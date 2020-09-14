@@ -8,7 +8,7 @@ import BackupIcon from '@material-ui/icons/Backup';
 import ChatIcon from '@material-ui/icons/Chat';
 import AddIcon from '@material-ui/icons/Add';
 import HomeIcon from '@material-ui/icons/Home';
-
+import InfoIcon from '@material-ui/icons/Info';
 
 function Navigation() {
     return (
@@ -37,6 +37,11 @@ function Navigation() {
                     <Link to="/chat">
                         <IconButton edge="start" aria-label="chat">
                             <ChatIcon />
+                        </IconButton>
+                    </Link>
+                    <Link to="/about">
+                        <IconButton edge="start" aria-label="about">
+                            <InfoIcon />
                         </IconButton>
                     </Link>
                     <Link to="/account">

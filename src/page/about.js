@@ -1,15 +1,12 @@
+import { Container } from '@material-ui/core';
 import React from 'react';
 
-function About(){
+function About() {
     return (
-        <div className="about">
-            <body>
-                <h2>ABOUT</h2>
-                <p>
-                    About text
-                </p>
-            </body>
-        </div>
+        <Container maxWidth="md">
+            <h2>About</h2>
+            <p>About text</p>
+        </Container>
     );
 }
 
