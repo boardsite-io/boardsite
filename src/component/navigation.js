@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import AppBar from '@material-ui/core/AppBar';
 import { Grid, IconButton, Toolbar } from '@material-ui/core';
@@ -18,21 +19,31 @@ function Navigation() {
                     container
                     spacing={0}
                 >
-                    <IconButton edge="start" aria-label="home">
-                        <HomeIcon />
-                    </IconButton>
-                    <IconButton edge="start" aria-label="add">
-                        <AddIcon />
-                    </IconButton>
-                    <IconButton edge="start" aria-label="account">
-                        <AccountBoxIcon />
-                    </IconButton>
-                    <IconButton edge="start" aria-label="backup">
-                        <BackupIcon />
-                    </IconButton>
-                    <IconButton edge="start" aria-label="chat">
-                        <ChatIcon />
-                    </IconButton>
+                    <Link to="/">
+                        <IconButton edge="start" aria-label="home">
+                            <HomeIcon />
+                        </IconButton>
+                    </Link>
+                    <Link to="/add">
+                        <IconButton edge="start" aria-label="add">
+                            <AddIcon />
+                        </IconButton>
+                    </Link>
+                    <Link to="/backup">
+                        <IconButton edge="start" aria-label="backup">
+                            <BackupIcon />
+                        </IconButton>
+                    </Link>
+                    <Link to="/chat">
+                        <IconButton edge="start" aria-label="chat">
+                            <ChatIcon />
+                        </IconButton>
+                    </Link>
+                    <Link to="/account">
+                        <IconButton edge="start" aria-label="account">
+                            <AccountBoxIcon />
+                        </IconButton>
+                    </Link>
                 </Grid>
             </Toolbar>
         </AppBar>
