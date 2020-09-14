@@ -1,34 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 
-import Navigation from './navigation';
-import Home from './home';
-import Whiteboard from './whiteboard';
-import About from './about';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import './css/index.css';
+
+import Navigation from './component/navigation';
+import theme from './component/theme';
+import routes from './component/route';
+import { BrowserRouter as Router } from 'react-router-dom';
+
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { ThemeProvider } from '@material-ui/core/styles';
 
 class Boardsite extends React.Component {
     render() {
         return (
-            <div className="boardsite">
-                <head>
-                    <title>BoardSite</title>
-                </head>
-
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
                 <Router>
-                <Navigation />
-                <Switch>
-                    <Route path="/" exact component={Home} />
-                    <Route path="/whiteboard" component={Whiteboard} />
-                    <Route path="/about" component={About} />
-                </Switch>
+                    <Navigation />
+                    {routes}
                 </Router>
-
-                <footer>
-                    Certified Footer 4Head
-                </footer>
-            </div>
+            </ThemeProvider>
         );
     }
 }
