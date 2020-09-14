@@ -2,6 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+import Navigation from './navigation';
+import Home from './home';
+import Whiteboard from './whiteboard';
+import About from './about';
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+
 class Boardsite extends React.Component {
     render() {
         return (
@@ -10,22 +16,15 @@ class Boardsite extends React.Component {
                     <title>BoardSite</title>
                 </head>
 
-                <header>
-                    <h1>Bread Gang</h1>
-                    <ul>
-                        <li><a href="#home">Startseite</a></li>
-                        <li><a href="#about">Über</a></li>
-                        <li><a href="#contact">Kontakt</a></li>
-                    </ul>
-                </header>
-                <body>
-                    <h2>WhiteBOIrd</h2>
-                    <p>
-                        This rad website is going to take over the internet 
-                        with PogChamp functionalities and sonic speed nasa performance XDXD.
-                    </p>
-                    le ESKETIT
-                </body>
+                <Router>
+                <Navigation />
+                <Switch>
+                    <Route path="/" exact component={Home} />
+                    <Route path="/whiteboard" component={Whiteboard} />
+                    <Route path="/about" component={About} />
+                </Switch>
+                </Router>
+
                 <footer>
                     Certified Footer 4Head
                 </footer>
