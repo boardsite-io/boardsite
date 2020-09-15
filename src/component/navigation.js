@@ -9,6 +9,7 @@ import ChatIcon from '@material-ui/icons/Chat';
 import AddIcon from '@material-ui/icons/Add';
 import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
+import Tooltip from '@material-ui/core/Tooltip';
 
 function Navigation() {
     return (
@@ -19,36 +20,48 @@ function Navigation() {
                     container
                     spacing={0}
                 >
-                    <Link to="/">
-                        <IconButton edge="start" aria-label="home">
-                            <HomeIcon />
-                        </IconButton>
-                    </Link>
-                    <Link to="/add">
-                        <IconButton edge="start" aria-label="add">
-                            <AddIcon />
-                        </IconButton>
-                    </Link>
-                    <Link to="/backup">
-                        <IconButton edge="start" aria-label="backup">
-                            <BackupIcon />
-                        </IconButton>
-                    </Link>
-                    <Link to="/chat">
-                        <IconButton edge="start" aria-label="chat">
-                            <ChatIcon />
-                        </IconButton>
-                    </Link>
-                    <Link to="/about">
-                        <IconButton edge="start" aria-label="about">
-                            <InfoIcon />
-                        </IconButton>
-                    </Link>
-                    <Link to="/account">
-                        <IconButton edge="start" aria-label="account">
-                            <AccountBoxIcon />
-                        </IconButton>
-                    </Link>
+                    <Tooltip title="Home">
+                        <Link to="/">
+                            <IconButton edge="start" aria-label="home">
+                                <HomeIcon />
+                            </IconButton>
+                        </Link>
+                    </Tooltip>
+                    <Tooltip title="Create">
+                        <Link to="/add">
+                            <IconButton edge="start" aria-label="add">
+                                <AddIcon />
+                            </IconButton>
+                        </Link>
+                    </Tooltip>
+                    <Tooltip title="Cloud Backup">
+                        <Link to="/backup">
+                            <IconButton edge="start" aria-label="backup">
+                                <BackupIcon />
+                            </IconButton>
+                        </Link>
+                    </Tooltip>
+                    <Tooltip title="Chat">
+                        <Link to="/chat">
+                            <IconButton edge="start" aria-label="chat">
+                                <ChatIcon />
+                            </IconButton>
+                        </Link>
+                    </Tooltip>
+                    <Tooltip title="About">
+                        <Link to="/about">
+                            <IconButton edge="start" aria-label="about">
+                                <InfoIcon />
+                            </IconButton>
+                        </Link>
+                    </Tooltip>
+                    <Tooltip title="Account">
+                        <Link to="/account">
+                            <IconButton edge="start" aria-label="account">
+                                <AccountBoxIcon />
+                            </IconButton>
+                        </Link>
+                    </Tooltip>
                 </Grid>
             </Toolbar>
         </AppBar>
