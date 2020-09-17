@@ -1,17 +1,19 @@
 import React from 'react';
+import { Container } from '@material-ui/core';
 
-
-function Whiteboard(){
+function Whiteboard() {
     return (
-        <div className="whiteboard">
-            <body>
-                <h2>WhiteBOIrd</h2>
-                <p>
-                    This rad website is going to take over the internet 
-                    with PogChamp functionalities and sonic speed nasa performance XDXD.
+        <Container maxWidth="lg">
+            <div className="whiteboard">
+                <body>
+                    <h2>WhiteBOIrd</h2>
+                    <p>
+                        This rad website is going to take over the internet
+                        with PogChamp functionalities and sonic speed nasa performance XDXD.
                 </p>
-            </body>
-        </div>
+                </body>
+            </div>
+        </Container>
     );
 }
 

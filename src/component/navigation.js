@@ -11,6 +11,8 @@ import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
 import Tooltip from '@material-ui/core/Tooltip';
 
+// import '../css/index.css';
+
 function Navigation() {
     return (
         <AppBar position="static" color="primary">
@@ -41,13 +43,15 @@ function Navigation() {
                             </IconButton>
                         </Link>
                     </Tooltip>
-                    <Tooltip title="Chat" style={{ flex: 1 }}>
-                        <Link to="/chat">
-                            <IconButton edge="start" aria-label="chat">
-                                <ChatIcon />
-                            </IconButton>
-                        </Link>
-                    </Tooltip>
+                    <div style={{ flex: 0.9 }}> {/* Lower flex -> more space between icons */}
+                        <Tooltip title="Chat">
+                            <Link to="/chat">
+                                <IconButton edge="start" aria-label="chat">
+                                    <ChatIcon />
+                                </IconButton>
+                            </Link>
+                        </Tooltip>
+                    </div>
                     <Tooltip title="About">
                         <Link to="/about">
                             <IconButton edge="start" aria-label="about">
