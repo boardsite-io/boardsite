@@ -41,7 +41,7 @@ function Navigation() {
                             </IconButton>
                         </Link>
                     </Tooltip>
-                    <Tooltip title="Chat">
+                    <Tooltip title="Chat" style={{ flex: 1 }}>
                         <Link to="/chat">
                             <IconButton edge="start" aria-label="chat">
                                 <ChatIcon />
