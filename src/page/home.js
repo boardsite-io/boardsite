@@ -11,7 +11,7 @@ function Home() {
         const canvasEle = canvas.current;
         canvasEle.width = 600; //canvasEle.clientWidth;
         canvasEle.height = 400; //canvasEle.clientHeight;
-        
+
         // get context of the canvas
         ctx = canvasEle.getContext("2d");
         let canvasElem = document.querySelector("canvas");
@@ -60,19 +60,24 @@ function Home() {
         ctx.fillRect(x, y, w, h);
     }
 
+    function clearCanvas(){
+        let canvasElem = document.querySelector("canvas");
+        ctx.clearRect(0, 0, canvasElem.width, canvasElem.height);
+    }
+
     function getMousePosition(canvas, event) {
         let rect = canvas.getBoundingClientRect();
         let x = event.clientX - rect.left;
         let y = event.clientY - rect.top;
 
-        return [x,y];
+        return [x, y];
     }
 
     return (
         <Container maxWidth="lg">
             <h1>Home</h1>
             <div>
-                <Button variant="contained" color="primary" onClick={() => alert("Hello World!")}>Hello</Button>
+                <Button variant="contained" color="primary" onClick={() => clearCanvas()}>Clear</Button>
             </div>
             <div>
                 <canvas ref={canvas}> </canvas>
