@@ -1,41 +1,31 @@
-import { Button, Container } from '@material-ui/core';
+import { Button, Container, TextField } from '@material-ui/core';
 import React, { useRef, useEffect } from 'react';
 
 function Home() {
-    const canvas = useRef();
-    let ctx = null;
+    const canvasRef = useRef(null);
+    const ctxRef = useRef(null);
+    const colorRef = useRef("#ffffff");
 
     // initialize the canvas context
     useEffect(() => {
         // assign the width and height to canvas
-        const canvasEle = canvas.current;
-        canvasEle.width = 600; //canvasEle.clientWidth;
-        canvasEle.height = 400; //canvasEle.clientHeight;
+        const canvasEle = canvasRef.current;
+        canvasEle.width = 500; //canvasEle.clientWidth;
+        canvasEle.height = 500; //canvasEle.clientHeight;
 
         // get context of the canvas
-        ctx = canvasEle.getContext("2d");
+        ctxRef.current = canvasEle.getContext("2d");
         let canvasElem = document.querySelector("canvas");
 
-        canvasElem.addEventListener("mousedown", function (e) {
+        canvasElem.addEventListener("mousedown", (e) => {
             let [click_x, click_y] = getMousePosition(canvasElem, e);
-            drawRect({ x: click_x, y: click_y, w: 10, h: 10 }, { borderColor: 'blue', borderWidth: 5 });
+            let block_size = 50;
+            click_x = click_x - click_x%block_size;
+            click_y = click_y - click_y%block_size;
+            console.log(colorRef.current.value)
+            drawFillRect({ x: click_x, y: click_y, w: block_size, h: block_size }, { backgroundColor: colorRef.current.value, borderWidth: 0 });
             //alert(`X:${click_x}, Y:${click_y}`);
         });
-    }, []);
-
-    useEffect(() => {
-        const r1Info = { x: 20, y: 30, w: 100, h: 50 };
-        const r1Style = { borderColor: 'red', borderWidth: 10 };
-        drawRect(r1Info, r1Style);
-
-        const r2Info = { x: 100, y: 100, w: 80, h: 150 };
-        drawRect(r2Info);
-
-        const r3Info = { x: 250, y: 80, w: 80, h: 120 };
-        drawFillRect(r3Info, { backgroundColor: 'green' });
-
-        const r4Info = { x: 200, y: 220, w: 100, h: 50 };
-        drawFillRect(r4Info);
     }, []);
 
     // draw rectangle
@@ -43,11 +33,11 @@ function Home() {
         const { x, y, w, h } = info;
         const { borderColor = 'black', borderWidth = 1 } = style;
 
-        ctx.beginPath();
-        ctx.strokeStyle = borderColor;
-        ctx.lineWidth = borderWidth;
-        ctx.rect(x, y, w, h);
-        ctx.stroke();
+        ctxRef.current.beginPath();
+        ctxRef.current.strokeStyle = borderColor;
+        ctxRef.current.lineWidth = borderWidth;
+        ctxRef.current.rect(x, y, w, h);
+        ctxRef.current.stroke();
     }
 
     // draw rectangle with background
@@ -55,14 +45,14 @@ function Home() {
         const { x, y, w, h } = info;
         const { backgroundColor = 'black' } = style;
 
-        ctx.beginPath();
-        ctx.fillStyle = backgroundColor;
-        ctx.fillRect(x, y, w, h);
+        ctxRef.current.beginPath();
+        ctxRef.current.fillStyle = backgroundColor;
+        ctxRef.current.fillRect(x, y, w, h);
     }
 
-    function clearCanvas(){
+    function clearCanvas() {
         let canvasElem = document.querySelector("canvas");
-        ctx.clearRect(0, 0, canvasElem.width, canvasElem.height);
+        ctxRef.current.clearRect(0, 0, canvasElem.width, canvasElem.height);
     }
 
     function getMousePosition(canvas, event) {
@@ -78,9 +68,10 @@ function Home() {
             <h1>Home</h1>
             <div>
                 <Button variant="contained" color="primary" onClick={() => clearCanvas()}>Clear</Button>
+                <TextField inputRef={colorRef} id="outlined-basic" label="Input Color Hex #" variant="outlined" />
             </div>
             <div>
-                <canvas ref={canvas}> </canvas>
+                <canvas ref={canvasRef}> </canvas>
             </div>
         </Container>
     );
