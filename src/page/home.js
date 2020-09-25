@@ -4,6 +4,7 @@ import React, { useRef, useEffect } from 'react';
 // https://developer.aliyun.com/mirror/npm/package/material-ui-rc-color-picker
 import ColorPicker from 'material-ui-rc-color-picker';
 import 'material-ui-rc-color-picker/assets/index.css';
+import { green } from '@material-ui/core/colors';
 
 function Home() {
     const canvasRef = useRef(null);
@@ -70,6 +71,7 @@ function Home() {
 
     function onColorChange(color) {
         blockColor = color.color;
+        colorRef.current.value = color.color;
     }
 
     return (
@@ -81,15 +83,17 @@ function Home() {
                 </div>
                 <div className="toolbar">
                     <Button variant="contained" color="primary" onClick={() => clearCanvas()}>Clear</Button>
-                    <TextField inputRef={colorRef} id="outlined-basic" label="e.g. #0f0" variant="outlined" />
-                    <ColorPicker
-                        enableAlpha={false}
-                        color={blockColor}
-                        onChange={ (color) => onColorChange(color) }
-                        onClose={ (color) => onColorChange(color)}
-                        mode="RGB"
-                        placement="topLeft"
-                    />
+                    <TextField inputRef={colorRef} id="outlined-basic" label="" variant="outlined" />
+                    <div className="colorpicker">
+                        <ColorPicker
+                            enableAlpha={false}
+                            color={blockColor}
+                            onChange={(color) => onColorChange(color)}
+                            onClose={(color) => onColorChange(color)}
+                            mode="RGB"
+                            placement="topLeft"
+                        />
+                    </div>
                 </div>
             </div>
         </Container>
