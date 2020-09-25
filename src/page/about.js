@@ -3,7 +3,7 @@ import React from 'react';
 
 function About() {
     return (
-        <Container maxWidth="lg">
+        <Container id="container" maxWidth="lg">
             <h2>About</h2>
             <p>About text</p>
         </Container>

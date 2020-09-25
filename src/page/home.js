@@ -4,7 +4,6 @@ import React, { useRef, useEffect } from 'react';
 // https://developer.aliyun.com/mirror/npm/package/material-ui-rc-color-picker
 import ColorPicker from 'material-ui-rc-color-picker';
 import 'material-ui-rc-color-picker/assets/index.css';
-import { green } from '@material-ui/core/colors';
 
 function Home() {
     const canvasRef = useRef(null);
@@ -28,11 +27,17 @@ function Home() {
             let block_size = 50;
             click_x = click_x - click_x % block_size;
             click_y = click_y - click_y % block_size;
-            //console.log(colorRef.current.value)
             //drawFillRect({ x: click_x, y: click_y, w: block_size, h: block_size }, { backgroundColor: colorRef.current.value, borderWidth: 0 });
-            drawFillRect({ x: click_x, y: click_y, w: block_size, h: block_size }, { backgroundColor: blockColor, borderWidth: 0 });
+            if (e.button === 0){
+                drawFillRect({ x: click_x, y: click_y, w: block_size, h: block_size }, { backgroundColor: blockColor, borderWidth: 0 });
+            }
+            else if (e.button === 2){
+                ctxRef.current.clearRect(click_x, click_y, block_size, block_size);
+            }
         });
-    }, []);
+
+        canvasElem.addEventListener('contextmenu', event => event.preventDefault());
+    }, [blockColor]);
 
     // draw rectangle
     // const drawRect = (info, style = {}) => {
@@ -47,7 +52,7 @@ function Home() {
     // }
 
     // draw rectangle with background
-    const drawFillRect = (info, style = {}) => {
+    function drawFillRect(info, style = {}) {
         const { x, y, w, h } = info;
         const { backgroundColor = 'black' } = style;
 
@@ -65,7 +70,6 @@ function Home() {
         let rect = canvas.getBoundingClientRect();
         let x = event.clientX - rect.left;
         let y = event.clientY - rect.top;
-
         return [x, y];
     }
 
@@ -75,15 +79,20 @@ function Home() {
     }
 
     return (
-        <Container maxWidth="lg">
+        <Container id="container" maxWidth="lg">
             <h1>Home</h1>
             <div className="homediv">
                 <div className="canvasdiv">
                     <canvas ref={canvasRef}> </canvas>
                 </div>
                 <div className="toolbar">
-                    <Button variant="contained" color="primary" onClick={() => clearCanvas()}>Clear</Button>
-                    <TextField inputRef={colorRef} id="outlined-basic" label="" variant="outlined" />
+                    <Button id="button" variant="contained" color="primary" onClick={() => clearCanvas()}>Clear</Button>
+                    <Button id="button" variant="contained" color="primary" onClick={() => clearCanvas()}>Save</Button>
+                    <Button id="button" variant="contained" color="primary" onClick={() => clearCanvas()}>Load</Button>
+                    <Button id="button" variant="contained" color="primary" onClick={() => clearCanvas()}>Clear</Button>
+                    <Button id="button" variant="contained" color="primary" onClick={() => clearCanvas()}>Clear</Button>
+                    <Button id="button" variant="contained" color="primary" onClick={() => clearCanvas()}>Clear</Button>
+                    <TextField inputRef={colorRef} id="textfield" label="" variant="outlined" />
                     <div className="colorpicker">
                         <ColorPicker
                             enableAlpha={false}

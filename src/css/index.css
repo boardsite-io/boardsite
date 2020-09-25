@@ -8,8 +8,22 @@ canvas {
     margin: 10px;
 }
 
+/* #container {
+    background-color: gold;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+} */
+
+#button {
+    height: 30px;
+}
+
+#textfield {
+    border-radius: 4px;
+}
+
 .colorpicker {
-    background-color: grey;
+    /* background-color: grey; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -25,8 +39,8 @@ canvas {
 .toolbar {
     border-radius: 4px;
     display: grid;
-    grid-template-rows: 40px auto 40px auto;
-    background-color: white;
+    grid-template-rows: 40px 40px 40px 40px 40px 40px 40px auto;
+    /* background-color: white; */
     gap: 10px;
     margin: 10px;
 }

@@ -3,7 +3,7 @@ import { Container } from '@material-ui/core';
 
 function Whiteboard() {
     return (
-        <Container maxWidth="lg">
+        <Container id="container" maxWidth="lg">
             <div className="whiteboard">
                 <body>
                     <h2>WhiteBOIrd</h2>

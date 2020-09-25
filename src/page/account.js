@@ -3,7 +3,7 @@ import { Container } from '@material-ui/core'
 
 function Account() {
     return (
-        <Container maxWidth="lg">
+        <Container id="container" maxWidth="lg">
         <div>
             <h1> XD HEADER </h1>
             <p>
