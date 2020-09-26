@@ -13,6 +13,10 @@ function Home() {
 
     // initialize the canvas context
     useEffect(() => {
+        // open socket to patys nasa server
+        var socket = new WebSocket(".../..."); 
+        socket.onmessage = (data) => console.log(JSON.parse(data.data));
+
         // assign the width and height to canvas
         const canvasEle = canvasRef.current;
         canvasEle.width = 500; //canvasEle.clientWidth;
@@ -27,16 +31,44 @@ function Home() {
             let block_size = 50;
             click_x = click_x - click_x % block_size;
             click_y = click_y - click_y % block_size;
-            //drawFillRect({ x: click_x, y: click_y, w: block_size, h: block_size }, { backgroundColor: colorRef.current.value, borderWidth: 0 });
+            
             if (e.button === 0){
                 drawFillRect({ x: click_x, y: click_y, w: block_size, h: block_size }, { backgroundColor: blockColor, borderWidth: 0 });
             }
             else if (e.button === 2){
                 ctxRef.current.clearRect(click_x, click_y, block_size, block_size);
             }
+
+            // console.log("0x" + blockColor.substring(1) + " - x: " + (click_x/block_size));
+            let x_id = click_x/block_size;
+            let y_id = click_y/block_size;
+            let c_id = parseInt(blockColor.substring(1)); // remove first bit: #, and then convert to int .. only works for colors without a-f : FIX!
+            socket.send(JSON.stringify([{value: c_id, x: x_id, y: y_id}]))
         });
+        
+        // canvasElem.addEventListener("mousemove", (e) => {
+        //     let [x2, y2] = getMousePosition(canvasElem, e);
+        //     let x1 = x2 - e.movementX;
+        //     let y1 = y2 - e.movementY;
+        //     drawLine(x1, y1, x2, y2);
+        // });
+
+        // canvasElem.addEventListener("mouseup", (e) => {
+        //     let [click_x, click_y] = getMousePosition(canvasElem, e);
+        //     let block_size = 50;
+        //     click_x = click_x - click_x % block_size;
+        //     click_y = click_y - click_y % block_size;
+            
+        //     if (e.button === 0){
+        //         drawFillRect({ x: click_x, y: click_y, w: block_size, h: block_size }, { backgroundColor: blockColor, borderWidth: 0 });
+        //     }
+        //     else if (e.button === 2){
+        //         ctxRef.current.clearRect(click_x, click_y, block_size, block_size);
+        //     }
+        // });
 
         canvasElem.addEventListener('contextmenu', event => event.preventDefault());
+
     }, [blockColor]);
 
     // draw rectangle
@@ -49,6 +81,14 @@ function Home() {
     //     ctxRef.current.lineWidth = borderWidth;
     //     ctxRef.current.rect(x, y, w, h);
     //     ctxRef.current.stroke();
+    // }
+
+    // function drawLine(x1, y1, x2, y2) {
+    //     let c = ctxRef.current;
+    //     c.beginPath();
+    //     c.moveTo(x1,y1);
+    //     c.lineTo(x2,y2);
+    //     c.stroke();
     // }
 
     // draw rectangle with background

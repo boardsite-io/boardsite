@@ -23,7 +23,6 @@ canvas {
 }
 
 .colorpicker {
-    /* background-color: grey; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -40,7 +39,6 @@ canvas {
     border-radius: 4px;
     display: grid;
     grid-template-rows: 40px 40px 40px 40px 40px 40px 40px auto;
-    /* background-color: white; */
     gap: 10px;
     margin: 10px;
 }

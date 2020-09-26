@@ -11,10 +11,15 @@ import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
 import Tooltip from '@material-ui/core/Tooltip';
 
+import Account from '../page/account'
+
 // import '../css/index.css';
 
 function Navigation() {
+    const [openAccDialog, setOpenAccDialog] = React.useState(false);
+
     return (
+        <>
         <AppBar position="static" color="primary">
             <Toolbar>
                 <Grid
@@ -60,15 +65,15 @@ function Navigation() {
                         </Link>
                     </Tooltip>
                     <Tooltip title="Account">
-                        <Link to="/account">
-                            <IconButton edge="start" aria-label="account">
+                            <IconButton edge="start" aria-label="account" onClick={() => setOpenAccDialog(true)}>
                                 <AccountBoxIcon />
                             </IconButton>
-                        </Link>
                     </Tooltip>
                 </Grid>
             </Toolbar>
         </AppBar>
+        <Account openAccDialog={openAccDialog} setOpenAccDialog={setOpenAccDialog} />
+        </>
     );
 }
 
