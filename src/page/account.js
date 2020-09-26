@@ -22,7 +22,7 @@ function Account(props) {
         <div id="accdialog">
             <Dialog
                 classes={{ scrollPaper: classes.scrollPaper }}
-                fullWidth="true"
+                fullWidth={true}
                 maxWidth="sm"
                 open={props.openAccDialog}
                 scroll="paper"

@@ -1,5 +1,5 @@
 import { Button, Container, TextField } from '@material-ui/core';
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 // https://developer.aliyun.com/mirror/npm/package/material-ui-rc-color-picker
 import ColorPicker from 'material-ui-rc-color-picker';
@@ -9,13 +9,23 @@ function Home() {
     const canvasRef = useRef(null);
     const ctxRef = useRef(null);
     const colorRef = useRef("#ffffff");
-    let blockColor = "#000000";
+    const [currColor, setCurrColor] = useState();
+    const [locations, setLocations] = useState([]);
+
+    useEffect(() => {
+        const canvas = canvasRef.current
+        const ctx = canvas.getContext('2d')
+        ctx.clearRect(0, 0, window.innerHeight, window.innerWidth)
+        locations.forEach(location => draw(location))
+    })
 
     // initialize the canvas context
     useEffect(() => {
+        setCurrColor("#000000");
+        colorRef.current.value = "#000000";
         // open socket to patys nasa server
-        var socket = new WebSocket(".../..."); 
-        socket.onmessage = (data) => console.log(JSON.parse(data.data));
+        // var socket = new WebSocket(".../..."); 
+        // socket.onmessage = (data) => console.log(JSON.parse(data.data));
 
         // assign the width and height to canvas
         const canvasEle = canvasRef.current;
@@ -27,49 +37,13 @@ function Home() {
         let canvasElem = document.querySelector("canvas");
 
         canvasElem.addEventListener("mousedown", (e) => {
-            let [click_x, click_y] = getMousePosition(canvasElem, e);
-            let block_size = 50;
-            click_x = click_x - click_x % block_size;
-            click_y = click_y - click_y % block_size;
-            
-            if (e.button === 0){
-                drawFillRect({ x: click_x, y: click_y, w: block_size, h: block_size }, { backgroundColor: blockColor, borderWidth: 0 });
-            }
-            else if (e.button === 2){
-                ctxRef.current.clearRect(click_x, click_y, block_size, block_size);
-            }
-
-            // console.log("0x" + blockColor.substring(1) + " - x: " + (click_x/block_size));
-            let x_id = click_x/block_size;
-            let y_id = click_y/block_size;
-            let c_id = parseInt(blockColor.substring(1)); // remove first bit: #, and then convert to int .. only works for colors without a-f : FIX!
-            socket.send(JSON.stringify([{value: c_id, x: x_id, y: y_id}]))
+            handleCanvasClick(e);
+            //socket.send(JSON.stringify([{value: c_id, x: x_id, y: y_id}]))
         });
-        
-        // canvasElem.addEventListener("mousemove", (e) => {
-        //     let [x2, y2] = getMousePosition(canvasElem, e);
-        //     let x1 = x2 - e.movementX;
-        //     let y1 = y2 - e.movementY;
-        //     drawLine(x1, y1, x2, y2);
-        // });
-
-        // canvasElem.addEventListener("mouseup", (e) => {
-        //     let [click_x, click_y] = getMousePosition(canvasElem, e);
-        //     let block_size = 50;
-        //     click_x = click_x - click_x % block_size;
-        //     click_y = click_y - click_y % block_size;
-            
-        //     if (e.button === 0){
-        //         drawFillRect({ x: click_x, y: click_y, w: block_size, h: block_size }, { backgroundColor: blockColor, borderWidth: 0 });
-        //     }
-        //     else if (e.button === 2){
-        //         ctxRef.current.clearRect(click_x, click_y, block_size, block_size);
-        //     }
-        // });
 
         canvasElem.addEventListener('contextmenu', event => event.preventDefault());
 
-    }, [blockColor]);
+    }, []);
 
     // draw rectangle
     // const drawRect = (info, style = {}) => {
@@ -91,30 +65,49 @@ function Home() {
     //     c.stroke();
     // }
 
-    // draw rectangle with background
-    function drawFillRect(info, style = {}) {
-        const { x, y, w, h } = info;
-        const { backgroundColor = 'black' } = style;
+    function draw(location) {
+        let x = location.x;
+        let y = location.y;
+        let color = location.color;
+        let block_size = 50;
+        drawFillRect(x * block_size, y * block_size, block_size, block_size, color);
+    }
 
+    function handleClear() {
+        setLocations([])
+    }
+
+    function handleCanvasClick(e) {
+        let block_size = 50;
+        let canvasElem = document.querySelector("canvas");
+        let rect = canvasElem.getBoundingClientRect();
+        let x = e.clientX - rect.left;
+        let y = e.clientY - rect.top;
+        x = (x - x % block_size) / block_size;
+        y = (y - y % block_size) / block_size;
+
+        if (e.button === 0) {
+            const color = colorRef.current.value;
+            const newLocation = { x: x, y: y, color: color };
+            setLocations(locations => [...locations, newLocation]);
+        }
+        else if (e.button === 2) {
+            // var array = [...locations];
+            // console.log(array.length);
+            // array.splice(array.length, 1);
+            // setLocations(array => [array]);
+        }
+    }
+
+    // draw rectangle with background
+    function drawFillRect(x, y, w, h, color) {
         ctxRef.current.beginPath();
-        ctxRef.current.fillStyle = backgroundColor;
+        ctxRef.current.fillStyle = color;
         ctxRef.current.fillRect(x, y, w, h);
     }
 
-    function clearCanvas() {
-        let canvasElem = document.querySelector("canvas");
-        ctxRef.current.clearRect(0, 0, canvasElem.width, canvasElem.height);
-    }
-
-    function getMousePosition(canvas, event) {
-        let rect = canvas.getBoundingClientRect();
-        let x = event.clientX - rect.left;
-        let y = event.clientY - rect.top;
-        return [x, y];
-    }
-
     function onColorChange(color) {
-        blockColor = color.color;
+        setCurrColor(color.color);
         colorRef.current.value = color.color;
     }
 
@@ -126,17 +119,14 @@ function Home() {
                     <canvas ref={canvasRef}> </canvas>
                 </div>
                 <div className="toolbar">
-                    <Button id="button" variant="contained" color="primary" onClick={() => clearCanvas()}>Clear</Button>
-                    <Button id="button" variant="contained" color="primary" onClick={() => clearCanvas()}>Save</Button>
-                    <Button id="button" variant="contained" color="primary" onClick={() => clearCanvas()}>Load</Button>
-                    <Button id="button" variant="contained" color="primary" onClick={() => clearCanvas()}>Clear</Button>
-                    <Button id="button" variant="contained" color="primary" onClick={() => clearCanvas()}>Clear</Button>
-                    <Button id="button" variant="contained" color="primary" onClick={() => clearCanvas()}>Clear</Button>
+                    <Button id="button" variant="contained" color="primary" onClick={() => handleClear()}>Clear</Button>
+                    <Button id="button" variant="contained" color="primary" onClick={() => handleClear()}>Save</Button>
+                    <Button id="button" variant="contained" color="primary" onClick={() => handleClear()}>Load</Button>
                     <TextField inputRef={colorRef} id="textfield" label="" variant="outlined" />
                     <div className="colorpicker">
                         <ColorPicker
                             enableAlpha={false}
-                            color={blockColor}
+                            color={currColor}
                             onChange={(color) => onColorChange(color)}
                             onClose={(color) => onColorChange(color)}
                             mode="RGB"
