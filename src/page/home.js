@@ -9,8 +9,8 @@ function Home() {
     const canvasRef = useRef(null);
     const ctxRef = useRef(null);
     const colorRef = useRef("#ffffff");
-    const [currColor, setCurrColor] = useState();
-    const [locations, setLocations] = useState([]);
+    const [currColor, setCurrColor] = useState(() => null);
+    const [locations, setLocations] = useState(() => []);
 
     useEffect(() => {
         const canvas = canvasRef.current
@@ -92,10 +92,7 @@ function Home() {
             setLocations(locations => [...locations, newLocation]);
         }
         else if (e.button === 2) {
-            // var array = [...locations];
-            // console.log(array.length);
-            // array.splice(array.length, 1);
-            // setLocations(array => [array]);
+            setLocations(locations => [...locations.splice(0,locations.length-1)]);
         }
     }
 
