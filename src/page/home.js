@@ -9,7 +9,7 @@ function Home() {
     const canvasRef = useRef(null);
     const ctxRef = useRef(null);
     const colorRef = useRef("#ffffff");
-    const [currColor, setCurrColor] = useState(() => null);
+    const [currColor, setCurrColor] = useState(() => "#000000");
     const [locations, setLocations] = useState(() => []);
 
     useEffect(() => {
@@ -21,7 +21,6 @@ function Home() {
 
     // initialize the canvas context
     useEffect(() => {
-        setCurrColor("#000000");
         colorRef.current.value = "#000000";
         // open socket to patys nasa server
         // var socket = new WebSocket(".../..."); 
@@ -36,14 +35,35 @@ function Home() {
         ctxRef.current = canvasEle.getContext("2d");
         let canvasElem = document.querySelector("canvas");
 
-        canvasElem.addEventListener("mousedown", (e) => {
-            handleCanvasClick(e);
-            //socket.send(JSON.stringify([{value: c_id, x: x_id, y: y_id}]))
-        });
+        canvasElem.addEventListener("mousedown", (e) => handleCanvasClick(e, currColor));
+        canvasElem.addEventListener('contextmenu', e => e.preventDefault());
 
-        canvasElem.addEventListener('contextmenu', event => event.preventDefault());
-
+        return () => {
+            canvasElem.removeEventListener("mousedown", (e) => handleCanvasClick(e, currColor) );
+            canvasElem.removeEventListener('contextmenu', e => e.preventDefault());
+        };
     }, []);
+
+    function handleCanvasClick(e, currColor) {
+        let block_size = 50;
+        let canvasElem = document.querySelector("canvas");
+        let rect = canvasElem.getBoundingClientRect();
+        let x = e.clientX - rect.left;
+        let y = e.clientY - rect.top;
+        x = (x - x % block_size) / block_size;
+        y = (y - y % block_size) / block_size;
+
+        if (e.button === 0) {
+            const color = currColor;//colorRef.current.value;
+            const newLocation = { x: x, y: y, color: color };
+            setLocations(locations => [...locations, newLocation]);
+        }
+        else if (e.button === 2) {
+            setLocations(locations => [...locations.splice(0,locations.length-1)]);
+        }
+
+        //socket.send(JSON.stringify([{value: c_id, x: x_id, y: y_id}]))
+    }
 
     // draw rectangle
     // const drawRect = (info, style = {}) => {
@@ -77,24 +97,7 @@ function Home() {
         setLocations([])
     }
 
-    function handleCanvasClick(e) {
-        let block_size = 50;
-        let canvasElem = document.querySelector("canvas");
-        let rect = canvasElem.getBoundingClientRect();
-        let x = e.clientX - rect.left;
-        let y = e.clientY - rect.top;
-        x = (x - x % block_size) / block_size;
-        y = (y - y % block_size) / block_size;
-
-        if (e.button === 0) {
-            const color = colorRef.current.value;
-            const newLocation = { x: x, y: y, color: color };
-            setLocations(locations => [...locations, newLocation]);
-        }
-        else if (e.button === 2) {
-            setLocations(locations => [...locations.splice(0,locations.length-1)]);
-        }
-    }
+    
 
     // draw rectangle with background
     function drawFillRect(x, y, w, h, color) {
@@ -108,6 +111,14 @@ function Home() {
         colorRef.current.value = color.color;
     }
 
+    function saveBoard(){
+        
+    }
+
+    function loadBoard(){
+        
+    }
+
     return (
         <Container id="container" maxWidth="lg">
             <h1>Home</h1>
@@ -117,8 +128,8 @@ function Home() {
                 </div>
                 <div className="toolbar">
                     <Button id="button" variant="contained" color="primary" onClick={() => handleClear()}>Clear</Button>
-                    <Button id="button" variant="contained" color="primary" onClick={() => handleClear()}>Save</Button>
-                    <Button id="button" variant="contained" color="primary" onClick={() => handleClear()}>Load</Button>
+                    <Button id="button" variant="contained" color="primary" onClick={() => saveBoard()}>Save</Button>
+                    <Button id="button" variant="contained" color="primary" onClick={() => loadBoard()}>Load</Button>
                     <TextField inputRef={colorRef} id="textfield" label="" variant="outlined" />
                     <div className="colorpicker">
                         <ColorPicker
