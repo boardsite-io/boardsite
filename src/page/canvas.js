@@ -4,7 +4,7 @@ function Canvas(props) {
     const canvasRef = useRef(null);
     const ctxRef = useRef(null);
     const wsRef = useRef(null);
-    
+
     useEffect(() => {
         const canvas = canvasRef.current
         const ctx = canvas.getContext('2d')
@@ -12,36 +12,33 @@ function Canvas(props) {
         props.locations.forEach((location, index) => {
             return draw(location, index);
         })
-    },[JSON.stringify(props.locations)])
+    }, [draw, props.changeCounter, props.locations])
 
     // initialize the canvas context
     useEffect(() => {
+        let isMounted = true;
+
         wsRef.current = new WebSocket("ws://heat.port0.org:8000/api/board");
 
-        wsRef.current.onopen = () => {
-            // on connecting, do nothing but log it to the console
-            console.log('connected')
-        }
-
+        wsRef.current.onopen = () => { console.log('connected') }
 
         wsRef.current.onmessage = (data) => {
-            // listen to data sent from the websocket server
-            const message = JSON.parse(data.data)
+            if (isMounted) {
+                props.setChangeCounter((changeCounter) => changeCounter + 1);
+                // listen to data sent from the websocket server
+                const message = JSON.parse(data.data);
 
-            let locations = props.locations;
-            message.forEach(location => {
-                //console.log(location);
-                let index = 10 * location.y + location.x
-                locations[index] = { color: location.color };
-            })
-            props.setLocations(locations);
+                let locations = props.locations;
+                message.forEach(location => {
+                    //console.log(location);
+                    let index = 10 * location.y + location.x
+                    locations[index] = { color: location.color };
+                })
+                props.setLocations(locations);
+            }
         }
 
-        wsRef.current.onclose = () => {
-            console.log('disconnected')
-            // automatically try to reconnect on connection loss
-
-        }
+        wsRef.current.onclose = () => { console.log('disconnected') }
 
         // assign the width and height to canvas
         const canvasEle = canvasRef.current;
@@ -54,10 +51,11 @@ function Canvas(props) {
         canvasElem.addEventListener("contextmenu", e => e.preventDefault()); // Disable Context Menu
         canvasElem.addEventListener("mousedown", (e) => handleCanvasRightClick(e));
 
-        // return () => {
-        //     canvasElem.removeEventListener("contextmenu", e => e.preventDefault());
-        //     canvasElem.removeEventListener("mousedown", (e) => handleCanvasRightClick(e));
-        // };
+        return () => {
+            isMounted = false;
+            canvasElem.removeEventListener("contextmenu", e => e.preventDefault());
+            canvasElem.removeEventListener("mousedown", (e) => handleCanvasRightClick(e));
+        };
     }, []);
 
     function handleCanvasRightClick(e) {
