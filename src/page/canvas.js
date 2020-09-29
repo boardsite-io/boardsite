@@ -1,21 +1,47 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 function Canvas(props) {
     const canvasRef = useRef(null);
     const ctxRef = useRef(null);
-
+    const wsRef = useRef(null);
+    
     useEffect(() => {
         const canvas = canvasRef.current
         const ctx = canvas.getContext('2d')
         ctx.clearRect(0, 0, window.innerHeight, window.innerWidth)
-        props.locations.forEach(location => draw(location))
-    })
+        props.locations.forEach((location, index) => {
+            return draw(location, index);
+        })
+    },[JSON.stringify(props.locations)])
 
     // initialize the canvas context
     useEffect(() => {
-        // open socket to patys nasa server
-        // var socket = new WebSocket(".../..."); 
-        // socket.onmessage = (data) => console.log(JSON.parse(data.data));
+        wsRef.current = new WebSocket("ws://heat.port0.org:8000/api/board");
+
+        wsRef.current.onopen = () => {
+            // on connecting, do nothing but log it to the console
+            console.log('connected')
+        }
+
+
+        wsRef.current.onmessage = (data) => {
+            // listen to data sent from the websocket server
+            const message = JSON.parse(data.data)
+
+            let locations = props.locations;
+            message.forEach(location => {
+                //console.log(location);
+                let index = 10 * location.y + location.x
+                locations[index] = { color: location.color };
+            })
+            props.setLocations(locations);
+        }
+
+        wsRef.current.onclose = () => {
+            console.log('disconnected')
+            // automatically try to reconnect on connection loss
+
+        }
 
         // assign the width and height to canvas
         const canvasEle = canvasRef.current;
@@ -26,17 +52,17 @@ function Canvas(props) {
         ctxRef.current = canvasEle.getContext("2d");
         let canvasElem = document.querySelector("canvas");
         canvasElem.addEventListener("contextmenu", e => e.preventDefault()); // Disable Context Menu
-        canvasElem.addEventListener("mousedown", (e) => handleCanvasRightClick(e) );
+        canvasElem.addEventListener("mousedown", (e) => handleCanvasRightClick(e));
 
-        return () => {
-            canvasElem.removeEventListener("contextmenu", e => e.preventDefault());
-            canvasElem.removeEventListener("mousedown", (e) => handleCanvasRightClick(e) );
-        };
+        // return () => {
+        //     canvasElem.removeEventListener("contextmenu", e => e.preventDefault());
+        //     canvasElem.removeEventListener("mousedown", (e) => handleCanvasRightClick(e));
+        // };
     }, []);
 
     function handleCanvasRightClick(e) {
         if (e.button === 2) {
-            props.setLocations(locations => [...locations.splice(0,locations.length-1)]);
+            props.setLocations([]);
         }
     }
 
@@ -46,25 +72,28 @@ function Canvas(props) {
         let rect = canvasElem.getBoundingClientRect();
         let x = e.clientX - rect.left;
         let y = e.clientY - rect.top;
+        const color = props.currColor;
         x = (x - x % block_size) / block_size;
         y = (y - y % block_size) / block_size;
-        if (e.button === 0) {
-            const color = props.currColor;
-            const newLocation = { x: x, y: y, color: color };
-            props.setLocations(locations => [...locations, newLocation]);
-        }
-        // else if (e.button === 2) {
-        //     props.setLocations(locations => [...locations.splice(0,locations.length-1)]);
-        // }
+        let colorInt = parseInt(color.substring(1), 16);
+        // const newLocation = { x: x, y: y, color: colorInt };
+        // props.setLocations(locations => [...locations, newLocation]);
 
-        //socket.send(JSON.stringify([{value: c_id, x: x_id, y: y_id}]))
+        if (wsRef.current.readyState === WebSocket.OPEN) {
+            wsRef.current.send(JSON.stringify([{ x: x, y: y, color: colorInt, action: "juan" }]))
+        }
+        else {
+            console.log("socket not open");
+        }
     }
 
-    function draw(location) {
-        let x = location.x;
-        let y = location.y;
-        let color = location.color;
+    function draw(location, index) {
+        let x = index % 10;
+        let y = (index - index % 10) / 10;
+        let colorInt = location.color;
+        let color = "#" + colorInt.toString(16).padStart(6, "0");
         let block_size = 50;
+        //console.log("draw: x: " + x + " y: " + y + " c: " + color);
         drawFillRect(x * block_size, y * block_size, block_size, block_size, color);
     }
 
@@ -76,7 +105,7 @@ function Canvas(props) {
     }
 
     return (
-        <div className="canvasdiv">
+        <div websocket={wsRef.current} className="canvasdiv">
             <canvas onClick={handleCanvasClick} ref={canvasRef} />
         </div>
     );

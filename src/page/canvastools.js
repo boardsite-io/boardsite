@@ -11,7 +11,7 @@ function CanvasTools(props) {
         props.setLocations([])
     }
     function saveBoard(){
-        console.log(props.currColor);
+        console.log(props.locations);
     }
 
     function loadBoard(){
