@@ -62,6 +62,7 @@ function Canvas(props) {
             isMounted = false;
             canvasElem.removeEventListener("contextmenu", e => e.preventDefault());
             canvasElem.removeEventListener("mousedown", (e) => handleCanvasRightClick(e));
+            wsRef.current.close();
         };
     }, []);
 
