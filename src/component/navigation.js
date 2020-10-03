@@ -11,7 +11,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
 import Tooltip from '@material-ui/core/Tooltip';
 
-import Account from '../page/account'
+import UserLogin from './userlogin.js'
 
 // import '../css/index.css';
 
@@ -72,7 +72,7 @@ function Navigation() {
                 </Grid>
             </Toolbar>
         </AppBar>
-        <Account openAccDialog={openAccDialog} setOpenAccDialog={setOpenAccDialog} />
+        <UserLogin openAccDialog={openAccDialog} setOpenAccDialog={setOpenAccDialog} />
         </>
     );
 }
