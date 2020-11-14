@@ -5,6 +5,10 @@ function Whiteboard() {
     const ctxRef = useRef(null);
     const wsRef = useRef(null);
 
+    let isMouseDown = false;
+    let lastX = -1;
+    let lastY = -1;
+
     // useEffect(() => {
     //     function draw(location, index) {
     //         let x = index % props.blocksPerDim;
@@ -57,7 +61,10 @@ function Whiteboard() {
         ctxRef.current = canvasEle.getContext("2d");
         let canvasElem = document.querySelector("canvas");
         canvasElem.addEventListener("contextmenu", e => e.preventDefault()); // Disable Context Menu
-        // canvasElem.addEventListener("mousedown", (e) => handleCanvasRightClick(e));
+        canvasElem.addEventListener("mousedown", (e) => handleCanvasClick(e));
+        canvasElem.addEventListener("mouseup", (e) => handleCanvasClickRelease(e));
+        canvasElem.addEventListener("mousemove", (e) => handleCanvasMove(e));
+        
 
         // return () => {
         //     isMounted = false;
@@ -67,18 +74,51 @@ function Whiteboard() {
         // };
     }, []);
 
-    // function handleCanvasRightClick(e) {
-    //     if (e.button === 2) {
-    //         props.setLocations([]);
-    //     }
-    // }
+    function handleCanvasMove(e) {
+        if(isMouseDown){
+            let canvasElem = document.querySelector("canvas");
+            let rect = canvasElem.getBoundingClientRect();
+            let x = e.clientX - rect.left;
+            let y = e.clientY - rect.top;
 
-    function handleCanvasClick(e) {
+            drawLine(lastX, lastY, x, y, 10, "#000")
+            lastX = x;
+            lastY = y;
+        }
+    }
+    function handleCanvasClickRelease(e) {
+        isMouseDown = false;
+
         let canvasElem = document.querySelector("canvas");
         let rect = canvasElem.getBoundingClientRect();
         let x = e.clientX - rect.left;
         let y = e.clientY - rect.top;
-        drawFillRect(x,y,50,50,"#0f0");
+        lastX = -1;
+        lastY = -1;
+        if (e.button === 2) {
+            drawFillRect(x,y,100,50,"#50f");
+        }
+        else{
+            drawFillRect(x,y,20,100,"#5f5");
+        }
+    }
+
+    function handleCanvasClick(e) {
+        isMouseDown = true;
+        let canvasElem = document.querySelector("canvas");
+        let rect = canvasElem.getBoundingClientRect();
+        let x = e.clientX - rect.left;
+        let y = e.clientY - rect.top;
+        lastX = x;
+        lastY = y;
+
+        if (e.button === 2) {
+            drawFillRect(x,y,50,50,"#f0f");
+        }
+        else{
+            drawFillRect(x,y,50,50,"#0f0");
+        }
+        
         // const color = props.currColor;
         // x = (x - x % props.blockSize) / props.blockSize;
         // y = (y - y % props.blockSize) / props.blockSize;
@@ -94,6 +134,15 @@ function Whiteboard() {
         // }
     }
 
+    // draw line
+    function drawLine(x1, y1, x2, y2, w, color) {
+        ctxRef.current.beginPath();
+        ctxRef.current.fillStyle = color;
+        ctxRef.current.moveTo(x1,y1);
+        ctxRef.current.lineTo(x2,y2);
+        ctxRef.current.stroke();
+    }
+
     // draw rectangle with background
     function drawFillRect(x, y, w, h, color) {
         ctxRef.current.beginPath();
@@ -103,7 +152,7 @@ function Whiteboard() {
 
     return (
         <div websocket={wsRef.current} className="canvasdiv">
-            <canvas onClick={handleCanvasClick} ref={canvasRef} />
+            <canvas ref={canvasRef} />
         </div>
     );
 }
