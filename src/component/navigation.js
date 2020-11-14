@@ -35,7 +35,7 @@ function Navigation() {
                         </Link>
                     </Tooltip>
                     <Tooltip title="Create">
-                        <Link to="/add">
+                        <Link to="/whiteboard">
                             <IconButton edge="start" aria-label="add">
                                 <AddIcon />
                             </IconButton>
