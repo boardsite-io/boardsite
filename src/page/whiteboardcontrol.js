@@ -5,8 +5,8 @@ import WhiteboardTools from './whiteboardtools';
 
 function WhiteboardControl() {
     const [strokeCollection, setStrokeCollection] = useState([]);
-    const [currColor, setCurrColor] = useState("#000000");
-    const [currWidth, setCurrWidth] = useState(10);
+    const [strokeStyle, setStrokeStyle] = useState("#000000");
+    const [lineWidth, setLineWidth] = useState(3);
 
     return (
         <Container id="container" maxWidth="lg">
@@ -20,10 +20,10 @@ function WhiteboardControl() {
 
                     <div className="whiteboardsection">
                         <Whiteboard strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
-                        currColor={currColor} currWidth={currWidth}/>
-                        <WhiteboardTools currColor={currColor} setCurrColor={setCurrColor} strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}/>
+                        strokeStyle={strokeStyle} lineWidth={lineWidth}/>
+                        <WhiteboardTools strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
+                        strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}/>
                     </div>
-                    
                 </body>
             </div>
         </Container>

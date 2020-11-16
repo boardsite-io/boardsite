@@ -18,7 +18,7 @@ function WhiteboardTools(props) {
         
     }
     function onColorChange(color) {
-        props.setCurrColor(color.color);
+        props.setStrokeStyle(color.color);
         colorRef.current.value = color.color;
     }
 
@@ -31,7 +31,7 @@ function WhiteboardTools(props) {
             <div className="colorpicker">
                 <ColorPicker
                     enableAlpha={false}
-                    color={props.currColor}
+                    color={props.strokeStyle}
                     onChange={(color) => onColorChange(color)}
                     onClose={(color) => onColorChange(color)}
                     mode="RGB"

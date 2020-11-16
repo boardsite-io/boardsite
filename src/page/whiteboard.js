@@ -8,46 +8,12 @@ function Whiteboard(props) {
     let sampleCount = 0;
     let lastX = -1;
     let lastY = -1;
-    let strokePoints = [];
+    let stroke = [];
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, window.innerHeight, window.innerWidth)
-        props.strokeCollection.forEach((stroke) => {
-            return drawCurve(ctx, stroke, 0.5);
-        })
-    }, [props.strokeCollection])
-
-    // initialize the canvas context
-    useEffect(() => {
-        // let isMounted = true;
-
-        // wsRef.current = new WebSocket("ws://heat.port0.org:8000/api/board");
-        // wsRef.current.onopen = () => { console.log('connected') }
-        // wsRef.current.onmessage = (data) => {
-        //     if (isMounted) {
-        //         props.setChangeCounter((changeCounter) => changeCounter + 1);
-        //         // listen to data sent from the websocket server
-        //         const message = JSON.parse(data.data);
-
-        //         let locations = props.locations;
-        //         message.forEach(location => {
-        //             //console.log(location);
-        //             let index = props.blocksPerDim * location.y + location.x
-        //             locations[index] = { color: location.color };
-        //         })
-        //         props.setLocations(locations);
-        //     }
-        // }
-
-        // wsRef.current.onclose = () => { console.log('disconnected') }
-
-        const canvas = canvasRef.current;
-        // DIN A4	2480 x 3508 Pixel
         canvas.width = 620; //canvas.clientWidth;
         canvas.height = 877; //canvas.clientHeight;
-
         canvas.addEventListener("contextmenu", e => e.preventDefault()); // Disable Context Menu
         canvas.addEventListener("mousedown", (e) => handleCanvasMouseDown(e));
         canvas.addEventListener("mouseup", (e) => handleCanvasMouseUp(e));
@@ -55,15 +21,57 @@ function Whiteboard(props) {
         canvas.addEventListener("mouseleave", (e) => handleCanvasMouseLeave(e));
 
         return () => {
-            // isMounted = false;
             canvas.removeEventListener("contextmenu", e => e.preventDefault());
             canvas.removeEventListener("mousedown", (e) => handleCanvasMouseDown(e));
             canvas.removeEventListener("mouseup", (e) => handleCanvasMouseUp(e));
             canvas.removeEventListener("mousemove", (e) => handleCanvasMouseMove(e));
             canvas.removeEventListener("mouseleave", (e) => handleCanvasMouseLeave(e));
-            // wsRef.current.close();
         };
-    }, []);
+    },[])
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        ctx.lineWidth = props.lineWidth;
+        ctx.strokeStyle = props.strokeStyle;
+    }, [props.lineWidth, props.strokeStyle])
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, window.innerHeight, window.innerWidth)
+        props.strokeCollection.forEach((stroke) => {
+            console.log(stroke);
+            ctx.strokeStyle = stroke[0];
+            ctx.lineWidth = stroke[1];
+            return drawCurve(ctx, stroke.slice(2));
+        })
+    }, [props.strokeCollection])
+
+    // // initialize the canvas context
+    // useEffect(() => {
+    //     let isMounted = true;
+
+    //     wsRef.current = new WebSocket("ws://heat.port0.org:8000/api/board");
+    //     wsRef.current.onopen = () => { console.log('connected') }
+    //     wsRef.current.onmessage = (data) => {
+    //         if (isMounted) {
+    //             props.setChangeCounter((changeCounter) => changeCounter + 1);
+    //             // listen to data sent from the websocket server
+    //             const message = JSON.parse(data.data);
+
+    //             let locations = props.locations;
+    //             message.forEach(location => {
+    //                 //console.log(location);
+    //                 let index = props.blocksPerDim * location.y + location.x
+    //                 locations[index] = { color: location.color };
+    //             })
+    //             props.setLocations(locations);
+    //         }
+    //     }
+
+    //     wsRef.current.onclose = () => { console.log('disconnected') }
+    // }, []);
 
     function handleCanvasMouseDown(e) {
         const canvas = canvasRef.current;
@@ -72,7 +80,9 @@ function Whiteboard(props) {
         let rect = canvas.getBoundingClientRect();
         let x = e.clientX - rect.left;
         let y = e.clientY - rect.top;
-        strokePoints = [x,y];
+        
+        stroke = [x, y];
+
         lastX = x;
         lastY = y;
 
@@ -91,12 +101,12 @@ function Whiteboard(props) {
             let rect = canvas.getBoundingClientRect();
             let x = e.clientX - rect.left;
             let y = e.clientY - rect.top;
-            let moveDist = Math.pow(x-lastX,2) + Math.pow(y-lastY,2); // Quadratic distance moved from last registered point
-            
+            let moveDist = Math.pow(x - lastX, 2) + Math.pow(y - lastY, 2); // Quadratic distance moved from last registered point
+
             if (moveDist > 50 && sampleCount > 5) {
                 sampleCount = 1;
-                strokePoints.push(x, y);
-                drawLine(lastX, lastY, x, y, 10, "#000")
+                stroke.push(x, y);
+                drawLine(lastX, lastY, x, y, props.lineWidth, props.strokeStyle);
                 lastX = x;
                 lastY = y;
             }
@@ -107,10 +117,15 @@ function Whiteboard(props) {
         if (!isMouseDown) { return; } // Ignore reentering
         isMouseDown = false;
         const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
         let rect = canvas.getBoundingClientRect();
         let x = e.clientX - rect.left;
         let y = e.clientY - rect.top;
-        strokePoints.push(x, y);
+        stroke.push(x, y);
+        stroke = getCurvePoints(stroke, 0.5);
+        stroke.unshift(ctx.lineWidth);
+        stroke.unshift(ctx.strokeStyle);
+
         lastX = -1;
         lastY = -1;
 
@@ -122,9 +137,7 @@ function Whiteboard(props) {
         // }
 
         // Add stroke to strokeCollection
-        props.setStrokeCollection(strokeCollection => {
-            return [...strokeCollection, strokePoints];
-        });
+        props.setStrokeCollection(strokeCollection => { return [...strokeCollection, stroke]; });
     }
 
     function handleCanvasMouseLeave(e) {
@@ -152,15 +165,15 @@ function Whiteboard(props) {
     }
 
     // DRAWING FUNCTIONS FROM STACKOVERFLOW
-
-    function drawCurve(ctx, ptsa, tension, isClosed, numOfSegments, showPoints) {
+    function drawCurve(ctx, ptsa, showPoints) {
         ctx.beginPath();
-        drawLines(ctx, getCurvePoints(ptsa, tension, isClosed, numOfSegments));
+        drawLines(ctx, ptsa);
         if (showPoints) {
             ctx.beginPath();
             for (var i = 0; i < ptsa.length - 1; i += 2)
                 ctx.rect(ptsa[i] - 2, ptsa[i + 1] - 2, 4, 4);
         }
+
         ctx.stroke();
     }
 
