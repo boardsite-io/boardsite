@@ -1,36 +1,23 @@
 import React, { useRef, useEffect } from 'react';
 
 function Whiteboard(props) {
-    const canvasRef = useRef(null);
-    const ctxRef = useRef(null);
-    const wsRef = useRef(null);
+    const wsRef = useRef();
+    const canvasRef = useRef();
 
     let isMouseDown = false;
     let sampleCount = 0;
     let lastX = -1;
     let lastY = -1;
     let strokePoints = [];
-    
 
     useEffect(() => {
-        // function draw(location, index) {
-        //     let x = index % props.blocksPerDim;
-        //     let y = (index - index % props.blocksPerDim) / props.blocksPerDim;
-        //     let colorInt = location.color;
-        //     let color = "#" + colorInt.toString(16).padStart(6, "0");
-        //     //console.log("draw: x: " + x + " y: " + y + " c: " + color);
-        //     drawFillRect(x * props.blockSize, y * props.blockSize, props.blockSize, props.blockSize, color);
-        // }
-
-        const canvas = canvasRef.current
-        const ctx = canvas.getContext('2d')
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, window.innerHeight, window.innerWidth)
         props.strokeCollection.forEach((stroke) => {
             return drawCurve(ctx, stroke, 0.5);
-            //return draw(stroke, index);
         })
-    }, [props.strokeCollection]) 
-    // [props.changeCounter, props.locations, props.blockSize, props.blocksPerDim])
+    }, [props.strokeCollection])
 
     // initialize the canvas context
     useEffect(() => {
@@ -56,38 +43,36 @@ function Whiteboard(props) {
 
         // wsRef.current.onclose = () => { console.log('disconnected') }
 
-        // // assign the width and height to canvas
-        const canvasEle = canvasRef.current;
+        const canvas = canvasRef.current;
         // DIN A4	2480 x 3508 Pixel
-        canvasEle.width = 620; //canvasEle.clientWidth;
-        canvasEle.height = 877; //canvasEle.clientHeight;
+        canvas.width = 620; //canvas.clientWidth;
+        canvas.height = 877; //canvas.clientHeight;
 
-        // // get context of the canvas
-        ctxRef.current = canvasEle.getContext("2d");
-        let canvasElem = document.querySelector("canvas");
-        canvasElem.addEventListener("contextmenu", e => e.preventDefault()); // Disable Context Menu
-        canvasElem.addEventListener("mousedown", (e) => handleCanvasClick(e));
-        canvasElem.addEventListener("mouseup", (e) => handleCanvasClickRelease(e));
-        canvasElem.addEventListener("mousemove", (e) => handleCanvasMove(e));
+        canvas.addEventListener("contextmenu", e => e.preventDefault()); // Disable Context Menu
+        canvas.addEventListener("mousedown", (e) => handleCanvasMouseDown(e));
+        canvas.addEventListener("mouseup", (e) => handleCanvasMouseUp(e));
+        canvas.addEventListener("mousemove", (e) => handleCanvasMouseMove(e));
+        canvas.addEventListener("mouseleave", (e) => handleCanvasMouseLeave(e));
 
-        // return () => {
-        //     isMounted = false;
-        //     canvasElem.removeEventListener("contextmenu", e => e.preventDefault());
-        //     canvasElem.removeEventListener("mousedown", (e) => handleCanvasRightClick(e));
-        //     wsRef.current.close();
-        // };
+        return () => {
+            // isMounted = false;
+            canvas.removeEventListener("contextmenu", e => e.preventDefault());
+            canvas.removeEventListener("mousedown", (e) => handleCanvasMouseDown(e));
+            canvas.removeEventListener("mouseup", (e) => handleCanvasMouseUp(e));
+            canvas.removeEventListener("mousemove", (e) => handleCanvasMouseMove(e));
+            canvas.removeEventListener("mouseleave", (e) => handleCanvasMouseLeave(e));
+            // wsRef.current.close();
+        };
     }, []);
 
-    function handleCanvasClick(e) {
+    function handleCanvasMouseDown(e) {
+        const canvas = canvasRef.current;
         isMouseDown = true;
         sampleCount = 1;
-        let canvasElem = document.querySelector("canvas");
-        let rect = canvasElem.getBoundingClientRect();
+        let rect = canvas.getBoundingClientRect();
         let x = e.clientX - rect.left;
         let y = e.clientY - rect.top;
-
         strokePoints = [x,y];
-
         lastX = x;
         lastY = y;
 
@@ -97,28 +82,13 @@ function Whiteboard(props) {
         // else {
         //     drawFillRect(x, y, 50, 50, "#0f0");
         // }
-
-        // const color = props.currColor;
-        // x = (x - x % props.blockSize) / props.blockSize;
-        // y = (y - y % props.blockSize) / props.blockSize;
-        // let colorInt = parseInt(color.substring(1), 16);
-        // // const newLocation = { x: x, y: y, color: colorInt };
-        // // props.setLocations(locations => [...locations, newLocation]);
-
-        // if (wsRef.current.readyState === WebSocket.OPEN) {
-        //     wsRef.current.send(JSON.stringify([{ x: x, y: y, color: colorInt, action: "juan" }]))
-        // }
-        // else {
-        //     console.log("socket not open");
-        // }
     }
 
-    function handleCanvasMove(e) {
+    function handleCanvasMouseMove(e) {
         if (isMouseDown) {
             sampleCount += 1;
-
-            let canvasElem = document.querySelector("canvas");
-            let rect = canvasElem.getBoundingClientRect();
+            const canvas = canvasRef.current;
+            let rect = canvas.getBoundingClientRect();
             let x = e.clientX - rect.left;
             let y = e.clientY - rect.top;
             let moveDist = Math.pow(x-lastX,2) + Math.pow(y-lastY,2); // Quadratic distance moved from last registered point
@@ -130,32 +100,26 @@ function Whiteboard(props) {
                 lastX = x;
                 lastY = y;
             }
-            
         }
     }
-    function handleCanvasClickRelease(e) {
-        isMouseDown = false;
 
-        let canvasElem = document.querySelector("canvas");
-        let rect = canvasElem.getBoundingClientRect();
+    function handleCanvasMouseUp(e) {
+        if (!isMouseDown) { return; } // Ignore reentering
+        isMouseDown = false;
+        const canvas = canvasRef.current;
+        let rect = canvas.getBoundingClientRect();
         let x = e.clientX - rect.left;
         let y = e.clientY - rect.top;
-
         strokePoints.push(x, y);
-
         lastX = -1;
         lastY = -1;
-        // if (e.button === 2) {
-        //     drawFillRect(x, y, 100, 50, "#50f");
+
+        // if (wsRef.current.readyState === WebSocket.OPEN) {
+        //     wsRef.current.send(JSON.stringify([{ x: x, y: y, color: colorInt, action: "juan" }]))
         // }
         // else {
-        //     drawFillRect(x, y, 20, 100, "#5f5");
+        //     console.log("socket not open");
         // }
-
-        // Draw interp line
-        //var myPoints = [10, 10, 40, 30, 100, 10, 200, 100, 200, 50, 250, 120]; //minimum two points
-        // var tension = 0.5;
-        // drawCurve(ctxRef.current, strokePoints, tension);
 
         // Add stroke to strokeCollection
         props.setStrokeCollection(strokeCollection => {
@@ -163,41 +127,44 @@ function Whiteboard(props) {
         });
     }
 
+    function handleCanvasMouseLeave(e) {
+        handleCanvasMouseUp(e);
+    }
+
     // draw line
     function drawLine(x1, y1, x2, y2, w, color) {
-        ctxRef.current.beginPath();
-        ctxRef.current.fillStyle = color;
-        ctxRef.current.moveTo(x1, y1);
-        ctxRef.current.lineTo(x2, y2);
-        ctxRef.current.stroke();
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        ctx.beginPath();
+        ctx.fillStyle = color;
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
     }
 
     // draw rectangle with background
     function drawFillRect(x, y, w, h, color) {
-        ctxRef.current.beginPath();
-        ctxRef.current.fillStyle = color;
-        ctxRef.current.fillRect(x, y, w, h);
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        ctx.beginPath();
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, w, h);
     }
 
     // DRAWING FUNCTIONS FROM STACKOVERFLOW
 
     function drawCurve(ctx, ptsa, tension, isClosed, numOfSegments, showPoints) {
-
         ctx.beginPath();
-
         drawLines(ctx, getCurvePoints(ptsa, tension, isClosed, numOfSegments));
-
         if (showPoints) {
             ctx.beginPath();
             for (var i = 0; i < ptsa.length - 1; i += 2)
                 ctx.rect(ptsa[i] - 2, ptsa[i + 1] - 2, 4, 4);
         }
-
         ctx.stroke();
     }
 
     function getCurvePoints(pts, tension, isClosed, numOfSegments) {
-
         // use input value if provided, or use a default value	 
         tension = (typeof tension != 'undefined') ? tension : 0.5;
         isClosed = isClosed ? isClosed : false;
@@ -265,7 +232,6 @@ function Whiteboard(props) {
 
             }
         }
-
         return res;
     }
 
@@ -273,9 +239,6 @@ function Whiteboard(props) {
         ctx.moveTo(pts[0], pts[1]);
         for (var i = 2; i < pts.length - 1; i += 2) ctx.lineTo(pts[i], pts[i + 1]);
     }
-
-
-
 
     return (
         <div websocket={wsRef.current} className="canvasdiv">
