@@ -1,32 +1,36 @@
 import React, { useRef, useEffect } from 'react';
 
-function Whiteboard() {
+function Whiteboard(props) {
     const canvasRef = useRef(null);
     const ctxRef = useRef(null);
     const wsRef = useRef(null);
 
     let isMouseDown = false;
+    let sampleCount = 0;
     let lastX = -1;
     let lastY = -1;
     let strokePoints = [];
+    
 
-    // useEffect(() => {
-    //     function draw(location, index) {
-    //         let x = index % props.blocksPerDim;
-    //         let y = (index - index % props.blocksPerDim) / props.blocksPerDim;
-    //         let colorInt = location.color;
-    //         let color = "#" + colorInt.toString(16).padStart(6, "0");
-    //         //console.log("draw: x: " + x + " y: " + y + " c: " + color);
-    //         drawFillRect(x * props.blockSize, y * props.blockSize, props.blockSize, props.blockSize, color);
-    //     }
+    useEffect(() => {
+        // function draw(location, index) {
+        //     let x = index % props.blocksPerDim;
+        //     let y = (index - index % props.blocksPerDim) / props.blocksPerDim;
+        //     let colorInt = location.color;
+        //     let color = "#" + colorInt.toString(16).padStart(6, "0");
+        //     //console.log("draw: x: " + x + " y: " + y + " c: " + color);
+        //     drawFillRect(x * props.blockSize, y * props.blockSize, props.blockSize, props.blockSize, color);
+        // }
 
-    //     const canvas = canvasRef.current
-    //     const ctx = canvas.getContext('2d')
-    //     ctx.clearRect(0, 0, window.innerHeight, window.innerWidth)
-    //     props.locations.forEach((location, index) => {
-    //         return draw(location, index);
-    //     })
-    // }, [props.changeCounter, props.locations, props.blockSize, props.blocksPerDim])
+        const canvas = canvasRef.current
+        const ctx = canvas.getContext('2d')
+        ctx.clearRect(0, 0, window.innerHeight, window.innerWidth)
+        props.strokeCollection.forEach((stroke) => {
+            return drawCurve(ctx, stroke, 0.5);
+            //return draw(stroke, index);
+        })
+    }, [props.strokeCollection]) 
+    // [props.changeCounter, props.locations, props.blockSize, props.blocksPerDim])
 
     // initialize the canvas context
     useEffect(() => {
@@ -76,6 +80,7 @@ function Whiteboard() {
 
     function handleCanvasClick(e) {
         isMouseDown = true;
+        sampleCount = 1;
         let canvasElem = document.querySelector("canvas");
         let rect = canvasElem.getBoundingClientRect();
         let x = e.clientX - rect.left;
@@ -86,12 +91,12 @@ function Whiteboard() {
         lastX = x;
         lastY = y;
 
-        if (e.button === 2) {
-            drawFillRect(x, y, 50, 50, "#f0f");
-        }
-        else {
-            drawFillRect(x, y, 50, 50, "#0f0");
-        }
+        // if (e.button === 2) {
+        //     drawFillRect(x, y, 50, 50, "#f0f");
+        // }
+        // else {
+        //     drawFillRect(x, y, 50, 50, "#0f0");
+        // }
 
         // const color = props.currColor;
         // x = (x - x % props.blockSize) / props.blockSize;
@@ -110,13 +115,16 @@ function Whiteboard() {
 
     function handleCanvasMove(e) {
         if (isMouseDown) {
+            sampleCount += 1;
+
             let canvasElem = document.querySelector("canvas");
             let rect = canvasElem.getBoundingClientRect();
             let x = e.clientX - rect.left;
             let y = e.clientY - rect.top;
             let moveDist = Math.pow(x-lastX,2) + Math.pow(y-lastY,2); // Quadratic distance moved from last registered point
             
-            if (moveDist > 250) {
+            if (moveDist > 50 && sampleCount > 5) {
+                sampleCount = 1;
                 strokePoints.push(x, y);
                 drawLine(lastX, lastY, x, y, 10, "#000")
                 lastX = x;
@@ -137,25 +145,22 @@ function Whiteboard() {
 
         lastX = -1;
         lastY = -1;
-        if (e.button === 2) {
-            drawFillRect(x, y, 100, 50, "#50f");
-        }
-        else {
-            drawFillRect(x, y, 20, 100, "#5f5");
-        }
-
-
-        // TODO: Draw on props.strokeCollection change
-        // Delete drawings
-        const canvas = canvasRef.current
-        const ctx = canvas.getContext('2d')
-        ctx.clearRect(0, 0, window.innerHeight, window.innerWidth)
+        // if (e.button === 2) {
+        //     drawFillRect(x, y, 100, 50, "#50f");
+        // }
+        // else {
+        //     drawFillRect(x, y, 20, 100, "#5f5");
+        // }
 
         // Draw interp line
         //var myPoints = [10, 10, 40, 30, 100, 10, 200, 100, 200, 50, 250, 120]; //minimum two points
-        var tension = 0.5;
-        drawCurve(ctxRef.current, strokePoints, tension);
-        console.log(strokePoints);
+        // var tension = 0.5;
+        // drawCurve(ctxRef.current, strokePoints, tension);
+
+        // Add stroke to strokeCollection
+        props.setStrokeCollection(strokeCollection => {
+            return [...strokeCollection, strokePoints];
+        });
     }
 
     // draw line
@@ -173,7 +178,6 @@ function Whiteboard() {
         ctxRef.current.fillStyle = color;
         ctxRef.current.fillRect(x, y, w, h);
     }
-
 
     // DRAWING FUNCTIONS FROM STACKOVERFLOW
 
