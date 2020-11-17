@@ -15,6 +15,15 @@ canvas {
     margin: 10px;
 }
 
+.homepage {
+    border-radius: 4px;
+    display: grid;
+    grid-template-rows: 40px 40px 40px;
+    gap: 10px;
+    margin: auto;
+    width: 400px;
+}
+
 .toolbar {
     border-radius: 4px;
     display: grid;
