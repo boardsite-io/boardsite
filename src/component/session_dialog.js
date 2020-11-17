@@ -16,12 +16,13 @@ export default function AlertDialog(props) {
                 onClose={() => props.setOpen(false)}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
+                fullWidth="true"
             >
-                <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
+                <DialogTitle id="alert-dialog-title">{"Create or join a session!"}</DialogTitle>
                 <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
+                    {/* <DialogContentText id="alert-dialog-description">
                         Let Google scam you.
-                    </DialogContentText>
+                    </DialogContentText> */}
                     <div className="homepage">
                         <Button variant="contained"
                             color="primary" onClick={() => props.handleCreate()}>Create Session</Button>
@@ -32,12 +33,9 @@ export default function AlertDialog(props) {
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => props.setOpen(false)} color="primary">
-                        Disagree
-                </Button>
                     <Button onClick={() => props.setOpen(false)} color="primary" autoFocus>
-                        Agree
-                </Button>
+                        Close
+                    </Button>
                 </DialogActions>
             </Dialog>
         </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container } from '@material-ui/core';
 
 import Canvas from './canvas';
@@ -17,25 +17,39 @@ function CanvasControl() {
     const [open, setOpen] = React.useState(true);
     const [sessionID, setSessionID] = useState("");
 
+    const wsRef = useRef(null);
+
     useEffect(() => {
         setOpen(true);
     },[])
 
-    function onMsgHandle() {
+    function onMsgHandle(data) {
+        setChangeCounter((changeCounter) => changeCounter + 1);
+        // listen to data sent from the websocket server
+        const message = JSON.parse(data.data);
 
+        let tmp = locations;
+        message.forEach(location => {
+            //console.log(location);
+            let index = blocksPerDim * location.y + location.x
+            tmp[index] = { color: location.color };
+        })
+        setLocations(tmp);
+        // TODO: ASYNC LOCATIONS
     }
 
     function handleCreate(e) {
-        let boardDim = {x: 5, y: 5};
+        let boardDim = {x: 10, y: 10};
         createBoardRequest(boardDim).then((data) => {
-            setSessionID(data.id);
+            setSessionID(data.id,() => handleJoin() )
         }).catch(() => console.log("FEHLER"));
     }
 
-    function handleJoin(e) {
+    function handleJoin() {
         createWebsocket(sessionID, onMsgHandle, 
-            null, null).then((socket) => console.log("FIXME XD"))
+            null, null).then((socket) => wsRef.current = socket).catch(() => console.log("ALARM!"))
         console.log(sessionID);
+        setOpen(false);
     }
 
     function handleTextFieldChange(e) {
@@ -50,7 +64,8 @@ function CanvasControl() {
             <div className="homediv">
                 <Canvas changeCounter={changeCounter} setChangeCounter={setChangeCounter} currColor={currColor} 
                         locations={locations} setLocations={setLocations} blocksPerDim={blocksPerDim} setBlocksPerDim={setBlocksPerDim}
-                        blockSize={blockSize} setBlockSize={setBlockSize}/>
+                        blockSize={blockSize} setBlockSize={setBlockSize} 
+                        wsRef={wsRef}/>
                 <CanvasTools currColor={currColor} setCurrColor={setCurrColor} locations={locations} setLocations={setLocations}/>
             </div>
         </Container>

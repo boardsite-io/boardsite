@@ -3,7 +3,6 @@ import React, { useRef, useEffect } from 'react';
 function Canvas(props) {
     const canvasRef = useRef(null);
     const ctxRef = useRef(null);
-    const wsRef = useRef(null);
 
     useEffect(() => {
         function draw(location, index) {
@@ -25,28 +24,6 @@ function Canvas(props) {
 
     // initialize the canvas context
     useEffect(() => {
-        let isMounted = true;
-
-        wsRef.current = new WebSocket("ws://heat.port0.org:8000/api/board");
-        wsRef.current.onopen = () => { console.log('connected') }
-        wsRef.current.onmessage = (data) => {
-            if (isMounted) {
-                props.setChangeCounter((changeCounter) => changeCounter + 1);
-                // listen to data sent from the websocket server
-                const message = JSON.parse(data.data);
-
-                let locations = props.locations;
-                message.forEach(location => {
-                    //console.log(location);
-                    let index = props.blocksPerDim * location.y + location.x
-                    locations[index] = { color: location.color };
-                })
-                props.setLocations(locations);
-            }
-        }
-
-        wsRef.current.onclose = () => { console.log('disconnected') }
-
         // assign the width and height to canvas
         const canvasEle = canvasRef.current;
         canvasEle.width = props.blockSize * props.blocksPerDim; //canvasEle.clientWidth;
@@ -59,10 +36,9 @@ function Canvas(props) {
         canvasElem.addEventListener("mousedown", (e) => handleCanvasRightClick(e));
 
         return () => {
-            isMounted = false;
             canvasElem.removeEventListener("contextmenu", e => e.preventDefault());
             canvasElem.removeEventListener("mousedown", (e) => handleCanvasRightClick(e));
-            wsRef.current.close();
+            props.wsRef.current.close();
         };
     }, []);
 
@@ -84,8 +60,8 @@ function Canvas(props) {
         // const newLocation = { x: x, y: y, color: colorInt };
         // props.setLocations(locations => [...locations, newLocation]);
 
-        if (wsRef.current.readyState === WebSocket.OPEN) {
-            wsRef.current.send(JSON.stringify([{ x: x, y: y, color: colorInt, action: "juan" }]))
+        if (props.wsRef.current.readyState === WebSocket.OPEN) {
+            props.wsRef.current.send(JSON.stringify([{ x: x, y: y, color: colorInt, action: "juan" }]))
         }
         else {
             console.log("socket not open");
@@ -100,7 +76,7 @@ function Canvas(props) {
     }
 
     return (
-        <div websocket={wsRef.current} className="canvasdiv">
+        <div websocket={props.wsRef.current} className="canvasdiv">
             <canvas onClick={handleCanvasClick} ref={canvasRef} />
         </div>
     );
