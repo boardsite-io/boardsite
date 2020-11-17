@@ -21,7 +21,7 @@ canvas {
     grid-template-rows: 40px 40px 40px;
     gap: 10px;
     margin: auto;
-    width: 400px;
+    width: 200px;
 }
 
 .toolbar {

@@ -1,4 +1,5 @@
 const baseURL = "http://heat.port0.org:8000";
+//const baseURL = "https://cors-anywhere.herokuapp.com/http://heat.port0.org:8000";
 
 /**
  * Send data request to API.
@@ -40,7 +41,7 @@ function createWebsocket(sessionID, onMsgHandle, onConnectHandle, onCloseHandle)
 
         // check after 1 second if connection is ok
         setTimeout(() => {
-            if (socket.readyState != socket.OPEN) {
+            if (socket.readyState !== socket.OPEN) {
                 reject({error: "can connect to websocket"})
             } else {
                 resolve(socket)
