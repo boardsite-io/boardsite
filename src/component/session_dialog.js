@@ -16,14 +16,13 @@ export default function AlertDialog(props) {
                 onClose={() => props.setOpen(false)}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
-                fullWidth="true"
             >
                 <DialogTitle id="alert-dialog-title">{"Create or join a session!"}</DialogTitle>
-                <DialogContent>
+                <DialogContent style={{ height:200 }}>
                     {/* <DialogContentText id="alert-dialog-description">
                         Let Google scam you.
                     </DialogContentText> */}
-                    <div className="homepage">
+                    <div className="dialogbuttons">
                         <Button variant="contained"
                             color="primary" onClick={() => props.handleCreate()}>Create Session</Button>
                         <Button variant="contained"

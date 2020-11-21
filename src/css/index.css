@@ -18,10 +18,19 @@ canvas {
 .homepage {
     border-radius: 4px;
     display: grid;
-    grid-template-rows: 40px 40px 40px;
+    grid-template-rows: 50px 50px 50px;
     gap: 10px;
     margin: auto;
     width: 200px;
+}
+
+.dialogbuttons {
+    border-radius: 4px;
+    display: grid;
+    grid-template-rows: 50px 50px 40px;
+    gap: 10px;
+    margin: auto;
+    width: 300px;
 }
 
 .toolbar {
