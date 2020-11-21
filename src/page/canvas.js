@@ -59,7 +59,7 @@ function Canvas(props) {
         // const newLocation = { x: x, y: y, color: colorInt };
         // props.setLocations(locations => [...locations, newLocation]);
 
-        if (props.wsRef.current.readyState === WebSocket.OPEN) {
+        if (props.wsRef.current !== null) {
             props.wsRef.current.send(JSON.stringify([{ x: x, y: y, color: colorInt, action: "juan" }]))
         }
         else {
