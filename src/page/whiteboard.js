@@ -39,39 +39,13 @@ function Whiteboard(props) {
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, window.innerHeight, window.innerWidth)
+        ctx.clearRect(0, 0, window.innerHeight, window.innerWidth);
         props.strokeCollection.forEach((stroke) => {
-            console.log(stroke);
             ctx.strokeStyle = stroke[0];
             ctx.lineWidth = stroke[1];
             return drawCurve(ctx, stroke.slice(2));
         })
     }, [props.strokeCollection])
-
-    // // initialize the canvas context
-    // useEffect(() => {
-    //     let isMounted = true;
-
-    //     wsRef.current = new WebSocket("ws://heat.port0.org:8000/api/board");
-    //     wsRef.current.onopen = () => { console.log('connected') }
-    //     wsRef.current.onmessage = (data) => {
-    //         if (isMounted) {
-    //             props.setChangeCounter((changeCounter) => changeCounter + 1);
-    //             // listen to data sent from the websocket server
-    //             const message = JSON.parse(data.data);
-
-    //             let locations = props.locations;
-    //             message.forEach(location => {
-    //                 //console.log(location);
-    //                 let index = props.blocksPerDim * location.y + location.x
-    //                 locations[index] = { color: location.color };
-    //             })
-    //             props.setLocations(locations);
-    //         }
-    //     }
-
-    //     wsRef.current.onclose = () => { console.log('disconnected') }
-    // }, []);
 
     function handleCanvasMouseDown(e) {
         const canvas = canvasRef.current;
@@ -129,15 +103,16 @@ function Whiteboard(props) {
         lastX = -1;
         lastY = -1;
 
-        // if (wsRef.current.readyState === WebSocket.OPEN) {
-        //     wsRef.current.send(JSON.stringify([{ x: x, y: y, color: colorInt, action: "juan" }]))
-        // }
-        // else {
-        //     console.log("socket not open");
-        // }
-
         // Add stroke to strokeCollection
         props.setStrokeCollection(strokeCollection => { return [...strokeCollection, stroke]; });
+        let strokeid = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4) + Date.now().toString(36);
+        // let colorInt = parseInt(ctx.strokeStyle.substring(1), 16);
+        if (props.wsRef.current !== null) {
+            props.wsRef.current.send(JSON.stringify([{ id: strokeid, type: "stroke", line_width: ctx.lineWidth, color: ctx.strokeStyle, position: stroke.slice(2) }]));
+        }
+        else {
+            console.log("socket not open");
+        }
     }
 
     function handleCanvasMouseLeave(e) {

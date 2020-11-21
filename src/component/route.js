@@ -7,10 +7,9 @@ import Account from '../page/account';
 
 export default (
     <Route>
-        <Route path="/" exact component={WhiteboardControl} />
-        {/* <Route path="/blocks/:id" exact component={WhiteboardControl} /> */}
-        <Route exact path="/create"> <WhiteboardControl /> </Route>
-        <Route path="/about" component={About} />
-        <Route path="/account" component={Account} />
+        <Route exact path="/" component={WhiteboardControl} />
+        <Route exact path="/s=:id" component={WhiteboardControl}/>
+        <Route exact path="/about" component={About} />
+        <Route exact path="/account" component={Account} />
     </Route>
 );
