@@ -5,11 +5,10 @@ function Canvas(props) {
     const ctxRef = useRef(null);
 
     useEffect(() => {
-        function draw(location, index) {
+        function draw(c, index) {
             let x = index % props.blocksPerDim;
             let y = (index - index % props.blocksPerDim) / props.blocksPerDim;
-            let colorInt = location.color;
-            let color = "#" + colorInt.toString(16).padStart(6, "0");
+            let color = "#" + c.toString(16).padStart(6, "0");
             //console.log("draw: x: " + x + " y: " + y + " c: " + color);
             drawFillRect(x * props.blockSize, y * props.blockSize, props.blockSize, props.blockSize, color);
         }
@@ -17,8 +16,8 @@ function Canvas(props) {
         const canvas = canvasRef.current
         const ctx = canvas.getContext('2d')
         ctx.clearRect(0, 0, window.innerHeight, window.innerWidth)
-        props.locations.forEach((location, index) => {
-            return draw(location, index);
+        Object.keys(props.locations).forEach((key) => {
+            return draw(props.locations[key], key);
         })
     }, [props.changeCounter, props.locations, props.blockSize, props.blocksPerDim])
 
@@ -38,7 +37,7 @@ function Canvas(props) {
         return () => {
             canvasElem.removeEventListener("contextmenu", e => e.preventDefault());
             canvasElem.removeEventListener("mousedown", (e) => handleCanvasRightClick(e));
-            props.wsRef.current.close();
+            //props.wsRef.current.close();
         };
     }, []);
 
