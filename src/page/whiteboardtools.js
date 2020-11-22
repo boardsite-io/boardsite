@@ -5,7 +5,7 @@ import ColorPicker from 'material-ui-rc-color-picker';
 import 'material-ui-rc-color-picker/assets/index.css';
 
 function WhiteboardTools(props) {
-    const colorRef = useRef("#ffffff");
+    const strokeStyleRef = useRef("#ffffff");
 
     function handleClear() {
         props.setStrokeCollection([])
@@ -19,7 +19,16 @@ function WhiteboardTools(props) {
     }
     function onColorChange(color) {
         props.setStrokeStyle(color.color);
-        colorRef.current.value = color.color;
+        strokeStyleRef.current.value = color.color;
+    }
+
+    function handleColorTextFieldChange(e){
+        props.setStrokeStyle(e.target.value);
+        strokeStyleRef.current.value = e.target.value;
+    }
+
+    function handleWidthTextFieldChange(e){
+        props.setLineWidth(e.target.value);
     }
 
     return (
@@ -27,7 +36,6 @@ function WhiteboardTools(props) {
             <Button id="button" variant="contained" color="primary" onClick={() => handleClear()}>Clear</Button>
             <Button id="button" variant="contained" color="primary" onClick={() => saveBoard()}>Save</Button>
             <Button id="button" variant="contained" color="primary" onClick={() => loadBoard()}>Load</Button>
-            <TextField defaultValue={'#000000'} inputRef={colorRef} id="textfield" label="" variant="outlined" />
             <div className="colorpicker">
                 <ColorPicker
                     enableAlpha={false}
@@ -38,6 +46,8 @@ function WhiteboardTools(props) {
                     placement="topLeft"
                 />
             </div>
+            <TextField defaultValue={'#000000'} onChange={(e) => handleColorTextFieldChange(e)} inputRef={strokeStyleRef} label="Color" variant="outlined" />
+            <TextField defaultValue={'3'} onChange={(e) => handleWidthTextFieldChange(e)} label="Width" variant="outlined" />
         </div>
     );
 }

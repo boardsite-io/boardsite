@@ -1,18 +1,19 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container } from '@material-ui/core';
 import Whiteboard from './whiteboard';
 import WhiteboardTools from './whiteboardtools';
 
 import AlertDialog from '../component/session_dialog';
-import {createWebsocket, createBoardRequest} from '../core/api';
+import { createWebsocket, createBoardRequest } from '../core/api';
 import { useParams } from 'react-router-dom';
 
 function WhiteboardControl() {
-    const [strokeCollection, setStrokeCollection] = useState([]);
+    const [strokeCollection, setStrokeCollection] = useState({});
+    const [strokeMessage, setStrokeMessage] = useState({});
     const [strokeStyle, setStrokeStyle] = useState("#000000");
     const [lineWidth, setLineWidth] = useState(3);
+    const [needsRedraw, setNeedsRedraw] = useState(0);
 
-    const [changeCounter, setChangeCounter] = useState(0);
     const [open, setOpen] = useState(true);
     const [sessionID, setSessionID] = useState("");
     const [sidInput, setSidInput] = useState("");
@@ -34,9 +35,17 @@ function WhiteboardControl() {
     // Verify session id and try to connect to session
     useEffect(() => {
         if (sessionID !== ""){
-            createWebsocket(sessionID, onMsgHandle, 
-                null, null).then((socket) => wsRef.current = socket).catch(() => console.log(`cannot connect websocket on '/${sessionID}'`))
-            console.log(sessionID);
+            createWebsocket(
+                sessionID, 
+                onMsgHandle, 
+                null, 
+                null,
+            ).then((socket) => {
+                    wsRef.current = socket; 
+                    console.log(sessionID);
+                }
+            ).catch(() => console.log(`cannot connect websocket on '/${sessionID}'`))
+            
             navigator.clipboard.writeText(sessionID); // copy session ID to clipboard
             setOpen(false); // close dialog
         }
@@ -45,17 +54,17 @@ function WhiteboardControl() {
 
     // Handles messages from the websocket
     function onMsgHandle(data) {
-        // setChangeCounter((changeCounter) => changeCounter + 1);
         // listen to data sent from the websocket server
         const message = JSON.parse(data.data);
-        console.log(message);
-        // TODO: message handling
-        // setStrokeCollection((prev) => {
-        //     message.forEach((loc) => {
-                
-        //     })
-        //     return [...prev];
-        // });
+        //console.log(message);
+        setStrokeMessage({});
+        message.forEach((stroke) => {
+            setStrokeMessage((prev) => {
+                let res = {...prev}
+                res[stroke.id] = stroke
+                return res;
+            });
+        })
     }
 
     function handleCreate(e) {
@@ -86,9 +95,11 @@ function WhiteboardControl() {
 
                 <div className="whiteboardsection">
                     <Whiteboard wsRef={wsRef} strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
-                        strokeStyle={strokeStyle} lineWidth={lineWidth} />
+                        strokeStyle={strokeStyle} lineWidth={lineWidth} needsRedraw={needsRedraw} setNeedsRedraw={setNeedsRedraw}
+                        strokeMessage={strokeMessage} setStrokeMessage={setStrokeMessage}/>
                     <WhiteboardTools strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
-                        strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection} />
+                        strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
+                        lineWidth={lineWidth} setLineWidth={setLineWidth}/>
                 </div>
             </div>
         </Container>

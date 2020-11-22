@@ -4,6 +4,7 @@ function Whiteboard(props) {
     const wsRef = useRef();
     const canvasRef = useRef();
 
+    let imageData;
     let isMouseDown = false;
     let sampleCount = 0;
     let lastX = -1;
@@ -27,8 +28,10 @@ function Whiteboard(props) {
             canvas.removeEventListener("mousemove", (e) => handleCanvasMouseMove(e));
             canvas.removeEventListener("mouseleave", (e) => handleCanvasMouseLeave(e));
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 
+    // Update stroke attributes in context when their props change
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
@@ -36,19 +39,48 @@ function Whiteboard(props) {
         ctx.strokeStyle = props.strokeStyle;
     }, [props.lineWidth, props.strokeStyle])
 
+    // Redraws the full strokeCollection
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, window.innerHeight, window.innerWidth);
-        props.strokeCollection.forEach((stroke) => {
-            ctx.strokeStyle = stroke[0];
-            ctx.lineWidth = stroke[1];
-            return drawCurve(ctx, stroke.slice(2));
+        Object.keys(props.strokeCollection).forEach((key) => {
+            // [{ id: , type: , line_width: , color: , position: }];
+            let stroke = props.strokeCollection[key];
+            ctx.strokeStyle = stroke.color;
+            ctx.lineWidth = stroke.line_width;
+            return drawCurve(ctx, stroke.position);
         })
-    }, [props.strokeCollection, drawCurve])
+        ctx.strokeStyle = props.strokeStyle;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.needsRedraw])
+
+    // Draws incoming stroke messages
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        Object.keys(props.strokeMessage).forEach((key) => {
+            // [{ id: , type: , line_width: , color: , position: }];
+            // TODO: CHECK FOR MESSAGE TYPE CLEAR / NEWSTROKE ETC
+            let stroke = props.strokeMessage[key];
+            props.setStrokeCollection((prev) => { 
+                let res = {...prev};
+                res[stroke.id] = stroke;
+                return res;
+            });
+            ctx.strokeStyle = stroke.color;
+            ctx.lineWidth = stroke.line_width;
+            return drawCurve(ctx, stroke.position);
+        })
+        ctx.strokeStyle = props.strokeStyle;
+        //props.setStrokeMessage({});
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.strokeMessage])
 
     function handleCanvasMouseDown(e) {
         const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        imageData = ctx.getImageData(0,0,canvas.width,canvas.height); // Save canvas state
         isMouseDown = true;
         sampleCount = 1;
         let rect = canvas.getBoundingClientRect();
@@ -80,7 +112,7 @@ function Whiteboard(props) {
             if (moveDist > 50 && sampleCount > 5) {
                 sampleCount = 1;
                 stroke.push(x, y);
-                drawLine(lastX, lastY, x, y, props.lineWidth, props.strokeStyle);
+                drawLine(lastX, lastY, x, y);
                 lastX = x;
                 lastY = y;
             }
@@ -90,6 +122,8 @@ function Whiteboard(props) {
     function handleCanvasMouseUp(e) {
         if (!isMouseDown) { return; } // Ignore reentering
         isMouseDown = false;
+        lastX = -1;
+        lastY = -1;
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         let rect = canvas.getBoundingClientRect();
@@ -97,15 +131,21 @@ function Whiteboard(props) {
         let y = e.clientY - rect.top;
         stroke.push(x, y);
         stroke = getCurvePoints(stroke, 0.5);
-        stroke.unshift(ctx.lineWidth);
-        stroke.unshift(ctx.strokeStyle);
+        stroke = stroke.map(x => Math.round(x*1e3)/1e3);
 
-        lastX = -1;
-        lastY = -1;
+        // Delete livestroke lines and restroke interpolated and potentially buffered strokes
+        ctx.putImageData(imageData, 0, 0);
+        drawCurve(ctx, stroke);
 
+        let strokeid = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4) + Date.now().toString(36).substr(4);
+        let strokeObject = { id: strokeid, type: "stroke", line_width: ctx.lineWidth, color: ctx.strokeStyle, position: stroke };
         // Add stroke to strokeCollection
-        props.setStrokeCollection(strokeCollection => { return [...strokeCollection, stroke]; });
-        let strokeid = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4) + Date.now().toString(36);
+        props.setStrokeCollection((prev) => { 
+            let res = {...prev};
+            res[strokeid] = strokeObject;
+            return res;
+        });
+
         // let colorInt = parseInt(ctx.strokeStyle.substring(1), 16);
         if (props.wsRef.current !== null) {
             props.wsRef.current.send(JSON.stringify([{ id: strokeid, type: "stroke", line_width: ctx.lineWidth, color: ctx.strokeStyle, position: stroke.slice(2) }]));
@@ -120,24 +160,23 @@ function Whiteboard(props) {
     }
 
     // draw line
-    function drawLine(x1, y1, x2, y2, w, color) {
+    function drawLine(x1, y1, x2, y2) {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         ctx.beginPath();
-        ctx.fillStyle = color;
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
         ctx.stroke();
     }
 
     // draw rectangle with background
-    function drawFillRect(x, y, w, h, color) {
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        ctx.beginPath();
-        ctx.fillStyle = color;
-        ctx.fillRect(x, y, w, h);
-    }
+    // function drawFillRect(x, y, w, h, color) {
+    //     const canvas = canvasRef.current;
+    //     const ctx = canvas.getContext('2d');
+    //     ctx.beginPath();
+    //     ctx.fillStyle = color;
+    //     ctx.fillRect(x, y, w, h);
+    // }
 
     // DRAWING FUNCTIONS FROM STACKOVERFLOW
     function drawCurve(ctx, ptsa, showPoints) {
@@ -148,7 +187,6 @@ function Whiteboard(props) {
             for (var i = 0; i < ptsa.length - 1; i += 2)
                 ctx.rect(ptsa[i] - 2, ptsa[i + 1] - 2, 4, 4);
         }
-
         ctx.stroke();
     }
 
