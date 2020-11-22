@@ -45,7 +45,7 @@ function Whiteboard(props) {
             ctx.lineWidth = stroke[1];
             return drawCurve(ctx, stroke.slice(2));
         })
-    }, [props.strokeCollection])
+    }, [props.strokeCollection, drawCurve])
 
     function handleCanvasMouseDown(e) {
         const canvas = canvasRef.current;

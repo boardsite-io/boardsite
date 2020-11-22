@@ -45,17 +45,17 @@ function WhiteboardControl() {
 
     // Handles messages from the websocket
     function onMsgHandle(data) {
-        setChangeCounter((changeCounter) => changeCounter + 1);
+        // setChangeCounter((changeCounter) => changeCounter + 1);
         // listen to data sent from the websocket server
         const message = JSON.parse(data.data);
-
+        console.log(message);
         // TODO: message handling
-        setStrokeCollection((prev) => {
-            message.forEach((loc) => {
+        // setStrokeCollection((prev) => {
+        //     message.forEach((loc) => {
                 
-            })
-            return {...prev};
-        });
+        //     })
+        //     return [...prev];
+        // });
     }
 
     function handleCreate(e) {
