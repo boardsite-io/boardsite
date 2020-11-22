@@ -4,7 +4,7 @@ import Whiteboard from './whiteboard';
 import WhiteboardTools from './whiteboardtools';
 
 import AlertDialog from '../component/session_dialog';
-import { createWebsocket, createBoardRequest } from '../core/api';
+import { createWebsocket, createBoardRequest } from '../util/api';
 import { useParams } from 'react-router-dom';
 
 function WhiteboardControl() {
@@ -43,10 +43,10 @@ function WhiteboardControl() {
             ).then((socket) => {
                     wsRef.current = socket; 
                     console.log(sessionID);
+                    navigator.clipboard.writeText(sessionID); // copy session ID to clipboard
                 }
             ).catch(() => console.log(`cannot connect websocket on '/${sessionID}'`))
             
-            navigator.clipboard.writeText(sessionID); // copy session ID to clipboard
             setOpen(false); // close dialog
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps

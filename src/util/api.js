@@ -7,7 +7,7 @@ const baseURL = "http://heat.port0.org:8000";
  * @param {*} data 
  * @param {string} method 
  */
-function sendRequest(url, method, data={}) {
+export function sendRequest(url, method, data={}) {
     return new Promise((resolve, reject) => {
         fetch(`${baseURL}${url}`, {
             method: method,
@@ -32,7 +32,7 @@ function sendRequest(url, method, data={}) {
  * @param {function} onConnectHandle 
  * @param {function} onCloseHandle 
  */
-function createWebsocket(sessionID, onMsgHandle, onConnectHandle, onCloseHandle) {
+export function createWebsocket(sessionID, onMsgHandle, onConnectHandle, onCloseHandle) {
     return new Promise((resolve, reject) => {
         let socket = new WebSocket(`${baseURL.replace("http","ws")}/board/${sessionID}`);
         socket.onmessage = onMsgHandle;
@@ -49,9 +49,10 @@ function createWebsocket(sessionID, onMsgHandle, onConnectHandle, onCloseHandle)
         }, 1000);
     });
 }
-
-function createBoardRequest(boardDim) {
+/**
+ * 
+ * @param {{x: number, y: number}} boardDim 
+ */
+export function createBoardRequest(boardDim) {
     return sendRequest("/board/create", "POST", boardDim);
 }
-
-export {sendRequest,createWebsocket,createBoardRequest}
