@@ -23,7 +23,7 @@ function Whiteboard(props) {
             canvas.removeEventListener("mouseleave", null);
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[])
+    }, [])
 
     // Update stroke attributes in context when their props change
     useEffect(() => {
@@ -33,22 +33,14 @@ function Whiteboard(props) {
         ctx.strokeStyle = props.strokeStyle;
     }, [props.lineWidth, props.strokeStyle])
 
-    // Redraws the full strokeCollection
+    // Clear canvas
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, window.innerHeight, window.innerWidth);
-        Object.keys(props.strokeCollection).forEach((key) => {
-            // [{ id: , type: , line_width: , color: , position: }];
-            let stroke = props.strokeCollection[key];
-            ctx.strokeStyle = stroke.color;
-            ctx.lineWidth = stroke.line_width;
-            return util.drawCurve(ctx, stroke.position);
-        })
-        ctx.strokeStyle = props.strokeStyle;
-        ctx.lineWidth = props.lineWidth;
+        props.setStrokeCollection({});
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.needsRedraw])
+    }, [props.needsClear])
 
     // Draws incoming stroke messages
     useEffect(() => {
@@ -58,8 +50,8 @@ function Whiteboard(props) {
             // [{ id: , type: , line_width: , color: , position: }];
             // TODO: CHECK FOR MESSAGE TYPE CLEAR / NEWSTROKE ETC
             let stroke = props.strokeMessage[key];
-            props.setStrokeCollection((prev) => { 
-                let res = {...prev};
+            props.setStrokeCollection((prev) => {
+                let res = { ...prev };
                 res[stroke.id] = stroke;
                 return res;
             });

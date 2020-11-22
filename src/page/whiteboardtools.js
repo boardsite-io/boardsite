@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Button, TextField } from '@material-ui/core';
-
+import * as api from '../util/api';
 import ColorPicker from 'material-ui-rc-color-picker';
 import 'material-ui-rc-color-picker/assets/index.css';
 
@@ -8,7 +8,8 @@ function WhiteboardTools(props) {
     const strokeStyleRef = useRef("#ffffff");
 
     function handleClear() {
-        props.setStrokeCollection([])
+        //props.setStrokeCollection([])
+        api.clearBoard(props.sessionID);
     }
     function saveBoard(){
         console.log(props.strokeCollection);

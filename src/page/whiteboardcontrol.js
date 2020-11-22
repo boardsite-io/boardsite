@@ -12,7 +12,7 @@ function WhiteboardControl() {
     const [strokeMessage, setStrokeMessage] = useState({});
     const [strokeStyle, setStrokeStyle] = useState("#000000");
     const [lineWidth, setLineWidth] = useState(3);
-    const [needsRedraw, setNeedsRedraw] = useState(0);
+    const [needsClear, setNeedsClear] = useState(0);
 
     const [open, setOpen] = useState(true);
     const [sessionID, setSessionID] = useState("");
@@ -56,6 +56,10 @@ function WhiteboardControl() {
     function onMsgHandle(data) {
         // listen to data sent from the websocket server
         const message = JSON.parse(data.data);
+        if (message.length === 0){
+            setNeedsClear(x => x + 1);
+        }
+
         //console.log(message);
         setStrokeMessage({});
         message.forEach((stroke) => {
@@ -64,7 +68,7 @@ function WhiteboardControl() {
                 res[stroke.id] = stroke
                 return res;
             });
-        })
+        });
     }
 
     function handleCreate(e) {
@@ -95,11 +99,11 @@ function WhiteboardControl() {
 
                 <div className="whiteboardsection">
                     <Whiteboard wsRef={wsRef} strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
-                        strokeStyle={strokeStyle} lineWidth={lineWidth} needsRedraw={needsRedraw} setNeedsRedraw={setNeedsRedraw}
+                        strokeStyle={strokeStyle} lineWidth={lineWidth} needsClear={needsClear} setNeedsClear={setNeedsClear}
                         strokeMessage={strokeMessage} setStrokeMessage={setStrokeMessage}/>
                     <WhiteboardTools strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
                         strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
-                        lineWidth={lineWidth} setLineWidth={setLineWidth}/>
+                        lineWidth={lineWidth} setLineWidth={setLineWidth} sessionID={sessionID}/>
                 </div>
             </div>
         </Container>

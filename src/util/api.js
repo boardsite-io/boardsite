@@ -20,7 +20,7 @@ export function sendRequest(url, method, data={}) {
                 } else {
                     resolve(data); // successful fetch
                 }
-            }).catch(() => reject())
+            }).catch(() => resolve({}))
         ).catch(() => reject());
     });
 }
@@ -55,4 +55,12 @@ export function createWebsocket(sessionID, onMsgHandle, onConnectHandle, onClose
  */
 export function createBoardRequest(boardDim) {
     return sendRequest("/board/create", "POST", boardDim);
+}
+
+/**
+ * Clears the board.
+ * @param {string} sessionID
+ */
+export function clearBoard(sessionID) {
+    return sendRequest(`/board/${sessionID}`, "PUT", {action: "clear"});
 }
