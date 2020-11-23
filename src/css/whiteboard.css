@@ -1,0 +1,22 @@
+.canvasdiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    touch-action: none;
+    background-color: #ffffff;
+    border: 1px solid rgb(104, 104, 104);
+    border-radius: 4px;
+    align-items: center;
+    margin: 10px;
+}
+
+.whiteboard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+

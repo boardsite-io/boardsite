@@ -29,21 +29,21 @@ function Navigation() {
                 >
                     <Tooltip title="Home">
                         <Link to="/">
-                            <IconButton edge="start" aria-label="home">
+                            <IconButton color="secondary" edge="start" aria-label="home">
                                 <HomeIcon />
                             </IconButton>
                         </Link>
                     </Tooltip>
                     <Tooltip title="Create">
                         <Link to="/s=420guccigang">
-                            <IconButton edge="start" aria-label="add">
+                            <IconButton color="secondary" edge="start" aria-label="add">
                                 <AddIcon />
                             </IconButton>
                         </Link>
                     </Tooltip>
                     <Tooltip title="Cloud Backup">
                         <Link to="/backup">
-                            <IconButton edge="start" aria-label="backup">
+                            <IconButton color="secondary" edge="start" aria-label="backup">
                                 <BackupIcon />
                             </IconButton>
                         </Link>
@@ -51,7 +51,7 @@ function Navigation() {
                     <div style={{ flex: 0.9 }}> {/* Lower flex -> more space between icons */}
                         <Tooltip title="Chat">
                             <Link to="/chat">
-                                <IconButton edge="start" aria-label="chat">
+                                <IconButton color="secondary" edge="start" aria-label="chat">
                                     <ChatIcon />
                                 </IconButton>
                             </Link>
@@ -59,13 +59,13 @@ function Navigation() {
                     </div>
                     <Tooltip title="About">
                         <Link to="/about">
-                            <IconButton edge="start" aria-label="about">
+                            <IconButton color="secondary" edge="start" aria-label="about">
                                 <InfoIcon />
                             </IconButton>
                         </Link>
                     </Tooltip>
                     <Tooltip title="Account">
-                            <IconButton edge="start" aria-label="account" onClick={() => setOpenAccDialog(true)}>
+                            <IconButton color="secondary" edge="start" aria-label="account" onClick={() => setOpenAccDialog(true)}>
                                 <AccountBoxIcon />
                             </IconButton>
                     </Tooltip>

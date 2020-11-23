@@ -1,0 +1,18 @@
+.toolbar {
+    border-radius: 4px;
+    display: grid;
+    /* grid-template-rows: 40px 40px 40px 40px 40px 40px 40px 40px 40px auto; */
+    gap: 20px;
+    width: 100px;
+}
+
+#button {
+    height: 40px;
+    width: 100px;
+}
+
+.colorpicker {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

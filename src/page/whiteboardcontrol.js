@@ -6,6 +6,7 @@ import WhiteboardTools from './whiteboardtools';
 import AlertDialog from '../component/session_dialog';
 import { createWebsocket, createBoardRequest } from '../util/api';
 import { useParams } from 'react-router-dom';
+import '../css/whiteboard.css';
 
 function WhiteboardControl() {
     const [strokeCollection, setStrokeCollection] = useState({});
@@ -91,20 +92,13 @@ function WhiteboardControl() {
             <AlertDialog open={open} setOpen={setOpen} sessionID_input={sidInput} setSessionID_input={setSidInput}
             handleTextFieldChange={handleTextFieldChange} handleJoin={handleJoin} handleCreate={handleCreate} />
             <div className="whiteboard">
-                <h1>WhiteBOIrd</h1>
-                <p>
-                    This rad website is going to take over the internet
-                    with PogChamp functionalities and sonic speed nasa performance XDXD.
-                    </p>
-
-                <div className="whiteboardsection">
                     <Whiteboard wsRef={wsRef} strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
                         strokeStyle={strokeStyle} lineWidth={lineWidth} needsClear={needsClear} setNeedsClear={setNeedsClear}
                         strokeMessage={strokeMessage} setStrokeMessage={setStrokeMessage}/>
                     <WhiteboardTools strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
                         strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
-                        lineWidth={lineWidth} setLineWidth={setLineWidth} sessionID={sessionID}/>
-                </div>
+                        lineWidth={lineWidth} setLineWidth={setLineWidth} sessionID={sessionID}
+                        setOpen={setOpen}/>
             </div>
         </Container>
     );
