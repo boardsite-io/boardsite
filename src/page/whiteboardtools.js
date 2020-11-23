@@ -6,7 +6,7 @@ import 'material-ui-rc-color-picker/assets/index.css';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import SaveIcon from '@material-ui/icons/Save';
 import GetAppIcon from '@material-ui/icons/GetApp';
-import AddIcon from '@material-ui/icons/Add';
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import '../css/toolbar.css';
 
 function WhiteboardTools(props) {
@@ -44,7 +44,7 @@ function WhiteboardTools(props) {
 
     return (
         <div className="toolbar">
-            <Button id="button" variant="contained" color="primary" onClick={() => props.setOpen(true)}><AddIcon/></Button>
+            <Button id="button" variant="contained" color="primary" onClick={() => props.setOpen(true)}><GroupAddIcon/></Button>
             <Button id="button" variant="contained" color="primary" onClick={() => handleClear()}><DeleteForeverIcon/></Button>
             <Button id="button" variant="contained" color="primary" onClick={() => saveBoard()}><SaveIcon/></Button>
             <Button id="button" variant="contained" color="primary" onClick={() => loadBoard()}><GetAppIcon/></Button>
@@ -58,7 +58,7 @@ function WhiteboardTools(props) {
                     placement="topLeft"
                 />
             </div>
-            <TextField defaultValue={'#000000'} onChange={(e) => handleColorTextFieldChange(e)} inputRef={strokeStyleRef} label="Color" variant="filled" />
+            <TextField defaultValue={'#000000'} onChange={(e) => handleColorTextFieldChange(e)} inputRef={strokeStyleRef} label="Color" variant="outlined"/>
             <TextField defaultValue={'3'} onChange={(e) => handleWidthTextFieldChange(e)} label="Width" variant="outlined" />
             <TextField defaultValue={'None'} inputRef={sidRef} variant="outlined" />
         </div>
