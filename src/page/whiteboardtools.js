@@ -17,7 +17,10 @@ function WhiteboardTools(props) {
     const [color, setColor] = useState({ r: '0', g: '0', b: '0', a: '1', });
 
     function handleClear() {
-        //props.setStrokeCollection([])
+        // Local clear
+        props.setStrokeCollection({})
+        props.setNeedsClear(x => x + 1);
+        // Server clear
         api.clearBoard(props.sessionID);
     }
     function saveBoard() {
@@ -70,7 +73,7 @@ function WhiteboardTools(props) {
             },
         },
     });
-    
+
     return (
         <div className="toolbar">
             <Button id="button" variant="contained" color="primary" onClick={() => props.setOpen(true)}><GroupAddIcon color="secondary" /></Button>

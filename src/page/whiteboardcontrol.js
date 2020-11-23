@@ -91,15 +91,13 @@ function WhiteboardControl() {
         <Container id="container" maxWidth="lg">
             <AlertDialog open={open} setOpen={setOpen} sessionID_input={sidInput} setSessionID_input={setSidInput}
             handleTextFieldChange={handleTextFieldChange} handleJoin={handleJoin} handleCreate={handleCreate} />
-            <div className="whiteboard">
-                    <Whiteboard wsRef={wsRef} strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
-                        strokeStyle={strokeStyle} lineWidth={lineWidth} needsClear={needsClear} setNeedsClear={setNeedsClear}
-                        strokeMessage={strokeMessage} setStrokeMessage={setStrokeMessage}/>
-                    <WhiteboardTools strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
-                        strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
-                        lineWidth={lineWidth} setLineWidth={setLineWidth} sessionID={sessionID}
-                        setOpen={setOpen}/>
-            </div>
+            <Whiteboard wsRef={wsRef} strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
+                strokeStyle={strokeStyle} lineWidth={lineWidth} needsClear={needsClear} setNeedsClear={setNeedsClear}
+                strokeMessage={strokeMessage} setStrokeMessage={setStrokeMessage}/>
+            <WhiteboardTools strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
+                strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
+                lineWidth={lineWidth} setLineWidth={setLineWidth} sessionID={sessionID}
+                setOpen={setOpen} setNeedsClear={setNeedsClear} />
         </Container>
     );
 }

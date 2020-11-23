@@ -1,23 +1,18 @@
 .toolbar {
+    position: fixed;
+    right: 40px;
+    top: 100px;
     display: grid;
-    /* grid-template-rows: 40px 40px 40px 40px 40px 40px 40px 40px 40px auto; */
     gap: 20px;
-    width: 100px;
+    width: 30px;
 }
 
 #button {
-    height: 40px;
-    width: 100px;
+    height: 30px;
 }
 
 .colorpicker {
-    position: relative;
-    left: -250px;
-    top: -300px;
-}
-
-#textfield {
-    color: red;
-    background-color: rgb(0, 210, 190);
-    border-radius: 5px;
+    position: fixed;
+    right: 300px;
+    top: 100px;
 }
