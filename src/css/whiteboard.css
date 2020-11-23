@@ -13,4 +13,5 @@ canvas {
     border: 1px solid rgb(104, 104, 104);
     border-radius: 4px;
     margin: 10px;
+    cursor: crosshair;
 }
