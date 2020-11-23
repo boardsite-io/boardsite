@@ -13,6 +13,6 @@
 
 .colorpicker {
     position: fixed;
-    right: 300px;
-    top: 100px;
+    left: 100px;
+    top: 80px;
 }
