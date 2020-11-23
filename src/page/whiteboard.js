@@ -75,7 +75,7 @@ function Whiteboard(props) {
     }, [props.strokeMessage])
 
     return (
-        <div className="canvasdiv" websocket={props.wsRef.current}>
+        <div websocket={props.wsRef.current}>
             <canvas ref={canvasRef} />
         </div>
     );

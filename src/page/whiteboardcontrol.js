@@ -88,17 +88,19 @@ function WhiteboardControl() {
     }
 
     return (
-        <Container id="container" maxWidth="lg">
+        <div>
             <AlertDialog open={open} setOpen={setOpen} sessionID_input={sidInput} setSessionID_input={setSidInput}
             handleTextFieldChange={handleTextFieldChange} handleJoin={handleJoin} handleCreate={handleCreate} />
-            <Whiteboard wsRef={wsRef} strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
-                strokeStyle={strokeStyle} lineWidth={lineWidth} needsClear={needsClear} setNeedsClear={setNeedsClear}
-                strokeMessage={strokeMessage} setStrokeMessage={setStrokeMessage}/>
+            <div className="canvasdiv">
+                <Whiteboard wsRef={wsRef} strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
+                    strokeStyle={strokeStyle} lineWidth={lineWidth} needsClear={needsClear} setNeedsClear={setNeedsClear}
+                    strokeMessage={strokeMessage} setStrokeMessage={setStrokeMessage}/>
+            </div>
             <WhiteboardTools strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
                 strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
                 lineWidth={lineWidth} setLineWidth={setLineWidth} sessionID={sessionID}
                 setOpen={setOpen} setNeedsClear={setNeedsClear} />
-        </Container>
+                </div>
     );
 }
 

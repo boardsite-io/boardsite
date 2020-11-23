@@ -1,6 +1,9 @@
 .canvasdiv {
     display: flex;
-    justify-content: center;
+    flex-flow: column;
+    height: 100vh;
+    width: auto;
+    overflow: auto;
     align-items: center;
 }
 
@@ -9,14 +12,5 @@ canvas {
     background-color: #ffffff;
     border: 1px solid rgb(104, 104, 104);
     border-radius: 4px;
-    align-items: center;
     margin: 10px;
 }
-
-.whiteboard {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: auto;
-}
-

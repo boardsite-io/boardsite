@@ -1,7 +1,7 @@
 .toolbar {
     position: fixed;
-    right: 40px;
-    top: 100px;
+    left: 20px;
+    top: 80px;
     display: grid;
     gap: 20px;
     width: 30px;

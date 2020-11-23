@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 
 import './css/index.css';
 
-import Navigation from './component/navigation';
 import theme from './component/theme';
 import routes from './component/route';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -15,9 +14,9 @@ class Boardsite extends React.Component {
     render() {
         return (
             <ThemeProvider theme={theme}>
+                <h1 id="watermark" >BoardSite</h1>
                 <CssBaseline />
                 <Router>
-                    <Navigation />
                     {routes}
                 </Router>
             </ThemeProvider>
