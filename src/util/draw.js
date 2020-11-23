@@ -8,6 +8,9 @@ let lastY = -1;
 let stroke = [];
 
 export function handleCanvasMouseDown(e, canvasRef, wsRef) {
+    if (e.type === "touchstart"){
+        e = e.changedTouches[0];
+    }
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     imageData = ctx.getImageData(0, 0, canvas.width, canvas.height); // Save canvas state
@@ -21,17 +24,15 @@ export function handleCanvasMouseDown(e, canvasRef, wsRef) {
 
     lastX = x;
     lastY = y;
-
-    // if (e.button === 2) {
-    //     drawFillRect(x, y, 50, 50, "#f0f");
-    // }
-    // else {
-    //     drawFillRect(x, y, 50, 50, "#0f0");
-    // }
 }
 
 export function handleCanvasMouseMove(e, canvasRef, wsRef) {
     if (isMouseDown) {
+        let minSampleCount = 8;
+        if (e.type === "touchmove"){
+            e = e.touches[0];
+            minSampleCount = 3; // more precision for stylus
+        }
         sampleCount += 1;
         const canvas = canvasRef.current;
         let rect = canvas.getBoundingClientRect();
@@ -39,7 +40,7 @@ export function handleCanvasMouseMove(e, canvasRef, wsRef) {
         let y = e.clientY - rect.top;
         let moveDist = Math.pow(x - lastX, 2) + Math.pow(y - lastY, 2); // Quadratic distance moved from last registered point
 
-        if (moveDist > 50 && sampleCount > 5) {
+        if (moveDist > 100 || sampleCount > minSampleCount) {
             sampleCount = 1;
             stroke.push(x, y);
             const ctx = canvas.getContext('2d');
@@ -58,9 +59,11 @@ export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection) {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     let rect = canvas.getBoundingClientRect();
-    let x = e.clientX - rect.left;
-    let y = e.clientY - rect.top;
-    stroke.push(x, y);
+    if (e.type !== "touchend" && e.type !== "touchcancel"){
+        let x = e.clientX - rect.left;
+        let y = e.clientY - rect.top;
+        stroke.push(x, y);
+    }
     stroke = getCurvePoints(stroke, 0.5);
     stroke = stroke.map(x => Math.round(x * 1e3) / 1e3);
 
@@ -81,6 +84,9 @@ export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection) {
     updateStrokeCollection(setStrokeCollection, strokeObject, wsRef);
 }
 
+export function handleCanvasMouseLeave(e, canvasRef, wsRef, setStrokeCollection) {
+    handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection);
+}
 
 export function updateStrokeCollection(setStrokeCollection, strokeObject, wsRef) {
     // Add stroke to strokeCollection
@@ -97,10 +103,6 @@ export function updateStrokeCollection(setStrokeCollection, strokeObject, wsRef)
     else {
         console.log("socket not open");
     }
-}
-
-export function handleCanvasMouseLeave(e, canvasRef, wsRef, setStrokeCollection) {
-    handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection);
 }
 
 // draw line

@@ -11,16 +11,26 @@ function Whiteboard(props) {
         canvas.height = 877; //canvas.clientHeight;
         canvas.addEventListener("contextmenu", e => e.preventDefault()); // Disable Context Menu
         canvas.addEventListener("mousedown", (e) => util.handleCanvasMouseDown(e, canvasRef, props.wsRef));
-        canvas.addEventListener("mouseup", (e) => util.handleCanvasMouseUp(e, canvasRef, props.wsRef, props.setStrokeCollection));
         canvas.addEventListener("mousemove", (e) => util.handleCanvasMouseMove(e, canvasRef, props.wsRef));
+        canvas.addEventListener("mouseup", (e) => util.handleCanvasMouseUp(e, canvasRef, props.wsRef, props.setStrokeCollection));
         canvas.addEventListener("mouseleave", (e) => util.handleCanvasMouseLeave(e, canvasRef, props.wsRef, props.setStrokeCollection));
-
+        // Touch & stylus support
+        canvas.addEventListener("touchstart", (e) => util.handleCanvasMouseDown(e, canvasRef, props.wsRef));
+        canvas.addEventListener("touchmove", (e) => util.handleCanvasMouseMove(e, canvasRef, props.wsRef));
+        canvas.addEventListener("touchend", (e) => util.handleCanvasMouseUp(e, canvasRef, props.wsRef, props.setStrokeCollection));
+        canvas.addEventListener("touchcancel", (e) => util.handleCanvasMouseLeave(e, canvasRef, props.wsRef, props.setStrokeCollection));
+        
         return () => {
             canvas.removeEventListener("contextmenu", null);
             canvas.removeEventListener("mousedown", null);
             canvas.removeEventListener("mouseup", null);
             canvas.removeEventListener("mousemove", null);
             canvas.removeEventListener("mouseleave", null);
+            // Touch & stylus support
+            canvas.removeEventListener("touchstart", null);
+            canvas.removeEventListener("touchmove", null);
+            canvas.removeEventListener("touchend", null);
+            canvas.removeEventListener("touchcancel", null);
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
