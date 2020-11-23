@@ -1,5 +1,4 @@
 .toolbar {
-    border-radius: 4px;
     display: grid;
     /* grid-template-rows: 40px 40px 40px 40px 40px 40px 40px 40px 40px auto; */
     gap: 20px;
@@ -12,7 +11,13 @@
 }
 
 .colorpicker {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: relative;
+    left: -250px;
+    top: -300px;
+}
+
+#textfield {
+    color: red;
+    background-color: rgb(0, 210, 190);
+    border-radius: 5px;
 }
