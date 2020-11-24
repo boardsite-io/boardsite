@@ -80,7 +80,6 @@ function Whiteboard(props) {
         ctx.clearRect(0, 0, window.innerHeight, window.innerWidth);
         Object.keys(props.strokeCollection).forEach((key) => {
             let stroke = props.strokeCollection[key];
-            console.log(stroke);
             ctx.strokeStyle = stroke.color;
             ctx.lineWidth = stroke.line_width;
             return util.drawCurve(ctx, stroke.position);

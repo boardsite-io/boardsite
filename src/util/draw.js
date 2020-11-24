@@ -128,7 +128,7 @@ export function updateStrokeCollection(setStrokeCollection, strokeObject, wsRef)
  * @param {number} hitboxAccuracy accuracy in pixels
  */
 export function addHitbox(setHitboxCollection, strokeObject, boardResolution, hitboxAccuracy) {
-    let positions = strokeObject.position.splice(0);
+    let positions = strokeObject.position.slice(0);
     let id = strokeObject.id;
     let pointSkipFactor = 4;
     
@@ -152,7 +152,7 @@ export function addHitbox(setHitboxCollection, strokeObject, boardResolution, hi
 }
 
 export function eraser(setHitboxCollection, setStrokeCollection, strokeObject, setNeedsRedraw, boardResolution, hitboxAccuracy) {
-    let positions = strokeObject.position.splice(0);
+    let positions = strokeObject.position.slice(0);
     let pointSkipFactor = 4;
     let idsToDelete = [];
 
