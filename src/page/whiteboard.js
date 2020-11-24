@@ -15,7 +15,7 @@ function Whiteboard(props) {
         canvas.addEventListener("mousemove", (e) => util.handleCanvasMouseMove(e, canvasRef));
         canvas.addEventListener("mouseup", (e) => util.handleCanvasMouseUp(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, setNeedsRedraw));
         canvas.addEventListener("mouseleave", (e) => util.handleCanvasMouseLeave(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, setNeedsRedraw));
-        // Touch & stylus support
+        // touch & stylus support
         canvas.addEventListener("touchstart", (e) => util.handleCanvasMouseDown(e, canvasRef));
         canvas.addEventListener("touchmove", (e) => util.handleCanvasMouseMove(e, canvasRef));
         canvas.addEventListener("touchend", (e) => util.handleCanvasMouseUp(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, setNeedsRedraw));
@@ -27,7 +27,7 @@ function Whiteboard(props) {
             canvas.removeEventListener("mouseup", null);
             canvas.removeEventListener("mousemove", null);
             canvas.removeEventListener("mouseleave", null);
-            // Touch & stylus support
+            // touch & stylus support
             canvas.removeEventListener("touchstart", null);
             canvas.removeEventListener("touchmove", null);
             canvas.removeEventListener("touchend", null);
