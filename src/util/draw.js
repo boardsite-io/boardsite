@@ -153,7 +153,7 @@ export function addHitbox(setHitboxCollection, strokeObject, boardResolution, hi
 
 export function eraser(setHitboxCollection, setStrokeCollection, strokeObject, setNeedsRedraw, boardResolution, hitboxAccuracy) {
     let positions = strokeObject.position.slice(0);
-    let pointSkipFactor = 4;
+    let pointSkipFactor = 2;
     let idsToDelete = [];
 
     setHitboxCollection((prev) => {
@@ -171,7 +171,14 @@ export function eraser(setHitboxCollection, setStrokeCollection, strokeObject, s
                 }
             }
         }
-        // TODO: REMOVE DELETED ID HITBOXES FROM HITBOXCOLLECTION
+
+        // REMOVE DELETED ID HITBOXES FROM HITBOXCOLLECTION
+        Object.keys(_prev).forEach((key) => {
+            if (idsToDelete.includes(_prev[key][0])){
+                delete _prev[key];
+            }
+        })
+        
         return _prev;
     });
 
