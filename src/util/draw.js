@@ -9,12 +9,13 @@ let stroke = [];
 let isEraser = false;
 
 export function handleCanvasMouseDown(e, canvasRef) {
-    if (e.type === "touchstart"){
-        e = e.changedTouches[0];
-    }
-
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
+    
+    if (e.type === "touchstart"){
+        e = e.changedTouches[0];
+        imageData = ctx.getImageData(0, 0, canvas.width, canvas.height); // Save canvas state
+    }
 
     if(e.button === 0){ // left-click
         isEraser = false;

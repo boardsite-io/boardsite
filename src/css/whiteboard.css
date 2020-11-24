@@ -1,4 +1,7 @@
 .canvasdiv {
+    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
     display: flex;
     flex-flow: column;
     height: 100vh;
@@ -9,6 +12,9 @@
 
 canvas {
     touch-action: none;
+    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
     background-color: #ffffff;
     border: 1px solid rgb(104, 104, 104);
     border-radius: 4px;
