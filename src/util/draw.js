@@ -11,17 +11,17 @@ let isEraser = false;
 export function handleCanvasMouseDown(e, canvasRef) {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    
-    if (e.type === "touchstart"){
+
+    if (e.type === "touchstart") {
         isEraser = false;
         e = e.changedTouches[0];
         imageData = ctx.getImageData(0, 0, canvas.width, canvas.height); // Save canvas state
     }
-    else{
-        if(e.button === 0){ // left-click
+    else {
+        if (e.button === 0) { // left-click
             isEraser = false;
             imageData = ctx.getImageData(0, 0, canvas.width, canvas.height); // Save canvas state
-        } else if(e.button === 2){ // right-click
+        } else if (e.button === 2) { // right-click
             isEraser = true;
         }
     }
@@ -39,7 +39,7 @@ export function handleCanvasMouseDown(e, canvasRef) {
 export function handleCanvasMouseMove(e, canvasRef) {
     if (isMouseDown) {
         let minSampleCount = 8;
-        if (e.type === "touchmove"){
+        if (e.type === "touchmove") {
             e = e.touches[0];
             minSampleCount = 3; // more precision for stylus
         }
@@ -54,7 +54,7 @@ export function handleCanvasMouseMove(e, canvasRef) {
             sampleCount = 1;
             stroke.push(x, y);
             const ctx = canvas.getContext('2d');
-            if(!isEraser){
+            if (!isEraser) {
                 drawLine(lastX, lastY, x, y, ctx);
             }
             lastX = x;
@@ -71,7 +71,7 @@ export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, se
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     let rect = canvas.getBoundingClientRect();
-    if (e.type !== "touchend" && e.type !== "touchcancel"){
+    if (e.type !== "touchend" && e.type !== "touchcancel") {
         let x = e.clientX - rect.left;
         let y = e.clientY - rect.top;
         stroke.push(x, y);
@@ -80,21 +80,21 @@ export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, se
     stroke = stroke.map(x => Math.round(x * 1e3) / 1e3);
     // generate unique id
     let strokeid = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4) + Date.now().toString(36).substr(4);
-    let strokeObject = { 
-        id: strokeid, 
-        type: "stroke", 
-        line_width: ctx.lineWidth, 
-        color: ctx.strokeStyle, 
-        position: stroke, 
+    let strokeObject = {
+        id: strokeid,
+        type: "stroke",
+        line_width: ctx.lineWidth,
+        color: ctx.strokeStyle,
+        position: stroke,
     };
 
-    if(!isEraser){
+    if (!isEraser) {
         // Delete livestroke lines and restroke interpolated and potentially buffered strokes
         ctx.putImageData(imageData, 0, 0);
         drawCurve(ctx, stroke);
         updateStrokeCollection(setStrokeCollection, strokeObject, wsRef);
         addHitbox(setHitboxCollection, strokeObject);
-    } else{
+    } else {
         eraser(setHitboxCollection, setStrokeCollection, strokeObject, setNeedsRedraw);
     }
 }
@@ -131,25 +131,161 @@ export function updateStrokeCollection(setStrokeCollection, strokeObject, wsRef)
 export function addHitbox(setHitboxCollection, strokeObject, boardResolution, hitboxAccuracy) {
     let positions = strokeObject.position.slice(0);
     let id = strokeObject.id;
+    let lineWidth = strokeObject.line_width;
     let pointSkipFactor = 4;
-    
+
     setHitboxCollection((prev) => {
-        let _prev = {...prev}
-        for (let i = 0; i < positions.length; i += 2*pointSkipFactor) {
-            let x = Math.round(positions[i]);
-            let y = Math.round(positions[i + 1]);
-            if([x,y] in _prev){ // other ID(s) in this hitbox position
-                let tmp = _prev[[x,y]];
-                if(!tmp.includes(id)){ // prevent double entries of same id
+        let _prev = { ...prev }
+
+        // PixelReihen Algo: https://de.wikipedia.org/wiki/Rasterung_von_Linien
+        let x1 = Math.round(positions[0]);
+        let y1 = Math.round(positions[1]);
+        for (let i = 2 * pointSkipFactor; i < positions.length; i += 2 * pointSkipFactor) {
+            let x2 = Math.round(positions[i]);
+            let y2 = Math.round(positions[i + 1]);
+            let xd = (x2 - x1);
+            let yd = (y2 - y1);
+            let m = yd / xd;
+            let norm_x = 1 / (Math.pow(m, 2) + 1) * lineWidth / 2 / m;
+            let norm_y = norm_x * lineWidth / 2;
+
+            // line corners
+            let x1_left = x1 - norm_y;
+            let y1_left = y1 + norm_x;
+            let x1_right = x1 + norm_y;
+            let y1_right = y1 - norm_x;
+            let x2_right = x2 + norm_y;
+            let y2_right = y2 - norm_x;
+
+            let pixel_para = calcPixelRow(x1_right, y1_right, x2_right, y2_right); // parallel to the line
+            let pixel_perp = calcPixelRow(x1_right, y1_right, x1_left, y1_left); // perpendicular to the line (e.g. end edge of line)
+            let pixel_full = [];
+
+            for (let i = 0; i < pixel_perp.length; i += 2) {
+                let x_shift = pixel_perp[i];
+                let y_shift = pixel_perp[i + 1];
+                pixel_full.push()
+            }
+
+            x1 = x2;
+            y1 = y2;
+        }
+
+
+
+        for (let i = 2 * pointSkipFactor; i < positions.length; i += 2 * pointSkipFactor) {
+            if ([x, y] in _prev) { // other ID(s) in this hitbox position
+                let tmp = _prev[[x, y]];
+                if (!tmp.includes(id)) { // prevent double entries of same id
                     tmp.push(id);
-                    _prev[[x,y]] = tmp;
+                    _prev[[x, y]] = tmp;
                 }
-            } else{ // no other ID in this hitbox position
-                _prev[[x,y]] = [id];
+            } else { // no other ID in this hitbox position
+                _prev[[x, y]] = [id];
             }
         }
+
         return _prev;
     });
+}
+
+/**
+ * Calculates the pixel positions that are touched by a line, 
+ * defined by the connection between (x1,y1) and (x2,y2). 
+ * The input has to be such that x2 > x1
+ * @param {*} x1 
+ * @param {*} y1 
+ * @param {*} x2 
+ * @param {*} y2 
+ */
+function calcPixelRow(x1, y1, x2, y2) {
+    let xd = x2 - x1;
+    let yd = y2 - y1;
+    let pixelRow = [];
+
+
+    if (xd === 0) { // vertical line
+        for (let i = 0; i <= yd; i++) {
+            pixelRow.push(x1, y1 + i);
+        }
+    } else if (yd === 0) { // horizontal line
+        for (let i = 0; i <= xd; i++) {
+            pixelRow.push(x1 + i, y1);
+        }
+    } else { // normal line
+        let m_inv = xd / yd;
+        let type = 0;
+        // console.log(xd, yd, m_inv)
+        if (1 > m_inv && m_inv > 0) {
+            console.log("1")
+            type = 1;
+            let cp = [x1, y1, x2, y2, xd, yd];
+            m_inv = 1 / m_inv;
+            y1 = cp[0];
+            x1 = cp[1];
+            y2 = cp[2];
+            x2 = cp[3];
+            yd = cp[4];
+            xd = cp[5];
+        } else if (-1 <= m_inv && m_inv < 0) {
+            console.log("2")
+            type = 2;
+            let cp = [x1, y1, x2, y2, xd, yd];
+            m_inv = -1 / m_inv;
+            x1 = cp[3]; // y2
+            y1 = cp[0]; // x1
+            x2 = cp[1]; // y1
+            y2 = cp[2]; // x2
+            yd = cp[4]; // xd
+            xd = -cp[5]; // -yd
+        } else if (m_inv < -1) {
+            console.log("3")
+            type = 3;
+            let cp = [y1, y2, yd];
+            y1 = cp[1];
+            y2 = cp[0];
+            yd = -yd;
+            m_inv = -m_inv;
+        }
+
+        let rowStart = x1;
+        for (let i = 0; i < yd; i++) {
+            let rowEnd = Math.ceil(x1 + (0.5 + i) * m_inv - 1);
+            for (let j = rowStart; j <= rowEnd; j++) {
+                pixelRow.push(j, y1 + i);
+            }
+            rowStart = rowEnd + 1;
+        }
+        for (let j = rowStart; j <= x2; j++) {
+            pixelRow.push(j, y2);
+        }
+
+        // CORRECT THE OUTPUT
+        if (type === 1) {
+            let pxRow = [];
+            for (let i = 0; i < pixelRow.length; i += 2) {
+                pxRow.push(pixelRow[i + 1], pixelRow[i]);
+            }
+            return pxRow;
+        } else if (type === 2) {
+            let pxRow = [];
+            let len = pixelRow.length;
+            for (let i = 0; i < len; i += 2) {
+                pxRow.push(pixelRow[i + 1]);
+                pxRow.push(pixelRow[len - i - 2]);
+            }
+            return pxRow
+        } else if (type === 3) {
+            let pxRow = pixelRow.slice(0);
+            let len = pixelRow.length;
+            for (let i = 1; i < len; i += 2) {
+                pxRow[i] = pixelRow[len - i];
+            }
+            return pxRow;
+        } else {
+            return pixelRow;
+        }
+    }
 }
 
 export function eraser(setHitboxCollection, setStrokeCollection, strokeObject, setNeedsRedraw, boardResolution, hitboxAccuracy) {
@@ -158,15 +294,15 @@ export function eraser(setHitboxCollection, setStrokeCollection, strokeObject, s
     let idsToDelete = [];
 
     setHitboxCollection((prev) => {
-        let _prev = {...prev}
-        for (let i = 0; i < positions.length; i += 2*pointSkipFactor) {
+        let _prev = { ...prev }
+        for (let i = 0; i < positions.length; i += 2 * pointSkipFactor) {
             let x = Math.round(positions[i]);
             let y = Math.round(positions[i + 1]);
-            if([x,y] in _prev){ // IDs in this hitbox position
-                let tmp = _prev[[x,y]];
+            if ([x, y] in _prev) { // IDs in this hitbox position
+                let tmp = _prev[[x, y]];
                 for (let i = 0; i < tmp.length; i++) {
                     let id = tmp[i];
-                    if(!idsToDelete.includes(id)){
+                    if (!idsToDelete.includes(id)) {
                         idsToDelete.push(id);
                     }
                 }
@@ -175,17 +311,17 @@ export function eraser(setHitboxCollection, setStrokeCollection, strokeObject, s
 
         // REMOVE DELETED ID HITBOXES FROM HITBOXCOLLECTION
         Object.keys(_prev).forEach((key) => {
-            if (idsToDelete.includes(_prev[key][0])){
+            if (idsToDelete.includes(_prev[key][0])) {
                 delete _prev[key];
             }
         })
-        
+
         return _prev;
     });
 
     // erase id's strokes from collection
     setStrokeCollection((prev) => {
-        let _prev = {...prev}
+        let _prev = { ...prev }
         for (let i = 0; i < idsToDelete.length; i++) {
             delete _prev[idsToDelete[i]];
         }
