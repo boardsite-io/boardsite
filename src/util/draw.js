@@ -131,49 +131,96 @@ export function updateStrokeCollection(setStrokeCollection, strokeObject, wsRef)
 export function addHitbox(setHitboxCollection, strokeObject, boardResolution, hitboxAccuracy) {
     let positions = strokeObject.position.slice(0);
     let id = strokeObject.id;
-    let lineWidth = strokeObject.line_width;
-    let pointSkipFactor = 4;
+    let pointSkipFactor = 8;
 
     setHitboxCollection((prev) => {
         let _prev = { ...prev }
-
-        // PixelReihen Algo: https://de.wikipedia.org/wiki/Rasterung_von_Linien
         let x1 = Math.round(positions[0]);
         let y1 = Math.round(positions[1]);
+
+        let pixel_full = [];
+
         for (let i = 2 * pointSkipFactor; i < positions.length; i += 2 * pointSkipFactor) {
             let x2 = Math.round(positions[i]);
             let y2 = Math.round(positions[i + 1]);
-            let xd = (x2 - x1);
-            let yd = (y2 - y1);
-            let m = yd / xd;
-            let norm_x = 1 / (Math.pow(m, 2) + 1) * lineWidth / 2 / m;
-            let norm_y = norm_x * lineWidth / 2;
-
-            // line corners
-            let x1_left = x1 - norm_y;
-            let y1_left = y1 + norm_x;
-            let x1_right = x1 + norm_y;
-            let y1_right = y1 - norm_x;
-            let x2_right = x2 + norm_y;
-            let y2_right = y2 - norm_x;
-
-            let pixel_para = calcPixelRow(x1_right, y1_right, x2_right, y2_right); // parallel to the line
-            let pixel_perp = calcPixelRow(x1_right, y1_right, x1_left, y1_left); // perpendicular to the line (e.g. end edge of line)
-            let pixel_full = [];
-
-            for (let i = 0; i < pixel_perp.length; i += 2) {
-                let x_shift = pixel_perp[i];
-                let y_shift = pixel_perp[i + 1];
-                pixel_full.push()
+            if ((Math.pow(x2-x1,2) + Math.pow(y2-y1,2)) < 50) { // move to next iter if points too close
+                continue;
             }
 
+            // GARBAGE TRY TO ADJUST HITBOX TO LINEWIDTH XDDDD
+            // let xd = (x2 - x1);
+            // let yd = (y2 - y1);
+            // let norm_x; 
+            // let norm_y; 
+            // if (xd < 1) { // vertical line
+            //     norm_x = lineWidth / 2;
+            //     norm_y = 0;
+            // }
+            // else if (yd < 1){ // horizontal line
+            //     norm_x = 0;
+            //     norm_y = lineWidth / 2;
+            // } else {
+            //     let m = yd / xd;
+            //     norm_x = 1 / (Math.pow(m, 2) + 1) * lineWidth / 2 / m;
+            //     norm_y = norm_x * lineWidth / 2;
+            // }
+            
+            // // line corners
+            // let x1_left = Math.round(x1 - norm_y);
+            // let y1_left = Math.round(y1 + norm_x);
+            // let x1_right = Math.round(x1 + norm_y);
+            // let y1_right = Math.round(y1 - norm_x);
+            // let x2_right = Math.round(x2 + norm_y);
+            // let y2_right = Math.round(y2 - norm_x);
+
+            // console.log(x1_left, y1_left, x1_right, y1_right, x2_right, y2_right, x1,y1,x2, y2);
+
+            // let pixel_para = [];
+            // let pixel_perp = [];
+            // if (x1_right < x2_right) { // Feed input in right order for function - maybe put in the function later? potential TODO
+            //     pixel_para = calcPixelRow(x1_right, y1_right, x2_right, y2_right); // parallel to the line
+            // } else {
+            //     pixel_para = calcPixelRow(x2_right, y2_right, x1_right, y1_right); // parallel to the line
+            // }
+            // if (x1_right < x1_left) {
+            //     pixel_perp = calcPixelRow(x1_right, y1_right, x1_left, y1_left); // perpendicular to the line (e.g. end edge of line)
+            // } else {
+            //     pixel_perp = calcPixelRow(x1_left, y1_left, x1_right, y1_right); // perpendicular to the line (e.g. end edge of line)
+            // }
+
+            // console.log(pixel_perp);
+
+            // for (let i = 0; i < pixel_perp.length; i += 2) {
+            //     let x_shift = pixel_perp[i];
+            //     let y_shift = pixel_perp[i + 1];
+            //     for (let i = 0; i < pixel_para.length; i += 2){
+            //         let x = pixel_para[i] + x_shift;
+            //         let y = pixel_para[i+1] + y_shift;
+            //         pixel_full.push(x,y);
+            //     }
+            // }
+
+            let hitPixels;
+            if (x1 < x2){
+                hitPixels = calcPixelRow(x1, y1, x2, y2);
+            } else {
+                hitPixels = calcPixelRow(x2, y2, x1, y1);
+            }
+
+            for (let i = 0; i < hitPixels.length; i += 2){
+                let x = hitPixels[i];
+                let y = hitPixels[i+1];
+                pixel_full.push(x,y);
+            }
+            
             x1 = x2;
             y1 = y2;
         }
 
-
-
-        for (let i = 2 * pointSkipFactor; i < positions.length; i += 2 * pointSkipFactor) {
+        // insert new hitboxes
+        for (let i = 0; i < pixel_full.length; i += 2) {
+            let x = pixel_full[i];
+            let y = pixel_full[i+1];
             if ([x, y] in _prev) { // other ID(s) in this hitbox position
                 let tmp = _prev[[x, y]];
                 if (!tmp.includes(id)) { // prevent double entries of same id
@@ -191,33 +238,48 @@ export function addHitbox(setHitboxCollection, strokeObject, boardResolution, hi
 
 /**
  * Calculates the pixel positions that are touched by a line, 
- * defined by the connection between (x1,y1) and (x2,y2). 
- * The input has to be such that x2 > x1
+ * defined by the connection between (x1,y1) and (x2,y2).
  * @param {*} x1 
  * @param {*} y1 
  * @param {*} x2 
  * @param {*} y2 
  */
 function calcPixelRow(x1, y1, x2, y2) {
+    // PixelReihen Algo: https://de.wikipedia.org/wiki/Rasterung_von_Linien
+    
+    if (x2-x1 < 0) { // order so that x2 >= x1
+        let cp = [x1,y1,x2,y2];
+        x1 = cp[2];
+        y1 = cp[3];
+        x2 = cp[0];
+        y2 = cp[1];
+    }
     let xd = x2 - x1;
     let yd = y2 - y1;
+
     let pixelRow = [];
 
-
     if (xd === 0) { // vertical line
-        for (let i = 0; i <= yd; i++) {
-            pixelRow.push(x1, y1 + i);
+        if (yd >= 0){
+            for (let i = 0; i <= yd; i++) {
+                pixelRow.push(x1, y1 + i);
+            }
+        } else {
+            for (let i = 0; i <= -yd; i++) {
+                pixelRow.push(x1, y2 + i);
+            }
         }
+        return pixelRow;
     } else if (yd === 0) { // horizontal line
         for (let i = 0; i <= xd; i++) {
             pixelRow.push(x1 + i, y1);
         }
+        return pixelRow;
     } else { // normal line
         let m_inv = xd / yd;
         let type = 0;
         // console.log(xd, yd, m_inv)
         if (1 > m_inv && m_inv > 0) {
-            console.log("1")
             type = 1;
             let cp = [x1, y1, x2, y2, xd, yd];
             m_inv = 1 / m_inv;
@@ -228,7 +290,6 @@ function calcPixelRow(x1, y1, x2, y2) {
             yd = cp[4];
             xd = cp[5];
         } else if (-1 <= m_inv && m_inv < 0) {
-            console.log("2")
             type = 2;
             let cp = [x1, y1, x2, y2, xd, yd];
             m_inv = -1 / m_inv;
@@ -239,7 +300,6 @@ function calcPixelRow(x1, y1, x2, y2) {
             yd = cp[4]; // xd
             xd = -cp[5]; // -yd
         } else if (m_inv < -1) {
-            console.log("3")
             type = 3;
             let cp = [y1, y2, yd];
             y1 = cp[1];
