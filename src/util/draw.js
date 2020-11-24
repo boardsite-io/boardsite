@@ -13,15 +13,17 @@ export function handleCanvasMouseDown(e, canvasRef) {
     const ctx = canvas.getContext('2d');
     
     if (e.type === "touchstart"){
+        isEraser = false;
         e = e.changedTouches[0];
         imageData = ctx.getImageData(0, 0, canvas.width, canvas.height); // Save canvas state
     }
-
-    if(e.button === 0){ // left-click
-        isEraser = false;
-        imageData = ctx.getImageData(0, 0, canvas.width, canvas.height); // Save canvas state
-    } else if(e.button === 2){ // right-click
-        isEraser = true;
+    else{
+        if(e.button === 0){ // left-click
+            isEraser = false;
+            imageData = ctx.getImageData(0, 0, canvas.width, canvas.height); // Save canvas state
+        } else if(e.button === 2){ // right-click
+            isEraser = true;
+        }
     }
 
     isMouseDown = true;
@@ -29,9 +31,7 @@ export function handleCanvasMouseDown(e, canvasRef) {
     let rect = canvas.getBoundingClientRect();
     let x = e.clientX - rect.left;
     let y = e.clientY - rect.top;
-
     stroke = [x, y];
-
     lastX = x;
     lastY = y;
 }
