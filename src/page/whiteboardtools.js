@@ -24,7 +24,10 @@ function WhiteboardTools(props) {
         api.clearBoard(props.sessionID);
     }
     function saveBoard() {
-        console.log(props.strokeCollection);
+        Object.keys(props.strokeCollection).forEach((key) => {
+            let stroke = props.strokeCollection[key];
+            console.log(stroke);
+        })
     }
 
     function loadBoard() {

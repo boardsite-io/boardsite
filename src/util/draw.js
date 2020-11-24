@@ -6,14 +6,23 @@ let sampleCount = 0;
 let lastX = -1;
 let lastY = -1;
 let stroke = [];
+let isEraser = false;
 
-export function handleCanvasMouseDown(e, canvasRef, wsRef) {
+export function handleCanvasMouseDown(e, canvasRef) {
     if (e.type === "touchstart"){
         e = e.changedTouches[0];
     }
+
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height); // Save canvas state
+
+    if(e.button === 0){ // left-click
+        isEraser = false;
+        imageData = ctx.getImageData(0, 0, canvas.width, canvas.height); // Save canvas state
+    } else if(e.button === 2){ // right-click
+        isEraser = true;
+    }
+
     isMouseDown = true;
     sampleCount = 1;
     let rect = canvas.getBoundingClientRect();
@@ -26,7 +35,7 @@ export function handleCanvasMouseDown(e, canvasRef, wsRef) {
     lastY = y;
 }
 
-export function handleCanvasMouseMove(e, canvasRef, wsRef) {
+export function handleCanvasMouseMove(e, canvasRef) {
     if (isMouseDown) {
         let minSampleCount = 8;
         if (e.type === "touchmove"){
@@ -44,14 +53,16 @@ export function handleCanvasMouseMove(e, canvasRef, wsRef) {
             sampleCount = 1;
             stroke.push(x, y);
             const ctx = canvas.getContext('2d');
-            drawLine(lastX, lastY, x, y, ctx);
+            if(!isEraser){
+                drawLine(lastX, lastY, x, y, ctx);
+            }
             lastX = x;
             lastY = y;
         }
     }
 }
 
-export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection) {
+export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setNeedsRedraw) {
     if (!isMouseDown) { return; } // Ignore reentering
     isMouseDown = false;
     lastX = -1;
@@ -66,11 +77,6 @@ export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection) {
     }
     stroke = getCurvePoints(stroke, 0.5);
     stroke = stroke.map(x => Math.round(x * 1e3) / 1e3);
-
-    // Delete livestroke lines and restroke interpolated and potentially buffered strokes
-    ctx.putImageData(imageData, 0, 0);
-    drawCurve(ctx, stroke);
-
     // generate unique id
     let strokeid = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4) + Date.now().toString(36).substr(4);
     let strokeObject = { 
@@ -81,11 +87,19 @@ export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection) {
         position: stroke, 
     };
 
-    updateStrokeCollection(setStrokeCollection, strokeObject, wsRef);
+    if(!isEraser){
+        // Delete livestroke lines and restroke interpolated and potentially buffered strokes
+        ctx.putImageData(imageData, 0, 0);
+        drawCurve(ctx, stroke);
+        updateStrokeCollection(setStrokeCollection, strokeObject, wsRef);
+        addHitbox(setHitboxCollection, strokeObject);
+    } else{
+        eraser(setHitboxCollection, setStrokeCollection, strokeObject, setNeedsRedraw);
+    }
 }
 
-export function handleCanvasMouseLeave(e, canvasRef, wsRef, setStrokeCollection) {
-    handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection);
+export function handleCanvasMouseLeave(e, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setNeedsRedraw) {
+    handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setNeedsRedraw);
 }
 
 export function updateStrokeCollection(setStrokeCollection, strokeObject, wsRef) {
@@ -93,6 +107,7 @@ export function updateStrokeCollection(setStrokeCollection, strokeObject, wsRef)
     setStrokeCollection((prev) => {
         let res = { ...prev };
         res[strokeObject.id] = strokeObject;
+        // console.log(res[strokeObject.id].position);
         return res;
     });
 
@@ -103,6 +118,73 @@ export function updateStrokeCollection(setStrokeCollection, strokeObject, wsRef)
     else {
         console.log("socket not open");
     }
+}
+
+/**
+ * 
+ * @param {function} setHitboxCollection state setting function
+ * @param {object} strokeObject stroke object to set hitbox from
+ * @param {[number: width, number: height]} boardResolution canvas resolution in pixels
+ * @param {number} hitboxAccuracy accuracy in pixels
+ */
+export function addHitbox(setHitboxCollection, strokeObject, boardResolution, hitboxAccuracy) {
+    let positions = strokeObject.position.splice(0);
+    let id = strokeObject.id;
+    let pointSkipFactor = 4;
+    
+    setHitboxCollection((prev) => {
+        let _prev = {...prev}
+        for (let i = 0; i < positions.length; i += 2*pointSkipFactor) {
+            let x = Math.round(positions[i]);
+            let y = Math.round(positions[i + 1]);
+            if([x,y] in _prev){ // other ID(s) in this hitbox position
+                let tmp = _prev[[x,y]];
+                if(!tmp.includes(id)){ // prevent double entries of same id
+                    tmp.push(id);
+                    _prev[[x,y]] = tmp;
+                }
+            } else{ // no other ID in this hitbox position
+                _prev[[x,y]] = [id];
+            }
+        }
+        return _prev;
+    });
+}
+
+export function eraser(setHitboxCollection, setStrokeCollection, strokeObject, setNeedsRedraw, boardResolution, hitboxAccuracy) {
+    let positions = strokeObject.position.splice(0);
+    let pointSkipFactor = 4;
+    let idsToDelete = [];
+
+    setHitboxCollection((prev) => {
+        let _prev = {...prev}
+        for (let i = 0; i < positions.length; i += 2*pointSkipFactor) {
+            let x = Math.round(positions[i]);
+            let y = Math.round(positions[i + 1]);
+            if([x,y] in _prev){ // IDs in this hitbox position
+                let tmp = _prev[[x,y]];
+                for (let i = 0; i < tmp.length; i++) {
+                    let id = tmp[i];
+                    if(!idsToDelete.includes(id)){
+                        idsToDelete.push(id);
+                    }
+                }
+            }
+        }
+        // TODO: REMOVE DELETED ID HITBOXES FROM HITBOXCOLLECTION
+        return _prev;
+    });
+
+    // erase id's strokes from collection
+    setStrokeCollection((prev) => {
+        let _prev = {...prev}
+        for (let i = 0; i < idsToDelete.length; i++) {
+            delete _prev[idsToDelete[i]];
+        }
+        return _prev;
+    });
+
+    setNeedsRedraw(x => x + 1); // trigger redraw
 }
 
 // draw line

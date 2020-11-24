@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Container } from '@material-ui/core';
 import Whiteboard from './whiteboard';
 import WhiteboardTools from './whiteboardtools';
 
@@ -10,6 +9,7 @@ import '../css/whiteboard.css';
 
 function WhiteboardControl() {
     const [strokeCollection, setStrokeCollection] = useState({});
+    const [hitboxCollection, setHitboxCollection] = useState({});
     const [strokeMessage, setStrokeMessage] = useState({});
     const [strokeStyle, setStrokeStyle] = useState("#000000");
     const [lineWidth, setLineWidth] = useState(3);
@@ -94,7 +94,7 @@ function WhiteboardControl() {
             <div className="canvasdiv">
                 <Whiteboard wsRef={wsRef} strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
                     strokeStyle={strokeStyle} lineWidth={lineWidth} needsClear={needsClear} setNeedsClear={setNeedsClear}
-                    strokeMessage={strokeMessage} setStrokeMessage={setStrokeMessage}/>
+                    strokeMessage={strokeMessage} setStrokeMessage={setStrokeMessage} setHitboxCollection={setHitboxCollection} />
             </div>
             <WhiteboardTools strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
                 strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
