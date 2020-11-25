@@ -133,8 +133,9 @@ export function addHitbox(setHitboxCollection, strokeObject) {
     setHitboxCollection((prev) => {
         let _prev = { ...prev }
         let pointSkipFactor = 8; // only check every p-th (x,y) position to reduce computational load
-        let quadMinPixDist = 25; // quadratic minimum distance between points to be valid for hitbox calculation
-        let hitbox = getHitbox(positions, pointSkipFactor, quadMinPixDist);
+        let quadMinPixDist = 64; // quadratic minimum distance between points to be valid for hitbox calculation
+        let padding = 1;
+        let hitbox = getHitbox(positions, pointSkipFactor, quadMinPixDist, padding);
 
         // insert new hitboxes
         for (let i = 0; i < hitbox.length; i++) {
@@ -159,9 +160,10 @@ export function eraser(setHitboxCollection, setStrokeCollection, strokeObject, s
     let idsToDelete = [];
 
     setHitboxCollection((prev) => {
-        let pointSkipFactor = 8; // only check every p-th (x,y) position to reduce computational load
+        let pointSkipFactor = 16; // only check every p-th (x,y) position to reduce computational load
         let quadMinPixDist = 25; // quadratic minimum distance between points to be valid for hitbox calculation
-        let hitbox = getHitbox(positions, pointSkipFactor, quadMinPixDist);
+        let padding = 0;
+        let hitbox = getHitbox(positions, pointSkipFactor, quadMinPixDist, padding);
         let _prev = { ...prev }
         for (let i = 0; i < hitbox.length; i++) {
             let xy = hitbox[i];
@@ -198,7 +200,7 @@ export function eraser(setHitboxCollection, setStrokeCollection, strokeObject, s
     setNeedsRedraw(x => x + 1); // trigger redraw
 }
 
-export function getHitbox(positions, pointSkipFactor, quadMinPixDist) {
+export function getHitbox(positions, pointSkipFactor, quadMinPixDist, padding) {
     // calculate hitboxes of all segments
     let xy1 = [Math.round(positions[0]), Math.round(positions[1])];
     let xy2;
@@ -219,26 +221,28 @@ export function getHitbox(positions, pointSkipFactor, quadMinPixDist) {
         hitbox = hitbox.concat(hitboxPixels);
     }
 
-    // add one pixel on all sides of the hitbox to ensure proper functionality
-    let tmp = {};
-    for (let i = 0; i < hitbox.length; i++) {
-        tmp[hitbox[i]] = 1;
-    }
-    for (let i = 0; i < hitbox.length; i++) {
-        let x = hitbox[i][0];
-        let y = hitbox[i][1];
-        for (let j = -1; j <= 1; j++) {
-            for (let k = -1; k <= 1; k++) {
-                if (j || k) {
-                    let pos = [x + j, y + k];
-                    if (!(pos in tmp)) {
-                        tmp[pos] = 1;
+    if (padding) {
+        // add one pixel on all sides of the hitbox to ensure proper functionality
+        let tmp = {};
+        for (let i = 0; i < hitbox.length; i++) {
+            tmp[hitbox[i]] = 1;
+        }
+        for (let i = 0; i < hitbox.length; i++) {
+            let x = hitbox[i][0];
+            let y = hitbox[i][1];
+            for (let j = -1; j <= 1; j++) {
+                for (let k = -1; k <= 1; k++) {
+                    if (j || k) {
+                        let pos = [x + j, y + k];
+                        if (!(pos in tmp)) {
+                            tmp[pos] = 1;
+                        }
                     }
                 }
             }
         }
+        hitbox = Object.keys(tmp).map(x => JSON.parse("[" + x + "]"));
     }
-    hitbox = Object.keys(tmp).map(x => JSON.parse("[" + x + "]"));
 
     return hitbox;
 }
