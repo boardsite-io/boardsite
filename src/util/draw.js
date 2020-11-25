@@ -137,17 +137,16 @@ export function addHitbox(setHitboxCollection, strokeObject) {
         let hitbox = getHitbox(positions, pointSkipFactor, quadMinPixDist);
 
         // insert new hitboxes
-        for (let i = 0; i < hitbox.length; i += 2) {
-            let x = hitbox[i];
-            let y = hitbox[i+1];
-            if ([x, y] in _prev) { // other ID(s) in this hitbox position
-                let tmp = _prev[[x, y]];
+        for (let i = 0; i < hitbox.length; i++) {
+            let xy = hitbox[i];
+            if (xy in _prev) { // other ID(s) in this hitbox position
+                let tmp = _prev[xy];
                 if (!tmp.includes(id)) { // prevent double entries of same id
                     tmp.push(id);
-                    _prev[[x, y]] = tmp;
+                    _prev[xy] = tmp;
                 }
             } else { // no other ID in this hitbox position
-                _prev[[x, y]] = [id];
+                _prev[xy] = [id];
             }
         }
 
@@ -164,11 +163,10 @@ export function eraser(setHitboxCollection, setStrokeCollection, strokeObject, s
         let quadMinPixDist = 25; // quadratic minimum distance between points to be valid for hitbox calculation
         let hitbox = getHitbox(positions, pointSkipFactor, quadMinPixDist);
         let _prev = { ...prev }
-        for (let i = 0; i < hitbox.length; i += 2) {
-            let x = Math.round(hitbox[i]);
-            let y = Math.round(hitbox[i + 1]);
-            if ([x, y] in _prev) { // IDs in this hitbox position
-                let tmp = _prev[[x, y]];
+        for (let i = 0; i < hitbox.length; i++) {
+            let xy = hitbox[i];
+            if (xy in _prev) { // IDs in this hitbox position
+                let tmp = _prev[xy];
                 for (let i = 0; i < tmp.length; i++) {
                     let id = tmp[i];
                     if (!idsToDelete.includes(id)) {
@@ -202,31 +200,26 @@ export function eraser(setHitboxCollection, setStrokeCollection, strokeObject, s
 
 export function getHitbox(positions, pointSkipFactor, quadMinPixDist) {
     // calculate hitboxes of all segments
-    let x1 = Math.round(positions[0]);
-    let y1 = Math.round(positions[1]);
-    let pixel_full = [];
+    let xy1 = [Math.round(positions[0]), Math.round(positions[1])];
+    let xy2;
+    let hitbox = [];
     for (let i = 2 * pointSkipFactor; i < positions.length; i += 2 * pointSkipFactor) {
-        let x2 = Math.round(positions[i]);
-        let y2 = Math.round(positions[i + 1]);
-        if ((Math.pow(x2-x1,2) + Math.pow(y2-y1,2)) < quadMinPixDist) { // move to next iter if points too close
+        xy2 = [Math.round(positions[i]), Math.round(positions[i + 1])];
+        if ((Math.pow(xy2[0] - xy1[0], 2) + Math.pow(xy2[1] - xy1[1], 2)) < quadMinPixDist) { // move to next iter if points too close
             continue;
         }
-
-        let hitboxPixels = calcPixelRow(x1, y1, x2, y2);
-        pixel_full = pixel_full.concat(hitboxPixels);
-        
-        x1 = x2;
-        y1 = y2;
+        let hitboxPixels = calcPixelRow(xy1[0], xy1[1], xy2[0], xy2[1]);
+        hitbox = hitbox.concat(hitboxPixels);
+        xy1 = xy2;
     }
     // include last point of stroke that might have been left out in for loop
-    let x2 = Math.round(positions[positions.length-2]);
-    let y2 = Math.round(positions[positions.length-1]);
-    if ((Math.pow(x2-x1,2) + Math.pow(y2-y1,2)) < quadMinPixDist) { // check if necessary
-        let hitboxPixels = calcPixelRow(x1, y1, x2, y2);
-        pixel_full = pixel_full.concat(hitboxPixels);
+    xy2 = [Math.round(positions[positions.length - 2]), Math.round(positions[positions.length - 1])];
+    if ((Math.pow(xy2[0] - xy1[0], 2) + Math.pow(xy2[1] - xy1[1], 2)) < quadMinPixDist) { // check if necessary
+        let hitboxPixels = calcPixelRow(xy1[0], xy1[1], xy2[0], xy2[1]);
+        hitbox = hitbox.concat(hitboxPixels);
     }
 
-    return pixel_full;
+    return hitbox;
 }
 
 /**
@@ -239,9 +232,9 @@ export function getHitbox(positions, pointSkipFactor, quadMinPixDist) {
  */
 export function calcPixelRow(x1, y1, x2, y2) {
     // PixelReihen Algo: https://de.wikipedia.org/wiki/Rasterung_von_Linien
-    
-    if (x2-x1 < 0) { // order so that x2 >= x1
-        let cp = [x1,y1,x2,y2];
+
+    if (x2 - x1 < 0) { // order so that x2 >= x1
+        let cp = [x1, y1, x2, y2];
         x1 = cp[2];
         y1 = cp[3];
         x2 = cp[0];
@@ -250,28 +243,27 @@ export function calcPixelRow(x1, y1, x2, y2) {
     let xd = x2 - x1;
     let yd = y2 - y1;
 
-    let pixelRow = [];
+    let hitbox = [];
 
     if (xd === 0) { // vertical line
-        if (yd >= 0){
+        if (yd >= 0) {
             for (let i = 0; i <= yd; i++) {
-                pixelRow.push(x1, y1 + i);
+                hitbox.push([x1, y1 + i]);
             }
         } else {
             for (let i = 0; i <= -yd; i++) {
-                pixelRow.push(x1, y2 + i);
+                hitbox.push([x1, y2 + i]);
             }
         }
-        return pixelRow;
+        return hitbox;
     } else if (yd === 0) { // horizontal line
         for (let i = 0; i <= xd; i++) {
-            pixelRow.push(x1 + i, y1);
+            hitbox.push([x1 + i, y1]);
         }
-        return pixelRow;
+        return hitbox;
     } else { // normal line
         let m_inv = xd / yd;
         let type = 0;
-        // console.log(xd, yd, m_inv)
         if (1 > m_inv && m_inv > 0) {
             type = 1;
             let cp = [x1, y1, x2, y2, xd, yd];
@@ -305,38 +297,37 @@ export function calcPixelRow(x1, y1, x2, y2) {
         for (let i = 0; i < yd; i++) {
             let rowEnd = Math.ceil(x1 + (0.5 + i) * m_inv - 1);
             for (let j = rowStart; j <= rowEnd; j++) {
-                pixelRow.push(j, y1 + i);
+                hitbox.push([j, y1 + i]);
             }
             rowStart = rowEnd + 1;
         }
         for (let j = rowStart; j <= x2; j++) {
-            pixelRow.push(j, y2);
+            hitbox.push([j, y2]);
         }
 
         // CORRECT THE OUTPUT
         if (type === 1) {
-            let pxRow = [];
-            for (let i = 0; i < pixelRow.length; i += 2) {
-                pxRow.push(pixelRow[i + 1], pixelRow[i]);
+            let hbox = [];
+            for (let i = 0; i < hitbox.length; i++) {
+                hbox.push([hitbox[i][0], hitbox[i][1]]);
             }
-            return pxRow;
+            return hbox;
         } else if (type === 2) {
             let pxRow = [];
-            let len = pixelRow.length;
-            for (let i = 0; i < len; i += 2) {
-                pxRow.push(pixelRow[i + 1]);
-                pxRow.push(pixelRow[len - i - 2]);
+            let len = hitbox.length;
+            for (let i = 0; i < len; i++) {
+                pxRow.push([hitbox[i][1], hitbox[len - i - 1][0]]);
             }
             return pxRow
         } else if (type === 3) {
-            let pxRow = pixelRow.slice(0);
-            let len = pixelRow.length;
-            for (let i = 1; i < len; i += 2) {
-                pxRow[i] = pixelRow[len - i];
+            let pxRow = [];
+            let len = hitbox.length;
+            for (let i = 0; i < len; i++) {
+                pxRow.push([hitbox[i][0], hitbox[len - i - 1][1]])
             }
             return pxRow;
         } else {
-            return pixelRow;
+            return hitbox;
         }
     }
 }
