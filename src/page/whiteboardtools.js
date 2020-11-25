@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { TextField, IconButton, Icon } from '@material-ui/core';
+import { TextField, IconButton} from '@material-ui/core';
 import * as api from '../util/api';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import SaveIcon from '@material-ui/icons/Save';
@@ -11,14 +11,14 @@ import '../css/toolbar.css';
 import { SketchPicker } from 'react-color'
 import reactCSS from 'reactcss'
 
-import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
-import RangeSlider from 'react-bootstrap-range-slider';
+// import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
+// import RangeSlider from 'react-bootstrap-range-slider';
 
 function WhiteboardTools(props) {
     const sidRef = useRef(null);
     const [displayColorPicker, setDisplayColorPicker] = useState(false);
     const [color, setColor] = useState({ r: '0', g: '0', b: '0', a: '1', });
-    const [ value, setValue ] = useState(0); 
+    // const [ value, setValue ] = useState(0); 
 
     function handleClear() {
         // Local clear
@@ -88,10 +88,6 @@ function WhiteboardTools(props) {
             <IconButton id="iconButton" variant="contained" color="primary" onClick={() => saveBoard()}><SaveIcon color="secondary" id="iconButtonInner" /></IconButton>
             <IconButton id="iconButton" variant="contained" color="primary" onClick={() => loadBoard()}><GetAppIcon color="secondary" id="iconButtonInner" /></IconButton>
             <IconButton id="iconButton" variant="contained" color="primary" onClick={handleClick}><PaletteIcon color="secondary" id="iconButtonInner" /></IconButton>
-            {/* <RangeSlider
-                value={value}
-                onChange={changeEvent => setValue(changeEvent.target.value)}
-            /> */}
             <TextField id="textField" onChange={(e) => handleWidthTextFieldChange(e)} label="Width" />
             <TextField id="textField" inputRef={sidRef} variant="outlined" />
             <div className="colorpicker">
