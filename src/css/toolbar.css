@@ -10,8 +10,29 @@
     width: 30px;
 }
 
-#button {
-    height: 30px;
+#iconButton {
+    background-color: #00D2BE;
+    width: 50px;
+    height: 20px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+#iconButton:hover #iconButtonInner{
+    color: #00D2BE;
+    
+}
+#iconButton:hover{
+    background-color: black;
+    
+}
+
+#textField {
+    color: black;
+    background-color: #00D2BE;
+    width: 50px;
+    height: 15px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
 
 .colorpicker {
