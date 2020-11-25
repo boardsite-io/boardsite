@@ -219,6 +219,27 @@ export function getHitbox(positions, pointSkipFactor, quadMinPixDist) {
         hitbox = hitbox.concat(hitboxPixels);
     }
 
+    // add one pixel on all sides of the hitbox to ensure proper functionality
+    let tmp = {};
+    for (let i = 0; i < hitbox.length; i++) {
+        tmp[hitbox[i]] = 1;
+    }
+    for (let i = 0; i < hitbox.length; i++) {
+        let x = hitbox[i][0];
+        let y = hitbox[i][1];
+        for (let j = -1; j <= 1; j++) {
+            for (let k = -1; k <= 1; k++) {
+                if (j || k) {
+                    let pos = [x + j, y + k];
+                    if (!(pos in tmp)) {
+                        tmp[pos] = 1;
+                    }
+                }
+            }
+        }
+    }
+    hitbox = Object.keys(tmp).map(x => JSON.parse("[" + x + "]"));
+
     return hitbox;
 }
 
