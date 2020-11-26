@@ -140,61 +140,50 @@ export function addHitbox(setHitboxCollection, strokeObject) {
         // insert new hitboxes
         for (let i = 0; i < hitbox.length; i++) {
             let xy = hitbox[i];
-            if (xy in _prev) { // other ID(s) in this hitbox position
-                let tmp = _prev[xy];
-                if (!tmp.includes(id)) { // prevent double entries of same id
-                    tmp.push(id);
-                    _prev[xy] = tmp;
-                }
+            if (_prev.hasOwnProperty(xy)) { // other ID(s) in this hitbox position
+                _prev[xy][id] = true;
             } else { // no other ID in this hitbox position
-                _prev[xy] = [id];
+                _prev[xy] = {};
+                _prev[xy][id] = true;
             }
         }
-
+        
         return _prev;
     });
 }
 
 export function eraser(setHitboxCollection, setStrokeCollection, strokeObject, setNeedsRedraw, wsRef) {
     let positions = strokeObject.position.slice(0);
-    let idsToDelete = [];
+    let idsToDelete = {};
 
     setHitboxCollection((prev) => {
         let pointSkipFactor = 16; // only check every p-th (x,y) position to reduce computational load
         let quadMinPixDist = 25; // quadratic minimum distance between points to be valid for hitbox calculation
         let padding = 0;
         let hitbox = getHitbox(positions, pointSkipFactor, quadMinPixDist, padding);
-        let _prev = { ...prev }
+        let _prev = { ...prev };
         for (let i = 0; i < hitbox.length; i++) {
             let xy = hitbox[i];
-            if (xy in _prev) { // IDs in this hitbox position
-                let tmp = _prev[xy];
-                for (let i = 0; i < tmp.length; i++) {
-                    let id = tmp[i];
-                    if (!idsToDelete.includes(id)) {
-                        idsToDelete.push(id);
-                    }
-                }
+            if (_prev.hasOwnProperty(xy)) { // there are IDs in this hitbox position
+                Object.keys(_prev[xy]).forEach((id) => {
+                    idsToDelete[id] = true;
+                })
             }
         }
-
-        // REMOVE DELETED ID HITBOXES FROM HITBOXCOLLECTION
-        Object.keys(_prev).forEach((key) => {
-            if (idsToDelete.includes(_prev[key][0])) {
-                delete _prev[key];
-            }
-        })
-
+        
+        // remove deleted id hitboxes from collection
+        Object.keys(_prev).forEach((posKey) => {
+            Object.keys(idsToDelete).forEach((keyToDel) => {
+                delete _prev[posKey][keyToDel];
+            });
+        });
+        
         // Send ids to delete
-        let deleteObjects = [];
-        idsToDelete.forEach(id => {
-            let deleteObj = {
-                id: id,
-                type: "delete",
-            };
-            deleteObjects.push(deleteObj);
+        let deleteObjects = Object.keys(idsToDelete).map((id) => {
+            return { id: id, type: "delete" };
         })
-        if (wsRef.current !== null && deleteObjects.length !== 0) {
+
+        if (deleteObjects.length > 0 && wsRef.current !== null) {
             wsRef.current.send(JSON.stringify(deleteObjects));
         }
 
@@ -204,9 +193,10 @@ export function eraser(setHitboxCollection, setStrokeCollection, strokeObject, s
     // erase id's strokes from collection
     setStrokeCollection((prev) => {
         let _prev = { ...prev }
-        for (let i = 0; i < idsToDelete.length; i++) {
-            delete _prev[idsToDelete[i]];
-        }
+        Object.keys(idsToDelete).forEach((keyToDel) => {
+            delete _prev[keyToDel];
+        });
+        
         return _prev;
     });
 

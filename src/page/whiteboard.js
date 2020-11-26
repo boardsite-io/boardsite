@@ -74,14 +74,12 @@ function Whiteboard(props) {
                 util.drawCurve(ctx, stroke.position);
             }
             else if (stroke.type === "delete") {
-                // erase id's hitbox from collection
+                // remove deleted id hitboxes from collection 
                 props.setHitboxCollection((prev) => {
                     let _prev = { ...prev }
-                    Object.keys(_prev).forEach((key) => {
-                        if (_prev[key][0] === stroke.id) {
-                            delete _prev[key];
-                        }
-                    })
+                    Object.keys(_prev).forEach((posKey) => {
+                        delete _prev[posKey][stroke.id];
+                    });
                     return _prev;
                 });
 
