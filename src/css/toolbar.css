@@ -26,17 +26,26 @@
     
 }
 
-#textField {
-    color: black;
-    background-color: #00D2BE;
-    width: 50px;
-    height: 15px;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-}
-
 .colorpicker {
     position: fixed;
     left: 100px;
     top: 80px;
+}
+
+.sliderdiv{
+    position: fixed;
+    left: 100px;
+    top: 300px;
+    display: grid;
+    grid-template-columns: 70% 30%;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    height: 40px;
+    width: 200px;
+    background-color: #00D2BE;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
