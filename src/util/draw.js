@@ -61,7 +61,7 @@ export function handleCanvasMouseMove(e, canvasRef) {
     }
 }
 
-export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setNeedsRedraw) {
+export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setIdOrder, setNeedsRedraw) {
     if (!isMouseDown) { return; } // Ignore reentering
     isMouseDown = false;
     lastX = -1;
@@ -92,13 +92,20 @@ export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, se
         drawCurve(ctx, stroke);
         updateStrokeCollection(setStrokeCollection, strokeObject, wsRef);
         addHitbox(setHitboxCollection, strokeObject);
+
+        // add to actions stack
+        setIdOrder((prev) => {
+            let _prev = [...prev];
+            _prev.push([strokeObject.id, strokeObject.type]);
+            return _prev;
+        });
     } else {
-        eraser(setHitboxCollection, setStrokeCollection, strokeObject, setNeedsRedraw, wsRef);
+        eraser(setHitboxCollection, setStrokeCollection, setIdOrder, strokeObject, setNeedsRedraw, wsRef);
     }
 }
 
-export function handleCanvasMouseLeave(e, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setNeedsRedraw) {
-    handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setNeedsRedraw);
+export function handleCanvasMouseLeave(e, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setIdOrder, setNeedsRedraw) {
+    handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setIdOrder, setNeedsRedraw);
 }
 
 export function updateStrokeCollection(setStrokeCollection, strokeObject, wsRef) {
@@ -106,7 +113,6 @@ export function updateStrokeCollection(setStrokeCollection, strokeObject, wsRef)
     setStrokeCollection((prev) => {
         let res = { ...prev };
         res[strokeObject.id] = strokeObject;
-        // console.log(res[strokeObject.id].position);
         return res;
     });
 
@@ -147,12 +153,12 @@ export function addHitbox(setHitboxCollection, strokeObject) {
                 _prev[xy][id] = true;
             }
         }
-        
+
         return _prev;
     });
 }
 
-export function eraser(setHitboxCollection, setStrokeCollection, strokeObject, setNeedsRedraw, wsRef) {
+export function eraser(setHitboxCollection, setStrokeCollection, setIdOrder, strokeObject, setNeedsRedraw, wsRef) {
     let positions = strokeObject.position.slice(0);
     let idsToDelete = {};
 
@@ -170,14 +176,14 @@ export function eraser(setHitboxCollection, setStrokeCollection, strokeObject, s
                 })
             }
         }
-        
+
         // remove deleted id hitboxes from collection
         Object.keys(_prev).forEach((posKey) => {
             Object.keys(idsToDelete).forEach((keyToDel) => {
                 delete _prev[posKey][keyToDel];
             });
         });
-        
+
         // Send ids to delete
         let deleteObjects = Object.keys(idsToDelete).map((id) => {
             return { id: id, type: "delete" };
@@ -194,9 +200,15 @@ export function eraser(setHitboxCollection, setStrokeCollection, strokeObject, s
     setStrokeCollection((prev) => {
         let _prev = { ...prev }
         Object.keys(idsToDelete).forEach((keyToDel) => {
+            // add to actions stack
+            setIdOrder((prev) => {
+                let _prev = [...prev];
+                _prev.push([keyToDel, "delete"]);
+                return _prev;
+            });
             delete _prev[keyToDel];
         });
-        
+
         return _prev;
     });
 
@@ -457,7 +469,7 @@ export function drawCurve(ctx, ptsa) {
 
 export function drawLines(ctx, pts) {
     ctx.moveTo(pts[0], pts[1]);
-    for (var i = 2; i < pts.length - 1; i += 2){
+    for (var i = 2; i < pts.length - 1; i += 2) {
         ctx.lineTo(pts[i], pts[i + 1]);
-    } 
+    }
 }

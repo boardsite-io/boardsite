@@ -9,6 +9,7 @@ import '../css/whiteboard.css';
 
 function WhiteboardControl() {
     const [strokeCollection, setStrokeCollection] = useState({});
+    const [idOrder, setIdOrder] = useState([]);
     const [ , setHitboxCollection] = useState({});
     const [strokeMessage, setStrokeMessage] = useState({});
     const [strokeStyle, setStrokeStyle] = useState("#000000");
@@ -94,12 +95,14 @@ function WhiteboardControl() {
             <div className="canvasdiv">
                 <Whiteboard wsRef={wsRef} strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
                     strokeStyle={strokeStyle} lineWidth={lineWidth} needsClear={needsClear} setNeedsClear={setNeedsClear}
-                    strokeMessage={strokeMessage} setStrokeMessage={setStrokeMessage} setHitboxCollection={setHitboxCollection} />
+                    strokeMessage={strokeMessage} setStrokeMessage={setStrokeMessage} setHitboxCollection={setHitboxCollection}
+                    idOrder={idOrder} setIdOrder={setIdOrder} />
             </div>
             <WhiteboardTools strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
                 strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
                 lineWidth={lineWidth} setLineWidth={setLineWidth} sessionID={sessionID}
-                setOpen={setOpen} setNeedsClear={setNeedsClear} />
+                setOpen={setOpen} setNeedsClear={setNeedsClear} 
+                idOrder={idOrder} setIdOrder={setIdOrder} />
                 </div>
     );
 }

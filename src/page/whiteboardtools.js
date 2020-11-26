@@ -25,6 +25,7 @@ function WhiteboardTools(props) {
         // Local clear
         props.setStrokeCollection({})
         props.setNeedsClear(x => x + 1);
+        props.setIdOrder([]);
         // Server clear
         api.clearBoard(props.sessionID);
     }
@@ -36,7 +37,7 @@ function WhiteboardTools(props) {
     }
 
     function loadBoard() {
-
+        console.log(props.idOrder);
     }
 
     function handlePaletteClick() {
