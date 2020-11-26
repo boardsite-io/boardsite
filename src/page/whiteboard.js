@@ -50,13 +50,13 @@ function Whiteboard(props) {
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, window.innerHeight, window.innerWidth);
         props.setStrokeCollection({});
+        props.setHitboxCollection({});
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.needsClear])
 
-    // Draws incoming stroke messages
+    // Processes incoming stroke messages
     useEffect(() => {
         // addHitbox(setHitboxCollection, strokeObject)
-        console.log(props.strokeMessage);
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         Object.keys(props.strokeMessage).forEach((key) => {
