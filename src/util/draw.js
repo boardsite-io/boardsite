@@ -93,7 +93,7 @@ export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, se
         updateStrokeCollection(setStrokeCollection, strokeObject, wsRef);
         addHitbox(setHitboxCollection, strokeObject);
     } else {
-        eraser(setHitboxCollection, setStrokeCollection, strokeObject, setNeedsRedraw);
+        eraser(setHitboxCollection, setStrokeCollection, strokeObject, setNeedsRedraw, wsRef);
     }
 }
 
@@ -155,7 +155,7 @@ export function addHitbox(setHitboxCollection, strokeObject) {
     });
 }
 
-export function eraser(setHitboxCollection, setStrokeCollection, strokeObject, setNeedsRedraw) {
+export function eraser(setHitboxCollection, setStrokeCollection, strokeObject, setNeedsRedraw, wsRef) {
     let positions = strokeObject.position.slice(0);
     let idsToDelete = [];
 
@@ -184,6 +184,19 @@ export function eraser(setHitboxCollection, setStrokeCollection, strokeObject, s
                 delete _prev[key];
             }
         })
+
+        // Send ids to delete
+        let deleteObjects = [];
+        idsToDelete.forEach(id => {
+            let deleteObj = {
+                id: id,
+                type: "delete",
+            };
+            deleteObjects.push(deleteObj);
+        })
+        if (wsRef.current !== null && deleteObjects.length !== 0) {
+            wsRef.current.send(JSON.stringify(deleteObjects));
+        }
 
         return _prev;
     });
@@ -446,20 +459,15 @@ export function getCurvePoints(pts, tension, isClosed, numOfSegments) {
 }
 
 // DRAWING FUNCTIONS FROM STACKOVERFLOW
-export function drawCurve(ctx, ptsa, showPoints) {
+export function drawCurve(ctx, ptsa) {
     ctx.beginPath();
     drawLines(ctx, ptsa);
-    if (showPoints) {
-        ctx.beginPath();
-        for (var i = 0; i < ptsa.length - 1; i += 2)
-            ctx.rect(ptsa[i] - 2, ptsa[i + 1] - 2, 4, 4);
-    }
     ctx.stroke();
 }
 
-
-
 export function drawLines(ctx, pts) {
     ctx.moveTo(pts[0], pts[1]);
-    for (var i = 2; i < pts.length - 1; i += 2) ctx.lineTo(pts[i], pts[i + 1]);
+    for (var i = 2; i < pts.length - 1; i += 2){
+        ctx.lineTo(pts[i], pts[i + 1]);
+    } 
 }

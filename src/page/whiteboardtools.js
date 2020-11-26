@@ -152,7 +152,7 @@ function WhiteboardTools(props) {
                             />
                         </div>
                     </div>
-                    : null
+                : null
             }
         </div>
     );
