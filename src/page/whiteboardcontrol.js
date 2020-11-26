@@ -9,7 +9,7 @@ import '../css/whiteboard.css';
 
 function WhiteboardControl() {
     const [strokeCollection, setStrokeCollection] = useState({});
-    const [hitboxCollection, setHitboxCollection] = useState({});
+    const [ , setHitboxCollection] = useState({});
     const [strokeMessage, setStrokeMessage] = useState({});
     const [strokeStyle, setStrokeStyle] = useState("#000000");
     const [lineWidth, setLineWidth] = useState(3);

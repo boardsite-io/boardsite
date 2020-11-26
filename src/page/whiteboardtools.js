@@ -47,7 +47,7 @@ function WhiteboardTools(props) {
         setDisplayWidthPicker(!displayWidthPicker);
     };
 
-    function handleClose() {
+    function handlePaletteClose() {
         setDisplayColorPicker(false);
     };
 
@@ -55,9 +55,17 @@ function WhiteboardTools(props) {
         setDisplayWidthPicker(false);
     };
 
-    function handleChange(color) {
+    function handlePaletteChange(color) {
         setColor(color.rgb);
         props.setStrokeStyle(color.hex)
+    };
+
+    const handleSliderChange = (event, newValue) => {
+        props.setLineWidth(newValue);
+    };
+
+    const handleInputChange = (event) => {
+        props.setLineWidth(event.target.value === '' ? '' : Number(event.target.value));
     };
 
     // Slider Functions
@@ -69,22 +77,8 @@ function WhiteboardTools(props) {
         }
     };
 
-    const handleSliderChange = (event, newValue) => {
-        props.setLineWidth(newValue);
-    };
-
-    const handleInputChange = (event) => {
-        props.setLineWidth(event.target.value === '' ? '' : Number(event.target.value));
-    };
-
     const styles = reactCSS({
         'default': {
-            // color: {
-            //     width: '100px',
-            //     height: '20px',
-            //     borderRadius: '5px',
-            //     background: `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`,
-            // },
             popover: {
                 position: 'absolute',
                 zIndex: '2', // stack order
@@ -119,44 +113,47 @@ function WhiteboardTools(props) {
             <IconButton id="iconButton" variant="contained" color="primary" onClick={handleWidthClick}>
                 <CreateIcon color="secondary" id="iconButtonInner" />
             </IconButton>
-            {
-                displayWidthPicker ? <div style={styles.popover}>
-                    <div style={styles.cover} onClick={handleWidthClose} />
-                    <div className="sliderdiv">
-                        <Slider
-                            color="secondary"
-                            value={typeof props.lineWidth === 'number' ? props.lineWidth : 0}
-                            onChange={handleSliderChange}
-                            aria-labelledby="input-slider"
-                            min={minWidth}
-                            max={maxWidth}
-                        />
-                        <Input
-                            className={styles.input}
-                            value={props.lineWidth}
-                            margin="dense"
-                            onChange={handleInputChange}
-                            onBlur={handleBlur}
-                            inputProps={{
-                                step: 10,
-                                min: minWidth,
-                                max: maxWidth,
-                                type: 'number',
-                                'aria-labelledby': 'input-slider',
-                            }}
-                        />
+            { // Palette Popup
+                displayColorPicker ?
+                    <div style={styles.popover}>
+                        <div style={styles.cover} onClick={handlePaletteClose} />
+                        <div className="colorpicker">
+                            <SketchPicker disableAlpha={true} color={color} onChange={handlePaletteChange} />
+                        </div>
                     </div>
-                </div> : null
+                    : null
             }
-
-            <div className="colorpicker">
-                {
-                    displayColorPicker ? <div style={styles.popover}>
-                        <div style={styles.cover} onClick={handleClose} />
-                        <SketchPicker disableAlpha={true} color={color} onChange={handleChange} />
-                    </div> : null
-                }
-            </div>
+            { // Width Slider Popup
+                displayWidthPicker ?
+                    <div style={styles.popover}>
+                        <div style={styles.cover} onClick={handleWidthClose} />
+                        <div className="widthpicker">
+                            <Slider
+                                color="secondary"
+                                value={typeof props.lineWidth === 'number' ? props.lineWidth : 0}
+                                onChange={handleSliderChange}
+                                aria-labelledby="input-slider"
+                                min={minWidth}
+                                max={maxWidth}
+                            />
+                            <Input
+                                className={styles.input}
+                                value={props.lineWidth}
+                                margin="dense"
+                                onChange={handleInputChange}
+                                onBlur={handleBlur}
+                                inputProps={{
+                                    step: 10,
+                                    min: minWidth,
+                                    max: maxWidth,
+                                    type: 'number',
+                                    'aria-labelledby': 'input-slider',
+                                }}
+                            />
+                        </div>
+                    </div>
+                    : null
+            }
         </div>
     );
 }
