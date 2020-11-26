@@ -15,7 +15,9 @@ class Boardsite extends React.Component {
         return (
             <ThemeProvider theme={theme}>
                 <h1 id="watermark" style={{
-                    color: theme.palette.secondary.main, backgroundColor: theme.palette.primary.main
+                    color: theme.palette.primary.main, 
+                    backgroundColor: theme.palette.secondary.main,
+                    border: "2px solid" + theme.palette.primary.main
                     }} >BoardSite</h1>
                 <CssBaseline />
                 <Router>
