@@ -1,12 +1,12 @@
 import * as hd from './handledata.js';
 import * as hbx from './hitbox.js';
 
-export function eraser(setHitboxCollection, setStrokeCollection, setIdOrder, strokeObject, setNeedsRedraw, wsRef) {
+export function eraser(setHitboxCollection, setStrokeCollection, setUndoStack, strokeObject, setNeedsRedraw, wsRef) {
     let positions = strokeObject.position.slice(0);
     let idsToDelete = {};
 
     setHitboxCollection((prev) => {
-        let pointSkipFactor = 16; // only check every p-th (x,y) position to reduce computational load
+        let pointSkipFactor = 8; // only check every p-th (x,y) position to reduce computational load
         let quadMinPixDist = 25; // quadratic minimum distance between points to be valid for hitbox calculation
         let padding = 0;
         let hitbox = hbx.getHitbox(positions, pointSkipFactor, quadMinPixDist, padding);
@@ -27,7 +27,7 @@ export function eraser(setHitboxCollection, setStrokeCollection, setIdOrder, str
 
     hd.eraseFromHitboxCollection(idsToDelete, setHitboxCollection);
     hd.sendIdsToDelete(idsToDelete, wsRef);
-    hd.eraseFromStrokeCollection(idsToDelete, setStrokeCollection, setIdOrder, setNeedsRedraw);
+    hd.eraseFromStrokeCollection(idsToDelete, setStrokeCollection, setUndoStack, setNeedsRedraw);
 }
 
 // draw line
