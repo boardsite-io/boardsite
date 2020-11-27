@@ -132,7 +132,7 @@ export function calcPixelRow(x1, y1, x2, y2) {
         if (type === 1) {
             let hbox = [];
             for (let i = 0; i < hitbox.length; i++) {
-                hbox.push([hitbox[i][0], hitbox[i][1]]);
+                hbox.push([hitbox[i][1], hitbox[i][0]]);
             }
             return hbox;
         } else if (type === 2) {
