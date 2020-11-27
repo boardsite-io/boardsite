@@ -1,6 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 
 import * as util from '../util/draw.js';
+import * as draw from '../util/drawingengine.js';
+import * as hbx from '../util/hitbox.js';
 
 function Whiteboard(props) {
     const canvasRef = useRef();
@@ -75,10 +77,10 @@ function Whiteboard(props) {
                     res[stroke.id] = stroke;
                     return res;
                 });
-                util.addHitbox(props.setHitboxCollection, stroke);
+                hbx.addHitbox(props.setHitboxCollection, stroke);
                 ctx.strokeStyle = stroke.color;
                 ctx.lineWidth = stroke.line_width;
-                util.drawCurve(ctx, stroke.position);
+                draw.drawCurve(ctx, stroke.position);
             }
             else if (stroke.type === "delete") {
                 // remove deleted id hitboxes from collection 
@@ -114,7 +116,7 @@ function Whiteboard(props) {
             let stroke = props.strokeCollection[key];
             ctx.strokeStyle = stroke.color;
             ctx.lineWidth = stroke.line_width;
-            return util.drawCurve(ctx, stroke.position);
+            return draw.drawCurve(ctx, stroke.position);
         })
         ctx.strokeStyle = props.strokeStyle;
         ctx.lineWidth = props.lineWidth;
