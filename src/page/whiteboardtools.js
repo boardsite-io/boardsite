@@ -7,6 +7,9 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import PaletteIcon from '@material-ui/icons/Palette';
 import CreateIcon from '@material-ui/icons/Create';
+import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
+import SkipNextIcon from '@material-ui/icons/SkipNext';
+
 import '../css/toolbar.css';
 import { SketchPicker } from 'react-color'
 import reactCSS from 'reactcss'
@@ -17,6 +20,8 @@ import reactCSS from 'reactcss'
 function WhiteboardTools(props) {
     const [displayColorPicker, setDisplayColorPicker] = useState(false);
     const [displayWidthPicker, setDisplayWidthPicker] = useState(false);
+    const [redoStack, setActionStack] = useState([]);
+
     const [color, setColor] = useState({ r: '0', g: '0', b: '0', a: '1', });
     const minWidth = 1;
     const maxWidth = 100;
@@ -26,6 +31,7 @@ function WhiteboardTools(props) {
         props.setStrokeCollection({})
         props.setNeedsClear(x => x + 1);
         props.setIdOrder([]);
+        setActionStack([]);
         // Server clear
         api.clearBoard(props.sessionID);
     }
@@ -37,7 +43,43 @@ function WhiteboardTools(props) {
     }
 
     function loadBoard() {
-        console.log(props.idOrder);
+        console.log(props.idOrder,redoStack);
+    }
+
+    function handlePrevious() {
+        let lastAction = props.idOrder.pop();
+        if (lastAction !== undefined) {
+            let type = lastAction[1];
+            let id = lastAction[0];
+            if (type === "stroke") {
+                // remove deleted id hitboxes from collection 
+                props.setHitboxCollection((prev) => {
+                    let _prev = { ...prev }
+                    Object.keys(_prev).forEach((posKey) => {
+                        delete _prev[posKey][id];
+                    });
+                    return _prev;
+                });
+
+                // erase id's strokes from collection
+                props.setStrokeCollection((prev) => {
+                    let _prev = { ...prev };
+                    redoStack.push(_prev[id]);
+                    delete _prev[id];
+                    return _prev;
+                });
+                props.setNeedsRedraw(x => x + 1); // trigger redraw
+            }
+        }
+    }
+
+    function handleNext() {
+        let redo = redoStack.pop();
+        if (redo !== undefined) {
+            let addMe = {};
+            addMe[redo.id] = redo;
+            props.setStrokeMessage(addMe);
+        }
     }
 
     function handlePaletteClick() {
@@ -108,6 +150,12 @@ function WhiteboardTools(props) {
             <IconButton id="iconButton" variant="contained" color="primary" onClick={() => loadBoard()}>
                 <GetAppIcon color="secondary" id="iconButtonInner" />
             </IconButton>
+            <IconButton id="iconButton" variant="contained" color="primary" onClick={() => handlePrevious()}>
+                <SkipPreviousIcon color="secondary" id="iconButtonInner" />
+            </IconButton>
+            <IconButton id="iconButton" variant="contained" color="primary" onClick={() => handleNext()}>
+                <SkipNextIcon color="secondary" id="iconButtonInner" />
+            </IconButton>
             <IconButton id="iconButton" variant="contained" color="primary" onClick={handlePaletteClick}>
                 <PaletteIcon color="secondary" id="iconButtonInner" />
             </IconButton>
@@ -153,7 +201,7 @@ function WhiteboardTools(props) {
                             />
                         </div>
                     </div>
-                : null
+                    : null
             }
         </div>
     );

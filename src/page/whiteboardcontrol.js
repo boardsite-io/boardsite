@@ -15,6 +15,7 @@ function WhiteboardControl() {
     const [strokeStyle, setStrokeStyle] = useState("#000000");
     const [lineWidth, setLineWidth] = useState(3);
     const [needsClear, setNeedsClear] = useState(0);
+    const [needsRedraw, setNeedsRedraw] = useState(0);
 
     const [open, setOpen] = useState(true);
     const [sessionID, setSessionID] = useState("");
@@ -96,13 +97,14 @@ function WhiteboardControl() {
                 <Whiteboard wsRef={wsRef} strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
                     strokeStyle={strokeStyle} lineWidth={lineWidth} needsClear={needsClear} setNeedsClear={setNeedsClear}
                     strokeMessage={strokeMessage} setStrokeMessage={setStrokeMessage} setHitboxCollection={setHitboxCollection}
-                    idOrder={idOrder} setIdOrder={setIdOrder} />
+                    idOrder={idOrder} setIdOrder={setIdOrder} needsRedraw={needsRedraw} setNeedsRedraw={setNeedsRedraw} />
             </div>
             <WhiteboardTools strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
                 strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
                 lineWidth={lineWidth} setLineWidth={setLineWidth} sessionID={sessionID}
-                setOpen={setOpen} setNeedsClear={setNeedsClear} 
-                idOrder={idOrder} setIdOrder={setIdOrder} />
+                setOpen={setOpen} setNeedsClear={setNeedsClear} setHitboxCollection={setHitboxCollection}
+                idOrder={idOrder} setIdOrder={setIdOrder} setNeedsRedraw={setNeedsRedraw} 
+                setStrokeMessage={setStrokeMessage} />
                 </div>
     );
 }

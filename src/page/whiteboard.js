@@ -1,10 +1,9 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 
 import * as util from '../util/draw.js';
 
 function Whiteboard(props) {
     const canvasRef = useRef();
-    const [needsRedraw, setNeedsRedraw] = useState(0);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -13,13 +12,13 @@ function Whiteboard(props) {
         canvas.addEventListener("contextmenu", e => e.preventDefault()); // Disable Context Menu
         canvas.addEventListener("mousedown", (e) => util.handleCanvasMouseDown(e, canvasRef));
         canvas.addEventListener("mousemove", (e) => util.handleCanvasMouseMove(e, canvasRef));
-        canvas.addEventListener("mouseup", (e) => util.handleCanvasMouseUp(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setIdOrder, setNeedsRedraw));
-        canvas.addEventListener("mouseleave", (e) => util.handleCanvasMouseLeave(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setIdOrder, setNeedsRedraw));
+        canvas.addEventListener("mouseup", (e) => util.handleCanvasMouseUp(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setIdOrder, props.setNeedsRedraw));
+        canvas.addEventListener("mouseleave", (e) => util.handleCanvasMouseLeave(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setIdOrder, props.setNeedsRedraw));
         // touch & stylus support
         canvas.addEventListener("touchstart", (e) => util.handleCanvasMouseDown(e, canvasRef));
         canvas.addEventListener("touchmove", (e) => util.handleCanvasMouseMove(e, canvasRef));
-        canvas.addEventListener("touchend", (e) => util.handleCanvasMouseUp(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setIdOrder, setNeedsRedraw));
-        canvas.addEventListener("touchcancel", (e) => util.handleCanvasMouseLeave(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setIdOrder, setNeedsRedraw));
+        canvas.addEventListener("touchend", (e) => util.handleCanvasMouseUp(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setIdOrder, props.setNeedsRedraw));
+        canvas.addEventListener("touchcancel", (e) => util.handleCanvasMouseLeave(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setIdOrder, props.setNeedsRedraw));
 
         return () => {
             canvas.removeEventListener("contextmenu", null);
@@ -97,7 +96,7 @@ function Whiteboard(props) {
                     delete _prev[stroke.id];
                     return _prev;
                 });
-                setNeedsRedraw(x => x + 1); // trigger redraw
+                props.setNeedsRedraw(x => x + 1); // trigger redraw
             }
         })
 
@@ -120,7 +119,7 @@ function Whiteboard(props) {
         ctx.strokeStyle = props.strokeStyle;
         ctx.lineWidth = props.lineWidth;
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [needsRedraw])
+    }, [props.needsRedraw])
 
     return (
         <div websocket={props.wsRef.current}>
