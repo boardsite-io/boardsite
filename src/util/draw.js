@@ -1,5 +1,6 @@
-import * as draw from '../util/drawingengine.js';
-import * as hbx from '../util/hitbox.js';
+import * as draw from './drawingengine.js';
+import * as hbx from './hitbox.js';
+import * as hd from './handledata.js';
 
 let imageData;
 let isMouseDown = false;
@@ -93,7 +94,7 @@ export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, se
         // Delete livestroke lines and restroke interpolated and potentially buffered strokes
         ctx.putImageData(imageData, 0, 0);
         draw.drawCurve(ctx, stroke);
-        updateStrokeCollection(setStrokeCollection, strokeObject, wsRef);
+        hd.addToStrokeCollection(strokeObject, setStrokeCollection, wsRef);
         hbx.addHitbox(setHitboxCollection, strokeObject);
 
         // add to actions stack
@@ -103,84 +104,10 @@ export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, se
             return _prev;
         });
     } else {
-        eraser(setHitboxCollection, setStrokeCollection, setIdOrder, strokeObject, setNeedsRedraw, wsRef);
+        draw.eraser(setHitboxCollection, setStrokeCollection, setIdOrder, strokeObject, setNeedsRedraw, wsRef);
     }
 }
 
 export function handleCanvasMouseLeave(e, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setIdOrder, setNeedsRedraw) {
     handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setIdOrder, setNeedsRedraw);
-}
-
-export function updateStrokeCollection(setStrokeCollection, strokeObject, wsRef) {
-    // Add stroke to strokeCollection
-    setStrokeCollection((prev) => {
-        let res = { ...prev };
-        res[strokeObject.id] = strokeObject;
-        return res;
-    });
-
-    // let colorInt = parseInt(ctx.strokeStyle.substring(1), 16);
-    if (wsRef.current !== null) {
-        wsRef.current.send(JSON.stringify([strokeObject]));
-    }
-    else {
-        console.log("socket not open");
-    }
-}
-
-export function eraser(setHitboxCollection, setStrokeCollection, setIdOrder, strokeObject, setNeedsRedraw, wsRef) {
-    let positions = strokeObject.position.slice(0);
-    let idsToDelete = {};
-
-    setHitboxCollection((prev) => {
-        let pointSkipFactor = 16; // only check every p-th (x,y) position to reduce computational load
-        let quadMinPixDist = 25; // quadratic minimum distance between points to be valid for hitbox calculation
-        let padding = 0;
-        let hitbox = hbx.getHitbox(positions, pointSkipFactor, quadMinPixDist, padding);
-        let _prev = { ...prev };
-        for (let i = 0; i < hitbox.length; i++) {
-            let xy = hitbox[i];
-            if (_prev.hasOwnProperty(xy)) { // there are IDs in this hitbox position
-                Object.keys(_prev[xy]).forEach((id) => {
-                    idsToDelete[id] = true;
-                })
-            }
-        }
-
-        // remove deleted id hitboxes from collection
-        Object.keys(_prev).forEach((posKey) => {
-            Object.keys(idsToDelete).forEach((keyToDel) => {
-                delete _prev[posKey][keyToDel];
-            });
-        });
-
-        // Send ids to delete
-        let deleteObjects = Object.keys(idsToDelete).map((id) => {
-            return { id: id, type: "delete" };
-        })
-
-        if (deleteObjects.length > 0 && wsRef.current !== null) {
-            wsRef.current.send(JSON.stringify(deleteObjects));
-        }
-
-        return _prev;
-    });
-
-    // erase id's strokes from collection
-    setStrokeCollection((prev) => {
-        let _prev = { ...prev }
-        Object.keys(idsToDelete).forEach((keyToDel) => {
-            // add to actions stack
-            setIdOrder((prev) => {
-                let _prev = [...prev];
-                _prev.push([keyToDel, "delete"]);
-                return _prev;
-            });
-            delete _prev[keyToDel];
-        });
-
-        return _prev;
-    });
-
-    setNeedsRedraw(x => x + 1); // trigger redraw
 }
