@@ -14,26 +14,21 @@ import '../css/toolbar.css';
 import { SketchPicker } from 'react-color'
 import reactCSS from 'reactcss'
 
+import * as hd from '../util/handledata.js';
+
 // import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 // import RangeSlider from 'react-bootstrap-range-slider';
 
 function WhiteboardTools(props) {
     const [displayColorPicker, setDisplayColorPicker] = useState(false);
     const [displayWidthPicker, setDisplayWidthPicker] = useState(false);
-    const [redoStack, setActionStack] = useState([]);
-
     const [color, setColor] = useState({ r: '0', g: '0', b: '0', a: '1', });
     const minWidth = 1;
-    const maxWidth = 100;
+    const maxWidth = 40;
 
     function handleClear() {
-        // Local clear
-        props.setStrokeCollection({})
-        props.setNeedsClear(x => x + 1);
-        props.setIdOrder([]);
-        setActionStack([]);
-        // Server clear
-        api.clearBoard(props.sessionID);
+        props.setNeedsClear(x => x + 1); // Local clear
+        api.clearBoard(props.sessionID); // Server clear
     }
     function saveBoard() {
         Object.keys(props.strokeCollection).forEach((key) => {
@@ -43,38 +38,28 @@ function WhiteboardTools(props) {
     }
 
     function loadBoard() {
-        console.log(props.idOrder,redoStack);
+        console.log(props.undoStack, props.redoStack);
     }
 
     function handlePrevious() {
-        let lastAction = props.idOrder.pop();
+        let lastAction = props.undoStack.pop();
         if (lastAction !== undefined) {
             let type = lastAction[1];
             let id = lastAction[0];
-            if (type === "stroke") {
-                // remove deleted id hitboxes from collection 
-                props.setHitboxCollection((prev) => {
-                    let _prev = { ...prev }
-                    Object.keys(_prev).forEach((posKey) => {
-                        delete _prev[posKey][id];
-                    });
-                    return _prev;
-                });
 
-                // erase id's strokes from collection
-                props.setStrokeCollection((prev) => {
-                    let _prev = { ...prev };
-                    redoStack.push(_prev[id]);
-                    delete _prev[id];
-                    return _prev;
-                });
-                props.setNeedsRedraw(x => x + 1); // trigger redraw
+            if (type === "stroke") {
+                hd.eraseFromStrokeCollection(id, props.setStrokeCollection, props.setUndoStack, props.setNeedsRedraw);
+                hd.eraseFromHitboxCollection(id, props.setHitboxCollection);
+            } else if (type === "delete"){
+                // hd.addToStrokeCollection(strokeObject, props.setStrokeCollection, props.wsRef, false)
+                // hd.addToHitboxCollection(strokeObject, props.setHitboxCollection);
+                // draw.drawCurve(ctx, strokeObject);
             }
         }
     }
 
     function handleNext() {
-        let redo = redoStack.pop();
+        let redo = props.redoStack.pop();
         if (redo !== undefined) {
             let addMe = {};
             addMe[redo.id] = redo;

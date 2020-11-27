@@ -9,13 +9,15 @@ import '../css/whiteboard.css';
 
 function WhiteboardControl() {
     const [strokeCollection, setStrokeCollection] = useState({});
-    const [idOrder, setIdOrder] = useState([]);
-    const [ , setHitboxCollection] = useState({});
+    const [undoStack, setUndoStack] = useState([]);
+    const [redoStack, setRedoStack] = useState([]);
+    const [, setHitboxCollection] = useState({});
     const [strokeMessage, setStrokeMessage] = useState({});
     const [strokeStyle, setStrokeStyle] = useState("#000000");
     const [lineWidth, setLineWidth] = useState(3);
     const [needsClear, setNeedsClear] = useState(0);
     const [needsRedraw, setNeedsRedraw] = useState(0);
+    
 
     const [open, setOpen] = useState(true);
     const [sessionID, setSessionID] = useState("");
@@ -24,58 +26,55 @@ function WhiteboardControl() {
 
     // Connect to session if valid session link
     const { id } = useParams();
-    useEffect(()=>{
-        if(id !== undefined){ // Check if id specified in link
+    useEffect(() => {
+        if (id !== undefined) { // Check if id specified in link
             setSessionID(id); // Set session id and connect to session
         }
-    },[id])
+    }, [id])
 
     // Open dialog on mount
     useEffect(() => {
         setOpen(true);
-    },[])
+    }, [])
 
     // Verify session id and try to connect to session
     useEffect(() => {
-        if (sessionID !== ""){
+        if (sessionID !== "") {
             createWebsocket(
-                sessionID, 
-                onMsgHandle, 
-                null, 
+                sessionID,
+                onMsgHandle,
+                null,
                 null,
             ).then((socket) => {
-                    wsRef.current = socket; 
-                    console.log(sessionID);
-                    navigator.clipboard.writeText(sessionID); // copy session ID to clipboard
-                }
+                wsRef.current = socket;
+                console.log(sessionID);
+                navigator.clipboard.writeText(sessionID); // copy session ID to clipboard
+            }
             ).catch(() => console.log(`cannot connect websocket on '/${sessionID}'`))
-            
+
             setOpen(false); // close dialog
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[sessionID])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [sessionID])
 
     // Handles messages from the websocket
     function onMsgHandle(data) {
         // listen to data sent from the websocket server
         const message = JSON.parse(data.data);
-        if (message.length === 0){
+        if (message.length === 0) {
             setNeedsClear(x => x + 1);
         }
-
-        //console.log(message);
-        setStrokeMessage({});
-        message.forEach((stroke) => {
-            setStrokeMessage((prev) => {
-                let res = {...prev}
-                res[stroke.id] = stroke
-                return res;
+        else {
+            let msg = {};
+            message.forEach((stroke) => {
+                msg[stroke.id] = stroke
             });
-        });
+            setStrokeMessage(msg);
+        }
     }
 
     function handleCreate(e) {
-        let boardDim = {x: 10, y: 10};
+        let boardDim = { x: 10, y: 10 };
         createBoardRequest(boardDim).then((data) => {
             setSessionID(data.id);
         }).catch(() => console.log("server cannot create session"));
@@ -92,20 +91,25 @@ function WhiteboardControl() {
     return (
         <div>
             <AlertDialog open={open} setOpen={setOpen} sessionID_input={sidInput} setSessionID_input={setSidInput}
-            handleTextFieldChange={handleTextFieldChange} handleJoin={handleJoin} handleCreate={handleCreate} />
+                handleTextFieldChange={handleTextFieldChange} handleJoin={handleJoin} handleCreate={handleCreate} />
             <div className="canvasdiv">
-                <Whiteboard wsRef={wsRef} strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
+                <Whiteboard wsRef={wsRef} 
+                    strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
                     strokeStyle={strokeStyle} lineWidth={lineWidth} needsClear={needsClear} setNeedsClear={setNeedsClear}
                     strokeMessage={strokeMessage} setStrokeMessage={setStrokeMessage} setHitboxCollection={setHitboxCollection}
-                    idOrder={idOrder} setIdOrder={setIdOrder} needsRedraw={needsRedraw} setNeedsRedraw={setNeedsRedraw} />
+                    needsRedraw={needsRedraw} setNeedsRedraw={setNeedsRedraw}
+                    undoStack={undoStack} setUndoStack={setUndoStack} 
+                    redoStack={redoStack} setRedoStack={setRedoStack} />
             </div>
-            <WhiteboardTools strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
+            <WhiteboardTools wsRef={wsRef} strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
                 strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
                 lineWidth={lineWidth} setLineWidth={setLineWidth} sessionID={sessionID}
                 setOpen={setOpen} setNeedsClear={setNeedsClear} setHitboxCollection={setHitboxCollection}
-                idOrder={idOrder} setIdOrder={setIdOrder} setNeedsRedraw={setNeedsRedraw} 
-                setStrokeMessage={setStrokeMessage} />
-                </div>
+                setStrokeMessage={setStrokeMessage} 
+                setNeedsRedraw={setNeedsRedraw} 
+                undoStack={undoStack} setUndoStack={setUndoStack}
+                redoStack={redoStack} setRedoStack={setRedoStack} />
+        </div>
     );
 }
 

@@ -1,5 +1,4 @@
 import * as draw from './drawingengine.js';
-import * as hbx from './hitbox.js';
 import * as hd from './handledata.js';
 
 let imageData;
@@ -94,7 +93,7 @@ export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, se
         // Delete livestroke lines and restroke interpolated and potentially buffered strokes
         ctx.putImageData(imageData, 0, 0);
         draw.drawCurve(ctx, strokeObject);
-        hd.addToStrokeCollection(strokeObject, setStrokeCollection, wsRef, true);
+        hd.addToStrokeCollection(strokeObject, setStrokeCollection, setIdOrder, wsRef, true);
         hd.addToHitboxCollection(strokeObject, setHitboxCollection);
 
         // add to actions stack

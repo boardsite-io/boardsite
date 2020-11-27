@@ -1,6 +1,16 @@
 import * as hbx from './hitbox.js';
 
-export function addToStrokeCollection(strokeObject, setStrokeCollection, wsRef, sendStroke) {
+// action in ["id", "type"] format
+export function addToUndoStack(action, setIdOrder) {
+    // add to actions stack
+    setIdOrder((prev) => {
+        let _prev = [...prev];
+        _prev.push(action);
+        return _prev;
+    });
+}
+
+export function addToStrokeCollection(strokeObject, setStrokeCollection, setIdOrder, wsRef, sendStroke) {
     // Add stroke to strokeCollection
     setStrokeCollection((prev) => {
         let res = { ...prev };
@@ -12,9 +22,17 @@ export function addToStrokeCollection(strokeObject, setStrokeCollection, wsRef, 
     if (wsRef.current !== null && sendStroke) {
         wsRef.current.send(JSON.stringify([strokeObject]));
     }
+
+    addToUndoStack([strokeObject.id, strokeObject.type], setIdOrder);
 }
 
 export function eraseFromStrokeCollection(ids, setStrokeCollection, setIdOrder, setNeedsRedraw) {
+    if (typeof ids === "string") {
+        let id = {};
+        id[ids] = true;
+        ids = id;
+    }
+
     // erase id's strokes from collection
     setStrokeCollection((prev) => {
         let _prev = { ...prev }
@@ -26,16 +44,6 @@ export function eraseFromStrokeCollection(ids, setStrokeCollection, setIdOrder, 
         return _prev;
     });
     setNeedsRedraw(x => x + 1); // trigger redraw
-}
-
-// action in ["id", "type"] format
-export function addToUndoStack(action, setIdOrder) {
-    // add to actions stack
-    setIdOrder((prev) => {
-        let _prev = [...prev];
-        _prev.push(action);
-        return _prev;
-    });
 }
 
 /**
@@ -73,6 +81,12 @@ export function addToHitboxCollection(strokeObject, setHitboxCollection) {
 
 // remove id hitboxes from hitbox collection
 export function eraseFromHitboxCollection(ids, setHitboxCollection) {
+    if (typeof ids === "string") {
+        let id = {};
+        id[ids] = true;
+        ids = id;
+    }
+
     setHitboxCollection((prev) => {
         let _prev = { ...prev };
         Object.keys(_prev).forEach((posKey) => {

@@ -14,13 +14,13 @@ function Whiteboard(props) {
         canvas.addEventListener("contextmenu", e => e.preventDefault()); // Disable Context Menu
         canvas.addEventListener("mousedown", (e) => evl.handleCanvasMouseDown(e, canvasRef));
         canvas.addEventListener("mousemove", (e) => evl.handleCanvasMouseMove(e, canvasRef));
-        canvas.addEventListener("mouseup", (e) => evl.handleCanvasMouseUp(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setIdOrder, props.setNeedsRedraw));
-        canvas.addEventListener("mouseleave", (e) => evl.handleCanvasMouseLeave(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setIdOrder, props.setNeedsRedraw));
+        canvas.addEventListener("mouseup", (e) => evl.handleCanvasMouseUp(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.setNeedsRedraw));
+        canvas.addEventListener("mouseleave", (e) => evl.handleCanvasMouseLeave(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.setNeedsRedraw));
         // touch & stylus support
         canvas.addEventListener("touchstart", (e) => evl.handleCanvasMouseDown(e, canvasRef));
         canvas.addEventListener("touchmove", (e) => evl.handleCanvasMouseMove(e, canvasRef));
-        canvas.addEventListener("touchend", (e) => evl.handleCanvasMouseUp(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setIdOrder, props.setNeedsRedraw));
-        canvas.addEventListener("touchcancel", (e) => evl.handleCanvasMouseLeave(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setIdOrder, props.setNeedsRedraw));
+        canvas.addEventListener("touchend", (e) => evl.handleCanvasMouseUp(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.setNeedsRedraw));
+        canvas.addEventListener("touchcancel", (e) => evl.handleCanvasMouseLeave(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.setNeedsRedraw));
 
         return () => {
             canvas.removeEventListener("contextmenu", null);
@@ -45,14 +45,15 @@ function Whiteboard(props) {
         ctx.strokeStyle = props.strokeStyle;
     }, [props.lineWidth, props.strokeStyle])
 
-    // Clear canvas
+    // Clear canvas and all collections / stacks
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, window.innerHeight, window.innerWidth);
         props.setStrokeCollection({});
         props.setHitboxCollection({});
-        props.setIdOrder([]);
+        props.setUndoStack([]);
+        props.setRedoStack([]);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.needsClear])
 
@@ -62,24 +63,14 @@ function Whiteboard(props) {
         const ctx = canvas.getContext('2d');
         Object.keys(props.strokeMessage).forEach((key) => {
             let strokeObject = props.strokeMessage[key];
-
-            // add to actions stack
-            props.setIdOrder((prev) => {
-                let _prev = [...prev];
-                _prev.push([strokeObject.id, strokeObject.type]);
-                return _prev;
-            });
-
             if (strokeObject.type === "stroke") {
-                hd.addToStrokeCollection(strokeObject, props.setStrokeCollection, props.wsRef, false)
+                hd.addToStrokeCollection(strokeObject, props.setStrokeCollection, props.setUndoStack, props.wsRef, false)
                 hd.addToHitboxCollection(strokeObject, props.setHitboxCollection);
                 draw.drawCurve(ctx, strokeObject);
             }
             else if (strokeObject.type === "delete") {
-                let id = {};
-                id[strokeObject.id] = true;
-                hd.eraseFromStrokeCollection(id, props.setStrokeCollection, props.setIdOrder, props.setNeedsRedraw);
-                hd.eraseFromHitboxCollection(id, props.setHitboxCollection);
+                hd.eraseFromStrokeCollection(strokeObject.id, props.setStrokeCollection, props.setUndoStack, props.setNeedsRedraw);
+                hd.eraseFromHitboxCollection(strokeObject.id, props.setHitboxCollection);
             }
         })
 
