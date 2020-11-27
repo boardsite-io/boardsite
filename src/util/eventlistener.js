@@ -93,9 +93,9 @@ export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, se
     if (!isEraser) {
         // Delete livestroke lines and restroke interpolated and potentially buffered strokes
         ctx.putImageData(imageData, 0, 0);
-        draw.drawCurve(ctx, stroke);
-        hd.addToStrokeCollection(strokeObject, setStrokeCollection, wsRef);
-        hbx.addHitbox(setHitboxCollection, strokeObject);
+        draw.drawCurve(ctx, strokeObject);
+        hd.addToStrokeCollection(strokeObject, setStrokeCollection, wsRef, true);
+        hd.addToHitboxCollection(strokeObject, setHitboxCollection);
 
         // add to actions stack
         setIdOrder((prev) => {

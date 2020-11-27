@@ -1,36 +1,3 @@
-/**
- * 
- * @param {function} setHitboxCollection state setting function
- * @param {object} strokeObject stroke object to set hitbox from
- * @param {[number: width, number: height]} boardResolution canvas resolution in pixels
- * @param {number} hitboxAccuracy accuracy in pixels
- */
-export function addHitbox(setHitboxCollection, strokeObject) {
-    let positions = strokeObject.position.slice(0); // create copy of positions array
-    let id = strokeObject.id; // extract id
-
-    setHitboxCollection((prev) => {
-        let _prev = { ...prev }
-        let pointSkipFactor = 8; // only check every p-th (x,y) position to reduce computational load
-        let quadMinPixDist = 64; // quadratic minimum distance between points to be valid for hitbox calculation
-        let padding = 1;
-        let hitbox = getHitbox(positions, pointSkipFactor, quadMinPixDist, padding);
-
-        // insert new hitboxes
-        for (let i = 0; i < hitbox.length; i++) {
-            let xy = hitbox[i];
-            if (_prev.hasOwnProperty(xy)) { // other ID(s) in this hitbox position
-                _prev[xy][id] = true;
-            } else { // no other ID in this hitbox position
-                _prev[xy] = {};
-                _prev[xy][id] = true;
-            }
-        }
-
-        return _prev;
-    });
-}
-
 export function getHitbox(positions, pointSkipFactor, quadMinPixDist, padding) {
     // calculate hitboxes of all segments
     let xy1 = [Math.round(positions[0]), Math.round(positions[1])];

@@ -119,9 +119,11 @@ export function getCurvePoints(pts, tension, isClosed, numOfSegments) {
 }
 
 // DRAWING FUNCTIONS FROM STACKOVERFLOW
-export function drawCurve(ctx, ptsa) {
+export function drawCurve(ctx, strokeObject) {
+    ctx.strokeStyle = strokeObject.color;
+    ctx.lineWidth = strokeObject.line_width;
     ctx.beginPath();
-    drawLines(ctx, ptsa);
+    drawLines(ctx, strokeObject.position);
     ctx.stroke();
 }
 
