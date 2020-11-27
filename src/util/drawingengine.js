@@ -39,13 +39,10 @@ export function drawLine(x1, y1, x2, y2, ctx) {
 }
 
 // draw rectangle with background
-// function drawFillRect(x, y, w, h, color) {
-//     const canvas = canvasRef.current;
-//     const ctx = canvas.getContext('2d');
-//     ctx.beginPath();
-//     ctx.fillStyle = color;
-//     ctx.fillRect(x, y, w, h);
-// }
+export function drawFillRect(x, y, w, h, ctx) {
+    ctx.beginPath();
+    ctx.fillRect(x, y, w, h);
+}
 
 export function getCurvePoints(pts, tension, isClosed, numOfSegments) {
     // use input value if provided, or use a default value	 

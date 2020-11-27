@@ -38,7 +38,8 @@ function WhiteboardTools(props) {
     }
 
     function loadBoard() {
-        console.log(props.undoStack, props.redoStack);
+        props.setNeedsHitboxDebug(x=>x+1);
+        // console.log(props.undoStack, props.redoStack);
     }
 
     function handlePrevious() {

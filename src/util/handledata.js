@@ -61,7 +61,7 @@ export function addToHitboxCollection(strokeObject, setHitboxCollection) {
         let _prev = { ...prev }
         let pointSkipFactor = 8; // only check every p-th (x,y) position to reduce computational load
         let quadMinPixDist = 64; // quadratic minimum distance between points to be valid for hitbox calculation
-        let padding = 1;
+        let padding = true;
         let hitbox = hbx.getHitbox(positions, pointSkipFactor, quadMinPixDist, padding);
 
         // insert new hitboxes

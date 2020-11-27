@@ -11,12 +11,13 @@ function WhiteboardControl() {
     const [strokeCollection, setStrokeCollection] = useState({});
     const [undoStack, setUndoStack] = useState([]);
     const [redoStack, setRedoStack] = useState([]);
-    const [, setHitboxCollection] = useState({});
+    const [hitboxCollection, setHitboxCollection] = useState({});
     const [strokeMessage, setStrokeMessage] = useState({});
     const [strokeStyle, setStrokeStyle] = useState("#000000");
     const [lineWidth, setLineWidth] = useState(3);
     const [needsClear, setNeedsClear] = useState(0);
     const [needsRedraw, setNeedsRedraw] = useState(0);
+    const [needsHitboxDebug, setNeedsHitboxDebug] = useState(0);
     
 
     const [open, setOpen] = useState(true);
@@ -95,11 +96,13 @@ function WhiteboardControl() {
             <div className="canvasdiv">
                 <Whiteboard wsRef={wsRef} 
                     strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
+                    hitboxCollection={hitboxCollection} setHitboxCollection={setHitboxCollection}
                     strokeStyle={strokeStyle} lineWidth={lineWidth} needsClear={needsClear} setNeedsClear={setNeedsClear}
-                    strokeMessage={strokeMessage} setStrokeMessage={setStrokeMessage} setHitboxCollection={setHitboxCollection}
+                    strokeMessage={strokeMessage} setStrokeMessage={setStrokeMessage} 
                     needsRedraw={needsRedraw} setNeedsRedraw={setNeedsRedraw}
                     undoStack={undoStack} setUndoStack={setUndoStack} 
-                    redoStack={redoStack} setRedoStack={setRedoStack} />
+                    redoStack={redoStack} setRedoStack={setRedoStack} 
+                    needsHitboxDebug={needsHitboxDebug} />
             </div>
             <WhiteboardTools wsRef={wsRef} strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
                 strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
@@ -108,7 +111,8 @@ function WhiteboardControl() {
                 setStrokeMessage={setStrokeMessage} 
                 setNeedsRedraw={setNeedsRedraw} 
                 undoStack={undoStack} setUndoStack={setUndoStack}
-                redoStack={redoStack} setRedoStack={setRedoStack} />
+                redoStack={redoStack} setRedoStack={setRedoStack} 
+                setNeedsHitboxDebug={setNeedsHitboxDebug} />
         </div>
     );
 }

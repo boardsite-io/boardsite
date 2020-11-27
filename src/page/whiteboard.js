@@ -93,6 +93,28 @@ function Whiteboard(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.needsRedraw])
 
+    /////////////////////////////////
+    // DEBUG: draws hitboxCollection
+    useEffect(() => {
+        console.log("XD");
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = "#00FF00";
+        ctx.clearRect(0, 0, window.innerHeight, window.innerWidth);
+        Object.keys(props.hitboxCollection).forEach((key) => {
+            let xy = JSON.parse("[" + key + "]");
+            let x = xy[0];
+            let y = xy[1];
+            let w = 1;
+            let h = 1;
+            return draw.drawFillRect(x, y, w, h, ctx);
+        })
+        ctx.strokeStyle = props.strokeStyle;
+        ctx.lineWidth = props.lineWidth;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.needsHitboxDebug])
+    /////////////////////////////////
+
     return (
         <div websocket={props.wsRef.current}>
             <canvas ref={canvasRef} />
