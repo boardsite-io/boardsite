@@ -119,7 +119,7 @@ function WhiteboardTools(props) {
             <IconButton id="iconButton" variant="contained" onClick={() => props.setOpenAccDialog(true)}>
                 <AccountBoxIcon color="secondary" id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" onClick={() => props.setOpen(true)}>
+            <IconButton id="iconButton" variant="contained" onClick={() => props.setOpenSessionDialog(true)}>
                 <GroupAddIcon color="secondary" id="iconButtonInner" />
             </IconButton>
             <IconButton id="iconButton" variant="contained" color="primary" onClick={() => handleClear()}>

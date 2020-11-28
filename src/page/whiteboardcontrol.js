@@ -20,7 +20,7 @@ function WhiteboardControl() {
     const [needsClear, setNeedsClear] = useState(0);
     const [needsRedraw, setNeedsRedraw] = useState(0);
     const [needsHitboxDebug, setNeedsHitboxDebug] = useState(0);
-    const [open, setOpen] = useState(false);
+    const [openSessionDialog, setOpenSessionDialog] = useState(false);
     const [openAccDialog, setOpenAccDialog] = useState(false);
     const [sessionID, setSessionID] = useState("");
     const [sidInput, setSidInput] = useState("");
@@ -48,7 +48,7 @@ function WhiteboardControl() {
                 console.log(sessionID);
                 navigator.clipboard.writeText(sessionID); // copy session ID to clipboard
             }).catch(() => console.log(`cannot connect websocket on '/${sessionID}'`));
-            setOpen(false); // close dialog
+            setOpenSessionDialog(false); // close dialog
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sessionID])
@@ -138,7 +138,7 @@ function WhiteboardControl() {
     return (
         <div>
             <UserLogin openAccDialog={openAccDialog} setOpenAccDialog={setOpenAccDialog} />
-            <AlertDialog open={open} setOpen={setOpen} sessionID_input={sidInput} setSessionID_input={setSidInput}
+            <AlertDialog open={openSessionDialog} setOpen={setOpenSessionDialog} sessionID_input={sidInput} setSessionID_input={setSidInput}
                 handleTextFieldChange={handleTextFieldChange} handleJoin={handleJoin} handleCreate={handleCreate} />
             <Whiteboard wsRef={wsRef} canvasRef={canvasRef}
                 strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
@@ -151,7 +151,7 @@ function WhiteboardControl() {
                 strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
                 lineWidth={lineWidth} setLineWidth={setLineWidth} 
                 sessionID={sessionID}
-                setOpen={setOpen} 
+                setOpenSessionDialog={setOpenSessionDialog} 
                 setOpenAccDialog={setOpenAccDialog} 
                 setNeedsClear={setNeedsClear} 
                 setHitboxCollection={setHitboxCollection}
