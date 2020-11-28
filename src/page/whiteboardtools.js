@@ -49,11 +49,9 @@ function WhiteboardTools(props) {
             let type = undo.type;
             props.redoStack.push(undo);
             if (type === "stroke") {
-                hd.eraseFromStrokeCollection(id, props.setStrokeCollection, props.setUndoStack, props.setNeedsRedraw, false);
-                hd.eraseFromHitboxCollection(id, props.setHitboxCollection);
+                hd.eraseFromStrokeCollection(id, props.setStrokeCollection, props.setHitboxCollection, props.wsRef, props.setUndoStack, props.setNeedsRedraw, true, false);
             } else if (type === "delete"){
-                hd.addToStrokeCollection(undo, props.setStrokeCollection, props.setUndoStack, props.wsRef, props.canvasRef, false, false);
-                hd.addToHitboxCollection(undo, props.setHitboxCollection);
+                hd.addToStrokeCollection(undo, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.wsRef, props.canvasRef, true, false);
             }
         }
     }
@@ -65,11 +63,9 @@ function WhiteboardTools(props) {
             let type = redo.type;
             props.undoStack.push(redo);
             if (type === "stroke") {
-                hd.addToStrokeCollection(redo, props.setStrokeCollection, props.setUndoStack, props.wsRef, props.canvasRef, false, false);
-                hd.addToHitboxCollection(redo, props.setHitboxCollection);
+                hd.addToStrokeCollection(redo, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.wsRef, props.canvasRef, true, false);
             } else if (type === "delete"){
-                hd.eraseFromStrokeCollection(id, props.setStrokeCollection, props.setUndoStack, props.setNeedsRedraw, false);
-                hd.eraseFromHitboxCollection(id, props.setHitboxCollection);
+                hd.eraseFromStrokeCollection(id, props.setStrokeCollection, props.setHitboxCollection, props.wsRef, props.setUndoStack, props.setNeedsRedraw, true, false);
             }
         }
     }

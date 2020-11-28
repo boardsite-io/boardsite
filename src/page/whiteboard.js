@@ -63,12 +63,12 @@ function Whiteboard(props) {
         Object.keys(props.strokeMessage).forEach((key) => {
             let strokeObject = props.strokeMessage[key];
             if (strokeObject.type === "stroke") {
-                hd.addToStrokeCollection(strokeObject, props.setStrokeCollection, props.setUndoStack, props.wsRef, props.canvasRef, false, true)
-                hd.addToHitboxCollection(strokeObject, props.setHitboxCollection);
+                hd.addToStrokeCollection(strokeObject, props.setStrokeCollection, props.setHitboxCollection, 
+                    props.setUndoStack, props.wsRef, props.canvasRef, false, true);
             }
             else if (strokeObject.type === "delete") {
-                hd.eraseFromStrokeCollection(strokeObject.id, props.setStrokeCollection, props.setUndoStack, props.setNeedsRedraw, true);
-                hd.eraseFromHitboxCollection(strokeObject.id, props.setHitboxCollection);
+                hd.eraseFromStrokeCollection(strokeObject.id, props.setStrokeCollection, props.setHitboxCollection, 
+                    props.wsRef, props.setUndoStack, props.setNeedsRedraw, false, true);
             }
         })
         const canvas = props.canvasRef.current;

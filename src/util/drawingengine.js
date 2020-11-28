@@ -25,9 +25,7 @@ export function eraser(setHitboxCollection, setStrokeCollection, setUndoStack, s
         return _prev;
     });
 
-    hd.sendIdsToDelete(idsToDelete, wsRef);
-    hd.eraseFromStrokeCollection(idsToDelete, setStrokeCollection, setUndoStack, setNeedsRedraw, true);
-    hd.eraseFromHitboxCollection(idsToDelete, setHitboxCollection);
+    hd.eraseFromStrokeCollection(idsToDelete, setStrokeCollection, setHitboxCollection, wsRef, setUndoStack, setNeedsRedraw, true, true);
 }
 
 // draw line

@@ -13,7 +13,7 @@ export function addToUndoStack(strokeObject, type, setUndoStack) {
     });
 }
 
-export function addToStrokeCollection(strokeObject, setStrokeCollection, setUndoStack, wsRef, canvasRef, sendStroke, addToUndo) {
+export function addToStrokeCollection(strokeObject, setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef, sendStroke, addToUndo) {
     // draw new stroke
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
@@ -33,13 +33,18 @@ export function addToStrokeCollection(strokeObject, setStrokeCollection, setUndo
     if (addToUndo){
         addToUndoStack(strokeObject, "stroke", setUndoStack);
     }
+    addToHitboxCollection(strokeObject, setHitboxCollection);
 }
 
-export function eraseFromStrokeCollection(ids, setStrokeCollection, setUndoStack, setNeedsRedraw, addToUndo) {
+export function eraseFromStrokeCollection(ids, setStrokeCollection, setHitboxCollection, wsRef, setUndoStack, setNeedsRedraw, sendStroke, addToUndo) {
     if (typeof ids === "string") {
         let id = {};
         id[ids] = true;
         ids = id;
+    }
+
+    if(sendStroke){
+        sendIdsToDelete(ids, wsRef);
     }
 
     // erase id's strokes from collection
@@ -55,6 +60,7 @@ export function eraseFromStrokeCollection(ids, setStrokeCollection, setUndoStack
         return _prev;
     });
     setNeedsRedraw(x => x + 1); // trigger redraw
+    eraseFromHitboxCollection(ids, setHitboxCollection);
 }
 
 /**
