@@ -1,16 +1,15 @@
 import * as hbx from './hitbox.js';
 
-// action in ["id", "type"] format
-export function addToUndoStack(action, setIdOrder) {
+export function addToUndoStack(strokeObject, setUndoStack) {
     // add to actions stack
-    setIdOrder((prev) => {
+    setUndoStack((prev) => {
         let _prev = [...prev];
-        _prev.push(action);
+        _prev.push(strokeObject);
         return _prev;
     });
 }
 
-export function addToStrokeCollection(strokeObject, setStrokeCollection, setIdOrder, wsRef, sendStroke) {
+export function addToStrokeCollection(strokeObject, setStrokeCollection, setUndoStack, wsRef, sendStroke) {
     // Add stroke to strokeCollection
     setStrokeCollection((prev) => {
         let res = { ...prev };
@@ -23,10 +22,10 @@ export function addToStrokeCollection(strokeObject, setStrokeCollection, setIdOr
         wsRef.current.send(JSON.stringify([strokeObject]));
     }
 
-    addToUndoStack([strokeObject.id, strokeObject.type], setIdOrder);
+    addToUndoStack(strokeObject, setUndoStack);
 }
 
-export function eraseFromStrokeCollection(ids, setStrokeCollection, setIdOrder, setNeedsRedraw) {
+export function eraseFromStrokeCollection(ids, setStrokeCollection, setUndoStack, setNeedsRedraw, addToUndo) {
     if (typeof ids === "string") {
         let id = {};
         id[ids] = true;
@@ -37,7 +36,11 @@ export function eraseFromStrokeCollection(ids, setStrokeCollection, setIdOrder, 
     setStrokeCollection((prev) => {
         let _prev = { ...prev }
         Object.keys(ids).forEach((keyToDel) => {
-            addToUndoStack([keyToDel, "delete"], setIdOrder);
+            if(addToUndo){
+                let strokeObject = _prev[keyToDel];
+                strokeObject["type"] = "delete";
+                addToUndoStack(strokeObject, setUndoStack);
+            }
             delete _prev[keyToDel];
         });
 
@@ -61,8 +64,8 @@ export function addToHitboxCollection(strokeObject, setHitboxCollection) {
         let _prev = { ...prev }
         let pointSkipFactor = 8; // only check every p-th (x,y) position to reduce computational load
         let quadMinPixDist = 64; // quadratic minimum distance between points to be valid for hitbox calculation
-        let padding = true;
-        let hitbox = hbx.getHitbox(positions, pointSkipFactor, quadMinPixDist, padding);
+        let lineWidth = strokeObject.line_width;
+        let hitbox = hbx.getHitbox(positions, pointSkipFactor, quadMinPixDist, lineWidth);
 
         // insert new hitboxes
         for (let i = 0; i < hitbox.length; i++) {

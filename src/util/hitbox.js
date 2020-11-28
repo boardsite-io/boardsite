@@ -1,4 +1,4 @@
-export function getHitbox(positions, pointSkipFactor, quadMinPixDist, padding) {
+export function getHitbox(positions, pointSkipFactor, quadMinPixDist, lineWidth) {
     // calculate hitboxes of all segments
     let xy1 = [Math.round(positions[0]), Math.round(positions[1])];
     let xy2;
@@ -19,7 +19,9 @@ export function getHitbox(positions, pointSkipFactor, quadMinPixDist, padding) {
         hitbox = hitbox.concat(hitboxPixels);
     }
 
-    if (padding) {
+    // TODO: make more efficient / set width of hitbox to width of stroke
+    if (lineWidth) {
+        //for (let i = 0; i < lineWidth; i++) {
         // add one pixel on all sides of the hitbox to ensure proper functionality
         let tmp = {};
         for (let i = 0; i < hitbox.length; i++) {
@@ -40,6 +42,7 @@ export function getHitbox(positions, pointSkipFactor, quadMinPixDist, padding) {
             }
         }
         hitbox = Object.keys(tmp).map(x => JSON.parse("[" + x + "]"));
+        //}
     }
 
     return hitbox;

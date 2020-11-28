@@ -18,9 +18,10 @@ function WhiteboardControl() {
     const [needsClear, setNeedsClear] = useState(0);
     const [needsRedraw, setNeedsRedraw] = useState(0);
     const [needsHitboxDebug, setNeedsHitboxDebug] = useState(0);
+    const canvasRef = useRef();
     
 
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     const [sessionID, setSessionID] = useState("");
     const [sidInput, setSidInput] = useState("");
     const wsRef = useRef(null);
@@ -34,9 +35,9 @@ function WhiteboardControl() {
     }, [id])
 
     // Open dialog on mount
-    useEffect(() => {
-        setOpen(true);
-    }, [])
+    // useEffect(() => {
+    //     setOpen(true);
+    // }, [])
 
     // Verify session id and try to connect to session
     useEffect(() => {
@@ -94,7 +95,7 @@ function WhiteboardControl() {
             <AlertDialog open={open} setOpen={setOpen} sessionID_input={sidInput} setSessionID_input={setSidInput}
                 handleTextFieldChange={handleTextFieldChange} handleJoin={handleJoin} handleCreate={handleCreate} />
             <div className="canvasdiv">
-                <Whiteboard wsRef={wsRef} 
+                <Whiteboard wsRef={wsRef} canvasRef={canvasRef}
                     strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
                     hitboxCollection={hitboxCollection} setHitboxCollection={setHitboxCollection}
                     strokeStyle={strokeStyle} lineWidth={lineWidth} needsClear={needsClear} setNeedsClear={setNeedsClear}
@@ -104,7 +105,8 @@ function WhiteboardControl() {
                     redoStack={redoStack} setRedoStack={setRedoStack} 
                     needsHitboxDebug={needsHitboxDebug} />
             </div>
-            <WhiteboardTools wsRef={wsRef} strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
+            <WhiteboardTools wsRef={wsRef} canvasRef={canvasRef}
+                strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
                 strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
                 lineWidth={lineWidth} setLineWidth={setLineWidth} sessionID={sessionID}
                 setOpen={setOpen} setNeedsClear={setNeedsClear} setHitboxCollection={setHitboxCollection}

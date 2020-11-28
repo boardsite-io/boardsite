@@ -1,26 +1,26 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 import * as evl from '../util/eventlistener.js';
 import * as draw from '../util/drawingengine.js';
 import * as hd from '../util/handledata.js';
 
 function Whiteboard(props) {
-    const canvasRef = useRef();
+    
 
     useEffect(() => {
-        const canvas = canvasRef.current;
+        const canvas = props.canvasRef.current;
         canvas.width = 620; //canvas.clientWidth;
         canvas.height = 877; //canvas.clientHeight;
         canvas.addEventListener("contextmenu", e => e.preventDefault()); // Disable Context Menu
-        canvas.addEventListener("mousedown", (e) => evl.handleCanvasMouseDown(e, canvasRef));
-        canvas.addEventListener("mousemove", (e) => evl.handleCanvasMouseMove(e, canvasRef));
-        canvas.addEventListener("mouseup", (e) => evl.handleCanvasMouseUp(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.setNeedsRedraw));
-        canvas.addEventListener("mouseleave", (e) => evl.handleCanvasMouseLeave(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.setNeedsRedraw));
+        canvas.addEventListener("mousedown", (e) => evl.handleCanvasMouseDown(e, props.canvasRef));
+        canvas.addEventListener("mousemove", (e) => evl.handleCanvasMouseMove(e, props.canvasRef));
+        canvas.addEventListener("mouseup", (e) => evl.handleCanvasMouseUp(e, props.canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.setNeedsRedraw));
+        canvas.addEventListener("mouseleave", (e) => evl.handleCanvasMouseLeave(e, props.canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.setNeedsRedraw));
         // touch & stylus support
-        canvas.addEventListener("touchstart", (e) => evl.handleCanvasMouseDown(e, canvasRef));
-        canvas.addEventListener("touchmove", (e) => evl.handleCanvasMouseMove(e, canvasRef));
-        canvas.addEventListener("touchend", (e) => evl.handleCanvasMouseUp(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.setNeedsRedraw));
-        canvas.addEventListener("touchcancel", (e) => evl.handleCanvasMouseLeave(e, canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.setNeedsRedraw));
+        canvas.addEventListener("touchstart", (e) => evl.handleCanvasMouseDown(e, props.canvasRef));
+        canvas.addEventListener("touchmove", (e) => evl.handleCanvasMouseMove(e, props.canvasRef));
+        canvas.addEventListener("touchend", (e) => evl.handleCanvasMouseUp(e, props.canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.setNeedsRedraw));
+        canvas.addEventListener("touchcancel", (e) => evl.handleCanvasMouseLeave(e, props.canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.setNeedsRedraw));
 
         return () => {
             canvas.removeEventListener("contextmenu", null);
@@ -39,7 +39,7 @@ function Whiteboard(props) {
 
     // Update stroke attributes in context when their props change
     useEffect(() => {
-        const canvas = canvasRef.current;
+        const canvas = props.canvasRef.current;
         const ctx = canvas.getContext('2d');
         ctx.lineWidth = props.lineWidth;
         ctx.strokeStyle = props.strokeStyle;
@@ -47,7 +47,7 @@ function Whiteboard(props) {
 
     // Clear canvas and all collections / stacks
     useEffect(() => {
-        const canvas = canvasRef.current;
+        const canvas = props.canvasRef.current;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, window.innerHeight, window.innerWidth);
         props.setStrokeCollection({});
@@ -59,7 +59,7 @@ function Whiteboard(props) {
 
     // Processes incoming stroke messages
     useEffect(() => {
-        const canvas = canvasRef.current;
+        const canvas = props.canvasRef.current;
         const ctx = canvas.getContext('2d');
         Object.keys(props.strokeMessage).forEach((key) => {
             let strokeObject = props.strokeMessage[key];
@@ -69,7 +69,7 @@ function Whiteboard(props) {
                 draw.drawCurve(ctx, strokeObject);
             }
             else if (strokeObject.type === "delete") {
-                hd.eraseFromStrokeCollection(strokeObject.id, props.setStrokeCollection, props.setUndoStack, props.setNeedsRedraw);
+                hd.eraseFromStrokeCollection(strokeObject.id, props.setStrokeCollection, props.setUndoStack, props.setNeedsRedraw, true);
                 hd.eraseFromHitboxCollection(strokeObject.id, props.setHitboxCollection);
             }
         })
@@ -81,7 +81,7 @@ function Whiteboard(props) {
 
     // redraws full strokeCollection
     useEffect(() => {
-        const canvas = canvasRef.current;
+        const canvas = props.canvasRef.current;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, window.innerHeight, window.innerWidth);
         Object.keys(props.strokeCollection).forEach((key) => {
@@ -97,7 +97,7 @@ function Whiteboard(props) {
     // DEBUG: draws hitboxCollection
     useEffect(() => {
         console.log("XD");
-        const canvas = canvasRef.current;
+        const canvas = props.canvasRef.current;
         const ctx = canvas.getContext('2d');
         ctx.fillStyle = "#00FF00";
         ctx.clearRect(0, 0, window.innerHeight, window.innerWidth);
@@ -117,7 +117,7 @@ function Whiteboard(props) {
 
     return (
         <div websocket={props.wsRef.current}>
-            <canvas ref={canvasRef} />
+            <canvas ref={props.canvasRef} />
         </div>
     );
 }

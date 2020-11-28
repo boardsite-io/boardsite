@@ -15,6 +15,7 @@ import { SketchPicker } from 'react-color'
 import reactCSS from 'reactcss'
 
 import * as hd from '../util/handledata.js';
+import * as draw from '../util/drawingengine.js';
 
 // import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 // import RangeSlider from 'react-bootstrap-range-slider';
@@ -38,23 +39,27 @@ function WhiteboardTools(props) {
     }
 
     function loadBoard() {
-        props.setNeedsHitboxDebug(x=>x+1);
-        // console.log(props.undoStack, props.redoStack);
+        // props.setNeedsHitboxDebug(x=>x+1);
+        console.log(props.undoStack, props.redoStack);
     }
 
     function handlePrevious() {
-        let lastAction = props.undoStack.pop();
-        if (lastAction !== undefined) {
-            let type = lastAction[1];
-            let id = lastAction[0];
+        let undo = props.undoStack.pop();
+        if (undo !== undefined) {
+            let id = undo.id;
+            let type = undo.type;
 
             if (type === "stroke") {
-                hd.eraseFromStrokeCollection(id, props.setStrokeCollection, props.setUndoStack, props.setNeedsRedraw);
+                let stroke = props.strokeCollection[id];
+                props.redoStack.push(stroke);
+                hd.eraseFromStrokeCollection(id, props.setStrokeCollection, props.setUndoStack, props.setNeedsRedraw, false);
                 hd.eraseFromHitboxCollection(id, props.setHitboxCollection);
             } else if (type === "delete"){
-                // hd.addToStrokeCollection(strokeObject, props.setStrokeCollection, props.wsRef, false)
-                // hd.addToHitboxCollection(strokeObject, props.setHitboxCollection);
-                // draw.drawCurve(ctx, strokeObject);
+                const canvas = props.canvasRef.current;
+                const ctx = canvas.getContext('2d');
+                draw.drawCurve(ctx, undo);
+                hd.addToStrokeCollection(undo, props.setStrokeCollection, props.setUndoStack, props.wsRef, false);
+                hd.addToHitboxCollection(undo, props.setHitboxCollection);
             }
         }
     }
@@ -62,9 +67,26 @@ function WhiteboardTools(props) {
     function handleNext() {
         let redo = props.redoStack.pop();
         if (redo !== undefined) {
-            let addMe = {};
-            addMe[redo.id] = redo;
-            props.setStrokeMessage(addMe);
+            let type = redo.type;
+            let id = redo.id;
+
+            if (type === "stroke") {
+                const canvas = props.canvasRef.current;
+                const ctx = canvas.getContext('2d');
+                draw.drawCurve(ctx, redo);
+                hd.addToStrokeCollection(redo, props.setStrokeCollection, props.setUndoStack, props.wsRef, false);
+                hd.addToHitboxCollection(redo, props.setHitboxCollection);
+            } else if (type === "delete"){
+                let stroke = props.strokeCollection[id];
+                props.undoStack.push(stroke);
+                hd.eraseFromStrokeCollection(id, props.setStrokeCollection, props.setUndoStack, props.setNeedsRedraw, false);
+                hd.eraseFromHitboxCollection(id, props.setHitboxCollection);
+            }
+
+
+            // let addMe = {};
+            // addMe[redo.id] = redo;
+            // props.setStrokeMessage(addMe);
         }
     }
 

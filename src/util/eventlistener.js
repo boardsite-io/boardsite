@@ -95,13 +95,6 @@ export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, se
         draw.drawCurve(ctx, strokeObject);
         hd.addToStrokeCollection(strokeObject, setStrokeCollection, setIdOrder, wsRef, true);
         hd.addToHitboxCollection(strokeObject, setHitboxCollection);
-
-        // add to actions stack
-        setIdOrder((prev) => {
-            let _prev = [...prev];
-            _prev.push([strokeObject.id, strokeObject.type]);
-            return _prev;
-        });
     } else {
         draw.eraser(setHitboxCollection, setStrokeCollection, setIdOrder, strokeObject, setNeedsRedraw, wsRef);
     }
