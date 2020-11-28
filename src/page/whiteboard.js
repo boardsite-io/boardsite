@@ -66,7 +66,6 @@ function Whiteboard(props) {
             if (strokeObject.type === "stroke") {
                 hd.addToStrokeCollection(strokeObject, props.setStrokeCollection, props.setUndoStack, props.wsRef, props.canvasRef, false)
                 hd.addToHitboxCollection(strokeObject, props.setHitboxCollection);
-                draw.drawCurve(ctx, strokeObject);
             }
             else if (strokeObject.type === "delete") {
                 hd.eraseFromStrokeCollection(strokeObject.id, props.setStrokeCollection, props.setUndoStack, props.setNeedsRedraw, true);

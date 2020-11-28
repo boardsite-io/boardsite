@@ -55,7 +55,6 @@ function WhiteboardTools(props) {
                 hd.eraseFromStrokeCollection(id, props.setStrokeCollection, props.setUndoStack, props.setNeedsRedraw, false);
                 hd.eraseFromHitboxCollection(id, props.setHitboxCollection);
             } else if (type === "delete"){
-                
                 hd.addToStrokeCollection(undo, props.setStrokeCollection, props.setUndoStack, props.wsRef, props.canvasRef, false);
                 hd.addToHitboxCollection(undo, props.setHitboxCollection);
             }
@@ -69,9 +68,6 @@ function WhiteboardTools(props) {
             let id = redo.id;
 
             if (type === "stroke") {
-                const canvas = props.canvasRef.current;
-                const ctx = canvas.getContext('2d');
-                draw.drawCurve(ctx, redo);
                 hd.addToStrokeCollection(redo, props.setStrokeCollection, props.setUndoStack, props.wsRef, props.canvasRef, false);
                 hd.addToHitboxCollection(redo, props.setHitboxCollection);
             } else if (type === "delete"){
