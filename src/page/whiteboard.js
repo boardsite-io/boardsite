@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 
 import * as evl from '../util/eventlistener.js';
-import * as draw from '../util/drawingengine.js';
 
 function Whiteboard(props) {
     useEffect(() => {
@@ -33,58 +32,6 @@ function Whiteboard(props) {
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
-    // Clear canvas and all collections / stacks
-    useEffect(() => {
-        const canvas = props.canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, window.innerHeight, window.innerWidth);
-        props.setStrokeCollection({});
-        props.setHitboxCollection({});
-        props.setUndoStack([]);
-        props.setRedoStack([]);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.needsClear])
-
-    // redraws full strokeCollection
-    useEffect(() => {
-        const canvas = props.canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, window.innerHeight, window.innerWidth);
-        Object.keys(props.strokeCollection).forEach((key) => {
-            let strokeObject = props.strokeCollection[key];
-            return draw.drawCurve(ctx, strokeObject);
-        })
-        setContextProps();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.needsRedraw])
-
-    /////////////////////////////////
-    // DEBUG: draws hitboxCollection
-    useEffect(() => {
-        const canvas = props.canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        ctx.fillStyle = "#00FF00";
-        ctx.clearRect(0, 0, window.innerHeight, window.innerWidth);
-        Object.keys(props.hitboxCollection).forEach((key) => {
-            let xy = JSON.parse("[" + key + "]");
-            let x = xy[0];
-            let y = xy[1];
-            let w = 1;
-            let h = 1;
-            return draw.drawFillRect(x, y, w, h, ctx);
-        })
-        setContextProps();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.needsHitboxDebug])
-    /////////////////////////////////
-
-    function setContextProps(){
-        const canvas = props.canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        ctx.strokeStyle = props.strokeStyle;
-        ctx.lineWidth = props.lineWidth;
-    }
 
     return (
         <div className="canvasdiv" websocket={props.wsRef.current}>
