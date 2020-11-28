@@ -91,9 +91,9 @@ export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, se
 
     if (!isEraser) {
         ctx.putImageData(imageData, 0, 0);
-        hd.addToStrokeCollection(strokeObject, setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef, true, true);
+        hd.processStrokes([strokeObject], "stroke", setStrokeCollection, setHitboxCollection, setUndoStack, setNeedsRedraw, wsRef, canvasRef);
     } else {
-        draw.eraser(setHitboxCollection, setStrokeCollection, setUndoStack, strokeObject, setNeedsRedraw, wsRef);
+        draw.eraser(setHitboxCollection, setStrokeCollection, setUndoStack, strokeObject, setNeedsRedraw, wsRef, canvasRef);
     }
 }
 

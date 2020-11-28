@@ -1,66 +1,92 @@
 import * as hbx from './hitbox.js';
 import * as draw from '../util/drawingengine.js';
 
-export function addToUndoStack(strokeObject, type, setUndoStack) {
-    let _strokeObject = { ...strokeObject }; // create copy
-    _strokeObject.type = type;
+// Send ids to delete
+export function sendStrokeObjectArray(strokeObjectArray, wsRef) {
+    if (strokeObjectArray.length > 0 && wsRef.current !== null) {
+        wsRef.current.send(JSON.stringify(strokeObjectArray));
+    }
+}
 
-    // add to actions stack
-    setUndoStack((prev) => {
+export function processStrokes(strokeObjectArray, processType, setStrokeCollection, setHitboxCollection, setStack, setNeedsRedraw, wsRef, canvasRef) {
+    strokeObjectArray = [...strokeObjectArray]; // copy
+    addToStack(strokeObjectArray, processType, setStack, setStrokeCollection); // Redo or Undo Stack (depending on input)
+
+    if (processType !== "message") {
+        sendStrokeObjectArray(strokeObjectArray, wsRef);
+    }
+
+    strokeObjectArray.forEach((strokeObject) => {
+        if (processType === "undo") {
+            if (strokeObject.type === "stroke") {
+                eraseFromStrokeCollection(strokeObject, setStrokeCollection, setHitboxCollection, setNeedsRedraw);
+            } else if (strokeObject.type === "delete") {
+                addToStrokeCollection(strokeObject.object, setStrokeCollection, setHitboxCollection, canvasRef);
+            }
+        }
+        else {
+            if (strokeObject.type === "stroke") {
+                addToStrokeCollection(strokeObject, setStrokeCollection, setHitboxCollection, canvasRef);
+            } else if (strokeObject.type === "delete") {
+                eraseFromStrokeCollection(strokeObject, setStrokeCollection, setHitboxCollection, setNeedsRedraw);
+            }
+        }
+    });
+}
+
+export function addToStack(strokeObjectArray, processType, setStack, setStrokeCollection) {
+    let _strokeObjectArray = [...strokeObjectArray]; // create copy
+
+    setStrokeCollection((prev) => {
+        _strokeObjectArray.forEach((strokeObject) => {
+            // Fetch and insert the positions array before deletion to make undo / redo of deletions possible
+            if (strokeObject.type === "delete" && processType !== "undo") {
+                strokeObject["object"] = { ...prev[strokeObject.id] };
+                strokeObject["type"] = "delete";
+            }
+        })
+        return prev;
+    })
+
+    // add to undo/redo stack
+    setStack((prev) => {
         let _prev = [...prev];
-        _prev.push(_strokeObject);
+        _prev.push(_strokeObjectArray);
         return _prev;
     });
 }
 
-export function addToStrokeCollection(strokeObject, setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef, sendStroke, addToUndo) {
-    // draw new stroke
+export function addToStrokeCollection(strokeObject, setStrokeCollection, setHitboxCollection, canvasRef) {
+    // Draw stroke
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     draw.drawCurve(ctx, strokeObject);
+
     // Add stroke to strokeCollection
     setStrokeCollection((prev) => {
-        let res = { ...prev };
-        res[strokeObject.id] = strokeObject;
-        return res;
+        let _prev = { ...prev };
+        _prev[strokeObject.id] = strokeObject;
+        return _prev;
     });
 
-    // let colorInt = parseInt(ctx.strokeStyle.substring(1), 16);
-    if (wsRef.current !== null && sendStroke) {
-        wsRef.current.send(JSON.stringify([strokeObject]));
-    }
-
-    if (addToUndo) {
-        addToUndoStack(strokeObject, "stroke", setUndoStack);
-    }
     addToHitboxCollection(strokeObject, setHitboxCollection);
 }
 
-export function eraseFromStrokeCollection(ids, setStrokeCollection, setHitboxCollection, wsRef, setUndoStack, setNeedsRedraw, sendStroke, addToUndo) {
-    if (typeof ids === "string") {
+export function eraseFromStrokeCollection(strokeObject, setStrokeCollection, setHitboxCollection, setNeedsRedraw) {
+    if (typeof strokeObject === "string") {
         let id = {};
-        id[ids] = true;
-        ids = id;
+        id[strokeObject] = true;
+        strokeObject = id;
     }
 
-    if (sendStroke) {
-        sendIdsToDelete(ids, wsRef);
-    }
-
-    // erase id's strokes from collection
+    // erase id from collection
     setStrokeCollection((prev) => {
         let _prev = { ...prev }
-        Object.keys(ids).forEach((keyToDel) => {
-            if (addToUndo) {
-                let strokeObject = prev[keyToDel];
-                addToUndoStack(strokeObject, "delete", setUndoStack);
-            }
-            delete _prev[keyToDel];
-        });
+        delete _prev[strokeObject.id];
         return _prev;
     });
     setNeedsRedraw(x => x + 1); // trigger redraw
-    eraseFromHitboxCollection(ids, setHitboxCollection);
+    eraseFromHitboxCollection(strokeObject, setHitboxCollection);
 }
 
 /**
@@ -113,34 +139,4 @@ export function eraseFromHitboxCollection(ids, setHitboxCollection) {
         });
         return _prev;
     });
-}
-
-// Send ids to delete
-export function sendIdsToDelete(ids, wsRef) {
-    let deleteObjects = Object.keys(ids).map((id) => {
-        return { id: id, type: "delete" };
-    })
-
-    if (deleteObjects.length > 0 && wsRef.current !== null) {
-        wsRef.current.send(JSON.stringify(deleteObjects));
-    }
-}
-
-export function processMessage(data, setNeedsClear, setStrokeCollection, setHitboxCollection, setUndoStack, setNeedsRedraw, wsRef, canvasRef) {
-    const message = JSON.parse(data.data);
-    if (message.length === 0) {
-        setNeedsClear(x => x + 1);
-    }
-    else {
-        message.forEach((strokeObject) => {
-            if (strokeObject.type === "stroke") {
-                addToStrokeCollection(strokeObject, setStrokeCollection, setHitboxCollection,
-                    setUndoStack, wsRef, canvasRef, false, true);
-            }
-            else if (strokeObject.type === "delete") {
-                eraseFromStrokeCollection(strokeObject.id, setStrokeCollection, setHitboxCollection,
-                    wsRef, setUndoStack, setNeedsRedraw, false, true);
-            }
-        });
-    }
 }

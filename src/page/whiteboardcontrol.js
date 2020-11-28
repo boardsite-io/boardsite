@@ -35,9 +35,9 @@ function WhiteboardControl() {
     }, [id])
 
     // Open dialog on mount
-    useEffect(() => {
-        setOpen(true);
-    }, [])
+    // useEffect(() => {
+    //     setOpen(true);
+    // }, [])
 
     // Verify session id and try to connect to session
     useEffect(() => {
@@ -85,8 +85,15 @@ function WhiteboardControl() {
 
     // Handles messages from the websocket
     function onMsgHandle(data) {
-        hd.processMessage(data, setNeedsClear, setStrokeCollection, setHitboxCollection, setUndoStack, setNeedsRedraw, wsRef, canvasRef);
-        setContextProps();
+        const strokeObjectArray = JSON.parse(data.data);
+        if (strokeObjectArray.length === 0) {
+            setNeedsClear(x => x + 1);
+        }
+        else {
+            hd.processStrokes(strokeObjectArray, "message", setStrokeCollection, setHitboxCollection,
+                setUndoStack, setNeedsRedraw, wsRef, canvasRef);
+            setContextProps();
+        }
     }
 
     function setContextProps(){

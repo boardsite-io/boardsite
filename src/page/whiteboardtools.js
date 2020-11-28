@@ -30,6 +30,7 @@ function WhiteboardTools(props) {
         props.setNeedsClear(x => x + 1); // Local clear
         api.clearBoard(props.sessionID); // Server clear
     }
+
     function saveBoard() {
         Object.keys(props.strokeCollection).forEach((key) => {
             let stroke = props.strokeCollection[key];
@@ -42,31 +43,19 @@ function WhiteboardTools(props) {
         console.log(props.undoStack, props.redoStack);
     }
 
-    function handlePrevious() {
+    function handleUndo() {
         let undo = props.undoStack.pop();
         if (undo !== undefined) {
-            let id = undo.id;
-            let type = undo.type;
-            props.redoStack.push(undo);
-            if (type === "stroke") {
-                hd.eraseFromStrokeCollection(id, props.setStrokeCollection, props.setHitboxCollection, props.wsRef, props.setUndoStack, props.setNeedsRedraw, true, false);
-            } else if (type === "delete"){
-                hd.addToStrokeCollection(undo, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.wsRef, props.canvasRef, true, false);
-            }
+            hd.processStrokes(undo, "undo", props.setStrokeCollection, props.setHitboxCollection,
+                props.setRedoStack, props.setNeedsRedraw, props.wsRef, props.canvasRef);
         }
     }
 
-    function handleNext() {
+    function handleRedo() {
         let redo = props.redoStack.pop();
         if (redo !== undefined) {
-            let id = redo.id;
-            let type = redo.type;
-            props.undoStack.push(redo);
-            if (type === "stroke") {
-                hd.addToStrokeCollection(redo, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.wsRef, props.canvasRef, true, false);
-            } else if (type === "delete"){
-                hd.eraseFromStrokeCollection(id, props.setStrokeCollection, props.setHitboxCollection, props.wsRef, props.setUndoStack, props.setNeedsRedraw, true, false);
-            }
+            hd.processStrokes(redo, "redo", props.setStrokeCollection, props.setHitboxCollection,
+                props.setUndoStack, props.setNeedsRedraw, props.wsRef, props.canvasRef);
         }
     }
 
@@ -138,10 +127,10 @@ function WhiteboardTools(props) {
             <IconButton id="iconButton" variant="contained" color="primary" onClick={() => loadBoard()}>
                 <GetAppIcon color="secondary" id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={() => handlePrevious()}>
+            <IconButton id="iconButton" variant="contained" color="primary" onClick={() => handleUndo()}>
                 <SkipPreviousIcon color="secondary" id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={() => handleNext()}>
+            <IconButton id="iconButton" variant="contained" color="primary" onClick={() => handleRedo()}>
                 <SkipNextIcon color="secondary" id="iconButtonInner" />
             </IconButton>
             <IconButton id="iconButton" variant="contained" color="primary" onClick={handlePaletteClick}>

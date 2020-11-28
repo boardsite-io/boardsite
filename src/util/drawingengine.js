@@ -1,9 +1,10 @@
 import * as hd from './handledata.js';
 import * as hbx from './hitbox.js';
 
-export function eraser(setHitboxCollection, setStrokeCollection, setUndoStack, strokeObject, setNeedsRedraw, wsRef) {
+export function eraser(setHitboxCollection, setStrokeCollection, setUndoStack, strokeObject, setNeedsRedraw, wsRef, canvasRef) {
     let positions = strokeObject.position.slice(0);
     let idsToDelete = {};
+    let strokeObjectArray = [];
 
     setHitboxCollection((prev) => {
         let pointSkipFactor = 8; // only check every p-th (x,y) position to reduce computational load
@@ -11,21 +12,29 @@ export function eraser(setHitboxCollection, setStrokeCollection, setUndoStack, s
         let padding = 0;
         let hitbox = hbx.getHitbox(positions, pointSkipFactor, quadMinPixDist, padding);
         let _prev = { ...prev };
-
+        
         // get all ids from the eraser hitboxes
         for (let i = 0; i < hitbox.length; i++) {
             let xy = hitbox[i];
             if (_prev.hasOwnProperty(xy)) { // there are IDs in this hitbox position
-                Object.keys(_prev[xy]).forEach((id) => {
+                Object.keys(_prev[xy]).forEach((id) => { // for each ID in this hitbox position
                     idsToDelete[id] = true;
                 })
             }
         }
 
+        // formatting for processing function
+        Object.keys(idsToDelete).forEach((id) => {
+            strokeObject = {};
+            strokeObject["id"] = id;
+            strokeObject["type"] = "delete";
+            strokeObjectArray.push(strokeObject);
+        })
+
         return _prev;
     });
 
-    hd.eraseFromStrokeCollection(idsToDelete, setStrokeCollection, setHitboxCollection, wsRef, setUndoStack, setNeedsRedraw, true, true);
+    hd.processStrokes(strokeObjectArray, "eraser", setStrokeCollection, setHitboxCollection, setUndoStack, setNeedsRedraw, wsRef, canvasRef);
 }
 
 // draw line
