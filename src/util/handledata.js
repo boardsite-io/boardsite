@@ -9,40 +9,50 @@ export function sendStrokeObjectArray(strokeObjectArray, wsRef) {
 }
 
 export function processStrokes(strokeObjectArray, processType, setStrokeCollection, setHitboxCollection, setStack, setNeedsRedraw, wsRef, canvasRef) {
-    strokeObjectArray = [...strokeObjectArray]; // copy
+    strokeObjectArray = [...strokeObjectArray];
     addToStack(strokeObjectArray, processType, setStack, setStrokeCollection); // Redo or Undo Stack (depending on input)
 
-    if (processType !== "message") {
+    if (processType === "eraser") {
         sendStrokeObjectArray(strokeObjectArray, wsRef);
     }
 
     strokeObjectArray.forEach((strokeObject) => {
+        let _strokeObject = {...strokeObject};
         if (processType === "undo") {
-            if (strokeObject.type === "stroke") {
-                eraseFromStrokeCollection(strokeObject, setStrokeCollection, setHitboxCollection, setNeedsRedraw);
-            } else if (strokeObject.type === "delete") {
-                addToStrokeCollection(strokeObject.object, setStrokeCollection, setHitboxCollection, canvasRef);
+            if (_strokeObject.type === "stroke") {
+                _strokeObject.type = "delete"
+            } else if (_strokeObject.type === "delete") {
+                _strokeObject = _strokeObject.object
             }
         }
-        else {
-            if (strokeObject.type === "stroke") {
-                addToStrokeCollection(strokeObject, setStrokeCollection, setHitboxCollection, canvasRef);
-            } else if (strokeObject.type === "delete") {
-                eraseFromStrokeCollection(strokeObject, setStrokeCollection, setHitboxCollection, setNeedsRedraw);
-            }
+
+        if (_strokeObject.type === "stroke") {
+            addToStrokeCollection(_strokeObject, setStrokeCollection, setHitboxCollection, canvasRef);
+        } else if (_strokeObject.type === "delete") {
+            eraseFromStrokeCollection(_strokeObject, setStrokeCollection, setHitboxCollection, setNeedsRedraw);
+        }
+
+        if (processType !== "message" && processType !== "eraser") {
+            sendStrokeObjectArray([_strokeObject], wsRef);
         }
     });
 }
 
 export function addToStack(strokeObjectArray, processType, setStack, setStrokeCollection) {
+    // processType === "undo"   => setStack = RedoStack
+    // else                     => setStack = UndoStack
+
     let _strokeObjectArray = [...strokeObjectArray]; // create copy
 
     setStrokeCollection((prev) => {
         _strokeObjectArray.forEach((strokeObject) => {
-            // Fetch and insert the positions array before deletion to make undo / redo of deletions possible
-            if (strokeObject.type === "delete" && processType !== "undo") {
+            if (processType === "undo") { // setStack = RedoStack
+                // DO SOMETHING
+                //strokeObject["object"] = { ...prev[strokeObject.id] };
+            }
+            else if (strokeObject.type === "delete") {
+                // Fetch and insert the positions array before deletion to make undo / redo of deletions possible
                 strokeObject["object"] = { ...prev[strokeObject.id] };
-                strokeObject["type"] = "delete";
             }
         })
         return prev;
