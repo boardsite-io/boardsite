@@ -19,7 +19,7 @@ function WhiteboardControl() {
     const [needsRedraw, setNeedsRedraw] = useState(0);
     const [needsHitboxDebug, setNeedsHitboxDebug] = useState(0);
     const canvasRef = useRef();
-    
+
 
     const [open, setOpen] = useState(false);
     const [sessionID, setSessionID] = useState("");
@@ -94,26 +94,24 @@ function WhiteboardControl() {
         <div>
             <AlertDialog open={open} setOpen={setOpen} sessionID_input={sidInput} setSessionID_input={setSidInput}
                 handleTextFieldChange={handleTextFieldChange} handleJoin={handleJoin} handleCreate={handleCreate} />
-            <div className="canvasdiv">
-                <Whiteboard wsRef={wsRef} canvasRef={canvasRef}
-                    strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
-                    hitboxCollection={hitboxCollection} setHitboxCollection={setHitboxCollection}
-                    strokeStyle={strokeStyle} lineWidth={lineWidth} needsClear={needsClear} setNeedsClear={setNeedsClear}
-                    strokeMessage={strokeMessage} setStrokeMessage={setStrokeMessage} 
-                    needsRedraw={needsRedraw} setNeedsRedraw={setNeedsRedraw}
-                    undoStack={undoStack} setUndoStack={setUndoStack} 
-                    redoStack={redoStack} setRedoStack={setRedoStack} 
-                    needsHitboxDebug={needsHitboxDebug} />
-            </div>
+            <Whiteboard wsRef={wsRef} canvasRef={canvasRef}
+                strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
+                hitboxCollection={hitboxCollection} setHitboxCollection={setHitboxCollection}
+                strokeStyle={strokeStyle} lineWidth={lineWidth} needsClear={needsClear} setNeedsClear={setNeedsClear}
+                strokeMessage={strokeMessage} setStrokeMessage={setStrokeMessage}
+                needsRedraw={needsRedraw} setNeedsRedraw={setNeedsRedraw}
+                undoStack={undoStack} setUndoStack={setUndoStack}
+                redoStack={redoStack} setRedoStack={setRedoStack}
+                needsHitboxDebug={needsHitboxDebug} />
             <WhiteboardTools wsRef={wsRef} canvasRef={canvasRef}
                 strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
                 strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
                 lineWidth={lineWidth} setLineWidth={setLineWidth} sessionID={sessionID}
                 setOpen={setOpen} setNeedsClear={setNeedsClear} setHitboxCollection={setHitboxCollection}
-                setStrokeMessage={setStrokeMessage} 
-                setNeedsRedraw={setNeedsRedraw} 
+                setStrokeMessage={setStrokeMessage}
+                setNeedsRedraw={setNeedsRedraw}
                 undoStack={undoStack} setUndoStack={setUndoStack}
-                redoStack={redoStack} setRedoStack={setRedoStack} 
+                redoStack={redoStack} setRedoStack={setRedoStack}
                 setNeedsHitboxDebug={setNeedsHitboxDebug} />
         </div>
     );

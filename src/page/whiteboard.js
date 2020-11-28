@@ -5,8 +5,6 @@ import * as draw from '../util/drawingengine.js';
 import * as hd from '../util/handledata.js';
 
 function Whiteboard(props) {
-    
-
     useEffect(() => {
         const canvas = props.canvasRef.current;
         canvas.width = 620; //canvas.clientWidth;
@@ -39,10 +37,7 @@ function Whiteboard(props) {
 
     // Update stroke attributes in context when their props change
     useEffect(() => {
-        const canvas = props.canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        ctx.lineWidth = props.lineWidth;
-        ctx.strokeStyle = props.strokeStyle;
+        setContextProps();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.lineWidth, props.strokeStyle])
 
@@ -71,10 +66,7 @@ function Whiteboard(props) {
                     props.wsRef, props.setUndoStack, props.setNeedsRedraw, false, true);
             }
         })
-        const canvas = props.canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        ctx.strokeStyle = props.strokeStyle;
-        ctx.lineWidth = props.lineWidth;
+        setContextProps();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.strokeMessage])
 
@@ -87,8 +79,7 @@ function Whiteboard(props) {
             let strokeObject = props.strokeCollection[key];
             return draw.drawCurve(ctx, strokeObject);
         })
-        ctx.strokeStyle = props.strokeStyle;
-        ctx.lineWidth = props.lineWidth;
+        setContextProps();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.needsRedraw])
 
@@ -107,14 +98,20 @@ function Whiteboard(props) {
             let h = 1;
             return draw.drawFillRect(x, y, w, h, ctx);
         })
-        ctx.strokeStyle = props.strokeStyle;
-        ctx.lineWidth = props.lineWidth;
+        setContextProps();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.needsHitboxDebug])
     /////////////////////////////////
 
+    function setContextProps(){
+        const canvas = props.canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        ctx.strokeStyle = props.strokeStyle;
+        ctx.lineWidth = props.lineWidth;
+    }
+
     return (
-        <div websocket={props.wsRef.current}>
+        <div className="canvasdiv" websocket={props.wsRef.current}>
             <canvas ref={props.canvasRef} />
         </div>
     );
