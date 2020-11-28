@@ -64,7 +64,7 @@ export function handleCanvasMouseMove(e, canvasRef) {
     }
 }
 
-export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setIdOrder, setNeedsRedraw) {
+export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, setNeedsRedraw) {
     if (!isMouseDown) { return; } // Ignore reentering
     isMouseDown = false;
     lastX = -1;
@@ -90,13 +90,14 @@ export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, se
     };
 
     if (!isEraser) {
-        hd.addToStrokeCollection(strokeObject, setStrokeCollection, setIdOrder, wsRef, canvasRef, true);
+        ctx.putImageData(imageData, 0, 0);
+        hd.addToStrokeCollection(strokeObject, setStrokeCollection, setUndoStack, wsRef, canvasRef, true, true);
         hd.addToHitboxCollection(strokeObject, setHitboxCollection);
     } else {
-        draw.eraser(setHitboxCollection, setStrokeCollection, setIdOrder, strokeObject, setNeedsRedraw, wsRef);
+        draw.eraser(setHitboxCollection, setStrokeCollection, setUndoStack, strokeObject, setNeedsRedraw, wsRef);
     }
 }
 
-export function handleCanvasMouseLeave(e, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setIdOrder, setNeedsRedraw) {
-    handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setIdOrder, setNeedsRedraw);
+export function handleCanvasMouseLeave(e, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, setNeedsRedraw) {
+    handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, setNeedsRedraw);
 }

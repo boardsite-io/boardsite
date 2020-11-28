@@ -43,6 +43,7 @@ function Whiteboard(props) {
         const ctx = canvas.getContext('2d');
         ctx.lineWidth = props.lineWidth;
         ctx.strokeStyle = props.strokeStyle;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.lineWidth, props.strokeStyle])
 
     // Clear canvas and all collections / stacks
@@ -59,12 +60,10 @@ function Whiteboard(props) {
 
     // Processes incoming stroke messages
     useEffect(() => {
-        const canvas = props.canvasRef.current;
-        const ctx = canvas.getContext('2d');
         Object.keys(props.strokeMessage).forEach((key) => {
             let strokeObject = props.strokeMessage[key];
             if (strokeObject.type === "stroke") {
-                hd.addToStrokeCollection(strokeObject, props.setStrokeCollection, props.setUndoStack, props.wsRef, props.canvasRef, false)
+                hd.addToStrokeCollection(strokeObject, props.setStrokeCollection, props.setUndoStack, props.wsRef, props.canvasRef, false, true)
                 hd.addToHitboxCollection(strokeObject, props.setHitboxCollection);
             }
             else if (strokeObject.type === "delete") {
@@ -72,7 +71,8 @@ function Whiteboard(props) {
                 hd.eraseFromHitboxCollection(strokeObject.id, props.setHitboxCollection);
             }
         })
-
+        const canvas = props.canvasRef.current;
+        const ctx = canvas.getContext('2d');
         ctx.strokeStyle = props.strokeStyle;
         ctx.lineWidth = props.lineWidth;
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -95,7 +95,6 @@ function Whiteboard(props) {
     /////////////////////////////////
     // DEBUG: draws hitboxCollection
     useEffect(() => {
-        console.log("XD");
         const canvas = props.canvasRef.current;
         const ctx = canvas.getContext('2d');
         ctx.fillStyle = "#00FF00";

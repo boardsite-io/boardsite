@@ -1,16 +1,19 @@
 import * as hbx from './hitbox.js';
 import * as draw from '../util/drawingengine.js';
 
-export function addToUndoStack(strokeObject, setUndoStack) {
+export function addToUndoStack(strokeObject, type, setUndoStack) {
+    let _strokeObject = {...strokeObject}; // create copy
+    _strokeObject.type = type;
+
     // add to actions stack
     setUndoStack((prev) => {
         let _prev = [...prev];
-        _prev.push(strokeObject);
+        _prev.push(_strokeObject);
         return _prev;
     });
 }
 
-export function addToStrokeCollection(strokeObject, setStrokeCollection, setUndoStack, wsRef, canvasRef, sendStroke) {
+export function addToStrokeCollection(strokeObject, setStrokeCollection, setUndoStack, wsRef, canvasRef, sendStroke, addToUndo) {
     // draw new stroke
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
@@ -26,8 +29,10 @@ export function addToStrokeCollection(strokeObject, setStrokeCollection, setUndo
     if (wsRef.current !== null && sendStroke) {
         wsRef.current.send(JSON.stringify([strokeObject]));
     }
-
-    addToUndoStack(strokeObject, setUndoStack);
+    
+    if (addToUndo){
+        addToUndoStack(strokeObject, "stroke", setUndoStack);
+    }
 }
 
 export function eraseFromStrokeCollection(ids, setStrokeCollection, setUndoStack, setNeedsRedraw, addToUndo) {
@@ -42,13 +47,11 @@ export function eraseFromStrokeCollection(ids, setStrokeCollection, setUndoStack
         let _prev = { ...prev }
         Object.keys(ids).forEach((keyToDel) => {
             if(addToUndo){
-                let strokeObject = _prev[keyToDel];
-                strokeObject["type"] = "delete";
-                addToUndoStack(strokeObject, setUndoStack);
+                let strokeObject = prev[keyToDel];
+                addToUndoStack(strokeObject, "delete", setUndoStack);
             }
             delete _prev[keyToDel];
         });
-
         return _prev;
     });
     setNeedsRedraw(x => x + 1); // trigger redraw

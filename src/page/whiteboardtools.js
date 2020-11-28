@@ -15,7 +15,6 @@ import { SketchPicker } from 'react-color'
 import reactCSS from 'reactcss'
 
 import * as hd from '../util/handledata.js';
-import * as draw from '../util/drawingengine.js';
 
 // import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 // import RangeSlider from 'react-bootstrap-range-slider';
@@ -48,14 +47,12 @@ function WhiteboardTools(props) {
         if (undo !== undefined) {
             let id = undo.id;
             let type = undo.type;
-
+            props.redoStack.push(undo);
             if (type === "stroke") {
-                let stroke = props.strokeCollection[id];
-                props.redoStack.push(stroke);
                 hd.eraseFromStrokeCollection(id, props.setStrokeCollection, props.setUndoStack, props.setNeedsRedraw, false);
                 hd.eraseFromHitboxCollection(id, props.setHitboxCollection);
             } else if (type === "delete"){
-                hd.addToStrokeCollection(undo, props.setStrokeCollection, props.setUndoStack, props.wsRef, props.canvasRef, false);
+                hd.addToStrokeCollection(undo, props.setStrokeCollection, props.setUndoStack, props.wsRef, props.canvasRef, false, false);
                 hd.addToHitboxCollection(undo, props.setHitboxCollection);
             }
         }
@@ -64,23 +61,16 @@ function WhiteboardTools(props) {
     function handleNext() {
         let redo = props.redoStack.pop();
         if (redo !== undefined) {
-            let type = redo.type;
             let id = redo.id;
-
+            let type = redo.type;
+            props.undoStack.push(redo);
             if (type === "stroke") {
-                hd.addToStrokeCollection(redo, props.setStrokeCollection, props.setUndoStack, props.wsRef, props.canvasRef, false);
+                hd.addToStrokeCollection(redo, props.setStrokeCollection, props.setUndoStack, props.wsRef, props.canvasRef, false, false);
                 hd.addToHitboxCollection(redo, props.setHitboxCollection);
             } else if (type === "delete"){
-                let stroke = props.strokeCollection[id];
-                props.undoStack.push(stroke);
                 hd.eraseFromStrokeCollection(id, props.setStrokeCollection, props.setUndoStack, props.setNeedsRedraw, false);
                 hd.eraseFromHitboxCollection(id, props.setHitboxCollection);
             }
-
-
-            // let addMe = {};
-            // addMe[redo.id] = redo;
-            // props.setStrokeMessage(addMe);
         }
     }
 
