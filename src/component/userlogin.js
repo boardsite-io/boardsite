@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function UserLogin(props) {
+export default function UserLogin(props) {
     const classes = useStyles();
 
     return (
@@ -130,5 +130,3 @@ function LoginForm() {
         </>
     );
 }
-
-export default UserLogin;

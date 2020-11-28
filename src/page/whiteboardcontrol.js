@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Whiteboard from './whiteboard';
 import WhiteboardTools from './whiteboardtools';
-
+import UserLogin from '../component/userlogin';
 import AlertDialog from '../component/session_dialog';
 import { createWebsocket, createBoardRequest } from '../util/api';
 import { useParams } from 'react-router-dom';
@@ -21,6 +21,7 @@ function WhiteboardControl() {
     const [needsRedraw, setNeedsRedraw] = useState(0);
     const [needsHitboxDebug, setNeedsHitboxDebug] = useState(0);
     const [open, setOpen] = useState(false);
+    const [openAccDialog, setOpenAccDialog] = useState(false);
     const [sessionID, setSessionID] = useState("");
     const [sidInput, setSidInput] = useState("");
     const wsRef = useRef(null);
@@ -136,6 +137,7 @@ function WhiteboardControl() {
 
     return (
         <div>
+            <UserLogin openAccDialog={openAccDialog} setOpenAccDialog={setOpenAccDialog} />
             <AlertDialog open={open} setOpen={setOpen} sessionID_input={sidInput} setSessionID_input={setSidInput}
                 handleTextFieldChange={handleTextFieldChange} handleJoin={handleJoin} handleCreate={handleCreate} />
             <Whiteboard wsRef={wsRef} canvasRef={canvasRef}
@@ -147,8 +149,12 @@ function WhiteboardControl() {
             <WhiteboardTools wsRef={wsRef} canvasRef={canvasRef}
                 strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
                 strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
-                lineWidth={lineWidth} setLineWidth={setLineWidth} sessionID={sessionID}
-                setOpen={setOpen} setNeedsClear={setNeedsClear} setHitboxCollection={setHitboxCollection}
+                lineWidth={lineWidth} setLineWidth={setLineWidth} 
+                sessionID={sessionID}
+                setOpen={setOpen} 
+                setOpenAccDialog={setOpenAccDialog} 
+                setNeedsClear={setNeedsClear} 
+                setHitboxCollection={setHitboxCollection}
                 setNeedsRedraw={setNeedsRedraw}
                 undoStack={undoStack} setUndoStack={setUndoStack}
                 redoStack={redoStack} setRedoStack={setRedoStack}
