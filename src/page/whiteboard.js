@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 
 import * as evl from '../util/eventlistener.js';
 import * as draw from '../util/drawingengine.js';
-import * as hd from '../util/handledata.js';
 
 function Whiteboard(props) {
     useEffect(() => {
@@ -35,12 +34,6 @@ function Whiteboard(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    // Update stroke attributes in context when their props change
-    useEffect(() => {
-        setContextProps();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.lineWidth, props.strokeStyle])
-
     // Clear canvas and all collections / stacks
     useEffect(() => {
         const canvas = props.canvasRef.current;
@@ -52,23 +45,6 @@ function Whiteboard(props) {
         props.setRedoStack([]);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.needsClear])
-
-    // Processes incoming stroke messages
-    useEffect(() => {
-        Object.keys(props.strokeMessage).forEach((key) => {
-            let strokeObject = props.strokeMessage[key];
-            if (strokeObject.type === "stroke") {
-                hd.addToStrokeCollection(strokeObject, props.setStrokeCollection, props.setHitboxCollection, 
-                    props.setUndoStack, props.wsRef, props.canvasRef, false, true);
-            }
-            else if (strokeObject.type === "delete") {
-                hd.eraseFromStrokeCollection(strokeObject.id, props.setStrokeCollection, props.setHitboxCollection, 
-                    props.wsRef, props.setUndoStack, props.setNeedsRedraw, false, true);
-            }
-        })
-        setContextProps();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.strokeMessage])
 
     // redraws full strokeCollection
     useEffect(() => {
@@ -118,4 +94,3 @@ function Whiteboard(props) {
 }
 
 export default Whiteboard;
-

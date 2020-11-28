@@ -7,27 +7,26 @@ import { createWebsocket, createBoardRequest } from '../util/api';
 import { useParams } from 'react-router-dom';
 import '../css/whiteboard.css';
 
+import * as hd from '../util/handledata.js';
+
 function WhiteboardControl() {
     const [strokeCollection, setStrokeCollection] = useState({});
     const [undoStack, setUndoStack] = useState([]);
     const [redoStack, setRedoStack] = useState([]);
     const [hitboxCollection, setHitboxCollection] = useState({});
-    const [strokeMessage, setStrokeMessage] = useState({});
     const [strokeStyle, setStrokeStyle] = useState("#000000");
     const [lineWidth, setLineWidth] = useState(3);
     const [needsClear, setNeedsClear] = useState(0);
     const [needsRedraw, setNeedsRedraw] = useState(0);
     const [needsHitboxDebug, setNeedsHitboxDebug] = useState(0);
-    const canvasRef = useRef();
-
-
     const [open, setOpen] = useState(false);
     const [sessionID, setSessionID] = useState("");
     const [sidInput, setSidInput] = useState("");
     const wsRef = useRef(null);
+    const canvasRef = useRef();
+    const { id } = useParams();
 
     // Connect to session if valid session link
-    const { id } = useParams();
     useEffect(() => {
         if (id !== undefined) { // Check if id specified in link
             setSessionID(id); // Set session id and connect to session
@@ -59,20 +58,23 @@ function WhiteboardControl() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sessionID])
 
+    // Update stroke attributes in context when their props change
+    useEffect(() => {
+        setContextProps();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [lineWidth, strokeStyle])
+
     // Handles messages from the websocket
     function onMsgHandle(data) {
-        // listen to data sent from the websocket server
-        const message = JSON.parse(data.data);
-        if (message.length === 0) {
-            setNeedsClear(x => x + 1);
-        }
-        else {
-            let msg = {};
-            message.forEach((stroke) => {
-                msg[stroke.id] = stroke
-            });
-            setStrokeMessage(msg);
-        }
+        hd.processMessage(data, setNeedsClear, setStrokeCollection, setHitboxCollection, setUndoStack, setNeedsRedraw, wsRef, canvasRef);
+        setContextProps();
+    }
+
+    function setContextProps(){
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        ctx.strokeStyle = strokeStyle;
+        ctx.lineWidth = lineWidth;
     }
 
     function handleCreate(e) {
@@ -98,7 +100,6 @@ function WhiteboardControl() {
                 strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
                 hitboxCollection={hitboxCollection} setHitboxCollection={setHitboxCollection}
                 strokeStyle={strokeStyle} lineWidth={lineWidth} needsClear={needsClear} setNeedsClear={setNeedsClear}
-                strokeMessage={strokeMessage} setStrokeMessage={setStrokeMessage}
                 needsRedraw={needsRedraw} setNeedsRedraw={setNeedsRedraw}
                 undoStack={undoStack} setUndoStack={setUndoStack}
                 redoStack={redoStack} setRedoStack={setRedoStack}
@@ -108,7 +109,6 @@ function WhiteboardControl() {
                 strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
                 lineWidth={lineWidth} setLineWidth={setLineWidth} sessionID={sessionID}
                 setOpen={setOpen} setNeedsClear={setNeedsClear} setHitboxCollection={setHitboxCollection}
-                setStrokeMessage={setStrokeMessage}
                 setNeedsRedraw={setNeedsRedraw}
                 undoStack={undoStack} setUndoStack={setUndoStack}
                 redoStack={redoStack} setRedoStack={setRedoStack}

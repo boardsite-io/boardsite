@@ -2,7 +2,7 @@ import * as hbx from './hitbox.js';
 import * as draw from '../util/drawingengine.js';
 
 export function addToUndoStack(strokeObject, type, setUndoStack) {
-    let _strokeObject = {...strokeObject}; // create copy
+    let _strokeObject = { ...strokeObject }; // create copy
     _strokeObject.type = type;
 
     // add to actions stack
@@ -29,8 +29,8 @@ export function addToStrokeCollection(strokeObject, setStrokeCollection, setHitb
     if (wsRef.current !== null && sendStroke) {
         wsRef.current.send(JSON.stringify([strokeObject]));
     }
-    
-    if (addToUndo){
+
+    if (addToUndo) {
         addToUndoStack(strokeObject, "stroke", setUndoStack);
     }
     addToHitboxCollection(strokeObject, setHitboxCollection);
@@ -43,7 +43,7 @@ export function eraseFromStrokeCollection(ids, setStrokeCollection, setHitboxCol
         ids = id;
     }
 
-    if(sendStroke){
+    if (sendStroke) {
         sendIdsToDelete(ids, wsRef);
     }
 
@@ -51,7 +51,7 @@ export function eraseFromStrokeCollection(ids, setStrokeCollection, setHitboxCol
     setStrokeCollection((prev) => {
         let _prev = { ...prev }
         Object.keys(ids).forEach((keyToDel) => {
-            if(addToUndo){
+            if (addToUndo) {
                 let strokeObject = prev[keyToDel];
                 addToUndoStack(strokeObject, "delete", setUndoStack);
             }
@@ -126,3 +126,21 @@ export function sendIdsToDelete(ids, wsRef) {
     }
 }
 
+export function processMessage(data, setNeedsClear, setStrokeCollection, setHitboxCollection, setUndoStack, setNeedsRedraw, wsRef, canvasRef) {
+    const message = JSON.parse(data.data);
+    if (message.length === 0) {
+        setNeedsClear(x => x + 1);
+    }
+    else {
+        message.forEach((strokeObject) => {
+            if (strokeObject.type === "stroke") {
+                addToStrokeCollection(strokeObject, setStrokeCollection, setHitboxCollection,
+                    setUndoStack, wsRef, canvasRef, false, true);
+            }
+            else if (strokeObject.type === "delete") {
+                eraseFromStrokeCollection(strokeObject.id, setStrokeCollection, setHitboxCollection,
+                    wsRef, setUndoStack, setNeedsRedraw, false, true);
+            }
+        });
+    }
+}
