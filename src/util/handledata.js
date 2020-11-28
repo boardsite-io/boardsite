@@ -1,4 +1,5 @@
 import * as hbx from './hitbox.js';
+import * as draw from '../util/drawingengine.js';
 
 export function addToUndoStack(strokeObject, setUndoStack) {
     // add to actions stack
@@ -9,7 +10,11 @@ export function addToUndoStack(strokeObject, setUndoStack) {
     });
 }
 
-export function addToStrokeCollection(strokeObject, setStrokeCollection, setUndoStack, wsRef, sendStroke) {
+export function addToStrokeCollection(strokeObject, setStrokeCollection, setUndoStack, wsRef, canvasRef, sendStroke) {
+    // draw new stroke
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    draw.drawCurve(ctx, strokeObject);
     // Add stroke to strokeCollection
     setStrokeCollection((prev) => {
         let res = { ...prev };

@@ -64,7 +64,7 @@ function Whiteboard(props) {
         Object.keys(props.strokeMessage).forEach((key) => {
             let strokeObject = props.strokeMessage[key];
             if (strokeObject.type === "stroke") {
-                hd.addToStrokeCollection(strokeObject, props.setStrokeCollection, props.setUndoStack, props.wsRef, false)
+                hd.addToStrokeCollection(strokeObject, props.setStrokeCollection, props.setUndoStack, props.wsRef, props.canvasRef, false)
                 hd.addToHitboxCollection(strokeObject, props.setHitboxCollection);
                 draw.drawCurve(ctx, strokeObject);
             }

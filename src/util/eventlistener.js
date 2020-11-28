@@ -90,10 +90,7 @@ export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, se
     };
 
     if (!isEraser) {
-        // Delete livestroke lines and restroke interpolated and potentially buffered strokes
-        ctx.putImageData(imageData, 0, 0);
-        draw.drawCurve(ctx, strokeObject);
-        hd.addToStrokeCollection(strokeObject, setStrokeCollection, setIdOrder, wsRef, true);
+        hd.addToStrokeCollection(strokeObject, setStrokeCollection, setIdOrder, wsRef, canvasRef, true);
         hd.addToHitboxCollection(strokeObject, setHitboxCollection);
     } else {
         draw.eraser(setHitboxCollection, setStrokeCollection, setIdOrder, strokeObject, setNeedsRedraw, wsRef);
