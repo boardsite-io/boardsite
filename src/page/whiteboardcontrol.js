@@ -34,7 +34,7 @@ function WhiteboardControl() {
     // Open dialog on mount
     useEffect(() => {
         // setOpenSessionDialog(true);
-        setPageCollection([{canvasRef: createRef(), pageId: "xy123"}]);
+        setPageCollection([{ canvasRef: createRef(), pageId: "xy123" }]);
     }, [])
 
     // Verify session id and try to connect to session
@@ -110,6 +110,40 @@ function WhiteboardControl() {
     }
 
     function deletePage(pageId) {
+        // Delete strokeCollection from page
+        setStrokeCollection((prev) => {
+            delete prev[pageId]
+            return prev;
+        })
+
+        // Delete hitboxCollection from page
+        setHitboxCollection((prev) => {
+            delete prev[pageId]
+            return prev;
+        })
+
+        setUndoStack((prev) => {
+            let newPrev = [];
+            prev.forEach((actionArray, index) => {
+                let action = actionArray[0];
+                if (action.page_id !== pageId) {
+                    newPrev.push(prev[index]);
+                }
+            })
+            return newPrev;
+        })
+
+        setRedoStack((prev) => {
+            let newPrev = [];
+            prev.forEach((actionArray, index) => {
+                let action = actionArray[0];
+                if (action.page_id !== pageId) {
+                    newPrev.push(prev[index]);
+                }
+            })
+            return newPrev;
+        })
+
         // Find page index from id
         pageCollection.forEach((page, index) => {
             if (page.pageId === pageId) {
@@ -124,6 +158,8 @@ function WhiteboardControl() {
                 return [...prev.slice(0, index), ...prev.slice(index + 1)];
             })
         }
+
+
     }
 
     const pages = pageCollection.map((page) => {

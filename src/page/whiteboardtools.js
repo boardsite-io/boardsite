@@ -32,10 +32,7 @@ function WhiteboardTools(props) {
     }
 
     function saveBoard() {
-        Object.keys(props.strokeCollection).forEach((key) => {
-            let stroke = props.strokeCollection[key];
-            console.log(stroke);
-        })
+        console.log(props.strokeCollection, props.hitboxCollection);
     }
 
     function loadBoard() {
@@ -45,7 +42,7 @@ function WhiteboardTools(props) {
     function handleUndo() {
         let undo = props.undoStack.pop();
         if (undo !== undefined) {
-            let pageId = undo[0].pageId;
+            let pageId = undo[0].page_id;
             let canvasRef = getCanvasRef(pageId);
             hd.processStrokes(undo, "undo", props.setStrokeCollection, props.setHitboxCollection,
                 props.setRedoStack, props.wsRef, canvasRef);
@@ -55,7 +52,7 @@ function WhiteboardTools(props) {
     function handleRedo() {
         let redo = props.redoStack.pop();
         if (redo !== undefined) {
-            let pageId = redo[0].pageId;
+            let pageId = redo[0].page_id;
             let canvasRef = getCanvasRef(pageId);
             hd.processStrokes(redo, "redo", props.setStrokeCollection, props.setHitboxCollection,
                 props.setUndoStack, props.wsRef, canvasRef);

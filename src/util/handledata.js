@@ -40,10 +40,10 @@ export function addToStrokeCollection(strokeObject, setStrokeCollection, setHitb
     // Add stroke to strokeCollection
     setStrokeCollection((prev) => {
         let _prev = { ...prev };
-        if (_prev[strokeObject.pageId] === undefined){
-            _prev[strokeObject.pageId] = {};
+        if (_prev[strokeObject.page_id] === undefined){
+            _prev[strokeObject.page_id] = {};
         }
-        _prev[strokeObject.pageId][strokeObject.id] = strokeObject;
+        _prev[strokeObject.page_id][strokeObject.id] = strokeObject;
         return _prev;
     });
 
@@ -51,7 +51,7 @@ export function addToStrokeCollection(strokeObject, setStrokeCollection, setHitb
 }
 
 export function eraseFromStrokeCollection(strokeObject, setStrokeCollection, setHitboxCollection, canvasRef) {
-    let pageId = strokeObject.pageId;
+    let pageId = strokeObject.page_id;
     // erase id from collection
     setStrokeCollection((prev) => {
         let _prev = { ...prev }
@@ -70,7 +70,7 @@ export function addToStack(strokeObjectArray, processType, setStack, setStrokeCo
 
     setStrokeCollection((prev) => {
         _strokeObjectArray.forEach((strokeObject) => {
-            let pageId = strokeObject.pageId;
+            let pageId = strokeObject.page_id;
             if (processType === "undo") { // setStack = RedoStack
                 // DO SOMETHING
                 //strokeObject["object"] = { ...prev[strokeObject.id] };
@@ -101,7 +101,7 @@ export function addToStack(strokeObjectArray, processType, setStack, setStrokeCo
 export function addToHitboxCollection(strokeObject, setHitboxCollection) {
     let positions = strokeObject.position.slice(0); // create copy of positions array
     let id = strokeObject.id; // extract id
-    let pageId = strokeObject.pageId;
+    let pageId = strokeObject.page_id;
 
     setHitboxCollection((prev) => {
         let _prev = { ...prev }
@@ -129,7 +129,7 @@ export function addToHitboxCollection(strokeObject, setHitboxCollection) {
 
 // remove id hitboxes from hitbox collection
 export function eraseFromHitboxCollection(strokeObject, setHitboxCollection) {
-    let pageId = strokeObject.pageId;
+    let pageId = strokeObject.page_id;
     setHitboxCollection((prev) => {
         let _prev = { ...prev };
         Object.keys(_prev[pageId]).forEach((posKey) => {

@@ -82,7 +82,7 @@ export function handleCanvasMouseUp(e, pageId, canvasRef, wsRef, setStrokeCollec
     // generate unique id
     let strokeid = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4) + Date.now().toString(36).substr(4);
     let strokeObject = {
-        pageId: pageId,
+        page_id: pageId,
         id: strokeid,
         type: "stroke",
         line_width: ctx.lineWidth,

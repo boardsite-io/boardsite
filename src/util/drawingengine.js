@@ -25,7 +25,7 @@ export function eraser(setHitboxCollection, setStrokeCollection, setUndoStack, s
     let positions = strokeObject.position.slice();
     let idsToDelete = {};
     let strokeObjectArray = [];
-    let pageId = strokeObject.pageId;
+    let pageId = strokeObject.page_id;
 
     setHitboxCollection((prev) => {
         let pointSkipFactor = 8; // only check every p-th (x,y) position to reduce computational load
