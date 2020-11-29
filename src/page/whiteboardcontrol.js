@@ -23,6 +23,12 @@ function WhiteboardControl() {
     const [sidInput, setSidInput] = useState("");
     const wsRef = useRef();
     const { id } = useParams();
+    const [pageCollection, setPageCollection] = useState(
+        [
+            {canvasRef: createRef(), pageId: "xy123"},
+            // {canvasRef: createRef(), pageId: "b2is24"},
+        ]
+    );
 
     // Connect to session if valid session link
     useEffect(() => {
@@ -53,12 +59,12 @@ function WhiteboardControl() {
     useEffect(() => {
         setContextProps();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [lineWidth, strokeStyle])
+    }, [lineWidth, strokeStyle, pageCollection])
 
     // Clear all canvases and all collections / stacks
     useEffect(() => {
-        Object.keys(canvasRefs).forEach((id) => {
-            const canvas = canvasRefs[id].current;
+        pageCollection.forEach((page) => {
+            const canvas = page.canvasRef.current;
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, window.innerHeight, window.innerWidth);
             setStrokeCollection({});
@@ -69,6 +75,15 @@ function WhiteboardControl() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [needsClear])
 
+    function setContextProps() {
+        pageCollection.forEach((page) => {
+            const canvas = page.canvasRef.current;
+            const ctx = canvas.getContext('2d');
+            ctx.strokeStyle = strokeStyle;
+            ctx.lineWidth = lineWidth;
+        });
+    }
+
     // Handles messages from the websocket
     function onMsgHandle(data) {
         const strokeObjectArray = JSON.parse(data.data);
@@ -77,37 +92,20 @@ function WhiteboardControl() {
         }
         else {
             let pageId = strokeObjectArray[0].pageId;
-            let canvasRef = canvasRefs[pageId];
+            let canvasRef = pageCollection[pageId];
             hd.processStrokes(strokeObjectArray, "message", setStrokeCollection, setHitboxCollection,
                 setUndoStack, wsRef, canvasRef);
             setContextProps();
         }
     }
 
-    function setContextProps() {
-        Object.keys(canvasRefs).forEach((id) => {
-            const canvas = canvasRefs[id].current;
-            const ctx = canvas.getContext('2d');
-            ctx.strokeStyle = strokeStyle;
-            ctx.lineWidth = lineWidth;
-        });
-    }
-
-    const [canvasRefs, setCanvasRefs] = useState(
-        {
-            1: createRef(),
-            2: createRef(),
-            3: createRef(),
-            4: createRef()
-        }
-    );
-
-    const pages = Object.keys(canvasRefs).map((id) => {
+    const pages = pageCollection.map((page) => {
         return (
             <Whiteboard
+                key={page.pageId}
+                pageId={page.pageId}
+                canvasRef={page.canvasRef}
                 wsRef={wsRef}
-                canvasRef={canvasRefs[id]}
-                pageId={id}
                 setStrokeCollection={setStrokeCollection}
                 setHitboxCollection={setHitboxCollection}
                 setUndoStack={setUndoStack}
@@ -147,7 +145,7 @@ function WhiteboardControl() {
                 hitboxCollection={hitboxCollection} setHitboxCollection={setHitboxCollection}
                 undoStack={undoStack} setUndoStack={setUndoStack}
                 redoStack={redoStack} setRedoStack={setRedoStack}
-                canvasRefs={canvasRefs} setCanvasRefs={setCanvasRefs} />
+                pageCollection={pageCollection} setPageCollection={setPageCollection} />
             <div className="canvasdiv" websocket={wsRef.current}>
                 {pages}
             </div>

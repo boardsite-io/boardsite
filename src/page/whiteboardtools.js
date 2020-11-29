@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, createRef } from 'react';
 import { IconButton, Input, Slider } from '@material-ui/core';
 import * as api from '../util/api';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
@@ -47,7 +47,8 @@ function WhiteboardTools(props) {
     function handleUndo() {
         let undo = props.undoStack.pop();
         if (undo !== undefined) {
-            let canvasRef = props.canvasRefs[undo[0].pageId];
+            let pageId = undo[0].pageId;
+            let canvasRef = getCanvasRef(pageId);
             hd.processStrokes(undo, "undo", props.setStrokeCollection, props.setHitboxCollection,
                 props.setRedoStack, props.wsRef, canvasRef);
         }
@@ -56,10 +57,21 @@ function WhiteboardTools(props) {
     function handleRedo() {
         let redo = props.redoStack.pop();
         if (redo !== undefined) {
-            let canvasRef = props.canvasRefs[redo[0].pageId];
+            let pageId = redo[0].pageId;
+            let canvasRef = getCanvasRef(pageId);
             hd.processStrokes(redo, "redo", props.setStrokeCollection, props.setHitboxCollection,
                 props.setUndoStack, props.wsRef, canvasRef);
         }
+    }
+
+    function getCanvasRef(pageId) {
+        let canvasRef = null;
+        props.pageCollection.forEach((page) => {
+            if (page.pageId === pageId) {
+                canvasRef = page.canvasRef;
+            }
+        })
+        return canvasRef;
     }
 
     function handlePaletteClick() {
@@ -82,6 +94,17 @@ function WhiteboardTools(props) {
         setColor(color.rgb);
         props.setStrokeStyle(color.hex)
     };
+
+    function newPage() {
+        props.setPageCollection((prev) => {
+            let _prev = [ ...prev ];
+            let newPageId = Math.random().toString(36).substring(7);
+            let newCanvasRef = createRef();
+            let newPage = {canvasRef: newCanvasRef, pageId: newPageId};
+            _prev.push(newPage);
+            return _prev
+        })
+    }
 
     const handleSliderChange = (event, newValue) => {
         props.setLineWidth(newValue);
@@ -115,7 +138,7 @@ function WhiteboardTools(props) {
             },
         },
     });
-    
+
     return (
         <div className="toolbar">
             <IconButton id="iconButton" variant="contained" onClick={() => props.setOpenAccDialog(true)}>
@@ -124,27 +147,22 @@ function WhiteboardTools(props) {
             <IconButton id="iconButton" variant="contained" onClick={() => props.setOpenSessionDialog(true)}>
                 <GroupAddIcon color="secondary" id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={() => handleClear()}>
+            <IconButton id="iconButton" variant="contained" color="primary" onClick={handleClear}>
                 <DeleteForeverIcon color="secondary" id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={() => saveBoard()}>
+            <IconButton id="iconButton" variant="contained" color="primary" onClick={saveBoard}>
                 <SaveIcon color="secondary" id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={() => loadBoard()}>
+            <IconButton id="iconButton" variant="contained" color="primary" onClick={loadBoard}>
                 <GetAppIcon color="secondary" id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" onClick={() => {
-                props.setCanvasRefs((prev) => {
-                    console.log(props.strokeCollection, props.hitboxCollection);
-                    return prev
-                })
-            }}>
+            <IconButton id="iconButton" variant="contained" onClick={newPage}>
                 <AddIcon color="secondary" id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={() => handleUndo()}>
+            <IconButton id="iconButton" variant="contained" color="primary" onClick={handleUndo}>
                 <SkipPreviousIcon color="secondary" id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={() => handleRedo()}>
+            <IconButton id="iconButton" variant="contained" color="primary" onClick={handleRedo}>
                 <SkipNextIcon color="secondary" id="iconButtonInner" />
             </IconButton>
             <IconButton id="iconButton" variant="contained" color="primary" onClick={handlePaletteClick}>
