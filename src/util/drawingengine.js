@@ -22,7 +22,7 @@ export function redraw(pageId, canvasRef, setStrokeCollection) {
 }
 
 export function eraser(setHitboxCollection, setStrokeCollection, setUndoStack, strokeObject, wsRef, canvasRef) {
-    let positions = strokeObject.position.slice(0);
+    let positions = strokeObject.position.slice();
     let idsToDelete = {};
     let strokeObjectArray = [];
     let pageId = strokeObject.pageId;

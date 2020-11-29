@@ -70,13 +70,14 @@ export function addToStack(strokeObjectArray, processType, setStack, setStrokeCo
 
     setStrokeCollection((prev) => {
         _strokeObjectArray.forEach((strokeObject) => {
+            let pageId = strokeObject.pageId;
             if (processType === "undo") { // setStack = RedoStack
                 // DO SOMETHING
                 //strokeObject["object"] = { ...prev[strokeObject.id] };
             }
             else if (strokeObject.type === "delete") {
                 // Fetch and insert the positions array before deletion to make undo / redo of deletions possible
-                strokeObject["object"] = { ...prev[strokeObject.id] };
+                strokeObject["object"] = { ...prev[pageId][strokeObject.id] };
             }
         })
         return prev;
