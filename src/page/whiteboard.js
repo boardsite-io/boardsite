@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react';
 import * as evl from '../util/eventlistener.js';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { IconButton } from '@material-ui/core';
+import ClearIcon from '@material-ui/icons/Clear';
+import DeleteIcon from '@material-ui/icons/Delete';
+import AddIcon from '@material-ui/icons/Add';
 import reactCSS from 'reactcss'
 
 function Whiteboard(props) {
-    const [displaySettings, setDisplaySettings] = useState(false);
+    const [displayPageSettings, setDisplayPageSettings] = useState(false);
 
     useEffect(() => {
         const canvas = props.canvasRef.current;
@@ -53,31 +56,43 @@ function Whiteboard(props) {
         },
     });
 
-    function click() {
-        console.log("hi", props.pageId)
-        setDisplaySettings(true);
+    function openPageSettings() {
+        setDisplayPageSettings(true);
     }
 
-    function handleSettingsClose() {
-        setDisplaySettings(false);
+    function closePageSettings() {
+        setDisplayPageSettings(false);
+    }
+
+    function clearPage() {
+        console.log("This should clear the page");
+    }
+
+    function addPage() {
+        console.log("This should add a page");
     }
 
     return (
         <div className="page">
             <canvas ref={props.canvasRef} />
             <div>
-                <IconButton id="iconButton" variant="contained" onClick={click}>
+                <IconButton id="iconButton" variant="contained" onClick={openPageSettings}>
                     <MoreVertIcon color="secondary" id="iconButtonInner" />
                 </IconButton>
                 { // Palette Popup
-                    displaySettings ?
+                    displayPageSettings ?
                         <div style={styles.popover}>
-                            <div style={styles.cover} onClick={handleSettingsClose} />
+                            <div style={styles.cover} onClick={closePageSettings} />
                             <div className="pagesettings">
-                                <IconButton id="iconButton" variant="contained" onClick={click} />
-                                <IconButton id="iconButton" variant="contained" onClick={click} />
-                                <IconButton id="iconButton" variant="contained" onClick={click} />
-                                <IconButton id="iconButton" variant="contained" onClick={click} />
+                                <IconButton id="iconButton" variant="contained" onClick={() => props.deletePage(props.pageId)}>
+                                    <DeleteIcon color="secondary" id="iconButtonInner"/>
+                                </IconButton>
+                                <IconButton id="iconButton" variant="contained" onClick={clearPage}>
+                                    <ClearIcon color="secondary" id="iconButtonInner"/>
+                                </IconButton>
+                                <IconButton id="iconButton" variant="contained" onClick={addPage}>
+                                    <AddIcon color="secondary" id="iconButtonInner"/>
+                                </IconButton>
                             </div>
                         </div>
                         : null

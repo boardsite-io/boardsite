@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom';
 import * as hd from '../util/handledata.js';
 
 function WhiteboardControl() {
+    const [pageCollection, setPageCollection] = useState([]);
     const [strokeCollection, setStrokeCollection] = useState({});
     const [hitboxCollection, setHitboxCollection] = useState({});
     const [undoStack, setUndoStack] = useState([]);
@@ -22,11 +23,6 @@ function WhiteboardControl() {
     const [sidInput, setSidInput] = useState("");
     const wsRef = useRef();
     const { id } = useParams();
-    const [pageCollection, setPageCollection] = useState(
-        [
-            {canvasRef: createRef(), pageId: "xy123"},
-        ]
-    );
 
     // Connect to session if valid session link
     useEffect(() => {
@@ -36,9 +32,10 @@ function WhiteboardControl() {
     }, [id])
 
     // Open dialog on mount
-    // useEffect(() => {
-    //     setOpen(true);
-    // }, [])
+    useEffect(() => {
+        // setOpenSessionDialog(true);
+        setPageCollection([{canvasRef: createRef(), pageId: "xy123"}]);
+    }, [])
 
     // Verify session id and try to connect to session
     useEffect(() => {
@@ -112,14 +109,33 @@ function WhiteboardControl() {
         setSidInput(e.target.value);
     }
 
+    function deletePage(pageId) {
+        // Find page index from id
+        pageCollection.forEach((page, index) => {
+            if (page.pageId === pageId) {
+                // Delete page from pageCollection
+                deletePageFromCollection(index);
+                return;
+            }
+        })
+
+        function deletePageFromCollection(index) {
+            setPageCollection((prev) => {
+                return [...prev.slice(0, index), ...prev.slice(index + 1)];
+            })
+        }
+    }
+
     const pages = pageCollection.map((page) => {
         return (
             <Whiteboard
                 className="page"
                 key={page.pageId}
                 pageId={page.pageId}
+                deletePage={deletePage}
                 canvasRef={page.canvasRef}
                 wsRef={wsRef}
+                setPageCollection={setPageCollection}
                 setStrokeCollection={setStrokeCollection}
                 setHitboxCollection={setHitboxCollection}
                 setUndoStack={setUndoStack}
