@@ -52,7 +52,7 @@ export function eraser(setHitboxCollection, setStrokeCollection, setUndoStack, s
             strokeObject = {};
             strokeObject["id"] = id;
             strokeObject["type"] = "delete";
-            strokeObject["pageId"] = pageId;
+            strokeObject["page_id"] = pageId;
             strokeObjectArray.push(strokeObject);
         })
 
