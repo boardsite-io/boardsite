@@ -1,13 +1,6 @@
 import * as hbx from './hitbox.js';
 import * as draw from '../util/drawingengine.js';
 
-// Send ids to delete
-export function sendStrokeObjectArray(strokeObjectArray, wsRef) {
-    if (strokeObjectArray.length > 0 && wsRef.current !== null) {
-        wsRef.current.send(JSON.stringify(strokeObjectArray));
-    }
-}
-
 export function processStrokes(strokeObjectArray, processType, setStrokeCollection, setHitboxCollection, setStack, setNeedsRedraw, wsRef, canvasRef) {
     strokeObjectArray = [...strokeObjectArray];
     addToStack(strokeObjectArray, processType, setStack, setStrokeCollection); // Redo or Undo Stack (depending on input)
@@ -35,34 +28,6 @@ export function processStrokes(strokeObjectArray, processType, setStrokeCollecti
         if (processType !== "message" && processType !== "eraser") {
             sendStrokeObjectArray([_strokeObject], wsRef);
         }
-    });
-}
-
-export function addToStack(strokeObjectArray, processType, setStack, setStrokeCollection) {
-    // processType === "undo"   => setStack = RedoStack
-    // else                     => setStack = UndoStack
-
-    let _strokeObjectArray = [...strokeObjectArray]; // create copy
-
-    setStrokeCollection((prev) => {
-        _strokeObjectArray.forEach((strokeObject) => {
-            if (processType === "undo") { // setStack = RedoStack
-                // DO SOMETHING
-                //strokeObject["object"] = { ...prev[strokeObject.id] };
-            }
-            else if (strokeObject.type === "delete") {
-                // Fetch and insert the positions array before deletion to make undo / redo of deletions possible
-                strokeObject["object"] = { ...prev[strokeObject.id] };
-            }
-        })
-        return prev;
-    })
-
-    // add to undo/redo stack
-    setStack((prev) => {
-        let _prev = [...prev];
-        _prev.push(_strokeObjectArray);
-        return _prev;
     });
 }
 
@@ -97,6 +62,34 @@ export function eraseFromStrokeCollection(strokeObject, setStrokeCollection, set
     });
     setNeedsRedraw(x => x + 1); // trigger redraw
     eraseFromHitboxCollection(strokeObject, setHitboxCollection);
+}
+
+export function addToStack(strokeObjectArray, processType, setStack, setStrokeCollection) {
+    // processType === "undo"   => setStack = RedoStack
+    // else                     => setStack = UndoStack
+
+    let _strokeObjectArray = [...strokeObjectArray]; // create copy
+
+    setStrokeCollection((prev) => {
+        _strokeObjectArray.forEach((strokeObject) => {
+            if (processType === "undo") { // setStack = RedoStack
+                // DO SOMETHING
+                //strokeObject["object"] = { ...prev[strokeObject.id] };
+            }
+            else if (strokeObject.type === "delete") {
+                // Fetch and insert the positions array before deletion to make undo / redo of deletions possible
+                strokeObject["object"] = { ...prev[strokeObject.id] };
+            }
+        })
+        return prev;
+    })
+
+    // add to undo/redo stack
+    setStack((prev) => {
+        let _prev = [...prev];
+        _prev.push(_strokeObjectArray);
+        return _prev;
+    });
 }
 
 /**
@@ -149,4 +142,11 @@ export function eraseFromHitboxCollection(ids, setHitboxCollection) {
         });
         return _prev;
     });
+}
+
+// Send strokeObjectArray to websocket
+export function sendStrokeObjectArray(strokeObjectArray, wsRef) {
+    if (strokeObjectArray.length > 0 && wsRef.current !== undefined) {
+        wsRef.current.send(JSON.stringify(strokeObjectArray));
+    }
 }

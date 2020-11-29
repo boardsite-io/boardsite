@@ -64,12 +64,16 @@ export function handleCanvasMouseMove(e, canvasRef) {
     }
 }
 
-export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, setNeedsRedraw) {
+export function handleCanvasMouseUp(e, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, setNeedsRedraw) {
     if (!isMouseDown) { return; } // Ignore reentering
     isMouseDown = false;
     lastX = -1;
     lastY = -1;
     const canvas = canvasRef.current;
+    if (canvas === undefined) {
+        return
+    }
+
     const ctx = canvas.getContext('2d');
     let rect = canvas.getBoundingClientRect();
     if (e.type !== "touchend" && e.type !== "touchcancel") {
@@ -82,6 +86,7 @@ export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, se
     // generate unique id
     let strokeid = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4) + Date.now().toString(36).substr(4);
     let strokeObject = {
+        pageId: pageId,
         id: strokeid,
         type: "stroke",
         line_width: ctx.lineWidth,
@@ -97,6 +102,6 @@ export function handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, se
     }
 }
 
-export function handleCanvasMouseLeave(e, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, setNeedsRedraw) {
-    handleCanvasMouseUp(e, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, setNeedsRedraw);
+export function handleCanvasMouseLeave(e, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, setNeedsRedraw) {
+    handleCanvasMouseUp(e, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, setNeedsRedraw);
 }

@@ -10,6 +10,7 @@ import CreateIcon from '@material-ui/icons/Create';
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import AddIcon from '@material-ui/icons/Add';
 
 import '../css/toolbar.css';
 import { SketchPicker } from 'react-color'
@@ -113,7 +114,7 @@ function WhiteboardTools(props) {
             },
         },
     });
-
+    
     return (
         <div className="toolbar">
             <IconButton id="iconButton" variant="contained" onClick={() => props.setOpenAccDialog(true)}>
@@ -130,6 +131,14 @@ function WhiteboardTools(props) {
             </IconButton>
             <IconButton id="iconButton" variant="contained" color="primary" onClick={() => loadBoard()}>
                 <GetAppIcon color="secondary" id="iconButtonInner" />
+            </IconButton>
+            <IconButton id="iconButton" variant="contained" onClick={() => {
+                props.setWhiteboardArray((prev) => {
+                    console.log(props.strokeCollection,prev);
+                    return prev
+                })
+            }}>
+                <AddIcon color="secondary" id="iconButtonInner" />
             </IconButton>
             <IconButton id="iconButton" variant="contained" color="primary" onClick={() => handleUndo()}>
                 <SkipPreviousIcon color="secondary" id="iconButtonInner" />
