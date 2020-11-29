@@ -1,7 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as evl from '../util/eventlistener.js';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { IconButton } from '@material-ui/core';
+import reactCSS from 'reactcss'
 
 function Whiteboard(props) {
+    const [displaySettings, setDisplaySettings] = useState(false);
+
     useEffect(() => {
         const canvas = props.canvasRef.current;
         canvas.width = 620; //canvas.clientWidth;
@@ -32,8 +37,53 @@ function Whiteboard(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    const styles = reactCSS({
+        'default': {
+            popover: {
+                position: 'relative',
+                zIndex: '2', // stack order
+            },
+            cover: {
+                position: 'fixed',
+                top: '0px',
+                right: '0px',
+                bottom: '0px',
+                left: '0px',
+            },
+        },
+    });
+
+    function click() {
+        console.log("hi", props.pageId)
+        setDisplaySettings(true);
+    }
+
+    function handleSettingsClose() {
+        setDisplaySettings(false);
+    }
+
     return (
-        <canvas ref={props.canvasRef} />
+        <div className="page">
+            <canvas ref={props.canvasRef} />
+            <div>
+                <IconButton id="iconButton" variant="contained" onClick={click}>
+                    <MoreVertIcon color="secondary" id="iconButtonInner" />
+                </IconButton>
+                { // Palette Popup
+                    displaySettings ?
+                        <div style={styles.popover}>
+                            <div style={styles.cover} onClick={handleSettingsClose} />
+                            <div className="pagesettings">
+                                <IconButton id="iconButton" variant="contained" onClick={click} />
+                                <IconButton id="iconButton" variant="contained" onClick={click} />
+                                <IconButton id="iconButton" variant="contained" onClick={click} />
+                                <IconButton id="iconButton" variant="contained" onClick={click} />
+                            </div>
+                        </div>
+                        : null
+                }
+            </div>
+        </div>
     );
 }
 

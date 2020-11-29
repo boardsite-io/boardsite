@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import './css/index.css';
+import './css/whiteboard.css';
+import './css/toolbar.css';
 
 import theme from './component/theme';
 import routes from './component/route';

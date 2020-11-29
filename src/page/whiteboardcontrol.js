@@ -5,7 +5,6 @@ import UserLogin from '../component/userlogin';
 import AlertDialog from '../component/session_dialog';
 import { createWebsocket, createBoardRequest } from '../util/api';
 import { useParams } from 'react-router-dom';
-import '../css/whiteboard.css';
 
 import * as hd from '../util/handledata.js';
 
@@ -26,7 +25,6 @@ function WhiteboardControl() {
     const [pageCollection, setPageCollection] = useState(
         [
             {canvasRef: createRef(), pageId: "xy123"},
-            // {canvasRef: createRef(), pageId: "b2is24"},
         ]
     );
 
@@ -99,21 +97,6 @@ function WhiteboardControl() {
         }
     }
 
-    const pages = pageCollection.map((page) => {
-        return (
-            <Whiteboard
-                key={page.pageId}
-                pageId={page.pageId}
-                canvasRef={page.canvasRef}
-                wsRef={wsRef}
-                setStrokeCollection={setStrokeCollection}
-                setHitboxCollection={setHitboxCollection}
-                setUndoStack={setUndoStack}
-                setRedoStack={setRedoStack}
-            />
-        );
-    });
-
     function handleCreate(e) {
         let boardDim = { x: 10, y: 10 };
         createBoardRequest(boardDim).then((data) => {
@@ -128,6 +111,22 @@ function WhiteboardControl() {
     function handleTextFieldChange(e) {
         setSidInput(e.target.value);
     }
+
+    const pages = pageCollection.map((page) => {
+        return (
+            <Whiteboard
+                className="page"
+                key={page.pageId}
+                pageId={page.pageId}
+                canvasRef={page.canvasRef}
+                wsRef={wsRef}
+                setStrokeCollection={setStrokeCollection}
+                setHitboxCollection={setHitboxCollection}
+                setUndoStack={setUndoStack}
+                setRedoStack={setRedoStack}
+            />
+        );
+    });
 
     return (
         <div>
@@ -146,7 +145,7 @@ function WhiteboardControl() {
                 undoStack={undoStack} setUndoStack={setUndoStack}
                 redoStack={redoStack} setRedoStack={setRedoStack}
                 pageCollection={pageCollection} setPageCollection={setPageCollection} />
-            <div className="canvasdiv" websocket={wsRef.current}>
+            <div className="pagecollection" websocket={wsRef.current}>
                 {pages}
             </div>
         </div>

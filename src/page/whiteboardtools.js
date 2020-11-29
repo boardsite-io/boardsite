@@ -11,8 +11,6 @@ import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import AddIcon from '@material-ui/icons/Add';
-
-import '../css/toolbar.css';
 import { SketchPicker } from 'react-color'
 import reactCSS from 'reactcss'
 
@@ -97,10 +95,10 @@ function WhiteboardTools(props) {
 
     function newPage() {
         props.setPageCollection((prev) => {
-            let _prev = [ ...prev ];
+            let _prev = [...prev];
             let newPageId = Math.random().toString(36).substring(7);
             let newCanvasRef = createRef();
-            let newPage = {canvasRef: newCanvasRef, pageId: newPageId};
+            let newPage = { canvasRef: newCanvasRef, pageId: newPageId };
             _prev.push(newPage);
             return _prev
         })
@@ -126,7 +124,7 @@ function WhiteboardTools(props) {
     const styles = reactCSS({
         'default': {
             popover: {
-                position: 'absolute',
+                position: 'relative',
                 zIndex: '2', // stack order
             },
             cover: {
@@ -165,53 +163,57 @@ function WhiteboardTools(props) {
             <IconButton id="iconButton" variant="contained" color="primary" onClick={handleRedo}>
                 <SkipNextIcon color="secondary" id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={handlePaletteClick}>
-                <PaletteIcon color="secondary" id="iconButtonInner" />
-            </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={handleWidthClick}>
-                <CreateIcon color="secondary" id="iconButtonInner" />
-            </IconButton>
-            { // Palette Popup
-                displayColorPicker ?
-                    <div style={styles.popover}>
-                        <div style={styles.cover} onClick={handlePaletteClose} />
-                        <div className="colorpicker">
-                            <SketchPicker disableAlpha={true} color={color} onChange={handlePaletteChange} />
+            <div>
+                <IconButton id="iconButton" variant="contained" color="primary" onClick={handlePaletteClick}>
+                    <PaletteIcon color="secondary" id="iconButtonInner" />
+                </IconButton>
+                { // Palette Popup
+                    displayColorPicker ?
+                        <div style={styles.popover}>
+                            <div style={styles.cover} onClick={handlePaletteClose} />
+                            <div className="colorpicker">
+                                <SketchPicker disableAlpha={true} color={color} onChange={handlePaletteChange} />
+                            </div>
                         </div>
-                    </div>
-                    : null
-            }
-            { // Width Slider Popup
-                displayWidthPicker ?
-                    <div style={styles.popover}>
-                        <div style={styles.cover} onClick={handleWidthClose} />
-                        <div className="widthpicker">
-                            <Slider
-                                color="secondary"
-                                value={typeof props.lineWidth === 'number' ? props.lineWidth : 0}
-                                onChange={handleSliderChange}
-                                aria-labelledby="input-slider"
-                                min={minWidth}
-                                max={maxWidth}
-                            />
-                            <Input
-                                className={styles.input}
-                                value={props.lineWidth}
-                                margin="dense"
-                                onChange={handleInputChange}
-                                onBlur={handleBlur}
-                                inputProps={{
-                                    step: 10,
-                                    min: minWidth,
-                                    max: maxWidth,
-                                    type: 'number',
-                                    'aria-labelledby': 'input-slider',
-                                }}
-                            />
+                        : null
+                }
+            </div>
+            <div>
+                <IconButton id="iconButton" variant="contained" color="primary" onClick={handleWidthClick}>
+                    <CreateIcon color="secondary" id="iconButtonInner" />
+                </IconButton>
+                { // Width Slider Popup
+                    displayWidthPicker ?
+                        <div style={styles.popover}>
+                            <div style={styles.cover} onClick={handleWidthClose} />
+                            <div className="widthpicker">
+                                <Slider
+                                    color="secondary"
+                                    value={typeof props.lineWidth === 'number' ? props.lineWidth : 0}
+                                    onChange={handleSliderChange}
+                                    aria-labelledby="input-slider"
+                                    min={minWidth}
+                                    max={maxWidth}
+                                />
+                                <Input
+                                    className={styles.input}
+                                    value={props.lineWidth}
+                                    margin="dense"
+                                    onChange={handleInputChange}
+                                    onBlur={handleBlur}
+                                    inputProps={{
+                                        step: 10,
+                                        min: minWidth,
+                                        max: maxWidth,
+                                        type: 'number',
+                                        'aria-labelledby': 'input-slider',
+                                    }}
+                                />
+                            </div>
                         </div>
-                    </div>
-                    : null
-            }
+                        : null
+                }
+            </div>
         </div>
     );
 }

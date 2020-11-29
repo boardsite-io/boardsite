@@ -33,14 +33,14 @@
 
 .colorpicker {
     position: absolute;
-    left: 80px;
-    top: -150px;
+    left: 50px;
+    top: -280px;
 }
 
 .widthpicker{
     position: absolute;
-    left: 80px;
-    top: 105px;
+    left: 50px;
+    bottom: -5px;
     display: grid;
     grid-template-columns: 70% 30%;
     justify-content: space-between;
