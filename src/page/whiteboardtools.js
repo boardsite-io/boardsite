@@ -41,23 +41,24 @@ function WhiteboardTools(props) {
     }
 
     function loadBoard() {
-        // props.setNeedsHitboxDebug(x=>x+1);
         console.log(props.undoStack, props.redoStack);
     }
 
     function handleUndo() {
         let undo = props.undoStack.pop();
         if (undo !== undefined) {
+            let canvasRef = props.canvasRefs[undo[0].pageId];
             hd.processStrokes(undo, "undo", props.setStrokeCollection, props.setHitboxCollection,
-                props.setRedoStack, props.setNeedsRedraw, props.wsRef, props.canvasRef);
+                props.setRedoStack, props.wsRef, canvasRef);
         }
     }
 
     function handleRedo() {
         let redo = props.redoStack.pop();
         if (redo !== undefined) {
+            let canvasRef = props.canvasRefs[redo[0].pageId];
             hd.processStrokes(redo, "redo", props.setStrokeCollection, props.setHitboxCollection,
-                props.setUndoStack, props.setNeedsRedraw, props.wsRef, props.canvasRef);
+                props.setUndoStack, props.wsRef, canvasRef);
         }
     }
 
@@ -133,8 +134,8 @@ function WhiteboardTools(props) {
                 <GetAppIcon color="secondary" id="iconButtonInner" />
             </IconButton>
             <IconButton id="iconButton" variant="contained" onClick={() => {
-                props.setWhiteboardArray((prev) => {
-                    console.log(props.strokeCollection);
+                props.setCanvasRefs((prev) => {
+                    console.log(props.strokeCollection, props.hitboxCollection);
                     return prev
                 })
             }}>

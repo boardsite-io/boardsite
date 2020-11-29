@@ -68,7 +68,7 @@ function LoginForm() {
     const classes = useStyles();
 
     return (
-        <>
+        <div>
             <CssBaseline />
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
@@ -76,7 +76,7 @@ function LoginForm() {
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     Sign in
-          </Typography>
+                </Typography>
                 <form className={classes.form} noValidate>
                     <TextField
                         variant="outlined"
@@ -112,12 +112,12 @@ function LoginForm() {
                         className={classes.submit}
                     >
                         Sign In
-            </Button>
+                    </Button>
                     <Grid container>
                         <Grid item xs>
                             <Link href="#" variant="body2">
                                 Forgot password?
-                </Link>
+                            </Link>
                         </Grid>
                         <Grid item>
                             <Link href="#" variant="body2">
@@ -127,6 +127,6 @@ function LoginForm() {
                     </Grid>
                 </form>
             </div>
-        </>
+        </div>
     );
 }

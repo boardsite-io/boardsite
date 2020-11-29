@@ -8,7 +8,6 @@ import { useParams } from 'react-router-dom';
 import '../css/whiteboard.css';
 
 import * as hd from '../util/handledata.js';
-import * as draw from '../util/drawingengine.js';
 
 function WhiteboardControl() {
     const [strokeCollection, setStrokeCollection] = useState({});
@@ -18,14 +17,11 @@ function WhiteboardControl() {
     const [strokeStyle, setStrokeStyle] = useState("#000000");
     const [lineWidth, setLineWidth] = useState(3);
     const [needsClear, setNeedsClear] = useState(0);
-    const [needsRedraw, setNeedsRedraw] = useState(0);
-    const [needsHitboxDebug, setNeedsHitboxDebug] = useState(0);
     const [openSessionDialog, setOpenSessionDialog] = useState(false);
     const [openAccDialog, setOpenAccDialog] = useState(false);
     const [sessionID, setSessionID] = useState("");
     const [sidInput, setSidInput] = useState("");
     const wsRef = useRef();
-    const canvasRef = useRef();
     const { id } = useParams();
 
     // Connect to session if valid session link
@@ -59,34 +55,19 @@ function WhiteboardControl() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [lineWidth, strokeStyle])
 
-    // Clear canvas and all collections / stacks
+    // Clear all canvases and all collections / stacks
     useEffect(() => {
-        const canvas = canvasRef.current;
-        if (canvas !== undefined) {
+        Object.keys(canvasRefs).forEach((id) => {
+            const canvas = canvasRefs[id].current;
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, window.innerHeight, window.innerWidth);
             setStrokeCollection({});
             setHitboxCollection({});
             setUndoStack([]);
             setRedoStack([]);
-        }
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [needsClear])
-
-    // redraws full strokeCollection
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (canvas !== undefined) {
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, window.innerHeight, window.innerWidth);
-            Object.keys(strokeCollection).forEach((key) => {
-                let strokeObject = strokeCollection[key];
-                return draw.drawCurve(ctx, strokeObject);
-            })
-            setContextProps();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [needsRedraw])
 
     // Handles messages from the websocket
     function onMsgHandle(data) {
@@ -95,40 +76,40 @@ function WhiteboardControl() {
             setNeedsClear(x => x + 1);
         }
         else {
+            let pageId = strokeObjectArray[0].pageId;
+            let canvasRef = canvasRefs[pageId];
             hd.processStrokes(strokeObjectArray, "message", setStrokeCollection, setHitboxCollection,
-                setUndoStack, setNeedsRedraw, wsRef, canvasRef);
+                setUndoStack, wsRef, canvasRef);
             setContextProps();
         }
     }
 
     function setContextProps() {
-        for (let i = 0; i < whiteboardArray.length; i++) {
-            const canvas = whiteboardArray[i].canvasRef.current;
+        Object.keys(canvasRefs).forEach((id) => {
+            const canvas = canvasRefs[id].current;
             const ctx = canvas.getContext('2d');
             ctx.strokeStyle = strokeStyle;
             ctx.lineWidth = lineWidth;
-        }
+        });
     }
 
-    const [whiteboardArray, setWhiteboardArray] = useState(
-        [
-            { canvasRef: createRef(), strokeCollection: strokeCollection[0], id: 1 },
-            { canvasRef: createRef(), strokeCollection: strokeCollection[1], id: 2 },
-            { canvasRef: createRef(), strokeCollection: strokeCollection[2], id: 3 },
-            { canvasRef: createRef(), strokeCollection: strokeCollection[3], id: 4 }
-        ]
+    const [canvasRefs, setCanvasRefs] = useState(
+        {
+            1: createRef(),
+            2: createRef(),
+            3: createRef(),
+            4: createRef()
+        }
     );
 
-    const pages = whiteboardArray.map((board, index) => {
+    const pages = Object.keys(canvasRefs).map((id) => {
         return (
             <Whiteboard
-                index={index}
                 wsRef={wsRef}
-                canvasRef={board.canvasRef}
-                pageId={board.id}
+                canvasRef={canvasRefs[id]}
+                pageId={id}
                 setStrokeCollection={setStrokeCollection}
                 setHitboxCollection={setHitboxCollection}
-                setNeedsRedraw={setNeedsRedraw}
                 setUndoStack={setUndoStack}
                 setRedoStack={setRedoStack}
             />
@@ -150,30 +131,12 @@ function WhiteboardControl() {
         setSidInput(e.target.value);
     }
 
-    /////////////////////////////////
-    // DEBUG: draws hitboxCollection
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (canvas !== undefined) {
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = "#00FF00";
-            ctx.clearRect(0, 0, window.innerHeight, window.innerWidth);
-            Object.keys(hitboxCollection).forEach((key) => {
-                let xy = JSON.parse("[" + key + "]");
-                return draw.drawFillRect(xy[0], xy[1], 1, 1, ctx);
-            })
-            setContextProps();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [needsHitboxDebug])
-    /////////////////////////////////
-
     return (
         <div>
             <UserLogin openAccDialog={openAccDialog} setOpenAccDialog={setOpenAccDialog} />
             <AlertDialog open={openSessionDialog} setOpen={setOpenSessionDialog} sessionID_input={sidInput} setSessionID_input={setSidInput}
                 handleTextFieldChange={handleTextFieldChange} handleJoin={handleJoin} handleCreate={handleCreate} />
-            <WhiteboardTools wsRef={wsRef} canvasRef={canvasRef}
+            <WhiteboardTools wsRef={wsRef}
                 strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
                 strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
                 lineWidth={lineWidth} setLineWidth={setLineWidth}
@@ -181,12 +144,10 @@ function WhiteboardControl() {
                 setOpenSessionDialog={setOpenSessionDialog}
                 setOpenAccDialog={setOpenAccDialog}
                 setNeedsClear={setNeedsClear}
-                setHitboxCollection={setHitboxCollection}
-                setNeedsRedraw={setNeedsRedraw}
+                hitboxCollection={hitboxCollection} setHitboxCollection={setHitboxCollection}
                 undoStack={undoStack} setUndoStack={setUndoStack}
                 redoStack={redoStack} setRedoStack={setRedoStack}
-                setNeedsHitboxDebug={setNeedsHitboxDebug}
-                setWhiteboardArray={setWhiteboardArray} />
+                canvasRefs={canvasRefs} setCanvasRefs={setCanvasRefs} />
             <div className="canvasdiv" websocket={wsRef.current}>
                 {pages}
             </div>

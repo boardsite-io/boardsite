@@ -1,10 +1,31 @@
 import * as hd from './handledata.js';
 import * as hbx from './hitbox.js';
 
-export function eraser(setHitboxCollection, setStrokeCollection, setUndoStack, strokeObject, setNeedsRedraw, wsRef, canvasRef) {
+export function redraw(pageId, canvasRef, setStrokeCollection) {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, window.innerHeight, window.innerWidth);
+    let strokeStyle = ctx.strokeStyle;
+    let lineWidth = ctx.lineWidth;
+
+    // extract fresh strokecollection
+    setStrokeCollection((prev) => {
+        let strokeCollection = {...prev} // copy
+        Object.keys(strokeCollection[pageId]).forEach((key) => {
+            let strokeObject = strokeCollection[pageId][key];
+            return drawCurve(ctx, strokeObject);
+        })
+        ctx.strokeStyle = strokeStyle;
+        ctx.lineWidth = lineWidth;
+        return prev;
+    })
+}
+
+export function eraser(setHitboxCollection, setStrokeCollection, setUndoStack, strokeObject, wsRef, canvasRef) {
     let positions = strokeObject.position.slice(0);
     let idsToDelete = {};
     let strokeObjectArray = [];
+    let pageId = strokeObject.pageId;
 
     setHitboxCollection((prev) => {
         let pointSkipFactor = 8; // only check every p-th (x,y) position to reduce computational load
@@ -12,12 +33,15 @@ export function eraser(setHitboxCollection, setStrokeCollection, setUndoStack, s
         let padding = 0;
         let hitbox = hbx.getHitbox(positions, pointSkipFactor, quadMinPixDist, padding);
         let _prev = { ...prev };
-        
+
+        if (_prev[pageId] === undefined) {
+            return _prev;
+        }
         // get all ids from the eraser hitboxes
         for (let i = 0; i < hitbox.length; i++) {
             let xy = hitbox[i];
-            if (_prev.hasOwnProperty(xy)) { // there are IDs in this hitbox position
-                Object.keys(_prev[xy]).forEach((id) => { // for each ID in this hitbox position
+            if (_prev[pageId][xy] !== undefined) { // there are IDs in this hitbox position
+                Object.keys(_prev[pageId][xy]).forEach((id) => { // for each ID in this hitbox position
                     idsToDelete[id] = true;
                 })
             }
@@ -28,13 +52,14 @@ export function eraser(setHitboxCollection, setStrokeCollection, setUndoStack, s
             strokeObject = {};
             strokeObject["id"] = id;
             strokeObject["type"] = "delete";
+            strokeObject["pageId"] = pageId;
             strokeObjectArray.push(strokeObject);
         })
 
         return _prev;
     });
 
-    hd.processStrokes(strokeObjectArray, "eraser", setStrokeCollection, setHitboxCollection, setUndoStack, setNeedsRedraw, wsRef, canvasRef);
+    hd.processStrokes(strokeObjectArray, "eraser", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
 }
 
 // draw line

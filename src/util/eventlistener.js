@@ -64,16 +64,12 @@ export function handleCanvasMouseMove(e, canvasRef) {
     }
 }
 
-export function handleCanvasMouseUp(e, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, setNeedsRedraw) {
+export function handleCanvasMouseUp(e, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack) {
     if (!isMouseDown) { return; } // Ignore reentering
     isMouseDown = false;
     lastX = -1;
     lastY = -1;
     const canvas = canvasRef.current;
-    if (canvas === undefined) {
-        return
-    }
-
     const ctx = canvas.getContext('2d');
     let rect = canvas.getBoundingClientRect();
     if (e.type !== "touchend" && e.type !== "touchcancel") {
@@ -96,12 +92,12 @@ export function handleCanvasMouseUp(e, pageId, canvasRef, wsRef, setStrokeCollec
 
     if (!isEraser) {
         ctx.putImageData(imageData, 0, 0);
-        hd.processStrokes([strokeObject], "stroke", setStrokeCollection, setHitboxCollection, setUndoStack, setNeedsRedraw, wsRef, canvasRef);
+        hd.processStrokes([strokeObject], "stroke", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
     } else {
-        draw.eraser(setHitboxCollection, setStrokeCollection, setUndoStack, strokeObject, setNeedsRedraw, wsRef, canvasRef);
+        draw.eraser(setHitboxCollection, setStrokeCollection, setUndoStack, strokeObject, wsRef, canvasRef);
     }
 }
 
-export function handleCanvasMouseLeave(e, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, setNeedsRedraw) {
-    handleCanvasMouseUp(e, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, setNeedsRedraw);
+export function handleCanvasMouseLeave(e, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack) {
+    handleCanvasMouseUp(e, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack);
 }

@@ -1,7 +1,7 @@
 import * as hbx from './hitbox.js';
 import * as draw from '../util/drawingengine.js';
 
-export function processStrokes(strokeObjectArray, processType, setStrokeCollection, setHitboxCollection, setStack, setNeedsRedraw, wsRef, canvasRef) {
+export function processStrokes(strokeObjectArray, processType, setStrokeCollection, setHitboxCollection, setStack, wsRef, canvasRef) {
     strokeObjectArray = [...strokeObjectArray];
     addToStack(strokeObjectArray, processType, setStack, setStrokeCollection); // Redo or Undo Stack (depending on input)
 
@@ -22,7 +22,7 @@ export function processStrokes(strokeObjectArray, processType, setStrokeCollecti
         if (_strokeObject.type === "stroke") {
             addToStrokeCollection(_strokeObject, setStrokeCollection, setHitboxCollection, canvasRef);
         } else if (_strokeObject.type === "delete") {
-            eraseFromStrokeCollection(_strokeObject, setStrokeCollection, setHitboxCollection, setNeedsRedraw);
+            eraseFromStrokeCollection(_strokeObject, setStrokeCollection, setHitboxCollection, canvasRef);
         }
 
         if (processType !== "message" && processType !== "eraser") {
@@ -41,33 +41,24 @@ export function addToStrokeCollection(strokeObject, setStrokeCollection, setHitb
     setStrokeCollection((prev) => {
         let _prev = { ...prev };
         if (_prev[strokeObject.pageId] === undefined){
-            let obj = {};
-            obj[strokeObject.id] = strokeObject;
-            _prev[strokeObject.pageId] = strokeObject;
+            _prev[strokeObject.pageId] = {};
         }
-        else {
-            _prev[strokeObject.pageId][strokeObject.id] = strokeObject;
-        }
+        _prev[strokeObject.pageId][strokeObject.id] = strokeObject;
         return _prev;
     });
 
     addToHitboxCollection(strokeObject, setHitboxCollection);
 }
 
-export function eraseFromStrokeCollection(strokeObject, setStrokeCollection, setHitboxCollection, setNeedsRedraw) {
-    if (typeof strokeObject === "string") {
-        let id = {};
-        id[strokeObject] = true;
-        strokeObject = id;
-    }
-
+export function eraseFromStrokeCollection(strokeObject, setStrokeCollection, setHitboxCollection, canvasRef) {
+    let pageId = strokeObject.pageId;
     // erase id from collection
     setStrokeCollection((prev) => {
         let _prev = { ...prev }
-        delete _prev[strokeObject.id];
+        delete _prev[pageId][strokeObject.id];
         return _prev;
     });
-    setNeedsRedraw(x => x + 1); // trigger redraw
+    draw.redraw(pageId, canvasRef, setStrokeCollection);
     eraseFromHitboxCollection(strokeObject, setHitboxCollection);
 }
 
@@ -109,6 +100,7 @@ export function addToStack(strokeObjectArray, processType, setStack, setStrokeCo
 export function addToHitboxCollection(strokeObject, setHitboxCollection) {
     let positions = strokeObject.position.slice(0); // create copy of positions array
     let id = strokeObject.id; // extract id
+    let pageId = strokeObject.pageId;
 
     setHitboxCollection((prev) => {
         let _prev = { ...prev }
@@ -118,14 +110,16 @@ export function addToHitboxCollection(strokeObject, setHitboxCollection) {
         let hitbox = hbx.getHitbox(positions, pointSkipFactor, quadMinPixDist, lineWidth);
 
         // insert new hitboxes
+        if (_prev[pageId] === undefined){
+            _prev[pageId] = {};
+        }
+
         for (let i = 0; i < hitbox.length; i++) {
             let xy = hitbox[i];
-            if (_prev.hasOwnProperty(xy)) { // other ID(s) in this hitbox position
-                _prev[xy][id] = true;
-            } else { // no other ID in this hitbox position
-                _prev[xy] = {};
-                _prev[xy][id] = true;
+            if (_prev[xy] === undefined) {
+                _prev[pageId][xy] = {};
             }
+            _prev[pageId][xy][id] = true;
         }
 
         return _prev;
@@ -133,18 +127,13 @@ export function addToHitboxCollection(strokeObject, setHitboxCollection) {
 }
 
 // remove id hitboxes from hitbox collection
-export function eraseFromHitboxCollection(ids, setHitboxCollection) {
-    if (typeof ids === "string") {
-        let id = {};
-        id[ids] = true;
-        ids = id;
-    }
-
+export function eraseFromHitboxCollection(strokeObject, setHitboxCollection) {
+    let pageId = strokeObject.pageId;
     setHitboxCollection((prev) => {
         let _prev = { ...prev };
-        Object.keys(_prev).forEach((posKey) => {
-            Object.keys(ids).forEach((keyToDel) => {
-                delete _prev[posKey][keyToDel];
+        Object.keys(_prev[pageId]).forEach((posKey) => {
+            Object.keys(strokeObject).forEach((keyToDel) => {
+                delete _prev[pageId][posKey][keyToDel];
             });
         });
         return _prev;
