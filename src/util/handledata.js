@@ -40,7 +40,14 @@ export function addToStrokeCollection(strokeObject, setStrokeCollection, setHitb
     // Add stroke to strokeCollection
     setStrokeCollection((prev) => {
         let _prev = { ...prev };
-        _prev[strokeObject.id] = strokeObject;
+        if (_prev[strokeObject.pageId] === undefined){
+            let obj = {};
+            obj[strokeObject.id] = strokeObject;
+            _prev[strokeObject.pageId] = strokeObject;
+        }
+        else {
+            _prev[strokeObject.pageId][strokeObject.id] = strokeObject;
+        }
         return _prev;
     });
 

@@ -134,7 +134,7 @@ function WhiteboardTools(props) {
             </IconButton>
             <IconButton id="iconButton" variant="contained" onClick={() => {
                 props.setWhiteboardArray((prev) => {
-                    console.log(props.strokeCollection,prev);
+                    console.log(props.strokeCollection);
                     return prev
                 })
             }}>

@@ -102,14 +102,38 @@ function WhiteboardControl() {
     }
 
     function setContextProps() {
-        //const canvas = whiteboardArray[0].id.current;
-        const canvas = canvasRef.current;
-        if (canvas !== undefined) {
+        for (let i = 0; i < whiteboardArray.length; i++) {
+            const canvas = whiteboardArray[i].canvasRef.current;
             const ctx = canvas.getContext('2d');
             ctx.strokeStyle = strokeStyle;
             ctx.lineWidth = lineWidth;
         }
     }
+
+    const [whiteboardArray, setWhiteboardArray] = useState(
+        [
+            { canvasRef: createRef(), strokeCollection: strokeCollection[0], id: 1 },
+            { canvasRef: createRef(), strokeCollection: strokeCollection[1], id: 2 },
+            { canvasRef: createRef(), strokeCollection: strokeCollection[2], id: 3 },
+            { canvasRef: createRef(), strokeCollection: strokeCollection[3], id: 4 }
+        ]
+    );
+
+    const pages = whiteboardArray.map((board, index) => {
+        return (
+            <Whiteboard
+                index={index}
+                wsRef={wsRef}
+                canvasRef={board.canvasRef}
+                pageId={board.id}
+                setStrokeCollection={setStrokeCollection}
+                setHitboxCollection={setHitboxCollection}
+                setNeedsRedraw={setNeedsRedraw}
+                setUndoStack={setUndoStack}
+                setRedoStack={setRedoStack}
+            />
+        );
+    });
 
     function handleCreate(e) {
         let boardDim = { x: 10, y: 10 };
@@ -125,26 +149,6 @@ function WhiteboardControl() {
     function handleTextFieldChange(e) {
         setSidInput(e.target.value);
     }
-
-    const [whiteboardArray, setWhiteboardArray] = useState(
-        [
-            { canvasRef: createRef(), id: 1 },
-            { canvasRef: createRef(), id: 2 },
-            { canvasRef: createRef(), id: 3 },
-            { canvasRef: createRef(), id: 4 }
-        ]
-    );
-
-    const pages = whiteboardArray.map((board, index) => {
-        return (
-            <Whiteboard index={index} wsRef={wsRef} canvasRef={board.canvasRef} pageId={board.id}
-                strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
-                hitboxCollection={hitboxCollection} setHitboxCollection={setHitboxCollection}
-                setNeedsRedraw={setNeedsRedraw}
-                undoStack={undoStack} setUndoStack={setUndoStack}
-                redoStack={redoStack} setRedoStack={setRedoStack} />
-        );
-    });
 
     /////////////////////////////////
     // DEBUG: draws hitboxCollection
