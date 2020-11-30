@@ -5,7 +5,8 @@
     flex-flow: column;
     align-items: center;
     overflow: auto;
-    padding-top: 50px; /* space for the homebar */
+    padding-top: 60px; /* space for the homebar */
+    padding-bottom: 60px;
 }
 
 .pagecollection {
