@@ -6,7 +6,7 @@ import UserLogin from '../component/userlogin';
 import AlertDialog from '../component/session_dialog';
 import { createWebsocket, createBoardRequest } from '../util/api';
 import { useParams } from 'react-router-dom';
-
+import theme from '../component/theme';
 import * as hd from '../util/handledata.js';
 
 function WhiteboardControl() {
@@ -182,7 +182,7 @@ function WhiteboardControl() {
     });
     
     return (
-        <div>
+        <div className="pageview">
             <UserLogin openAccDialog={openAccDialog} setOpenAccDialog={setOpenAccDialog} />
             <AlertDialog open={openSessionDialog} setOpen={setOpenSessionDialog} sessionID_input={sidInput} setSessionID_input={setSidInput}
                 handleTextFieldChange={handleTextFieldChange} handleJoin={handleJoin} handleCreate={handleCreate} />
@@ -200,7 +200,11 @@ function WhiteboardControl() {
                 setOpenSessionDialog={setOpenSessionDialog}
                 setOpenAccDialog={setOpenAccDialog}
             />
-            <div className="pagecollection" websocket={wsRef.current}>
+            <div className="pagecollection" websocket={wsRef.current} 
+            style={{
+                backgroundColor: theme.palette.background.pagecollection,
+                //border: theme.palette.tertiary.border,
+            }}>
                 {pages}
             </div>
         </div>

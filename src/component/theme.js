@@ -18,6 +18,7 @@ const theme = createMuiTheme({
       main: red.A400,
     },
     background: {
+      pagecollection: '#888888ff',
       default: '#949398',
     },
   },
