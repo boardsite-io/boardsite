@@ -20,8 +20,8 @@
 .pagesettings {
     display: flex;
     flex-flow: column;
-    gap: 5px;
-    margin-top: 5px;
+    gap: 10px;
+    margin-top: 10px;
 }
 
 canvas {

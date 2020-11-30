@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, createRef } from 'react';
 import Whiteboard from './whiteboard';
-import WhiteboardTools from './whiteboardtools';
+import Toolbar from './toolbar';
+import Homebar from './homebar';
 import UserLogin from '../component/userlogin';
 import AlertDialog from '../component/session_dialog';
 import { createWebsocket, createBoardRequest } from '../util/api';
@@ -185,18 +186,20 @@ function WhiteboardControl() {
             <UserLogin openAccDialog={openAccDialog} setOpenAccDialog={setOpenAccDialog} />
             <AlertDialog open={openSessionDialog} setOpen={setOpenSessionDialog} sessionID_input={sidInput} setSessionID_input={setSidInput}
                 handleTextFieldChange={handleTextFieldChange} handleJoin={handleJoin} handleCreate={handleCreate} />
-            <WhiteboardTools wsRef={wsRef}
+            <Toolbar wsRef={wsRef}
                 strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
                 strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
                 lineWidth={lineWidth} setLineWidth={setLineWidth}
                 sessionID={sessionID}
-                setOpenSessionDialog={setOpenSessionDialog}
-                setOpenAccDialog={setOpenAccDialog}
                 setNeedsClear={setNeedsClear}
                 hitboxCollection={hitboxCollection} setHitboxCollection={setHitboxCollection}
                 undoStack={undoStack} setUndoStack={setUndoStack}
                 redoStack={redoStack} setRedoStack={setRedoStack}
                 pageCollection={pageCollection} setPageCollection={setPageCollection} />
+            <Homebar 
+                setOpenSessionDialog={setOpenSessionDialog}
+                setOpenAccDialog={setOpenAccDialog}
+            />
             <div className="pagecollection" websocket={wsRef.current}>
                 {pages}
             </div>

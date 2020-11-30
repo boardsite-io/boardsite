@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom';
 import './css/index.css';
 import './css/whiteboard.css';
 import './css/toolbar.css';
+import './css/buttons.css';
+import './css/homebar.css';
 
 import theme from './component/theme';
 import routes from './component/route';

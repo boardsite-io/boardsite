@@ -1,12 +1,13 @@
-.toolbar {
+.homebar {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
     position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
-    left: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 20px;
     display: grid;
+    grid-auto-flow: column;
     gap: 20px;
     width: auto;
     overflow: auto;
@@ -17,29 +18,4 @@
     border-radius: 4px;
     border: 1px solid  #000000;
     box-shadow: 0px 0px 5px #00000088;
-}
-
-.colorpicker {
-    position: fixed;
-    left: 80px;
-    top: 300px;
-}
-
-.widthpicker{
-    position: fixed;
-    left: 80px;
-    top: 380px;
-    display: grid;
-    grid-template-columns: 70% 30%;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    height: 40px;
-    width: 200px;
-    background-color: #00D2BE;
-    padding-left: 20px;
-    padding-right: 20px;
-    border-radius: 4px;
-    border: 1px solid  black;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }

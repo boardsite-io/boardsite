@@ -2,14 +2,12 @@ import React, { useState, createRef } from 'react';
 import { IconButton, Input, Slider } from '@material-ui/core';
 import * as api from '../util/api';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import SaveIcon from '@material-ui/icons/Save';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import GroupAddIcon from '@material-ui/icons/GroupAdd';
+
 import PaletteIcon from '@material-ui/icons/Palette';
 import CreateIcon from '@material-ui/icons/Create';
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
+
 import AddIcon from '@material-ui/icons/Add';
 import { SketchPicker } from 'react-color'
 import reactCSS from 'reactcss'
@@ -19,7 +17,7 @@ import * as hd from '../util/handledata.js';
 // import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 // import RangeSlider from 'react-bootstrap-range-slider';
 
-function WhiteboardTools(props) {
+function Toolbar(props) {
     const [displayColorPicker, setDisplayColorPicker] = useState(false);
     const [displayWidthPicker, setDisplayWidthPicker] = useState(false);
     const [color, setColor] = useState({ r: '0', g: '0', b: '0', a: '1', });
@@ -29,14 +27,6 @@ function WhiteboardTools(props) {
     function handleClear() {
         props.setNeedsClear(x => x + 1); // Local clear
         api.clearBoard(props.sessionID); // Server clear
-    }
-
-    function saveBoard() {
-        console.log(props.strokeCollection, props.hitboxCollection);
-    }
-
-    function loadBoard() {
-        console.log(props.undoStack, props.redoStack);
     }
 
     function handleUndo() {
@@ -136,20 +126,8 @@ function WhiteboardTools(props) {
 
     return (
         <div className="toolbar">
-            <IconButton id="iconButton" variant="contained" onClick={() => props.setOpenAccDialog(true)}>
-                <AccountBoxIcon color="secondary" id="iconButtonInner" />
-            </IconButton>
-            <IconButton id="iconButton" variant="contained" onClick={() => props.setOpenSessionDialog(true)}>
-                <GroupAddIcon color="secondary" id="iconButtonInner" />
-            </IconButton>
             <IconButton id="iconButton" variant="contained" color="primary" onClick={handleClear}>
                 <DeleteForeverIcon color="secondary" id="iconButtonInner" />
-            </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={saveBoard}>
-                <SaveIcon color="secondary" id="iconButtonInner" />
-            </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={loadBoard}>
-                <GetAppIcon color="secondary" id="iconButtonInner" />
             </IconButton>
             <IconButton id="iconButton" variant="contained" onClick={newPage}>
                 <AddIcon color="secondary" id="iconButtonInner" />
@@ -214,4 +192,4 @@ function WhiteboardTools(props) {
         </div>
     );
 }
-export default WhiteboardTools;
+export default Toolbar;
