@@ -3,19 +3,18 @@
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
     position: fixed;
+    top: 5px;
     left: 50%;
     transform: translateX(-50%);
-    top: 20px;
     display: grid;
     grid-auto-flow: column;
     gap: 20px;
     width: auto;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.7);
-    justify-content: space-between;
-    align-items: center;
+    justify-content: space-evenly;
     padding: 10px;
     border-radius: 4px;
-    border: 1px solid  #000000;
-    box-shadow: 0px 0px 5px #00000088;
+}
+
+.homebar:hover {
+    box-shadow: 0px 0px 10px #00D2BE;
 }

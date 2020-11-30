@@ -13,6 +13,7 @@ import { SketchPicker } from 'react-color'
 import reactCSS from 'reactcss'
 
 import * as hd from '../util/handledata.js';
+import theme from '../component/theme';
 
 // import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 // import RangeSlider from 'react-bootstrap-range-slider';
@@ -111,7 +112,7 @@ function Toolbar(props) {
     const styles = reactCSS({
         'default': {
             popover: {
-                position: 'relative',
+                position: 'fixed',
                 zIndex: '2', // stack order
             },
             cover: {
@@ -125,7 +126,10 @@ function Toolbar(props) {
     });
 
     return (
-        <div className="toolbar">
+        <div className="toolbar" style={{
+            backgroundColor: theme.palette.tertiary.main,
+            border: theme.palette.tertiary.border,
+        }}>
             <IconButton id="iconButton" variant="contained" color="primary" onClick={handleClear}>
                 <DeleteForeverIcon color="secondary" id="iconButtonInner" />
             </IconButton>

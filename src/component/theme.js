@@ -10,6 +10,10 @@ const theme = createMuiTheme({
     secondary: {
       main: '#000',
     },
+    tertiary: {
+      main: '#88888888',
+      border: '1px solid #00000088'
+    },
     error: {
       main: red.A400,
     },

@@ -180,7 +180,7 @@ function WhiteboardControl() {
             />
         );
     });
-
+    
     return (
         <div>
             <UserLogin openAccDialog={openAccDialog} setOpenAccDialog={setOpenAccDialog} />
