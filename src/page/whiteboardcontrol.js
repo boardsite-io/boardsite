@@ -27,6 +27,8 @@ function WhiteboardControl() {
     const [sidInput, setSidInput] = useState("");
     const wsRef = useRef();
     const { id } = useParams();
+    const scaleRef = useRef(1);
+    const isDrawModeRef = useRef(true);
 
     // Connect to session if valid session link
     useEffect(() => {
@@ -170,13 +172,6 @@ function WhiteboardControl() {
         }
     }
 
-    // SCALE REF
-    const scaleRef = useRef(1);
-    const isDrawModeRef = useRef(true);
-    function zoomChange(zoomObject) {
-        scaleRef.current = zoomObject.scale;
-    }
-
     return (
         <div className="viewport">
             <UserLogin openAccDialog={openAccDialog} setOpenAccDialog={setOpenAccDialog} />
@@ -185,9 +180,9 @@ function WhiteboardControl() {
             <div className="pagewrapper" websocket={wsRef.current}>
                 <TransformWrapper
                     defaultScale={1}
-                    onZoomChange={zoomChange}
+                    onZoomChange={(e) => {scaleRef.current = e.scale}}
                     options={{ 
-                        disabled: isDrawModeRef.current, 
+                        disabled: false, 
                         minScale: 0.5, 
                         maxScale: 2, 
                         limitToBounds: false, 
@@ -198,7 +193,7 @@ function WhiteboardControl() {
                         disabled: true 
                     }}
                     pan={{ 
-                        disabled: false, 
+                        disabled: isDrawModeRef.current, 
                         paddingSize: 40 
                     }}
                     wheel={{ 
@@ -207,22 +202,22 @@ function WhiteboardControl() {
                         step: 200 
                     }}
                 >
-                    {({ zoomIn, zoomOut, resetTransform, setScale, scale, options, positionX, positionY, setPositionX, setPositionY }) => (
+                    {({ zoomIn, zoomOut, resetTransform, setScale, scale, pan, options, positionX, positionY, setPositionX, setPositionY }) => (
                         <>
                             <Homebar
                                 setOpenSessionDialog={setOpenSessionDialog}
                                 setOpenAccDialog={setOpenAccDialog}
                             />
                             <Viewbar
+                                pan={pan}
                                 zoomIn={zoomIn}
                                 zoomOut={zoomOut}
                                 resetTransform={resetTransform}
-                                options={options}
                                 isDrawModeRef={isDrawModeRef}
                                 // positionX={positionX}
-                                // positionY={positionY}
+                                positionY={positionY}
                                 // setPositionX={setPositionX}
-                                // setPositionY={setPositionY}
+                                setPositionY={setPositionY}
                             />
                             <Toolbar wsRef={wsRef}
                                 strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}

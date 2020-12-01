@@ -5,48 +5,23 @@ import ZoomOutMapIcon from '@material-ui/icons/ZoomOutMap';
 import PanToolIcon from '@material-ui/icons/PanTool';
 import { IconButton } from '@material-ui/core';
 import theme from '../component/theme';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 export default function Viewbar(props) {
 
     function toggleDrawMode() {
-        props.options.disabled = !props.options.disabled;
-        props.isDrawModeRef.current = props.options.disabled;
+        props.pan.disabled = !props.pan.disabled;
+        props.isDrawModeRef.current = props.pan.disabled;
     }
 
-    function zoomIn(e) {
-        if (props.options.disabled) {
-            props.options.disabled = false;
-            props.zoomIn(e);
-            props.options.disabled = true;
-        }
-        else{
-            props.zoomIn(e);
-        }
+    function down(e) {
+        props.setPositionY(props.positionY - 100);
     }
 
-    function zoomOut(e) {
-        if (props.options.disabled) {
-            props.options.disabled = false;
-            props.zoomOut(e);
-            props.options.disabled = true;
-        }
-        else{
-            props.zoomOut(e);
-        }
+    function up(e) {
+        props.setPositionY(props.positionY + 100);
     }
-
-    function resetTransform(e) {
-        if (props.options.disabled) {
-            props.options.disabled = false;
-            props.resetTransform(e);
-            props.options.disabled = true;
-        }
-        else{
-            props.resetTransform(e);
-        }
-    }
-
-
 
     return (
         <div className="viewbar" style={{
@@ -56,16 +31,20 @@ export default function Viewbar(props) {
             <IconButton id="iconButton" variant="contained" color="primary" onClick={toggleDrawMode}>
                 <PanToolIcon color="secondary" id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={zoomIn}>
+            <IconButton id="iconButton" variant="contained" color="primary" onClick={props.zoomIn}>
                 <ZoomInIcon color="secondary" id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={zoomOut}>
+            <IconButton id="iconButton" variant="contained" color="primary" onClick={props.zoomOut}>
                 <ZoomOutIcon color="secondary" id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={resetTransform}>
+            <IconButton id="iconButton" variant="contained" color="primary" onClick={props.resetTransform}>
                 <ZoomOutMapIcon color="secondary" id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={null}>
+            <IconButton id="iconButton" variant="contained" color="primary" onClick={up}>
+                <ExpandLessIcon color="secondary" id="iconButtonInner" />
+            </IconButton>
+            <IconButton id="iconButton" variant="contained" color="primary" onClick={down}>
+                <ExpandMoreIcon color="secondary" id="iconButtonInner" />
             </IconButton>
         </div>
     );
