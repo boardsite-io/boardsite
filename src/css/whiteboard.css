@@ -4,20 +4,20 @@
     display: flex;
     flex-flow: column;
     align-items: center;
-    padding-top: 60px; /* space for the homebar */
-    padding-bottom: 60px;
+    /* padding-top: 60px;
+    padding-bottom: 60px; */
     overflow: hidden;
 }
 
 .pagewrapper {
-    background-color: cyan;
+    width: 100vw;
+    height: 100vh;
 }
 
 .pagecollectionouter {
-    background-color: rgba(0, 0, 139, 0.596);
+    padding-top: 60px;
     width: 100vw;
     height: 100vh;
-    align-items: center;
 }
 
 .pagecollection {
@@ -27,7 +27,6 @@
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
     border-radius: 4px;
     box-shadow: 0px 0px 5px 5px #00000044;
-    display: fixed;
     flex-flow: column;
     width: fit-content;
 }

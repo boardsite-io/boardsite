@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, createRef } from 'react';
 import Whiteboard from './whiteboard';
 import Toolbar from './toolbar';
 import Homebar from './homebar';
+import Viewbar from './viewbar';
 import UserLogin from '../component/userlogin';
 import AlertDialog from '../component/session_dialog';
 import { createWebsocket, createBoardRequest } from '../util/api';
@@ -69,6 +70,7 @@ function WhiteboardControl() {
             setHitboxCollection({});
             setUndoStack([]);
             setRedoStack([]);
+            setPageCollection([]);
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [needsClear])
@@ -113,6 +115,11 @@ function WhiteboardControl() {
     }
 
     function deletePage(pageId) {
+        if (pageCollection.length === 1) {
+            setNeedsClear(x => x + 1);
+            return;
+        }
+
         // Delete strokeCollection from page
         setStrokeCollection((prev) => {
             delete prev[pageId]
@@ -165,7 +172,7 @@ function WhiteboardControl() {
 
     // SCALE REF
     const scaleRef = useRef(1);
-    const isDrawModeRef = useRef(false);
+    const isDrawModeRef = useRef(true);
     function zoomChange(zoomObject) {
         scaleRef.current = zoomObject.scale;
     }
@@ -179,16 +186,43 @@ function WhiteboardControl() {
                 <TransformWrapper
                     defaultScale={1}
                     onZoomChange={zoomChange}
-                    options={{ minScale: 0.25, maxScale: 4, limitToBounds: false, limitToWrapper: false }}
-                    scalePadding={{ disabled: true }}
-                    pan={{ disabled: false, paddingSize: 20 }}
-                    wheel={{ disabled: false, wheelEnabled: false }}
+                    options={{ 
+                        disabled: isDrawModeRef.current, 
+                        minScale: 0.5, 
+                        maxScale: 2, 
+                        limitToBounds: false, 
+                        limitToWrapper: false, 
+                        centerContent: true 
+                    }}
+                    scalePadding={{ 
+                        disabled: true 
+                    }}
+                    pan={{ 
+                        disabled: false, 
+                        paddingSize: 40 
+                    }}
+                    wheel={{ 
+                        disabled: false, 
+                        wheelEnabled: true, 
+                        step: 200 
+                    }}
                 >
-                    {({ zoomIn, zoomOut, resetTransform, setScale, scale, options }) => (
+                    {({ zoomIn, zoomOut, resetTransform, setScale, scale, options, positionX, positionY, setPositionX, setPositionY }) => (
                         <>
                             <Homebar
                                 setOpenSessionDialog={setOpenSessionDialog}
                                 setOpenAccDialog={setOpenAccDialog}
+                            />
+                            <Viewbar
+                                zoomIn={zoomIn}
+                                zoomOut={zoomOut}
+                                resetTransform={resetTransform}
+                                options={options}
+                                isDrawModeRef={isDrawModeRef}
+                                // positionX={positionX}
+                                // positionY={positionY}
+                                // setPositionX={setPositionX}
+                                // setPositionY={setPositionY}
                             />
                             <Toolbar wsRef={wsRef}
                                 strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
@@ -201,18 +235,6 @@ function WhiteboardControl() {
                                 redoStack={redoStack} setRedoStack={setRedoStack}
                                 pageCollection={pageCollection} setPageCollection={setPageCollection}
                             />
-                            <div className="tools">
-                                <button onClick={(e) => {
-                                    options.disabled = !options.disabled;
-                                    isDrawModeRef.current = options.disabled;
-                                }}>Toggle Pan</button>
-                                <button onClick={zoomIn}>+</button>
-                                <button onClick={zoomOut}>-</button>
-                                <button onClick={resetTransform}>x</button>
-                                <button onClick={() => {
-                                    setScale(1)
-                                }}>log</button>
-                            </div>
                             <TransformComponent>
                                 <div className="pagecollectionouter">
                                     <div className="pagecollection" style={{ backgroundColor: theme.palette.background.pagecollection }}>

@@ -1,0 +1,17 @@
+.viewbar {
+    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+    position: fixed;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: grid;
+    grid-auto-flow: row;
+    gap: 20px;
+    width: auto;
+    justify-content: space-evenly;
+    padding: 10px;
+    border-radius: 4px;
+    z-index: 10;
+}
