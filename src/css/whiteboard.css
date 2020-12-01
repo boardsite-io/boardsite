@@ -1,24 +1,35 @@
-.pageview {
+.viewport {
     height: 100vh;
     width: 100vw;
     display: flex;
     flex-flow: column;
     align-items: center;
-    overflow: auto;
     padding-top: 60px; /* space for the homebar */
     padding-bottom: 60px;
+    overflow: hidden;
+}
+
+.pagewrapper {
+    background-color: cyan;
+}
+
+.pagecollectionouter {
+    background-color: rgba(0, 0, 139, 0.596);
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
 }
 
 .pagecollection {
+    margin: 0 auto;
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
-    display: flex;
-    flex-flow: column;
-    height: auto;
-    width: fit-content;
     border-radius: 4px;
     box-shadow: 0px 0px 5px 5px #00000044;
+    display: fixed;
+    flex-flow: column;
+    width: fit-content;
 }
 
 .page{
@@ -45,4 +56,22 @@ canvas {
     border-radius: 4px;
     /* box-shadow: 0 0 3px 5px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); */
     cursor: crosshair;
+}
+
+.tools{ /* for debugging */
+    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+    position: fixed;
+    left: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: grid;
+    grid-auto-flow: row;
+    gap: 20px;
+    width: auto;
+    justify-content: space-evenly;
+    padding: 10px;
+    border-radius: 4px;
+    z-index: 10;
 }

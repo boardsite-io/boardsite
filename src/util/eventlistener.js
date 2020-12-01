@@ -9,7 +9,7 @@ let lastY = -1;
 let stroke = [];
 let isEraser = false;
 
-export function handleCanvasMouseDown(e, canvasRef) {
+export function handleCanvasMouseDown(e, canvasRef, scaleRef) {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
 
@@ -30,14 +30,14 @@ export function handleCanvasMouseDown(e, canvasRef) {
     isMouseDown = true;
     sampleCount = 1;
     let rect = canvas.getBoundingClientRect();
-    let x = e.clientX - rect.left;
-    let y = e.clientY - rect.top;
+    let x = (e.clientX - rect.left) / scaleRef.current;
+    let y = (e.clientY - rect.top) / scaleRef.current;
     stroke = [x, y];
     lastX = x;
     lastY = y;
 }
 
-export function handleCanvasMouseMove(e, canvasRef) {
+export function handleCanvasMouseMove(e, canvasRef, scaleRef) {
     if (isMouseDown) {
         let minSampleCount = 8;
         if (e.type === "touchmove") {
@@ -47,8 +47,8 @@ export function handleCanvasMouseMove(e, canvasRef) {
         sampleCount += 1;
         const canvas = canvasRef.current;
         let rect = canvas.getBoundingClientRect();
-        let x = e.clientX - rect.left;
-        let y = e.clientY - rect.top;
+        let x = (e.clientX - rect.left) / scaleRef.current;
+        let y = (e.clientY - rect.top) / scaleRef.current;
         let moveDist = Math.pow(x - lastX, 2) + Math.pow(y - lastY, 2); // Quadratic distance moved from last registered point
 
         if (moveDist > 100 || sampleCount > minSampleCount) {
@@ -64,7 +64,7 @@ export function handleCanvasMouseMove(e, canvasRef) {
     }
 }
 
-export function handleCanvasMouseUp(e, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack) {
+export function handleCanvasMouseUp(e, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, scaleRef) {
     if (!isMouseDown) { return; } // Ignore reentering
     isMouseDown = false;
     lastX = -1;
@@ -73,8 +73,8 @@ export function handleCanvasMouseUp(e, pageId, canvasRef, wsRef, setStrokeCollec
     const ctx = canvas.getContext('2d');
     let rect = canvas.getBoundingClientRect();
     if (e.type !== "touchend" && e.type !== "touchcancel") {
-        let x = e.clientX - rect.left;
-        let y = e.clientY - rect.top;
+        let x = (e.clientX - rect.left) / scaleRef.current;
+        let y = (e.clientY - rect.top) / scaleRef.current;
         stroke.push(x, y);
     }
     stroke = draw.getCurvePoints(stroke, 0.5);
@@ -98,6 +98,6 @@ export function handleCanvasMouseUp(e, pageId, canvasRef, wsRef, setStrokeCollec
     }
 }
 
-export function handleCanvasMouseLeave(e, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack) {
-    handleCanvasMouseUp(e, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack);
+export function handleCanvasMouseLeave(e, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, scaleRef) {
+    handleCanvasMouseUp(e, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, scaleRef);
 }

@@ -9,6 +9,8 @@ import { useParams } from 'react-router-dom';
 import theme from '../component/theme';
 import * as hd from '../util/handledata.js';
 
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+
 function WhiteboardControl() {
     const [pageCollection, setPageCollection] = useState([]);
     const [strokeCollection, setStrokeCollection] = useState({});
@@ -159,55 +161,86 @@ function WhiteboardControl() {
                 return [...prev.slice(0, index), ...prev.slice(index + 1)];
             })
         }
-
-
     }
 
-    const pages = pageCollection.map((page) => {
-        return (
-            <Whiteboard
-                className="page"
-                key={page.pageId}
-                pageId={page.pageId}
-                deletePage={deletePage}
-                canvasRef={page.canvasRef}
-                wsRef={wsRef}
-                setPageCollection={setPageCollection}
-                setStrokeCollection={setStrokeCollection}
-                setHitboxCollection={setHitboxCollection}
-                setUndoStack={setUndoStack}
-                setRedoStack={setRedoStack}
-            />
-        );
-    });
-    
+    // SCALE REF
+    const scaleRef = useRef(1);
+    function zoomChange(zoomObject) {
+        scaleRef.current = zoomObject.scale;
+    }
+
     return (
-        <div className="pageview">
+        <div className="viewport">
             <UserLogin openAccDialog={openAccDialog} setOpenAccDialog={setOpenAccDialog} />
             <AlertDialog open={openSessionDialog} setOpen={setOpenSessionDialog} sessionID_input={sidInput} setSessionID_input={setSidInput}
                 handleTextFieldChange={handleTextFieldChange} handleJoin={handleJoin} handleCreate={handleCreate} />
-            <Toolbar wsRef={wsRef}
-                strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
-                strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
-                lineWidth={lineWidth} setLineWidth={setLineWidth}
-                sessionID={sessionID}
-                setNeedsClear={setNeedsClear}
-                hitboxCollection={hitboxCollection} setHitboxCollection={setHitboxCollection}
-                undoStack={undoStack} setUndoStack={setUndoStack}
-                redoStack={redoStack} setRedoStack={setRedoStack}
-                pageCollection={pageCollection} setPageCollection={setPageCollection} />
-            <Homebar 
-                setOpenSessionDialog={setOpenSessionDialog}
-                setOpenAccDialog={setOpenAccDialog}
-            />
-            <div className="pagecollection" websocket={wsRef.current} 
-            style={{
-                backgroundColor: theme.palette.background.pagecollection,
-                //border: theme.palette.tertiary.border,
-            }}>
-                {pages}
+            <div className="pagewrapper" websocket={wsRef.current}>
+                <TransformWrapper
+                    defaultScale={1}
+                    onZoomChange={zoomChange}
+                    options={{ minScale: 0.25, maxScale: 4, limitToBounds: false, limitToWrapper: false }}
+                    scalePadding={{ disabled: true }}
+                    pan={{ disabled: false, paddingSize: 20 }}
+                    wheel={{ disabled: false, wheelEnabled: false }}
+                >
+                    {({ zoomIn, zoomOut, resetTransform, setScale, scale, options }) => (
+                        <>
+                            <Homebar
+                                setOpenSessionDialog={setOpenSessionDialog}
+                                setOpenAccDialog={setOpenAccDialog}
+                            />
+                            <Toolbar wsRef={wsRef}
+                                strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
+                                strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
+                                lineWidth={lineWidth} setLineWidth={setLineWidth}
+                                sessionID={sessionID}
+                                setNeedsClear={setNeedsClear}
+                                hitboxCollection={hitboxCollection} setHitboxCollection={setHitboxCollection}
+                                undoStack={undoStack} setUndoStack={setUndoStack}
+                                redoStack={redoStack} setRedoStack={setRedoStack}
+                                pageCollection={pageCollection} setPageCollection={setPageCollection}
+                            />
+                            <div className="tools">
+                                <button onClick={(e) => {
+                                    options.disabled = !options.disabled;
+                                    console.log(options);
+                                }}>Toggle Pan</button>
+                                <button onClick={zoomIn}>+</button>
+                                <button onClick={zoomOut}>-</button>
+                                <button onClick={resetTransform}>x</button>
+                                <button onClick={() => {
+                                    setScale(1)
+                                }}>log</button>
+                            </div>
+                            <TransformComponent>
+                                <div className="pagecollectionouter">
+                                    <div className="pagecollection" style={{ backgroundColor: theme.palette.background.pagecollection }}>
+                                        {pageCollection.map((page) => {
+                                            return (
+                                                <Whiteboard
+                                                    className="page"
+                                                    scaleRef={scaleRef}
+                                                    key={page.pageId}
+                                                    pageId={page.pageId}
+                                                    deletePage={deletePage}
+                                                    canvasRef={page.canvasRef}
+                                                    wsRef={wsRef}
+                                                    setPageCollection={setPageCollection}
+                                                    setStrokeCollection={setStrokeCollection}
+                                                    setHitboxCollection={setHitboxCollection}
+                                                    setUndoStack={setUndoStack}
+                                                    setRedoStack={setRedoStack}
+                                                />
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </TransformComponent>
+                        </>
+                    )}
+                </TransformWrapper>
             </div>
-        </div>
+        </div >
     );
 }
 

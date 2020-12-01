@@ -15,15 +15,15 @@ function Whiteboard(props) {
         canvas.width = 620; //canvas.clientWidth;
         canvas.height = 877; //canvas.clientHeight;
         canvas.addEventListener("contextmenu", e => e.preventDefault()); // Disable Context Menu
-        canvas.addEventListener("mousedown", (e) => evl.handleCanvasMouseDown(e, props.canvasRef));
-        canvas.addEventListener("mousemove", (e) => evl.handleCanvasMouseMove(e, props.canvasRef));
-        canvas.addEventListener("mouseup", (e) => evl.handleCanvasMouseUp(e, props.pageId, props.canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack));
-        canvas.addEventListener("mouseleave", (e) => evl.handleCanvasMouseLeave(e, props.pageId, props.canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack));
+        canvas.addEventListener("mousedown", (e) => evl.handleCanvasMouseDown(e, props.canvasRef, props.scaleRef));
+        canvas.addEventListener("mousemove", (e) => evl.handleCanvasMouseMove(e, props.canvasRef, props.scaleRef));
+        canvas.addEventListener("mouseup", (e) => evl.handleCanvasMouseUp(e, props.pageId, props.canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.scaleRef));
+        canvas.addEventListener("mouseleave", (e) => evl.handleCanvasMouseLeave(e, props.pageId, props.canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.scaleRef));
         // touch & stylus support
-        canvas.addEventListener("touchstart", (e) => evl.handleCanvasMouseDown(e, props.canvasRef));
-        canvas.addEventListener("touchmove", (e) => evl.handleCanvasMouseMove(e, props.canvasRef));
-        canvas.addEventListener("touchend", (e) => evl.handleCanvasMouseUp(e, props.pageId, props.canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack));
-        canvas.addEventListener("touchcancel", (e) => evl.handleCanvasMouseLeave(e, props.pageId, props.canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack));
+        canvas.addEventListener("touchstart", (e) => evl.handleCanvasMouseDown(e, props.canvasRef, props.scaleRef));
+        canvas.addEventListener("touchmove", (e) => evl.handleCanvasMouseMove(e, props.canvasRef, props.scaleRef));
+        canvas.addEventListener("touchend", (e) => evl.handleCanvasMouseUp(e, props.pageId, props.canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.scaleRef));
+        canvas.addEventListener("touchcancel", (e) => evl.handleCanvasMouseLeave(e, props.pageId, props.canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.scaleRef));
 
         return () => {
             canvas.removeEventListener("contextmenu", null);
@@ -66,6 +66,7 @@ function Whiteboard(props) {
 
     function clearPage() {
         console.log("This should clear the page");
+        console.log(props.scaleRef);
     }
 
     function addPage() {
