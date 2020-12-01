@@ -7,6 +7,7 @@ import './css/toolbar.css';
 import './css/buttons.css';
 import './css/homebar.css';
 import './css/viewbar.css';
+import './css/popup.css';
 
 import theme from './component/theme';
 import routes from './component/route';

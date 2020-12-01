@@ -10,7 +10,6 @@ import SkipNextIcon from '@material-ui/icons/SkipNext';
 
 import AddIcon from '@material-ui/icons/Add';
 import { SketchPicker } from 'react-color'
-import reactCSS from 'reactcss'
 
 import * as hd from '../util/handledata.js';
 import theme from '../component/theme';
@@ -109,22 +108,6 @@ function Toolbar(props) {
         }
     };
 
-    const styles = reactCSS({
-        'default': {
-            popover: {
-                position: 'fixed',
-                zIndex: '10', // stack order
-            },
-            cover: {
-                position: 'fixed',
-                top: '0px',
-                right: '0px',
-                bottom: '0px',
-                left: '0px',
-            },
-        },
-    });
-
     return (
         <div className="toolbar" style={{
             backgroundColor: theme.palette.tertiary.main,
@@ -148,8 +131,8 @@ function Toolbar(props) {
                 </IconButton>
                 { // Palette Popup
                     displayColorPicker ?
-                        <div style={styles.popover}>
-                            <div style={styles.cover} onClick={handlePaletteClose} />
+                        <div className="popup">
+                            <div className="cover" onClick={handlePaletteClose} />
                             <div className="colorpicker">
                                 <SketchPicker disableAlpha={true} color={color} onChange={handlePaletteChange} />
                             </div>
@@ -163,8 +146,8 @@ function Toolbar(props) {
                 </IconButton>
                 { // Width Slider Popup
                     displayWidthPicker ?
-                        <div style={styles.popover}>
-                            <div style={styles.cover} onClick={handleWidthClose} />
+                        <div className="popup">
+                            <div className="cover" onClick={handleWidthClose} />
                             <div className="widthpicker">
                                 <Slider
                                     color="secondary"
@@ -175,7 +158,6 @@ function Toolbar(props) {
                                     max={maxWidth}
                                 />
                                 <Input
-                                    className={styles.input}
                                     value={props.lineWidth}
                                     margin="dense"
                                     onChange={handleInputChange}

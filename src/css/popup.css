@@ -1,0 +1,12 @@
+.popup {
+    position: fixed;
+    z-index: 10;
+}
+
+.cover {
+    position: fixed;
+    top: -100vh;
+    left: -100vw;
+    height: 200vh;
+    width: 200vw;
+}
