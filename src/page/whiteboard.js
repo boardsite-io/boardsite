@@ -10,20 +10,45 @@ import reactCSS from 'reactcss'
 function Whiteboard(props) {
     const [displayPageSettings, setDisplayPageSettings] = useState(false);
 
+    function mousedown(e){
+        if (props.isDrawModeRef.current) {
+            evl.handleCanvasMouseDown(e, props.canvasRef, props.scaleRef)
+        }
+    } 
+    function mousemove(e){
+        if (props.isDrawModeRef.current) {
+            evl.handleCanvasMouseMove(e, props.canvasRef, props.scaleRef);
+        }
+    } 
+    function mouseup(e){
+        if (props.isDrawModeRef.current) {
+            evl.handleCanvasMouseUp(e, props.pageId, props.canvasRef, props.wsRef, 
+                props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.scaleRef);
+        }
+        
+    } 
+    function mouseleave(e){
+        if (props.isDrawModeRef.current) {
+            evl.handleCanvasMouseLeave(e, props.pageId, props.canvasRef, props.wsRef, 
+                props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.scaleRef);
+        }
+    } 
+
+
     useEffect(() => {
         const canvas = props.canvasRef.current;
         canvas.width = 620; //canvas.clientWidth;
         canvas.height = 877; //canvas.clientHeight;
         canvas.addEventListener("contextmenu", e => e.preventDefault()); // Disable Context Menu
-        canvas.addEventListener("mousedown", (e) => evl.handleCanvasMouseDown(e, props.canvasRef, props.scaleRef));
-        canvas.addEventListener("mousemove", (e) => evl.handleCanvasMouseMove(e, props.canvasRef, props.scaleRef));
-        canvas.addEventListener("mouseup", (e) => evl.handleCanvasMouseUp(e, props.pageId, props.canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.scaleRef));
-        canvas.addEventListener("mouseleave", (e) => evl.handleCanvasMouseLeave(e, props.pageId, props.canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.scaleRef));
+        canvas.addEventListener("mousedown", (e) => mousedown(e));
+        canvas.addEventListener("mousemove", (e) => mousemove(e));
+        canvas.addEventListener("mouseup", (e) => mouseup(e));
+        canvas.addEventListener("mouseleave", (e) => mouseleave(e));
         // touch & stylus support
-        canvas.addEventListener("touchstart", (e) => evl.handleCanvasMouseDown(e, props.canvasRef, props.scaleRef));
-        canvas.addEventListener("touchmove", (e) => evl.handleCanvasMouseMove(e, props.canvasRef, props.scaleRef));
-        canvas.addEventListener("touchend", (e) => evl.handleCanvasMouseUp(e, props.pageId, props.canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.scaleRef));
-        canvas.addEventListener("touchcancel", (e) => evl.handleCanvasMouseLeave(e, props.pageId, props.canvasRef, props.wsRef, props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.scaleRef));
+        canvas.addEventListener("touchstart", (e) => mousedown(e));
+        canvas.addEventListener("touchmove", (e) => mousemove(e));
+        canvas.addEventListener("touchend", (e) => mouseup(e));
+        canvas.addEventListener("touchcancel", (e) => mouseleave(e));
 
         return () => {
             canvas.removeEventListener("contextmenu", null);

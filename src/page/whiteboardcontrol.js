@@ -165,6 +165,7 @@ function WhiteboardControl() {
 
     // SCALE REF
     const scaleRef = useRef(1);
+    const isDrawModeRef = useRef(false);
     function zoomChange(zoomObject) {
         scaleRef.current = zoomObject.scale;
     }
@@ -203,7 +204,7 @@ function WhiteboardControl() {
                             <div className="tools">
                                 <button onClick={(e) => {
                                     options.disabled = !options.disabled;
-                                    console.log(options);
+                                    isDrawModeRef.current = options.disabled;
                                 }}>Toggle Pan</button>
                                 <button onClick={zoomIn}>+</button>
                                 <button onClick={zoomOut}>-</button>
@@ -218,6 +219,7 @@ function WhiteboardControl() {
                                         {pageCollection.map((page) => {
                                             return (
                                                 <Whiteboard
+                                                    isDrawModeRef={isDrawModeRef}
                                                     className="page"
                                                     scaleRef={scaleRef}
                                                     key={page.pageId}
