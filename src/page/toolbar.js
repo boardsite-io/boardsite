@@ -113,7 +113,7 @@ function Toolbar(props) {
         'default': {
             popover: {
                 position: 'fixed',
-                zIndex: '2', // stack order
+                zIndex: '10', // stack order
             },
             cover: {
                 position: 'fixed',
