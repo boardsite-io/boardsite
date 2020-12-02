@@ -1,7 +1,6 @@
 import * as draw from './drawingengine.js';
 import * as hd from './handledata.js';
 
-let imageData;
 let isMouseDown = false;
 let sampleCount = 0;
 let lastX = -1;
@@ -9,19 +8,16 @@ let lastY = -1;
 let stroke = [];
 let isEraser = false;
 
-export function handleCanvasMouseDown(e, canvasRef, scaleRef) {
+export function handleCanvasMouseDown(e, liveCanvasRef, canvasRef, scaleRef) {
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
 
     if (e.type === "touchstart") {
         isEraser = false;
         e = e.changedTouches[0];
-        imageData = ctx.getImageData(0, 0, canvas.width, canvas.height); // Save canvas state
     }
     else {
         if (e.button === 0) { // left-click
             isEraser = false;
-            imageData = ctx.getImageData(0, 0, canvas.width, canvas.height); // Save canvas state
         } else if (e.button === 2) { // right-click
             isEraser = true;
         }
@@ -37,7 +33,7 @@ export function handleCanvasMouseDown(e, canvasRef, scaleRef) {
     lastY = y;
 }
 
-export function handleCanvasMouseMove(e, canvasRef, scaleRef) {
+export function handleCanvasMouseMove(e, liveCanvasRef, canvasRef, scaleRef) {
     if (isMouseDown) {
         let minSampleCount = 8;
         if (e.type === "touchmove") {
@@ -54,9 +50,11 @@ export function handleCanvasMouseMove(e, canvasRef, scaleRef) {
         if (moveDist > 100 || sampleCount > minSampleCount) {
             sampleCount = 1;
             stroke.push(x, y);
-            const ctx = canvas.getContext('2d');
+            const liveCanvas = liveCanvasRef.current;
+            const ctxLive = liveCanvas.getContext('2d');
+            
             if (!isEraser) {
-                draw.drawLine(lastX, lastY, x, y, ctx);
+                draw.drawLine(lastX, lastY, x, y, ctxLive);
             }
             lastX = x;
             lastY = y;
@@ -64,7 +62,7 @@ export function handleCanvasMouseMove(e, canvasRef, scaleRef) {
     }
 }
 
-export function handleCanvasMouseUp(e, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, scaleRef) {
+export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, scaleRef) {
     if (!isMouseDown) { return; } // Ignore reentering
     isMouseDown = false;
     lastX = -1;
@@ -91,13 +89,15 @@ export function handleCanvasMouseUp(e, pageId, canvasRef, wsRef, setStrokeCollec
     };
 
     if (!isEraser) {
-        ctx.putImageData(imageData, 0, 0);
+        const liveCanvas = liveCanvasRef.current;
+        const ctxLive = liveCanvas.getContext('2d');
+        ctxLive.clearRect(0, 0, 1240, 1754);
         hd.processStrokes([strokeObject], "stroke", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
     } else {
         draw.eraser(setHitboxCollection, setStrokeCollection, setUndoStack, strokeObject, wsRef, canvasRef);
     }
 }
 
-export function handleCanvasMouseLeave(e, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, scaleRef) {
-    handleCanvasMouseUp(e, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, scaleRef);
+export function handleCanvasMouseLeave(e, liveCanvasRef, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, scaleRef) {
+    handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, scaleRef);
 }

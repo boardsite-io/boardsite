@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, useRef, createRef } from 'react';
 import * as evl from '../util/eventlistener.js';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { IconButton } from '@material-ui/core';
@@ -8,35 +8,40 @@ import AddIcon from '@material-ui/icons/Add';
 
 function Whiteboard(props) {
     const [displayPageSettings, setDisplayPageSettings] = useState(false);
+    const liveCanvasRef = useRef(createRef());
 
-    function mousedown(e){
+    function mousedown(e) {
         if (props.isDrawModeRef.current) {
-            evl.handleCanvasMouseDown(e, props.canvasRef, props.scaleRef)
+            evl.handleCanvasMouseDown(e, liveCanvasRef, props.canvasRef, props.scaleRef)
         }
-    } 
-    function mousemove(e){
+    }
+    function mousemove(e) {
         if (props.isDrawModeRef.current) {
-            evl.handleCanvasMouseMove(e, props.canvasRef, props.scaleRef);
+            evl.handleCanvasMouseMove(e, liveCanvasRef, props.canvasRef, props.scaleRef);
         }
-    } 
-    function mouseup(e){
+    }
+    function mouseup(e) {
         if (props.isDrawModeRef.current) {
-            evl.handleCanvasMouseUp(e, props.pageId, props.canvasRef, props.wsRef, 
+            evl.handleCanvasMouseUp(e, liveCanvasRef, props.pageId, props.canvasRef, props.wsRef,
                 props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.scaleRef);
         }
-        
-    } 
-    function mouseleave(e){
+
+    }
+    function mouseleave(e) {
         if (props.isDrawModeRef.current) {
-            evl.handleCanvasMouseLeave(e, props.pageId, props.canvasRef, props.wsRef, 
+            evl.handleCanvasMouseLeave(e, liveCanvasRef, props.pageId, props.canvasRef, props.wsRef,
                 props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.scaleRef);
         }
     }
 
     useEffect(() => {
+        console.log(liveCanvasRef);
         const canvas = props.canvasRef.current;
+        const liveCanvas = liveCanvasRef.current;
         canvas.width = 1240; //canvas.clientWidth;
         canvas.height = 1754; //canvas.clientHeight;
+        liveCanvas.width = 1240; //canvas.clientWidth;
+        liveCanvas.height = 1754; //canvas.clientHeight;
         canvas.addEventListener("contextmenu", e => e.preventDefault()); // Disable Context Menu
         canvas.addEventListener("mousedown", (e) => mousedown(e));
         canvas.addEventListener("mousemove", (e) => mousemove(e));
@@ -82,7 +87,10 @@ function Whiteboard(props) {
 
     return (
         <div className="page">
-            <canvas ref={props.canvasRef} />
+            <div id="wrapper">
+                <canvas id="canvasMain" ref={props.canvasRef} />
+                <canvas id="canvasLive" ref={liveCanvasRef} />
+            </div>
             <div>
                 <IconButton id="iconButton" variant="contained" onClick={openPageSettings}>
                     <MoreVertIcon color="secondary" id="iconButtonInner" />
@@ -93,13 +101,13 @@ function Whiteboard(props) {
                             <div className="cover" onClick={closePageSettings} />
                             <div className="pagesettings">
                                 <IconButton id="iconButton" variant="contained" onClick={() => props.deletePage(props.pageId)}>
-                                    <DeleteIcon color="secondary" id="iconButtonInner"/>
+                                    <DeleteIcon color="secondary" id="iconButtonInner" />
                                 </IconButton>
                                 <IconButton id="iconButton" variant="contained" onClick={clearPage}>
-                                    <ClearIcon color="secondary" id="iconButtonInner"/>
+                                    <ClearIcon color="secondary" id="iconButtonInner" />
                                 </IconButton>
                                 <IconButton id="iconButton" variant="contained" onClick={addPage}>
-                                    <AddIcon color="secondary" id="iconButtonInner"/>
+                                    <AddIcon color="secondary" id="iconButtonInner" />
                                 </IconButton>
                             </div>
                         </div>
