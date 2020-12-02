@@ -5,7 +5,6 @@ import { IconButton } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
-import reactCSS from 'reactcss'
 
 function Whiteboard(props) {
     const [displayPageSettings, setDisplayPageSettings] = useState(false);
@@ -32,13 +31,12 @@ function Whiteboard(props) {
             evl.handleCanvasMouseLeave(e, props.pageId, props.canvasRef, props.wsRef, 
                 props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.scaleRef);
         }
-    } 
-
+    }
 
     useEffect(() => {
         const canvas = props.canvasRef.current;
-        canvas.width = 620; //canvas.clientWidth;
-        canvas.height = 877; //canvas.clientHeight;
+        canvas.width = 1240; //canvas.clientWidth;
+        canvas.height = 1754; //canvas.clientHeight;
         canvas.addEventListener("contextmenu", e => e.preventDefault()); // Disable Context Menu
         canvas.addEventListener("mousedown", (e) => mousedown(e));
         canvas.addEventListener("mousemove", (e) => mousemove(e));
@@ -64,22 +62,6 @@ function Whiteboard(props) {
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
-    const styles = reactCSS({
-        'default': {
-            popover: {
-                position: 'relative',
-                zIndex: '2', // stack order
-            },
-            cover: {
-                position: 'fixed',
-                top: '0px',
-                right: '0px',
-                bottom: '0px',
-                left: '0px',
-            },
-        },
-    });
 
     function openPageSettings() {
         setDisplayPageSettings(true);
@@ -107,8 +89,8 @@ function Whiteboard(props) {
                 </IconButton>
                 { // Palette Popup
                     displayPageSettings ?
-                        <div style={styles.popover}>
-                            <div style={styles.cover} onClick={closePageSettings} />
+                        <div className="popup">
+                            <div className="cover" onClick={closePageSettings} />
                             <div className="pagesettings">
                                 <IconButton id="iconButton" variant="contained" onClick={() => props.deletePage(props.pageId)}>
                                     <DeleteIcon color="secondary" id="iconButtonInner"/>
