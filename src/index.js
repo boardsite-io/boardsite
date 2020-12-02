@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import './css/theme.css';
 import './css/index.css';
 import './css/whiteboard.css';
 import './css/toolbar.css';
@@ -9,22 +10,20 @@ import './css/homebar.css';
 import './css/viewbar.css';
 import './css/popup.css';
 
-import theme from './component/theme';
 import routes from './component/route';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { ThemeProvider } from '@material-ui/core/styles';
 
 class Boardsite extends React.Component {
     render() {
         return (
-            <ThemeProvider theme={theme}>
+            <div className="rootdiv">
                 <CssBaseline />
                 <Router>
                     {routes}
                 </Router>
-            </ThemeProvider>
+            </div>
         );
     }
 }

@@ -12,7 +12,6 @@ import AddIcon from '@material-ui/icons/Add';
 import { SketchPicker } from 'react-color'
 
 import * as hd from '../util/handledata.js';
-import theme from '../component/theme';
 
 // import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 // import RangeSlider from 'react-bootstrap-range-slider';
@@ -109,10 +108,7 @@ function Toolbar(props) {
     };
 
     return (
-        <div className="toolbar" style={{
-            backgroundColor: theme.palette.tertiary.main,
-            border: theme.palette.tertiary.border,
-        }}>
+        <div className="toolbar">
             <IconButton id="iconButton" variant="contained" color="primary" onClick={handleClear}>
                 <DeleteForeverIcon color="secondary" id="iconButtonInner" />
             </IconButton>

@@ -1,4 +1,5 @@
 .toolbar {
+    background-color: var(--tertiary);
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
@@ -16,19 +17,6 @@
     z-index: 10;
 }
 
-.popup {
-    position: fixed;
-    z-index: 10;
-}
-
-.cover {
-    position: fixed;
-    top: -100vh;
-    left: -100vw;
-    height: 200vh;
-    width: 200vw;
-}
-
 .colorpicker {
     position: absolute;
     top: -235px;
@@ -39,7 +27,6 @@
     position: absolute;
     top: -35px;
     left: 50px;
-
     display: grid;
     grid-template-columns: 70% 30%;
     justify-content: space-between;

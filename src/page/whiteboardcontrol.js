@@ -7,7 +7,6 @@ import UserLogin from '../component/userlogin';
 import AlertDialog from '../component/session_dialog';
 import { createWebsocket, createBoardRequest } from '../util/api';
 import { useParams } from 'react-router-dom';
-import theme from '../component/theme';
 import * as hd from '../util/handledata.js';
 import * as pg from '../util/pageactions.js';
 
@@ -108,7 +107,7 @@ function WhiteboardControl() {
         setSidInput(e.target.value);
     }
 
-    function deletePage(pageId){
+    function deletePage(pageId) {
         pg.deletePage(pageId, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
     }
 
@@ -120,26 +119,26 @@ function WhiteboardControl() {
             <div className="pagewrapper" websocket={wsRef.current}>
                 <TransformWrapper
                     defaultScale={1}
-                    onZoomChange={(e) => {scaleRef.current = e.scale}}
-                    options={{ 
-                        disabled: false, 
-                        minScale: 0.5, 
-                        maxScale: 2, 
-                        limitToBounds: false, 
-                        limitToWrapper: false, 
-                        centerContent: true 
+                    onZoomChange={(e) => { scaleRef.current = e.scale }}
+                    options={{
+                        disabled: false,
+                        minScale: 0.5,
+                        maxScale: 2,
+                        limitToBounds: false,
+                        limitToWrapper: false,
+                        centerContent: true
                     }}
-                    scalePadding={{ 
-                        disabled: true 
+                    scalePadding={{
+                        disabled: true
                     }}
-                    pan={{ 
-                        disabled: isDrawModeRef.current, 
-                        paddingSize: 40 
+                    pan={{
+                        disabled: isDrawModeRef.current,
+                        paddingSize: 40
                     }}
-                    wheel={{ 
-                        disabled: false, 
-                        wheelEnabled: true, 
-                        step: 200 
+                    wheel={{
+                        disabled: false,
+                        wheelEnabled: true,
+                        step: 200
                     }}
                 >
                     {({ zoomIn, zoomOut, resetTransform, pan, options, positionX, positionY, setPositionX, setPositionY }) => (
@@ -172,26 +171,28 @@ function WhiteboardControl() {
                             />
                             <TransformComponent>
                                 <div className="pagecollectionouter">
-                                    <div className="pagecollection" style={{ backgroundColor: theme.palette.background.pagecollection }}>
-                                        {pageCollection.map((page) => {
-                                            return (
-                                                <Whiteboard
-                                                    isDrawModeRef={isDrawModeRef}
-                                                    className="page"
-                                                    scaleRef={scaleRef}
-                                                    key={page.pageId}
-                                                    pageId={page.pageId}
-                                                    deletePage={deletePage}
-                                                    canvasRef={page.canvasRef}
-                                                    wsRef={wsRef}
-                                                    setPageCollection={setPageCollection}
-                                                    setStrokeCollection={setStrokeCollection}
-                                                    setHitboxCollection={setHitboxCollection}
-                                                    setUndoStack={setUndoStack}
-                                                    setRedoStack={setRedoStack}
-                                                />
-                                            );
-                                        })}
+                                    <div className="pagecollectionmiddle">
+                                        <div className="pagecollectioninner">
+                                            {pageCollection.map((page) => {
+                                                return (
+                                                    <Whiteboard
+                                                        isDrawModeRef={isDrawModeRef}
+                                                        className="page"
+                                                        scaleRef={scaleRef}
+                                                        key={page.pageId}
+                                                        pageId={page.pageId}
+                                                        deletePage={deletePage}
+                                                        canvasRef={page.canvasRef}
+                                                        wsRef={wsRef}
+                                                        setPageCollection={setPageCollection}
+                                                        setStrokeCollection={setStrokeCollection}
+                                                        setHitboxCollection={setHitboxCollection}
+                                                        setUndoStack={setUndoStack}
+                                                        setRedoStack={setRedoStack}
+                                                    />
+                                                );
+                                            })}
+                                        </div>
                                     </div>
                                 </div>
                             </TransformComponent>

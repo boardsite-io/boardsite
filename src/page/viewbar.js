@@ -4,7 +4,6 @@ import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import ZoomOutMapIcon from '@material-ui/icons/ZoomOutMap';
 import PanToolIcon from '@material-ui/icons/PanTool';
 import { IconButton } from '@material-ui/core';
-import theme from '../component/theme';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
@@ -24,10 +23,7 @@ export default function Viewbar(props) {
     }
 
     return (
-        <div className="viewbar" style={{
-            backgroundColor: theme.palette.tertiary.main,
-            border: theme.palette.tertiary.border,
-        }}>
+        <div className="viewbar">
             <IconButton id="iconButton" variant="contained" color="primary" onClick={toggleDrawMode}>
                 <PanToolIcon color="secondary" id="iconButtonInner" />
             </IconButton>
