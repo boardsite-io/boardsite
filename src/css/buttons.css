@@ -1,3 +1,17 @@
+#buttonDialog {
+    color: var(--primary);
+    background-color: var(--secondary);
+}
+
+#buttonDialog:hover {
+    color: var(--secondary);
+    background-color: var(--primary);
+}
+
+#textField {
+    color: var(--primary);
+}
+
 #iconButtonInner {
     color: var(--primary);
 }

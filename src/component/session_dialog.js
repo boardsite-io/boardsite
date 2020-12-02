@@ -22,16 +22,16 @@ export default function AlertDialog(props) {
                         Let Google scam you.
                     </DialogContentText> */}
                     <div className="dialogbuttons">
-                        <Button variant="contained"
+                        <Button id="buttonDialog" variant="contained"
                             color="primary" onClick={() => props.handleCreate()}>Create Session</Button>
-                        <Button variant="contained"
+                        <Button id="buttonDialog" variant="contained"
                             color="primary" onClick={() => props.handleJoin()}>Join Session</Button>
-                        <TextField defaultValue={''} onChange={(e) => props.handleTextFieldChange(e)}
+                        <TextField id="textField" defaultValue={''} onChange={(e) => props.handleTextFieldChange(e)}
                             label="Insert Session ID" variant="outlined" />
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => props.setOpen(false)} color="primary" autoFocus>
+                    <Button id="buttonDialog" onClick={() => props.setOpen(false)} color="primary" autoFocus>
                         Close
                     </Button>
                 </DialogActions>
