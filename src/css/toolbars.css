@@ -1,20 +1,42 @@
-.toolbar {
+.homebar, .toolbar, .viewbar {
     background-color: var(--tertiary);
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
     position: fixed;
-    left: 5px;
-    top: 50%;
-    transform: translateY(-50%);
     display: grid;
-    grid-auto-flow: row;
+    grid-auto-flow: column;
     gap: 20px;
     width: auto;
     justify-content: space-evenly;
     padding: 10px;
     border-radius: 4px;
     z-index: 10;
+}
+
+.viewbar {
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    grid-auto-flow: row;
+}
+
+.homebar {
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    grid-auto-flow: column;
+}
+
+.homebar:hover .toolbar:hover .viewbar:hover {
+    box-shadow: 0px 0px 10px #00D2BE;
+}
+
+.toolbar {
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    grid-auto-flow: row;
 }
 
 .colorpicker {

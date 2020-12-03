@@ -4,10 +4,8 @@ import ReactDOM from 'react-dom';
 import './css/theme.css';
 import './css/index.css';
 import './css/whiteboard.css';
-import './css/toolbar.css';
+import './css/toolbars.css';
 import './css/buttons.css';
-import './css/homebar.css';
-import './css/viewbar.css';
 import './css/popup.css';
 
 import routes from './component/route';

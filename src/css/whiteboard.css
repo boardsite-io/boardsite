@@ -69,8 +69,8 @@
 .page{
     display: flex;
     flex-flow: row;
-    margin-right: 15px;
-    margin-left: 40px;
+    margin-right: 10px;
+    margin-left: 45px;
     gap: 5px;
 }
 
