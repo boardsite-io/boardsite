@@ -38,20 +38,20 @@
 }
 
 #wrapper{
-    height: 877px; /* 1754 */
-    width: 620px; /*1240 */
+    height: var(--canvasheight);
+    width: var(--canvaswidth);
     position:relative;
 }
 
 #canvasLive {
-    height: 877px; /* 1754 */
-    width: 620px; /*1240 */
+    height: var(--canvasheight);
+    width: var(--canvaswidth);
     background-color: var(--canvas);
 }
 
 #canvasMain {
-    height: 877px; /* 1754 */
-    width: 620px; /*1240 */
+    height: var(--canvasheight);
+    width: var(--canvaswidth);
     position:absolute; top:0px; left:0px;
 }
 

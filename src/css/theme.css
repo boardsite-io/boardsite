@@ -7,4 +7,6 @@
     --buttonshadow: 0px 0px 3px #00000088;
     --canvas: #ffffff;
     --canvasborder: 1px solid rgb(104, 104, 104);
+    --canvasheight: 877px;
+    --canvaswidth: 620px;
   }
