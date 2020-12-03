@@ -35,7 +35,6 @@ function Whiteboard(props) {
     }
 
     useEffect(() => {
-        console.log(liveCanvasRef);
         const canvas = props.canvasRef.current;
         const liveCanvas = liveCanvasRef.current;
         canvas.width = 1240; //canvas.clientWidth;

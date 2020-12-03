@@ -10,6 +10,13 @@ let isEraser = false;
 
 export function handleCanvasMouseDown(e, liveCanvasRef, canvasRef, scaleRef) {
     const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    const liveCanvas = liveCanvasRef.current;
+    const ctxLive = liveCanvas.getContext('2d');
+
+    // Share stroke information with live canvas context
+    ctxLive.lineWidth = ctx.lineWidth;
+    ctxLive.strokeStyle = ctx.strokeStyle;
 
     if (e.type === "touchstart") {
         isEraser = false;
