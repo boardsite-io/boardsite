@@ -7,6 +7,7 @@ let lastX = -1;
 let lastY = -1;
 let stroke = [];
 let isEraser = false;
+const canvasResolutionFactor = 2; 
 
 export function handleCanvasMouseDown(e, liveCanvasRef, canvasRef, scaleRef) {
     const canvas = canvasRef.current;
@@ -33,8 +34,8 @@ export function handleCanvasMouseDown(e, liveCanvasRef, canvasRef, scaleRef) {
     isMouseDown = true;
     sampleCount = 1;
     let rect = canvas.getBoundingClientRect();
-    let x = (e.clientX - rect.left) / scaleRef.current;
-    let y = (e.clientY - rect.top) / scaleRef.current;
+    let x = (e.clientX - rect.left) / scaleRef.current * canvasResolutionFactor;
+    let y = (e.clientY - rect.top) / scaleRef.current * canvasResolutionFactor;
     stroke = [x, y];
     lastX = x;
     lastY = y;
@@ -50,8 +51,8 @@ export function handleCanvasMouseMove(e, liveCanvasRef, canvasRef, scaleRef) {
         sampleCount += 1;
         const canvas = canvasRef.current;
         let rect = canvas.getBoundingClientRect();
-        let x = (e.clientX - rect.left) / scaleRef.current;
-        let y = (e.clientY - rect.top) / scaleRef.current;
+        let x = (e.clientX - rect.left) / scaleRef.current * canvasResolutionFactor;;
+        let y = (e.clientY - rect.top) / scaleRef.current * canvasResolutionFactor;;
         let moveDist = Math.pow(x - lastX, 2) + Math.pow(y - lastY, 2); // Quadratic distance moved from last registered point
 
         if (moveDist > 100 || sampleCount > minSampleCount) {
@@ -78,8 +79,8 @@ export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, 
     const ctx = canvas.getContext('2d');
     let rect = canvas.getBoundingClientRect();
     if (e.type !== "touchend" && e.type !== "touchcancel") {
-        let x = (e.clientX - rect.left) / scaleRef.current;
-        let y = (e.clientY - rect.top) / scaleRef.current;
+        let x = (e.clientX - rect.left) / scaleRef.current * canvasResolutionFactor;;
+        let y = (e.clientY - rect.top) / scaleRef.current * canvasResolutionFactor;;
         stroke.push(x, y);
     }
     stroke = draw.getCurvePoints(stroke, 0.5);
