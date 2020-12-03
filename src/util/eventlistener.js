@@ -43,7 +43,7 @@ export function handleCanvasMouseDown(e, liveCanvasRef, canvasRef, scaleRef) {
 
 export function handleCanvasMouseMove(e, liveCanvasRef, canvasRef, scaleRef) {
     if (isMouseDown) {
-        let minSampleCount = 8;
+        let minSampleCount = 20;
         if (e.type === "touchmove") {
             e = e.touches[0];
             minSampleCount = 3; // more precision for stylus
