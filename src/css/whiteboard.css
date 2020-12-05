@@ -7,23 +7,13 @@
     overflow: hidden;
 }
 
-.pagewrapper {
-    width: 100vw;
-    height: 100vh;
-}
-
 .pagecollectionouter {
-    padding-top: 60px;
     width: 100vw;
     height: 100vh;
-}
-
-.pagecollectionmiddle {
-    margin: 0px auto;
-    width: fit-content;
 }
 
 .pagecollectioninner {
+    width: fit-content;
     background-color: var(--pagesbackground);
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
@@ -37,7 +27,7 @@
     gap: 20px;
 }
 
-#wrapper{
+#canvasWrapper{
     height: var(--canvasheight);
     width: var(--canvaswidth);
     position:relative;

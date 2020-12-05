@@ -15,11 +15,19 @@ export default function Viewbar(props) {
     }
 
     function down(e) {
-        props.setPositionY(props.positionY - 100);
+        props.setPositionY(props.positionY - 200);
     }
 
     function up(e) {
-        props.setPositionY(props.positionY + 100);
+        props.setPositionY(props.positionY + 200);
+    }
+
+    function stretchToWindow() {
+        props.setScale(window.innerWidth / 710,0);
+        props.setPositionX(0,0);
+        // let x = props.positionX + 
+        // console.log(props.positionX, props.positionY);
+        // props.setPositionY(60,0)
     }
 
     return (
@@ -41,6 +49,10 @@ export default function Viewbar(props) {
             </IconButton>
             <IconButton id="iconButton" variant="contained" color="primary" onClick={down}>
                 <ExpandMoreIcon color="secondary" id="iconButtonInner" />
+            </IconButton>
+
+            <IconButton id="iconButton" variant="contained" color="primary" onClick={stretchToWindow}>
+                <ZoomOutMapIcon color="secondary" id="iconButtonInner" />
             </IconButton>
         </div>
     );

@@ -86,7 +86,7 @@ function Whiteboard(props) {
 
     return (
         <div className="page">
-            <div id="wrapper">
+            <div id="canvasWrapper">
                 <canvas id="canvasMain" ref={props.canvasRef} />
                 <canvas id="canvasLive" ref={liveCanvasRef} />
             </div>

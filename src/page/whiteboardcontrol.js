@@ -112,95 +112,94 @@ function WhiteboardControl() {
     }
 
     return (
-        <div className="viewport">
+        <div className="viewport" websocket={wsRef.current}>
             <UserLogin openAccDialog={openAccDialog} setOpenAccDialog={setOpenAccDialog} />
             <AlertDialog open={openSessionDialog} setOpen={setOpenSessionDialog} sessionID_input={sidInput} setSessionID_input={setSidInput}
                 handleTextFieldChange={handleTextFieldChange} handleJoin={handleJoin} handleCreate={handleCreate} />
-            <div className="pagewrapper" websocket={wsRef.current}>
-                <TransformWrapper
-                    defaultScale={1}
-                    onZoomChange={(e) => { scaleRef.current = e.scale }}
-                    options={{
-                        disabled: false,
-                        minScale: 0.5,
-                        maxScale: 2,
-                        limitToBounds: false,
-                        limitToWrapper: false,
-                        centerContent: true
-                    }}
-                    scalePadding={{
-                        disabled: true
-                    }}
-                    pan={{
-                        disabled: isDrawModeRef.current,
-                        paddingSize: 40
-                    }}
-                    wheel={{
-                        disabled: false,
-                        wheelEnabled: true,
-                        step: 200
-                    }}
-                >
-                    {({ zoomIn, zoomOut, resetTransform, pan, options, positionX, positionY, setPositionX, setPositionY }) => (
-                        <>
-                            <Homebar
-                                setOpenSessionDialog={setOpenSessionDialog}
-                                setOpenAccDialog={setOpenAccDialog}
-                            />
-                            <Viewbar
-                                pan={pan}
-                                zoomIn={zoomIn}
-                                zoomOut={zoomOut}
-                                resetTransform={resetTransform}
-                                isDrawModeRef={isDrawModeRef}
-                                // positionX={positionX}
-                                positionY={positionY}
-                                // setPositionX={setPositionX}
-                                setPositionY={setPositionY}
-                            />
-                            <Toolbar wsRef={wsRef}
-                                strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
-                                strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
-                                lineWidth={lineWidth} setLineWidth={setLineWidth}
-                                sessionID={sessionID}
-                                setNeedsClear={setNeedsClear}
-                                hitboxCollection={hitboxCollection} setHitboxCollection={setHitboxCollection}
-                                undoStack={undoStack} setUndoStack={setUndoStack}
-                                redoStack={redoStack} setRedoStack={setRedoStack}
-                                pageCollection={pageCollection} setPageCollection={setPageCollection}
-                            />
-                            <TransformComponent>
-                                <div className="pagecollectionouter">
-                                    <div className="pagecollectionmiddle">
-                                        <div className="pagecollectioninner">
-                                            {pageCollection.map((page) => {
-                                                return (
-                                                    <Whiteboard
-                                                        isDrawModeRef={isDrawModeRef}
-                                                        className="page"
-                                                        scaleRef={scaleRef}
-                                                        key={page.pageId}
-                                                        pageId={page.pageId}
-                                                        deletePage={deletePage}
-                                                        canvasRef={page.canvasRef}
-                                                        wsRef={wsRef}
-                                                        setPageCollection={setPageCollection}
-                                                        setStrokeCollection={setStrokeCollection}
-                                                        setHitboxCollection={setHitboxCollection}
-                                                        setUndoStack={setUndoStack}
-                                                        setRedoStack={setRedoStack}
-                                                    />
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
+            <TransformWrapper
+                defaultPositionX={(1 - 0.8)/2 * window.innerWidth}
+                defaultPositionY={60}
+                defaultScale={0.8 * window.innerWidth / 710}
+                onZoomChange={(e) => { scaleRef.current = e.scale }}
+                options={{
+                    disabled: false,
+                    minScale: 0.5,
+                    maxScale: 2,
+                    limitToBounds: false,
+                    limitToWrapper: false,
+                    centerContent: false
+                }}
+                scalePadding={{
+                    disabled: true
+                }}
+                pan={{
+                    disabled: isDrawModeRef.current,
+                    paddingSize: 0
+                }}
+                wheel={{
+                    disabled: false,
+                    wheelEnabled: true,
+                    step: 200
+                }}
+            >
+                {({ zoomIn, zoomOut, resetTransform, pan, options, positionX, positionY, setPositionX, setPositionY, setScale }) => (
+                    <>
+                        <Homebar
+                            setOpenSessionDialog={setOpenSessionDialog}
+                            setOpenAccDialog={setOpenAccDialog}
+                        />
+                        <Viewbar
+                            pan={pan}
+                            zoomIn={zoomIn}
+                            zoomOut={zoomOut}
+                            resetTransform={resetTransform}
+                            isDrawModeRef={isDrawModeRef}
+                            setScale={setScale}
+                            positionX={positionX}
+                            positionY={positionY}
+                            setPositionX={setPositionX}
+                            setPositionY={setPositionY}
+                        />
+                        <Toolbar wsRef={wsRef}
+                            strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
+                            strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
+                            lineWidth={lineWidth} setLineWidth={setLineWidth}
+                            sessionID={sessionID}
+                            setNeedsClear={setNeedsClear}
+                            hitboxCollection={hitboxCollection} setHitboxCollection={setHitboxCollection}
+                            undoStack={undoStack} setUndoStack={setUndoStack}
+                            redoStack={redoStack} setRedoStack={setRedoStack}
+                            pageCollection={pageCollection} setPageCollection={setPageCollection}
+                        />
+                        <TransformComponent>
+                            <div className="pagecollectionouter">
+                                <div className="pagecollectioninner">
+                                    {pageCollection.map((page) => {
+                                        return (
+                                            <Whiteboard
+                                                isDrawModeRef={isDrawModeRef}
+                                                className="page"
+                                                scaleRef={scaleRef}
+                                                key={page.pageId}
+                                                pageId={page.pageId}
+                                                deletePage={deletePage}
+                                                canvasRef={page.canvasRef}
+                                                wsRef={wsRef}
+                                                setPageCollection={setPageCollection}
+                                                setStrokeCollection={setStrokeCollection}
+                                                setHitboxCollection={setHitboxCollection}
+                                                setUndoStack={setUndoStack}
+                                                setRedoStack={setRedoStack}
+                                            />
+                                        );
+                                    })}
                                 </div>
-                            </TransformComponent>
-                        </>
-                    )}
-                </TransformWrapper>
-            </div>
-        </div >
+                            </div>
+                        </TransformComponent>
+                    </>
+                )}
+            </TransformWrapper>
+        </div>
     );
 }
 
