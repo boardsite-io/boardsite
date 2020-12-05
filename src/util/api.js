@@ -1,5 +1,9 @@
-const baseURL = "http://heat.port0.org:8000";
-//const baseURL = "https://cors-anywhere.herokuapp.com/http://heat.port0.org:8000";
+// retrieve api host from environment
+const hostname = process.env.REACT_APP_B_API_HOSTNAME
+const port = process.env.REACT_APP_B_API_PORT
+const ssl = process.env.REACT_APP_B_SSL === "1" ? "s" : "";
+
+const baseURL = `http${ssl}://${hostname}:${port}`;
 
 /**
  * Send data request to API.
