@@ -4,7 +4,7 @@ export function clearAll(setStrokeCollection, setHitboxCollection, setUndoStack,
     pageCollection.forEach((page) => {
         const canvas = page.canvasRef.current;
         const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, window.innerHeight, window.innerWidth);
+        ctx.clearRect(0, 0, 1240, 1754);
         setStrokeCollection({});
         setHitboxCollection({});
         setUndoStack([]);

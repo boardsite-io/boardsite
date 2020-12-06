@@ -4,7 +4,7 @@ import * as hbx from './hitbox.js';
 export function redraw(pageId, canvasRef, setStrokeCollection) {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, window.innerHeight, window.innerWidth);
+    ctx.clearRect(0, 0, 1240, 1754);
     let strokeStyle = ctx.strokeStyle;
     let lineWidth = ctx.lineWidth;
 
