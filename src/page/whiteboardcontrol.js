@@ -3,7 +3,6 @@ import Whiteboard from './whiteboard';
 import Toolbar from './toolbar';
 import Homebar from './homebar';
 import Viewbar from './viewbar';
-import UserLogin from '../component/userlogin';
 import AlertDialog from '../component/session_dialog';
 import { createWebsocket, createBoardRequest } from '../util/api';
 import { useParams } from 'react-router-dom';
@@ -30,7 +29,6 @@ function WhiteboardControl() {
     const [lineWidth, setLineWidth] = useState(3);
     const [needsClear, setNeedsClear] = useState(0);
     const [openSessionDialog, setOpenSessionDialog] = useState(false);
-    const [openAccDialog, setOpenAccDialog] = useState(false);
     
     const wsRef = useRef();
     const scaleRef = useRef(defaultScale);
@@ -119,7 +117,6 @@ function WhiteboardControl() {
 
     return (
         <div className="viewport" websocket={wsRef.current}>
-            <UserLogin openAccDialog={openAccDialog} setOpenAccDialog={setOpenAccDialog} />
             <AlertDialog open={openSessionDialog} setOpen={setOpenSessionDialog} sessionID_input={sidInput} setSessionID_input={setSidInput}
                 handleTextFieldChange={handleTextFieldChange} handleJoin={handleJoin} handleCreate={handleCreate} />
             <TransformWrapper
@@ -152,7 +149,6 @@ function WhiteboardControl() {
                     <>
                         <Homebar
                             setOpenSessionDialog={setOpenSessionDialog}
-                            setOpenAccDialog={setOpenAccDialog}
                         />
                         <Viewbar
                             pan={pan}

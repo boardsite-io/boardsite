@@ -1,6 +1,5 @@
 import React from 'react';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import SaveIcon from '@material-ui/icons/Save';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { IconButton } from '@material-ui/core';
@@ -17,9 +16,6 @@ export default function Homebar(props) {
 
     return (
         <div className="homebar">
-            <IconButton id="iconButton" variant="contained" onClick={() => props.setOpenAccDialog(true)}>
-                <AccountBoxIcon id="iconButtonInner" />
-            </IconButton>
             <IconButton id="iconButton" variant="contained" onClick={() => props.setOpenSessionDialog(true)}>
                 <GroupAddIcon id="iconButtonInner" />
             </IconButton>
