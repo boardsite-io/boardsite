@@ -13,7 +13,7 @@ export function clearAll(setStrokeCollection, setHitboxCollection, setUndoStack,
     });
 }
 
-export function newPage(setPageCollection) {
+export function addPage(setPageCollection) {
     setPageCollection((prev) => {
         let _prev = [...prev];
         let newPageId = Math.random().toString(36).substring(7);

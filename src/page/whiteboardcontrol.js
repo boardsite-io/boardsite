@@ -4,8 +4,8 @@ import Toolbar from './toolbar';
 import Homebar from './homebar';
 import Viewbar from './viewbar';
 import AlertDialog from '../component/session_dialog';
-import { createWebsocket, createBoardRequest } from '../util/api';
 import { useParams } from 'react-router-dom';
+import * as api from '../util/api';
 import * as hd from '../util/handledata.js';
 import * as pg from '../util/pageactions.js';
 
@@ -43,19 +43,18 @@ function WhiteboardControl() {
 
     // Open dialog on mount
     useEffect(() => {
-        // setOpenSessionDialog(true);
+        setOpenSessionDialog(true);
         setPageCollection([{ canvasRef: createRef(), pageId: "xy123" }]);
     }, [])
 
     // Verify session id and try to connect to session
     useEffect(() => {
         if (sessionID !== "") {
-            createWebsocket(sessionID, onMsgHandle, null, null,).then((socket) => {
+            api.createWebsocket(sessionID, onMsgHandle, null, null,).then((socket) => {
                 wsRef.current = socket;
                 console.log(sessionID);
                 navigator.clipboard.writeText(sessionID); // copy session ID to clipboard
             }).catch(() => console.log(`cannot connect websocket on '/${sessionID}'`));
-            setOpenSessionDialog(false); // close dialog
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sessionID])
@@ -65,12 +64,6 @@ function WhiteboardControl() {
         setContextProps();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [lineWidth, strokeStyle, pageCollection])
-
-    // Clear all canvases and all collections / stacks
-    useEffect(() => {
-        pg.clearAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [needsClear])
 
     function setContextProps() {
         pageCollection.forEach((page) => {
@@ -98,8 +91,12 @@ function WhiteboardControl() {
 
     function handleCreate(e) {
         let boardDim = { x: 10, y: 10 };
-        createBoardRequest(boardDim).then((data) => {
-            setSessionID(data.id);
+        api.createBoardRequest(boardDim).then((data) => {
+            api.getPages(data.id).then((data) => {
+                console.log(data);
+                setSessionID(data.id);
+                setOpenSessionDialog(false); // close dialog
+            }).catch(() => console.log("server cannot get pages"));
         }).catch(() => console.log("server cannot create session"));
     }
 
@@ -111,8 +108,28 @@ function WhiteboardControl() {
         setSidInput(e.target.value);
     }
 
+    function addPage() {
+        if (wsRef.current !== undefined) { // Online
+            api.addPage(sessionID);
+        } else { // Offline
+            pg.addPage(setPageCollection);
+        }
+    }
+
     function deletePage(pageId) {
-        pg.deletePage(pageId, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
+        if (wsRef.current !== undefined) { // Online
+            api.deletePage(sessionID, pageId);
+        } else { // Offline
+            pg.deletePage(pageId, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
+        }
+    }
+
+    function clearAll() {
+        if (wsRef.current !== undefined) { // Online
+            api.clearBoard(sessionID);
+        } else { // Offline
+            pg.clearAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
+        }
     }
 
     return (
@@ -167,7 +184,8 @@ function WhiteboardControl() {
                             strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
                             lineWidth={lineWidth} setLineWidth={setLineWidth}
                             sessionID={sessionID}
-                            setNeedsClear={setNeedsClear}
+                            addPage={addPage}
+                            clearAll={clearAll}
                             hitboxCollection={hitboxCollection} setHitboxCollection={setHitboxCollection}
                             undoStack={undoStack} setUndoStack={setUndoStack}
                             redoStack={redoStack} setRedoStack={setRedoStack}

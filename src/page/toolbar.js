@@ -23,11 +23,6 @@ function Toolbar(props) {
     const minWidth = 1;
     const maxWidth = 40;
 
-    function handleClear() {
-        props.setNeedsClear(x => x + 1); // Local clear
-        api.clearBoard(props.sessionID); // Server clear
-    }
-
     function handleUndo() {
         let undo = props.undoStack.pop();
         if (undo !== undefined) {
@@ -79,17 +74,6 @@ function Toolbar(props) {
         props.setStrokeStyle(color.hex)
     };
 
-    function newPage() {
-        props.setPageCollection((prev) => {
-            let _prev = [...prev];
-            let newPageId = Math.random().toString(36).substring(7);
-            let newCanvasRef = createRef();
-            let newPage = { canvasRef: newCanvasRef, pageId: newPageId };
-            _prev.push(newPage);
-            return _prev
-        })
-    }
-
     const handleSliderChange = (event, newValue) => {
         props.setLineWidth(newValue);
     };
@@ -109,10 +93,10 @@ function Toolbar(props) {
 
     return (
         <div className="toolbar">
-            <IconButton id="iconButton" variant="contained" onClick={handleClear}>
+            <IconButton id="iconButton" variant="contained" onClick={props.clearAll}>
                 <DeleteForeverIcon id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" onClick={newPage}>
+            <IconButton id="iconButton" variant="contained" onClick={props.addPage}>
                 <AddIcon id="iconButtonInner" />
             </IconButton>
             <IconButton id="iconButton" variant="contained" onClick={handleUndo}>

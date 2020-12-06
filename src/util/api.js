@@ -68,3 +68,15 @@ export function createBoardRequest(boardDim) {
 export function clearBoard(sessionID) {
     return sendRequest(`/board/${sessionID}`, "PUT", {action: "clear"});
 }
+
+export function getPages(sessionID) {
+    return sendRequest(`board/${sessionID}/page`, "GET");
+}
+
+export function addPage(sessionID) {
+    return sendRequest(`board/${sessionID}/page`, "POST");
+}
+
+export function deletePage(sessionID, pageID) {
+    return sendRequest(`board/${sessionID}/page/${pageID}`, "DELETE");
+}
