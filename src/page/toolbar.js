@@ -109,21 +109,21 @@ function Toolbar(props) {
 
     return (
         <div className="toolbar">
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={handleClear}>
-                <DeleteForeverIcon color="secondary" id="iconButtonInner" />
+            <IconButton id="iconButton" variant="contained" onClick={handleClear}>
+                <DeleteForeverIcon id="iconButtonInner" />
             </IconButton>
             <IconButton id="iconButton" variant="contained" onClick={newPage}>
-                <AddIcon color="secondary" id="iconButtonInner" />
+                <AddIcon id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={handleUndo}>
-                <SkipPreviousIcon color="secondary" id="iconButtonInner" />
+            <IconButton id="iconButton" variant="contained" onClick={handleUndo}>
+                <SkipPreviousIcon id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={handleRedo}>
-                <SkipNextIcon color="secondary" id="iconButtonInner" />
+            <IconButton id="iconButton" variant="contained" onClick={handleRedo}>
+                <SkipNextIcon id="iconButtonInner" />
             </IconButton>
             <div>
-                <IconButton id="iconButton" variant="contained" color="primary" onClick={handlePaletteClick}>
-                    <PaletteIcon color="secondary" id="iconButtonInner" />
+                <IconButton id="iconButton" variant="contained" onClick={handlePaletteClick}>
+                    <PaletteIcon id="iconButtonInner" />
                 </IconButton>
                 { // Palette Popup
                     displayColorPicker ?
@@ -137,8 +137,8 @@ function Toolbar(props) {
                 }
             </div>
             <div>
-                <IconButton id="iconButton" variant="contained" color="primary" onClick={handleWidthClick}>
-                    <CreateIcon color="secondary" id="iconButtonInner" />
+                <IconButton id="iconButton" variant="contained" onClick={handleWidthClick}>
+                    <CreateIcon id="iconButtonInner" />
                 </IconButton>
                 { // Width Slider Popup
                     displayWidthPicker ?
@@ -146,7 +146,6 @@ function Toolbar(props) {
                             <div className="cover" onClick={handleWidthClose} />
                             <div className="widthpicker">
                                 <Slider
-                                    color="secondary"
                                     value={typeof props.lineWidth === 'number' ? props.lineWidth : 0}
                                     onChange={handleSliderChange}
                                     aria-labelledby="input-slider"

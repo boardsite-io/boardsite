@@ -32,27 +32,27 @@ export default function Viewbar(props) {
 
     return (
         <div className="viewbar">
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={toggleDrawMode}>
-                <PanToolIcon color="secondary" id="iconButtonInner" />
+            <IconButton id="iconButton" variant="contained" onClick={toggleDrawMode}>
+                <PanToolIcon id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={props.zoomIn}>
-                <ZoomInIcon color="secondary" id="iconButtonInner" />
+            <IconButton id="iconButton" variant="contained" onClick={props.zoomIn}>
+                <ZoomInIcon id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={props.zoomOut}>
-                <ZoomOutIcon color="secondary" id="iconButtonInner" />
+            <IconButton id="iconButton" variant="contained" onClick={props.zoomOut}>
+                <ZoomOutIcon id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={props.resetTransform}>
-                <ZoomOutMapIcon color="secondary" id="iconButtonInner" />
+            <IconButton id="iconButton" variant="contained" onClick={props.resetTransform}>
+                <ZoomOutMapIcon id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={up}>
-                <ExpandLessIcon color="secondary" id="iconButtonInner" />
+            <IconButton id="iconButton" variant="contained" onClick={up}>
+                <ExpandLessIcon id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={down}>
-                <ExpandMoreIcon color="secondary" id="iconButtonInner" />
+            <IconButton id="iconButton" variant="contained" onClick={down}>
+                <ExpandMoreIcon id="iconButtonInner" />
             </IconButton>
 
-            <IconButton id="iconButton" variant="contained" color="primary" onClick={stretchToWindow}>
-                <ZoomOutMapIcon color="secondary" id="iconButtonInner" />
+            <IconButton id="iconButton" variant="contained" onClick={stretchToWindow}>
+                <ZoomOutMapIcon id="iconButtonInner" />
             </IconButton>
         </div>
     );
