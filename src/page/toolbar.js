@@ -1,6 +1,5 @@
-import React, { useState, createRef } from 'react';
+import React, { useState } from 'react';
 import { IconButton, Input, Slider } from '@material-ui/core';
-import * as api from '../util/api';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import PaletteIcon from '@material-ui/icons/Palette';

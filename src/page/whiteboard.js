@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, createRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import * as evl from '../util/eventlistener.js';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { IconButton } from '@material-ui/core';
@@ -8,7 +8,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 function Whiteboard(props) {
     const [displayPageSettings, setDisplayPageSettings] = useState(false);
-    const liveCanvasRef = useRef(createRef());
+    const liveCanvasRef = useRef();
 
     function mousedown(e) {
         if (props.isDrawModeRef.current) {

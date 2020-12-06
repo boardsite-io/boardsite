@@ -27,7 +27,6 @@ function WhiteboardControl() {
     const [redoStack, setRedoStack] = useState([]);
     const [strokeStyle, setStrokeStyle] = useState("#000000");
     const [lineWidth, setLineWidth] = useState(3);
-    const [needsClear, setNeedsClear] = useState(0);
     const [openSessionDialog, setOpenSessionDialog] = useState(false);
     
     const wsRef = useRef();
