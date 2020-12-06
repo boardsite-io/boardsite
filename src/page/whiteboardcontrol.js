@@ -13,6 +13,14 @@ import * as pg from '../util/pageactions.js';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 function WhiteboardControl() {
+    const defaultScale = 0.8 * window.innerWidth / 710;
+    const defaultPositionX = (1 - 0.8)/2 * window.innerWidth;
+    const defaultPositionY = 60;
+
+    const { id } = useParams();
+    const [sessionID, setSessionID] = useState("");
+    const [sidInput, setSidInput] = useState("");
+    
     const [pageCollection, setPageCollection] = useState([]);
     const [strokeCollection, setStrokeCollection] = useState({});
     const [hitboxCollection, setHitboxCollection] = useState({});
@@ -23,11 +31,9 @@ function WhiteboardControl() {
     const [needsClear, setNeedsClear] = useState(0);
     const [openSessionDialog, setOpenSessionDialog] = useState(false);
     const [openAccDialog, setOpenAccDialog] = useState(false);
-    const [sessionID, setSessionID] = useState("");
-    const [sidInput, setSidInput] = useState("");
+    
     const wsRef = useRef();
-    const { id } = useParams();
-    const scaleRef = useRef(1);
+    const scaleRef = useRef(defaultScale);
     const isDrawModeRef = useRef(true);
 
     // Connect to session if valid session link
@@ -117,9 +123,9 @@ function WhiteboardControl() {
             <AlertDialog open={openSessionDialog} setOpen={setOpenSessionDialog} sessionID_input={sidInput} setSessionID_input={setSidInput}
                 handleTextFieldChange={handleTextFieldChange} handleJoin={handleJoin} handleCreate={handleCreate} />
             <TransformWrapper
-                defaultPositionX={(1 - 0.8)/2 * window.innerWidth}
-                defaultPositionY={60}
-                defaultScale={0.8 * window.innerWidth / 710}
+                defaultPositionX={defaultPositionX}
+                defaultPositionY={defaultPositionY}
+                defaultScale={defaultScale}
                 onZoomChange={(e) => { scaleRef.current = e.scale }}
                 options={{
                     disabled: false,
