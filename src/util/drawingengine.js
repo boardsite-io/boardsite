@@ -1,4 +1,4 @@
-import * as hd from './handledata.js';
+import * as hd from './messageHandling.js';
 import * as hbx from './hitbox.js';
 
 export function redraw(pageId, canvasRef, setStrokeCollection) {

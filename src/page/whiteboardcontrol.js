@@ -6,8 +6,8 @@ import Viewbar from './viewbar';
 import AlertDialog from '../component/session_dialog';
 import { useParams } from 'react-router-dom';
 import * as api from '../util/api';
-import * as hd from '../util/handledata.js';
-import * as pg from '../util/pageactions.js';
+import * as hd from '../util/messageHandling.js';
+import * as pg from '../util/actionsPage.js';
 
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 

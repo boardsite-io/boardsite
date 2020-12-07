@@ -1,5 +1,5 @@
 import * as draw from './drawingengine.js';
-import * as hd from './handledata.js';
+import * as hd from './messageHandling.js';
 
 let isMouseDown = false;
 let sampleCount = 0;

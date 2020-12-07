@@ -1,36 +1,6 @@
 import * as hbx from './hitbox.js';
 import * as draw from '../util/drawingengine.js';
 
-export function processStrokes(strokeObjectArray, processType, setStrokeCollection, setHitboxCollection, setStack, wsRef, canvasRef) {
-    strokeObjectArray = [...strokeObjectArray];
-    addToStack(strokeObjectArray, processType, setStack, setStrokeCollection); // Redo or Undo Stack (depending on input)
-
-    if (processType === "eraser") {
-        sendStrokeObjectArray(strokeObjectArray, wsRef);
-    }
-
-    strokeObjectArray.forEach((strokeObject) => {
-        let _strokeObject = {...strokeObject};
-        if (processType === "undo") {
-            if (_strokeObject.type === "stroke") {
-                _strokeObject.type = "delete"
-            } else if (_strokeObject.type === "delete") {
-                _strokeObject = _strokeObject.object
-            }
-        }
-
-        if (_strokeObject.type === "stroke") {
-            addToStrokeCollection(_strokeObject, setStrokeCollection, setHitboxCollection, canvasRef);
-        } else if (_strokeObject.type === "delete") {
-            eraseFromStrokeCollection(_strokeObject, setStrokeCollection, setHitboxCollection, canvasRef);
-        }
-
-        if (processType !== "message" && processType !== "eraser") {
-            sendStrokeObjectArray([_strokeObject], wsRef);
-        }
-    });
-}
-
 export function addToStrokeCollection(strokeObject, setStrokeCollection, setHitboxCollection, canvasRef) {
     // Draw stroke
     const canvas = canvasRef.current;
@@ -40,7 +10,7 @@ export function addToStrokeCollection(strokeObject, setStrokeCollection, setHitb
     // Add stroke to strokeCollection
     setStrokeCollection((prev) => {
         let _prev = { ...prev };
-        if (_prev[strokeObject.page_id] === undefined){
+        if (_prev[strokeObject.page_id] === undefined) {
             _prev[strokeObject.page_id] = {};
         }
         _prev[strokeObject.page_id][strokeObject.id] = strokeObject;
@@ -111,7 +81,7 @@ export function addToHitboxCollection(strokeObject, setHitboxCollection) {
         let hitbox = hbx.getHitbox(positions, pointSkipFactor, quadMinPixDist, lineWidth);
 
         // insert new hitboxes
-        if (_prev[pageId] === undefined){
+        if (_prev[pageId] === undefined) {
             _prev[pageId] = {};
         }
 
@@ -141,9 +111,59 @@ export function eraseFromHitboxCollection(strokeObject, setHitboxCollection) {
     });
 }
 
-// Send strokeObjectArray to websocket
-export function sendStrokeObjectArray(strokeObjectArray, wsRef) {
-    if (strokeObjectArray.length > 0 && wsRef.current !== undefined) {
-        wsRef.current.send(JSON.stringify(strokeObjectArray));
-    }
+export function clearPageData(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack) {
+    // Delete from strokeCollection
+    setStrokeCollection((prev) => {
+        delete prev[pageid]
+        return prev;
+    })
+
+    // Delete from hitboxCollection
+    setHitboxCollection((prev) => {
+        delete prev[pageid]
+        return prev;
+    })
+
+    setUndoStack((prev) => {
+        let newPrev = [];
+        prev.forEach((actionArray, index) => {
+            let action = actionArray[0];
+            if (action.page_id !== pageid) {
+                newPrev.push(prev[index]);
+            }
+        })
+        return newPrev;
+    })
+
+    setRedoStack((prev) => {
+        let newPrev = [];
+        prev.forEach((actionArray, index) => {
+            let action = actionArray[0];
+            if (action.page_id !== pageid) {
+                newPrev.push(prev[index]);
+            }
+        })
+        return newPrev;
+    })
 }
+
+export function getCanvasIndex(pageId, pageCollection) {
+    let idx = 0;
+    pageCollection.forEach((page, index) => {
+        if (page.pageId === pageId) {
+            idx = index;
+        }
+    })
+    return idx;
+}
+
+export function deletePageFromCollection(pageId, setPageCollection) {
+    setPageCollection((prev) => {
+        let idx = getCanvasIndex(pageId, prev);
+        return [...prev.slice(0, idx), ...prev.slice(idx + 1)];
+    })
+}
+
+
+
+

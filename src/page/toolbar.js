@@ -10,7 +10,7 @@ import SkipNextIcon from '@material-ui/icons/SkipNext';
 import AddIcon from '@material-ui/icons/Add';
 import { SketchPicker } from 'react-color'
 
-import * as hd from '../util/handledata.js';
+import * as hd from '../util/messageHandling.js';
 
 // import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 // import RangeSlider from 'react-bootstrap-range-slider';
