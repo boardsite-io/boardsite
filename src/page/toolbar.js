@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IconButton, Input, Slider } from '@material-ui/core';
+import { Button, IconButton, Input, Slider } from '@material-ui/core';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import PaletteIcon from '@material-ui/icons/Palette';
@@ -90,12 +90,21 @@ function Toolbar(props) {
         }
     };
 
+    function debug() {
+        console.log(props.undoStack, props.redoStack, 
+            props.pageCollection, props.hitboxCollection,
+            props.strokeCollection);
+    }
+
     return (
         <div className="toolbar">
+            <Button style={{ backgroundColor: "green" }} onClick={debug}>
+                debug
+            </Button>
             <IconButton id="iconButton" variant="contained" onClick={props.clearAll}>
                 <DeleteForeverIcon id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" onClick={props.addPage}>
+            <IconButton id="iconButton" variant="contained" onClick={() => props.addPage()}>
                 <AddIcon id="iconButtonInner" />
             </IconButton>
             <IconButton id="iconButton" variant="contained" onClick={handleUndo}>

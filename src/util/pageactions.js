@@ -13,15 +13,32 @@ export function clearAll(setStrokeCollection, setHitboxCollection, setUndoStack,
     });
 }
 
-export function addPage(setPageCollection) {
+export function addPage(pageid, setPageCollection) {
     setPageCollection((prev) => {
         let _prev = [...prev];
         let newPageId = Math.random().toString(36).substring(7);
         let newCanvasRef = createRef();
         let newPage = { canvasRef: newCanvasRef, pageId: newPageId };
-        _prev.push(newPage);
+
+        if (pageid !== undefined) {
+            let index = getCanvasIndex(pageid, _prev);
+            _prev.splice(index, 0, newPage);
+        } else {
+            _prev.push(newPage);
+        }
+
         return _prev
     })
+}
+
+function getCanvasIndex(pageId, pageCollection) {
+    let idx = 0;
+    pageCollection.forEach((page, index) => {
+        if (page.pageId === pageId) {
+            idx = index;
+        }
+    })
+    return idx;
 }
 
 export function deletePage(pageId, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection) {

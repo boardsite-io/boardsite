@@ -75,15 +75,6 @@ function Whiteboard(props) {
         setDisplayPageSettings(false);
     }
 
-    function clearPage() {
-        console.log("This should clear the page");
-        console.log(props.scaleRef);
-    }
-
-    function addPage() {
-        console.log("This should add a page");
-    }
-
     return (
         <div className="page">
             <div id="canvasWrapper">
@@ -102,10 +93,10 @@ function Whiteboard(props) {
                                 <IconButton id="iconButton" variant="contained" onClick={() => props.deletePage(props.pageId)}>
                                     <DeleteIcon color="secondary" id="iconButtonInner" />
                                 </IconButton>
-                                <IconButton id="iconButton" variant="contained" onClick={clearPage}>
+                                <IconButton id="iconButton" variant="contained" onClick={() => props.clearPage(props.pageId)}>
                                     <ClearIcon color="secondary" id="iconButtonInner" />
                                 </IconButton>
-                                <IconButton id="iconButton" variant="contained" onClick={addPage}>
+                                <IconButton id="iconButton" variant="contained" onClick={() => props.addPage(props.pageId)}>
                                     <AddIcon color="secondary" id="iconButtonInner" />
                                 </IconButton>
                             </div>

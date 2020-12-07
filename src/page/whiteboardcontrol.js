@@ -107,28 +107,36 @@ function WhiteboardControl() {
         setSidInput(e.target.value);
     }
 
-    function addPage() {
+    /** Function for adding pages
+     * 
+     * @param {optional param - leave empty for appending pages} pageid 
+     */
+    function addPage(pageid) {
         if (wsRef.current !== undefined) { // Online
             api.addPage(sessionID);
         } else { // Offline
-            pg.addPage(setPageCollection);
+            pg.addPage(pageid, setPageCollection);
         }
     }
-
-    function deletePage(pageId) {
-        if (wsRef.current !== undefined) { // Online
-            api.deletePage(sessionID, pageId);
-        } else { // Offline
-            pg.deletePage(pageId, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
-        }
-    }
-
+    
     function clearAll() {
         if (wsRef.current !== undefined) { // Online
             api.clearBoard(sessionID);
         } else { // Offline
             pg.clearAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
         }
+    }
+
+    function deletePage(pageid) {
+        if (wsRef.current !== undefined) { // Online
+            api.deletePage(sessionID, pageid);
+        } else { // Offline
+            pg.deletePage(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
+        }
+    }
+
+    function clearPage(pageid) {
+
     }
 
     return (
@@ -146,7 +154,7 @@ function WhiteboardControl() {
                     maxScale: 2,
                     limitToBounds: false,
                     limitToWrapper: false,
-                    centerContent: false
+                    centerContent: false,
                 }}
                 scalePadding={{
                     disabled: true
@@ -196,14 +204,16 @@ function WhiteboardControl() {
                                     {pageCollection.map((page) => {
                                         return (
                                             <Whiteboard
-                                                isDrawModeRef={isDrawModeRef}
                                                 className="page"
+                                                wsRef={wsRef}
+                                                isDrawModeRef={isDrawModeRef}
+                                                canvasRef={page.canvasRef}
                                                 scaleRef={scaleRef}
                                                 key={page.pageId}
                                                 pageId={page.pageId}
                                                 deletePage={deletePage}
-                                                canvasRef={page.canvasRef}
-                                                wsRef={wsRef}
+                                                clearPage={clearPage}
+                                                addPage={addPage}
                                                 setPageCollection={setPageCollection}
                                                 setStrokeCollection={setStrokeCollection}
                                                 setHitboxCollection={setHitboxCollection}
