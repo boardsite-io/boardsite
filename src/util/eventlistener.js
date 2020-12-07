@@ -1,5 +1,5 @@
 import * as draw from './drawingengine.js';
-import * as hd from './messageHandling.js';
+import * as proc from './processing.js';
 
 let isMouseDown = false;
 let sampleCount = 0;
@@ -100,7 +100,7 @@ export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, 
         const liveCanvas = liveCanvasRef.current;
         const ctxLive = liveCanvas.getContext('2d');
         ctxLive.clearRect(0, 0, 1240, 1754);
-        hd.processStrokes([strokeObject], "stroke", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
+        proc.processStrokes([strokeObject], "stroke", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
     } else {
         draw.eraser(setHitboxCollection, setStrokeCollection, setUndoStack, strokeObject, wsRef, canvasRef);
     }

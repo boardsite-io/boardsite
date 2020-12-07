@@ -1,5 +1,5 @@
 import { createRef } from 'react';
-import * as dt from './actionsData.js';
+import * as actData from './actionsData.js';
 
 export function clearAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection) {
     pageCollection.forEach((page) => {
@@ -22,7 +22,7 @@ export function addPage(pageid, setPageCollection) {
         let newPage = { canvasRef: newCanvasRef, pageId: newPageId };
 
         if (pageid !== undefined) {
-            let index = dt.getCanvasIndex(pageid, _prev);
+            let index = actData.getCanvasIndex(pageid, _prev);
             _prev.splice(index, 0, newPage);
         } else {
             _prev.push(newPage);
@@ -38,6 +38,6 @@ export function deletePage(pageid, setStrokeCollection, setHitboxCollection, set
         return;
     }
 
-    dt.clearPageData(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack)
-    dt.deletePageFromCollection(pageid, setPageCollection);
+    actData.clearPageData(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack)
+    actData.deletePageFromCollection(pageid, setPageCollection);
 }

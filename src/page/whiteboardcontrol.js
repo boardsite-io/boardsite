@@ -6,8 +6,9 @@ import Viewbar from './viewbar';
 import AlertDialog from '../component/session_dialog';
 import { useParams } from 'react-router-dom';
 import * as api from '../util/api';
-import * as hd from '../util/messageHandling.js';
-import * as pg from '../util/actionsPage.js';
+import * as proc from '../util/processing.js';
+import * as actPage from '../util/actionsPage.js';
+import * as actData from '../util/actionsData.js';
 
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
@@ -77,12 +78,12 @@ function WhiteboardControl() {
     function onMsgHandle(data) {
         const strokeObjectArray = JSON.parse(data.data);
         if (strokeObjectArray.length === 0) {
-            pg.clearAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
+            actPage.clearAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
         }
         else {
             let pageId = strokeObjectArray[0].pageId;
             let canvasRef = pageCollection[pageId];
-            hd.processStrokes(strokeObjectArray, "message", setStrokeCollection, setHitboxCollection,
+            proc.processStrokes(strokeObjectArray, "message", setStrokeCollection, setHitboxCollection,
                 setUndoStack, wsRef, canvasRef);
             setContextProps();
         }
@@ -115,7 +116,7 @@ function WhiteboardControl() {
         if (wsRef.current !== undefined) { // Online
             api.addPage(sessionID);
         } else { // Offline
-            pg.addPage(pageid, setPageCollection);
+            actPage.addPage(pageid, setPageCollection);
         }
     }
     
@@ -123,7 +124,7 @@ function WhiteboardControl() {
         if (wsRef.current !== undefined) { // Online
             api.clearBoard(sessionID);
         } else { // Offline
-            pg.clearAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
+            actPage.clearAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
         }
     }
 
@@ -131,12 +132,36 @@ function WhiteboardControl() {
         if (wsRef.current !== undefined) { // Online
             api.deletePage(sessionID, pageid);
         } else { // Offline
-            pg.deletePage(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
+            actPage.deletePage(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
         }
     }
 
     function clearPage(pageid) {
 
+    }
+
+    function handleUndo() {
+        let undo = undoStack.pop();
+        if (undo !== undefined) {
+            let pageId = undo[0].page_id;
+            let canvasRef = actData.getCanvasRef(pageId, pageCollection);
+            proc.processStrokes(undo, "undo", setStrokeCollection, setHitboxCollection,
+                setRedoStack, wsRef, canvasRef);
+        }
+    }
+
+    function handleRedo() {
+        let redo = redoStack.pop();
+        if (redo !== undefined) {
+            let pageId = redo[0].page_id;
+            let canvasRef = actData.getCanvasRef(pageId, pageCollection);
+            proc.processStrokes(redo, "redo", setStrokeCollection, setHitboxCollection,
+                setUndoStack, wsRef, canvasRef);
+        }
+    }
+
+    function debug() {
+        console.log(pageCollection, hitboxCollection, strokeCollection);
     }
 
     return (
@@ -187,16 +212,14 @@ function WhiteboardControl() {
                             setPositionY={setPositionY}
                         />
                         <Toolbar wsRef={wsRef}
+                            debug={debug}
+                            handleUndo={handleUndo} 
+                            handleRedo={handleRedo}
                             strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
-                            strokeCollection={strokeCollection} setStrokeCollection={setStrokeCollection}
                             lineWidth={lineWidth} setLineWidth={setLineWidth}
                             sessionID={sessionID}
                             addPage={addPage}
                             clearAll={clearAll}
-                            hitboxCollection={hitboxCollection} setHitboxCollection={setHitboxCollection}
-                            undoStack={undoStack} setUndoStack={setUndoStack}
-                            redoStack={redoStack} setRedoStack={setRedoStack}
-                            pageCollection={pageCollection} setPageCollection={setPageCollection}
                         />
                         <TransformComponent>
                             <div className="pagecollectionouter">

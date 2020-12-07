@@ -1,5 +1,5 @@
 import * as hbx from './hitbox.js';
-import * as draw from '../util/drawingengine.js';
+import * as draw from './drawingengine.js';
 
 export function addToStrokeCollection(strokeObject, setStrokeCollection, setHitboxCollection, canvasRef) {
     // Draw stroke
@@ -164,6 +164,14 @@ export function deletePageFromCollection(pageId, setPageCollection) {
     })
 }
 
-
+export function getCanvasRef(pageId, pageCollection) {
+    let canvasRef = null;
+    pageCollection.forEach((page) => {
+        if (page.pageId === pageId) {
+            canvasRef = page.canvasRef;
+        }
+    })
+    return canvasRef;
+}
 
 

@@ -1,4 +1,4 @@
-import * as hd from './messageHandling.js';
+import * as proc from './processing.js';
 import * as hbx from './hitbox.js';
 
 export function redraw(pageId, canvasRef, setStrokeCollection) {
@@ -59,7 +59,7 @@ export function eraser(setHitboxCollection, setStrokeCollection, setUndoStack, s
         return _prev;
     });
 
-    hd.processStrokes(strokeObjectArray, "eraser", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
+    proc.processStrokes(strokeObjectArray, "eraser", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
 }
 
 // draw line

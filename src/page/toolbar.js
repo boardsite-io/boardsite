@@ -10,47 +10,12 @@ import SkipNextIcon from '@material-ui/icons/SkipNext';
 import AddIcon from '@material-ui/icons/Add';
 import { SketchPicker } from 'react-color'
 
-import * as hd from '../util/messageHandling.js';
-
-// import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
-// import RangeSlider from 'react-bootstrap-range-slider';
-
 function Toolbar(props) {
     const [displayColorPicker, setDisplayColorPicker] = useState(false);
     const [displayWidthPicker, setDisplayWidthPicker] = useState(false);
     const [color, setColor] = useState({ r: '0', g: '0', b: '0', a: '1', });
     const minWidth = 1;
     const maxWidth = 40;
-
-    function handleUndo() {
-        let undo = props.undoStack.pop();
-        if (undo !== undefined) {
-            let pageId = undo[0].page_id;
-            let canvasRef = getCanvasRef(pageId);
-            hd.processStrokes(undo, "undo", props.setStrokeCollection, props.setHitboxCollection,
-                props.setRedoStack, props.wsRef, canvasRef);
-        }
-    }
-
-    function handleRedo() {
-        let redo = props.redoStack.pop();
-        if (redo !== undefined) {
-            let pageId = redo[0].page_id;
-            let canvasRef = getCanvasRef(pageId);
-            hd.processStrokes(redo, "redo", props.setStrokeCollection, props.setHitboxCollection,
-                props.setUndoStack, props.wsRef, canvasRef);
-        }
-    }
-
-    function getCanvasRef(pageId) {
-        let canvasRef = null;
-        props.pageCollection.forEach((page) => {
-            if (page.pageId === pageId) {
-                canvasRef = page.canvasRef;
-            }
-        })
-        return canvasRef;
-    }
 
     function handlePaletteClick() {
         setDisplayColorPicker(!displayColorPicker);
@@ -90,15 +55,9 @@ function Toolbar(props) {
         }
     };
 
-    function debug() {
-        console.log(props.undoStack, props.redoStack, 
-            props.pageCollection, props.hitboxCollection,
-            props.strokeCollection);
-    }
-
     return (
         <div className="toolbar">
-            <Button style={{ backgroundColor: "green" }} onClick={debug}>
+            <Button style={{ backgroundColor: "green" }} onClick={props.debug}>
                 debug
             </Button>
             <IconButton id="iconButton" variant="contained" onClick={props.clearAll}>
@@ -107,10 +66,10 @@ function Toolbar(props) {
             <IconButton id="iconButton" variant="contained" onClick={() => props.addPage()}>
                 <AddIcon id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" onClick={handleUndo}>
+            <IconButton id="iconButton" variant="contained" onClick={props.handleUndo}>
                 <SkipPreviousIcon id="iconButtonInner" />
             </IconButton>
-            <IconButton id="iconButton" variant="contained" onClick={handleRedo}>
+            <IconButton id="iconButton" variant="contained" onClick={props.handleRedo}>
                 <SkipNextIcon id="iconButtonInner" />
             </IconButton>
             <div>
