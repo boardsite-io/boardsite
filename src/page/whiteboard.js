@@ -93,7 +93,7 @@ function Whiteboard(props) {
                                 <IconButton id="iconButton" variant="contained" onClick={() => props.deletePage(props.pageId)}>
                                     <DeleteIcon color="secondary" id="iconButtonInner" />
                                 </IconButton>
-                                <IconButton id="iconButton" variant="contained" onClick={() => props.clearPage(props.pageId)}>
+                                <IconButton id="iconButton" variant="contained" onClick={() => props.clearPage(props.pageId, props.canvasRef)}>
                                     <ClearIcon color="secondary" id="iconButtonInner" />
                                 </IconButton>
                                 <IconButton id="iconButton" variant="contained" onClick={() => props.addPage(props.pageId)}>

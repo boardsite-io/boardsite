@@ -132,12 +132,16 @@ function WhiteboardControl() {
         if (wsRef.current !== undefined) { // Online
             api.deletePage(sessionID, pageid);
         } else { // Offline
-            actPage.deletePage(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
+            actPage.deletePage(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, setPageCollection);
         }
     }
 
-    function clearPage(pageid) {
-
+    function clearPage(pageid, canvasRef) {
+        if (wsRef.current !== undefined) { // Online
+            // api.clearPage(sessionID, pageid);
+        } else { // Offline
+            actPage.clearPage(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, canvasRef);
+        }
     }
 
     function handleUndo() {

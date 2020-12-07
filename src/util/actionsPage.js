@@ -32,12 +32,16 @@ export function addPage(pageid, setPageCollection) {
     })
 }
 
-export function deletePage(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection) {
-    if (pageCollection.length === 1) {
-        clearAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
-        return;
-    }
-
-    actData.clearPageData(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack)
+export function deletePage(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, setPageCollection) {
+    actData.clearPageData(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack);
     actData.deletePageFromCollection(pageid, setPageCollection);
+}
+
+export function clearPage(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, canvasRef) {    
+    actData.clearPageData(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack);
+    
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, 1240, 1754);
+
 }

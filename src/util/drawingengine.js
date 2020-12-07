@@ -58,8 +58,10 @@ export function eraser(setHitboxCollection, setStrokeCollection, setUndoStack, s
 
         return _prev;
     });
-
-    proc.processStrokes(strokeObjectArray, "eraser", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
+    
+    if(strokeObjectArray.length !== 0) {
+        proc.processStrokes(strokeObjectArray, "eraser", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
+    }
 }
 
 // draw line
