@@ -6,28 +6,32 @@ let sampleCount = 0;
 let lastX = -1;
 let lastY = -1;
 let stroke = [];
-let isEraser = false;
-const canvasResolutionFactor = 2; 
+const canvasResolutionFactor = 2;
+let _activeTool = "pen";
 
-export function handleCanvasMouseDown(e, liveCanvasRef, canvasRef, scaleRef) {
+export function handleCanvasMouseDown(e, liveCanvasRef, canvasRef, scaleRef, setActiveTool) {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     const liveCanvas = liveCanvasRef.current;
     const ctxLive = liveCanvas.getContext('2d');
+
+    setActiveTool((activeTool) => {
+        _activeTool = activeTool;
+        return activeTool;
+    });
 
     // Share stroke information with live canvas context
     ctxLive.lineWidth = ctx.lineWidth;
     ctxLive.strokeStyle = ctx.strokeStyle;
 
     if (e.type === "touchstart") {
-        isEraser = false;
         e = e.changedTouches[0];
     }
     else {
         if (e.button === 0) { // left-click
-            isEraser = false;
+            // console.log("Hi");
         } else if (e.button === 2) { // right-click
-            isEraser = true;
+            _activeTool = "eraser";
         }
     }
 
@@ -61,7 +65,7 @@ export function handleCanvasMouseMove(e, liveCanvasRef, canvasRef, scaleRef) {
             const liveCanvas = liveCanvasRef.current;
             const ctxLive = liveCanvas.getContext('2d');
             
-            if (!isEraser) {
+            if (_activeTool !== "eraser") {
                 draw.drawLine(lastX, lastY, x, y, ctxLive);
             }
             lastX = x;
@@ -96,11 +100,11 @@ export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, 
         position: stroke,
     };
 
-    if (!isEraser) {
+    if (_activeTool !== "eraser") {
+        proc.processStrokes([strokeObject], "stroke", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
         const liveCanvas = liveCanvasRef.current;
         const ctxLive = liveCanvas.getContext('2d');
         ctxLive.clearRect(0, 0, 1240, 1754);
-        proc.processStrokes([strokeObject], "stroke", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
     } else {
         draw.eraser(setHitboxCollection, setStrokeCollection, setUndoStack, strokeObject, wsRef, canvasRef);
     }

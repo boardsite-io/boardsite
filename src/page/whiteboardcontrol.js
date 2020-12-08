@@ -248,6 +248,7 @@ function WhiteboardControl() {
                                                 setHitboxCollection={setHitboxCollection}
                                                 setUndoStack={setUndoStack}
                                                 setRedoStack={setRedoStack}
+                                                setActiveTool={setActiveTool}
                                             />
                                         );
                                     })}

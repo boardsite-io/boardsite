@@ -13,7 +13,7 @@ function Whiteboard(props) {
 
     function mousedown(e) {
         if (props.isDrawModeRef.current) {
-            evl.handleCanvasMouseDown(e, liveCanvasRef, props.canvasRef, props.scaleRef)
+            evl.handleCanvasMouseDown(e, liveCanvasRef, props.canvasRef, props.scaleRef, props.setActiveTool)
         }
     }
     function mousemove(e) {
