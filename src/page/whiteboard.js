@@ -83,7 +83,7 @@ function Whiteboard(props) {
                 <canvas id="canvasLive" ref={liveCanvasRef} />
             </div>
             <div>
-                <Tooltip id="tooltip" title="page settings" TransitionProps={{ timeout: 0 }}>
+                <Tooltip id="tooltip" title="page settings" TransitionProps={{ timeout: 0 }} placement="bottom">
                     <IconButton id="iconButton" variant="contained" onClick={openPageSettings}>
                         <MoreVertIcon color="secondary" id="iconButtonInner" />
                     </IconButton>
@@ -93,17 +93,17 @@ function Whiteboard(props) {
                         <div className="popup">
                             <div className="cover" onClick={closePageSettings} />
                             <div className="pagesettings">
-                                <Tooltip id="tooltip" title="clear Page" TransitionProps={{ timeout: 0 }}>
+                                <Tooltip id="tooltip" title="clear Page" TransitionProps={{ timeout: 0 }} placement="left">
                                     <IconButton id="iconButton" variant="contained" onClick={() => props.clearPage(props.pageId, props.canvasRef)}>
                                         <ClearIcon color="secondary" id="iconButtonInner" />
                                     </IconButton>
                                 </Tooltip>
-                                <Tooltip id="tooltip" title="add page" TransitionProps={{ timeout: 0 }}>
+                                <Tooltip id="tooltip" title="add page" TransitionProps={{ timeout: 0 }} placement="left">
                                     <IconButton id="iconButton" variant="contained" onClick={() => props.addPage(props.pageId)}>
                                         <AddIcon color="secondary" id="iconButtonInner" />
                                     </IconButton>
                                 </Tooltip>
-                                <Tooltip id="tooltip" title="delete page" TransitionProps={{ timeout: 0 }}>
+                                <Tooltip id="tooltip" title="delete page" TransitionProps={{ timeout: 0 }} placement="left">
                                     <IconButton id="iconButton" variant="contained" onClick={() => props.deletePage(props.pageId)}>
                                         <RemoveIcon color="secondary" id="iconButtonInner" />
                                     </IconButton>

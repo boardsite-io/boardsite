@@ -61,28 +61,28 @@ function Toolbar(props) {
             <Button style={{ backgroundColor: "green" }} onClick={props.debug}>
                 debug
             </Button>
-            <Tooltip id="tooltip" title="delete all pages" TransitionProps={{ timeout: 0 }}>
+            <Tooltip id="tooltip" title="delete all pages" TransitionProps={{ timeout: 0 }} placement="right">
                 <IconButton id="iconButton" variant="contained" onClick={props.clearAll}>
                     <DeleteForeverIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
-            <Tooltip id="tooltip" title="add page" TransitionProps={{ timeout: 0 }}>
+            <Tooltip id="tooltip" title="add page" TransitionProps={{ timeout: 0 }} placement="right">
                 <IconButton id="iconButton" variant="contained" onClick={() => props.addPage()}>
                     <AddIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
-            <Tooltip id="tooltip" title="undo" TransitionProps={{ timeout: 0 }}>
+            <Tooltip id="tooltip" title="undo" TransitionProps={{ timeout: 0 }} placement="right">
                 <IconButton id="iconButton" variant="contained" onClick={props.handleUndo}>
                     <UndoIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
-            <Tooltip id="tooltip" title="redo" TransitionProps={{ timeout: 0 }}>
+            <Tooltip id="tooltip" title="redo" TransitionProps={{ timeout: 0 }} placement="right">
                 <IconButton id="iconButton" variant="contained" onClick={props.handleRedo}>
                     <RedoIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
             <div>
-                <Tooltip id="tooltip" title="choose color" TransitionProps={{ timeout: 0 }}>
+                <Tooltip id="tooltip" title="choose color" TransitionProps={{ timeout: 0 }} placement="right">
                     <IconButton id="iconButton" variant="contained" onClick={handlePaletteClick}>
                         <PaletteIcon id="iconButtonInner" />
                     </IconButton>
@@ -99,7 +99,7 @@ function Toolbar(props) {
                 }
             </div>
             <div>
-                <Tooltip id="tooltip" title="choose width" TransitionProps={{ timeout: 0 }}>
+                <Tooltip id="tooltip" title="choose width" TransitionProps={{ timeout: 0 }} placement="right">
                     <IconButton id="iconButton" variant="contained" onClick={handleWidthClick}>
                         <CreateIcon id="iconButtonInner" />
                     </IconButton>
