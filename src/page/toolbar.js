@@ -4,11 +4,11 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import PaletteIcon from '@material-ui/icons/Palette';
 import CreateIcon from '@material-ui/icons/Create';
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
-
+import UndoIcon from '@material-ui/icons/Undo';
+import RedoIcon from '@material-ui/icons/Redo';
 import AddIcon from '@material-ui/icons/Add';
 import { SketchPicker } from 'react-color'
+import Tooltip from '@material-ui/core/Tooltip';
 
 function Toolbar(props) {
     const [displayColorPicker, setDisplayColorPicker] = useState(false);
@@ -60,22 +60,32 @@ function Toolbar(props) {
             <Button style={{ backgroundColor: "green" }} onClick={props.debug}>
                 debug
             </Button>
-            <IconButton id="iconButton" variant="contained" onClick={props.clearAll}>
-                <DeleteForeverIcon id="iconButtonInner" />
-            </IconButton>
-            <IconButton id="iconButton" variant="contained" onClick={() => props.addPage()}>
-                <AddIcon id="iconButtonInner" />
-            </IconButton>
-            <IconButton id="iconButton" variant="contained" onClick={props.handleUndo}>
-                <SkipPreviousIcon id="iconButtonInner" />
-            </IconButton>
-            <IconButton id="iconButton" variant="contained" onClick={props.handleRedo}>
-                <SkipNextIcon id="iconButtonInner" />
-            </IconButton>
-            <div>
-                <IconButton id="iconButton" variant="contained" onClick={handlePaletteClick}>
-                    <PaletteIcon id="iconButtonInner" />
+            <Tooltip id="tooltip" title="delete all pages">
+                <IconButton id="iconButton" variant="contained" onClick={props.clearAll}>
+                    <DeleteForeverIcon id="iconButtonInner" />
                 </IconButton>
+            </Tooltip>
+            <Tooltip id="tooltip" title="add page">
+                <IconButton id="iconButton" variant="contained" onClick={() => props.addPage()}>
+                    <AddIcon id="iconButtonInner" />
+                </IconButton>
+            </Tooltip>
+            <Tooltip id="tooltip" title="un-do">
+                <IconButton id="iconButton" variant="contained" onClick={props.handleUndo}>
+                    <UndoIcon id="iconButtonInner" />
+                </IconButton>
+            </Tooltip>
+            <Tooltip id="tooltip" title="re-do">
+                <IconButton id="iconButton" variant="contained" onClick={props.handleRedo}>
+                    <RedoIcon id="iconButtonInner" />
+                </IconButton>
+            </Tooltip>
+            <div>
+                <Tooltip id="tooltip" title="choose color">
+                    <IconButton id="iconButton" variant="contained" onClick={handlePaletteClick}>
+                        <PaletteIcon id="iconButtonInner" />
+                    </IconButton>
+                </Tooltip>
                 { // Palette Popup
                     displayColorPicker ?
                         <div className="popup">
@@ -88,9 +98,11 @@ function Toolbar(props) {
                 }
             </div>
             <div>
-                <IconButton id="iconButton" variant="contained" onClick={handleWidthClick}>
-                    <CreateIcon id="iconButtonInner" />
-                </IconButton>
+                <Tooltip id="tooltip" title="choose width">
+                    <IconButton id="iconButton" variant="contained" onClick={handleWidthClick}>
+                        <CreateIcon id="iconButtonInner" />
+                    </IconButton>
+                </Tooltip>
                 { // Width Slider Popup
                     displayWidthPicker ?
                         <div className="popup">

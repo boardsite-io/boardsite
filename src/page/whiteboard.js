@@ -3,8 +3,9 @@ import * as evl from '../util/eventlistener.js';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { IconButton } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
-import DeleteIcon from '@material-ui/icons/Delete';
+import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
+import Tooltip from '@material-ui/core/Tooltip';
 
 function Whiteboard(props) {
     const [displayPageSettings, setDisplayPageSettings] = useState(false);
@@ -82,23 +83,31 @@ function Whiteboard(props) {
                 <canvas id="canvasLive" ref={liveCanvasRef} />
             </div>
             <div>
-                <IconButton id="iconButton" variant="contained" onClick={openPageSettings}>
-                    <MoreVertIcon color="secondary" id="iconButtonInner" />
-                </IconButton>
+                <Tooltip id="tooltip" title="Page Settings">
+                    <IconButton id="iconButton" variant="contained" onClick={openPageSettings}>
+                        <MoreVertIcon color="secondary" id="iconButtonInner" />
+                    </IconButton>
+                </Tooltip>
                 { // Palette Popup
                     displayPageSettings ?
                         <div className="popup">
                             <div className="cover" onClick={closePageSettings} />
                             <div className="pagesettings">
-                                <IconButton id="iconButton" variant="contained" onClick={() => props.deletePage(props.pageId)}>
-                                    <DeleteIcon color="secondary" id="iconButtonInner" />
-                                </IconButton>
-                                <IconButton id="iconButton" variant="contained" onClick={() => props.clearPage(props.pageId, props.canvasRef)}>
-                                    <ClearIcon color="secondary" id="iconButtonInner" />
-                                </IconButton>
-                                <IconButton id="iconButton" variant="contained" onClick={() => props.addPage(props.pageId)}>
-                                    <AddIcon color="secondary" id="iconButtonInner" />
-                                </IconButton>
+                                <Tooltip id="tooltip" title="Clear Page">
+                                    <IconButton id="iconButton" variant="contained" onClick={() => props.clearPage(props.pageId, props.canvasRef)}>
+                                        <ClearIcon color="secondary" id="iconButtonInner" />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip id="tooltip" title="Add Page">
+                                    <IconButton id="iconButton" variant="contained" onClick={() => props.addPage(props.pageId)}>
+                                        <AddIcon color="secondary" id="iconButtonInner" />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip id="tooltip" title="Delete Page">
+                                    <IconButton id="iconButton" variant="contained" onClick={() => props.deletePage(props.pageId)}>
+                                        <RemoveIcon color="secondary" id="iconButtonInner" />
+                                    </IconButton>
+                                </Tooltip>
                             </div>
                         </div>
                         : null
