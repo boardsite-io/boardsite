@@ -33,37 +33,37 @@ export default function Viewbar(props) {
 
     return (
         <div className="viewbar">
-            <Tooltip id="tooltip" title="toggle panning">
+            <Tooltip id="tooltip" title="toggle panning" TransitionProps={{ timeout: 0 }}>
                 <IconButton id="iconButton" variant="contained" onClick={toggleDrawMode}>
                     <PanToolIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
-            <Tooltip id="tooltip" title="zoom in">
+            <Tooltip id="tooltip" title="zoom in" TransitionProps={{ timeout: 0 }}>
                 <IconButton id="iconButton" variant="contained" onClick={props.zoomIn}>
                     <ZoomInIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
-            <Tooltip id="tooltip" title="zoom out">
+            <Tooltip id="tooltip" title="zoom out" TransitionProps={{ timeout: 0 }}>
                 <IconButton id="iconButton" variant="contained" onClick={props.zoomOut}>
                     <ZoomOutIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
-            <Tooltip id="tooltip" title="reset transform">
+            <Tooltip id="tooltip" title="reset transform" TransitionProps={{ timeout: 0 }}>
                 <IconButton id="iconButton" variant="contained" onClick={props.resetTransform}>
                     <ZoomOutMapIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
-            <Tooltip id="tooltip" title="scroll up">
+            <Tooltip id="tooltip" title="scroll up" TransitionProps={{ timeout: 0 }}>
                 <IconButton id="iconButton" variant="contained" onClick={up}>
                     <ExpandLessIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
-            <Tooltip id="tooltip" title="scroll down">
+            <Tooltip id="tooltip" title="scroll down" TransitionProps={{ timeout: 0 }}>
                 <IconButton id="iconButton" variant="contained" onClick={down}>
                     <ExpandMoreIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
-            <Tooltip id="tooltip" title="fit width to page">
+            <Tooltip id="tooltip" title="fit width to page" TransitionProps={{ timeout: 0 }}>
                 <IconButton id="iconButton" variant="contained" onClick={stretchToWindow}>
                     <ZoomOutMapIcon id="iconButtonInner" />
                 </IconButton>

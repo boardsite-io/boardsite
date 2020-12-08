@@ -17,17 +17,17 @@ export default function Homebar(props) {
 
     return (
         <div className="homebar">
-            <Tooltip id="tooltip" title="Join or Create Session">
+            <Tooltip id="tooltip" title="join or create session" TransitionProps={{ timeout: 0 }}>
                 <IconButton id="iconButton" variant="contained" onClick={() => props.setOpenSessionDialog(true)}>
                     <GroupAddIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
-            <Tooltip id="tooltip" title="Save">
+            <Tooltip id="tooltip" title="save" TransitionProps={{ timeout: 0 }}>
                 <IconButton id="iconButton" variant="contained" onClick={saveBoard}>
                     <SaveIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
-            <Tooltip id="tooltip" title="Load">
+            <Tooltip id="tooltip" title="load" TransitionProps={{ timeout: 0 }}>
                 <IconButton id="iconButton" variant="contained" onClick={loadBoard}>
                     <GetAppIcon id="iconButtonInner" />
                 </IconButton>
