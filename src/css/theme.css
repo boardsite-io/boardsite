@@ -1,10 +1,11 @@
 :root {
     --primary: #00D2BE;
     --secondary: rgb(73, 73, 82);
-    --tertiary: rgba(226, 226, 226, 0.616); /* bar background */ 
+    --tertiary: rgba(167, 167, 167, 0.637); /* bar background */ 
     --background: #4A4A4A;
     --pagesbackground: #88888888;
     --buttonshadow: 0px 0px 3px #00000088;
+    --toolring: #11292673;
     --canvas: #ffffff;
     --canvasborder: 1px solid rgb(104, 104, 104);
     --canvasheight: 877px;

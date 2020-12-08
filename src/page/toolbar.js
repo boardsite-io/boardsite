@@ -61,9 +61,9 @@ function Toolbar(props) {
 
     return (
         <div className="toolbar">
-            <Button style={{ backgroundColor: "green" }} onClick={props.debug}>
-                debug
-            </Button>
+            <IconButton id="iconButton" style={{ backgroundColor: "green" }} onClick={props.debug}>
+                D
+            </IconButton>
             <Tooltip id="tooltip" title="delete all pages" TransitionProps={{ timeout: 0 }} placement="right">
                 <IconButton id="iconButton" variant="contained" onClick={props.clearAll}>
                     <DeleteForeverIcon id="iconButtonInner" />
@@ -86,31 +86,32 @@ function Toolbar(props) {
             </Tooltip>
 
 
-
-            <Tooltip id="tooltip" title="pen" TransitionProps={{ timeout: 0 }} placement="right">
-                {
-                    props.activeTool === "pen" ?
-                        <IconButton id="iconButtonActive" variant="contained" onClick={() => props.setActiveTool("pen")}>
-                            <BrushIcon id="iconButtonActiveInner" />
-                        </IconButton>
-                        : 
-                        <IconButton id="iconButton" variant="contained" onClick={() => props.setActiveTool("pen")}>
-                            <BrushIcon id="iconButtonInner" />
-                        </IconButton>
-                }
-            </Tooltip>
-            <Tooltip id="tooltip" title="eraser" TransitionProps={{ timeout: 0 }} placement="right">
-                {
-                    props.activeTool === "eraser" ?
-                        <IconButton id="iconButtonActive" variant="contained" onClick={() => props.setActiveTool("eraser")}>
-                            <HighlightOffIcon id="iconButtonActiveInner" />
-                        </IconButton>
-                        :
-                        <IconButton id="iconButton" variant="contained" onClick={() => props.setActiveTool("eraser")}>
-                            <HighlightOffIcon id="iconButtonInner" />
-                        </IconButton>
-                }
-            </Tooltip>
+            <div className="toolring">
+                <Tooltip id="tooltip" title="pen" TransitionProps={{ timeout: 0 }} placement="right">
+                    {
+                        props.activeTool === "pen" ?
+                            <IconButton id="iconButtonActive" variant="contained" onClick={() => props.setActiveTool("pen")}>
+                                <BrushIcon id="iconButtonActiveInner" />
+                            </IconButton>
+                            :
+                            <IconButton id="iconButton" variant="contained" onClick={() => props.setActiveTool("pen")}>
+                                <BrushIcon id="iconButtonInner" />
+                            </IconButton>
+                    }
+                </Tooltip>
+                <Tooltip id="tooltip" title="eraser" TransitionProps={{ timeout: 0 }} placement="right">
+                    {
+                        props.activeTool === "eraser" ?
+                            <IconButton id="iconButtonActive" variant="contained" onClick={() => props.setActiveTool("eraser")}>
+                                <HighlightOffIcon id="iconButtonActiveInner" />
+                            </IconButton>
+                            :
+                            <IconButton id="iconButton" variant="contained" onClick={() => props.setActiveTool("eraser")}>
+                                <HighlightOffIcon id="iconButtonInner" />
+                            </IconButton>
+                    }
+                </Tooltip>
+            </div>
 
 
 
