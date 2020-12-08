@@ -38,3 +38,17 @@
 #tooltip {
     font-family: monospace;
 }
+
+#iconButtonActive {
+    color: var(--primary);
+    background-color: var(--primary);
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    background-color: var(--primary);
+    box-shadow: 0px 0px 10px var(--primary);
+}
+
+#iconButtonActiveInner {
+    color: var(--secondary);
+}

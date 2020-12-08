@@ -33,6 +33,7 @@ function WhiteboardControl() {
     const wsRef = useRef();
     const scaleRef = useRef(defaultScale);
     const isDrawModeRef = useRef(true);
+    const [activeTool, setActiveTool] = useState("pen");
 
     // Connect to session if valid session link
     useEffect(() => {
@@ -221,6 +222,7 @@ function WhiteboardControl() {
                             handleRedo={handleRedo}
                             strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
                             lineWidth={lineWidth} setLineWidth={setLineWidth}
+                            activeTool={activeTool} setActiveTool={setActiveTool}
                             sessionID={sessionID}
                             addPage={addPage}
                             clearAll={clearAll}

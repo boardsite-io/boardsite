@@ -9,6 +9,9 @@ import RedoIcon from '@material-ui/icons/Redo';
 import AddIcon from '@material-ui/icons/Add';
 import { SketchPicker } from 'react-color'
 
+import BrushIcon from '@material-ui/icons/Brush';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+
 import Tooltip from '@material-ui/core/Tooltip';
 
 function Toolbar(props) {
@@ -81,6 +84,36 @@ function Toolbar(props) {
                     <RedoIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
+
+
+
+            <Tooltip id="tooltip" title="pen" TransitionProps={{ timeout: 0 }} placement="right">
+                {
+                    props.activeTool === "pen" ?
+                        <IconButton id="iconButtonActive" variant="contained" onClick={() => props.setActiveTool("pen")}>
+                            <BrushIcon id="iconButtonActiveInner" />
+                        </IconButton>
+                        : 
+                        <IconButton id="iconButton" variant="contained" onClick={() => props.setActiveTool("pen")}>
+                            <BrushIcon id="iconButtonInner" />
+                        </IconButton>
+                }
+            </Tooltip>
+            <Tooltip id="tooltip" title="eraser" TransitionProps={{ timeout: 0 }} placement="right">
+                {
+                    props.activeTool === "eraser" ?
+                        <IconButton id="iconButtonActive" variant="contained" onClick={() => props.setActiveTool("eraser")}>
+                            <HighlightOffIcon id="iconButtonActiveInner" />
+                        </IconButton>
+                        :
+                        <IconButton id="iconButton" variant="contained" onClick={() => props.setActiveTool("eraser")}>
+                            <HighlightOffIcon id="iconButtonInner" />
+                        </IconButton>
+                }
+            </Tooltip>
+
+
+
             <div>
                 <Tooltip id="tooltip" title="choose color" TransitionProps={{ timeout: 0 }} placement="right">
                     <IconButton id="iconButton" variant="contained" onClick={handlePaletteClick}>
