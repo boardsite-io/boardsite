@@ -1,5 +1,6 @@
 .rootdiv {
-    background-color: var(--background);
+    background-color: var(--backgroundColor);
+    background-image: var(--backgroundImage);
 }
 
 .dialogbuttons {

@@ -1,11 +1,12 @@
 :root {
     --primary: #00D2BE;
-    --secondary: rgb(73, 73, 82);
-    --tertiary: rgb(167, 167, 167); /* bar background */ 
-    --background: #4A4A4A;
+    --secondary:#141b1ace;
+    --tertiary: #ffffffbb; /* bar background */ 
+    --backgroundColor:#000000;
+    --backgroundImage: linear-gradient(#1f8ac0, #36365c);
     --pagesBackground: #88888888;
     --buttonShadow: 0px 0px 3px #00000088;
-    --toolRing: #11292673;
+    --toolRing: #88888888;
     --canvasBackgroundColor: #ffffff;
     --canvasBackgroundPosition: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
     --canvasBackgroundSize: 20px 20px;
