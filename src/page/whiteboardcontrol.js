@@ -79,7 +79,7 @@ function WhiteboardControl() {
     function onMsgHandle(data) {
         const strokeObjectArray = JSON.parse(data.data);
         if (strokeObjectArray.length === 0) {
-            actPage.clearAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
+            actPage.deleteAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
         }
         else {
             let pageId = strokeObjectArray[0].pageId;
@@ -121,11 +121,11 @@ function WhiteboardControl() {
         }
     }
     
-    function clearAll() {
+    function deleteAll() {
         if (wsRef.current !== undefined) { // Online
             api.clearBoard(sessionID);
         } else { // Offline
-            actPage.clearAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
+            actPage.deleteAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
         }
     }
 
@@ -142,6 +142,14 @@ function WhiteboardControl() {
             // api.clearPage(sessionID, pageid);
         } else { // Offline
             actPage.clearPage(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, canvasRef);
+        }
+    }
+
+    function clearAll() {
+        if (wsRef.current !== undefined) { // Online
+            // api.clearAll(sessionID);
+        } else { // Offline
+            actPage.clearAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection);
         }
     }
 
@@ -203,6 +211,10 @@ function WhiteboardControl() {
                     <>
                         <Homebar
                             setOpenSessionDialog={setOpenSessionDialog}
+                            addPage={addPage}
+                            deleteAll={deleteAll}
+                            clearAll={clearAll}
+                            deletePage={deletePage}
                         />
                         <Viewbar
                             pan={pan}
@@ -218,14 +230,11 @@ function WhiteboardControl() {
                         />
                         <Toolbar wsRef={wsRef}
                             debug={debug}
-                            handleUndo={handleUndo} 
-                            handleRedo={handleRedo}
                             strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
                             lineWidth={lineWidth} setLineWidth={setLineWidth}
                             activeTool={activeTool} setActiveTool={setActiveTool}
-                            sessionID={sessionID}
-                            addPage={addPage}
-                            clearAll={clearAll}
+                            handleUndo={handleUndo} 
+                            handleRedo={handleRedo}
                         />
                         <TransformComponent>
                             <div className="pagecollectionouter">

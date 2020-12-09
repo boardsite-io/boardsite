@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Button, IconButton, Input, Slider } from '@material-ui/core';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import { IconButton, Input, Slider } from '@material-ui/core';
 
 import PaletteIcon from '@material-ui/icons/Palette';
 import CreateIcon from '@material-ui/icons/Create';
+
 import UndoIcon from '@material-ui/icons/Undo';
 import RedoIcon from '@material-ui/icons/Redo';
-import AddIcon from '@material-ui/icons/Add';
+
 import { SketchPicker } from 'react-color'
 
 import BrushIcon from '@material-ui/icons/Brush';
@@ -64,30 +64,19 @@ function Toolbar(props) {
             <IconButton id="iconButton" style={{ backgroundColor: "green" }} onClick={props.debug}>
                 D
             </IconButton>
-            <Tooltip id="tooltip" title="delete all pages" TransitionProps={{ timeout: 0 }} placement="right">
-                <IconButton id="iconButton" variant="contained" onClick={props.clearAll}>
-                    <DeleteForeverIcon id="iconButtonInner" />
-                </IconButton>
-            </Tooltip>
-            <Tooltip id="tooltip" title="add page" TransitionProps={{ timeout: 0 }} placement="right">
-                <IconButton id="iconButton" variant="contained" onClick={() => props.addPage()}>
-                    <AddIcon id="iconButtonInner" />
-                </IconButton>
-            </Tooltip>
-            <Tooltip id="tooltip" title="undo" TransitionProps={{ timeout: 0 }} placement="right">
+            <Tooltip id="tooltip" title="undo" TransitionProps={{ timeout: 0 }} placement="bottom">
                 <IconButton id="iconButton" variant="contained" onClick={props.handleUndo}>
                     <UndoIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
-            <Tooltip id="tooltip" title="redo" TransitionProps={{ timeout: 0 }} placement="right">
+            <Tooltip id="tooltip" title="redo" TransitionProps={{ timeout: 0 }} placement="bottom">
                 <IconButton id="iconButton" variant="contained" onClick={props.handleRedo}>
                     <RedoIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
 
-
             <div className="toolring">
-                <Tooltip id="tooltip" title="pen" TransitionProps={{ timeout: 0 }} placement="right">
+                <Tooltip id="tooltip" title="pen" TransitionProps={{ timeout: 0 }} placement="bottom">
                     {
                         props.activeTool === "pen" ?
                             <IconButton id="iconButtonActive" variant="contained" onClick={() => props.setActiveTool("pen")}>
@@ -99,7 +88,7 @@ function Toolbar(props) {
                             </IconButton>
                     }
                 </Tooltip>
-                <Tooltip id="tooltip" title="eraser" TransitionProps={{ timeout: 0 }} placement="right">
+                <Tooltip id="tooltip" title="eraser" TransitionProps={{ timeout: 0 }} placement="bottom">
                     {
                         props.activeTool === "eraser" ?
                             <IconButton id="iconButtonActive" variant="contained" onClick={() => props.setActiveTool("eraser")}>
@@ -116,7 +105,7 @@ function Toolbar(props) {
 
 
             <div>
-                <Tooltip id="tooltip" title="choose color" TransitionProps={{ timeout: 0 }} placement="right">
+                <Tooltip id="tooltip" title="choose color" TransitionProps={{ timeout: 0 }} placement="bottom">
                     <IconButton id="iconButton" variant="contained" onClick={handlePaletteClick}>
                         <PaletteIcon id="iconButtonInner" />
                     </IconButton>
@@ -133,7 +122,7 @@ function Toolbar(props) {
                 }
             </div>
             <div>
-                <Tooltip id="tooltip" title="choose width" TransitionProps={{ timeout: 0 }} placement="right">
+                <Tooltip id="tooltip" title="choose width" TransitionProps={{ timeout: 0 }} placement="bottom">
                     <IconButton id="iconButton" variant="contained" onClick={handleWidthClick}>
                         <CreateIcon id="iconButtonInner" />
                     </IconButton>

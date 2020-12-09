@@ -1,19 +1,6 @@
 import { createRef } from 'react';
 import * as actData from './actionsData.js';
 
-export function clearAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection) {
-    pageCollection.forEach((page) => {
-        const canvas = page.canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, 1240, 1754);
-        setStrokeCollection({});
-        setHitboxCollection({});
-        setUndoStack([]);
-        setRedoStack([]);
-        setPageCollection([]);
-    });
-}
-
 export function addPage(pageid, setPageCollection) {
     setPageCollection((prev) => {
         let _prev = [...prev];
@@ -37,11 +24,37 @@ export function deletePage(pageid, setStrokeCollection, setHitboxCollection, set
     actData.deletePageFromCollection(pageid, setPageCollection);
 }
 
-export function clearPage(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, canvasRef) {    
+export function deleteAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection) {
+    pageCollection.forEach((page) => {
+        const canvas = page.canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, 1240, 1754);
+    });
+
+    setStrokeCollection({});
+    setHitboxCollection({});
+    setUndoStack([]);
+    setRedoStack([]);
+    setPageCollection([]);
+}
+
+export function clearPage(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, canvasRef) {
     actData.clearPageData(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack);
-    
+
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, 1240, 1754);
+}
 
+export function clearAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection) {
+    pageCollection.forEach((page) => {
+        const canvas = page.canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, 1240, 1754);
+    });
+
+    setStrokeCollection({});
+    setHitboxCollection({});
+    setUndoStack([]);
+    setRedoStack([]);
 }

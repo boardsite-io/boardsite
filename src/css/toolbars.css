@@ -13,6 +13,10 @@
     z-index: 10;
 }
 
+.homebar:hover, .toolbar:hover, .viewbar:hover {
+    box-shadow: 0px 0px 2px 2px var(--primary);
+}
+
 .viewbar {
     right: 5px;
     top: 50%;
@@ -21,42 +25,40 @@
 }
 
 .homebar {
-    top: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-    grid-auto-flow: column;
-}
-
-.homebar:hover, .toolbar:hover, .viewbar:hover {
-    box-shadow: 0px 0px 0px 4px var(--primary);
-}
-
-.toolring {
-    display: grid;
-    grid-auto-flow: row;
-    gap: 20px;
-    background-color: var(--toolring);
-    border-radius: 4px;
-    width: fit-content;
-}
-
-.toolbar {
     left: 5px;
     top: 50%;
     transform: translateY(-50%);
     grid-auto-flow: row;
 }
 
+.toolbar {
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    grid-auto-flow: column;
+}
+
+.toolring {
+    display: grid;
+    grid-auto-flow: column;
+    margin-left: 20px;
+    margin-right: 20px;
+    gap: 20px;
+    background-color: var(--toolring);
+    border-radius: 4px;
+    width: fit-content;
+}
+
 .colorpicker {
     position: absolute;
-    top: -235px;
-    left: 50px;
+    top: 20px;
+    left: -90px;
 }
 
 .widthpicker{
     position: absolute;
-    top: -35px;
-    left: 50px;
+    top: 20px;
+    left: -90px;
     display: grid;
     grid-template-columns: 70% 30%;
     justify-content: space-between;
