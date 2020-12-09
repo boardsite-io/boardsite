@@ -61,7 +61,7 @@ function Toolbar(props) {
 
     return (
         <div className="toolbar">
-            <IconButton id="iconButton" style={{ backgroundColor: "green" }} onClick={props.debug}>
+            <IconButton id="iconButton" style={{ backgroundColor: "grey" }} onClick={props.debug}>
                 D
             </IconButton>
             <Tooltip id="tooltip" title="undo" TransitionProps={{ timeout: 0 }} placement="bottom">
