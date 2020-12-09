@@ -1,10 +1,12 @@
 export function getHitbox(positions, pointSkipFactor, quadMinPixDist, lineWidth) {
     // calculate hitboxes of all segments
-    let xy1 = [Math.round(positions[0]), Math.round(positions[1])];
+    let reduceLoadFactor = 1/25; // defines the size of each hitbox in px: 1/100px => 100x100px hitboxes
+
+    let xy1 = [Math.floor(positions[0]*reduceLoadFactor), Math.floor(positions[1]*reduceLoadFactor)];
     let xy2;
     let hitbox = [];
     for (let i = 2 * pointSkipFactor; i < positions.length; i += 2 * pointSkipFactor) {
-        xy2 = [Math.round(positions[i]), Math.round(positions[i + 1])];
+        xy2 = [Math.floor(positions[i]*reduceLoadFactor), Math.floor(positions[i + 1]*reduceLoadFactor)];
         if ((Math.pow(xy2[0] - xy1[0], 2) + Math.pow(xy2[1] - xy1[1], 2)) < quadMinPixDist) { // move to next iter if points too close
             continue;
         }
@@ -13,7 +15,7 @@ export function getHitbox(positions, pointSkipFactor, quadMinPixDist, lineWidth)
         xy1 = xy2;
     }
     // include last point of stroke that might have been left out in for loop
-    xy2 = [Math.round(positions[positions.length - 2]), Math.round(positions[positions.length - 1])];
+    xy2 = [Math.floor(positions[positions.length - 2]*reduceLoadFactor), Math.floor(positions[positions.length - 1]*reduceLoadFactor)];
     if ((Math.pow(xy2[0] - xy1[0], 2) + Math.pow(xy2[1] - xy1[1], 2)) < quadMinPixDist) { // check if necessary
         let hitboxPixels = calcPixelRow(xy1[0], xy1[1], xy2[0], xy2[1]);
         hitbox = hitbox.concat(hitboxPixels);
