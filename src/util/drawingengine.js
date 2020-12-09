@@ -4,7 +4,7 @@ import * as hbx from './hitbox.js';
 export function redraw(pageId, canvasRef, setStrokeCollection) {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, 1240, 1754);
+    ctx.clearRect(0, 0, 2480, 3508);
     let strokeStyle = ctx.strokeStyle;
     let lineWidth = ctx.lineWidth;
 
@@ -28,8 +28,8 @@ export function eraser(setHitboxCollection, setStrokeCollection, setUndoStack, s
     let pageId = strokeObject.page_id;
 
     setHitboxCollection((prev) => {
-        let pointSkipFactor = 8; // only check every p-th (x,y) position to reduce computational load
-        let quadMinPixDist = 25; // quadratic minimum distance between points to be valid for hitbox calculation
+        let pointSkipFactor = 16; // only check every p-th (x,y) position to reduce computational load
+        let quadMinPixDist = 100; // quadratic minimum distance between points to be valid for hitbox calculation
         let padding = 0;
         let hitbox = hbx.getHitbox(positions, pointSkipFactor, quadMinPixDist, padding);
         let _prev = { ...prev };

@@ -59,7 +59,7 @@ export function handleCanvasMouseMove(e, liveCanvasRef, canvasRef, scaleRef) {
         let y = (e.clientY - rect.top) / scaleRef.current * canvasResolutionFactor;;
         let moveDist = Math.pow(x - lastX, 2) + Math.pow(y - lastY, 2); // Quadratic distance moved from last registered point
 
-        if (moveDist > 100 || sampleCount > minSampleCount) {
+        if (moveDist > 1000 || sampleCount > minSampleCount) {
             sampleCount = 1;
             stroke.push(x, y);
             const liveCanvas = liveCanvasRef.current;

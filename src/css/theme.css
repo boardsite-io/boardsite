@@ -8,10 +8,10 @@
     --buttonShadow: 0px 0px 3px #00000088;
     --toolRing: #88888888;
     --canvasBackgroundColor: #ffffff;
-    --canvasBackgroundPosition: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+    --canvasBackgroundPosition: -10px -10px;
     --canvasBackgroundSize: 20px 20px;
     --canvasBackgroundImage: linear-gradient(rgba(150, 150, 150, .3) 1px, transparent 1px), linear-gradient(90deg, rgba(150, 150, 150, .3) 1px, transparent 1px);
-    --canvasBorder: 1px solid rgb(104, 104, 104);
+    --canvasBorder: 0px solid rgb(104, 104, 104);
     --canvasWidth: 620px;
     --canvasHeight: 877px;
   }

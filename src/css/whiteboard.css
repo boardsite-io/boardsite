@@ -53,7 +53,6 @@
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
     margin: 0 auto;
     border: var(--canvasBorder);
-    box-shadow: 0 0 3px 5px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
     cursor: crosshair;
 }
 
