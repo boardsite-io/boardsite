@@ -38,10 +38,10 @@ function Whiteboard(props) {
     useEffect(() => {
         const canvas = props.canvasRef.current;
         const liveCanvas = liveCanvasRef.current;
-        canvas.width = 1240; //canvas.clientWidth;
-        canvas.height = 1754; //canvas.clientHeight;
-        liveCanvas.width = 1240; //canvas.clientWidth;
-        liveCanvas.height = 1754; //canvas.clientHeight;
+        canvas.width = 2480; //canvas.clientWidth;
+        canvas.height = 3508; //canvas.clientHeight;
+        liveCanvas.width = 2480; //canvas.clientWidth;
+        liveCanvas.height = 3508; //canvas.clientHeight;
         liveCanvas.addEventListener("contextmenu", e => e.preventDefault()); // Disable Context Menu
         liveCanvas.addEventListener("mousedown", (e) => mousedown(e));
         liveCanvas.addEventListener("mousemove", (e) => mousemove(e));

@@ -6,7 +6,7 @@ let sampleCount = 0;
 let lastX = -1;
 let lastY = -1;
 let stroke = [];
-const canvasResolutionFactor = 2;
+const canvasResolutionFactor = 4;
 let _activeTool = "pen";
 
 export function handleCanvasMouseDown(e, liveCanvasRef, canvasRef, scaleRef, setActiveTool) {
@@ -104,7 +104,7 @@ export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, 
         proc.processStrokes([strokeObject], "stroke", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
         const liveCanvas = liveCanvasRef.current;
         const ctxLive = liveCanvas.getContext('2d');
-        ctxLive.clearRect(0, 0, 1240, 1754);
+        ctxLive.clearRect(0, 0, 2480, 3508);
     } else {
         draw.eraser(setHitboxCollection, setStrokeCollection, setUndoStack, strokeObject, wsRef, canvasRef);
     }

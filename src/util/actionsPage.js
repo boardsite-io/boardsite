@@ -28,7 +28,7 @@ export function deleteAll(setStrokeCollection, setHitboxCollection, setUndoStack
     pageCollection.forEach((page) => {
         const canvas = page.canvasRef.current;
         const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, 1240, 1754);
+        ctx.clearRect(0, 0, 2480, 3508);
     });
 
     setStrokeCollection({});
@@ -43,14 +43,14 @@ export function clearPage(pageid, setStrokeCollection, setHitboxCollection, setU
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, 1240, 1754);
+    ctx.clearRect(0, 0, 2480, 3508);
 }
 
 export function clearAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection) {
     pageCollection.forEach((page) => {
         const canvas = page.canvasRef.current;
         const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, 1240, 1754);
+        ctx.clearRect(0, 0, 2480, 3508);
     });
 
     setStrokeCollection({});
