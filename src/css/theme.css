@@ -1,9 +1,10 @@
 :root {
     --primary: #00D2BE;
     --secondary:#141b1ace;
-    --tertiary: #ffffffbb; /* bar background */ 
+    --barBackgroundImage: linear-gradient(90deg,#d3d3d388, #cacaca88); /* bar background */ 
+    --barBoxShadow: 0px 0px 0px 2px var(--primary);
     --backgroundColor:#000000;
-    --backgroundImage: linear-gradient(#1f8ac0, #36365c);
+    --backgroundImage: linear-gradient(#1f8ac0, #333366);
     --pagesBackground: #88888888;
     --buttonShadow: 0px 0px 3px #00000088;
     --toolRing: #88888888;
