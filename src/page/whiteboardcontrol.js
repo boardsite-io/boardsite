@@ -32,7 +32,7 @@ function WhiteboardControl() {
     
     const wsRef = useRef();
     const scaleRef = useRef(defaultScale);
-    const isDrawModeRef = useRef(true);
+    const [drawMode, setDrawMode] = useState(true);
     const [activeTool, setActiveTool] = useState("pen");
 
     // Connect to session if valid session link
@@ -198,7 +198,7 @@ function WhiteboardControl() {
                     disabled: true
                 }}
                 pan={{
-                    disabled: isDrawModeRef.current,
+                    disabled: drawMode,
                     paddingSize: 0
                 }}
                 wheel={{
@@ -217,11 +217,12 @@ function WhiteboardControl() {
                             deletePage={deletePage}
                         />
                         <Viewbar
+                            //pan={props.pan.disabled}
                             pan={pan}
                             zoomIn={zoomIn}
                             zoomOut={zoomOut}
                             resetTransform={resetTransform}
-                            isDrawModeRef={isDrawModeRef}
+                            drawMode={drawMode} setDrawMode={setDrawMode}
                             setScale={setScale}
                             positionX={positionX}
                             positionY={positionY}
@@ -244,7 +245,7 @@ function WhiteboardControl() {
                                             <Whiteboard
                                                 className="page"
                                                 wsRef={wsRef}
-                                                isDrawModeRef={isDrawModeRef}
+                                                setDrawMode={setDrawMode}
                                                 canvasRef={page.canvasRef}
                                                 scaleRef={scaleRef}
                                                 key={page.pageId}

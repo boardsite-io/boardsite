@@ -1,38 +1,49 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as evl from '../util/eventlistener.js';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { IconButton } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import Tooltip from '@material-ui/core/Tooltip';
+import MenuIcon from '@material-ui/icons/Menu';
 
 function Whiteboard(props) {
     const [displayPageSettings, setDisplayPageSettings] = useState(false);
     const liveCanvasRef = useRef();
 
     function mousedown(e) {
-        if (props.isDrawModeRef.current) {
-            evl.handleCanvasMouseDown(e, liveCanvasRef, props.canvasRef, props.scaleRef, props.setActiveTool)
-        }
+        props.setDrawMode((prev) => {
+            if (prev) {
+                evl.handleCanvasMouseDown(e, liveCanvasRef, props.canvasRef, props.scaleRef, props.setActiveTool)
+            }
+            return prev;
+        })
     }
     function mousemove(e) {
-        if (props.isDrawModeRef.current) {
-            evl.handleCanvasMouseMove(e, liveCanvasRef, props.canvasRef, props.scaleRef);
-        }
+        props.setDrawMode((prev) => {
+            if (prev) {
+                evl.handleCanvasMouseMove(e, liveCanvasRef, props.canvasRef, props.scaleRef);
+            }
+            return prev;
+        })
     }
     function mouseup(e) {
-        if (props.isDrawModeRef.current) {
-            evl.handleCanvasMouseUp(e, liveCanvasRef, props.pageId, props.canvasRef, props.wsRef,
-                props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.scaleRef);
-        }
-
+        props.setDrawMode((prev) => {
+            if (prev) {
+                evl.handleCanvasMouseUp(e, liveCanvasRef, props.pageId, props.canvasRef, props.wsRef,
+                    props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.scaleRef);
+            }
+            return prev;
+        })
     }
     function mouseleave(e) {
-        if (props.isDrawModeRef.current) {
-            evl.handleCanvasMouseLeave(e, liveCanvasRef, props.pageId, props.canvasRef, props.wsRef,
-                props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.scaleRef);
-        }
+        props.setDrawMode((prev) => {
+            if (prev) {
+                evl.handleCanvasMouseLeave(e, liveCanvasRef, props.pageId, props.canvasRef, props.wsRef,
+                    props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.scaleRef);
+            }
+            return prev;
+        })
     }
 
     useEffect(() => {
@@ -85,7 +96,7 @@ function Whiteboard(props) {
             <div>
                 <Tooltip id="tooltip" title="page settings" TransitionProps={{ timeout: 0 }} placement="bottom">
                     <IconButton id="iconButton" variant="contained" onClick={openPageSettings}>
-                        <MoreVertIcon color="secondary" id="iconButtonInner" />
+                        <MenuIcon color="secondary" id="iconButtonInner" />
                     </IconButton>
                 </Tooltip>
                 { // Palette Popup

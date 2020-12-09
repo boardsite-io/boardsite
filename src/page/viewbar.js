@@ -1,18 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import ZoomOutMapIcon from '@material-ui/icons/ZoomOutMap';
-import PanToolIcon from '@material-ui/icons/PanTool';
 import { IconButton } from '@material-ui/core';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Tooltip from '@material-ui/core/Tooltip';
+import FullscreenIcon from '@material-ui/icons/Fullscreen';
+import OpenWithIcon from '@material-ui/icons/OpenWith';
 
 export default function Viewbar(props) {
-
     function toggleDrawMode() {
         props.pan.disabled = !props.pan.disabled;
-        props.isDrawModeRef.current = props.pan.disabled;
+        props.setDrawMode(props.pan.disabled);
     }
 
     function down(e) {
@@ -34,9 +34,17 @@ export default function Viewbar(props) {
     return (
         <div className="viewbar">
             <Tooltip id="tooltip" title="toggle panning" TransitionProps={{ timeout: 0 }} placement="left">
-                <IconButton id="iconButton" variant="contained" onClick={toggleDrawMode}>
-                    <PanToolIcon id="iconButtonInner" />
-                </IconButton>
+                {
+                    props.drawMode ?
+                        <IconButton id="iconButton" variant="contained" onClick={toggleDrawMode}>
+                            <OpenWithIcon id="iconButtonInner" />
+                        </IconButton>
+                        :
+                        <IconButton id="iconButtonActive" variant="contained" onClick={toggleDrawMode}>
+                            <OpenWithIcon id="iconButtonActiveInner" />
+                        </IconButton>
+                }
+
             </Tooltip>
             <Tooltip id="tooltip" title="zoom in" TransitionProps={{ timeout: 0 }} placement="left">
                 <IconButton id="iconButton" variant="contained" onClick={props.zoomIn}>
@@ -65,7 +73,7 @@ export default function Viewbar(props) {
             </Tooltip>
             <Tooltip id="tooltip" title="fit width to page" TransitionProps={{ timeout: 0 }} placement="left">
                 <IconButton id="iconButton" variant="contained" onClick={stretchToWindow}>
-                    <ZoomOutMapIcon id="iconButtonInner" />
+                    <FullscreenIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
         </div>
