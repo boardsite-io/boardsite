@@ -27,7 +27,7 @@ function WhiteboardControl() {
     const [undoStack, setUndoStack] = useState([]);
     const [redoStack, setRedoStack] = useState([]);
     const [strokeStyle, setStrokeStyle] = useState("#000000");
-    const [lineWidth, setLineWidth] = useState(3);
+    const [lineWidth, setLineWidth] = useState(15);
     const [openSessionDialog, setOpenSessionDialog] = useState(false);
     
     const wsRef = useRef();
@@ -60,21 +60,6 @@ function WhiteboardControl() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sessionID])
 
-    // Update stroke attributes in context when their props change
-    useEffect(() => {
-        setContextProps();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [lineWidth, strokeStyle, pageCollection])
-
-    function setContextProps() {
-        pageCollection.forEach((page) => {
-            const canvas = page.canvasRef.current;
-            const ctx = canvas.getContext('2d');
-            ctx.strokeStyle = strokeStyle;
-            ctx.lineWidth = lineWidth;
-        });
-    }
-
     // Handles messages from the websocket
     function onMsgHandle(data) {
         const strokeObjectArray = JSON.parse(data.data);
@@ -86,7 +71,6 @@ function WhiteboardControl() {
             let canvasRef = pageCollection[pageId];
             proc.processStrokes(strokeObjectArray, "message", setStrokeCollection, setHitboxCollection,
                 setUndoStack, wsRef, canvasRef);
-            setContextProps();
         }
     }
 
@@ -109,10 +93,6 @@ function WhiteboardControl() {
         setSidInput(e.target.value);
     }
 
-    /** Function for adding pages
-     * 
-     * @param {optional param - leave empty for appending pages} pageid 
-     */
     function addPage(pageid) {
         if (wsRef.current !== undefined) { // Online
             api.addPage(sessionID);
@@ -245,7 +225,6 @@ function WhiteboardControl() {
                                             <Whiteboard
                                                 className="page"
                                                 wsRef={wsRef}
-                                                setDrawMode={setDrawMode}
                                                 canvasRef={page.canvasRef}
                                                 scaleRef={scaleRef}
                                                 key={page.pageId}
@@ -253,12 +232,15 @@ function WhiteboardControl() {
                                                 deletePage={deletePage}
                                                 clearPage={clearPage}
                                                 addPage={addPage}
+                                                setDrawMode={setDrawMode}
                                                 setPageCollection={setPageCollection}
                                                 setStrokeCollection={setStrokeCollection}
                                                 setHitboxCollection={setHitboxCollection}
                                                 setUndoStack={setUndoStack}
                                                 setRedoStack={setRedoStack}
                                                 setActiveTool={setActiveTool}
+                                                setStrokeStyle={setStrokeStyle}
+                                                setLineWidth={setLineWidth}
                                             />
                                         );
                                     })}

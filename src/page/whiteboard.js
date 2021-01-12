@@ -14,7 +14,7 @@ function Whiteboard(props) {
     function mousedown(e) {
         props.setDrawMode((prev) => {
             if (prev) {
-                evl.handleCanvasMouseDown(e, liveCanvasRef, props.canvasRef, props.scaleRef, props.setActiveTool)
+                evl.handleCanvasMouseDown(e, liveCanvasRef, props.scaleRef, props.setActiveTool, props.setLineWidth, props.setStrokeStyle)
             }
             return prev;
         })
@@ -22,7 +22,7 @@ function Whiteboard(props) {
     function mousemove(e) {
         props.setDrawMode((prev) => {
             if (prev) {
-                evl.handleCanvasMouseMove(e, liveCanvasRef, props.canvasRef, props.scaleRef);
+                evl.handleCanvasMouseMove(e, liveCanvasRef, props.scaleRef);
             }
             return prev;
         })

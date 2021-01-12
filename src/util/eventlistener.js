@@ -8,21 +8,27 @@ let lastY = -1;
 let stroke = [];
 const canvasResolutionFactor = 4;
 let _activeTool = "pen";
+let _lineWidth;
+let _strokeStyle;
 
-export function handleCanvasMouseDown(e, liveCanvasRef, canvasRef, scaleRef, setActiveTool) {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    const liveCanvas = liveCanvasRef.current;
-    const ctxLive = liveCanvas.getContext('2d');
-
+export function handleCanvasMouseDown(e, liveCanvasRef, scaleRef, setActiveTool, setLineWidth, setStrokeStyle) {
     setActiveTool((activeTool) => {
         _activeTool = activeTool;
         return activeTool;
     });
+    setLineWidth((lineWidth) => {
+        _lineWidth = lineWidth;
+        return lineWidth;
+    });
+    setStrokeStyle((strokeStyle) => {
+        _strokeStyle = strokeStyle;
+        return strokeStyle;
+    });
 
-    // Share stroke information with live canvas context
-    ctxLive.lineWidth = ctx.lineWidth;
-    ctxLive.strokeStyle = ctx.strokeStyle;
+    const liveCanvas = liveCanvasRef.current;
+    const ctxLive = liveCanvas.getContext('2d');
+    ctxLive.lineWidth = _lineWidth;
+    ctxLive.strokeStyle = _strokeStyle;
 
     if (e.type === "touchstart") {
         e = e.changedTouches[0];
@@ -37,7 +43,7 @@ export function handleCanvasMouseDown(e, liveCanvasRef, canvasRef, scaleRef, set
 
     isMouseDown = true;
     sampleCount = 1;
-    let rect = canvas.getBoundingClientRect();
+    let rect = liveCanvas.getBoundingClientRect();
     let x = (e.clientX - rect.left) / scaleRef.current * canvasResolutionFactor;
     let y = (e.clientY - rect.top) / scaleRef.current * canvasResolutionFactor;
     stroke = [x, y];
@@ -45,16 +51,16 @@ export function handleCanvasMouseDown(e, liveCanvasRef, canvasRef, scaleRef, set
     lastY = y;
 }
 
-export function handleCanvasMouseMove(e, liveCanvasRef, canvasRef, scaleRef) {
+export function handleCanvasMouseMove(e, liveCanvasRef, scaleRef) {
     if (isMouseDown) {
-        let minSampleCount = 20;
+        let minSampleCount = 10;
         if (e.type === "touchmove") {
             e = e.touches[0];
             minSampleCount = 3; // more precision for stylus
         }
         sampleCount += 1;
-        const canvas = canvasRef.current;
-        let rect = canvas.getBoundingClientRect();
+        const liveCanvas = liveCanvasRef.current;
+        let rect = liveCanvas.getBoundingClientRect();
         let x = (e.clientX - rect.left) / scaleRef.current * canvasResolutionFactor;;
         let y = (e.clientY - rect.top) / scaleRef.current * canvasResolutionFactor;;
         let moveDist = Math.pow(x - lastX, 2) + Math.pow(y - lastY, 2); // Quadratic distance moved from last registered point
@@ -62,7 +68,6 @@ export function handleCanvasMouseMove(e, liveCanvasRef, canvasRef, scaleRef) {
         if (moveDist > 1000 || sampleCount > minSampleCount) {
             sampleCount = 1;
             stroke.push(x, y);
-            const liveCanvas = liveCanvasRef.current;
             const ctxLive = liveCanvas.getContext('2d');
             
             if (_activeTool !== "eraser") {
@@ -79,9 +84,8 @@ export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, 
     isMouseDown = false;
     lastX = -1;
     lastY = -1;
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    let rect = canvas.getBoundingClientRect();
+    const liveCanvas = liveCanvasRef.current;
+    let rect = liveCanvas.getBoundingClientRect();
     if (e.type !== "touchend" && e.type !== "touchcancel") {
         let x = (e.clientX - rect.left) / scaleRef.current * canvasResolutionFactor;;
         let y = (e.clientY - rect.top) / scaleRef.current * canvasResolutionFactor;;
@@ -95,14 +99,13 @@ export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, 
         page_id: pageId,
         id: strokeid,
         type: "stroke",
-        line_width: ctx.lineWidth,
-        color: ctx.strokeStyle,
+        line_width: _lineWidth,
+        color: _strokeStyle,
         position: stroke,
     };
 
     if (_activeTool !== "eraser") {
         proc.processStrokes([strokeObject], "stroke", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
-        const liveCanvas = liveCanvasRef.current;
         const ctxLive = liveCanvas.getContext('2d');
         ctxLive.clearRect(0, 0, 2480, 3508);
     } else {
