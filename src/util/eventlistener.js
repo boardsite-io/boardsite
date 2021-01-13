@@ -3,9 +3,7 @@ import * as proc from './processing.js';
 
 let isMouseDown = false;
 let sampleCount = 0;
-let lastX = -1;
-let lastY = -1;
-let stroke = [];
+let strokePoints = [];
 let trianglePoints = 0;
 
 const canvasResolutionFactor = 4;
@@ -19,7 +17,7 @@ export function handleCanvasMouseDown(e, liveCanvasRef, scaleRef, setActiveTool,
         return activeTool;
     });
     setLineWidth((lineWidth) => {
-        _lineWidth = lineWidth;
+        _lineWidth = lineWidth * canvasResolutionFactor;
         return lineWidth;
     });
     setStrokeStyle((strokeStyle) => {
@@ -49,27 +47,24 @@ export function handleCanvasMouseDown(e, liveCanvasRef, scaleRef, setActiveTool,
     let rect = liveCanvas.getBoundingClientRect();
     let x = (e.clientX - rect.left) / scaleRef.current * canvasResolutionFactor;
     let y = (e.clientY - rect.top) / scaleRef.current * canvasResolutionFactor;
-    lastX = x;
-    lastY = y;
 
     if (_activeTool === "pen") {
-        stroke = [x, y];
+        strokePoints = [x, y];
         draw.drawFillCircle(ctxLive, x, y, _lineWidth/2);
     }
     else if (_activeTool === "line") {
-        stroke = [x, y];
+        strokePoints = [x, y];
     }
     else if (_activeTool === "triangle") {
         if (trianglePoints === 0){
-            stroke = [];
+            strokePoints = [];
         }
-        // DOSMTH
     }
     else if (_activeTool === "circle") {
         // DOSMTH
     }
     else { // eraser
-        stroke = [x, y];
+        strokePoints = [x, y];
     }
 }
 
@@ -85,45 +80,42 @@ export function handleCanvasMouseMove(e, liveCanvasRef, scaleRef) {
         let rect = liveCanvas.getBoundingClientRect();
         let x = (e.clientX - rect.left) / scaleRef.current * canvasResolutionFactor;
         let y = (e.clientY - rect.top) / scaleRef.current * canvasResolutionFactor;
-        let moveDist = Math.pow(x - lastX, 2) + Math.pow(y - lastY, 2); // Quadratic distance moved from last registered point
+        let moveDist = Math.pow(x - strokePoints[strokePoints.length-2], 2) + Math.pow(y - strokePoints[strokePoints.length-1], 2); // Quadratic distance moved from last registered point
+        const ctxLive = liveCanvas.getContext('2d');
 
-        if (moveDist > 1000 || sampleCount > minSampleCount) {
+        if (_activeTool === "line") {
+            ctxLive.clearRect(0, 0, 2480, 3508);
+            draw.drawLine(strokePoints[0], strokePoints[1], x, y, ctxLive)
+        }
+        else if (_activeTool === "triangle") {
+            ctxLive.clearRect(0, 0, 2480, 3508);
+            if (trianglePoints === 0){
+                draw.drawFillCircle(ctxLive, x, y, _lineWidth/2);
+            }
+            else if (trianglePoints === 1){
+                draw.drawLine(strokePoints[0], strokePoints[1], x, y, ctxLive);
+            }
+            else if (trianglePoints === 2) {
+                let trianglepts = [...strokePoints];
+                trianglepts.push(x,y);
+                draw.drawFillTriangle(ctxLive, trianglepts);
+            }
+        }
+        else if (_activeTool === "circle") {
+            // TODO
+        }
+        else if (moveDist > 1000 || sampleCount > minSampleCount) {
             sampleCount = 1;
-            const ctxLive = liveCanvas.getContext('2d');
-            
             if (_activeTool === "pen") {
-                draw.drawLine(lastX, lastY, x, y, ctxLive);
-                stroke.push(x, y);
-                lastX = x;
-                lastY = y;
-            }
-            else if (_activeTool === "line") {
-                ctxLive.clearRect(0, 0, 2480, 3508);
-                draw.drawLine(lastX, lastY, x, y, ctxLive)
-            }
-            else if (_activeTool === "triangle") {
-                ctxLive.clearRect(0, 0, 2480, 3508);
-                if (trianglePoints === 0){
-                    draw.drawFillCircle(ctxLive, x, y, _lineWidth/2);
+                // draw.drawLine(strokePoints[strokePoints.length-2], strokePoints[strokePoints.length-1], x, y, ctxLive);
+                strokePoints.push(x, y);
+                let strokeLen = strokePoints.length;
+                if (strokeLen >= 6) {
+                    draw.drawLines(ctxLive, strokePoints.slice(strokeLen - 6));
                 }
-                else if (trianglePoints === 1){
-                    draw.drawLine(stroke[0], stroke[1], x, y, ctxLive);
-                }
-                else if (trianglePoints === 2) {
-                    let trianglepts = [...stroke];
-                    trianglepts.push(x,y);
-                    draw.drawFillTriangle(ctxLive, trianglepts);
-                }
-            }
-            else if (_activeTool === "circle") {
-                ctxLive.clearRect(0, 0, 2480, 3508);
-                draw.drawLine(lastX, lastY, x, y, ctxLive)
             }
             else { // eraser
-                stroke.push(x, y);
-                lastX = x;
-                lastY = y;
-                // DO NOTHING?
+                strokePoints.push(x, y);
             }
         }
     }
@@ -132,8 +124,6 @@ export function handleCanvasMouseMove(e, liveCanvasRef, scaleRef) {
 export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, scaleRef) {
     if (!isMouseDown) { return; } // Ignore reentering
     isMouseDown = false;
-    lastX = -1;
-    lastY = -1;
     const liveCanvas = liveCanvasRef.current;
     const ctxLive = liveCanvas.getContext('2d');
 
@@ -141,13 +131,13 @@ export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, 
         let rect = liveCanvas.getBoundingClientRect();
         let x = (e.clientX - rect.left) / scaleRef.current * canvasResolutionFactor;;
         let y = (e.clientY - rect.top) / scaleRef.current * canvasResolutionFactor;;
-        stroke.push(x, y);
+        strokePoints.push(x, y);
     }
     
-    if (_activeTool === "pen") {
-        stroke = draw.getCurvePoints(stroke, 0.1);
+    if (_activeTool === "pen" && strokePoints.length > 4) {
+        strokePoints = draw.getCurvePoints(strokePoints, 0.1);
     }
-    stroke = stroke.map(x => Math.round(x * 1e3) / 1e3);
+    strokePoints = strokePoints.map(x => Math.round(x * 1e3) / 1e3);
 
     // generate unique id
     let strokeid = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4) + Date.now().toString(36).substr(4);
@@ -158,7 +148,7 @@ export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, 
         tool: _activeTool,
         line_width: _lineWidth,
         color: _strokeStyle,
-        position: stroke,
+        position: strokePoints,
     };
 
     if (_activeTool === "pen") {
@@ -170,26 +160,26 @@ export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, 
         ctxLive.clearRect(0, 0, 2480, 3508);
     }
     else if (_activeTool === "triangle") {
-        ctxLive.clearRect(0, 0, 2480, 3508);
         trianglePoints += 1;
         if (trianglePoints === 1){
-            draw.drawFillCircle(ctxLive, stroke[0], stroke[1], _lineWidth/2);
+            draw.drawFillCircle(ctxLive, strokePoints[0], strokePoints[1], _lineWidth/2);
         }
         else if (trianglePoints === 2){
-            draw.drawLine(stroke[0], stroke[1], stroke[2], stroke[3], ctxLive);
+            draw.drawLine(strokePoints[0], strokePoints[1], strokePoints[2], strokePoints[3], ctxLive);
         }
         else if (trianglePoints === 3) {
-            ctxLive.clearRect(0, 0, 2480, 3508);
             proc.processStrokes([strokeObject], "stroke", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
+            ctxLive.clearRect(0, 0, 2480, 3508);
             trianglePoints = 0;
         }
     }
     else if (_activeTool === "circle") {
-        proc.processStrokes([strokeObject], "stroke", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
-        ctxLive.clearRect(0, 0, 2480, 3508);
+        // proc.processStrokes([strokeObject], "stroke", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
+        // ctxLive.clearRect(0, 0, 2480, 3508);
     }
     else { // eraser
         draw.eraser(setHitboxCollection, setStrokeCollection, setUndoStack, strokeObject, wsRef, canvasRef);
+        ctxLive.clearRect(0, 0, 2480, 3508);
     }
 }
 

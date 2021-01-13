@@ -27,7 +27,7 @@ function WhiteboardControl() {
     const [undoStack, setUndoStack] = useState([]);
     const [redoStack, setRedoStack] = useState([]);
     const [strokeStyle, setStrokeStyle] = useState("#000000");
-    const [lineWidth, setLineWidth] = useState(15);
+    const [lineWidth, setLineWidth] = useState(5);
     const [openSessionDialog, setOpenSessionDialog] = useState(false);
     
     const wsRef = useRef();
@@ -44,7 +44,7 @@ function WhiteboardControl() {
 
     // Open dialog on mount
     useEffect(() => {
-        setOpenSessionDialog(true);
+        //setOpenSessionDialog(true);
         setPageCollection([{ canvasRef: createRef(), pageId: "xy123" }]);
     }, [])
 
