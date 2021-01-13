@@ -110,8 +110,8 @@ export function handleCanvasMouseMove(e, liveCanvasRef, scaleRef) {
                 // draw.drawLine(strokePoints[strokePoints.length-2], strokePoints[strokePoints.length-1], x, y, ctxLive);
                 strokePoints.push(x, y);
                 let strokeLen = strokePoints.length;
-                if (strokeLen >= 6) {
-                    draw.drawLines(ctxLive, strokePoints.slice(strokeLen - 6));
+                if (strokeLen >= 4) {
+                    draw.drawLines(ctxLive, strokePoints.slice(strokeLen - 4));
                 }
             }
             else { // eraser

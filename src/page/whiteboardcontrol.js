@@ -212,7 +212,7 @@ function WhiteboardControl() {
                     step: 200
                 }}
             >
-                {({ zoomIn, zoomOut, resetTransform, pan, options, positionX, positionY, setPositionX, setPositionY, setScale }) => (
+                {({ zoomIn, zoomOut, resetTransform, pan, options, scale, positionX, positionY, setPositionX, setPositionY, setScale }) => (
                     <>
                         <Homebar
                             setOpenSessionDialog={setOpenSessionDialog}
@@ -231,6 +231,7 @@ function WhiteboardControl() {
                             resetTransform={resetTransform}
                             drawMode={drawMode} setDrawMode={setDrawMode}
                             setScale={setScale}
+                            scale={scale}
                             positionX={positionX}
                             positionY={positionY}
                             setPositionX={setPositionX}

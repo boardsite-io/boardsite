@@ -24,11 +24,20 @@ export default function Viewbar(props) {
     }
 
     function stretchToWindow() {
-        props.setScale(window.innerWidth / 710, 0);
+        let newScale = window.innerWidth / 710;
+        let y = props.positionY / props.scale * newScale;
+        props.setScale(newScale, 0);
         props.setPositionX(0, 0);
-        // let x = props.positionX + 
-        // console.log(props.positionX, props.positionY);
-        // props.setPositionY(60,0)
+        props.setPositionY(y, 0);
+    }
+
+    function resetAndCenter() {
+        let w = window.innerWidth;
+        let x = (w - 710) / 2;
+        let y = props.positionY / props.scale;
+        props.setScale(1, 0);
+        props.setPositionX(x, 0);
+        props.setPositionY(y, 0);
     }
 
     return (
@@ -57,7 +66,7 @@ export default function Viewbar(props) {
                 </IconButton>
             </Tooltip>
             <Tooltip id="tooltip" title="reset transform" TransitionProps={{ timeout: 0 }} placement="left">
-                <IconButton id="iconButton" variant="contained" onClick={props.resetTransform}>
+                <IconButton id="iconButton" variant="contained" onClick={resetAndCenter}>
                     <ZoomOutMapIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
