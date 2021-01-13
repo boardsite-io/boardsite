@@ -11,6 +11,7 @@ import * as actPage from '../util/actionsPage.js';
 import * as actData from '../util/actionsData.js';
 
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { jsPDF } from "jspdf";
 
 function WhiteboardControl() {
     const defaultScale = 0.8 * window.innerWidth / 710;
@@ -157,6 +158,30 @@ function WhiteboardControl() {
         console.log(pageCollection, hitboxCollection, strokeCollection);
     }
 
+    function exportToPDF() {
+        if (pageCollection.length === 0) {
+            return;
+        }
+        const pdf = new jsPDF();
+        const width = pdf.internal.pageSize.getWidth();
+        const height = pdf.internal.pageSize.getHeight();
+        let canvasPage = pageCollection[0].canvasRef.current;
+        let imgData = canvasPage.toDataURL('image/png');
+        pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+        for (let i = 1; i < pageCollection.length; i++) {
+            canvasPage = pageCollection[i].canvasRef.current;
+            imgData = canvasPage.toDataURL('image/png');
+            pdf.addPage();
+            pdf.setPage(i + 1);
+            pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+        }
+        pdf.save("a4.pdf");
+    }
+
+    function save() {
+        // TODO;
+    }
+
     return (
         <div className="viewport" websocket={wsRef.current}>
             <AlertDialog open={openSessionDialog} setOpen={setOpenSessionDialog} sessionID_input={sidInput} setSessionID_input={setSidInput}
@@ -195,6 +220,8 @@ function WhiteboardControl() {
                             deleteAll={deleteAll}
                             clearAll={clearAll}
                             deletePage={deletePage}
+                            exportToPDF={exportToPDF}
+                            save={save}
                         />
                         <Viewbar
                             //pan={props.pan.disabled}

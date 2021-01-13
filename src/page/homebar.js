@@ -12,14 +12,6 @@ import RemoveIcon from '@material-ui/icons/Remove';
 
 export default function Homebar(props) {
 
-    function saveBoard() {
-        // console.log(props.strokeCollection, props.hitboxCollection);
-    }
-
-    function loadBoard() {
-        // console.log(props.undoStack, props.redoStack);
-    }
-
     return (
         <div className="homebar">
             <Tooltip id="tooltip" title="join or create session" TransitionProps={{ timeout: 0 }} placement="right">
@@ -28,12 +20,12 @@ export default function Homebar(props) {
                 </IconButton>
             </Tooltip>
             <Tooltip id="tooltip" title="save" TransitionProps={{ timeout: 0 }} placement="right">
-                <IconButton id="iconButton" variant="contained" onClick={saveBoard}>
+                <IconButton id="iconButton" variant="contained" onClick={props.save}>
                     <SaveIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
-            <Tooltip id="tooltip" title="load" TransitionProps={{ timeout: 0 }} placement="right">
-                <IconButton id="iconButton" variant="contained" onClick={loadBoard}>
+            <Tooltip id="tooltip" title="export to PDF" TransitionProps={{ timeout: 0 }} placement="right">
+                <IconButton id="iconButton" variant="contained" onClick={props.exportToPDF}>
                     <GetAppIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>

@@ -8,6 +8,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "jspdf": "^2.2.0",
     "material-ui-color-picker": "^3.5.1",
     "material-ui-rc-color-picker": "^1.0.4",
     "react": "^16.13.1",
