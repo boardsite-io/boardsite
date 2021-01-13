@@ -9,6 +9,10 @@ import RedoIcon from '@material-ui/icons/Redo';
 
 import { SketchPicker } from 'react-color'
 
+import RemoveIcon from '@material-ui/icons/Remove';
+import ChangeHistoryIcon from '@material-ui/icons/ChangeHistory';
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+
 import BrushIcon from '@material-ui/icons/Brush';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
@@ -76,6 +80,43 @@ function Toolbar(props) {
             </Tooltip>
 
             <div className="toolring">
+            
+                <Tooltip id="tooltip" title="line" TransitionProps={{ timeout: 0 }} placement="bottom">
+                    {
+                        props.activeTool === "line" ?
+                            <IconButton id="iconButtonActive" variant="contained" onClick={() => props.setActiveTool("line")}>
+                                <RemoveIcon id="iconButtonActiveInner" />
+                            </IconButton>
+                            :
+                            <IconButton id="iconButton" variant="contained" onClick={() => props.setActiveTool("line")}>
+                                <RemoveIcon id="iconButtonInner" />
+                            </IconButton>
+                    }
+                </Tooltip>
+                <Tooltip id="tooltip" title="triangle" TransitionProps={{ timeout: 0 }} placement="bottom">
+                    {
+                        props.activeTool === "triangle" ?
+                            <IconButton id="iconButtonActive" variant="contained" onClick={() => props.setActiveTool("triangle")}>
+                                <ChangeHistoryIcon id="iconButtonActiveInner" />
+                            </IconButton>
+                            :
+                            <IconButton id="iconButton" variant="contained" onClick={() => props.setActiveTool("triangle")}>
+                                <ChangeHistoryIcon id="iconButtonInner" />
+                            </IconButton>
+                    }
+                </Tooltip>
+                <Tooltip id="tooltip" title="circle" TransitionProps={{ timeout: 0 }} placement="bottom">
+                    {
+                        props.activeTool === "circle" ?
+                            <IconButton id="iconButtonActive" variant="contained" onClick={() => props.setActiveTool("circle")}>
+                                <RadioButtonUncheckedIcon id="iconButtonActiveInner" />
+                            </IconButton>
+                            :
+                            <IconButton id="iconButton" variant="contained" onClick={() => props.setActiveTool("circle")}>
+                                <RadioButtonUncheckedIcon id="iconButtonInner" />
+                            </IconButton>
+                    }
+                </Tooltip>
                 <Tooltip id="tooltip" title="pen" TransitionProps={{ timeout: 0 }} placement="bottom">
                     {
                         props.activeTool === "pen" ?

@@ -10,7 +10,7 @@ export function redraw(pageId, canvasRef, setStrokeCollection) {
 
     // extract fresh strokecollection
     setStrokeCollection((prev) => {
-        let strokeCollection = {...prev} // copy
+        let strokeCollection = { ...prev } // copy
         Object.keys(strokeCollection[pageId]).forEach((key) => {
             let strokeObject = strokeCollection[pageId][key];
             return drawCurve(ctx, strokeObject);
@@ -30,8 +30,7 @@ export function eraser(setHitboxCollection, setStrokeCollection, setUndoStack, s
     setHitboxCollection((prev) => {
         let pointSkipFactor = 16; // only check every p-th (x,y) position to reduce computational load
         let quadMinPixDist = 100; // quadratic minimum distance between points to be valid for hitbox calculation
-        let padding = 0;
-        let hitbox = hbx.getHitbox(positions, pointSkipFactor, quadMinPixDist, padding);
+        let hitbox = hbx.getHitbox(positions, pointSkipFactor, quadMinPixDist, strokeObject.line_width);
         let _prev = { ...prev };
 
         if (_prev[pageId] === undefined) {
@@ -58,24 +57,10 @@ export function eraser(setHitboxCollection, setStrokeCollection, setUndoStack, s
 
         return _prev;
     });
-    
-    if(strokeObjectArray.length !== 0) {
+
+    if (strokeObjectArray.length !== 0) {
         proc.processStrokes(strokeObjectArray, "eraser", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
     }
-}
-
-// draw line
-export function drawLine(x1, y1, x2, y2, ctx) {
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.stroke();
-}
-
-// draw rectangle with background
-export function drawFillRect(x, y, w, h, ctx) {
-    ctx.beginPath();
-    ctx.fillRect(x, y, w, h);
 }
 
 export function getCurvePoints(pts, tension, isClosed, numOfSegments) {
@@ -149,18 +134,70 @@ export function getCurvePoints(pts, tension, isClosed, numOfSegments) {
     return res;
 }
 
-// DRAWING FUNCTIONS FROM STACKOVERFLOW
 export function drawCurve(ctx, strokeObject) {
     ctx.strokeStyle = strokeObject.color;
+    ctx.fillStyle = strokeObject.color;
     ctx.lineWidth = strokeObject.line_width;
-    ctx.beginPath();
-    drawLines(ctx, strokeObject.position);
-    ctx.stroke();
+    let pts = strokeObject.position;
+
+    if (strokeObject.tool === "triangle") {
+        drawFillTriangle(ctx, pts);
+    }
+    else {
+        drawLines(ctx, pts);
+    }
 }
 
 export function drawLines(ctx, pts) {
+    ctx.beginPath();
     ctx.moveTo(pts[0], pts[1]);
     for (var i = 2; i < pts.length - 1; i += 2) {
         ctx.lineTo(pts[i], pts[i + 1]);
     }
+    ctx.stroke();
+    // Rounded ends
+    drawFillCircle(ctx, pts[0], pts[1], ctx.lineWidth/2);
+    drawFillCircle(ctx, pts[pts.length-2], pts[pts.length-1], ctx.lineWidth/2);
+}
+
+export function drawTriangle(ctx, pts) {
+    ctx.beginPath();
+    ctx.moveTo(pts[0], pts[1]);
+    ctx.lineTo(pts[2], pts[3]);
+    ctx.lineTo(pts[4], pts[5]);
+    ctx.stroke();
+}
+
+export function drawFillTriangle(ctx, pts) {
+    ctx.beginPath();
+    ctx.moveTo(pts[0], pts[1]);
+    ctx.lineTo(pts[2], pts[3]);
+    ctx.lineTo(pts[4], pts[5]);
+    ctx.fill();
+}
+
+// draw line
+export function drawLine(x1, y1, x2, y2, ctx) {
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+}
+
+// draw rectangle with background
+export function drawFillRect(x, y, w, h, ctx) {
+    ctx.beginPath();
+    ctx.fillRect(x, y, w, h);
+}
+
+export function drawCircle(ctx, x, y, radius) {
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, 2*Math.PI);
+    ctx.stroke();
+}
+
+export function drawFillCircle(ctx, x, y, radius) {
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, 2*Math.PI);
+    ctx.fill();
 }
