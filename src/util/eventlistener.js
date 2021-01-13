@@ -53,7 +53,7 @@ export function handleCanvasMouseDown(e, liveCanvasRef, scaleRef, setActiveTool,
 
 export function handleCanvasMouseMove(e, liveCanvasRef, scaleRef) {
     if (isMouseDown) {
-        let minSampleCount = 5;
+        let minSampleCount = 10;
         if (e.type === "touchmove") {
             e = e.touches[0];
             minSampleCount = 3; // more precision for stylus
@@ -91,6 +91,7 @@ export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, 
         let y = (e.clientY - rect.top) / scaleRef.current * canvasResolutionFactor;;
         stroke.push(x, y);
     }
+    stroke = draw.getCurvePoints(stroke, 0.5);
     stroke = stroke.map(x => Math.round(x * 1e3) / 1e3);
     // generate unique id
     let strokeid = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4) + Date.now().toString(36).substr(4);
