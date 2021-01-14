@@ -141,7 +141,10 @@ export function drawCurve(ctx, strokeObject) {
     let pts = strokeObject.position;
 
     if (strokeObject.tool === "triangle") {
-        drawFillTriangle(ctx, pts);
+        drawTriangle(ctx, pts);
+    }
+    else if (strokeObject.tool === "circle") {
+        drawCircle(ctx, pts[0], pts[1], pts[2]);
     }
     else {
         drawLines(ctx, pts);
@@ -165,6 +168,7 @@ export function drawTriangle(ctx, pts) {
     ctx.moveTo(pts[0], pts[1]);
     ctx.lineTo(pts[2], pts[3]);
     ctx.lineTo(pts[4], pts[5]);
+    ctx.closePath();
     ctx.stroke();
 }
 
