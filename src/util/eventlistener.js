@@ -13,7 +13,7 @@ import * as proc from './processing.js';
 let isMouseDown = false;
 let sampleCount = 0;
 let strokePoints = [];
-let shapePoints = 0;
+let shapeInProgress = false;
 
 const canvasResolutionFactor = 4;
 let _activeTool;
@@ -62,18 +62,14 @@ export function handleCanvasMouseDown(e, liveCanvasRef, scaleRef, setActiveTool,
         strokePoints = [x, y];
         draw.drawFillCircle(ctxLive, x, y, _lineWidth/2);
     }
-    else if (_activeTool === "line") {
-        strokePoints = [x, y];
-    }
     else if (_activeTool === "triangle") {
-        if (shapePoints === 0){
-            strokePoints = [];
+        if (shapeInProgress){
+            draw.drawTriangle(ctxLive, [...strokePoints, x, y]);
+        } else {
+            strokePoints = [x, y];
         }
     }
-    else if (_activeTool === "circle") {
-        strokePoints = [x, y];
-    }
-    else { // eraser
+    else {
         strokePoints = [x, y];
     }
 }
@@ -99,16 +95,11 @@ export function handleCanvasMouseMove(e, liveCanvasRef, scaleRef) {
         }
         else if (_activeTool === "triangle") {
             ctxLive.clearRect(0, 0, 2480, 3508);
-            if (shapePoints === 0){
-                draw.drawFillCircle(ctxLive, x, y, _lineWidth/2);
+            if (shapeInProgress){
+                draw.drawTriangle(ctxLive, [...strokePoints, x, y]);
             }
-            else if (shapePoints === 1){
+            else {
                 draw.drawLines(ctxLive, [strokePoints[0], strokePoints[1], x, y]);
-            }
-            else if (shapePoints === 2) {
-                let trianglepts = [...strokePoints];
-                trianglepts.push(x,y);
-                draw.drawTriangle(ctxLive, trianglepts);
             }
         }
         else if (_activeTool === "circle") {
@@ -154,18 +145,14 @@ export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, 
         // ctxLive.clearRect(0, 0, 2480, 3508);
     }
     else if (_activeTool === "triangle") {
-        shapePoints += 1;
-        if (shapePoints === 1){
-            draw.drawFillCircle(ctxLive, strokePoints[0], strokePoints[1], _lineWidth/2);
-        }
-        else if (shapePoints === 2){
-            draw.drawLines(ctxLive, strokePoints);
-        }
-        else if (shapePoints === 3) {
+        if (shapeInProgress){
             proc.processStrokes([strokeObject], "stroke", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
             ctxLive.clearRect(0, 0, 2480, 3508);
-            shapePoints = 0;
         }
+        else {
+            draw.drawLines(ctxLive, strokePoints);
+        }
+        shapeInProgress = !shapeInProgress;
     }
     else {
         if (_activeTool === "pen") {
@@ -186,7 +173,6 @@ export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, 
             ctxLive.clearRect(0, 0, 2480, 3508);
         }, 0);
     }
-    
 }
 
 export function handleCanvasMouseLeave(e, liveCanvasRef, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, scaleRef) {
