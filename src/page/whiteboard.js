@@ -105,17 +105,26 @@ function Whiteboard(props) {
                             <div className="cover" onClick={closePageSettings} />
                             <div className="pagesettings">
                                 <Tooltip id="tooltip" title="clear Page" TransitionProps={{ timeout: 0 }} placement="left">
-                                    <IconButton id="iconButton" variant="contained" onClick={() => props.clearPage(props.pageId, props.canvasRef)}>
+                                    <IconButton id="iconButton" variant="contained" onClick={() => {
+                                        props.clearPage(props.pageId, props.canvasRef); 
+                                        closePageSettings();
+                                    }}>
                                         <ClearIcon color="secondary" id="iconButtonInner" />
                                     </IconButton>
                                 </Tooltip>
                                 <Tooltip id="tooltip" title="add page" TransitionProps={{ timeout: 0 }} placement="left">
-                                    <IconButton id="iconButton" variant="contained" onClick={() => props.addPage(props.pageId)}>
+                                    <IconButton id="iconButton" variant="contained" onClick={() => {
+                                        props.addPage(props.pageId)
+                                        closePageSettings();
+                                    }}>
                                         <AddIcon color="secondary" id="iconButtonInner" />
                                     </IconButton>
                                 </Tooltip>
                                 <Tooltip id="tooltip" title="delete page" TransitionProps={{ timeout: 0 }} placement="left">
-                                    <IconButton id="iconButton" variant="contained" onClick={() => props.deletePage(props.pageId)}>
+                                    <IconButton id="iconButton" variant="contained" onClick={() => {
+                                        props.deletePage(props.pageId)
+                                        closePageSettings();
+                                    }}>
                                         <RemoveIcon color="secondary" id="iconButtonInner" />
                                     </IconButton>
                                 </Tooltip>
