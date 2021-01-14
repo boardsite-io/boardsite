@@ -1,4 +1,4 @@
-.homebar, .toolbar, .viewbar {
+.homebar, .toolbar, .viewbar, .extratools {
     background-image: var(--barBackgroundImage);
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
@@ -13,7 +13,7 @@
     z-index: 10;
 }
 
-.homebar:hover, .toolbar:hover, .viewbar:hover {
+.homebar:hover, .toolbar:hover, .viewbar:hover, .extratools:hover {
     box-shadow: var(--barBoxShadow);
 }
 
@@ -47,6 +47,13 @@
     background-color: var(--toolRing);
     border-radius: 4px;
     width: fit-content;
+}
+
+.extratools {
+    position: absolute;
+    top: 60px;
+    left: 120px;
+    grid-auto-flow: column;
 }
 
 .colorpicker {
