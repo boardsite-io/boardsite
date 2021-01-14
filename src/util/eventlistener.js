@@ -31,6 +31,13 @@ export function handleCanvasMouseDown(e, liveCanvasRef, scaleRef, setActiveTool,
     ctxLive.strokeStyle = _strokeStyle;
     ctxLive.fillStyle = _strokeStyle;
 
+    isMouseDown = true;
+    sampleCount = 1;
+
+    let rect = liveCanvas.getBoundingClientRect();
+    let x = (e.clientX - rect.left) / scaleRef.current * canvasResolutionFactor;
+    let y = (e.clientY - rect.top) / scaleRef.current * canvasResolutionFactor;
+
     if (e.type === "touchstart") {
         e = e.changedTouches[0];
     }
@@ -41,12 +48,6 @@ export function handleCanvasMouseDown(e, liveCanvasRef, scaleRef, setActiveTool,
             _activeTool = "eraser";
         }
     }
-
-    isMouseDown = true;
-    sampleCount = 1;
-    let rect = liveCanvas.getBoundingClientRect();
-    let x = (e.clientX - rect.left) / scaleRef.current * canvasResolutionFactor;
-    let y = (e.clientY - rect.top) / scaleRef.current * canvasResolutionFactor;
 
     if (_activeTool === "pen") {
         strokePoints = [x, y];
@@ -110,9 +111,7 @@ export function handleCanvasMouseMove(e, liveCanvasRef, scaleRef) {
                 // draw.drawLine(strokePoints[strokePoints.length-2], strokePoints[strokePoints.length-1], x, y, ctxLive);
                 strokePoints.push(x, y);
                 let strokeLen = strokePoints.length;
-                if (strokeLen >= 4) {
-                    draw.drawLines(ctxLive, strokePoints.slice(strokeLen - 4));
-                }
+                draw.drawLines(ctxLive, strokePoints.slice(strokeLen - 4));
             }
             else { // eraser
                 strokePoints.push(x, y);
@@ -135,6 +134,7 @@ export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, 
     }
     
     if (_activeTool === "pen" && strokePoints.length > 4) {
+        draw.drawLines(ctxLive, strokePoints.slice(strokePoints.length - 4));
         strokePoints = draw.getCurvePoints(strokePoints, 0.1);
     }
     strokePoints = strokePoints.map(x => Math.round(x * 1e3) / 1e3);
@@ -151,13 +151,20 @@ export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, 
         position: strokePoints,
     };
 
+    // console.time('start');
+    // console.timeEnd('start');
+
     if (_activeTool === "pen") {
-        proc.processStrokes([strokeObject], "stroke", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
-        ctxLive.clearRect(0, 0, 2480, 3508);
+        setTimeout(() => { // Put into timeout function without delay to prevent halting the other functions in this function
+            proc.processStrokes([strokeObject], "stroke", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
+            ctxLive.clearRect(0, 0, 2480, 3508);
+        }, 0);
     }
     else if (_activeTool === "line") {
-        proc.processStrokes([strokeObject], "stroke", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
-        ctxLive.clearRect(0, 0, 2480, 3508);
+        setTimeout(() => { // Put into timeout function without delay to prevent halting the other functions in this function
+            proc.processStrokes([strokeObject], "stroke", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
+            ctxLive.clearRect(0, 0, 2480, 3508);
+        }, 0);
     }
     else if (_activeTool === "triangle") {
         trianglePoints += 1;
