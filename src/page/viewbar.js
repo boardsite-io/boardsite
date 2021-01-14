@@ -65,8 +65,8 @@ export default function Viewbar(props) {
                     <ZoomOutIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
-            <Tooltip id="tooltip" title="reset transform" TransitionProps={{ timeout: 0 }} placement="left">
-                <IconButton id="iconButton" variant="contained" onClick={resetAndCenter}>
+            <Tooltip id="tooltip" title="fit page width" TransitionProps={{ timeout: 0 }} placement="left">
+                <IconButton id="iconButton" variant="contained" onClick={stretchToWindow}>
                     <ZoomOutMapIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
@@ -80,8 +80,8 @@ export default function Viewbar(props) {
                     <ExpandMoreIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
-            <Tooltip id="tooltip" title="fit width to page" TransitionProps={{ timeout: 0 }} placement="left">
-                <IconButton id="iconButton" variant="contained" onClick={stretchToWindow}>
+            <Tooltip id="tooltip" title="center and reset scale" TransitionProps={{ timeout: 0 }} placement="left">
+                <IconButton id="iconButton" variant="contained" onClick={resetAndCenter}>
                     <FullscreenIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>

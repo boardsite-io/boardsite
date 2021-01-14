@@ -15,13 +15,13 @@ import { jsPDF } from "jspdf";
 
 function WhiteboardControl() {
     const defaultScale = 0.8 * window.innerWidth / 710;
-    const defaultPositionX = (1 - 0.8)/2 * window.innerWidth;
+    const defaultPositionX = (1 - 0.8) / 2 * window.innerWidth;
     const defaultPositionY = 60;
 
     const { id } = useParams();
     const [sessionID, setSessionID] = useState("");
     const [sidInput, setSidInput] = useState("");
-    
+
     const [pageCollection, setPageCollection] = useState([]);
     const [strokeCollection, setStrokeCollection] = useState({});
     const [hitboxCollection, setHitboxCollection] = useState({});
@@ -30,7 +30,7 @@ function WhiteboardControl() {
     const [strokeStyle, setStrokeStyle] = useState("#000000");
     const [lineWidth, setLineWidth] = useState(5);
     const [openSessionDialog, setOpenSessionDialog] = useState(false);
-    
+
     const wsRef = useRef();
     const scaleRef = useRef(defaultScale);
     const [drawMode, setDrawMode] = useState(true);
@@ -101,7 +101,7 @@ function WhiteboardControl() {
             actPage.addPage(pageid, setPageCollection);
         }
     }
-    
+
     function deleteAll() {
         if (wsRef.current !== undefined) { // Online
             api.clearBoard(sessionID);
@@ -186,6 +186,23 @@ function WhiteboardControl() {
         <div className="viewport" websocket={wsRef.current}>
             <AlertDialog open={openSessionDialog} setOpen={setOpenSessionDialog} sessionID_input={sidInput} setSessionID_input={setSidInput}
                 handleTextFieldChange={handleTextFieldChange} handleJoin={handleJoin} handleCreate={handleCreate} />
+            <Toolbar wsRef={wsRef}
+                debug={debug}
+                strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
+                lineWidth={lineWidth} setLineWidth={setLineWidth}
+                activeTool={activeTool} setActiveTool={setActiveTool}
+                handleUndo={handleUndo}
+                handleRedo={handleRedo}
+            />
+            <Homebar
+                setOpenSessionDialog={setOpenSessionDialog}
+                addPage={addPage}
+                deleteAll={deleteAll}
+                clearAll={clearAll}
+                deletePage={deletePage}
+                exportToPDF={exportToPDF}
+                save={save}
+            />
             <TransformWrapper
                 defaultPositionX={defaultPositionX}
                 defaultPositionY={defaultPositionY}
@@ -212,17 +229,8 @@ function WhiteboardControl() {
                     step: 200
                 }}
             >
-                {({ zoomIn, zoomOut, resetTransform, pan, options, scale, positionX, positionY, setPositionX, setPositionY, setScale }) => (
+                {({ zoomIn, zoomOut, resetTransform, pan, scale, positionX, positionY, setPositionX, setPositionY, setScale }) => (
                     <>
-                        <Homebar
-                            setOpenSessionDialog={setOpenSessionDialog}
-                            addPage={addPage}
-                            deleteAll={deleteAll}
-                            clearAll={clearAll}
-                            deletePage={deletePage}
-                            exportToPDF={exportToPDF}
-                            save={save}
-                        />
                         <Viewbar
                             //pan={props.pan.disabled}
                             pan={pan}
@@ -236,14 +244,6 @@ function WhiteboardControl() {
                             positionY={positionY}
                             setPositionX={setPositionX}
                             setPositionY={setPositionY}
-                        />
-                        <Toolbar wsRef={wsRef}
-                            debug={debug}
-                            strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
-                            lineWidth={lineWidth} setLineWidth={setLineWidth}
-                            activeTool={activeTool} setActiveTool={setActiveTool}
-                            handleUndo={handleUndo} 
-                            handleRedo={handleRedo}
                         />
                         <TransformComponent>
                             <div className="pagecollectionouter">

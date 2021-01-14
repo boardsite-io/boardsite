@@ -80,7 +80,6 @@ function Toolbar(props) {
             </Tooltip>
 
             <div className="toolring">
-            
                 <Tooltip id="tooltip" title="line" TransitionProps={{ timeout: 0 }} placement="bottom">
                     {
                         props.activeTool === "line" ?
@@ -142,9 +141,6 @@ function Toolbar(props) {
                     }
                 </Tooltip>
             </div>
-
-
-
             <div>
                 <Tooltip id="tooltip" title="choose color" TransitionProps={{ timeout: 0 }} placement="bottom">
                     <IconButton id="iconButton" variant="contained" onClick={handlePaletteClick}>
