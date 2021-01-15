@@ -30,8 +30,7 @@ function Whiteboard(props) {
     function mouseup(e) {
         props.setDrawMode((prev) => {
             if (prev) {
-                evl.handleCanvasMouseUp(e, liveCanvasRef, props.pageId, props.canvasRef, props.wsRef,
-                    props.setBoardInfo);
+                evl.handleCanvasMouseUp(e, liveCanvasRef, props.pageId, props.canvasRef, props.wsRef, props.setBoardInfo);
             }
             return prev;
         })
@@ -39,8 +38,7 @@ function Whiteboard(props) {
     function mouseleave(e) {
         props.setDrawMode((prev) => {
             if (prev) {
-                evl.handleCanvasMouseLeave(e, liveCanvasRef, props.pageId, props.canvasRef, props.wsRef,
-                    props.setBoardInfo);
+                evl.handleCanvasMouseLeave(e, liveCanvasRef, props.pageId, props.canvasRef, props.wsRef, props.setBoardInfo);
             }
             return prev;
         })

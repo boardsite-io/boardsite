@@ -1,21 +1,15 @@
 import React, { useState } from 'react';
 import { IconButton, Input, Slider } from '@material-ui/core';
-
 import PaletteIcon from '@material-ui/icons/Palette';
 import CreateIcon from '@material-ui/icons/Create';
-
 import UndoIcon from '@material-ui/icons/Undo';
 import RedoIcon from '@material-ui/icons/Redo';
-
-import { SketchPicker } from 'react-color'
-
 import RemoveIcon from '@material-ui/icons/Remove';
 import ChangeHistoryIcon from '@material-ui/icons/ChangeHistory';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-
 import BrushIcon from '@material-ui/icons/Brush';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-
+import { SketchPicker } from 'react-color'
 import Tooltip from '@material-ui/core/Tooltip';
 
 function Toolbar(props) {

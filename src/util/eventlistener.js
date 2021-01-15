@@ -19,6 +19,8 @@ const canvasResolutionFactor = 4;
 let style;
 let activeTool;
 let scaleFactor;
+let rect;
+let ctxLive;
 
 export function handleCanvasMouseDown(e, liveCanvasRef, setBoardInfo) {
     setBoardInfo((prev) => {
@@ -28,16 +30,17 @@ export function handleCanvasMouseDown(e, liveCanvasRef, setBoardInfo) {
         return prev;
     })
 
+    isMouseDown = true;
+    sampleCount = 1;
     const liveCanvas = liveCanvasRef.current;
-    const ctxLive = liveCanvas.getContext('2d');
+    ctxLive = liveCanvas.getContext('2d', {
+        alpha: true,
+        desynchronized: false,
+    });
     ctxLive.lineWidth = style.width;
     ctxLive.strokeStyle = style.color;
     ctxLive.fillStyle = style.color;
-
-    isMouseDown = true;
-    sampleCount = 1;
-
-    let rect = liveCanvas.getBoundingClientRect();
+    rect = liveCanvas.getBoundingClientRect();
     let x = (e.clientX - rect.left) * scaleFactor;
     let y = (e.clientY - rect.top) * scaleFactor;
 
@@ -78,12 +81,11 @@ export function handleCanvasMouseMove(e, liveCanvasRef) {
             minSampleCount = 3; // more precision for stylus
         }
         sampleCount += 1;
-        const liveCanvas = liveCanvasRef.current;
-        let rect = liveCanvas.getBoundingClientRect();
         let x = (e.clientX - rect.left) * scaleFactor;
         let y = (e.clientY - rect.top) * scaleFactor;
-        let moveDist = Math.pow(x - strokePoints[strokePoints.length-2], 2) + Math.pow(y - strokePoints[strokePoints.length-1], 2); // Quadratic distance moved from last registered point
-        const ctxLive = liveCanvas.getContext('2d');
+        // Quadratic distance moved from last registered point
+        let moveDist = Math.pow(x - strokePoints[strokePoints.length-2], 2) 
+                     + Math.pow(y - strokePoints[strokePoints.length-1], 2);
 
         if (activeTool === "line") {
             ctxLive.clearRect(0, 0, 2480, 3508);
@@ -119,11 +121,8 @@ export function handleCanvasMouseMove(e, liveCanvasRef) {
 export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, setBoardInfo) {
     if (!isMouseDown) { return; } // Ignore reentering
     isMouseDown = false;
-    const liveCanvas = liveCanvasRef.current;
-    const ctxLive = liveCanvas.getContext('2d');
 
     if (e.type !== "touchend" && e.type !== "touchcancel") {
-        let rect = liveCanvas.getBoundingClientRect();
         let x = (e.clientX - rect.left) * scaleFactor;
         let y = (e.clientY - rect.top) * scaleFactor;
         strokePoints.push(x, y);

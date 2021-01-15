@@ -9,7 +9,6 @@ import * as api from '../util/api';
 import * as proc from '../util/processing.js';
 import * as actPage from '../util/actionsPage.js';
 import * as actData from '../util/actionsData.js';
-
 import * as control from '../util/boardcontrol.js';
 
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
@@ -19,17 +18,13 @@ function WhiteboardControl() {
     // const defaultScale = 0.8 * window.innerWidth / 710;
     const defaultPositionX = (1 - 0.8) / 2 * window.innerWidth;
     const defaultPositionY = 60;
-
     const [drawMode, setDrawMode] = useState(true);
-
     const { id } = useParams();
     const [sessionID, setSessionID] = useState("");
     const [sidInput, setSidInput] = useState("");
-
     const [pageCollection, setPageCollection] = useState([]);
     const [openSessionDialog, setOpenSessionDialog] = useState(false);
     const [boardInfo, setBoardInfo] = useState(new control.BoardControl());
-
     const wsRef = useRef();
     
     // Connect to session if valid session link
@@ -63,16 +58,15 @@ function WhiteboardControl() {
 
     // Handles messages from the websocket
     function onMsgHandle(data) {
-        // const strokeObjectArray = JSON.parse(data.data);
-        // if (strokeObjectArray.length === 0) {
-        //     actPage.deleteAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
-        // }
-        // else {
-        //     let pageId = strokeObjectArray[0].pageId;
-        //     let canvasRef = pageCollection[pageId];
-        //     proc.processStrokes(strokeObjectArray, "message", setStrokeCollection, setHitboxCollection,
-        //         setUndoStack, wsRef, canvasRef);
-        // }
+        const strokeObjectArray = JSON.parse(data.data);
+        if (strokeObjectArray.length === 0) {
+            actPage.deleteAll(setBoardInfo, setPageCollection);
+        }
+        else {
+            let pageId = strokeObjectArray[0].pageId;
+            let canvasRef = pageCollection[pageId];
+            proc.processStrokes(strokeObjectArray, "message", setBoardInfo, wsRef, canvasRef);
+        }
     }
 
     function handleCreate(e) {
@@ -204,7 +198,7 @@ function WhiteboardControl() {
                 defaultPositionX={defaultPositionX}
                 defaultPositionY={defaultPositionY}
                 defaultScale={1}
-                onZoomChange={(e) => { 
+                onZoomChange={(e) => {
                     setBoardInfo((prev) => { prev.scaleRef = e.scale; return prev; });
                 }}
                 options={{
@@ -231,7 +225,6 @@ function WhiteboardControl() {
                 {({ zoomIn, zoomOut, resetTransform, pan, scale, positionX, positionY, setPositionX, setPositionY, setScale }) => (
                     <>
                         <Viewbar
-                            //pan={props.pan.disabled}
                             pan={pan}
                             zoomIn={zoomIn}
                             zoomOut={zoomOut}
