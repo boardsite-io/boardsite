@@ -5,6 +5,8 @@ import Homebar from './homebar';
 import Viewbar from './viewbar';
 import AlertDialog from '../component/session_dialog';
 import { useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux'
+
 import * as api from '../util/api';
 import * as proc from '../util/processing.js';
 import * as actPage from '../util/actionsPage.js';
@@ -20,46 +22,40 @@ function WhiteboardControl() {
     const defaultPositionX = (1 - 0.8) / 2 * window.innerWidth;
     const defaultPositionY = 60;
 
-    const [drawMode, setDrawMode] = useState(true);
-
-    const { id } = useParams();
-    const [sessionID, setSessionID] = useState("");
+    const [openSessionDialog, setOpenSessionDialog] = useState(false);
     const [sidInput, setSidInput] = useState("");
 
-    const [pageCollection, setPageCollection] = useState([]);
-    const [openSessionDialog, setOpenSessionDialog] = useState(false);
-    const [boardInfo, setBoardInfo] = useState(new control.BoardControl());
 
-    const wsRef = useRef();
-    
+    const pageRank = useSelector((state) => state.boardcontrol.pageRank);
+
     // Connect to session if valid session link
-    useEffect(() => {
-        if (id !== undefined) { // Check if id specified in link
-            setSessionID(id); // Set session id and connect to session
-        }
-    }, [id])
+    // useEffect(() => {
+    //     if (id !== undefined) { // Check if id specified in link
+    //         setSessionID(id); // Set session id and connect to session
+    //     }
+    // }, [id])
 
-    // Open dialog on mount
-    useEffect(() => {
-        //setOpenSessionDialog(true);
-        // setBoardInfo((prev) => {
-        //     prev.pageCollection = [{ canvasRef: createRef(), pageId: "xy123" }]; 
-        //     return prev;
-        // });
-        setPageCollection([{ canvasRef: createRef(), pageId: "xy123" }]); 
-    }, [])
+    // // Open dialog on mount
+    // useEffect(() => {
+    //     setOpenSessionDialog(true);
+    //      setBoardInfo((prev) => {
+    //          prev.pageCollection = [{ canvasRef: createRef(), pageId: "xy123" }]; 
+    //          return prev;
+    //     });
+    //     setPageCollection([{ canvasRef: createRef(), pageId: "xy123" }]); 
+    // }, [])
 
     // Verify session id and try to connect to session
-    useEffect(() => {
-        if (sessionID !== "") {
-            api.createWebsocket(sessionID, onMsgHandle, null, null,).then((socket) => {
-                // wsRef.current = socket;
-                console.log(sessionID);
-                navigator.clipboard.writeText(sessionID); // copy session ID to clipboard
-            }).catch(() => console.log(`cannot connect websocket on '/${sessionID}'`));
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sessionID])
+    // useEffect(() => {
+    //     if (sessionID !== "") {
+    //         api.createWebsocket(sessionID, onMsgHandle, null, null,).then((socket) => {
+    //             // wsRef.current = socket;
+    //             console.log(sessionID);
+    //             navigator.clipboard.writeText(sessionID); // copy session ID to clipboard
+    //         }).catch(() => console.log(`cannot connect websocket on '/${sessionID}'`));
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [sessionID])
 
     // Handles messages from the websocket
     function onMsgHandle(data) {
@@ -76,18 +72,18 @@ function WhiteboardControl() {
     }
 
     function handleCreate(e) {
-        let boardDim = { x: 10, y: 10 };
-        api.createBoardRequest(boardDim).then((data) => {
-            api.getPages(data.id).then((data) => {
-                console.log(data);
-                setSessionID(data.id);
-                setOpenSessionDialog(false); // close dialog
-            }).catch(() => console.log("server cannot get pages"));
-        }).catch(() => console.log("server cannot create session"));
+        // let boardDim = { x: 10, y: 10 };
+        // api.createBoardRequest(boardDim).then((data) => {
+        //     api.getPages(data.id).then((data) => {
+        //         console.log(data);
+        //         setSessionID(data.id);
+        //         setOpenSessionDialog(false); // close dialog
+        //     }).catch(() => console.log("server cannot get pages"));
+        // }).catch(() => console.log("server cannot create session"));
     }
 
     function handleJoin() {
-        setSessionID(sidInput);
+        // setSessionID(sidInput);
     }
 
     function handleTextFieldChange(e) {
@@ -95,86 +91,86 @@ function WhiteboardControl() {
     }
 
     function addPage(pageid) {
-        if (wsRef.current !== undefined) { // Online
-            api.addPage(sessionID);
-        } else { // Offline
-            actPage.addPage(pageid, setPageCollection);
-        }
+        // if (wsRef.current !== undefined) { // Online
+        //     api.addPage(sessionID);
+        // } else { // Offline
+        //     actPage.addPage(pageid, setPageCollection);
+        // }
     }
 
     function deleteAll() {
-        if (wsRef.current !== undefined) { // Online
-            // api.clearBoard(sessionID);
-        } else { // Offline
-            actPage.deleteAll(setBoardInfo, setPageCollection);
-            console.log("XD");
-        }
+        // if (wsRef.current !== undefined) { // Online
+        //     // api.clearBoard(sessionID);
+        // } else { // Offline
+        //     actPage.deleteAll(setBoardInfo, setPageCollection);
+        //     console.log("XD");
+        // }
     }
 
     function deletePage(pageid) {
-        if (wsRef.current !== undefined) { // Online
-            // api.deletePage(sessionID, pageid);
-        } else { // Offline
-            actPage.deletePage(pageid, setBoardInfo, setPageCollection);
-        }
+        // if (wsRef.current !== undefined) { // Online
+        //     // api.deletePage(sessionID, pageid);
+        // } else { // Offline
+        //     actPage.deletePage(pageid, setBoardInfo, setPageCollection);
+        // }
     }
 
     function clearPage(pageid, canvasRef) {
-        if (wsRef.current !== undefined) { // Online
-            // api.clearPage(sessionID, pageid);
-        } else { // Offline
-            actPage.clearPage(pageid, setBoardInfo, canvasRef);
-        }
+        // if (wsRef.current !== undefined) { // Online
+        //     // api.clearPage(sessionID, pageid);
+        // } else { // Offline
+        //     actPage.clearPage(pageid, setBoardInfo, canvasRef);
+        // }
     }
 
     function clearAll() {
-        if (wsRef.current !== undefined) { // Online
-            // api.clearAll(sessionID);
-        } else { // Offline
-            actPage.clearAll(setBoardInfo, pageCollection);
-        }
+        // if (wsRef.current !== undefined) { // Online
+        //     // api.clearAll(sessionID);
+        // } else { // Offline
+        //     actPage.clearAll(setBoardInfo, pageCollection);
+        // }
     }
 
     function handleUndo() {
-        let undo = boardInfo.undoStack.pop();
-        if (undo !== undefined) {
-            let pageId = undo[0].page_id;
-            let canvasRef = actData.getCanvasRef(pageId, pageCollection);
-            proc.processStrokes(undo, "undo", setBoardInfo, wsRef, canvasRef);
-        }
+        // let undo = boardInfo.undoStack.pop();
+        // if (undo !== undefined) {
+        //     let pageId = undo[0].page_id;
+        //     let canvasRef = actData.getCanvasRef(pageId, pageCollection);
+        //     proc.processStrokes(undo, "undo", setBoardInfo, wsRef, canvasRef);
+        // }
     }
 
     function handleRedo() {
-        let redo = boardInfo.redoStack.pop();
-        if (redo !== undefined) {
-            let pageId = redo[0].page_id;
-            let canvasRef = actData.getCanvasRef(pageId, pageCollection);
-            proc.processStrokes(redo, "redo", setBoardInfo, wsRef, canvasRef);
-        }
+        // let redo = boardInfo.redoStack.pop();
+        // if (redo !== undefined) {
+        //     let pageId = redo[0].page_id;
+        //     let canvasRef = actData.getCanvasRef(pageId, pageCollection);
+        //     proc.processStrokes(redo, "redo", setBoardInfo, wsRef, canvasRef);
+        // }
     }
 
     function debug() {
-        console.log(boardInfo);
+        // console.log(boardInfo);
     }
 
     function exportToPDF() {
-        if (pageCollection.length === 0) {
-            return;
-        }
-        const pdf = new jsPDF();
-        const width = pdf.internal.pageSize.getWidth();
-        const height = pdf.internal.pageSize.getHeight();
-        let canvasPage = pageCollection[0].canvasRef.current;
-        let imgData = canvasPage.toDataURL('image/png');
-        pdf.addImage(imgData, 'PNG', 0, 0, width, height);
-        for (let i = 1; i < pageCollection.length; i++) {
-            canvasPage = pageCollection[i].canvasRef.current;
-            imgData = canvasPage.toDataURL('image/png');
-            pdf.addPage();
-            pdf.setPage(i + 1);
-            pdf.addImage(imgData, 'PNG', 0, 0, width, height);
-        }
-        pdf.save("a4.pdf");
+        // if (pageCollection.length === 0) {
+        //     return;
+        // }
+        // const pdf = new jsPDF();
+        // const width = pdf.internal.pageSize.getWidth();
+        // const height = pdf.internal.pageSize.getHeight();
+        // let canvasPage = pageCollection[0].canvasRef.current;
+        // let imgData = canvasPage.toDataURL('image/png');
+        // pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+        // for (let i = 1; i < pageCollection.length; i++) {
+        //     canvasPage = pageCollection[i].canvasRef.current;
+        //     imgData = canvasPage.toDataURL('image/png');
+        //     pdf.addPage();
+        //     pdf.setPage(i + 1);
+        //     pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+        // }
+        // pdf.save("a4.pdf");
     }
 
     function save() {
@@ -182,12 +178,11 @@ function WhiteboardControl() {
     }
 
     return (
-        <div className="viewport" websocket={wsRef.current}>
+        <div className="viewport">
             <AlertDialog open={openSessionDialog} setOpen={setOpenSessionDialog} sessionID_input={sidInput} setSessionID_input={setSidInput}
                 handleTextFieldChange={handleTextFieldChange} handleJoin={handleJoin} handleCreate={handleCreate} />
-            <Toolbar wsRef={wsRef}
+            <Toolbar 
                 debug={debug}
-                setBoardInfo={setBoardInfo}
                 handleUndo={handleUndo}
                 handleRedo={handleRedo}
             />
@@ -205,7 +200,7 @@ function WhiteboardControl() {
                 defaultPositionY={defaultPositionY}
                 defaultScale={1}
                 onZoomChange={(e) => { 
-                    setBoardInfo((prev) => { prev.scaleRef = e.scale; return prev; });
+                    //setBoardInfo((prev) => { prev.scaleRef = e.scale; return prev; });
                 }}
                 options={{
                     disabled: false,
@@ -219,7 +214,7 @@ function WhiteboardControl() {
                     disabled: true
                 }}
                 pan={{
-                    disabled: drawMode,
+                    disabled: true, //drawMode,
                     paddingSize: 0
                 }}
                 wheel={{
@@ -236,7 +231,8 @@ function WhiteboardControl() {
                             zoomIn={zoomIn}
                             zoomOut={zoomOut}
                             resetTransform={resetTransform}
-                            drawMode={drawMode} setDrawMode={setDrawMode}
+                            drawMode={true}
+                            //drawMode={drawMode} setDrawMode={setDrawMode}
                             setScale={setScale}
                             scale={scale}
                             positionX={positionX}
@@ -247,19 +243,11 @@ function WhiteboardControl() {
                         <TransformComponent>
                             <div className="pagecollectionouter">
                                 <div className="pagecollectioninner">
-                                    {pageCollection.map((page) => {
+                                    {pageRank.map((pageId) => {
                                         return (
                                             <Whiteboard
                                                 className="page"
-                                                wsRef={wsRef}
-                                                canvasRef={page.canvasRef}
-                                                key={page.pageId}
-                                                pageId={page.pageId}
-                                                deletePage={deletePage}
-                                                clearPage={clearPage}
-                                                addPage={addPage}
-                                                setDrawMode={setDrawMode}
-                                                setBoardInfo={setBoardInfo}
+                                                key={pageId}
                                             />
                                         );
                                     })}

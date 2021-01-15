@@ -1,68 +1,38 @@
 import React, { useState, useEffect, useRef } from 'react';
-import * as evl from '../util/eventlistener.js';
 import { IconButton } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import Tooltip from '@material-ui/core/Tooltip';
 import MenuIcon from '@material-ui/icons/Menu';
+import * as evl from '../util/eventlistener.js';
+import * as constant from '../../constants.js';
 
 function Whiteboard(props) {
     const [displayPageSettings, setDisplayPageSettings] = useState(false);
     const liveCanvasRef = useRef();
+    const mainCanvasRef = useRef();
 
-    function mousedown(e) {
-        props.setDrawMode((prev) => {
-            if (prev) {
-                evl.handleCanvasMouseDown(e, liveCanvasRef, props.setBoardInfo)
-            }
-            return prev;
-        })
-    }
-    function mousemove(e) {
-        props.setDrawMode((prev) => {
-            if (prev) {
-                evl.handleCanvasMouseMove(e, liveCanvasRef);
-            }
-            return prev;
-        })
-    }
-    function mouseup(e) {
-        props.setDrawMode((prev) => {
-            if (prev) {
-                evl.handleCanvasMouseUp(e, liveCanvasRef, props.pageId, props.canvasRef, props.wsRef,
-                    props.setBoardInfo);
-            }
-            return prev;
-        })
-    }
-    function mouseleave(e) {
-        props.setDrawMode((prev) => {
-            if (prev) {
-                evl.handleCanvasMouseLeave(e, liveCanvasRef, props.pageId, props.canvasRef, props.wsRef,
-                    props.setBoardInfo);
-            }
-            return prev;
-        })
-    }
+    const pageId = props.key;
+
 
     useEffect(() => {
-        const canvas = props.canvasRef.current;
+        const mainCanvas = mainCanvasRef.current;
         const liveCanvas = liveCanvasRef.current;
-        canvas.width = 2480; //canvas.clientWidth;
-        canvas.height = 3508; //canvas.clientHeight;
-        liveCanvas.width = 2480; //canvas.clientWidth;
-        liveCanvas.height = 3508; //canvas.clientHeight;
+        mainCanvas.width = constant.CANVAS_WIDTH; //canvas.clientWidth;
+        mainCanvas.height = constant.CANVAS_HEIGHT; //canvas.clientHeight;
+        liveCanvas.width = constant.CANVAS_WIDTH; //canvas.clientWidth;
+        liveCanvas.height = constant.CANVAS_HEIGHT; //canvas.clientHeight;
         liveCanvas.addEventListener("contextmenu", e => e.preventDefault()); // Disable Context Menu
-        liveCanvas.addEventListener("mousedown", (e) => mousedown(e));
-        liveCanvas.addEventListener("mousemove", (e) => mousemove(e));
-        liveCanvas.addEventListener("mouseup", (e) => mouseup(e));
-        liveCanvas.addEventListener("mouseleave", (e) => mouseleave(e));
+        liveCanvas.addEventListener("mousedown", (e) => evl.handleCanvasMouseDown(e, liveCanvasRef));
+        liveCanvas.addEventListener("mousemove", (e) => evl.handleCanvasMouseMove(e, liveCanvasRef));
+        liveCanvas.addEventListener("mouseup", (e) => evl.handleCanvasMouseUp(e, pageId, mainCanvasRef, liveCanvasRef));
+        liveCanvas.addEventListener("mouseleave", (e) => evl.handleCanvasMouseLeave(e, pageId, mainCanvasRef, liveCanvasRef));
         // touch & stylus support
-        liveCanvas.addEventListener("touchstart", (e) => mousedown(e));
-        liveCanvas.addEventListener("touchmove", (e) => mousemove(e));
-        liveCanvas.addEventListener("touchend", (e) => mouseup(e));
-        liveCanvas.addEventListener("touchcancel", (e) => mouseleave(e));
+        liveCanvas.addEventListener("touchstart", (e) => evl.handleCanvasMouseDown(e, liveCanvasRef));
+        liveCanvas.addEventListener("touchmove", (e) => evl.handleCanvasMouseMove(e, liveCanvasRef));
+        liveCanvas.addEventListener("touchend", (e) => evl.handleCanvasMouseUp(e, pageId, mainCanvasRef, liveCanvasRef));
+        liveCanvas.addEventListener("touchcancel", (e) => evl.handleCanvasMouseLeave(e, pageId, mainCanvasRef, liveCanvasRef));
 
         return () => {
             liveCanvas.removeEventListener("contextmenu", null);
@@ -86,12 +56,12 @@ function Whiteboard(props) {
     function closePageSettings() {
         setDisplayPageSettings(false);
     }
-
+    
     return (
         <div className="page">
             <div id="canvasWrapper">
-                <canvas id="canvasLive" ref={liveCanvasRef} />
-                <canvas id="canvasMain" ref={props.canvasRef} />
+                <canvas id={`${pageId}_live`} ref={liveCanvasRef} />
+                <canvas id={`${pageId}_main`} ref={mainCanvasRef} />
             </div>
             <div>
                 <Tooltip id="tooltip" title="page settings" TransitionProps={{ timeout: 0 }} placement="bottom">

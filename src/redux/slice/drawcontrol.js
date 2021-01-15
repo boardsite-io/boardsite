@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const drawControlSlice = createSlice({
-    name: "drawcontrol",
+    name: "drawControl",
     initialState: {
         active: true,
         tool: "pen",
@@ -13,7 +13,7 @@ const drawControlSlice = createSlice({
     reducers: {
         
     }
-})
+});
 
 //export const { ... } = drawControlSlice.actions;
 

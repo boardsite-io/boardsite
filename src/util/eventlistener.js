@@ -10,6 +10,10 @@
 import * as draw from './drawingengine.js';
 import * as proc from './processing.js';
 
+import { clearAll, addPage } from '../redux/slice/boardcontrol.js';
+
+import store from '../redux/store.js';
+
 let isMouseDown = false;
 let sampleCount = 0;
 let strokePoints = [];
@@ -20,13 +24,16 @@ let style;
 let activeTool;
 let scaleFactor;
 
-export function handleCanvasMouseDown(e, liveCanvasRef, setBoardInfo) {
+export function handleCanvasMouseDown(e, liveCanvasRef) {
     setBoardInfo((prev) => {
         style = prev.style;
         activeTool = prev.activeTool;
         scaleFactor = canvasResolutionFactor / prev.scaleRef;
         return prev;
     })
+
+    store.getStore(); // {boardControl: {pageRank, pageCollection}, drawControl: {}}
+    store.dispatch(addPage({pageId: "fwfe", pageIndex: -1}));
 
     const liveCanvas = liveCanvasRef.current;
     const ctxLive = liveCanvas.getContext('2d');
@@ -116,7 +123,7 @@ export function handleCanvasMouseMove(e, liveCanvasRef) {
     }
 }
 
-export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, setBoardInfo) {
+export function handleCanvasMouseUp(e, pageId, mainCanvasRef, liveCanvasRef) {
     if (!isMouseDown) { return; } // Ignore reentering
     isMouseDown = false;
     const liveCanvas = liveCanvasRef.current;
@@ -170,6 +177,6 @@ export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, 
     }
 }
 
-export function handleCanvasMouseLeave(e, liveCanvasRef, pageId, canvasRef, wsRef, setBoardInfo) {
-    handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, setBoardInfo);
+export function handleCanvasMouseLeave(e, pageId, mainCanvasRef, liveCanvasRef) {
+    handleCanvasMouseUp(e, pageId, mainCanvasRef, liveCanvasRef);
 }
