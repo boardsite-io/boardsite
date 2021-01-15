@@ -25,6 +25,11 @@ function Toolbar(props) {
     const [color, setColor] = useState({ r: '0', g: '0', b: '0', a: '1', });
     const minWidth = 1;
     const maxWidth = 40;
+    const canvasResolutionFactor = 4;
+
+    const [ , setStrokeStyle] = useState("#000000");
+    const [lineWidth, setLineWidth] = useState(3);
+    const [activeTool, setActiveTool] = useState("pen");
 
     function handlePaletteClick() {
         setDisplayColorPicker(!displayColorPicker);
@@ -44,23 +49,27 @@ function Toolbar(props) {
 
     function handlePaletteChange(color) {
         setColor(color.rgb);
-        props.setStrokeStyle(color.hex)
+        setStrokeStyle(color.hex);
+        props.setBoardInfo((prev) => { prev.style.color = color.hex; return prev; });
     };
 
-    const handleSliderChange = (event, newValue) => {
-        props.setLineWidth(newValue);
+    const handleSliderChange = (event, width) => {
+        setLineWidth(width);
+        props.setBoardInfo((prev) => { prev.style.width = width * canvasResolutionFactor; return prev; });
     };
 
     const handleInputChange = (event) => {
-        props.setLineWidth(event.target.value === '' ? '' : Number(event.target.value));
+        let width = event.target.value === '' ? '' : Number(event.target.value);
+        setLineWidth(width);
+        props.setBoardInfo((prev) => { prev.style.width = width * canvasResolutionFactor; return prev; });
     };
 
     // Slider Functions
     const handleBlur = () => {
-        if (props.lineWidth < minWidth) {
-            props.setLineWidth(minWidth);
-        } else if (props.lineWidth > maxWidth) {
-            props.setLineWidth(maxWidth);
+        if (lineWidth < minWidth) {
+            setLineWidth(minWidth);
+        } else if (lineWidth > maxWidth) {
+            setLineWidth(maxWidth);
         }
     };
 
@@ -82,14 +91,15 @@ function Toolbar(props) {
             <div className="toolring">
                 <Tooltip id="tooltip" title="pen" TransitionProps={{ timeout: 0 }} placement="bottom">
                     {
-                        props.activeTool === "pen" ?
+                        activeTool === "pen" ?
                             <IconButton id="iconButtonActive" variant="contained" onClick={() => setDisplayExtraTools((prev) => !prev)}>
                                 <BrushIcon id="iconButtonActiveInner" />
                             </IconButton>
                             :
                             <IconButton id="iconButton" variant="contained" onClick={() => {
-                                props.setActiveTool("pen");
+                                setActiveTool("pen");
                                 setDisplayExtraTools(false);
+                                props.setBoardInfo((prev) => { prev.activeTool = "pen"; return prev; });
                             }}>
                                 <BrushIcon id="iconButtonInner" />
                             </IconButton>
@@ -97,53 +107,64 @@ function Toolbar(props) {
                 </Tooltip>
                 <Tooltip id="tooltip" title="eraser" TransitionProps={{ timeout: 0 }} placement="bottom">
                     {
-                        props.activeTool === "eraser" ?
-                            <IconButton id="iconButtonActive" variant="contained" onClick={() => props.setActiveTool("eraser")}>
+                        activeTool === "eraser" ?
+                            <IconButton id="iconButtonActive" variant="contained" onClick={() => setActiveTool("eraser")}>
                                 <HighlightOffIcon id="iconButtonActiveInner" />
                             </IconButton>
                             :
-                            <IconButton id="iconButton" variant="contained" onClick={() => props.setActiveTool("eraser")}>
+                            <IconButton id="iconButton" variant="contained" onClick={() => {
+                                setActiveTool("eraser");
+                                props.setBoardInfo((prev) => { prev.activeTool = "eraser"; return prev; });
+                            }}>
                                 <HighlightOffIcon id="iconButtonInner" />
                             </IconButton>
                     }
                 </Tooltip>
-
             </div>
             {
                 displayExtraTools ?
                     <div className="extratools" >
                         <Tooltip id="tooltip" title="line" TransitionProps={{ timeout: 0 }} placement="bottom">
                             {
-                                props.activeTool === "line" ?
+                                activeTool === "line" ?
                                     <IconButton id="iconButtonActive" variant="contained" onClick={() => setDisplayExtraTools(false)}>
                                         <RemoveIcon id="iconButtonActiveInner" />
                                     </IconButton>
                                     :
-                                    <IconButton id="iconButton" variant="contained" onClick={() => props.setActiveTool("line")}>
+                                    <IconButton id="iconButton" variant="contained" onClick={() => {
+                                        setActiveTool("line");
+                                        props.setBoardInfo((prev) => { prev.activeTool = "line"; return prev; });
+                                    }}>
                                         <RemoveIcon id="iconButtonInner" />
                                     </IconButton>
                             }
                         </Tooltip>
                         <Tooltip id="tooltip" title="triangle" TransitionProps={{ timeout: 0 }} placement="bottom">
                             {
-                                props.activeTool === "triangle" ?
+                                activeTool === "triangle" ?
                                     <IconButton id="iconButtonActive" variant="contained" onClick={() => setDisplayExtraTools(false)}>
                                         <ChangeHistoryIcon id="iconButtonActiveInner" />
                                     </IconButton>
                                     :
-                                    <IconButton id="iconButton" variant="contained" onClick={() => props.setActiveTool("triangle")}>
+                                    <IconButton id="iconButton" variant="contained" onClick={() => {
+                                        setActiveTool("triangle");
+                                        props.setBoardInfo((prev) => { prev.activeTool = "triangle"; return prev; });
+                                    }}>
                                         <ChangeHistoryIcon id="iconButtonInner" />
                                     </IconButton>
                             }
                         </Tooltip>
                         <Tooltip id="tooltip" title="circle" TransitionProps={{ timeout: 0 }} placement="bottom">
                             {
-                                props.activeTool === "circle" ?
+                                activeTool === "circle" ?
                                     <IconButton id="iconButtonActive" variant="contained" onClick={() => setDisplayExtraTools(false)}>
                                         <RadioButtonUncheckedIcon id="iconButtonActiveInner" />
                                     </IconButton>
                                     :
-                                    <IconButton id="iconButton" variant="contained" onClick={() => props.setActiveTool("circle")}>
+                                    <IconButton id="iconButton" variant="contained" onClick={() => {
+                                        setActiveTool("circle");
+                                        props.setBoardInfo((prev) => { prev.activeTool = "circle"; return prev; });
+                                    }}>
                                         <RadioButtonUncheckedIcon id="iconButtonInner" />
                                     </IconButton>
                             }
@@ -181,14 +202,14 @@ function Toolbar(props) {
                             <div className="cover" onClick={handleWidthClose} />
                             <div className="widthpicker">
                                 <Slider
-                                    value={typeof props.lineWidth === 'number' ? props.lineWidth : 0}
+                                    value={typeof lineWidth === 'number' ? lineWidth : 0}
                                     onChange={handleSliderChange}
                                     aria-labelledby="input-slider"
                                     min={minWidth}
                                     max={maxWidth}
                                 />
                                 <Input
-                                    value={props.lineWidth}
+                                    value={lineWidth}
                                     margin="dense"
                                     onChange={handleInputChange}
                                     onBlur={handleBlur}

@@ -10,32 +10,28 @@ import * as proc from '../util/processing.js';
 import * as actPage from '../util/actionsPage.js';
 import * as actData from '../util/actionsData.js';
 
+import * as control from '../util/boardcontrol.js';
+
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { jsPDF } from "jspdf";
 
 function WhiteboardControl() {
-    const defaultScale = 0.8 * window.innerWidth / 710;
+    // const defaultScale = 0.8 * window.innerWidth / 710;
     const defaultPositionX = (1 - 0.8) / 2 * window.innerWidth;
     const defaultPositionY = 60;
+
+    const [drawMode, setDrawMode] = useState(true);
 
     const { id } = useParams();
     const [sessionID, setSessionID] = useState("");
     const [sidInput, setSidInput] = useState("");
 
     const [pageCollection, setPageCollection] = useState([]);
-    const [strokeCollection, setStrokeCollection] = useState({});
-    const [hitboxCollection, setHitboxCollection] = useState({});
-    const [undoStack, setUndoStack] = useState([]);
-    const [redoStack, setRedoStack] = useState([]);
-    const [strokeStyle, setStrokeStyle] = useState("#000000");
-    const [lineWidth, setLineWidth] = useState(5);
     const [openSessionDialog, setOpenSessionDialog] = useState(false);
+    const [boardInfo, setBoardInfo] = useState(new control.BoardControl());
 
     const wsRef = useRef();
-    const scaleRef = useRef(defaultScale);
-    const [drawMode, setDrawMode] = useState(true);
-    const [activeTool, setActiveTool] = useState("pen");
-
+    
     // Connect to session if valid session link
     useEffect(() => {
         if (id !== undefined) { // Check if id specified in link
@@ -46,14 +42,18 @@ function WhiteboardControl() {
     // Open dialog on mount
     useEffect(() => {
         //setOpenSessionDialog(true);
-        setPageCollection([{ canvasRef: createRef(), pageId: "xy123" }]);
+        // setBoardInfo((prev) => {
+        //     prev.pageCollection = [{ canvasRef: createRef(), pageId: "xy123" }]; 
+        //     return prev;
+        // });
+        setPageCollection([{ canvasRef: createRef(), pageId: "xy123" }]); 
     }, [])
 
     // Verify session id and try to connect to session
     useEffect(() => {
         if (sessionID !== "") {
             api.createWebsocket(sessionID, onMsgHandle, null, null,).then((socket) => {
-                wsRef.current = socket;
+                // wsRef.current = socket;
                 console.log(sessionID);
                 navigator.clipboard.writeText(sessionID); // copy session ID to clipboard
             }).catch(() => console.log(`cannot connect websocket on '/${sessionID}'`));
@@ -63,16 +63,16 @@ function WhiteboardControl() {
 
     // Handles messages from the websocket
     function onMsgHandle(data) {
-        const strokeObjectArray = JSON.parse(data.data);
-        if (strokeObjectArray.length === 0) {
-            actPage.deleteAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
-        }
-        else {
-            let pageId = strokeObjectArray[0].pageId;
-            let canvasRef = pageCollection[pageId];
-            proc.processStrokes(strokeObjectArray, "message", setStrokeCollection, setHitboxCollection,
-                setUndoStack, wsRef, canvasRef);
-        }
+        // const strokeObjectArray = JSON.parse(data.data);
+        // if (strokeObjectArray.length === 0) {
+        //     actPage.deleteAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
+        // }
+        // else {
+        //     let pageId = strokeObjectArray[0].pageId;
+        //     let canvasRef = pageCollection[pageId];
+        //     proc.processStrokes(strokeObjectArray, "message", setStrokeCollection, setHitboxCollection,
+        //         setUndoStack, wsRef, canvasRef);
+        // }
     }
 
     function handleCreate(e) {
@@ -104,17 +104,18 @@ function WhiteboardControl() {
 
     function deleteAll() {
         if (wsRef.current !== undefined) { // Online
-            api.clearBoard(sessionID);
+            // api.clearBoard(sessionID);
         } else { // Offline
-            actPage.deleteAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
+            actPage.deleteAll(setBoardInfo, setPageCollection);
+            console.log("XD");
         }
     }
 
     function deletePage(pageid) {
         if (wsRef.current !== undefined) { // Online
-            api.deletePage(sessionID, pageid);
+            // api.deletePage(sessionID, pageid);
         } else { // Offline
-            actPage.deletePage(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, setPageCollection);
+            actPage.deletePage(pageid, setBoardInfo, setPageCollection);
         }
     }
 
@@ -122,7 +123,7 @@ function WhiteboardControl() {
         if (wsRef.current !== undefined) { // Online
             // api.clearPage(sessionID, pageid);
         } else { // Offline
-            actPage.clearPage(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, canvasRef);
+            actPage.clearPage(pageid, setBoardInfo, canvasRef);
         }
     }
 
@@ -130,32 +131,30 @@ function WhiteboardControl() {
         if (wsRef.current !== undefined) { // Online
             // api.clearAll(sessionID);
         } else { // Offline
-            actPage.clearAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection);
+            actPage.clearAll(setBoardInfo, pageCollection);
         }
     }
 
     function handleUndo() {
-        let undo = undoStack.pop();
+        let undo = boardInfo.undoStack.pop();
         if (undo !== undefined) {
             let pageId = undo[0].page_id;
             let canvasRef = actData.getCanvasRef(pageId, pageCollection);
-            proc.processStrokes(undo, "undo", setStrokeCollection, setHitboxCollection,
-                setRedoStack, wsRef, canvasRef);
+            proc.processStrokes(undo, "undo", setBoardInfo, wsRef, canvasRef);
         }
     }
 
     function handleRedo() {
-        let redo = redoStack.pop();
+        let redo = boardInfo.redoStack.pop();
         if (redo !== undefined) {
             let pageId = redo[0].page_id;
             let canvasRef = actData.getCanvasRef(pageId, pageCollection);
-            proc.processStrokes(redo, "redo", setStrokeCollection, setHitboxCollection,
-                setUndoStack, wsRef, canvasRef);
+            proc.processStrokes(redo, "redo", setBoardInfo, wsRef, canvasRef);
         }
     }
 
     function debug() {
-        console.log(pageCollection, hitboxCollection, strokeCollection);
+        console.log(boardInfo);
     }
 
     function exportToPDF() {
@@ -188,9 +187,7 @@ function WhiteboardControl() {
                 handleTextFieldChange={handleTextFieldChange} handleJoin={handleJoin} handleCreate={handleCreate} />
             <Toolbar wsRef={wsRef}
                 debug={debug}
-                strokeStyle={strokeStyle} setStrokeStyle={setStrokeStyle}
-                lineWidth={lineWidth} setLineWidth={setLineWidth}
-                activeTool={activeTool} setActiveTool={setActiveTool}
+                setBoardInfo={setBoardInfo}
                 handleUndo={handleUndo}
                 handleRedo={handleRedo}
             />
@@ -206,8 +203,10 @@ function WhiteboardControl() {
             <TransformWrapper
                 defaultPositionX={defaultPositionX}
                 defaultPositionY={defaultPositionY}
-                defaultScale={defaultScale}
-                onZoomChange={(e) => { scaleRef.current = e.scale }}
+                defaultScale={1}
+                onZoomChange={(e) => { 
+                    setBoardInfo((prev) => { prev.scaleRef = e.scale; return prev; });
+                }}
                 options={{
                     disabled: false,
                     minScale: 0.5,
@@ -254,21 +253,13 @@ function WhiteboardControl() {
                                                 className="page"
                                                 wsRef={wsRef}
                                                 canvasRef={page.canvasRef}
-                                                scaleRef={scaleRef}
                                                 key={page.pageId}
                                                 pageId={page.pageId}
                                                 deletePage={deletePage}
                                                 clearPage={clearPage}
                                                 addPage={addPage}
                                                 setDrawMode={setDrawMode}
-                                                setPageCollection={setPageCollection}
-                                                setStrokeCollection={setStrokeCollection}
-                                                setHitboxCollection={setHitboxCollection}
-                                                setUndoStack={setUndoStack}
-                                                setRedoStack={setRedoStack}
-                                                setActiveTool={setActiveTool}
-                                                setStrokeStyle={setStrokeStyle}
-                                                setLineWidth={setLineWidth}
+                                                setBoardInfo={setBoardInfo}
                                             />
                                         );
                                     })}

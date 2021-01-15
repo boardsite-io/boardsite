@@ -14,7 +14,7 @@ function Whiteboard(props) {
     function mousedown(e) {
         props.setDrawMode((prev) => {
             if (prev) {
-                evl.handleCanvasMouseDown(e, liveCanvasRef, props.scaleRef, props.setActiveTool, props.setLineWidth, props.setStrokeStyle)
+                evl.handleCanvasMouseDown(e, liveCanvasRef, props.setBoardInfo)
             }
             return prev;
         })
@@ -22,7 +22,7 @@ function Whiteboard(props) {
     function mousemove(e) {
         props.setDrawMode((prev) => {
             if (prev) {
-                evl.handleCanvasMouseMove(e, liveCanvasRef, props.scaleRef);
+                evl.handleCanvasMouseMove(e, liveCanvasRef);
             }
             return prev;
         })
@@ -31,7 +31,7 @@ function Whiteboard(props) {
         props.setDrawMode((prev) => {
             if (prev) {
                 evl.handleCanvasMouseUp(e, liveCanvasRef, props.pageId, props.canvasRef, props.wsRef,
-                    props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.scaleRef);
+                    props.setBoardInfo);
             }
             return prev;
         })
@@ -40,7 +40,7 @@ function Whiteboard(props) {
         props.setDrawMode((prev) => {
             if (prev) {
                 evl.handleCanvasMouseLeave(e, liveCanvasRef, props.pageId, props.canvasRef, props.wsRef,
-                    props.setStrokeCollection, props.setHitboxCollection, props.setUndoStack, props.scaleRef);
+                    props.setBoardInfo);
             }
             return prev;
         })

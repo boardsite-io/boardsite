@@ -19,42 +19,42 @@ export function addPage(pageid, setPageCollection) {
     })
 }
 
-export function deletePage(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, setPageCollection) {
-    actData.clearPageData(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack);
+export function deletePage(pageid, setBoardInfo, setPageCollection) {
+    actData.clearPageData(pageid, setBoardInfo);
     actData.deletePageFromCollection(pageid, setPageCollection);
 }
 
-export function deleteAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection) {
-    pageCollection.forEach((page) => {
-        const canvas = page.canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, 2480, 3508);
-    });
-
-    setStrokeCollection({});
-    setHitboxCollection({});
-    setUndoStack([]);
-    setRedoStack([]);
+export function deleteAll(setBoardInfo, setPageCollection) {
+    setBoardInfo((prev) => {
+        prev.strokeCollection = {};
+        prev.hitboxCollection = {};
+        prev.undoStack = [];
+        prev.redoStack = [];
+        return prev;
+    })
     setPageCollection([]);
 }
 
-export function clearPage(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, canvasRef) {
-    actData.clearPageData(pageid, setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack);
+export function clearPage(pageid, setBoardInfo, canvasRef) {
+    actData.clearPageData(pageid, setBoardInfo);
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, 2480, 3508);
 }
 
-export function clearAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection) {
+export function clearAll(setBoardInfo, pageCollection) {
     pageCollection.forEach((page) => {
         const canvas = page.canvasRef.current;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, 2480, 3508);
     });
 
-    setStrokeCollection({});
-    setHitboxCollection({});
-    setUndoStack([]);
-    setRedoStack([]);
+    setBoardInfo((prev) => {
+        prev.strokeCollection = {};
+        prev.hitboxCollection = {};
+        prev.undoStack = [];
+        prev.redoStack = [];
+        return prev;
+    });
 }

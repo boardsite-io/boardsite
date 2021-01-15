@@ -1,8 +1,8 @@
 import * as actData from './actionsData.js';
 
-export function processStrokes(strokeObjectArray, processType, setStrokeCollection, setHitboxCollection, setStack, wsRef, canvasRef) {
+export function processStrokes(strokeObjectArray, processType, setBoardInfo, wsRef, canvasRef) {
     strokeObjectArray = [...strokeObjectArray];
-    actData.addToStack(strokeObjectArray, processType, setStack, setStrokeCollection); // Redo or Undo Stack (depending on input)
+    actData.addToStack(strokeObjectArray, processType, setBoardInfo); // Redo or Undo Stack (depending on input)
 
     if (processType === "eraser") {
         sendStrokeObjectArray(strokeObjectArray, wsRef);
@@ -19,9 +19,9 @@ export function processStrokes(strokeObjectArray, processType, setStrokeCollecti
         }
 
         if (_strokeObject.type === "stroke") {
-            actData.addToStrokeCollection(_strokeObject, setStrokeCollection, setHitboxCollection, canvasRef);
+            actData.addToStrokeCollection(_strokeObject, setBoardInfo, canvasRef);
         } else if (_strokeObject.type === "delete") {
-            actData.eraseFromStrokeCollection(_strokeObject, setStrokeCollection, setHitboxCollection, canvasRef);
+            actData.eraseFromStrokeCollection(_strokeObject, setBoardInfo, canvasRef);
         }
 
         if (processType !== "message" && processType !== "eraser") {

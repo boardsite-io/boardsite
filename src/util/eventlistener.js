@@ -16,36 +16,30 @@ let strokePoints = [];
 let shapeInProgress = false;
 
 const canvasResolutionFactor = 4;
-let _activeTool;
-let _lineWidth;
-let _strokeStyle;
+let style;
+let activeTool;
+let scaleFactor;
 
-export function handleCanvasMouseDown(e, liveCanvasRef, scaleRef, setActiveTool, setLineWidth, setStrokeStyle) {
-    setActiveTool((activeTool) => {
-        _activeTool = activeTool;
-        return activeTool;
-    });
-    setLineWidth((lineWidth) => {
-        _lineWidth = lineWidth * canvasResolutionFactor;
-        return lineWidth;
-    });
-    setStrokeStyle((strokeStyle) => {
-        _strokeStyle = strokeStyle;
-        return strokeStyle;
-    });
+export function handleCanvasMouseDown(e, liveCanvasRef, setBoardInfo) {
+    setBoardInfo((prev) => {
+        style = prev.style;
+        activeTool = prev.activeTool;
+        scaleFactor = canvasResolutionFactor / prev.scaleRef;
+        return prev;
+    })
 
     const liveCanvas = liveCanvasRef.current;
     const ctxLive = liveCanvas.getContext('2d');
-    ctxLive.lineWidth = _lineWidth;
-    ctxLive.strokeStyle = _strokeStyle;
-    ctxLive.fillStyle = _strokeStyle;
+    ctxLive.lineWidth = style.width;
+    ctxLive.strokeStyle = style.color;
+    ctxLive.fillStyle = style.color;
 
     isMouseDown = true;
     sampleCount = 1;
 
     let rect = liveCanvas.getBoundingClientRect();
-    let x = (e.clientX - rect.left) / scaleRef.current * canvasResolutionFactor;
-    let y = (e.clientY - rect.top) / scaleRef.current * canvasResolutionFactor;
+    let x = (e.clientX - rect.left) * scaleFactor;
+    let y = (e.clientY - rect.top) * scaleFactor;
 
     if (e.type === "touchstart") {
         e = e.changedTouches[0];
@@ -54,15 +48,16 @@ export function handleCanvasMouseDown(e, liveCanvasRef, scaleRef, setActiveTool,
         if (e.button === 0) { // left-click
             // console.log("Hi");
         } else if (e.button === 2) { // right-click
-            _activeTool = "eraser";
+            activeTool = "eraser";
         }
     }
 
-    if (_activeTool === "pen") {
+    if (activeTool === "pen") {
         strokePoints = [x, y];
-        draw.drawFillCircle(ctxLive, x, y, _lineWidth/2);
+        draw.drawFillCircle(ctxLive, x, y, style.width/2);
+        shapeInProgress = false;
     }
-    else if (_activeTool === "triangle") {
+    else if (activeTool === "triangle") {
         if (shapeInProgress){
             draw.drawTriangle(ctxLive, [...strokePoints, x, y]);
         } else {
@@ -71,10 +66,11 @@ export function handleCanvasMouseDown(e, liveCanvasRef, scaleRef, setActiveTool,
     }
     else {
         strokePoints = [x, y];
+        shapeInProgress = false;
     }
 }
 
-export function handleCanvasMouseMove(e, liveCanvasRef, scaleRef) {
+export function handleCanvasMouseMove(e, liveCanvasRef) {
     if (isMouseDown) {
         let minSampleCount = 10;
         if (e.type === "touchmove") {
@@ -84,16 +80,16 @@ export function handleCanvasMouseMove(e, liveCanvasRef, scaleRef) {
         sampleCount += 1;
         const liveCanvas = liveCanvasRef.current;
         let rect = liveCanvas.getBoundingClientRect();
-        let x = (e.clientX - rect.left) / scaleRef.current * canvasResolutionFactor;
-        let y = (e.clientY - rect.top) / scaleRef.current * canvasResolutionFactor;
+        let x = (e.clientX - rect.left) * scaleFactor;
+        let y = (e.clientY - rect.top) * scaleFactor;
         let moveDist = Math.pow(x - strokePoints[strokePoints.length-2], 2) + Math.pow(y - strokePoints[strokePoints.length-1], 2); // Quadratic distance moved from last registered point
         const ctxLive = liveCanvas.getContext('2d');
 
-        if (_activeTool === "line") {
+        if (activeTool === "line") {
             ctxLive.clearRect(0, 0, 2480, 3508);
             draw.drawLines(ctxLive, [strokePoints[0], strokePoints[1], x, y]);
         }
-        else if (_activeTool === "triangle") {
+        else if (activeTool === "triangle") {
             ctxLive.clearRect(0, 0, 2480, 3508);
             if (shapeInProgress){
                 draw.drawTriangle(ctxLive, [...strokePoints, x, y]);
@@ -102,14 +98,14 @@ export function handleCanvasMouseMove(e, liveCanvasRef, scaleRef) {
                 draw.drawLines(ctxLive, [strokePoints[0], strokePoints[1], x, y]);
             }
         }
-        else if (_activeTool === "circle") {
+        else if (activeTool === "circle") {
             ctxLive.clearRect(0, 0, 2480, 3508);
             let radius = Math.sqrt(Math.pow(x - strokePoints[0], 2) + Math.pow(y - strokePoints[1], 2));
             draw.drawCircle(ctxLive, strokePoints[0], strokePoints[1], radius);
         }
         else if (moveDist > 1000 || sampleCount > minSampleCount) {
             sampleCount = 1;
-            if (_activeTool === "pen") {
+            if (activeTool === "pen") {
                 strokePoints.push(x, y);
                 draw.drawLines(ctxLive, strokePoints.slice(strokePoints.length - 4));
             }
@@ -120,7 +116,7 @@ export function handleCanvasMouseMove(e, liveCanvasRef, scaleRef) {
     }
 }
 
-export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, scaleRef) {
+export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, setBoardInfo) {
     if (!isMouseDown) { return; } // Ignore reentering
     isMouseDown = false;
     const liveCanvas = liveCanvasRef.current;
@@ -128,25 +124,24 @@ export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, 
 
     if (e.type !== "touchend" && e.type !== "touchcancel") {
         let rect = liveCanvas.getBoundingClientRect();
-        let x = (e.clientX - rect.left) / scaleRef.current * canvasResolutionFactor;
-        let y = (e.clientY - rect.top) / scaleRef.current * canvasResolutionFactor;
+        let x = (e.clientX - rect.left) * scaleFactor;
+        let y = (e.clientY - rect.top) * scaleFactor;
         strokePoints.push(x, y);
         strokePoints = strokePoints.map(x => Math.round(x * 1e3) / 1e3);
     }
 
     let strokeid = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4) + Date.now().toString(36).substr(4); // generate unique id
-    let strokeObject = { page_id: pageId, id: strokeid, type: "stroke", tool: _activeTool, line_width: _lineWidth, color: _strokeStyle, position: strokePoints};
-
+    let strokeObject = { page_id: pageId, id: strokeid, type: "stroke", tool: activeTool, line_width: style.width, color: style.color, position: strokePoints};
     // console.time('start');
     // console.timeEnd('start');
 
-    if (_activeTool === "eraser") {
-        draw.eraser(setHitboxCollection, setStrokeCollection, setUndoStack, strokeObject, wsRef, canvasRef);
+    if (activeTool === "eraser") {
+        draw.eraser(setBoardInfo, strokeObject, wsRef, canvasRef);
         // ctxLive.clearRect(0, 0, 2480, 3508);
     }
-    else if (_activeTool === "triangle") {
+    else if (activeTool === "triangle") {
         if (shapeInProgress){
-            proc.processStrokes([strokeObject], "stroke", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
+            proc.processStrokes([strokeObject], "stroke", setBoardInfo, wsRef, canvasRef);
             ctxLive.clearRect(0, 0, 2480, 3508);
         }
         else {
@@ -155,26 +150,26 @@ export function handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, 
         shapeInProgress = !shapeInProgress;
     }
     else {
-        if (_activeTool === "pen") {
+        if (activeTool === "pen") {
             draw.drawLines(ctxLive, strokePoints.slice(strokePoints.length - 4));
             strokeObject.position = draw.getCurvePoints(strokePoints, 0.5);
         }
-        else if (_activeTool === "line") {
+        else if (activeTool === "line") {
             draw.drawLines(ctxLive, strokePoints);
         }
-        else if (_activeTool === "circle") {
+        else if (activeTool === "circle") {
             let radius = Math.sqrt(Math.pow(strokePoints[2] - strokePoints[0], 2) + Math.pow(strokePoints[3] - strokePoints[1], 2));
             strokeObject.position[2] = radius;
             draw.drawCircle(ctxLive, strokePoints[0], strokePoints[1], radius);
         }
 
         setTimeout(() => { // Put into timeout function without delay to prevent halting the other functions in this function
-            proc.processStrokes([strokeObject], "stroke", setStrokeCollection, setHitboxCollection, setUndoStack, wsRef, canvasRef);
+            proc.processStrokes([strokeObject], "stroke", setBoardInfo, wsRef, canvasRef);
             ctxLive.clearRect(0, 0, 2480, 3508);
         }, 0);
     }
 }
 
-export function handleCanvasMouseLeave(e, liveCanvasRef, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, scaleRef) {
-    handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, setStrokeCollection, setHitboxCollection, setUndoStack, scaleRef);
+export function handleCanvasMouseLeave(e, liveCanvasRef, pageId, canvasRef, wsRef, setBoardInfo) {
+    handleCanvasMouseUp(e, liveCanvasRef, pageId, canvasRef, wsRef, setBoardInfo);
 }
