@@ -13,6 +13,9 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 
+import store from './redux/store.js';
+import { Provider } from 'react-redux';
+
 class Boardsite extends React.Component {
     render() {
         return (
@@ -29,6 +32,8 @@ class Boardsite extends React.Component {
 // ========================================
 
 ReactDOM.render(
-    <Boardsite />,
+    <Provider store={store}>
+        <Boardsite />
+    </Provider>,
     document.getElementById('root')
 );
