@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Whiteboard from './whiteboard';
-import Toolbar from './toolbar';
-import Homebar from './homebar';
-import Viewbar from './viewbar';
+import Whiteboard from '../component/whiteboard';
+import Toolbar from '../component/toolbar';
+import Homebar from '../component/homebar';
+import Viewbar from '../component/viewbar';
 import AlertDialog from '../component/session_dialog';
 // import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux'
