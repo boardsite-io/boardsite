@@ -6,15 +6,13 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import Tooltip from '@material-ui/core/Tooltip';
 import MenuIcon from '@material-ui/icons/Menu';
 import * as evl from '../util/eventlistener.js';
-import * as constant from '../../constants.js';
+import * as constant from '../constants.js';
 
 function Whiteboard(props) {
     const [displayPageSettings, setDisplayPageSettings] = useState(false);
     const liveCanvasRef = useRef();
     const mainCanvasRef = useRef();
-
-    const pageId = props.key;
-
+    const pageId = props.pageId;
 
     useEffect(() => {
         const mainCanvas = mainCanvasRef.current;
@@ -24,12 +22,12 @@ function Whiteboard(props) {
         liveCanvas.width = constant.CANVAS_WIDTH; //canvas.clientWidth;
         liveCanvas.height = constant.CANVAS_HEIGHT; //canvas.clientHeight;
         liveCanvas.addEventListener("contextmenu", e => e.preventDefault()); // Disable Context Menu
-        liveCanvas.addEventListener("mousedown", (e) => evl.handleCanvasMouseDown(e, liveCanvasRef));
+        liveCanvas.addEventListener("mousedown", (e) => evl.handleCanvasMouseDown(e, liveCanvasRef, props.scaleRef));
         liveCanvas.addEventListener("mousemove", (e) => evl.handleCanvasMouseMove(e, liveCanvasRef));
         liveCanvas.addEventListener("mouseup", (e) => evl.handleCanvasMouseUp(e, pageId, mainCanvasRef, liveCanvasRef));
         liveCanvas.addEventListener("mouseleave", (e) => evl.handleCanvasMouseLeave(e, pageId, mainCanvasRef, liveCanvasRef));
         // touch & stylus support
-        liveCanvas.addEventListener("touchstart", (e) => evl.handleCanvasMouseDown(e, liveCanvasRef));
+        liveCanvas.addEventListener("touchstart", (e) => evl.handleCanvasMouseDown(e, liveCanvasRef, props.scaleRef));
         liveCanvas.addEventListener("touchmove", (e) => evl.handleCanvasMouseMove(e, liveCanvasRef));
         liveCanvas.addEventListener("touchend", (e) => evl.handleCanvasMouseUp(e, pageId, mainCanvasRef, liveCanvasRef));
         liveCanvas.addEventListener("touchcancel", (e) => evl.handleCanvasMouseLeave(e, pageId, mainCanvasRef, liveCanvasRef));
@@ -59,9 +57,9 @@ function Whiteboard(props) {
     
     return (
         <div className="page">
-            <div id="canvasWrapper">
-                <canvas id={`${pageId}_live`} ref={liveCanvasRef} />
-                <canvas id={`${pageId}_main`} ref={mainCanvasRef} />
+            <div className="canvasWrapper">
+                <canvas className="canvasLive" id={`${pageId}_live`} ref={liveCanvasRef} />
+                <canvas className="canvasMain" id={`${pageId}_main`} ref={mainCanvasRef} />
             </div>
             <div>
                 <Tooltip id="tooltip" title="page settings" TransitionProps={{ timeout: 0 }} placement="bottom">

@@ -9,6 +9,7 @@
 
 import * as draw from './drawingengine.js';
 import * as proc from './processing.js';
+import * as constant from '../constants.js';
 
 import { clearAll, addPage } from '../redux/slice/boardcontrol.js';
 
@@ -18,25 +19,19 @@ let isMouseDown = false;
 let sampleCount = 0;
 let strokePoints = [];
 let shapeInProgress = false;
-
-const canvasResolutionFactor = 4;
 let style;
 let activeTool;
 let scaleFactor;
 
-export function handleCanvasMouseDown(e, liveCanvasRef) {
-    setBoardInfo((prev) => {
-        style = prev.style;
-        activeTool = prev.activeTool;
-        scaleFactor = canvasResolutionFactor / prev.scaleRef;
-        return prev;
-    })
-
-    store.getStore(); // {boardControl: {pageRank, pageCollection}, drawControl: {}}
-    store.dispatch(addPage({pageId: "fwfe", pageIndex: -1}));
+export function handleCanvasMouseDown(e, liveCanvasRef, scaleRef) {
+    let storeX = store.getState(); // {boardControl: {pageRank, pageCollection}, drawControl: {}}
+    
 
     const liveCanvas = liveCanvasRef.current;
     const ctxLive = liveCanvas.getContext('2d');
+    style = storeX.drawControl.style;
+    activeTool = storeX.drawControl.tool;
+    scaleFactor = constant.CANVAS_PIXEL_RATIO / scaleRef.current;
     ctxLive.lineWidth = style.width;
     ctxLive.strokeStyle = style.color;
     ctxLive.fillStyle = style.color;
@@ -128,6 +123,8 @@ export function handleCanvasMouseUp(e, pageId, mainCanvasRef, liveCanvasRef) {
     isMouseDown = false;
     const liveCanvas = liveCanvasRef.current;
     const ctxLive = liveCanvas.getContext('2d');
+    const mainCanvas = mainCanvasRef.current;
+    const ctxMain = mainCanvas.getContext('2d');
 
     if (e.type !== "touchend" && e.type !== "touchcancel") {
         let rect = liveCanvas.getBoundingClientRect();
@@ -143,12 +140,12 @@ export function handleCanvasMouseUp(e, pageId, mainCanvasRef, liveCanvasRef) {
     // console.timeEnd('start');
 
     if (activeTool === "eraser") {
-        draw.eraser(setBoardInfo, strokeObject, wsRef, canvasRef);
+        // draw.eraser(setBoardInfo, strokeObject, wsRef, canvasRef);
         // ctxLive.clearRect(0, 0, 2480, 3508);
     }
     else if (activeTool === "triangle") {
         if (shapeInProgress){
-            proc.processStrokes([strokeObject], "stroke", setBoardInfo, wsRef, canvasRef);
+            proc.processStrokes([strokeObject], "stroke", ctxMain);
             ctxLive.clearRect(0, 0, 2480, 3508);
         }
         else {
@@ -171,7 +168,7 @@ export function handleCanvasMouseUp(e, pageId, mainCanvasRef, liveCanvasRef) {
         }
 
         setTimeout(() => { // Put into timeout function without delay to prevent halting the other functions in this function
-            proc.processStrokes([strokeObject], "stroke", setBoardInfo, wsRef, canvasRef);
+            proc.processStrokes([strokeObject], "stroke", ctxMain);
             ctxLive.clearRect(0, 0, 2480, 3508);
         }, 0);
     }

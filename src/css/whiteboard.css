@@ -27,24 +27,24 @@
     gap: 20px;
 }
 
-#canvasWrapper{
+.canvasWrapper{
     height: var(--canvasHeight);
     width: var(--canvasWidth);
     position:relative;
 }
 
-#canvasLive {
+.canvasLive {
     position:absolute; top:0px; left:0px;
 }
 
-#canvasMain {
+.canvasMain {
     background-color: var(--canvasBackgroundColor);
     background-size: var(--canvasBackgroundSize);
     background-image: var(--canvasBackgroundImage);
     background-position: var(--canvasBackgroundPosition);
 }
 
-#canvasLive,#canvasMain{
+.canvasLive, .canvasMain{
     height: var(--canvasHeight);
     width: var(--canvasWidth);
     touch-action: none;

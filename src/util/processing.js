@@ -1,11 +1,14 @@
-import * as actData from './actionsData.js';
+import store from '../redux/store.js';
+import { addToStack, addToStrokeCollection, eraseFromStrokeCollection } from '../redux/slice/boardcontrol.js';
+import * as draw from '../util/drawingengine';
 
-export function processStrokes(strokeObjectArray, processType, setBoardInfo, wsRef, canvasRef) {
+export function processStrokes(strokeObjectArray, processType, ctx) {
     strokeObjectArray = [...strokeObjectArray];
-    actData.addToStack(strokeObjectArray, processType, setBoardInfo); // Redo or Undo Stack (depending on input)
+    // store.dispatch(addToStack()); // TODO
 
     if (processType === "eraser") {
-        sendStrokeObjectArray(strokeObjectArray, wsRef);
+        // sendStrokeObjectArray(strokeObjectArray, wsRef);
+        // store.dispatch(sendStrokeObjectArray()); // TODO
     }
 
     strokeObjectArray.forEach((strokeObject) => {
@@ -19,13 +22,18 @@ export function processStrokes(strokeObjectArray, processType, setBoardInfo, wsR
         }
 
         if (_strokeObject.type === "stroke") {
-            actData.addToStrokeCollection(_strokeObject, setBoardInfo, canvasRef);
+            draw.drawCurve(ctx, _strokeObject);
+            store.dispatch(addToStrokeCollection( _strokeObject));
         } else if (_strokeObject.type === "delete") {
-            actData.eraseFromStrokeCollection(_strokeObject, setBoardInfo, canvasRef);
+            // actData.eraseFromStrokeCollection(_strokeObject, setBoardInfo, canvasRef);
+            // redraw the page
+            store.dispatch(eraseFromStrokeCollection(_strokeObject));
+            draw.redraw(_strokeObject.page_id);
         }
 
         if (processType !== "message" && processType !== "eraser") {
-            sendStrokeObjectArray([_strokeObject], wsRef);
+            // sendStrokeObjectArray([_strokeObject], wsRef);
+            // store.dispatch(sendStrokeObjectArray()); // TODO
         }
     });
 }

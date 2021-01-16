@@ -1,6 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createRef } from 'react';
-import * as draw from '../../util/drawingengine';
 import * as constant from '../../constants.js';
 
 const boardControlSlice = createSlice({
@@ -90,9 +88,6 @@ const boardControlSlice = createSlice({
             const pageId = strokeObject.page_id;
             const strokeId = strokeObject.id;
 
-            // Draw stroke
-            draw.drawCurve(pageId, strokeObject);
-
             // add to collection
             state.pageCollection[pageId].strokes[strokeId] = strokeObject;
 
@@ -129,9 +124,6 @@ const boardControlSlice = createSlice({
             const strokeId = strokeObject.id;
             delete state.pageCollection[pageId].strokes[strokeId];
 
-            // redraw the page
-            draw.redraw(pageId);
-            
             // eraseFromHitboxCollection(strokeObject, setBoardInfo);
             // let pageId = strokeObject.page_id;
 
@@ -170,5 +162,5 @@ function deletePageData(state, pageId) {
     // prev.redoStack = newRedo;
 }
 
-export const { addPage, clearAll } = boardControlSlice.actions;
+export const { addPage, addToStrokeCollection, eraseFromStrokeCollection, clearAll } = boardControlSlice.actions;
 export default boardControlSlice.reducer;

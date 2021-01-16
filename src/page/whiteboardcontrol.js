@@ -7,26 +7,30 @@ import AlertDialog from '../component/session_dialog';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
 
-import * as api from '../util/api';
-import * as proc from '../util/processing.js';
-import * as actPage from '../util/actionsPage.js';
-import * as actData from '../util/actionsData.js';
+// import * as api from '../util/api';
+// import * as proc from '../util/processing.js';
+// import * as actPage from '../util/actionsPage.js';
+// import * as actData from '../util/actionsData.js';
 
-import * as control from '../util/boardcontrol.js';
+// import * as control from '../util/boardcontrol';
 
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { jsPDF } from "jspdf";
+
+import store from '../redux/store.js';
+import { clearAll, addPage } from '../redux/slice/boardcontrol.js';
 
 function WhiteboardControl() {
     // const defaultScale = 0.8 * window.innerWidth / 710;
     const defaultPositionX = (1 - 0.8) / 2 * window.innerWidth;
     const defaultPositionY = 60;
-
     const [openSessionDialog, setOpenSessionDialog] = useState(false);
     const [sidInput, setSidInput] = useState("");
-
-
-    const pageRank = useSelector((state) => state.boardcontrol.pageRank);
+    const pageRank = useSelector((state) => {
+        console.log(state);
+        return state.boardControl.pageRank
+    });
+    const scaleRef = useRef(1);
 
     // Connect to session if valid session link
     // useEffect(() => {
@@ -35,15 +39,11 @@ function WhiteboardControl() {
     //     }
     // }, [id])
 
-    // // Open dialog on mount
-    // useEffect(() => {
-    //     setOpenSessionDialog(true);
-    //      setBoardInfo((prev) => {
-    //          prev.pageCollection = [{ canvasRef: createRef(), pageId: "xy123" }]; 
-    //          return prev;
-    //     });
-    //     setPageCollection([{ canvasRef: createRef(), pageId: "xy123" }]); 
-    // }, [])
+    // Open dialog on mount
+    useEffect(() => {
+        // setOpenSessionDialog(true);
+        addPageX();
+    }, [])
 
     // Verify session id and try to connect to session
     // useEffect(() => {
@@ -90,7 +90,8 @@ function WhiteboardControl() {
         setSidInput(e.target.value);
     }
 
-    function addPage(pageid) {
+    function addPageX(pageid) {
+        store.dispatch(addPage({pageId: "fwfe", pageIndex: 123})); // TODO: implement nanoid() for unique id
         // if (wsRef.current !== undefined) { // Online
         //     api.addPage(sessionID);
         // } else { // Offline
@@ -181,14 +182,14 @@ function WhiteboardControl() {
         <div className="viewport">
             <AlertDialog open={openSessionDialog} setOpen={setOpenSessionDialog} sessionID_input={sidInput} setSessionID_input={setSidInput}
                 handleTextFieldChange={handleTextFieldChange} handleJoin={handleJoin} handleCreate={handleCreate} />
-            <Toolbar 
+            <Toolbar
                 debug={debug}
                 handleUndo={handleUndo}
                 handleRedo={handleRedo}
             />
             <Homebar
                 setOpenSessionDialog={setOpenSessionDialog}
-                addPage={addPage}
+                addPage={addPageX}
                 deleteAll={deleteAll}
                 clearAll={clearAll}
                 deletePage={deletePage}
@@ -199,8 +200,8 @@ function WhiteboardControl() {
                 defaultPositionX={defaultPositionX}
                 defaultPositionY={defaultPositionY}
                 defaultScale={1}
-                onZoomChange={(e) => { 
-                    //setBoardInfo((prev) => { prev.scaleRef = e.scale; return prev; });
+                onZoomChange={(e) => {
+                    scaleRef.current = e.scale;
                 }}
                 options={{
                     disabled: false,
@@ -247,7 +248,9 @@ function WhiteboardControl() {
                                         return (
                                             <Whiteboard
                                                 className="page"
+                                                pageId={pageId}
                                                 key={pageId}
+                                                scaleRef={scaleRef}
                                             />
                                         );
                                     })}
