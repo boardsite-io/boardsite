@@ -1,22 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 // import * as constant from '../../constants.js';
-
-/*
-        pageCollection: {
-            pageId: {
-                strokes: {
-                    strokeID: {strokeobj}
-                }
-                hitbox???
-            }
-        }
-        */
-
-        // hitboxCollection: {},
-        // undoStack: [],
-        // redoStack: [],
+// pageCollection: {
+//     pageId: {
+//         strokes: {
+//             strokeID: {strokeobj}
+//         }
+//         TODO: hitbox???
+//     }
+// }
         
-
 const boardControlSlice = createSlice({
     name: "boardControl",
     initialState: {
@@ -30,7 +22,8 @@ const boardControlSlice = createSlice({
         actAddPage: (state, action) => {
             const { pageId, pageIndex } = action.payload;
             state.pageCollection[pageId] = {
-                strokes: {}
+                strokes: {},
+                // hitboxes: {}, // TODO
             };
 
             if (pageIndex >= 0) {
@@ -128,8 +121,7 @@ const boardControlSlice = createSlice({
 });
 
 function deletePageData(state, pageId) {
-    delete state.strokeCollection[pageId];
-    delete state.hitboxCollection[pageId];
+    state.pageCollection[pageId].strokes = {}; // does this produce garbage???
 
     // let newUndo = [];
     // prev.undoStack.forEach((actionArray, index) => {

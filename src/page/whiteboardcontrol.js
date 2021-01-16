@@ -88,14 +88,36 @@ function WhiteboardControl() {
         setSidInput(e.target.value);
     }
 
-    // TODO: ADD PAge between others
-    function addPage() {
-        const id = nanoid();
-        store.dispatch(actAddPage({pageId: id, pageIndex: -1})); // pageIndex -1 means append
+    function addPage(pageId) {
+        if (pageId !== undefined) {
+            store.dispatch(actAddPage({pageId: nanoid(), pageIndex: pageRank.indexOf(pageId)})); // pageIndex -1 means append
+        } else {
+            store.dispatch(actAddPage({pageId: nanoid(), pageIndex: -1})); // pageIndex -1 means append
+        }
+        
         // if (wsRef.current !== undefined) { // Online
         //     api.addPage(sessionID);
         // } else { // Offline
         //     actPage.addPage(pageid, setPageCollection);
+        // }
+    }
+
+    // TODO: FINDCANVASBYID => CLEAR
+    function clearPage(pageId) {
+        store.dispatch(actClearPage(pageId));
+        // if (wsRef.current !== undefined) { // Online
+        //     // api.clearPage(sessionID, pageid);
+        // } else { // Offline
+        //     actPage.clearPage(pageid, setBoardInfo, canvasRef);
+        // }
+    }
+
+    function deletePage(pageId) {
+        store.dispatch(actDeletePage(pageId));
+        // if (wsRef.current !== undefined) { // Online
+        //     // api.deletePage(sessionID, pageid);
+        // } else { // Offline
+        //     actPage.deletePage(pageid, setBoardInfo, setPageCollection);
         // }
     }
 
@@ -106,25 +128,6 @@ function WhiteboardControl() {
         // } else { // Offline
         //     actPage.deleteAll(setBoardInfo, setPageCollection);
         //     console.log("XD");
-        // }
-    }
-
-    function deletePage(pageid) {
-        store.dispatch(actDeletePage());
-        // if (wsRef.current !== undefined) { // Online
-        //     // api.deletePage(sessionID, pageid);
-        // } else { // Offline
-        //     actPage.deletePage(pageid, setBoardInfo, setPageCollection);
-        // }
-    }
-
-    // TODO: FINDCANVASBYID => CLEAR
-    function clearPage(pageid) {
-        store.dispatch(actClearPage());
-        // if (wsRef.current !== undefined) { // Online
-        //     // api.clearPage(sessionID, pageid);
-        // } else { // Offline
-        //     actPage.clearPage(pageid, setBoardInfo, canvasRef);
         // }
     }
 
@@ -242,7 +245,9 @@ function WhiteboardControl() {
                                                 pageId={pageId}
                                                 key={pageId}
                                                 scaleRef={scaleRef}
+                                                addPage={addPage}
                                                 clearPage={clearPage}
+                                                deletePage={deletePage}
                                             />
                                         );
                                     })}

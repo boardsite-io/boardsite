@@ -74,7 +74,7 @@ function Whiteboard(props) {
                             <div className="pagesettings">
                                 <Tooltip id="tooltip" title="clear Page" TransitionProps={{ timeout: 0 }} placement="left">
                                     <IconButton id="iconButton" variant="contained" onClick={() => {
-                                        props.clearPage(props.pageId, props.canvasRef); 
+                                        props.clearPage(props.pageId); 
                                         closePageSettings();
                                     }}>
                                         <ClearIcon color="secondary" id="iconButtonInner" />
