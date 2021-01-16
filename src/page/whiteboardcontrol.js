@@ -6,6 +6,7 @@ import Viewbar from './viewbar';
 import AlertDialog from '../component/session_dialog';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
+import { nanoid } from '@reduxjs/toolkit'
 
 // import * as api from '../util/api';
 // import * as proc from '../util/processing.js';
@@ -88,7 +89,8 @@ function WhiteboardControl() {
     }
 
     function addPageX() {
-        store.dispatch(addPage({pageId: "fwfe", pageIndex: 123})); // TODO: implement nanoid() for unique id
+        const id = nanoid();
+        store.dispatch(addPage({pageId: id, pageIndex: -1})); // pageIndex -1 means append
         // if (wsRef.current !== undefined) { // Online
         //     api.addPage(sessionID);
         // } else { // Offline

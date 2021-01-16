@@ -11,7 +11,6 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
 export default function Homebar(props) {
-
     return (
         <div className="homebar">
             <Tooltip id="tooltip" title="join or create session" TransitionProps={{ timeout: 0 }} placement="right">

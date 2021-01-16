@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import ZoomOutMapIcon from '@material-ui/icons/ZoomOutMap';
@@ -9,10 +9,16 @@ import Tooltip from '@material-ui/core/Tooltip';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import OpenWithIcon from '@material-ui/icons/OpenWith';
 
+import store from '../redux/store.js';
+import { setActive } from '../redux/slice/drawcontrol.js';
+
 export default function Viewbar(props) {
+    const [displayPenMode, setDisplayPenMode] = useState(true);
+
     function toggleDrawMode() {
+        setDisplayPenMode((prev) => !prev);
         props.pan.disabled = !props.pan.disabled;
-        props.setDrawMode(props.pan.disabled);
+        store.dispatch(setActive(props.pan.disabled));
     }
 
     function down(e) {
@@ -44,7 +50,7 @@ export default function Viewbar(props) {
         <div className="viewbar">
             <Tooltip id="tooltip" title="toggle panning" TransitionProps={{ timeout: 0 }} placement="left">
                 {
-                    props.drawMode ?
+                    displayPenMode ?
                         <IconButton id="iconButton" variant="contained" onClick={toggleDrawMode}>
                             <OpenWithIcon id="iconButtonInner" />
                         </IconButton>
