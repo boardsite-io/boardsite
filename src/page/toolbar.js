@@ -21,10 +21,9 @@ function Toolbar(props) {
     const [displayColorPicker, setDisplayColorPicker] = useState(false);
     const [displayWidthPicker, setDisplayWidthPicker] = useState(false);
     const [displayExtraTools, setDisplayExtraTools] = useState(false);
-    const [color, setColor2] = useState({ r: '0', g: '0', b: '0', a: '1', });
-    const [ , setStrokeStyle] = useState(constant.DEFAULT_COLOR);
+    const [colorDisplay, setColorDisplay] = useState(constant.DEFAULT_COLOR);
     const [lineWidth, setLineWidth] = useState(constant.DEFAULT_WIDTH);
-    const [activeTool, setActiveTool] = useState("pen");
+    const [activeTool, setActiveTool] = useState(constant.DEFAULT_TOOL);
 
     function handlePaletteClick() {
         setDisplayColorPicker(!displayColorPicker);
@@ -43,8 +42,7 @@ function Toolbar(props) {
     };
 
     function handlePaletteChange(color) {
-        setColor2(color.rgb);
-        setStrokeStyle(color.hex);
+        setColorDisplay(color.rgb);
         store.dispatch(setColor(color.hex));
     };
 
@@ -178,7 +176,7 @@ function Toolbar(props) {
                         <div className="popup">
                             <div className="cover" onClick={handlePaletteClose} />
                             <div className="colorpicker">
-                                <SketchPicker disableAlpha={true} color={color} onChange={handlePaletteChange} />
+                                <SketchPicker disableAlpha={true} color={colorDisplay} onChange={handlePaletteChange} />
                             </div>
                         </div>
                         : null
