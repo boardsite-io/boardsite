@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, createRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Whiteboard from './whiteboard';
 import Toolbar from './toolbar';
 import Homebar from './homebar';
@@ -9,9 +9,6 @@ import { useSelector, useDispatch } from 'react-redux'
 
 // import * as api from '../util/api';
 // import * as proc from '../util/processing.js';
-// import * as actPage from '../util/actionsPage.js';
-// import * as actData from '../util/actionsData.js';
-
 // import * as control from '../util/boardcontrol';
 
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
@@ -27,7 +24,7 @@ function WhiteboardControl() {
     const [openSessionDialog, setOpenSessionDialog] = useState(false);
     const [sidInput, setSidInput] = useState("");
     const pageRank = useSelector((state) => {
-        console.log(state);
+        // console.log(state); // fires 
         return state.boardControl.pageRank
     });
     const scaleRef = useRef(1);
@@ -90,7 +87,7 @@ function WhiteboardControl() {
         setSidInput(e.target.value);
     }
 
-    function addPageX(pageid) {
+    function addPageX() {
         store.dispatch(addPage({pageId: "fwfe", pageIndex: 123})); // TODO: implement nanoid() for unique id
         // if (wsRef.current !== undefined) { // Online
         //     api.addPage(sessionID);

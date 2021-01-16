@@ -1,34 +1,29 @@
 import React, { useState } from 'react';
 import { IconButton, Input, Slider } from '@material-ui/core';
-
 import PaletteIcon from '@material-ui/icons/Palette';
 import CreateIcon from '@material-ui/icons/Create';
-
 import UndoIcon from '@material-ui/icons/Undo';
 import RedoIcon from '@material-ui/icons/Redo';
-
 import { SketchPicker } from 'react-color'
-
 import RemoveIcon from '@material-ui/icons/Remove';
 import ChangeHistoryIcon from '@material-ui/icons/ChangeHistory';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-
 import BrushIcon from '@material-ui/icons/Brush';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-
 import Tooltip from '@material-ui/core/Tooltip';
+
+import store from '../redux/store.js';
+import { setColor, setWidth, setTool } from '../redux/slice/drawcontrol.js';
+
+import * as constant from '../constants.js';
 
 function Toolbar(props) {
     const [displayColorPicker, setDisplayColorPicker] = useState(false);
     const [displayWidthPicker, setDisplayWidthPicker] = useState(false);
     const [displayExtraTools, setDisplayExtraTools] = useState(false);
-    const [color, setColor] = useState({ r: '0', g: '0', b: '0', a: '1', });
-    const minWidth = 1;
-    const maxWidth = 40;
-    const canvasResolutionFactor = 4;
-
-    const [ , setStrokeStyle] = useState("#000000");
-    const [lineWidth, setLineWidth] = useState(3);
+    const [color, setColor2] = useState({ r: '0', g: '0', b: '0', a: '1', });
+    const [ , setStrokeStyle] = useState(constant.DEFAULT_COLOR);
+    const [lineWidth, setLineWidth] = useState(constant.DEFAULT_WIDTH);
     const [activeTool, setActiveTool] = useState("pen");
 
     function handlePaletteClick() {
@@ -48,36 +43,35 @@ function Toolbar(props) {
     };
 
     function handlePaletteChange(color) {
-        setColor(color.rgb);
+        setColor2(color.rgb);
         setStrokeStyle(color.hex);
-        props.setBoardInfo((prev) => { prev.style.color = color.hex; return prev; });
+        store.dispatch(setColor(color.hex));
     };
 
     const handleSliderChange = (event, width) => {
         setLineWidth(width);
-        props.setBoardInfo((prev) => { prev.style.width = width * canvasResolutionFactor; return prev; });
+        store.dispatch(setWidth(width * constant.CANVAS_PIXEL_RATIO));
     };
 
     const handleInputChange = (event) => {
-        let width = event.target.value === '' ? '' : Number(event.target.value);
+        const width = event.target.value === '' ? '' : Number(event.target.value);
         setLineWidth(width);
-        props.setBoardInfo((prev) => { prev.style.width = width * canvasResolutionFactor; return prev; });
+        store.dispatch(setWidth(width * constant.CANVAS_PIXEL_RATIO));
     };
 
     // Slider Functions
     const handleBlur = () => {
-        if (lineWidth < minWidth) {
-            setLineWidth(minWidth);
-        } else if (lineWidth > maxWidth) {
-            setLineWidth(maxWidth);
+        if (lineWidth < constant.WIDTH_MIN) {
+            setLineWidth(constant.WIDTH_MIN);
+        } else if (lineWidth > constant.WIDTH_MAX) {
+            setLineWidth(constant.WIDTH_MAX);
         }
     };
 
     return (
         <div className="toolbar">
-            <IconButton id="iconButton" style={{ backgroundColor: "grey" }} onClick={props.debug}>
-                D
-            </IconButton>
+            <IconButton id="iconButton" style={{ backgroundColor: "grey" }} onClick={props.debug}>D</IconButton>
+
             <Tooltip id="tooltip" title="undo" TransitionProps={{ timeout: 0 }} placement="bottom">
                 <IconButton id="iconButton" variant="contained" onClick={props.handleUndo}>
                     <UndoIcon id="iconButtonInner" />
@@ -99,7 +93,7 @@ function Toolbar(props) {
                             <IconButton id="iconButton" variant="contained" onClick={() => {
                                 setActiveTool("pen");
                                 setDisplayExtraTools(false);
-                                props.setBoardInfo((prev) => { prev.activeTool = "pen"; return prev; });
+                                store.dispatch(setTool("pen"));
                             }}>
                                 <BrushIcon id="iconButtonInner" />
                             </IconButton>
@@ -114,7 +108,7 @@ function Toolbar(props) {
                             :
                             <IconButton id="iconButton" variant="contained" onClick={() => {
                                 setActiveTool("eraser");
-                                props.setBoardInfo((prev) => { prev.activeTool = "eraser"; return prev; });
+                                store.dispatch(setTool("eraser"));
                             }}>
                                 <HighlightOffIcon id="iconButtonInner" />
                             </IconButton>
@@ -133,7 +127,7 @@ function Toolbar(props) {
                                     :
                                     <IconButton id="iconButton" variant="contained" onClick={() => {
                                         setActiveTool("line");
-                                        props.setBoardInfo((prev) => { prev.activeTool = "line"; return prev; });
+                                        store.dispatch(setTool("line"));
                                     }}>
                                         <RemoveIcon id="iconButtonInner" />
                                     </IconButton>
@@ -148,7 +142,7 @@ function Toolbar(props) {
                                     :
                                     <IconButton id="iconButton" variant="contained" onClick={() => {
                                         setActiveTool("triangle");
-                                        props.setBoardInfo((prev) => { prev.activeTool = "triangle"; return prev; });
+                                        store.dispatch(setTool("triangle"));
                                     }}>
                                         <ChangeHistoryIcon id="iconButtonInner" />
                                     </IconButton>
@@ -163,7 +157,7 @@ function Toolbar(props) {
                                     :
                                     <IconButton id="iconButton" variant="contained" onClick={() => {
                                         setActiveTool("circle");
-                                        props.setBoardInfo((prev) => { prev.activeTool = "circle"; return prev; });
+                                        store.dispatch(setTool("circle"));
                                     }}>
                                         <RadioButtonUncheckedIcon id="iconButtonInner" />
                                     </IconButton>
@@ -205,8 +199,8 @@ function Toolbar(props) {
                                     value={typeof lineWidth === 'number' ? lineWidth : 0}
                                     onChange={handleSliderChange}
                                     aria-labelledby="input-slider"
-                                    min={minWidth}
-                                    max={maxWidth}
+                                    min={constant.WIDTH_MIN}
+                                    max={constant.WIDTH_MAX}
                                 />
                                 <Input
                                     value={lineWidth}
@@ -214,9 +208,9 @@ function Toolbar(props) {
                                     onChange={handleInputChange}
                                     onBlur={handleBlur}
                                     inputProps={{
-                                        step: 10,
-                                        min: minWidth,
-                                        max: maxWidth,
+                                        step: constant.WIDTH_STEP,
+                                        min: constant.WIDTH_MIN,
+                                        max: constant.WIDTH_MAX,
                                         type: 'number',
                                         'aria-labelledby': 'input-slider',
                                     }}
