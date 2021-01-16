@@ -4,8 +4,8 @@ import Toolbar from './toolbar';
 import Homebar from './homebar';
 import Viewbar from './viewbar';
 import AlertDialog from '../component/session_dialog';
-import { useParams } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux'
+// import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux'
 import { nanoid } from '@reduxjs/toolkit'
 
 // import * as api from '../util/api';
@@ -13,10 +13,10 @@ import { nanoid } from '@reduxjs/toolkit'
 // import * as control from '../util/boardcontrol';
 
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import { jsPDF } from "jspdf";
+// import { jsPDF } from "jspdf";
 
 import store from '../redux/store.js';
-import { clearAll, addPage } from '../redux/slice/boardcontrol.js';
+import { actAddPage, actClearPage, actDeletePage, actDeleteAll } from '../redux/slice/boardcontrol.js';
 
 function WhiteboardControl() {
     // const defaultScale = 0.8 * window.innerWidth / 710;
@@ -40,7 +40,7 @@ function WhiteboardControl() {
     // Open dialog on mount
     useEffect(() => {
         // setOpenSessionDialog(true);
-        addPageX();
+        addPage();
     }, [])
 
     // Verify session id and try to connect to session
@@ -56,18 +56,18 @@ function WhiteboardControl() {
     // }, [sessionID])
 
     // Handles messages from the websocket
-    function onMsgHandle(data) {
-        // const strokeObjectArray = JSON.parse(data.data);
-        // if (strokeObjectArray.length === 0) {
-        //     actPage.deleteAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
-        // }
-        // else {
-        //     let pageId = strokeObjectArray[0].pageId;
-        //     let canvasRef = pageCollection[pageId];
-        //     proc.processStrokes(strokeObjectArray, "message", setStrokeCollection, setHitboxCollection,
-        //         setUndoStack, wsRef, canvasRef);
-        // }
-    }
+    // function onMsgHandle(data) {
+    //     const strokeObjectArray = JSON.parse(data.data);
+    //     if (strokeObjectArray.length === 0) {
+    //         actPage.deleteAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
+    //     }
+    //     else {
+    //         let pageId = strokeObjectArray[0].pageId;
+    //         let canvasRef = pageCollection[pageId];
+    //         proc.processStrokes(strokeObjectArray, "message", setStrokeCollection, setHitboxCollection,
+    //             setUndoStack, wsRef, canvasRef);
+    //     }
+    // }
 
     function handleCreate(e) {
         // let boardDim = { x: 10, y: 10 };
@@ -88,9 +88,10 @@ function WhiteboardControl() {
         setSidInput(e.target.value);
     }
 
-    function addPageX() {
+    // TODO: ADD PAge between others
+    function addPage() {
         const id = nanoid();
-        store.dispatch(addPage({pageId: id, pageIndex: -1})); // pageIndex -1 means append
+        store.dispatch(actAddPage({pageId: id, pageIndex: -1})); // pageIndex -1 means append
         // if (wsRef.current !== undefined) { // Online
         //     api.addPage(sessionID);
         // } else { // Offline
@@ -99,6 +100,7 @@ function WhiteboardControl() {
     }
 
     function deleteAll() {
+        store.dispatch(actDeleteAll());
         // if (wsRef.current !== undefined) { // Online
         //     // api.clearBoard(sessionID);
         // } else { // Offline
@@ -108,6 +110,7 @@ function WhiteboardControl() {
     }
 
     function deletePage(pageid) {
+        store.dispatch(actDeletePage());
         // if (wsRef.current !== undefined) { // Online
         //     // api.deletePage(sessionID, pageid);
         // } else { // Offline
@@ -115,19 +118,13 @@ function WhiteboardControl() {
         // }
     }
 
-    function clearPage(pageid, canvasRef) {
+    // TODO: FINDCANVASBYID => CLEAR
+    function clearPage(pageid) {
+        store.dispatch(actClearPage());
         // if (wsRef.current !== undefined) { // Online
         //     // api.clearPage(sessionID, pageid);
         // } else { // Offline
         //     actPage.clearPage(pageid, setBoardInfo, canvasRef);
-        // }
-    }
-
-    function clearAll() {
-        // if (wsRef.current !== undefined) { // Online
-        //     // api.clearAll(sessionID);
-        // } else { // Offline
-        //     actPage.clearAll(setBoardInfo, pageCollection);
         // }
     }
 
@@ -188,9 +185,8 @@ function WhiteboardControl() {
             />
             <Homebar
                 setOpenSessionDialog={setOpenSessionDialog}
-                addPage={addPageX}
+                addPage={addPage}
                 deleteAll={deleteAll}
-                clearAll={clearAll}
                 deletePage={deletePage}
                 exportToPDF={exportToPDF}
                 save={save}
@@ -223,16 +219,12 @@ function WhiteboardControl() {
                     step: 200
                 }}
             >
-                {({ zoomIn, zoomOut, resetTransform, pan, scale, positionX, positionY, setPositionX, setPositionY, setScale }) => (
+                {({ zoomIn, zoomOut, pan, scale, positionX, positionY, setPositionX, setPositionY, setScale }) => (
                     <>
                         <Viewbar
-                            //pan={props.pan.disabled}
                             pan={pan}
                             zoomIn={zoomIn}
                             zoomOut={zoomOut}
-                            resetTransform={resetTransform}
-                            drawMode={true}
-                            //drawMode={drawMode} setDrawMode={setDrawMode}
                             setScale={setScale}
                             scale={scale}
                             positionX={positionX}
@@ -250,6 +242,7 @@ function WhiteboardControl() {
                                                 pageId={pageId}
                                                 key={pageId}
                                                 scaleRef={scaleRef}
+                                                clearPage={clearPage}
                                             />
                                         );
                                     })}

@@ -1,5 +1,5 @@
 import store from '../redux/store.js';
-import { addToStack, addToStrokeCollection, eraseFromStrokeCollection } from '../redux/slice/boardcontrol.js';
+import {actAddStroke, actEraseStroke} from '../redux/slice/boardcontrol.js';
 import * as draw from '../util/drawingengine';
 
 export function processStrokes(strokeObjectArray, processType, ctx) {
@@ -23,11 +23,11 @@ export function processStrokes(strokeObjectArray, processType, ctx) {
 
         if (_strokeObject.type === "stroke") {
             draw.drawCurve(ctx, _strokeObject);
-            store.dispatch(addToStrokeCollection( _strokeObject));
+            store.dispatch(actAddStroke( _strokeObject));
         } else if (_strokeObject.type === "delete") {
             // actData.eraseFromStrokeCollection(_strokeObject, setBoardInfo, canvasRef);
             // redraw the page
-            store.dispatch(eraseFromStrokeCollection(_strokeObject));
+            store.dispatch(actEraseStroke(_strokeObject));
             draw.redraw(_strokeObject.page_id);
         }
 

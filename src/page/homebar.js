@@ -6,7 +6,6 @@ import { IconButton } from '@material-ui/core';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import ClearIcon from '@material-ui/icons/Clear';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
@@ -31,11 +30,6 @@ export default function Homebar(props) {
             <Tooltip id="tooltip" title="delete all pages" TransitionProps={{ timeout: 0 }} placement="right">
                 <IconButton id="iconButton" variant="contained" onClick={props.deleteAll}>
                     <DeleteForeverIcon id="iconButtonInner" />
-                </IconButton>
-            </Tooltip>
-            <Tooltip id="tooltip" title="clear all pages" TransitionProps={{ timeout: 0 }} placement="right">
-                <IconButton id="iconButton" variant="contained" onClick={props.clearAll}>
-                    <ClearIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
             <Tooltip id="tooltip" title="append page" TransitionProps={{ timeout: 0 }} placement="right">

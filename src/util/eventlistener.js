@@ -10,9 +10,6 @@
 import * as draw from './drawingengine.js';
 import * as proc from './processing.js';
 import * as constant from '../constants.js';
-
-import { clearAll, addPage } from '../redux/slice/boardcontrol.js';
-
 import store from '../redux/store.js';
 
 let isMouseDown = false;
@@ -136,8 +133,6 @@ export function handleCanvasMouseUp(e, pageId, mainCanvasRef, liveCanvasRef) {
 
     let strokeid = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4) + Date.now().toString(36).substr(4); // generate unique id
     let strokeObject = { page_id: pageId, id: strokeid, type: "stroke", tool: activeTool, line_width: style.width, color: style.color, position: strokePoints};
-    // console.time('start');
-    // console.timeEnd('start');
 
     if (activeTool === "eraser") {
         // draw.eraser(setBoardInfo, strokeObject, wsRef, canvasRef);
