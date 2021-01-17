@@ -3,6 +3,11 @@ import { actAddStroke } from '../redux/slice/boardcontrol.js';
 import * as draw from './draw.js';
 import * as constant from '../constants.js';
 
+const SAT = require('sat');
+const V = SAT.Vector;
+const C = SAT.Circle;
+const P = SAT.Polygon;
+
 /**
  * Start the current stroke when mouse is pressed down
  * @param {*} canvas 
@@ -27,15 +32,16 @@ export function startStroke(canvas, tool, position) {
 export function moveStroke(canvas, prevPts, position, sampleCount) {
     const style = store.getState().drawControl.style;
     // Quadratic distance moved from last registered point
-    const moveDist  = Math.pow(position.x - prevPts[prevPts.length - 1].x, 2)
-                    + Math.pow(position.y - prevPts[prevPts.length - 1].y, 2);
+    const moveDist = Math.pow(position.x - prevPts[prevPts.length - 1].x, 2)
+        + Math.pow(position.y - prevPts[prevPts.length - 1].y, 2);
+    console.log(moveDist);
 
     // if (e.type === "touchmove") {
     //     e = e.touches[0];
     //     minSampleCount = 3; // more precision for stylus
     // }
 
-    if (moveDist > 1000 || sampleCount > constant.MIN_SAMPLE_COUNT) {
+    if (moveDist > 1000000 || sampleCount > constant.MIN_SAMPLE_COUNT) {
         prevPts.push(position);
         draw.drawLines(canvas, style, prevPts.slice(prevPts.length - 2));
         // if (activeTool === "pen") {
@@ -54,7 +60,7 @@ export function moveStroke(canvas, prevPts, position, sampleCount) {
     * position: [{x: number, y: number}]} curve 
     */
 export async function registerStroke(canvas, curve) {
-    const { pageId, type, style, points } = curve;
+    const { pageId, type, style, points } = curve; console.log(points);
     const ptsInterp = getPoints(points, 0.5);
 
     const stroke = {
@@ -66,8 +72,55 @@ export async function registerStroke(canvas, curve) {
         points: ptsInterp,
     };
 
-    draw.drawStroke(canvas, stroke);
+    // draw.drawStroke(canvas, stroke);
     store.dispatch(actAddStroke(stroke));
+
+    // --------------- HITBOX TESTING ---------------
+
+    // calc diff from linepoints to corners to calc vertices
+    for (let i = 0; i < points.length - 1; i++) {
+        const p1 = points[i],
+            p2 = points[i+1];
+
+        let dx = p2.x - p1.x;
+        let dy = p2.y - p1.y;
+        let dxw, dyw;
+        if (!dy){
+            dxw = 0;
+            dyw = style.width / 2;
+        } else if (!dx) {
+            dxw = style.width / 2;
+            dyw = 0;
+        } else {
+            let ratio = dx / dy;
+            dxw = Math.sqrt(Math.pow(style.width / 2, 2) / (1 + Math.pow(ratio, 2)));
+            dyw = -dxw * ratio;
+        }
+
+        // calc vertices
+        let v1 = { x: p1.x - dxw, y: p1.y - dyw },
+            v2 = { x: p2.x - dxw, y: p2.y - dyw },
+            v3 = { x: p2.x + dxw, y: p2.y + dyw },
+            v4 = { x: p1.x + dxw, y: p1.y + dyw };
+
+        let hitboxstyle = { ...style };
+        hitboxstyle.width = 2;
+        draw.drawLines(canvas, hitboxstyle, [v1, v2, v3, v4, v1]); // 4debug
+
+        // create hitbox
+        var hb1 = new P(new V(0, 0), [new V(v1.x, v1.y), new V(v2.x, v2.y), new V(v3.x, v3.y), new V(v4.x, v4.y)]);
+        var circle = new C(new V(300, 300), 200);
+        draw.drawCircle(canvas, hitboxstyle, { x: 300, y: 300, rad: 200 });
+
+        // check for collision
+        var response = new SAT.Response();
+        var collided = SAT.testPolygonCircle(hb1, circle, response);
+        // console.log(dx, dy, dxw, dyw, v1, v2, v3, v4);
+        // console.log(collided, response);
+    }
+
+    // PROFIT $$$
+    // --------------- HITBOX TESTING END -----------
 }
 
 /**

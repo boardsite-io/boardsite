@@ -89,8 +89,6 @@ export function eraser(setBoardInfo, strokeObject, wsRef, canvasRef) {
     // }
 }
 
-
-
 export function drawStroke(canvas, strokeObject) {
     drawLines(canvas, strokeObject.style, strokeObject.points);
 }
