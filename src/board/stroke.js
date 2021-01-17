@@ -31,26 +31,17 @@ export function startStroke(canvas, tool, position) {
  */
 export function moveStroke(canvas, prevPts, position, sampleCount) {
     const style = store.getState().drawControl.style;
-    // Quadratic distance moved from last registered point
-    const moveDist = Math.pow(position.x - prevPts[prevPts.length - 1].x, 2)
-        + Math.pow(position.y - prevPts[prevPts.length - 1].y, 2);
-    console.log(moveDist);
-
     // if (e.type === "touchmove") {
     //     e = e.touches[0];
     //     minSampleCount = 3; // more precision for stylus
     // }
-
-    if (moveDist > 1000000 || sampleCount > constant.MIN_SAMPLE_COUNT) {
-        prevPts.push(position);
-        draw.drawLines(canvas, style, prevPts.slice(prevPts.length - 2));
-        // if (activeTool === "pen") {
-        // }
-        // else { // eraser
-        //     strokePoints.push(x, y);
-        // }
-    }
-
+    prevPts.push(position);
+    draw.drawLines(canvas, style, prevPts.slice(prevPts.length - 2));
+    // if (activeTool === "pen") {
+    // }
+    // else { // eraser
+    //     strokePoints.push(x, y);
+    // }
 }
 
 /**
@@ -60,7 +51,7 @@ export function moveStroke(canvas, prevPts, position, sampleCount) {
     * position: [{x: number, y: number}]} curve 
     */
 export async function registerStroke(canvas, curve) {
-    const { pageId, type, style, points } = curve; console.log(points);
+    const { pageId, type, style, points } = curve;
     const ptsInterp = getPoints(points, 0.5);
 
     const stroke = {
@@ -72,7 +63,7 @@ export async function registerStroke(canvas, curve) {
         points: ptsInterp,
     };
 
-    // draw.drawStroke(canvas, stroke);
+    draw.drawStroke(canvas, stroke);
     store.dispatch(actAddStroke(stroke));
 
     // --------------- HITBOX TESTING ---------------
@@ -105,6 +96,7 @@ export async function registerStroke(canvas, curve) {
 
         let hitboxstyle = { ...style };
         hitboxstyle.width = 2;
+        hitboxstyle.color = "#f00";
         draw.drawLines(canvas, hitboxstyle, [v1, v2, v3, v4, v1]); // 4debug
 
         // create hitbox

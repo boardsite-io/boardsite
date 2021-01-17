@@ -8,5 +8,4 @@ export const DEFAULT_WIDTH = 4;
 export const DEFAULT_COLOR = "#000000";
 export const DEFAULT_TOOL = "pen";
 export const DEFAULT_ACTIVE = "true";
-
-export const MIN_SAMPLE_COUNT = 10;
+export const MIN_SAMPLE_COUNT = 5;

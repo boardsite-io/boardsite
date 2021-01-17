@@ -24,7 +24,8 @@ export function getCanvas(arg) {
 export function setStyleCtx(canvas, style) {
     const ctx = canvas.getContext('2d');
     const { width, color } = style;
-
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
     ctx.lineWidth = width;
     ctx.strokeStyle = color;
     ctx.fillStyle = color;
@@ -95,16 +96,12 @@ export function drawStroke(canvas, strokeObject) {
 
 export function drawLines(canvas, style, pts) {
     const ctx = setStyleCtx(canvas, style);
-
     ctx.beginPath();
     ctx.moveTo(pts[0].x, pts[0].y);
     for (let i = 1; i < pts.length; i++) {
         ctx.lineTo(pts[i].x, pts[i].y);
     }
     ctx.stroke();
-    // Rounded ends
-    drawCircle(canvas, style,{ ...pts[0], rad: ctx.lineWidth/2 }, true);
-    drawCircle(canvas, style, { ...pts[pts.length-1], rad: ctx.lineWidth/2}, true);
 }
 
 export function drawTriangle(canvas, style, pts, fill=false) {

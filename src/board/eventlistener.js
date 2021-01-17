@@ -54,8 +54,10 @@ export function handleCanvasMouseMove(e) {
         };
 
         sampleCount += 1;
-
-        moveStroke(liveCanvas, strokePoints, curPos, sampleCount);
+        if (sampleCount > constant.MIN_SAMPLE_COUNT) {
+            moveStroke(liveCanvas, strokePoints, curPos, sampleCount);
+            sampleCount = 0;
+        }
     }
 }
 
