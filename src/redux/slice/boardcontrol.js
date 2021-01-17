@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import * as draw from '../../board/draw.js';
 // import * as constant from '../../constants.js';
 // pageCollection: {
 //     pageId: {
@@ -40,9 +41,7 @@ const boardControlSlice = createSlice({
             deletePageData(state, pageId);
 
             // clear canvas
-            const canvas = document.getElementById(`${pageId}_main`);
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, 2480, 3508);
+            draw.clearCanvas(draw.getCanvas({id: `${pageId}_main`}));
         },
 
         // Delete page

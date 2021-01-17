@@ -5,7 +5,7 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import Tooltip from '@material-ui/core/Tooltip';
 import MenuIcon from '@material-ui/icons/Menu';
-import * as evl from '../util/eventlistener.js';
+import * as evl from '../board/eventlistener.js';
 import * as constant from '../constants.js';
 
 function Whiteboard(props) {
@@ -22,15 +22,15 @@ function Whiteboard(props) {
         liveCanvas.width = constant.CANVAS_WIDTH; //canvas.clientWidth;
         liveCanvas.height = constant.CANVAS_HEIGHT; //canvas.clientHeight;
         liveCanvas.addEventListener("contextmenu", e => e.preventDefault()); // Disable Context Menu
-        liveCanvas.addEventListener("mousedown", (e) => evl.handleCanvasMouseDown(e, liveCanvasRef, props.scaleRef));
-        liveCanvas.addEventListener("mousemove", (e) => evl.handleCanvasMouseMove(e, liveCanvasRef));
-        liveCanvas.addEventListener("mouseup", (e) => evl.handleCanvasMouseUp(e, pageId, mainCanvasRef, liveCanvasRef));
-        liveCanvas.addEventListener("mouseleave", (e) => evl.handleCanvasMouseLeave(e, pageId, mainCanvasRef, liveCanvasRef));
+        liveCanvas.addEventListener("mousedown", (e) => evl.handleCanvasMouseDown(e, props.scaleRef));
+        liveCanvas.addEventListener("mousemove", (e) => evl.handleCanvasMouseMove(e));
+        liveCanvas.addEventListener("mouseup", (e) => evl.handleCanvasMouseUp(e, pageId, mainCanvasRef));
+        liveCanvas.addEventListener("mouseleave", (e) => evl.handleCanvasMouseLeave(e, pageId, mainCanvasRef));
         // touch & stylus support
-        liveCanvas.addEventListener("touchstart", (e) => evl.handleCanvasMouseDown(e, liveCanvasRef, props.scaleRef));
-        liveCanvas.addEventListener("touchmove", (e) => evl.handleCanvasMouseMove(e, liveCanvasRef));
-        liveCanvas.addEventListener("touchend", (e) => evl.handleCanvasMouseUp(e, pageId, mainCanvasRef, liveCanvasRef));
-        liveCanvas.addEventListener("touchcancel", (e) => evl.handleCanvasMouseLeave(e, pageId, mainCanvasRef, liveCanvasRef));
+        liveCanvas.addEventListener("touchstart", (e) => evl.handleCanvasMouseDown(e, props.scaleRef));
+        liveCanvas.addEventListener("touchmove", (e) => evl.handleCanvasMouseMove(e));
+        liveCanvas.addEventListener("touchend", (e) => evl.handleCanvasMouseUp(e, pageId, mainCanvasRef));
+        liveCanvas.addEventListener("touchcancel", (e) => evl.handleCanvasMouseLeave(e, pageId, mainCanvasRef));
 
         return () => {
             liveCanvas.removeEventListener("contextmenu", null);

@@ -1,9 +1,54 @@
 import store from '../redux/store.js';
 import { actAddStroke } from '../redux/slice/boardcontrol.js';
-import * as draw from './drawingengine.js';
+import * as draw from './draw.js';
+import * as constant from '../constants.js';
 
 /**
- * Generate API serialized stroke object
+ * Start the current stroke when mouse is pressed down
+ * @param {*} canvas 
+ * @param {*} tool 
+ * @param {*} position 
+ */
+export function startStroke(canvas, tool, position) {
+    const style = store.getState().drawControl.style;
+
+    if (tool === "pen") {
+        draw.drawCircle(canvas, { ...position, rad: style.width / 2 }, true);
+    }
+}
+
+/**
+ * Update the live stroke when position is moved in the canvas
+ * @param {*} canvas 
+ * @param {*} prevPts 
+ * @param {*} position 
+ * @param {*} sampleCount 
+ */
+export function moveStroke(canvas, prevPts, position, sampleCount) {
+    const style = store.getState().drawControl.style;
+    // Quadratic distance moved from last registered point
+    const moveDist  = Math.pow(position.x - prevPts[prevPts.length - 1].x, 2)
+                    + Math.pow(position.y - prevPts[prevPts.length - 1].y, 2);
+
+    // if (e.type === "touchmove") {
+    //     e = e.touches[0];
+    //     minSampleCount = 3; // more precision for stylus
+    // }
+
+    if (moveDist > 1000 || sampleCount > constant.MIN_SAMPLE_COUNT) {
+        prevPts.push(position);
+        draw.drawLines(canvas, style, prevPts.slice(prevPts.length - 2));
+        // if (activeTool === "pen") {
+        // }
+        // else { // eraser
+        //     strokePoints.push(x, y);
+        // }
+    }
+
+}
+
+/**
+ * Generate API serialized stroke object, draw & save it to redux store
  * @param {{pageId: string, type: string, style: 
     * {color: string, width: number}, 
     * position: [{x: number, y: number}]} curve 
@@ -21,8 +66,8 @@ export async function registerStroke(canvas, curve) {
         points: ptsInterp,
     };
 
-    store.dispatch(actAddStroke(stroke));
     draw.drawStroke(canvas, stroke);
+    store.dispatch(actAddStroke(stroke));
 }
 
 /**
