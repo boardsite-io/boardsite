@@ -19,7 +19,8 @@ import store from '../redux/store.js';
 import { actAddPage, actClearPage, actDeletePage, actDeleteAll } from '../redux/slice/boardcontrol.js';
 
 function WhiteboardControl() {
-    // const defaultScale = 0.8 * window.innerWidth / 710;
+    const defaultScale = 0.8 * window.innerWidth / 710;
+    const scaleRef = useRef(defaultScale);
     const defaultPositionX = (1 - 0.8) / 2 * window.innerWidth;
     const defaultPositionY = 60;
     const [openSessionDialog, setOpenSessionDialog] = useState(false);
@@ -28,7 +29,7 @@ function WhiteboardControl() {
         // console.log(state); // fires 
         return state.boardControl.pageRank
     });
-    const scaleRef = useRef(1);
+    
 
     // Connect to session if valid session link
     // useEffect(() => {
@@ -41,6 +42,7 @@ function WhiteboardControl() {
     useEffect(() => {
         // setOpenSessionDialog(true);
         addPage();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // Verify session id and try to connect to session
@@ -197,7 +199,7 @@ function WhiteboardControl() {
             <TransformWrapper
                 defaultPositionX={defaultPositionX}
                 defaultPositionY={defaultPositionY}
-                defaultScale={1}
+                defaultScale={defaultScale}
                 onZoomChange={(e) => {
                     scaleRef.current = e.scale;
                 }}

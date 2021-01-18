@@ -11,16 +11,15 @@ import * as draw from './draw.js';
 import * as constant from '../constants.js';
 import store from '../redux/store.js';
 
-// TODO move to redux store
 let isMouseDown = false;
 let sampleCount = 0;
 let strokePoints = [];
 //let shapeInProgress = false;
-//let activeTool;
+let activeTool;
 let scaleFactor;
 
 export function handleCanvasMouseDown(e, scaleRef) {
-    let activeTool = store.getState().drawControl.tool;
+    activeTool = store.getState().drawControl.tool;
     scaleFactor = constant.CANVAS_PIXEL_RATIO / scaleRef.current;
 
     isMouseDown = true;
@@ -75,7 +74,7 @@ export function handleCanvasMouseUp(e, pageId, mainCanvasRef) {
         });
     }
 
-    registerStroke(mainCanvasRef.current, { pageId: pageId, style: style, type: "stroke", points: strokePoints });
+    registerStroke(mainCanvasRef.current, { pageId: pageId, style: style, type: "stroke", points: strokePoints, activeTool: activeTool });
 
     (async () => draw.clearCanvas(liveCanvas))()
 }

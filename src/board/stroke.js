@@ -1,7 +1,7 @@
 import store from '../redux/store.js';
 import { actAddStroke } from '../redux/slice/boardcontrol.js';
 import * as draw from './draw.js';
-import * as constant from '../constants.js';
+// import * as constant from '../constants.js';
 
 const SAT = require('sat');
 const V = SAT.Vector;
@@ -51,7 +51,7 @@ export function moveStroke(canvas, prevPts, position, sampleCount) {
     * position: [{x: number, y: number}]} curve 
     */
 export async function registerStroke(canvas, curve) {
-    const { pageId, type, style, points } = curve;
+    const { pageId, type, style, points, activeTool } = curve;
     const ptsInterp = getPoints(points, 0.5);
 
     const stroke = {
@@ -63,12 +63,73 @@ export async function registerStroke(canvas, curve) {
         points: ptsInterp,
     };
 
-    draw.drawStroke(canvas, stroke);
-    store.dispatch(actAddStroke(stroke));
+    const hitboxes = getHitbox(points, style, canvas);
+    if (activeTool === "eraser") {
+        let { collisionHitboxes, collisionIds } = getCollision(pageId, hitboxes);
+        // console.log(collisionHitboxes, collisionIds);
 
-    // --------------- HITBOX TESTING ---------------
+        // --------- DEBUG --------------
+        let hitboxstyle = { ...style };
+        hitboxstyle.width = 2;
+        hitboxstyle.color = "#0f0";
+        collisionHitboxes.forEach((hitbox) => {
+            const v1 = hitbox.v1,
+                v2 = hitbox.v2,
+                v3 = hitbox.v3,
+                v4 = hitbox.v4;
+            draw.drawLines(canvas, hitboxstyle, [v1, v2, v3, v4, v1]);
+        });
+        // --------- DEBUG END ----------
+    } else {
+        draw.drawStroke(canvas, stroke);
+        store.dispatch(actAddStroke({stroke: stroke, hitbox: hitboxes}));
+    }
+}
 
-    // calc diff from linepoints to corners to calc vertices
+/**
+ * Check which hitboxes collide with the eraser hitboxes
+ * @param {*} pageId 
+ * @param {*} eraserHitboxes 
+ */
+function getCollision(pageId, eraserHitboxes) {
+    let collisionIds = [];
+    let collisionHitboxes = []; // FOR DEBUGGING / VISUALIZATION
+    let hitboxes = {...store.getState().boardControl.pageCollection[pageId].hitboxes};
+    eraserHitboxes.forEach(eraserHitbox => {
+        const v1 = eraserHitbox.v1, v2 = eraserHitbox.v2, v3 = eraserHitbox.v3, v4 = eraserHitbox.v4;
+        const eraserHitboxPolygon = new P(new V(0, 0), [new V(v1.x, v1.y), new V(v2.x, v2.y), new V(v3.x, v3.y), new V(v4.x, v4.y)]);
+        const keys = Object.keys(hitboxes);
+        let idHasCollided = false;
+        for (let j = 0; j < keys.length; j++) {
+            const id = keys[j];
+            const hitboxFromId = hitboxes[id];
+            for (let i = 0; i < hitboxFromId.length; i++) {
+                const hitbox = hitboxFromId[i];
+                const v1 = hitbox.v1, v2 = hitbox.v2, v3 = hitbox.v3, v4 = hitbox.v4;
+                const hitboxPolygon = new P(new V(0, 0), [new V(v1.x, v1.y), new V(v2.x, v2.y), new V(v3.x, v3.y), new V(v4.x, v4.y)]);
+                const collided = SAT.testPolygonPolygon(eraserHitboxPolygon, hitboxPolygon);
+                if (collided) {
+                    collisionHitboxes.push(hitbox) // add hitbox for visualization / debug
+                    collisionIds.push(id); // add id to collided ids array
+                    delete hitboxes[id]; // remove hitboxes from id to avoid double detections and save time
+                    idHasCollided = true;
+                    break; // current id has a collision => no need to check rest of stroke for collisions
+                }
+            }
+            if(idHasCollided) {
+                break;
+            }
+        }
+    })
+    return {collisionHitboxes: collisionHitboxes, collisionIds: collisionIds};
+}
+
+/**
+ * Calculate hitbox from the non-interpolated points
+ * @param {*} points 
+ */
+function getHitbox(points, style, canvas) {
+    let hitboxes = [];
     for (let i = 0; i < points.length - 1; i++) {
         const p1 = points[i],
             p2 = points[i+1];
@@ -85,14 +146,14 @@ export async function registerStroke(canvas, curve) {
         } else {
             let ratio = dx / dy;
             dxw = Math.sqrt(Math.pow(style.width / 2, 2) / (1 + Math.pow(ratio, 2)));
-            dyw = -dxw * ratio;
+            dyw = dxw * ratio;
         }
 
         // calc vertices
-        let v1 = { x: p1.x - dxw, y: p1.y - dyw },
-            v2 = { x: p2.x - dxw, y: p2.y - dyw },
-            v3 = { x: p2.x + dxw, y: p2.y + dyw },
-            v4 = { x: p1.x + dxw, y: p1.y + dyw };
+        let v1 = { x: p1.x - dxw, y: p1.y + dyw },
+            v2 = { x: p2.x - dxw, y: p2.y + dyw },
+            v3 = { x: p2.x + dxw, y: p2.y - dyw },
+            v4 = { x: p1.x + dxw, y: p1.y - dyw };
 
         let hitboxstyle = { ...style };
         hitboxstyle.width = 2;
@@ -100,19 +161,11 @@ export async function registerStroke(canvas, curve) {
         draw.drawLines(canvas, hitboxstyle, [v1, v2, v3, v4, v1]); // 4debug
 
         // create hitbox
-        var hb1 = new P(new V(0, 0), [new V(v1.x, v1.y), new V(v2.x, v2.y), new V(v3.x, v3.y), new V(v4.x, v4.y)]);
-        var circle = new C(new V(300, 300), 200);
-        draw.drawCircle(canvas, hitboxstyle, { x: 300, y: 300, rad: 200 });
-
-        // check for collision
-        var response = new SAT.Response();
-        var collided = SAT.testPolygonCircle(hb1, circle, response);
-        // console.log(dx, dy, dxw, dyw, v1, v2, v3, v4);
-        // console.log(collided, response);
+        // var hitbox = new P(new V(0, 0), [new V(v1.x, v1.y), new V(v2.x, v2.y), new V(v3.x, v3.y), new V(v4.x, v4.y)]);
+        const hitbox = {v1: v1, v2: v2, v3: v3, v4: v4};
+        hitboxes.push(hitbox);
     }
-
-    // PROFIT $$$
-    // --------------- HITBOX TESTING END -----------
+    return hitboxes;
 }
 
 /**

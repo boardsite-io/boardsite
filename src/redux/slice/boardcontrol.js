@@ -24,7 +24,7 @@ const boardControlSlice = createSlice({
             const { pageId, pageIndex } = action.payload;
             state.pageCollection[pageId] = {
                 strokes: {},
-                // hitboxes: {}, // TODO
+                hitboxes: {},
             };
 
             if (pageIndex >= 0) {
@@ -63,12 +63,14 @@ const boardControlSlice = createSlice({
 
         // Add stroke to collection
         actAddStroke: (state, action) => {
-            const strokeObject = action.payload;
+            const strokeObject = action.payload.stroke;
+            const hitbox = action.payload.hitbox;
             const pageId = strokeObject.page_id;
             const strokeId = strokeObject.id;
 
             // add to collection
             state.pageCollection[pageId].strokes[strokeId] = strokeObject;
+            state.pageCollection[pageId].hitboxes[strokeId] = hitbox;
 
             // addToHitboxCollection(strokeObject, setBoardInfo);
             // let positions = strokeObject.position.slice(0); // create copy of positions array
