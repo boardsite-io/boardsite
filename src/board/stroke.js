@@ -107,8 +107,8 @@ function getCollision(pageId, eraserHitboxes) {
                 const hitbox = hitboxFromId[i];
                 const v1 = hitbox.v1, v2 = hitbox.v2, v3 = hitbox.v3, v4 = hitbox.v4;
                 const hitboxPolygon = new P(new V(0, 0), [new V(v1.x, v1.y), new V(v2.x, v2.y), new V(v3.x, v3.y), new V(v4.x, v4.y)]);
-                const collided = SAT.testPolygonPolygon(eraserHitboxPolygon, hitboxPolygon);
-                if (collided) {
+                idHasCollided = SAT.testPolygonPolygon(eraserHitboxPolygon, hitboxPolygon);
+                if (idHasCollided) {
                     collisionHitboxes.push(hitbox) // add hitbox for visualization / debug
                     collisionIds.push(id); // add id to collided ids array
                     delete hitboxes[id]; // remove hitboxes from id to avoid double detections and save time
