@@ -11,15 +11,14 @@ import { useSelector } from "react-redux"
 // import * as proc from '../util/processing.js';
 // import * as control from '../util/boardcontrol';
 
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch"
+// import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch"
 // import { jsPDF } from "jspdf";
 
 
 export default function Whiteboard() {
-    const defaultScale = (0.8 * window.innerWidth) / 710
-    const scaleRef = useRef(defaultScale)
-    const defaultPositionX = ((1 - 0.8) / 2) * window.innerWidth
-    const defaultPositionY = 60
+    // const scaleRef = useRef(1)
+    // const defaultPositionX = ((1 - 0.8) / 2) * window.innerWidth
+    // const defaultPositionY = 60
     const [openSessionDialog, setOpenSessionDialog] = useState(false)
     const [sidInput, setSidInput] = useState("")
     const pageRank = useSelector((state) => {
@@ -37,6 +36,7 @@ export default function Whiteboard() {
     // Open dialog on mount
     useEffect(() => {
         // setOpenSessionDialog(true);
+        addPage()
         addPage()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -83,7 +83,7 @@ export default function Whiteboard() {
     }
 
     function handleTextFieldChange(e) {
-        setSidInput(e.target.value)
+        // setSidInput(e.target.value)
     }
 
     function handleUndo() {
@@ -153,7 +153,7 @@ export default function Whiteboard() {
                 exportToPDF={exportToPDF}
                 save={save}
             />
-            <TransformWrapper
+            {/* <TransformWrapper
                 defaultPositionX={defaultPositionX}
                 defaultPositionY={defaultPositionY}
                 defaultScale={defaultScale}
@@ -202,8 +202,8 @@ export default function Whiteboard() {
                             positionY={positionY}
                             setPositionX={setPositionX}
                             setPositionY={setPositionY}
-                        />
-                        <TransformComponent>
+                        /> */}
+                        {/* <TransformComponent> */}
                             <div className="pagecollectionouter">
                                 <div className="pagecollectioninner">
                                     {pageRank.map((pageId) => {
@@ -212,16 +212,16 @@ export default function Whiteboard() {
                                                 className="page"
                                                 pageId={pageId}
                                                 key={pageId}
-                                                scaleRef={scaleRef}
+                                                // scaleRef={scaleRef}
                                             />
                                         )
                                     })}
                                 </div>
                             </div>
-                        </TransformComponent>
+                        {/* </TransformComponent>
                     </>
                 )}
-            </TransformWrapper>
+            </TransformWrapper> */}
         </div>
     )
 }

@@ -38,10 +38,7 @@ const boardControlSlice = createSlice({
         actClearPage: (state, action) => {
             // delete page data
             const pageId = action.payload
-            deletePageData(state, pageId)
-
-            // clear canvas
-            draw.clearCanvas(draw.getCanvas({ id: `${pageId}_main` }))
+            state.pageCollection[pageId] = {}
         },
 
         // Delete page
@@ -63,60 +60,18 @@ const boardControlSlice = createSlice({
 
         // Add stroke to collection
         actAddStroke: (state, action) => {
-            const strokeObject = action.payload.stroke
-            const hitbox = action.payload.hitbox
-            const pageId = strokeObject.page_id
-            const strokeId = strokeObject.id
+            const stroke = action.payload
+            const { page_id, id } = stroke
 
             // add to collection
-            state.pageCollection[pageId].strokes[strokeId] = strokeObject
-            state.pageCollection[pageId].hitboxes[strokeId] = hitbox
-
-            // addToHitboxCollection(strokeObject, setBoardInfo);
-            // let positions = strokeObject.position.slice(0); // create copy of positions array
-            // let id = strokeObject.id; // extract id
-            // let pageId = strokeObject.page_id;
-
-            // setBoardInfo((prev) => {
-            //     let pointSkipFactor = 8; // only check every p-th (x,y) position to reduce computational load
-            //     let quadMinPixDist = 64; // quadratic minimum distance between points to be valid for hitbox calculation
-            //     let lineWidth = strokeObject.line_width;
-            //     let hitbox = hbx.getHitbox(positions, pointSkipFactor, quadMinPixDist, lineWidth);
-            //     // insert new hitboxes
-            //     if (prev.hitboxCollection[pageId] === undefined) {
-            //         prev.hitboxCollection[pageId] = {};
-            //     }
-
-            //     for (let i = 0; i < hitbox.length; i++) {
-            //         let xy = hitbox[i];
-            //         if (prev.hitboxCollection[xy] === undefined) {
-            //             prev.hitboxCollection[pageId][xy] = {};
-            //         }
-            //         prev.hitboxCollection[pageId][xy][id] = true;
-            //     }
-
-            //     return prev;
-            // })
+            state.pageCollection[page_id].strokes[id] = stroke
         },
 
         // Erase stroke from collection
         actEraseStroke(state, action) {
-            const strokeObject = action.payload
-            const pageId = strokeObject.page_id
-            const strokeId = strokeObject.id
-            delete state.pageCollection[pageId].strokes[strokeId]
-
-            // eraseFromHitboxCollection(strokeObject, setBoardInfo);
-            // let pageId = strokeObject.page_id;
-
-            // setBoardInfo((prev) => {
-            //     Object.keys(prev.hitboxCollection[pageId]).forEach((posKey) => {
-            //         Object.keys(strokeObject).forEach((keyToDel) => {
-            //             delete prev.hitboxCollection[pageId][posKey][keyToDel];
-            //         });
-            //     });
-            //     return prev;
-            // })
+            const stroke = action.payload
+            const { page_id, id } = stroke
+            delete state.pageCollection[page_id].strokes[id]
         },
     },
 })

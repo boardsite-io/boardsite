@@ -30,17 +30,17 @@ export default function Viewbar(props) {
     }
 
     function stretchToWindow() {
-        let newScale = window.innerWidth / 710
-        let y = (props.positionY / props.scale) * newScale
+        const newScale = window.innerWidth / 710
+        const y = (props.positionY / props.scale) * newScale
         props.setScale(newScale, 0)
         props.setPositionX(0, 0)
         props.setPositionY(y, 0)
     }
 
     function resetAndCenter() {
-        let w = window.innerWidth
-        let x = (w - 710) / 2
-        let y = props.positionY / props.scale
+        const w = window.innerWidth
+        const x = (w - 710) / 2
+        const y = props.positionY / props.scale
         props.setScale(1, 0)
         props.setPositionX(x, 0)
         props.setPositionY(y, 0)

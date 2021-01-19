@@ -2,6 +2,8 @@ import { startStroke, moveStroke, registerStroke } from "./stroke.js"
 import { CANVAS_PIXEL_RATIO, MIN_SAMPLE_COUNT, tool } from "../../constants.js"
 import * as draw from "./draw.js"
 import store from "../../redux/store.js"
+import { CollectionsBookmarkOutlined } from "@material-ui/icons"
+import { actEraseStroke } from "../../redux/slice/boardcontrol.js"
 
 let isMouseDown = false,
     sampleCount = 0,
@@ -9,19 +11,18 @@ let isMouseDown = false,
     activeTool,
     scaleFactor
 
-export function handleCanvasMouseDown(e, scaleRef) {
+export function handleCanvasMouseDown(e, setLiveStroke, scaleRef) {
+    const style = store.getState().drawControl.style
     activeTool = store.getState().drawControl.tool
-    scaleFactor = CANVAS_PIXEL_RATIO / scaleRef.current
+    scaleFactor = 1 //CANVAS_PIXEL_RATIO / scaleRef.current
     isMouseDown = true
     sampleCount = 1
 
-
-    const pos = e.target.getStage().getPointerPosition();
-    const relPos = {
-        x: (e.clientX - pos.x) * scaleFactor,
-        y: (e.clientY - pos.y) * scaleFactor,
-    }
-
+    const pos = e.target.getStage().getPointerPosition()
+    // const relPos = {
+    //     x: (e.evt.clientX - pos.x) * scaleFactor,
+    //     y: (e.evt.clientY - pos.y) * scaleFactor,
+    // }
 
     // if (e.type === "touchstart") {
     //     e = e.changedTouches[0]
@@ -30,50 +31,36 @@ export function handleCanvasMouseDown(e, scaleRef) {
     // }
 
     // strokePoints = [curPos]
-    // startStroke(e.target, activeTool, curPos)
+
+    setLiveStroke(startStroke(pos, style, activeTool))
 }
 
-export function handleCanvasMouseMove(e) {
+export function handleCanvasMouseMove(e, setLiveStroke) {
     if (isMouseDown) {
         sampleCount += 1
         if (sampleCount > MIN_SAMPLE_COUNT) {
-            const pos = e.target.getStage().getPointerPosition();
-            const relPos = {
-                x: (e.clientX - pos.x) * scaleFactor,
-                y: (e.clientY - pos.y) * scaleFactor,
-            }
-            strokePoints.push(relPos)
-            //moveStroke(liveCanvas, strokePoints)
+            const pos = e.target.getStage().getPointerPosition()
+            // const relPos = {
+            //     x: (e.evt.clientX - pos.x) * scaleFactor,
+            //     y: (e.evt.clientY - pos.y) * scaleFactor,
+            // }
+            moveStroke(pos, setLiveStroke)
             sampleCount = 0
         }
     }
 }
 
-export function handleCanvasMouseUp(e, pageId, mainCanvasRef) {
-    // if (!isMouseDown) {
-    //     return
-    // } // Ignore reentering
-    // isMouseDown = false
-    // const style = store.getState().drawControl.style
-    // const liveCanvas = e.target
-
-    // if (e.type !== "touchend" && e.type !== "touchcancel") {
-    //     const rect = liveCanvas.getBoundingClientRect()
-    //     strokePoints.push({
-    //         x: (e.clientX - rect.left) * scaleFactor,
-    //         y: (e.clientY - rect.top) * scaleFactor,
-    //     })
-    // }
-
-    // registerStroke(mainCanvasRef.current, {
-    //     pageId: pageId,
-    //     style: style,
-    //     type: "stroke",
-    //     points: strokePoints,
-    //     activeTool: activeTool,
-    // })
+export function handleCanvasMouseUp(e, setLiveStroke, pageId) {
+    if (!isMouseDown) {
+        return
+    } // Ignore reentering
+    isMouseDown = false
 
     // ;(async () => draw.clearCanvas(liveCanvas))()
+    setLiveStroke((liveStroke) => {
+        registerStroke(liveStroke, pageId)
+        return {}
+    })
 }
 
 export function handleCanvasMouseLeave(
@@ -83,4 +70,13 @@ export function handleCanvasMouseLeave(
     liveCanvasRef
 ) {
     handleCanvasMouseUp(e, pageId, mainCanvasRef, liveCanvasRef)
+}
+
+export function handleStrokeMouseEnter(e, stroke) {
+    if (stroke.id === undefined || !isMouseDown) {
+        return
+    }
+    if (activeTool === tool.ERASER) {
+        store.dispatch(actEraseStroke(stroke))
+    }
 }

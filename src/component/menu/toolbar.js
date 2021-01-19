@@ -15,15 +15,24 @@ import Tooltip from "@material-ui/core/Tooltip"
 import store from "../../redux/store.js"
 import { setColor, setWidth, setTool } from "../../redux/slice/drawcontrol.js"
 
-import * as constant from "../../constants.js"
+import {
+    tool,
+    DEFAULT_COLOR,
+    DEFAULT_WIDTH,
+    DEFAULT_TOOL,
+    CANVAS_PIXEL_RATIO,
+    WIDTH_MIN,
+    WIDTH_MAX,
+    WIDTH_STEP,
+} from "../../constants.js"
 
 function Toolbar(props) {
     const [displayColorPicker, setDisplayColorPicker] = useState(false)
     const [displayWidthPicker, setDisplayWidthPicker] = useState(false)
     const [displayExtraTools, setDisplayExtraTools] = useState(false)
-    const [colorDisplay, setColorDisplay] = useState(constant.DEFAULT_COLOR)
-    const [lineWidth, setLineWidth] = useState(constant.DEFAULT_WIDTH)
-    const [activeTool, setActiveTool] = useState(constant.DEFAULT_TOOL)
+    const [colorDisplay, setColorDisplay] = useState(DEFAULT_COLOR)
+    const [lineWidth, setLineWidth] = useState(DEFAULT_WIDTH)
+    const [activeTool, setActiveTool] = useState(DEFAULT_TOOL)
 
     function handlePaletteClick() {
         setDisplayColorPicker(!displayColorPicker)
@@ -48,22 +57,22 @@ function Toolbar(props) {
 
     const handleSliderChange = (event, width) => {
         setLineWidth(width)
-        store.dispatch(setWidth(width * constant.CANVAS_PIXEL_RATIO))
+        store.dispatch(setWidth(width * CANVAS_PIXEL_RATIO))
     }
 
     const handleInputChange = (event) => {
         const width =
             event.target.value === "" ? "" : Number(event.target.value)
         setLineWidth(width)
-        store.dispatch(setWidth(width * constant.CANVAS_PIXEL_RATIO))
+        store.dispatch(setWidth(width * CANVAS_PIXEL_RATIO))
     }
 
     // Slider Functions
     const handleBlur = () => {
-        if (lineWidth < constant.WIDTH_MIN) {
-            setLineWidth(constant.WIDTH_MIN)
-        } else if (lineWidth > constant.WIDTH_MAX) {
-            setLineWidth(constant.WIDTH_MAX)
+        if (lineWidth < WIDTH_MIN) {
+            setLineWidth(WIDTH_MIN)
+        } else if (lineWidth > WIDTH_MAX) {
+            setLineWidth(WIDTH_MAX)
         }
     }
 
@@ -103,10 +112,10 @@ function Toolbar(props) {
             <div className="toolring">
                 <Tooltip
                     id="tooltip"
-                    title="pen"
+                    title="Pen"
                     TransitionProps={{ timeout: 0 }}
                     placement="bottom">
-                    {activeTool === "pen" ? (
+                    {activeTool === tool.PEN ? (
                         <IconButton
                             id="iconButtonActive"
                             variant="contained"
@@ -120,9 +129,9 @@ function Toolbar(props) {
                             id="iconButton"
                             variant="contained"
                             onClick={() => {
-                                setActiveTool("pen")
+                                setActiveTool(tool.PEN)
                                 setDisplayExtraTools(false)
-                                store.dispatch(setTool("pen"))
+                                store.dispatch(setTool(tool.PEN))
                             }}>
                             <BrushIcon id="iconButtonInner" />
                         </IconButton>
@@ -130,14 +139,14 @@ function Toolbar(props) {
                 </Tooltip>
                 <Tooltip
                     id="tooltip"
-                    title="eraser"
+                    title="Eraser"
                     TransitionProps={{ timeout: 0 }}
                     placement="bottom">
-                    {activeTool === "eraser" ? (
+                    {activeTool === tool.ERASER ? (
                         <IconButton
                             id="iconButtonActive"
                             variant="contained"
-                            onClick={() => setActiveTool("eraser")}>
+                            onClick={() => setActiveTool(tool.ERASER)}>
                             <HighlightOffIcon id="iconButtonActiveInner" />
                         </IconButton>
                     ) : (
@@ -145,8 +154,8 @@ function Toolbar(props) {
                             id="iconButton"
                             variant="contained"
                             onClick={() => {
-                                setActiveTool("eraser")
-                                store.dispatch(setTool("eraser"))
+                                setActiveTool(tool.ERASER)
+                                store.dispatch(setTool(tool.ERASER))
                             }}>
                             <HighlightOffIcon id="iconButtonInner" />
                         </IconButton>
@@ -157,10 +166,10 @@ function Toolbar(props) {
                 <div className="extratools">
                     <Tooltip
                         id="tooltip"
-                        title="line"
+                        title="Line"
                         TransitionProps={{ timeout: 0 }}
                         placement="bottom">
-                        {activeTool === "line" ? (
+                        {activeTool === tool.LINE ? (
                             <IconButton
                                 id="iconButtonActive"
                                 variant="contained"
@@ -172,8 +181,8 @@ function Toolbar(props) {
                                 id="iconButton"
                                 variant="contained"
                                 onClick={() => {
-                                    setActiveTool("line")
-                                    store.dispatch(setTool("line"))
+                                    setActiveTool(tool.LINE)
+                                    store.dispatch(setTool(tool.LINE))
                                 }}>
                                 <RemoveIcon id="iconButtonInner" />
                             </IconButton>
@@ -181,10 +190,10 @@ function Toolbar(props) {
                     </Tooltip>
                     <Tooltip
                         id="tooltip"
-                        title="triangle"
+                        title="Triangle"
                         TransitionProps={{ timeout: 0 }}
                         placement="bottom">
-                        {activeTool === "triangle" ? (
+                        {activeTool === tool.TRIANGLE ? (
                             <IconButton
                                 id="iconButtonActive"
                                 variant="contained"
@@ -196,8 +205,8 @@ function Toolbar(props) {
                                 id="iconButton"
                                 variant="contained"
                                 onClick={() => {
-                                    setActiveTool("triangle")
-                                    store.dispatch(setTool("triangle"))
+                                    setActiveTool(tool.TRIANGLE)
+                                    store.dispatch(setTool(tool.TRIANGLE))
                                 }}>
                                 <ChangeHistoryIcon id="iconButtonInner" />
                             </IconButton>
@@ -205,10 +214,10 @@ function Toolbar(props) {
                     </Tooltip>
                     <Tooltip
                         id="tooltip"
-                        title="circle"
+                        title="Circle"
                         TransitionProps={{ timeout: 0 }}
                         placement="bottom">
-                        {activeTool === "circle" ? (
+                        {activeTool === tool.CIRCLE ? (
                             <IconButton
                                 id="iconButtonActive"
                                 variant="contained"
@@ -220,8 +229,8 @@ function Toolbar(props) {
                                 id="iconButton"
                                 variant="contained"
                                 onClick={() => {
-                                    setActiveTool("circle")
-                                    store.dispatch(setTool("circle"))
+                                    setActiveTool(tool.CIRCLE)
+                                    store.dispatch(setTool(tool.CIRCLE))
                                 }}>
                                 <RadioButtonUncheckedIcon id="iconButtonInner" />
                             </IconButton>
@@ -288,8 +297,8 @@ function Toolbar(props) {
                                     }
                                     onChange={handleSliderChange}
                                     aria-labelledby="input-slider"
-                                    min={constant.WIDTH_MIN}
-                                    max={constant.WIDTH_MAX}
+                                    min={WIDTH_MIN}
+                                    max={WIDTH_MAX}
                                 />
                                 <Input
                                     value={lineWidth}
@@ -297,9 +306,9 @@ function Toolbar(props) {
                                     onChange={handleInputChange}
                                     onBlur={handleBlur}
                                     inputProps={{
-                                        step: constant.WIDTH_STEP,
-                                        min: constant.WIDTH_MIN,
-                                        max: constant.WIDTH_MAX,
+                                        step: WIDTH_STEP,
+                                        min: WIDTH_MIN,
+                                        max: WIDTH_MAX,
                                         type: "number",
                                         "aria-labelledby": "input-slider",
                                     }}
