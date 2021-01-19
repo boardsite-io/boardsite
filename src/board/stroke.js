@@ -15,11 +15,6 @@ const P = SAT.Polygon;
  * @param {*} position 
  */
 export function startStroke(canvas, tool, position) {
-    // const style = store.getState().drawControl.style;
-
-    // if (tool === "pen") {
-        
-    // }
 }
 
 /**
@@ -27,20 +22,12 @@ export function startStroke(canvas, tool, position) {
  * @param {*} canvas 
  * @param {*} prevPts 
  * @param {*} position 
- * @param {*} sampleCount 
  */
-export function moveStroke(canvas, prevPts, sampleCount) {
+export function moveStroke(canvas, prevPts) {
     const style = store.getState().drawControl.style;
-    // if (e.type === "touchmove") {
-    //     e = e.touches[0];
-    //     minSampleCount = 3; // more precision for stylus
-    // }
+    
+    // draw the latest points
     draw.drawLines(canvas, style, prevPts.slice(prevPts.length - 2));
-    // if (activeTool === "pen") {
-    // }
-    // else { // eraser
-    //     strokePoints.push(x, y);
-    // }
 }
 
 /**

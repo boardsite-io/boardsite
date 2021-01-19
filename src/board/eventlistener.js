@@ -1,6 +1,6 @@
 import { startStroke, moveStroke, registerStroke } from './stroke.js';
+import { CANVAS_PIXEL_RATIO, MIN_SAMPLE_COUNT, tool } from '../constants.js';
 import * as draw from './draw.js';
-import * as constant from '../constants.js';
 import store from '../redux/store.js';
 
 let isMouseDown = false,
@@ -8,11 +8,10 @@ let isMouseDown = false,
     strokePoints = [], 
     activeTool, 
     scaleFactor;
-//let shapeInProgress = false;
 
 export function handleCanvasMouseDown(e, scaleRef) {
     activeTool = store.getState().drawControl.tool;
-    scaleFactor = constant.CANVAS_PIXEL_RATIO / scaleRef.current;
+    scaleFactor = CANVAS_PIXEL_RATIO / scaleRef.current;
     isMouseDown = true;
     sampleCount = 1;
 
@@ -26,7 +25,7 @@ export function handleCanvasMouseDown(e, scaleRef) {
     if (e.type === "touchstart") {
         e = e.changedTouches[0];
     } else if (e.button === 2) {
-        activeTool = "eraser";
+        activeTool = tool.ERASER;
     }
 
     strokePoints = [curPos];
@@ -36,7 +35,7 @@ export function handleCanvasMouseDown(e, scaleRef) {
 export function handleCanvasMouseMove(e) {
     if (isMouseDown) {
         sampleCount += 1;
-        if (sampleCount > constant.MIN_SAMPLE_COUNT) {
+        if (sampleCount > MIN_SAMPLE_COUNT) {
             const liveCanvas = e.target;
             const rect = liveCanvas.getBoundingClientRect();
             const curPos = {
@@ -44,7 +43,7 @@ export function handleCanvasMouseMove(e) {
                 y: (e.clientY - rect.top) * scaleFactor,
             };
             strokePoints.push(curPos);
-            moveStroke(liveCanvas, strokePoints, sampleCount);
+            moveStroke(liveCanvas, strokePoints);
             sampleCount = 0;
         }
     }

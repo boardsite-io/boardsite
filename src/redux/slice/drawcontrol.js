@@ -1,14 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
-import * as constant from '../../constants.js';
+import {
+    DEFAULT_ACTIVE,
+    DEFAULT_TOOL,
+    DEFAULT_COLOR,
+    DEFAULT_WIDTH,
+    CANVAS_PIXEL_RATIO
+} from '../../constants.js';
 
 const drawControlSlice = createSlice({
     name: "drawControl",
     initialState: {
-        active: constant.DEFAULT_ACTIVE,
-        tool: constant.DEFAULT_TOOL,
+        active: DEFAULT_ACTIVE,
+        tool: DEFAULT_TOOL,
         style: {
-            color: constant.DEFAULT_COLOR,
-            width: constant.DEFAULT_WIDTH * constant.CANVAS_PIXEL_RATIO,
+            color: DEFAULT_COLOR,
+            width: DEFAULT_WIDTH * CANVAS_PIXEL_RATIO,
         }
     },
     reducers: {
