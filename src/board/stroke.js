@@ -15,11 +15,11 @@ const P = SAT.Polygon;
  * @param {*} position 
  */
 export function startStroke(canvas, tool, position) {
-    const style = store.getState().drawControl.style;
+    // const style = store.getState().drawControl.style;
 
-    if (tool === "pen") {
-        draw.drawCircle(canvas, { ...position, rad: style.width / 2 }, true);
-    }
+    // if (tool === "pen") {
+        
+    // }
 }
 
 /**
@@ -29,13 +29,12 @@ export function startStroke(canvas, tool, position) {
  * @param {*} position 
  * @param {*} sampleCount 
  */
-export function moveStroke(canvas, prevPts, position, sampleCount) {
+export function moveStroke(canvas, prevPts, sampleCount) {
     const style = store.getState().drawControl.style;
     // if (e.type === "touchmove") {
     //     e = e.touches[0];
     //     minSampleCount = 3; // more precision for stylus
     // }
-    prevPts.push(position);
     draw.drawLines(canvas, style, prevPts.slice(prevPts.length - 2));
     // if (activeTool === "pen") {
     // }
@@ -53,7 +52,6 @@ export function moveStroke(canvas, prevPts, position, sampleCount) {
 export async function registerStroke(canvas, curve) {
     const { pageId, type, style, points, activeTool } = curve;
     const ptsInterp = getPoints(points, 0.5);
-
     const stroke = {
         id: Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4)
             + Date.now().toString(36).substr(4),
@@ -66,19 +64,19 @@ export async function registerStroke(canvas, curve) {
     const hitboxes = getHitbox(points, style, canvas);
     if (activeTool === "eraser") {
         let { collisionHitboxes, collisionIds } = getCollision(pageId, hitboxes);
-        // console.log(collisionHitboxes, collisionIds);
+        // TODO: remove strokes in collisionIds and redraw
 
         // --------- DEBUG --------------
-        let hitboxstyle = { ...style };
-        hitboxstyle.width = 2;
-        hitboxstyle.color = "#0f0";
-        collisionHitboxes.forEach((hitbox) => {
-            const v1 = hitbox.v1,
-                v2 = hitbox.v2,
-                v3 = hitbox.v3,
-                v4 = hitbox.v4;
-            draw.drawLines(canvas, hitboxstyle, [v1, v2, v3, v4, v1]);
-        });
+        // let hitboxstyle = { ...style };
+        // hitboxstyle.width = 2;
+        // hitboxstyle.color = "#0f0";
+        // collisionHitboxes.forEach((hitbox) => {
+        //     const v1 = hitbox.v1,
+        //         v2 = hitbox.v2,
+        //         v3 = hitbox.v3,
+        //         v4 = hitbox.v4;
+        //     draw.drawLines(canvas, hitboxstyle, [v1, v2, v3, v4, v1]);
+        // });
         // --------- DEBUG END ----------
     } else {
         draw.drawStroke(canvas, stroke);
@@ -88,8 +86,8 @@ export async function registerStroke(canvas, curve) {
 
 /**
  * Check which hitboxes collide with the eraser hitboxes
- * @param {*} pageId 
- * @param {*} eraserHitboxes 
+ * @param {String} pageId 
+ * @param {Array} eraserHitboxes 
  */
 function getCollision(pageId, eraserHitboxes) {
     let collisionIds = [];
@@ -112,7 +110,6 @@ function getCollision(pageId, eraserHitboxes) {
                     collisionHitboxes.push(hitbox) // add hitbox for visualization / debug
                     collisionIds.push(id); // add id to collided ids array
                     delete hitboxes[id]; // remove hitboxes from id to avoid double detections and save time
-                    idHasCollided = true;
                     break; // current id has a collision => no need to check rest of stroke for collisions
                 }
             }
@@ -126,7 +123,9 @@ function getCollision(pageId, eraserHitboxes) {
 
 /**
  * Calculate hitbox from the non-interpolated points
- * @param {*} points 
+ * @param {Array} points 
+ * @param {Object} style 
+ * @param {Canvas} canvas 
  */
 function getHitbox(points, style, canvas) {
     let hitboxes = [];
