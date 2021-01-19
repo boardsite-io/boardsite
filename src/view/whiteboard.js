@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from "react"
-import Whiteboard from "../component/whiteboard"
+import Page, { addPage } from "../component/page"
 import Toolbar from "../component/toolbar"
 import Homebar from "../component/homebar"
 import Viewbar from "../component/viewbar"
 import AlertDialog from "../component/session_dialog"
 // import { useParams } from 'react-router-dom';
 import { useSelector } from "react-redux"
-import { nanoid } from "@reduxjs/toolkit"
 
 // import * as api from '../util/api';
 // import * as proc from '../util/processing.js';
@@ -15,15 +14,8 @@ import { nanoid } from "@reduxjs/toolkit"
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch"
 // import { jsPDF } from "jspdf";
 
-import store from "../redux/store.js"
-import {
-    actAddPage,
-    actClearPage,
-    actDeletePage,
-    actDeleteAll,
-} from "../redux/slice/boardcontrol.js"
 
-function WhiteboardControl() {
+export default function Whiteboard() {
     const defaultScale = (0.8 * window.innerWidth) / 710
     const scaleRef = useRef(defaultScale)
     const defaultPositionX = ((1 - 0.8) / 2) * window.innerWidth
@@ -94,54 +86,6 @@ function WhiteboardControl() {
         setSidInput(e.target.value)
     }
 
-    function addPage(pageId) {
-        if (pageId !== undefined) {
-            store.dispatch(
-                actAddPage({
-                    pageId: nanoid(),
-                    pageIndex: pageRank.indexOf(pageId),
-                })
-            ) // pageIndex -1 means append
-        } else {
-            store.dispatch(actAddPage({ pageId: nanoid(), pageIndex: -1 })) // pageIndex -1 means append
-        }
-
-        // if (wsRef.current !== undefined) { // Online
-        //     api.addPage(sessionID);
-        // } else { // Offline
-        //     actPage.addPage(pageid, setPageCollection);
-        // }
-    }
-
-    // TODO: FINDCANVASBYID => CLEAR
-    function clearPage(pageId) {
-        store.dispatch(actClearPage(pageId))
-        // if (wsRef.current !== undefined) { // Online
-        //     // api.clearPage(sessionID, pageid);
-        // } else { // Offline
-        //     actPage.clearPage(pageid, setBoardInfo, canvasRef);
-        // }
-    }
-
-    function deletePage(pageId) {
-        store.dispatch(actDeletePage(pageId))
-        // if (wsRef.current !== undefined) { // Online
-        //     // api.deletePage(sessionID, pageid);
-        // } else { // Offline
-        //     actPage.deletePage(pageid, setBoardInfo, setPageCollection);
-        // }
-    }
-
-    function deleteAll() {
-        store.dispatch(actDeleteAll())
-        // if (wsRef.current !== undefined) { // Online
-        //     // api.clearBoard(sessionID);
-        // } else { // Offline
-        //     actPage.deleteAll(setBoardInfo, setPageCollection);
-        //     console.log("XD");
-        // }
-    }
-
     function handleUndo() {
         // let undo = boardInfo.undoStack.pop();
         // if (undo !== undefined) {
@@ -206,9 +150,6 @@ function WhiteboardControl() {
             />
             <Homebar
                 setOpenSessionDialog={setOpenSessionDialog}
-                addPage={addPage}
-                deleteAll={deleteAll}
-                deletePage={deletePage}
                 exportToPDF={exportToPDF}
                 save={save}
             />
@@ -267,14 +208,11 @@ function WhiteboardControl() {
                                 <div className="pagecollectioninner">
                                     {pageRank.map((pageId) => {
                                         return (
-                                            <Whiteboard
+                                            <Page
                                                 className="page"
                                                 pageId={pageId}
                                                 key={pageId}
                                                 scaleRef={scaleRef}
-                                                addPage={addPage}
-                                                clearPage={clearPage}
-                                                deletePage={deletePage}
                                             />
                                         )
                                     })}
@@ -287,5 +225,3 @@ function WhiteboardControl() {
         </div>
     )
 }
-
-export default WhiteboardControl

@@ -7,7 +7,9 @@ import Tooltip from "@material-ui/core/Tooltip"
 
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever"
 import AddIcon from "@material-ui/icons/Add"
-import RemoveIcon from "@material-ui/icons/Remove"
+//import RemoveIcon from "@material-ui/icons/Remove"
+
+import { addPage, deleteAllPages } from "./page.js"
 
 export default function Homebar(props) {
     return (
@@ -56,7 +58,7 @@ export default function Homebar(props) {
                 <IconButton
                     id="iconButton"
                     variant="contained"
-                    onClick={props.deleteAll}>
+                    onClick={() => deleteAllPages()}>
                     <DeleteForeverIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
@@ -68,10 +70,11 @@ export default function Homebar(props) {
                 <IconButton
                     id="iconButton"
                     variant="contained"
-                    onClick={() => props.addPage()}>
+                    onClick={() => addPage()}>
                     <AddIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
+            {/*
             <Tooltip
                 id="tooltip"
                 title="delete last page"
@@ -84,6 +87,7 @@ export default function Homebar(props) {
                     <RemoveIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
+            */}
         </div>
     )
 }
