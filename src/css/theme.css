@@ -1,9 +1,13 @@
 :root {
-    --primary: #00D2BE;
-    --secondary:#141b1ace;
-    --barBackgroundImage: linear-gradient(90deg,#d3d3d388, #cacaca88); /* bar background */ 
+    --primary: #00d2be;
+    --secondary: #141b1ace;
+    --barBackgroundImage: linear-gradient(
+        90deg,
+        #d3d3d388,
+        #cacaca88
+    ); /* bar background */
     --barBoxShadow: 0px 0px 0px 2px var(--primary);
-    --backgroundColor:#000000;
+    --backgroundColor: #000000;
     --backgroundImage: linear-gradient(#1f8ac0, #333366);
     --pagesBackground: #88888888;
     --buttonShadow: 0px 0px 3px #00000088;
@@ -11,20 +15,24 @@
     --canvasBackgroundColor: #ffffff;
     --canvasBackgroundPosition: -10px -10px;
     --canvasBackgroundSize: 20px 20px;
-    --canvasBackgroundImage: linear-gradient(rgba(150, 150, 150, .3) 1px, transparent 1px), linear-gradient(90deg, rgba(150, 150, 150, .3) 1px, transparent 1px);
+    --canvasBackgroundImage: linear-gradient(
+            rgba(150, 150, 150, 0.3) 1px,
+            transparent 1px
+        ),
+        linear-gradient(90deg, rgba(150, 150, 150, 0.3) 1px, transparent 1px);
     --canvasBorder: 0px solid rgb(104, 104, 104);
     --canvasWidth: 620px;
     --canvasHeight: 877px;
-  }
+}
 
-  /* background-image: -webkit-linear-gradient(0deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px), -webkit-linear-gradient(#eee .05em, transparent .05em);
+/* background-image: -webkit-linear-gradient(0deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px), -webkit-linear-gradient(#eee .05em, transparent .05em);
   background-image: -moz-linear-gradient(0deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px), -moz-linear-gradient(#eee .05em, transparent .05em);
   background-image: -ms-linear-gradient(0deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px), -ms-linear-gradient(#eee .05em, transparent .05em);
   background-image: -o-linear-gradient(0deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px), -o-linear-gradient(#eee .05em, transparent .05em);
   background-image: linear-gradient(0deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px), linear-gradient(#eee .05em, transparent .05em); */
 
-  /* background-image: repeating-linear-gradient(transparent, transparent 50px, rgba(0,255,255, .25) 50px,rgba(0,255,255, .25) 100px); */
-  /* repeating-linear-gradient(90deg, rgba(0,255,255, .25), rgba(0,255,255, .25) 50px, transparent 50px, transparent 100px), 
+/* background-image: repeating-linear-gradient(transparent, transparent 50px, rgba(0,255,255, .25) 50px,rgba(0,255,255, .25) 100px); */
+/* repeating-linear-gradient(90deg, rgba(0,255,255, .25), rgba(0,255,255, .25) 50px, transparent 50px, transparent 100px), 
   repeating-linear-gradient(135deg, transparent, transparent 4px, rgba(255,255,255,.1) 4px, rgba(255,255,255,.1) 8px), 
   repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(255,255,255,.1) 4px, rgba(255,255,255,.1) 8px), 
   repeating-linear-gradient(transparent, transparent 20px, rgba(100,250,250, .2) 20px, rgba(100,250,250, .2) 21px, 

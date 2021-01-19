@@ -1,45 +1,45 @@
 // import * as proc from './processing.js';
 // import * as hbx from './hitbox.js';
-import * as constant from '../constants.js';
+import * as constant from "../constants.js"
 
 /**
  * Get the canvas element
- * @param {{id: string, ref: any}} arg 
+ * @param {{id: string, ref: any}} arg
  */
 export function getCanvas(arg) {
-    const { id, ref } = arg;
+    const { id, ref } = arg
 
     if (ref !== undefined) {
-        return ref.current;
+        return ref.current
     } else if (id !== undefined) {
-        return document.getElementById(id);
+        return document.getElementById(id)
     }
 }
 
 /**
  * Creates a new canvas context with given style
- * @param {*} canvas 
- * @param {*} style 
+ * @param {*} canvas
+ * @param {*} style
  */
 export function setStyleCtx(canvas, style) {
-    const ctx = canvas.getContext('2d');
-    const { width, color } = style;
-    ctx.lineJoin = 'round';
-    ctx.lineCap = 'round';
-    ctx.lineWidth = width;
-    ctx.strokeStyle = color;
-    ctx.fillStyle = color;
+    const ctx = canvas.getContext("2d")
+    const { width, color } = style
+    ctx.lineJoin = "round"
+    ctx.lineCap = "round"
+    ctx.lineWidth = width
+    ctx.strokeStyle = color
+    ctx.fillStyle = color
 
-    return ctx;
+    return ctx
 }
 
 export function clearCanvas(canvas) {
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, constant.CANVAS_WIDTH, constant.CANVAS_HEIGHT);
+    const ctx = canvas.getContext("2d")
+    ctx.clearRect(0, 0, constant.CANVAS_WIDTH, constant.CANVAS_HEIGHT)
 }
 
 export function redraw(canvas) {
-    clearCanvas(canvas);
+    clearCanvas(canvas)
 
     // setBoardInfo((prev) => {
     //     Object.keys(prev.strokeCollection[pageId]).forEach((key) => {
@@ -55,12 +55,10 @@ export function eraser(setBoardInfo, strokeObject, wsRef, canvasRef) {
     // let idsToDelete = {};
     // let strokeObjectArray = [];
     // let pageId = strokeObject.page_id;
-
     // setBoardInfo((prev) => {
     //     let pointSkipFactor = 16; // only check every p-th (x,y) position to reduce computational load
     //     let quadMinPixDist = 100; // quadratic minimum distance between points to be valid for hitbox calculation
     //     let hitbox = hbx.getHitbox(positions, pointSkipFactor, quadMinPixDist, strokeObject.line_width);
-
     //     if (prev.hitboxCollection[pageId] === undefined) {
     //         return prev;
     //     }
@@ -73,7 +71,6 @@ export function eraser(setBoardInfo, strokeObject, wsRef, canvasRef) {
     //             })
     //         }
     //     }
-
     //     // formatting for processing function
     //     Object.keys(idsToDelete).forEach((id) => {
     //         strokeObject = {};
@@ -84,38 +81,37 @@ export function eraser(setBoardInfo, strokeObject, wsRef, canvasRef) {
     //     })
     //     return prev;
     // });
-
     // if (strokeObjectArray.length !== 0) {
     //     proc.processStrokes(strokeObjectArray, "eraser", setBoardInfo, wsRef, canvasRef);
     // }
 }
 
 export function drawStroke(canvas, strokeObject) {
-    drawLines(canvas, strokeObject.style, strokeObject.points);
+    drawLines(canvas, strokeObject.style, strokeObject.points)
 }
 
 export function drawLines(canvas, style, pts) {
-    const ctx = setStyleCtx(canvas, style);
-    ctx.beginPath();
-    ctx.moveTo(pts[0].x, pts[0].y);
+    const ctx = setStyleCtx(canvas, style)
+    ctx.beginPath()
+    ctx.moveTo(pts[0].x, pts[0].y)
     for (let i = 1; i < pts.length; i++) {
-        ctx.lineTo(pts[i].x, pts[i].y);
+        ctx.lineTo(pts[i].x, pts[i].y)
     }
-    ctx.stroke();
+    ctx.stroke()
 }
 
-export function drawTriangle(canvas, style, pts, fill=false) {
-    const ctx = setStyleCtx(canvas, style);
+export function drawTriangle(canvas, style, pts, fill = false) {
+    const ctx = setStyleCtx(canvas, style)
 
-    ctx.beginPath();
-    ctx.moveTo(pts[0], pts[1]);
-    ctx.lineTo(pts[2], pts[3]);
-    ctx.lineTo(pts[4], pts[5]);
+    ctx.beginPath()
+    ctx.moveTo(pts[0], pts[1])
+    ctx.lineTo(pts[2], pts[3])
+    ctx.lineTo(pts[4], pts[5])
     if (fill) {
-        ctx.fill();
+        ctx.fill()
     } else {
-        ctx.closePath();
-        ctx.stroke();
+        ctx.closePath()
+        ctx.stroke()
     }
 }
 
@@ -133,15 +129,15 @@ export function drawTriangle(canvas, style, pts, fill=false) {
 //     ctx.fillRect(x, y, w, h);
 // }
 
-export function drawCircle(canvas, style, pos, fill=false) {
-    const { x, y, rad } = pos;
-    const ctx = setStyleCtx(canvas, style);
+export function drawCircle(canvas, style, pos, fill = false) {
+    const { x, y, rad } = pos
+    const ctx = setStyleCtx(canvas, style)
 
-    ctx.beginPath();
-    ctx.arc(x, y, rad, 0, 2*Math.PI);
+    ctx.beginPath()
+    ctx.arc(x, y, rad, 0, 2 * Math.PI)
     if (fill) {
-        ctx.fill();
+        ctx.fill()
     } else {
-        ctx.stroke();
+        ctx.stroke()
     }
 }

@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-import * as draw from '../../board/draw.js';
+import { createSlice } from "@reduxjs/toolkit"
+import * as draw from "../../board/draw.js"
 // import * as constant from '../../constants.js';
 // pageCollection: {
 //     pageId: {
@@ -9,7 +9,7 @@ import * as draw from '../../board/draw.js';
 //         TODO: hitbox???
 //     }
 // }
-        
+
 const boardControlSlice = createSlice({
     name: "boardControl",
     initialState: {
@@ -21,56 +21,56 @@ const boardControlSlice = createSlice({
     reducers: {
         // Add a new page
         actAddPage: (state, action) => {
-            const { pageId, pageIndex } = action.payload;
+            const { pageId, pageIndex } = action.payload
             state.pageCollection[pageId] = {
                 strokes: {},
                 hitboxes: {},
-            };
+            }
 
             if (pageIndex >= 0) {
-                state.pageRank.splice(pageIndex, 0, pageId);
+                state.pageRank.splice(pageIndex, 0, pageId)
             } else {
-                state.pageRank.push(pageId);
+                state.pageRank.push(pageId)
             }
         },
 
         // Clear page
         actClearPage: (state, action) => {
             // delete page data
-            const pageId = action.payload;
-            deletePageData(state, pageId);
+            const pageId = action.payload
+            deletePageData(state, pageId)
 
             // clear canvas
-            draw.clearCanvas(draw.getCanvas({id: `${pageId}_main`}));
+            draw.clearCanvas(draw.getCanvas({ id: `${pageId}_main` }))
         },
 
         // Delete page
         actDeletePage: (state, action) => {
             // delete page data
-            const pageId = action.payload;
-            delete state.pageCollection[pageId];
+            const pageId = action.payload
+            delete state.pageCollection[pageId]
 
             // delete page
-            const pageIndex = state.pageRank.indexOf(pageId);
-            state.pageRank.splice(pageIndex, 1);
+            const pageIndex = state.pageRank.indexOf(pageId)
+            state.pageRank.splice(pageIndex, 1)
         },
 
         // Delete all pages
         actDeleteAll: (state) => {
-            state.pageRank = [];
-            state.pageCollection = {};
+            state.pageRank = []
+            state.pageCollection = {}
         },
 
         // Add stroke to collection
         actAddStroke: (state, action) => {
-            const strokeObject = action.payload.stroke;
-            const hitbox = action.payload.hitbox;
-            const pageId = strokeObject.page_id;
-            const strokeId = strokeObject.id;
+            const strokeObject = action.payload.stroke
+            const hitbox = action.payload.hitbox
+            const pageId = strokeObject.page_id
+            const strokeId = strokeObject.id
 
             // add to collection
-            state.pageCollection[pageId].strokes[strokeId] = strokeObject;
-            state.pageCollection[pageId].hitboxes[strokeId] = hitbox;
+            state.pageCollection[pageId].strokes[strokeId] = strokeObject
+            state.pageCollection[pageId].hitboxes[strokeId] = hitbox
 
             // addToHitboxCollection(strokeObject, setBoardInfo);
             // let positions = strokeObject.position.slice(0); // create copy of positions array
@@ -101,10 +101,10 @@ const boardControlSlice = createSlice({
 
         // Erase stroke from collection
         actEraseStroke(state, action) {
-            const strokeObject = action.payload;
-            const pageId = strokeObject.page_id;
-            const strokeId = strokeObject.id;
-            delete state.pageCollection[pageId].strokes[strokeId];
+            const strokeObject = action.payload
+            const pageId = strokeObject.page_id
+            const strokeId = strokeObject.id
+            delete state.pageCollection[pageId].strokes[strokeId]
 
             // eraseFromHitboxCollection(strokeObject, setBoardInfo);
             // let pageId = strokeObject.page_id;
@@ -118,11 +118,11 @@ const boardControlSlice = createSlice({
             //     return prev;
             // })
         },
-    }
-});
+    },
+})
 
 function deletePageData(state, pageId) {
-    state.pageCollection[pageId].strokes = {}; // does this produce garbage???
+    state.pageCollection[pageId].strokes = {} // does this produce garbage???
 
     // let newUndo = [];
     // prev.undoStack.forEach((actionArray, index) => {
@@ -143,5 +143,12 @@ function deletePageData(state, pageId) {
     // prev.redoStack = newRedo;
 }
 
-export const {actAddPage, actClearPage, actDeletePage, actDeleteAll, actAddStroke, actEraseStroke} = boardControlSlice.actions;
-export default boardControlSlice.reducer;
+export const {
+    actAddPage,
+    actClearPage,
+    actDeletePage,
+    actDeleteAll,
+    actAddStroke,
+    actEraseStroke,
+} = boardControlSlice.actions
+export default boardControlSlice.reducer

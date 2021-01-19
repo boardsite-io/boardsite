@@ -15,9 +15,9 @@
 .pagecollectioninner {
     width: fit-content;
     background-color: var(--pagesBackground);
-    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
-    -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
-    -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+    -webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none; /* prevent copy paste, to allow, change 'none' to 'text' */
     border-radius: 4px;
     box-shadow: 0px 0px 5px 5px #00000044;
     display: flex;
@@ -27,14 +27,16 @@
     gap: 20px;
 }
 
-.canvasWrapper{
+.canvasWrapper {
     height: var(--canvasHeight);
     width: var(--canvasWidth);
-    position:relative;
+    position: relative;
 }
 
 .canvasLive {
-    position:absolute; top:0px; left:0px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
 }
 
 .canvasMain {
@@ -44,19 +46,20 @@
     background-position: var(--canvasBackgroundPosition);
 }
 
-.canvasLive, .canvasMain{
+.canvasLive,
+.canvasMain {
     height: var(--canvasHeight);
     width: var(--canvasWidth);
     touch-action: none;
-    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
-    -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
-    -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+    -webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none; /* prevent copy paste, to allow, change 'none' to 'text' */
     margin: 0 auto;
     border: var(--canvasBorder);
     cursor: crosshair;
 }
 
-.page{
+.page {
     display: flex;
     flex-flow: row;
     margin-right: 10px;
