@@ -12,10 +12,10 @@ import BrushIcon from "@material-ui/icons/Brush"
 import HighlightOffIcon from "@material-ui/icons/HighlightOff"
 import Tooltip from "@material-ui/core/Tooltip"
 
-import store from "../redux/store.js"
-import { setColor, setWidth, setTool } from "../redux/slice/drawcontrol.js"
+import store from "../../redux/store.js"
+import { setColor, setWidth, setTool } from "../../redux/slice/drawcontrol.js"
 
-import * as constant from "../constants.js"
+import * as constant from "../../constants.js"
 
 function Toolbar(props) {
     const [displayColorPicker, setDisplayColorPicker] = useState(false)

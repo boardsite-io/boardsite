@@ -9,7 +9,7 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever"
 import AddIcon from "@material-ui/icons/Add"
 //import RemoveIcon from "@material-ui/icons/Remove"
 
-import { addPage, deleteAllPages } from "./page.js"
+import { addPage, deleteAllPages } from "../board/page.js"
 
 export default function Homebar(props) {
     return (

@@ -6,7 +6,7 @@ import RemoveIcon from "@material-ui/icons/Remove"
 import Tooltip from "@material-ui/core/Tooltip"
 import MenuIcon from "@material-ui/icons/Menu"
 
-import { addPage, clearPage, deletePage } from "./page.js"
+import { addPage, clearPage, deletePage } from "../board/page.js"
 
 /**
  * 

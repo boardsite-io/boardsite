@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import * as draw from "../../board/draw.js"
+import * as draw from "../../component/board/draw.js"
 // import * as constant from '../../constants.js';
 // pageCollection: {
 //     pageId: {

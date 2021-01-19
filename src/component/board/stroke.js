@@ -1,12 +1,7 @@
-import store from "../redux/store.js"
-import { actAddStroke } from "../redux/slice/boardcontrol.js"
+import store from "../../redux/store.js"
+import { actAddStroke } from "../../redux/slice/boardcontrol.js"
 import * as draw from "./draw.js"
 // import * as constant from '../constants.js';
-
-const SAT = require("sat")
-const V = SAT.Vector
-const C = SAT.Circle
-const P = SAT.Polygon
 
 /**
  * Start the current stroke when mouse is pressed down
@@ -52,21 +47,6 @@ export async function registerStroke(canvas, curve) {
 
     const hitboxes = getHitbox(points, style, canvas)
     if (activeTool === "eraser") {
-        let { collisionHitboxes, collisionIds } = getCollision(pageId, hitboxes)
-        // TODO: remove strokes in collisionIds and redraw
-
-        // --------- DEBUG --------------
-        // let hitboxstyle = { ...style };
-        // hitboxstyle.width = 2;
-        // hitboxstyle.color = "#0f0";
-        // collisionHitboxes.forEach((hitbox) => {
-        //     const v1 = hitbox.v1,
-        //         v2 = hitbox.v2,
-        //         v3 = hitbox.v3,
-        //         v4 = hitbox.v4;
-        //     draw.drawLines(canvas, hitboxstyle, [v1, v2, v3, v4, v1]);
-        // });
-        // --------- DEBUG END ----------
     } else {
         draw.drawStroke(canvas, stroke)
         store.dispatch(actAddStroke({ stroke: stroke, hitbox: hitboxes }))
@@ -79,56 +59,56 @@ export async function registerStroke(canvas, curve) {
  * @param {Array} eraserHitboxes
  */
 function getCollision(pageId, eraserHitboxes) {
-    let collisionIds = []
-    let collisionHitboxes = [] // FOR DEBUGGING / VISUALIZATION
-    let hitboxes = {
-        ...store.getState().boardControl.pageCollection[pageId].hitboxes,
-    }
-    eraserHitboxes.forEach((eraserHitbox) => {
-        const v1 = eraserHitbox.v1,
-            v2 = eraserHitbox.v2,
-            v3 = eraserHitbox.v3,
-            v4 = eraserHitbox.v4
-        const eraserHitboxPolygon = new P(new V(0, 0), [
-            new V(v1.x, v1.y),
-            new V(v2.x, v2.y),
-            new V(v3.x, v3.y),
-            new V(v4.x, v4.y),
-        ])
-        const keys = Object.keys(hitboxes)
-        let idHasCollided = false
-        for (let j = 0; j < keys.length; j++) {
-            const id = keys[j]
-            const hitboxFromId = hitboxes[id]
-            for (let i = 0; i < hitboxFromId.length; i++) {
-                const hitbox = hitboxFromId[i]
-                const v1 = hitbox.v1,
-                    v2 = hitbox.v2,
-                    v3 = hitbox.v3,
-                    v4 = hitbox.v4
-                const hitboxPolygon = new P(new V(0, 0), [
-                    new V(v1.x, v1.y),
-                    new V(v2.x, v2.y),
-                    new V(v3.x, v3.y),
-                    new V(v4.x, v4.y),
-                ])
-                idHasCollided = SAT.testPolygonPolygon(
-                    eraserHitboxPolygon,
-                    hitboxPolygon
-                )
-                if (idHasCollided) {
-                    collisionHitboxes.push(hitbox) // add hitbox for visualization / debug
-                    collisionIds.push(id) // add id to collided ids array
-                    delete hitboxes[id] // remove hitboxes from id to avoid double detections and save time
-                    break // current id has a collision => no need to check rest of stroke for collisions
-                }
-            }
-            if (idHasCollided) {
-                break
-            }
-        }
-    })
-    return { collisionHitboxes: collisionHitboxes, collisionIds: collisionIds }
+    // let collisionIds = []
+    // let collisionHitboxes = [] // FOR DEBUGGING / VISUALIZATION
+    // let hitboxes = {
+    //     ...store.getState().boardControl.pageCollection[pageId].hitboxes,
+    // }
+    // eraserHitboxes.forEach((eraserHitbox) => {
+    //     const v1 = eraserHitbox.v1,
+    //         v2 = eraserHitbox.v2,
+    //         v3 = eraserHitbox.v3,
+    //         v4 = eraserHitbox.v4
+    //     const eraserHitboxPolygon = new P(new V(0, 0), [
+    //         new V(v1.x, v1.y),
+    //         new V(v2.x, v2.y),
+    //         new V(v3.x, v3.y),
+    //         new V(v4.x, v4.y),
+    //     ])
+    //     const keys = Object.keys(hitboxes)
+    //     let idHasCollided = false
+    //     for (let j = 0; j < keys.length; j++) {
+    //         const id = keys[j]
+    //         const hitboxFromId = hitboxes[id]
+    //         for (let i = 0; i < hitboxFromId.length; i++) {
+    //             const hitbox = hitboxFromId[i]
+    //             const v1 = hitbox.v1,
+    //                 v2 = hitbox.v2,
+    //                 v3 = hitbox.v3,
+    //                 v4 = hitbox.v4
+    //             const hitboxPolygon = new P(new V(0, 0), [
+    //                 new V(v1.x, v1.y),
+    //                 new V(v2.x, v2.y),
+    //                 new V(v3.x, v3.y),
+    //                 new V(v4.x, v4.y),
+    //             ])
+    //             idHasCollided = SAT.testPolygonPolygon(
+    //                 eraserHitboxPolygon,
+    //                 hitboxPolygon
+    //             )
+    //             if (idHasCollided) {
+    //                 collisionHitboxes.push(hitbox) // add hitbox for visualization / debug
+    //                 collisionIds.push(id) // add id to collided ids array
+    //                 delete hitboxes[id] // remove hitboxes from id to avoid double detections and save time
+    //                 break // current id has a collision => no need to check rest of stroke for collisions
+    //             }
+    //         }
+    //         if (idHasCollided) {
+    //             break
+    //         }
+    //     }
+    // })
+    // return { collisionHitboxes: collisionHitboxes, collisionIds: collisionIds }
 }
 
 /**

@@ -9,8 +9,8 @@ import Tooltip from "@material-ui/core/Tooltip"
 import FullscreenIcon from "@material-ui/icons/Fullscreen"
 import OpenWithIcon from "@material-ui/icons/OpenWith"
 
-import store from "../redux/store.js"
-import { setActive } from "../redux/slice/drawcontrol.js"
+import store from "../../redux/store.js"
+import { setActive } from "../../redux/slice/drawcontrol.js"
 
 export default function Viewbar(props) {
     const [displayPenMode, setDisplayPenMode] = useState(true)

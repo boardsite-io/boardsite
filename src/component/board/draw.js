@@ -1,6 +1,6 @@
 // import * as proc from './processing.js';
 // import * as hbx from './hitbox.js';
-import * as constant from "../constants.js"
+import * as constant from "../../constants.js"
 
 /**
  * Get the canvas element
