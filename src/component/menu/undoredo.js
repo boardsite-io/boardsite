@@ -12,33 +12,35 @@ let UndoRedo = ({ canUndo, canRedo, onUndo, onRedo }) => (
             title="undo"
             TransitionProps={{ timeout: 0 }}
             placement="bottom">
-            <IconButton
-                id="iconButton"
-                variant="contained"
-                disabled={!canUndo}
-                onClick={onUndo}>
-
-                <UndoIcon id="iconButtonInner" />
-            </IconButton>
+            <span>
+                <IconButton
+                    id="iconButton"
+                    variant="contained"
+                    disabled={!canUndo}
+                    onClick={onUndo}>
+                    <UndoIcon id="iconButtonInner" />
+                </IconButton>
+            </span>
         </Tooltip>
         <Tooltip
             id="tooltip"
             title="redo"
             TransitionProps={{ timeout: 0 }}
             placement="bottom">
-            <IconButton
-                id="iconButton"
-                variant="contained"
-                disabled={!canRedo}
-                onClick={onRedo}>
-                <RedoIcon id="iconButtonInner" />
-            </IconButton>
+            <span>
+                <IconButton
+                    id="iconButton"
+                    variant="contained"
+                    disabled={!canRedo}
+                    onClick={onRedo}>
+                    <RedoIcon id="iconButtonInner" />
+                </IconButton>
+            </span>
         </Tooltip>
     </>
 )
 
 const mapStateToProps = state => {
-    console.log(state);
     return {
         canUndo: state.boardControl.past.length > 0,
         canRedo: state.boardControl.future.length > 0
