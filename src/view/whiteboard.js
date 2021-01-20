@@ -21,10 +21,7 @@ export default function Whiteboard() {
     // const defaultPositionY = 60
     const [openSessionDialog, setOpenSessionDialog] = useState(false)
     const [sidInput, setSidInput] = useState("")
-    const pageRank = useSelector((state) => {
-        // console.log(state); // fires
-        return state.boardControl.pageRank
-    })
+    const pageRank = useSelector(state => state.boardControl.pageRank)
 
     // Connect to session if valid session link
     // useEffect(() => {

@@ -57,10 +57,15 @@ export function handleCanvasMouseUp(e, setLiveStroke, pageId) {
     isMouseDown = false
 
     // ;(async () => draw.clearCanvas(liveCanvas))()
+    
+    // ugly fix for setState during render warning => dont call action in setState!?
+    let _liveStroke;
     setLiveStroke((liveStroke) => {
-        registerStroke(liveStroke, pageId)
-        return {}
+        _liveStroke = liveStroke
+        return liveStroke
     })
+    registerStroke(_liveStroke, pageId)
+    setLiveStroke({});
 }
 
 export function handleCanvasMouseLeave(
