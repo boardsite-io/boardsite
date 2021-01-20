@@ -28,6 +28,7 @@
     gap: 20px;
     margin: auto;
     margin-top: 60px;
+    margin-bottom: 60px;
 }
 
 .canvasWrapperInner {
@@ -54,7 +55,6 @@
     background-position: var(--canvasBackgroundPosition);
 }
 
-.canvasLive,
 .canvas {
     height: var(--canvasHeight);
     width: var(--canvasWidth);
@@ -62,14 +62,16 @@
     -webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */
     -webkit-user-select: none; /* prevent copy paste, to allow, change 'none' to 'text' */
-    margin: 0 auto;
     border: var(--canvasBorder);
     cursor: crosshair;
 }
 
 .pagesettings {
+    position: relative;
+    top: 0px;
+    left: 0px;
+    margin-top: 10px;
     display: flex;
     flex-flow: column;
     gap: 10px;
-    margin-top: 10px;
 }

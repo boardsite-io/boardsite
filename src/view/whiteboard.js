@@ -37,7 +37,6 @@ export default function Whiteboard() {
     useEffect(() => {
         // setOpenSessionDialog(true);
         addPage()
-        addPage()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

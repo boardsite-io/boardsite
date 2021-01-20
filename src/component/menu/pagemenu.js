@@ -40,7 +40,7 @@ export default function PageMenu(props) {
             {
                 // Palette Popup
                 displayPageSettings ? (
-                    <div className="popup">
+                    <div className="pagesettingspopup">
                         <div className="cover" onClick={closePageSettings} />
                         <div className="pagesettings">
                             <Tooltip
