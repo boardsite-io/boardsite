@@ -14,16 +14,23 @@ import {
     actDeletePage,
     actDeleteAll,
 } from "../../redux/slice/boardcontrol.js"
+import { setTool } from "../../redux/slice/drawcontrol"
 import { useSelector } from "react-redux"
 
 export default function Whiteboard(props) {
     const [liveStroke, setLiveStroke] = useState({})
-    const pageCollection = useSelector(
-        (state) => state.boardControl.pageCollection
-    )
+    const pageCollection = useSelector(state => state.boardControl.pageCollection)
     const pageId = props.pageId
 
     function onMouseDown(e) {
+        switch (e.evt.button) {
+            case 2: // right-click
+                store.dispatch(setTool(constant.tool.ERASER))
+                break;
+            default:
+                // store.dispatch(setTool(constant.tool.PEN))
+                break;
+        }
         evl.handleCanvasMouseDown(e, setLiveStroke, props.scaleRef)
     }
 
@@ -55,9 +62,7 @@ export default function Whiteboard(props) {
                             (strokeId, i) => (
                                 <StrokeShape
                                     key={strokeId}
-                                    stroke={
-                                        pageCollection[pageId].strokes[strokeId]
-                                    }
+                                    stroke={pageCollection[pageId].strokes[strokeId]}
                                 />
                             )
                         )}

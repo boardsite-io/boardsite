@@ -6,6 +6,9 @@ import Viewbar from "../component/menu/viewbar"
 import AlertDialog from "../component/menu/session_dialog"
 // import { useParams } from 'react-router-dom';
 import { useSelector } from "react-redux"
+import { tool } from "../constants.js"
+import { setTool } from "../redux/slice/drawcontrol.js"
+import store from "../redux/store.js"
 
 // import * as api from '../util/api';
 // import * as proc from '../util/processing.js';
@@ -34,8 +37,17 @@ export default function Whiteboard() {
     useEffect(() => {
         // setOpenSessionDialog(true);
         addPage()
+        document.addEventListener('keypress', handleKeyPress)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    function handleKeyPress(e) {
+        switch (e.key) {
+            case "p": store.dispatch(setTool(tool.PEN)); break;
+            case "e": store.dispatch(setTool(tool.ERASER)); break;
+            default: break;
+        }
+    }
 
     // Verify session id and try to connect to session
     // useEffect(() => {
@@ -199,22 +211,22 @@ export default function Whiteboard() {
                             setPositionX={setPositionX}
                             setPositionY={setPositionY}
                         /> */}
-                        {/* <TransformComponent> */}
-                            <div className="pagecollectionouter">
-                                <div className="pagecollectioninner">
-                                    {pageRank.map((pageId) => {
-                                        return (
-                                            <Page
-                                                className="page"
-                                                pageId={pageId}
-                                                key={pageId}
-                                                // scaleRef={scaleRef}
-                                            />
-                                        )
-                                    })}
-                                </div>
-                            </div>
-                        {/* </TransformComponent>
+            {/* <TransformComponent> */}
+            <div className="pagecollectionouter">
+                <div className="pagecollectioninner">
+                    {pageRank.map((pageId) => {
+                        return (
+                            <Page
+                                className="page"
+                                pageId={pageId}
+                                key={pageId}
+                            // scaleRef={scaleRef}
+                            />
+                        )
+                    })}
+                </div>
+            </div>
+            {/* </TransformComponent>
                     </>
                 )}
             </TransformWrapper> */}

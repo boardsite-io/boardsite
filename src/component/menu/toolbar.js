@@ -99,7 +99,7 @@ function Toolbar(props) {
             <div className="toolring">
                 <Tooltip
                     id="tooltip"
-                    title="Pen"
+                    title="Pen (P)"
                     TransitionProps={{ timeout: 0 }}
                     placement="bottom">
                     {toolSelector === tool.PEN ? (
@@ -125,7 +125,7 @@ function Toolbar(props) {
                 </Tooltip>
                 <Tooltip
                     id="tooltip"
-                    title="Eraser"
+                    title="Eraser (E)"
                     TransitionProps={{ timeout: 0 }}
                     placement="bottom">
                     {toolSelector === tool.ERASER ? (
