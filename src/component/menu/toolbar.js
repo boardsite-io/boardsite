@@ -19,9 +19,6 @@ import { setColor, setWidth, setTool } from "../../redux/slice/drawcontrol.js"
 import {
     tool,
     DEFAULT_COLOR,
-    DEFAULT_WIDTH,
-    DEFAULT_TOOL,
-    CANVAS_PIXEL_RATIO,
     WIDTH_MIN,
     WIDTH_MAX,
     WIDTH_STEP,
@@ -32,8 +29,8 @@ function Toolbar(props) {
     const [displayWidthPicker, setDisplayWidthPicker] = useState(false)
     const [displayExtraTools, setDisplayExtraTools] = useState(false)
     const [colorDisplay, setColorDisplay] = useState(DEFAULT_COLOR)
-    const [lineWidth, setLineWidth] = useState(DEFAULT_WIDTH)
     const activeTool = useSelector(state => state.drawControl.tool)
+    const widthSelector = useSelector(state => state.drawControl.style.width)
 
     function handlePaletteClick() {
         setDisplayColorPicker(!displayColorPicker)
@@ -57,23 +54,20 @@ function Toolbar(props) {
     }
 
     const handleSliderChange = (event, width) => {
-        setLineWidth(width)
-        store.dispatch(setWidth(width * CANVAS_PIXEL_RATIO))
+        store.dispatch(setWidth(width))
     }
 
     const handleInputChange = (event) => {
-        const width =
-            event.target.value === "" ? "" : Number(event.target.value)
-        setLineWidth(width)
-        store.dispatch(setWidth(width * CANVAS_PIXEL_RATIO))
+        const width = event.target.value === "" ? "" : Number(event.target.value)
+        store.dispatch(setWidth(width))
     }
 
     // Slider Functions
     const handleBlur = () => {
-        if (lineWidth < WIDTH_MIN) {
-            setLineWidth(WIDTH_MIN)
-        } else if (lineWidth > WIDTH_MAX) {
-            setLineWidth(WIDTH_MAX)
+        if (widthSelector < WIDTH_MIN) {
+            store.dispatch(setWidth(WIDTH_MIN))
+        } else if (widthSelector > WIDTH_MAX) {
+            store.dispatch(setWidth(WIDTH_MAX))
         }
     }
 
@@ -287,8 +281,8 @@ function Toolbar(props) {
                             <div className="widthpicker">
                                 <Slider
                                     value={
-                                        typeof lineWidth === "number"
-                                            ? lineWidth
+                                        typeof widthSelector === "number"
+                                            ? widthSelector
                                             : 0
                                     }
                                     onChange={handleSliderChange}
@@ -297,7 +291,7 @@ function Toolbar(props) {
                                     max={WIDTH_MAX}
                                 />
                                 <Input
-                                    value={lineWidth}
+                                    value={widthSelector}
                                     margin="dense"
                                     onChange={handleInputChange}
                                     onBlur={handleBlur}
