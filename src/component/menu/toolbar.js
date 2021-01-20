@@ -15,22 +15,15 @@ import Tooltip from "@material-ui/core/Tooltip"
 import store from "../../redux/store.js"
 import { useSelector } from "react-redux"
 import { setColor, setWidth, setTool } from "../../redux/slice/drawcontrol.js"
-
-import {
-    tool,
-    DEFAULT_COLOR,
-    WIDTH_MIN,
-    WIDTH_MAX,
-    WIDTH_STEP,
-} from "../../constants.js"
+import { tool, WIDTH_MIN, WIDTH_MAX, WIDTH_STEP } from "../../constants.js"
 
 function Toolbar(props) {
     const [displayColorPicker, setDisplayColorPicker] = useState(false)
     const [displayWidthPicker, setDisplayWidthPicker] = useState(false)
     const [displayExtraTools, setDisplayExtraTools] = useState(false)
-    const [colorDisplay, setColorDisplay] = useState(DEFAULT_COLOR)
-    const activeTool = useSelector(state => state.drawControl.tool)
+    const toolSelector = useSelector(state => state.drawControl.tool)
     const widthSelector = useSelector(state => state.drawControl.style.width)
+    const colorSelector = useSelector(state => state.drawControl.style.color)
 
     function handlePaletteClick() {
         setDisplayColorPicker(!displayColorPicker)
@@ -49,7 +42,6 @@ function Toolbar(props) {
     }
 
     function handlePaletteChange(color) {
-        setColorDisplay(color.rgb)
         store.dispatch(setColor(color.hex))
     }
 
@@ -110,7 +102,7 @@ function Toolbar(props) {
                     title="Pen"
                     TransitionProps={{ timeout: 0 }}
                     placement="bottom">
-                    {activeTool === tool.PEN ? (
+                    {toolSelector === tool.PEN ? (
                         <IconButton
                             id="iconButtonActive"
                             variant="contained"
@@ -136,7 +128,7 @@ function Toolbar(props) {
                     title="Eraser"
                     TransitionProps={{ timeout: 0 }}
                     placement="bottom">
-                    {activeTool === tool.ERASER ? (
+                    {toolSelector === tool.ERASER ? (
                         <IconButton
                             id="iconButtonActive"
                             variant="contained"
@@ -162,7 +154,7 @@ function Toolbar(props) {
                         title="Line"
                         TransitionProps={{ timeout: 0 }}
                         placement="bottom">
-                        {activeTool === tool.LINE ? (
+                        {toolSelector === tool.LINE ? (
                             <IconButton
                                 id="iconButtonActive"
                                 variant="contained"
@@ -185,7 +177,7 @@ function Toolbar(props) {
                         title="Triangle"
                         TransitionProps={{ timeout: 0 }}
                         placement="bottom">
-                        {activeTool === tool.TRIANGLE ? (
+                        {toolSelector === tool.TRIANGLE ? (
                             <IconButton
                                 id="iconButtonActive"
                                 variant="contained"
@@ -208,7 +200,7 @@ function Toolbar(props) {
                         title="Circle"
                         TransitionProps={{ timeout: 0 }}
                         placement="bottom">
-                        {activeTool === tool.CIRCLE ? (
+                        {toolSelector === tool.CIRCLE ? (
                             <IconButton
                                 id="iconButtonActive"
                                 variant="contained"
@@ -252,7 +244,7 @@ function Toolbar(props) {
                             <div className="colorpicker">
                                 <SketchPicker
                                     disableAlpha={true}
-                                    color={colorDisplay}
+                                    color={colorSelector}
                                     onChange={handlePaletteChange}
                                 />
                             </div>
