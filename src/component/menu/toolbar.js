@@ -13,6 +13,7 @@ import HighlightOffIcon from "@material-ui/icons/HighlightOff"
 import Tooltip from "@material-ui/core/Tooltip"
 
 import store from "../../redux/store.js"
+import { useSelector } from "react-redux"
 import { setColor, setWidth, setTool } from "../../redux/slice/drawcontrol.js"
 
 import {
@@ -32,7 +33,7 @@ function Toolbar(props) {
     const [displayExtraTools, setDisplayExtraTools] = useState(false)
     const [colorDisplay, setColorDisplay] = useState(DEFAULT_COLOR)
     const [lineWidth, setLineWidth] = useState(DEFAULT_WIDTH)
-    const [activeTool, setActiveTool] = useState(DEFAULT_TOOL)
+    const activeTool = useSelector(state => state.drawControl.tool)
 
     function handlePaletteClick() {
         setDisplayColorPicker(!displayColorPicker)
@@ -129,7 +130,6 @@ function Toolbar(props) {
                             id="iconButton"
                             variant="contained"
                             onClick={() => {
-                                setActiveTool(tool.PEN)
                                 setDisplayExtraTools(false)
                                 store.dispatch(setTool(tool.PEN))
                             }}>
@@ -146,7 +146,7 @@ function Toolbar(props) {
                         <IconButton
                             id="iconButtonActive"
                             variant="contained"
-                            onClick={() => setActiveTool(tool.ERASER)}>
+                            onClick={() => store.dispatch(setTool(tool.ERASER))}>
                             <HighlightOffIcon id="iconButtonActiveInner" />
                         </IconButton>
                     ) : (
@@ -154,7 +154,6 @@ function Toolbar(props) {
                             id="iconButton"
                             variant="contained"
                             onClick={() => {
-                                setActiveTool(tool.ERASER)
                                 store.dispatch(setTool(tool.ERASER))
                             }}>
                             <HighlightOffIcon id="iconButtonInner" />
@@ -181,7 +180,6 @@ function Toolbar(props) {
                                 id="iconButton"
                                 variant="contained"
                                 onClick={() => {
-                                    setActiveTool(tool.LINE)
                                     store.dispatch(setTool(tool.LINE))
                                 }}>
                                 <RemoveIcon id="iconButtonInner" />
@@ -205,7 +203,6 @@ function Toolbar(props) {
                                 id="iconButton"
                                 variant="contained"
                                 onClick={() => {
-                                    setActiveTool(tool.TRIANGLE)
                                     store.dispatch(setTool(tool.TRIANGLE))
                                 }}>
                                 <ChangeHistoryIcon id="iconButtonInner" />
@@ -229,7 +226,6 @@ function Toolbar(props) {
                                 id="iconButton"
                                 variant="contained"
                                 onClick={() => {
-                                    setActiveTool(tool.CIRCLE)
                                     store.dispatch(setTool(tool.CIRCLE))
                                 }}>
                                 <RadioButtonUncheckedIcon id="iconButtonInner" />
