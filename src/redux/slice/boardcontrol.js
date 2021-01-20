@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 import * as draw from "../../component/board/draw.js"
+import undoable from 'redux-undo'
 // import * as constant from '../../constants.js';
 
 const boardControlSlice = createSlice({
@@ -67,28 +68,6 @@ const boardControlSlice = createSlice({
     },
 })
 
-function deletePageData(state, pageId) {
-    state.pageCollection[pageId].strokes = {} // does this produce garbage???
-
-    // let newUndo = [];
-    // prev.undoStack.forEach((actionArray, index) => {
-    //     let action = actionArray[0];
-    //     if (action.page_id !== pageid) {
-    //         newUndo.push(prev[index]);
-    //     }
-    // })
-    // prev.undoStack = newUndo;
-
-    // let newRedo = [];
-    // prev.redoStack.forEach((actionArray, index) => {
-    //     let action = actionArray[0];
-    //     if (action.page_id !== pageid) {
-    //         newRedo.push(prev[index]);
-    //     }
-    // })
-    // prev.redoStack = newRedo;
-}
-
 export const {
     actAddPage,
     actClearPage,
@@ -97,4 +76,6 @@ export const {
     actAddStroke,
     actEraseStroke,
 } = boardControlSlice.actions
-export default boardControlSlice.reducer
+
+const undoableTodos = undoable(boardControlSlice.reducer)
+export default undoableTodos

@@ -24,7 +24,7 @@ export default function Whiteboard() {
     // const defaultPositionY = 60
     const [openSessionDialog, setOpenSessionDialog] = useState(false)
     const [sidInput, setSidInput] = useState("")
-    const pageRank = useSelector(state => state.boardControl.pageRank)
+    const pageRank = useSelector(state => state.boardControl.present.pageRank)
 
     // Connect to session if valid session link
     // useEffect(() => {
@@ -38,6 +38,7 @@ export default function Whiteboard() {
         // setOpenSessionDialog(true);
         addPage()
         document.addEventListener('keypress', handleKeyPress)
+        return document.removeEventListener('keypress', handleKeyPress)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

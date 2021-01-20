@@ -2,8 +2,6 @@ import React, { useState } from "react"
 import { IconButton, Input, Slider } from "@material-ui/core"
 import PaletteIcon from "@material-ui/icons/Palette"
 import CreateIcon from "@material-ui/icons/Create"
-import UndoIcon from "@material-ui/icons/Undo"
-import RedoIcon from "@material-ui/icons/Redo"
 import { SketchPicker } from "react-color"
 import RemoveIcon from "@material-ui/icons/Remove"
 import ChangeHistoryIcon from "@material-ui/icons/ChangeHistory"
@@ -16,6 +14,8 @@ import store from "../../redux/store.js"
 import { useSelector } from "react-redux"
 import { setColor, setWidth, setTool } from "../../redux/slice/drawcontrol.js"
 import { tool, WIDTH_MIN, WIDTH_MAX, WIDTH_STEP } from "../../constants.js"
+
+import UndoRedo from './undoredo'
 
 function Toolbar(props) {
     const [displayColorPicker, setDisplayColorPicker] = useState(false)
@@ -71,31 +71,7 @@ function Toolbar(props) {
                 onClick={props.debug}>
                 D
             </IconButton>
-
-            <Tooltip
-                id="tooltip"
-                title="undo"
-                TransitionProps={{ timeout: 0 }}
-                placement="bottom">
-                <IconButton
-                    id="iconButton"
-                    variant="contained"
-                    onClick={props.handleUndo}>
-                    <UndoIcon id="iconButtonInner" />
-                </IconButton>
-            </Tooltip>
-            <Tooltip
-                id="tooltip"
-                title="redo"
-                TransitionProps={{ timeout: 0 }}
-                placement="bottom">
-                <IconButton
-                    id="iconButton"
-                    variant="contained"
-                    onClick={props.handleRedo}>
-                    <RedoIcon id="iconButtonInner" />
-                </IconButton>
-            </Tooltip>
+            <UndoRedo />
             <div className="toolring">
                 <Tooltip
                     id="tooltip"
@@ -112,16 +88,16 @@ function Toolbar(props) {
                             <BrushIcon id="iconButtonActiveInner" />
                         </IconButton>
                     ) : (
-                        <IconButton
-                            id="iconButton"
-                            variant="contained"
-                            onClick={() => {
-                                setDisplayExtraTools(false)
-                                store.dispatch(setTool(tool.PEN))
-                            }}>
-                            <BrushIcon id="iconButtonInner" />
-                        </IconButton>
-                    )}
+                            <IconButton
+                                id="iconButton"
+                                variant="contained"
+                                onClick={() => {
+                                    setDisplayExtraTools(false)
+                                    store.dispatch(setTool(tool.PEN))
+                                }}>
+                                <BrushIcon id="iconButtonInner" />
+                            </IconButton>
+                        )}
                 </Tooltip>
                 <Tooltip
                     id="tooltip"
@@ -136,15 +112,15 @@ function Toolbar(props) {
                             <HighlightOffIcon id="iconButtonActiveInner" />
                         </IconButton>
                     ) : (
-                        <IconButton
-                            id="iconButton"
-                            variant="contained"
-                            onClick={() => {
-                                store.dispatch(setTool(tool.ERASER))
-                            }}>
-                            <HighlightOffIcon id="iconButtonInner" />
-                        </IconButton>
-                    )}
+                            <IconButton
+                                id="iconButton"
+                                variant="contained"
+                                onClick={() => {
+                                    store.dispatch(setTool(tool.ERASER))
+                                }}>
+                                <HighlightOffIcon id="iconButtonInner" />
+                            </IconButton>
+                        )}
                 </Tooltip>
             </div>
             {displayExtraTools ? (
@@ -162,15 +138,15 @@ function Toolbar(props) {
                                 <RemoveIcon id="iconButtonActiveInner" />
                             </IconButton>
                         ) : (
-                            <IconButton
-                                id="iconButton"
-                                variant="contained"
-                                onClick={() => {
-                                    store.dispatch(setTool(tool.LINE))
-                                }}>
-                                <RemoveIcon id="iconButtonInner" />
-                            </IconButton>
-                        )}
+                                <IconButton
+                                    id="iconButton"
+                                    variant="contained"
+                                    onClick={() => {
+                                        store.dispatch(setTool(tool.LINE))
+                                    }}>
+                                    <RemoveIcon id="iconButtonInner" />
+                                </IconButton>
+                            )}
                     </Tooltip>
                     <Tooltip
                         id="tooltip"
@@ -185,15 +161,15 @@ function Toolbar(props) {
                                 <ChangeHistoryIcon id="iconButtonActiveInner" />
                             </IconButton>
                         ) : (
-                            <IconButton
-                                id="iconButton"
-                                variant="contained"
-                                onClick={() => {
-                                    store.dispatch(setTool(tool.TRIANGLE))
-                                }}>
-                                <ChangeHistoryIcon id="iconButtonInner" />
-                            </IconButton>
-                        )}
+                                <IconButton
+                                    id="iconButton"
+                                    variant="contained"
+                                    onClick={() => {
+                                        store.dispatch(setTool(tool.TRIANGLE))
+                                    }}>
+                                    <ChangeHistoryIcon id="iconButtonInner" />
+                                </IconButton>
+                            )}
                     </Tooltip>
                     <Tooltip
                         id="tooltip"
@@ -208,15 +184,15 @@ function Toolbar(props) {
                                 <RadioButtonUncheckedIcon id="iconButtonActiveInner" />
                             </IconButton>
                         ) : (
-                            <IconButton
-                                id="iconButton"
-                                variant="contained"
-                                onClick={() => {
-                                    store.dispatch(setTool(tool.CIRCLE))
-                                }}>
-                                <RadioButtonUncheckedIcon id="iconButtonInner" />
-                            </IconButton>
-                        )}
+                                <IconButton
+                                    id="iconButton"
+                                    variant="contained"
+                                    onClick={() => {
+                                        store.dispatch(setTool(tool.CIRCLE))
+                                    }}>
+                                    <RadioButtonUncheckedIcon id="iconButtonInner" />
+                                </IconButton>
+                            )}
                     </Tooltip>
                 </div>
             ) : null}

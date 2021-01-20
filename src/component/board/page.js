@@ -19,7 +19,7 @@ import { useSelector } from "react-redux"
 
 export default function Whiteboard(props) {
     const [liveStroke, setLiveStroke] = useState({})
-    const pageCollection = useSelector(state => state.boardControl.pageCollection)
+    const pageCollection = useSelector(state => state.boardControl.present.pageCollection)
     const pageId = props.pageId
 
     function onMouseDown(e) {
@@ -85,7 +85,7 @@ export function addPage(pageId) {
     store.dispatch(
         actAddPage({
             pageId: nanoid(),
-            pageIndex: store.getState().boardControl.pageRank.indexOf(pageId),
+            pageIndex: store.getState().boardControl.present.pageRank.indexOf(pageId),
         })
     )
 }
