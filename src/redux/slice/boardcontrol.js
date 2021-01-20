@@ -1,14 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 import * as draw from "../../component/board/draw.js"
 // import * as constant from '../../constants.js';
-// pageCollection: {
-//     pageId: {
-//         strokes: {
-//             strokeID: {strokeobj}
-//         }
-//         TODO: hitbox???
-//     }
-// }
 
 const boardControlSlice = createSlice({
     name: "boardControl",
@@ -24,7 +16,6 @@ const boardControlSlice = createSlice({
             const { pageId, pageIndex } = action.payload
             state.pageCollection[pageId] = {
                 strokes: {},
-                hitboxes: {},
             }
 
             if (pageIndex >= 0) {
@@ -38,7 +29,7 @@ const boardControlSlice = createSlice({
         actClearPage: (state, action) => {
             // delete page data
             const pageId = action.payload
-            state.pageCollection[pageId] = {}
+            state.pageCollection[pageId].strokes = {}
         },
 
         // Delete page
