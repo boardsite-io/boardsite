@@ -65,134 +65,76 @@ function Toolbar(props) {
 
     return (
         <div className="toolbar">
-            <IconButton
-                id="iconButton"
-                style={{ backgroundColor: "grey" }}
-                onClick={props.debug}>
+            <IconButton id="iconButton" style={{ backgroundColor: "grey" }} onClick={props.debug}>
                 D
             </IconButton>
             <UndoRedo />
             <div className="toolring">
-                <Tooltip
-                    id="tooltip"
-                    title="Pen (P)"
-                    TransitionProps={{ timeout: 0 }}
-                    placement="bottom">
-                    {toolSelector === tool.PEN ? (
-                        <IconButton
-                            id="iconButtonActive"
-                            variant="contained"
-                            onClick={() =>
-                                setDisplayExtraTools((prev) => !prev)
-                            }>
-                            <BrushIcon id="iconButtonActiveInner" />
-                        </IconButton>
-                    ) : (
-                            <IconButton
-                                id="iconButton"
-                                variant="contained"
-                                onClick={() => {
-                                    setDisplayExtraTools(false)
-                                    store.dispatch(setTool(tool.PEN))
-                                }}>
-                                <BrushIcon id="iconButtonInner" />
-                            </IconButton>
-                        )}
+                <Tooltip id="tooltip" title="Pen (P)" TransitionProps={{ timeout: 0 }} placement="bottom">
+                    <IconButton
+                        id={toolSelector === tool.PEN ? "iconButtonActive" : "iconButton"}
+                        variant="contained"
+                        onClick={toolSelector === tool.PEN ?
+                            () => setDisplayExtraTools((prev) => !prev)
+                            :
+                            () => {
+                                setDisplayExtraTools(false)
+                                store.dispatch(setTool(tool.PEN))
+                            }
+                        }>
+                        <BrushIcon id={toolSelector === tool.PEN ? "iconButtonActiveInner" : "iconButtonInner"} />
+                    </IconButton>
                 </Tooltip>
-                <Tooltip
-                    id="tooltip"
-                    title="Eraser (E)"
-                    TransitionProps={{ timeout: 0 }}
-                    placement="bottom">
-                    {toolSelector === tool.ERASER ? (
-                        <IconButton
-                            id="iconButtonActive"
-                            variant="contained"
-                            onClick={() => store.dispatch(setTool(tool.ERASER))}>
-                            <HighlightOffIcon id="iconButtonActiveInner" />
-                        </IconButton>
-                    ) : (
-                            <IconButton
-                                id="iconButton"
-                                variant="contained"
-                                onClick={() => {
-                                    store.dispatch(setTool(tool.ERASER))
-                                }}>
-                                <HighlightOffIcon id="iconButtonInner" />
-                            </IconButton>
-                        )}
+                <Tooltip id="tooltip" title="Eraser (E)" TransitionProps={{ timeout: 0 }} placement="bottom">
+                    <IconButton
+                        id={toolSelector === tool.ERASER ? "iconButtonActive" : "iconButton"}
+                        variant="contained"
+                        onClick={() => store.dispatch(setTool(tool.ERASER))}>
+                        <HighlightOffIcon id={toolSelector === tool.ERASER ? "iconButtonActiveInner" : "iconButtonInner"} />
+                    </IconButton>
                 </Tooltip>
             </div>
             {displayExtraTools ? (
                 <div className="extratools">
-                    <Tooltip
-                        id="tooltip"
-                        title="Line"
-                        TransitionProps={{ timeout: 0 }}
-                        placement="bottom">
-                        {toolSelector === tool.LINE ? (
-                            <IconButton
-                                id="iconButtonActive"
-                                variant="contained"
-                                onClick={() => setDisplayExtraTools(false)}>
-                                <RemoveIcon id="iconButtonActiveInner" />
-                            </IconButton>
-                        ) : (
-                                <IconButton
-                                    id="iconButton"
-                                    variant="contained"
-                                    onClick={() => {
-                                        store.dispatch(setTool(tool.LINE))
-                                    }}>
-                                    <RemoveIcon id="iconButtonInner" />
-                                </IconButton>
-                            )}
+                    <Tooltip id="tooltip" title="Line" TransitionProps={{ timeout: 0 }} placement="bottom">
+                        <IconButton
+                            id={toolSelector === tool.LINE ? "iconButtonActive" : "iconButton"}
+                            variant="contained"
+                            onClick={toolSelector === tool.LINE ? 
+                                () => setDisplayExtraTools(false)
+                                : 
+                                () => store.dispatch(setTool(tool.LINE))
+                            }>
+                            <RemoveIcon id={toolSelector === tool.LINE ? "iconButtonActiveInner" : "iconButtonInner"} />
+                        </IconButton>
                     </Tooltip>
-                    <Tooltip
-                        id="tooltip"
-                        title="Triangle"
-                        TransitionProps={{ timeout: 0 }}
-                        placement="bottom">
-                        {toolSelector === tool.TRIANGLE ? (
-                            <IconButton
-                                id="iconButtonActive"
-                                variant="contained"
-                                onClick={() => setDisplayExtraTools(false)}>
-                                <ChangeHistoryIcon id="iconButtonActiveInner" />
-                            </IconButton>
-                        ) : (
-                                <IconButton
-                                    id="iconButton"
-                                    variant="contained"
-                                    onClick={() => {
-                                        store.dispatch(setTool(tool.TRIANGLE))
-                                    }}>
-                                    <ChangeHistoryIcon id="iconButtonInner" />
-                                </IconButton>
-                            )}
+                    <Tooltip id="tooltip" title="Triangle" TransitionProps={{ timeout: 0 }} placement="bottom">
+                        <IconButton
+                            id={toolSelector === tool.TRIANGLE ? "iconButtonActive" : "iconButton"}
+                            variant="contained"
+                            onClick={toolSelector === tool.TRIANGLE ? 
+                                () => setDisplayExtraTools(false)
+                                : 
+                                () => store.dispatch(setTool(tool.TRIANGLE))
+                            }>
+                            <ChangeHistoryIcon id={toolSelector === tool.TRIANGLE ? "iconButtonActiveInner" : "iconButtonInner"} />
+                        </IconButton>
                     </Tooltip>
                     <Tooltip
                         id="tooltip"
                         title="Circle"
                         TransitionProps={{ timeout: 0 }}
                         placement="bottom">
-                        {toolSelector === tool.CIRCLE ? (
-                            <IconButton
-                                id="iconButtonActive"
-                                variant="contained"
-                                onClick={() => setDisplayExtraTools(false)}>
-                                <RadioButtonUncheckedIcon id="iconButtonActiveInner" />
-                            </IconButton>
-                        ) : (
-                                <IconButton
-                                    id="iconButton"
-                                    variant="contained"
-                                    onClick={() => {
-                                        store.dispatch(setTool(tool.CIRCLE))
-                                    }}>
-                                    <RadioButtonUncheckedIcon id="iconButtonInner" />
-                                </IconButton>
-                            )}
+                        <IconButton
+                            id={toolSelector === tool.CIRCLE ? "iconButtonActive" : "iconButton"}
+                            variant="contained"
+                            onClick={toolSelector === tool.CIRCLE ? 
+                                () => setDisplayExtraTools(false)
+                                : 
+                                () => store.dispatch(setTool(tool.CIRCLE))
+                            }>
+                            <RadioButtonUncheckedIcon id={toolSelector === tool.CIRCLE ? "iconButtonActiveInner" : "iconButtonInner"} />
+                        </IconButton>
                     </Tooltip>
                 </div>
             ) : null}
