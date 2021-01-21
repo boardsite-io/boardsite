@@ -18,28 +18,20 @@ import { setTool } from "../../redux/slice/drawcontrol"
 import { useSelector } from "react-redux"
 
 export default function Whiteboard(props) {
-    const [liveStroke, setLiveStroke] = useState({})
+    const liveStroke = useSelector(state => state.boardControl.present.liveStroke)
     const pageCollection = useSelector(state => state.boardControl.present.pageCollection)
     const pageId = props.pageId
 
     function onMouseDown(e) {
-        switch (e.evt.button) {
-            case 2: // right-click
-                store.dispatch(setTool(constant.tool.ERASER))
-                break;
-            default:
-                // store.dispatch(setTool(constant.tool.PEN))
-                break;
-        }
-        evl.handleCanvasMouseDown(e, setLiveStroke, props.scaleRef)
+        evl.handleCanvasMouseDown(e, props.scaleRef)
     }
 
     function onMouseMove(e) {
-        evl.handleCanvasMouseMove(e, setLiveStroke)
+        evl.handleCanvasMouseMove(e)
     }
 
     function onMouseUp(e) {
-        evl.handleCanvasMouseUp(e, setLiveStroke, pageId)
+        evl.handleCanvasMouseUp(e, pageId)
     }
 
     return (
@@ -70,7 +62,7 @@ export default function Whiteboard(props) {
                     <Layer>
                         {Object.keys(liveStroke).length > 0 ? (
                             <StrokeShape stroke={liveStroke} />
-                        ) : null}
+                        ) : <></>}
                     </Layer>
                 </Stage>
             </div>

@@ -1,5 +1,5 @@
 import store from "../../redux/store.js"
-import { actAddStroke } from "../../redux/slice/boardcontrol.js"
+import { actAddStroke, actSetLiveStroke } from "../../redux/slice/boardcontrol.js"
 import { handleStrokeMouseEnter } from "./eventlistener.js"
 import { Line } from "react-konva"
 import { tool } from "../../constants.js"
@@ -35,46 +35,48 @@ export function StrokeShape(props) {
 
 /**
  * Start the current stroke when mouse is pressed down
- * @param {*} canvas
- * @param {*} tool
  * @param {*} position
  */
-export function startStroke(position, style, type) {
-    return {
-        type: type,
+export function startLiveStroke(position) {
+    const { style, tool} = store.getState().drawControl
+
+    store.dispatch(actSetLiveStroke({
+        type: tool,
         style: style,
         points: [position.x, position.y],
-    }
+    }))
 }
 
 /**
  * Update the live stroke when position is moved in the canvas
- * @param {*} canvas
- * @param {*} prevPts
  * @param {*} position
  */
-export function moveStroke(position, setLiveStroke) {
-    setLiveStroke((liveStroke) => {
-        return {
-            ...liveStroke,
-            points: [...liveStroke.points, position.x, position.y],
-        }
-    })
+export function moveLiveStroke(position) {
+    const liveStroke = store.getState().boardControl.present.liveStroke
+
+    store.dispatch(actSetLiveStroke({
+        ...liveStroke,
+        points: [...liveStroke.points, position.x, position.y],
+    }))
 }
 
 /**
  * Generate API serialized stroke object, draw & save it to redux store
- * @param {{pageId: string, type: string, style:
- * {color: string, width: number},
- * position: [{x: number, y: number}]} curve
+ * @param {*} pageId 
  */
-export async function registerStroke(stroke, pageId) {
-    if (stroke.type === tool.ERASER) { return }
+export async function registerLiveStroke(position, pageId) {
+    let liveStroke = store.getState().boardControl.present.liveStroke
 
-    const ptsInterp = getPoints(stroke.points, 0.5)
+    // empty livestrokes e.g. rightmouse eraser
+    if (Object.keys(liveStroke).length === 0) { return }
+    if (liveStroke.type === tool.ERASER) { return }
 
-    stroke = {
-        ...stroke,
+    moveLiveStroke(position)
+
+    const ptsInterp = getPoints(liveStroke.points, 0.5)
+
+    liveStroke = {
+        ...liveStroke,
         id:
             Math.random()
                 .toString(36)
@@ -84,7 +86,11 @@ export async function registerStroke(stroke, pageId) {
         points: ptsInterp,
     }
 
-    store.dispatch(actAddStroke(stroke))
+    // add stroke to collection
+    store.dispatch(actAddStroke(liveStroke))
+
+    // clear livestroke
+    store.dispatch(actSetLiveStroke({}))
 }
 
 /**
