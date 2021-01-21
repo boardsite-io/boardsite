@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect } from "react"
 import Page, { addPage } from "../component/board/page"
 import Toolbar from "../component/menu/toolbar"
 import Homebar from "../component/menu/homebar"
-import Viewbar from "../component/menu/viewbar"
 import AlertDialog from "../component/menu/session_dialog"
 // import { useParams } from 'react-router-dom';
 import { useSelector } from "react-redux"

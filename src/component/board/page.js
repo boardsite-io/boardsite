@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react"
+import React from "react"
 import { nanoid } from "@reduxjs/toolkit"
 import PageMenu from "../menu/pagemenu.js"
-import { Stage, Layer, Rect, Circle } from "react-konva"
+import { Stage, Layer } from "react-konva"
 import { StrokeShape } from "./stroke.js"
 
 import * as evl from "./eventlistener.js"
@@ -14,7 +14,6 @@ import {
     actDeletePage,
     actDeleteAll,
 } from "../../redux/slice/boardcontrol.js"
-import { setTool } from "../../redux/slice/drawcontrol"
 import { useSelector } from "react-redux"
 
 export default function Whiteboard(props) {
