@@ -120,11 +120,7 @@ function Toolbar(props) {
                             <ChangeHistoryIcon id={toolSelector === tool.TRIANGLE ? "iconButtonActiveInner" : "iconButtonInner"} />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip
-                        id="tooltip"
-                        title="Circle"
-                        TransitionProps={{ timeout: 0 }}
-                        placement="bottom">
+                    <Tooltip id="tooltip" title="Circle" TransitionProps={{ timeout: 0 }} placement="bottom">
                         <IconButton
                             id={toolSelector === tool.CIRCLE ? "iconButtonActive" : "iconButton"}
                             variant="contained"
@@ -139,15 +135,8 @@ function Toolbar(props) {
                 </div>
             ) : null}
             <div>
-                <Tooltip
-                    id="tooltip"
-                    title="choose color"
-                    TransitionProps={{ timeout: 0 }}
-                    placement="bottom">
-                    <IconButton
-                        id="iconButton"
-                        variant="contained"
-                        onClick={handlePaletteClick}>
+                <Tooltip id="tooltip" title="choose color" TransitionProps={{ timeout: 0 }} placement="bottom">
+                    <IconButton id="iconButton" variant="contained" onClick={handlePaletteClick}>
                         <PaletteIcon id="iconButtonInner" />
                     </IconButton>
                 </Tooltip>
@@ -171,15 +160,8 @@ function Toolbar(props) {
                 }
             </div>
             <div>
-                <Tooltip
-                    id="tooltip"
-                    title="choose width"
-                    TransitionProps={{ timeout: 0 }}
-                    placement="bottom">
-                    <IconButton
-                        id="iconButton"
-                        variant="contained"
-                        onClick={handleWidthClick}>
+                <Tooltip id="tooltip" title="choose width" TransitionProps={{ timeout: 0 }} placement="bottom">
+                    <IconButton id="iconButton" variant="contained" onClick={handleWidthClick}>
                         <CreateIcon id="iconButtonInner" />
                     </IconButton>
                 </Tooltip>
