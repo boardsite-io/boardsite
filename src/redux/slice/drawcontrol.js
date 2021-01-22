@@ -11,6 +11,7 @@ const drawControlSlice = createSlice({
     name: "drawControl",
     initialState: {
         active: DEFAULT_ACTIVE,
+        isMouseDown: false,
         liveStroke: {
             type: DEFAULT_TOOL,
             style: {
@@ -30,13 +31,17 @@ const drawControlSlice = createSlice({
             const width = action.payload
             state.liveStroke.style.width = width
         },
-        setTool: (state, action) => {
-            const tool = action.payload
-            state.liveStroke.type = tool
+        setType: (state, action) => {
+            const type = action.payload
+            state.liveStroke.type = type
         },
         setActive: (state, action) => {
             const active = action.payload
             state.active = active
+        },
+        setIsMouseDown: (state, action) => {
+            const isMouseDown = action.payload
+            state.isMouseDown = isMouseDown
         },
         actStartLiveStroke: (state, action) => {
             const { page_id, points } = action.payload
@@ -62,8 +67,9 @@ const drawControlSlice = createSlice({
 export const {
     setColor,
     setWidth,
-    setTool,
+    setType,
     setActive,
+    setIsMouseDown,
     actStartLiveStroke,
     actUpdateLiveStrokePos,
     actEndLiveStroke,

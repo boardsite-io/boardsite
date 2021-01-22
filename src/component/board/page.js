@@ -3,8 +3,6 @@ import { nanoid } from "@reduxjs/toolkit"
 import PageMenu from "../menu/pagemenu.js"
 import { Stage, Layer } from "react-konva"
 import { StrokeShape } from "./stroke.js"
-
-import * as evl from "./eventlistener.js"
 import * as constant from "../../constants.js"
 
 import store from "../../redux/store.js"
@@ -16,7 +14,15 @@ import {
 } from "../../redux/slice/boardcontrol.js"
 import { useSelector } from "react-redux"
 
-export default function Whiteboard(props) {
+import {
+    startLiveStroke,
+    moveLiveStroke,
+    registerLiveStroke,
+} from "./stroke.js"
+import { MIN_SAMPLE_COUNT } from "../../constants.js"
+import { setIsMouseDown } from "../../redux/slice/drawcontrol"
+
+export default function Page(props) {
     const pageId = props.pageId
     const liveStrokePts = useSelector(
         (state) => state.drawControl.liveStroke.points[pageId]
@@ -24,17 +30,54 @@ export default function Whiteboard(props) {
     const pageCollection = useSelector(
         (state) => state.boardControl.present.pageCollection
     )
+    const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
+
+    let sampleCount = 0
 
     function onMouseDown(e) {
-        evl.handleCanvasMouseDown(e, props.scaleRef, pageId)
+        store.dispatch(setIsMouseDown(true))
+        if (e.evt.buttons === 2) {
+            return
+        }
+        //scaleFactor = 1 //CANVAS_PIXEL_RATIO / scaleRef.current
+        sampleCount = 1
+
+        const pos = e.target.getStage().getPointerPosition()
+        // const relPos = {
+        //     x: (e.evt.clientX - pos.x) * scaleFactor,
+        //     y: (e.evt.clientY - pos.y) * scaleFactor,
+        // }
+
+        startLiveStroke(pos, pageId)
     }
 
     function onMouseMove(e) {
-        evl.handleCanvasMouseMove(e)
+        if (!isMouseDown || e.evt.buttons === 2) {
+            return
+        }
+
+        sampleCount += 1
+        if (sampleCount > MIN_SAMPLE_COUNT) {
+            const pos = e.target.getStage().getPointerPosition()
+            // const relPos = {
+            //     x: (e.evt.clientX - pos.x) * scaleFactor,
+            //     y: (e.evt.clientY - pos.y) * scaleFactor,
+            // }
+            moveLiveStroke(pos)
+            sampleCount = 0
+        }
     }
 
     function onMouseUp(e) {
-        evl.handleCanvasMouseUp(e)
+        if (!isMouseDown) {
+            return
+        } // Ignore reentering
+        store.dispatch(setIsMouseDown(false))
+
+        // update latest position
+        const pos = e.target.getStage().getPointerPosition()
+
+        registerLiveStroke(pos)
     }
 
     return (
