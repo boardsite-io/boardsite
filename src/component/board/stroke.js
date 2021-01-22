@@ -80,7 +80,7 @@ export async function registerLiveStroke(position) {
 
     moveLiveStroke(position)
 
-    const ptsInterp = getPoints(liveStroke.points, 0.5)
+    //const ptsInterp = getPoints(liveStroke.points, 0.5)
 
     liveStroke = {
         ...liveStroke,
@@ -89,7 +89,7 @@ export async function registerLiveStroke(position) {
                 .toString(36)
                 .replace(/[^a-z]+/g, "")
                 .substr(0, 4) + Date.now().toString(36).substr(4),
-        points: ptsInterp,
+        //points: ptsInterp,
     }
     
     // add stroke to collection
