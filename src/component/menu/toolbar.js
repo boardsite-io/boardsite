@@ -21,9 +21,9 @@ function Toolbar(props) {
     const [displayColorPicker, setDisplayColorPicker] = useState(false)
     const [displayWidthPicker, setDisplayWidthPicker] = useState(false)
     const [displayExtraTools, setDisplayExtraTools] = useState(false)
-    const toolSelector = useSelector(state => state.drawControl.tool)
-    const widthSelector = useSelector(state => state.drawControl.style.width)
-    const colorSelector = useSelector(state => state.drawControl.style.color)
+    const toolSelector = useSelector(state => state.drawControl.liveStroke.tool)
+    const widthSelector = useSelector(state => state.drawControl.liveStroke.style.width)
+    const colorSelector = useSelector(state => state.drawControl.liveStroke.style.color)
 
     function handlePaletteClick() {
         setDisplayColorPicker(!displayColorPicker)

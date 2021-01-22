@@ -10,7 +10,7 @@ import { actEraseStroke } from "../../redux/slice/boardcontrol.js"
 let isMouseDown = false,
     sampleCount = 0
 
-export function handleCanvasMouseDown(e, scaleRef) {
+export function handleCanvasMouseDown(e, scaleRef, pageId) {
     isMouseDown = true
     if (e.evt.buttons === 2) {
         return
@@ -24,7 +24,7 @@ export function handleCanvasMouseDown(e, scaleRef) {
     //     y: (e.evt.clientY - pos.y) * scaleFactor,
     // }
 
-    startLiveStroke(pos)
+    startLiveStroke(pos, pageId)
 }
 
 export function handleCanvasMouseMove(e) {
@@ -44,7 +44,7 @@ export function handleCanvasMouseMove(e) {
     }
 }
 
-export function handleCanvasMouseUp(e, pageId) {
+export function handleCanvasMouseUp(e) {
     if (!isMouseDown) {
         return
     } // Ignore reentering
@@ -53,7 +53,7 @@ export function handleCanvasMouseUp(e, pageId) {
     // update latest position
     const pos = e.target.getStage().getPointerPosition()
 
-    registerLiveStroke(pos, pageId)
+    registerLiveStroke(pos)
 }
 
 export function handleStrokeMouseEnter(e, stroke) {

@@ -5,7 +5,6 @@ import undoable from 'redux-undo'
 const boardControlSlice = createSlice({
     name: "boardControl",
     initialState: {
-        liveStroke: {},
         pageRank: [], // ["id1", "id2", ...]
         pageCollection: {}, // {id1: canvasRef1, id2: canvasRef2, ...}
         sessionID: "",
@@ -50,12 +49,6 @@ const boardControlSlice = createSlice({
             state.pageCollection = {}
         },
 
-        // Set/Update the current live stroke
-        actSetLiveStroke: (state, action) => {
-            const liveStroke = action.payload
-            state.liveStroke = liveStroke
-        },
-
         // Add stroke to collection
         actAddStroke: (state, action) => {
             const stroke = action.payload
@@ -79,7 +72,6 @@ export const {
     actClearPage,
     actDeletePage,
     actDeleteAll,
-    actSetLiveStroke,
     actAddStroke,
     actEraseStroke,
 } = boardControlSlice.actions

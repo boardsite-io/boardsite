@@ -17,12 +17,14 @@ import {
 import { useSelector } from "react-redux"
 
 export default function Whiteboard(props) {
-    const liveStroke = useSelector(state => state.boardControl.present.liveStroke)
-    const pageCollection = useSelector(state => state.boardControl.present.pageCollection)
+    const liveStroke = useSelector((state) => state.drawControl.liveStroke)
+    const pageCollection = useSelector(
+        (state) => state.boardControl.present.pageCollection
+    )
     const pageId = props.pageId
 
     function onMouseDown(e) {
-        evl.handleCanvasMouseDown(e, props.scaleRef)
+        evl.handleCanvasMouseDown(e, props.scaleRef, pageId)
     }
 
     function onMouseMove(e) {
@@ -30,7 +32,7 @@ export default function Whiteboard(props) {
     }
 
     function onMouseUp(e) {
-        evl.handleCanvasMouseUp(e, pageId)
+        evl.handleCanvasMouseUp(e)
     }
 
     return (
@@ -53,15 +55,19 @@ export default function Whiteboard(props) {
                             (strokeId, i) => (
                                 <StrokeShape
                                     key={strokeId}
-                                    stroke={pageCollection[pageId].strokes[strokeId]}
+                                    stroke={
+                                        pageCollection[pageId].strokes[strokeId]
+                                    }
                                 />
                             )
                         )}
                     </Layer>
                     <Layer>
-                        {Object.keys(liveStroke).length > 0 ? (
+                        {liveStroke.page_id === pageId ? (
                             <StrokeShape stroke={liveStroke} />
-                        ) : <></>}
+                        ) : (
+                            <></>
+                        )}
                     </Layer>
                 </Stage>
             </div>
@@ -76,7 +82,9 @@ export function addPage(pageId) {
     store.dispatch(
         actAddPage({
             pageId: nanoid(),
-            pageIndex: store.getState().boardControl.present.pageRank.indexOf(pageId),
+            pageIndex: store
+                .getState()
+                .boardControl.present.pageRank.indexOf(pageId),
         })
     )
 }
