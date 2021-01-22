@@ -24,14 +24,14 @@
     /* box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); */
     box-shadow: var(--buttonShadow);
 }
-#iconButton:hover #iconButtonInner{
+#iconButton:hover #iconButtonInner {
     color: var(--secondary);
 }
-#iconButton:hover{
+#iconButton:hover {
     background-color: var(--primary);
     box-shadow: 0px 0px 10px var(--primary);
 }
-#iconButton:active{
+#iconButton:active {
     box-shadow: 0px 0px 20px var(--primary);
 }
 

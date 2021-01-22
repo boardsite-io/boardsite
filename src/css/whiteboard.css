@@ -10,63 +10,68 @@
 .pagecollectionouter {
     width: 100vw;
     height: 100vh;
+    overflow-y: scroll;
 }
 
 .pagecollectioninner {
     width: fit-content;
     background-color: var(--pagesBackground);
-    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
-    -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
-    -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+    -webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none; /* prevent copy paste, to allow, change 'none' to 'text' */
     border-radius: 4px;
     box-shadow: 0px 0px 5px 5px #00000044;
     display: flex;
     flex-flow: column;
-    padding-top: 40px;
-    padding-bottom: 40px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     gap: 20px;
+    margin: auto;
+    margin-top: 60px;
+    margin-bottom: 60px;
 }
 
-#canvasWrapper{
+.canvasWrapperInner {
     height: var(--canvasHeight);
     width: var(--canvasWidth);
-    position:relative;
+    position: relative;
 }
 
-#canvasLive {
-    position:absolute; top:0px; left:0px;
+.canvasWrapperOuter {
+    display: flex;
+    flex-flow: row;
+    margin-right: 5px;
+    margin-left: 5px;
+    gap: 5px;
 }
 
-#canvasMain {
+.canvas {
+    position: absolute;
+    top: 0px;
+    left: 0px;
     background-color: var(--canvasBackgroundColor);
     background-size: var(--canvasBackgroundSize);
     background-image: var(--canvasBackgroundImage);
     background-position: var(--canvasBackgroundPosition);
 }
 
-#canvasLive,#canvasMain{
+.canvas {
     height: var(--canvasHeight);
     width: var(--canvasWidth);
     touch-action: none;
-    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
-    -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
-    -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
-    margin: 0 auto;
+    -webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none; /* prevent copy paste, to allow, change 'none' to 'text' */
     border: var(--canvasBorder);
     cursor: crosshair;
 }
 
-.page{
-    display: flex;
-    flex-flow: row;
-    margin-right: 10px;
-    margin-left: 45px;
-    gap: 5px;
-}
-
 .pagesettings {
+    position: relative;
+    top: 0px;
+    left: 0px;
+    margin-top: 10px;
     display: flex;
     flex-flow: column;
     gap: 10px;
-    margin-top: 10px;
 }

@@ -3,6 +3,12 @@
     z-index: 10;
 }
 
+.pagesettingspopup {
+    position: relative;
+    top: 0px;
+    z-index: 10;
+}
+
 .cover {
     position: fixed;
     top: -100vh;

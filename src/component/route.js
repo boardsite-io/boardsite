@@ -1,11 +1,11 @@
-import React from 'react';
-import { Route } from 'react-router-dom';
+import React from "react"
+import { Route } from "react-router-dom"
 
-import WhiteboardControl from '../page/whiteboardcontrol';
+import Whiteboard from "../view/whiteboard.js"
 
 export default (
     <Route>
-        <Route exact path="/" component={WhiteboardControl} />
-        <Route exact path="/s=:id" component={WhiteboardControl}/>
+        <Route exact path="/" component={Whiteboard} />
+        <Route exact path="/s=:id" component={Whiteboard} />
     </Route>
-);
+)
