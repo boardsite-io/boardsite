@@ -17,11 +17,13 @@ import {
 import { useSelector } from "react-redux"
 
 export default function Whiteboard(props) {
-    const liveStroke = useSelector((state) => state.drawControl.liveStroke)
+    const pageId = props.pageId
+    const liveStrokePts = useSelector(
+        (state) => state.drawControl.liveStroke.points[pageId]
+    )
     const pageCollection = useSelector(
         (state) => state.boardControl.present.pageCollection
     )
-    const pageId = props.pageId
 
     function onMouseDown(e) {
         evl.handleCanvasMouseDown(e, props.scaleRef, pageId)
@@ -63,8 +65,13 @@ export default function Whiteboard(props) {
                         )}
                     </Layer>
                     <Layer>
-                        {liveStroke.page_id === pageId ? (
-                            <StrokeShape stroke={liveStroke} />
+                        {liveStrokePts !== undefined ? (
+                            <StrokeShape
+                                stroke={{
+                                    ...store.getState().drawControl.liveStroke,
+                                    points: liveStrokePts, // remove page_id key in points
+                                }}
+                            />
                         ) : (
                             <></>
                         )}

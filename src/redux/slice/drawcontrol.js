@@ -18,7 +18,7 @@ const drawControlSlice = createSlice({
                 width: DEFAULT_WIDTH * CANVAS_PIXEL_RATIO,
             },
             page_id: "",
-            points: [],
+            points: {}, // {"pageid": [x1,y1,x2,y2,...]}
         },
     },
     reducers: {
@@ -41,16 +41,20 @@ const drawControlSlice = createSlice({
         actStartLiveStroke: (state, action) => {
             const { page_id, points } = action.payload
             state.liveStroke.page_id = page_id
-            state.liveStroke.points = points
+            state.liveStroke.points[page_id] = points
         },
-        // Set the current live stroke position
-        actSetLiveStrokePos: (state, action) => {
+        // Update the current live stroke position
+        actUpdateLiveStrokePos: (state, action) => {
             const points = action.payload
-            state.liveStroke.points = points
+            const pid = state.liveStroke.page_id
+            state.liveStroke.points[pid] = [
+                ...state.liveStroke.points[pid],
+                ...points,
+            ]
         },
         actEndLiveStroke: (state) => {
             state.liveStroke.page_id = ""
-            state.liveStroke.points = []
+            state.liveStroke.points = {}
         },
     },
 })
@@ -61,7 +65,7 @@ export const {
     setTool,
     setActive,
     actStartLiveStroke,
-    actSetLiveStrokePos,
+    actUpdateLiveStrokePos,
     actEndLiveStroke,
 } = drawControlSlice.actions
 export default drawControlSlice.reducer

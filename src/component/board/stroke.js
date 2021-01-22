@@ -2,7 +2,7 @@ import store from "../../redux/store.js"
 import { actAddStroke } from "../../redux/slice/boardcontrol.js"
 import {
     actStartLiveStroke,
-    actSetLiveStrokePos,
+    actUpdateLiveStrokePos,
     actEndLiveStroke,
 } from "../../redux/slice/drawcontrol.js"
 import { handleStrokeMouseEnter } from "./eventlistener.js"
@@ -56,11 +56,10 @@ export function startLiveStroke(position, pageId) {
  * @param {*} position
  */
 export function moveLiveStroke(position) {
-    const liveStrokePts = store.getState().drawControl.liveStroke.points
-
     store.dispatch(
-        actSetLiveStrokePos([...liveStrokePts, position.x, position.y])
+        actUpdateLiveStrokePos([position.x, position.y])
     )
+    //console.log(store.getState().drawControl.liveStroke)
 }
 
 /**
@@ -89,7 +88,7 @@ export async function registerLiveStroke(position) {
                 .toString(36)
                 .replace(/[^a-z]+/g, "")
                 .substr(0, 4) + Date.now().toString(36).substr(4),
-        //points: ptsInterp,
+        points: liveStroke.points[liveStroke.page_id],
     }
     
     // add stroke to collection
