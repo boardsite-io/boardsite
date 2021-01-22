@@ -44,7 +44,7 @@ function handleStrokeMouseEnter(e, stroke) {
     }
 
     if (
-        store.getState().drawControl.type === type.ERASER ||
+        store.getState().drawControl.liveStroke.type === type.ERASER ||
         e.evt.buttons === 2
     ) {
         store.dispatch(actEraseStroke(stroke))
@@ -81,9 +81,8 @@ export function moveLiveStroke(position) {
  */
 export async function registerLiveStroke(position) {
     let liveStroke = store.getState().drawControl.liveStroke
-
     // empty livestrokes e.g. rightmouse eraser
-    if (liveStroke.points.length === 0) {
+    if (liveStroke.points[liveStroke.page_id] === undefined) {
         return
     }
     if (liveStroke.type === type.ERASER) {
