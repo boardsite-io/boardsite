@@ -28,7 +28,7 @@ export default function Page(props) {
         (state) => state.drawControl.liveStroke.points[pageId]
     )
     const pageCollection = useSelector(
-        (state) => state.boardControl.present.pageCollection
+        (state) => state.boardControl.present.pageCollection[pageId]
     )
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
 
@@ -96,13 +96,11 @@ export default function Page(props) {
                     onTouchMove={onMouseMove}
                     onTouchEnd={onMouseUp}>
                     <Layer>
-                        {Object.keys(pageCollection[pageId].strokes).map(
+                        {Object.keys(pageCollection.strokes).map(
                             (strokeId, i) => (
                                 <StrokeShape
                                     key={strokeId}
-                                    stroke={
-                                        pageCollection[pageId].strokes[strokeId]
-                                    }
+                                    stroke={pageCollection.strokes[strokeId]}
                                 />
                             )
                         )}
