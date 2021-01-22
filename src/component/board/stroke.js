@@ -1,13 +1,12 @@
 import store from "../../redux/store.js"
-import { actAddStroke } from "../../redux/slice/boardcontrol.js"
+import { actAddStroke, actEraseStroke } from "../../redux/slice/boardcontrol.js"
 import {
     actStartLiveStroke,
     actSetLiveStrokePos,
     actEndLiveStroke,
 } from "../../redux/slice/drawcontrol.js"
-import { handleStrokeMouseEnter } from "./eventlistener.js"
 import { Line } from "react-konva"
-import { tool } from "../../constants.js"
+import { type } from "../../constants.js"
 // import * as constant from '../constants.js';
 
 /**
@@ -17,7 +16,7 @@ import { tool } from "../../constants.js"
 export function StrokeShape(props) {
     let shape
     switch (props.stroke.type) {
-        case tool.PEN:
+        case type.PEN:
             shape = (
                 <Line
                     points={props.stroke.points}
@@ -36,6 +35,20 @@ export function StrokeShape(props) {
     }
 
     return shape
+}
+
+function handleStrokeMouseEnter(e, stroke) {
+    const isMouseDown = store.getState().drawControl.isMouseDown
+    if (stroke.id === undefined || !isMouseDown) {
+        return
+    }
+
+    if (
+        store.getState().drawControl.type === type.ERASER ||
+        e.evt.buttons === 2
+    ) {
+        store.dispatch(actEraseStroke(stroke))
+    }
 }
 
 /**
@@ -74,7 +87,7 @@ export async function registerLiveStroke(position) {
     if (liveStroke.points.length === 0) {
         return
     }
-    if (liveStroke.type === tool.ERASER) {
+    if (liveStroke.type === type.ERASER) {
         return
     }
 

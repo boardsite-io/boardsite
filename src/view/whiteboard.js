@@ -5,8 +5,8 @@ import Homebar from "../component/menu/homebar"
 import AlertDialog from "../component/menu/session_dialog"
 // import { useParams } from 'react-router-dom';
 import { useSelector } from "react-redux"
-import { tool } from "../constants.js"
-import { setTool } from "../redux/slice/drawcontrol.js"
+import { type } from "../constants.js"
+import { setType } from "../redux/slice/drawcontrol.js"
 import store from "../redux/store.js"
 
 // import * as api from '../util/api';
@@ -43,8 +43,8 @@ export default function Whiteboard() {
 
     function handleKeyPress(e) {
         switch (e.key) {
-            case "p": store.dispatch(setTool(tool.PEN)); break;
-            case "e": store.dispatch(setTool(tool.ERASER)); break;
+            case "p": store.dispatch(setType(type.PEN)); break;
+            case "e": store.dispatch(setType(type.ERASER)); break;
             default: break;
         }
     }
