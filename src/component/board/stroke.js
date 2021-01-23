@@ -80,7 +80,7 @@ export function moveLiveStroke(position) {
  * Generate API serialized stroke object, draw & save it to redux store
  * @param {*} pageId
  */
-export async function registerLiveStroke(position) {
+export async function registerLiveStroke() {
     let liveStroke = store.getState().drawControl.liveStroke
     // empty livestrokes e.g. rightmouse eraser
     if (liveStroke.points[liveStroke.page_id] === undefined) {
@@ -89,8 +89,6 @@ export async function registerLiveStroke(position) {
     if (liveStroke.type === type.ERASER) {
         return
     }
-
-    moveLiveStroke(position)
 
     liveStroke = {
         ...liveStroke,

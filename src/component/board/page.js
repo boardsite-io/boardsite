@@ -38,7 +38,6 @@ export default function Page(props) {
         sampleCount = 1
 
         const pos = e.target.getStage().getPointerPosition()
-
         startLiveStroke(pos, pageId)
     }
 
@@ -56,15 +55,17 @@ export default function Page(props) {
     }
 
     function onMouseUp(e) {
-
         if (!isMouseDown || !isActive) {
             return
         } // Ignore reentering
         store.dispatch(setIsMouseDown(false))
 
-        // update latest position
+        // update last position
         const pos = e.target.getStage().getPointerPosition()
-        registerLiveStroke(pos)
+        moveLiveStroke(pos)
+
+        // register finished stroke
+        registerLiveStroke()
     }
 
     return (
