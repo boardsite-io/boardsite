@@ -23,7 +23,7 @@ import { MIN_SAMPLE_COUNT } from "../../constants.js"
 import { setIsMouseDown } from "../../redux/slice/drawcontrol"
 
 export default function Page(props) {
-    console.log("Page Redraw");
+    // console.log("Page Redraw");
     const pageId = props.pageId
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
     const isActive = useSelector((state) => state.drawControl.isActive)

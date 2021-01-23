@@ -5,7 +5,7 @@ import {
     actUpdateLiveStrokePos,
     actEndLiveStroke,
 } from "../../redux/slice/drawcontrol.js"
-import { Line } from "react-konva"
+import { Line, Circle } from "react-konva"
 import { type } from "../../constants.js"
 // import * as constant from '../constants.js';
 
@@ -24,6 +24,52 @@ export function StrokeShape(props) {
                     strokeWidth={props.stroke.style.width}
                     tension={0.5}
                     lineCap="round"
+                    onMouseEnter={(e) =>
+                        handleStrokeMouseEnter(e, props.stroke)
+                    }
+                    draggable={props.isDraggable}
+                />
+            )
+            break
+        case type.LINE:
+            shape = (
+                <Line
+                    points={props.stroke.points}
+                    stroke={props.stroke.style.color}
+                    strokeWidth={props.stroke.style.width}
+                    tension={1}
+                    lineCap="round"
+                    onMouseEnter={(e) =>
+                        handleStrokeMouseEnter(e, props.stroke)
+                    }
+                    draggable={props.isDraggable}
+                />
+            )
+            break
+        // case type.TRIANGLE:
+        //     shape = (
+        //         <Line
+        //             points={props.stroke.points}
+        //             stroke={props.stroke.style.color}
+        //             strokeWidth={props.stroke.style.width}
+        //             tension={1}
+        //             lineCap="round"
+        //             onMouseEnter={(e) =>
+        //                 handleStrokeMouseEnter(e, props.stroke)
+        //             }
+        //             draggable={props.isDraggable}
+        //         />
+        //     )
+        //     break
+        case type.CIRCLE:
+            shape = (
+                <Circle
+                    x={props.stroke.points[0]}
+                    y={props.stroke.points[1]}
+                    radius={props.stroke.points[2]}
+                    stroke={props.stroke.style.color}
+                    strokeWidth={props.stroke.style.width}
+                    // fill={props.stroke.style.color}
                     onMouseEnter={(e) =>
                         handleStrokeMouseEnter(e, props.stroke)
                     }
@@ -99,6 +145,8 @@ export async function registerLiveStroke() {
                 .substr(0, 4) + Date.now().toString(36).substr(4),
         points: liveStroke.points[liveStroke.page_id],
     }
+
+    console.log(liveStroke);
 
     // add stroke to collection
     store.dispatch(actAddStroke(liveStroke))

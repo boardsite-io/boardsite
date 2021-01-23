@@ -13,7 +13,7 @@ import { addPage, clearPage, deletePage } from "../board/page.js"
  * @param {{pageId: string}} props 
  */
 export default function PageMenu(props) {
-    console.log("PageMenu Redraw");
+    // console.log("PageMenu Redraw");
     const [displayPageSettings, setDisplayPageSettings] = useState(false)
 
     function openPageSettings() {

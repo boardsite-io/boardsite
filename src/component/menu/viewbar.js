@@ -14,7 +14,7 @@ import { setIsActive } from "../../redux/slice/drawcontrol.js"
 import { useSelector } from "react-redux"
 
 export default function Viewbar(props) {
-    console.log("Viewbar Redraw");
+    // console.log("Viewbar Redraw");
     const isActive = useSelector((state) => state.drawControl.isActive)
     
     function toggleDrawMode() {

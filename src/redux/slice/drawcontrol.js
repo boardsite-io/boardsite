@@ -5,6 +5,7 @@ import {
     DEFAULT_COLOR,
     DEFAULT_WIDTH,
     CANVAS_PIXEL_RATIO,
+    type,
 } from "../../constants.js"
 
 const drawControlSlice = createSlice({
@@ -57,10 +58,31 @@ const drawControlSlice = createSlice({
         actUpdateLiveStrokePos: (state, action) => {
             const points = action.payload
             const pid = state.liveStroke.page_id
-            state.liveStroke.points[pid] = [
-                ...state.liveStroke.points[pid],
-                ...points,
-            ]
+            const currentType = state.liveStroke.type
+            switch (currentType) {
+                case type.PEN:
+                    state.liveStroke.points[pid] = [
+                        ...state.liveStroke.points[pid],
+                        ...points,
+                    ]
+                    break;
+                case type.LINE:
+                    state.liveStroke.points[pid][2] = points[0]
+                    state.liveStroke.points[pid][3] = points[1]
+                    break
+                // case type.TRIANGLE:
+                //     state.liveStroke.points[pid][2] = points[0]
+                //     state.liveStroke.points[pid][3] = points[1]
+                //     break
+                case type.CIRCLE:
+                    const dx = points[0] - state.liveStroke.points[pid][0]
+                    const dy = points[1] - state.liveStroke.points[pid][1]
+                    const radius = Math.sqrt(Math.pow(dx,2) + Math.pow(dy,2))
+                    state.liveStroke.points[pid][2] = radius
+                    break
+                default:
+                    break;
+            }
         },
         actEndLiveStroke: (state) => {
             state.liveStroke.page_id = ""
