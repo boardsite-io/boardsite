@@ -76,7 +76,7 @@ function Toolbar() {
             </IconButton>
             <UndoRedo />
             <div className="toolring">
-                <Tooltip id="tooltip" title="Pen (P)" TransitionProps={{ timeout: 0 }} placement="bottom">
+                <Tooltip id="tooltip" title="Pen (1 or P)" TransitionProps={{ timeout: 0 }} placement="bottom">
                     <IconButton
                         id={typeSelector === type.PEN ? "iconButtonActive" : "iconButton"}
                         variant="contained"
@@ -92,7 +92,7 @@ function Toolbar() {
                         <BrushIcon id={typeSelector === type.PEN ? "iconButtonActiveInner" : "iconButtonInner"} />
                     </IconButton>
                 </Tooltip>
-                <Tooltip id="tooltip" title="Eraser (E)" TransitionProps={{ timeout: 0 }} placement="bottom">
+                <Tooltip id="tooltip" title="Eraser (2 or E)" TransitionProps={{ timeout: 0 }} placement="bottom">
                     <IconButton
                         id={typeSelector === type.ERASER ? "iconButtonActive" : "iconButton"}
                         variant="contained"
@@ -103,7 +103,7 @@ function Toolbar() {
                         <HighlightOffIcon id={typeSelector === type.ERASER ? "iconButtonActiveInner" : "iconButtonInner"} />
                     </IconButton>
                 </Tooltip>
-                <Tooltip id="tooltip" title="Drag (D)" TransitionProps={{ timeout: 0 }} placement="bottom">
+                <Tooltip id="tooltip" title="Drag (3 or D)" TransitionProps={{ timeout: 0 }} placement="bottom">
                     <IconButton
                         id={isDraggable ? "iconButtonActive" : "iconButton"}
                         variant="contained"

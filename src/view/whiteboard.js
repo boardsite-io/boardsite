@@ -37,15 +37,18 @@ export default function Whiteboard() {
         // setOpenSessionDialog(true);
         addPage()
         document.addEventListener('keypress', handleKeyPress)
-        return document.removeEventListener('keypress', handleKeyPress)
+        // return document.removeEventListener('keypress', handleKeyPress)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     function handleKeyPress(e) {
         switch (e.key) {
-            case "p": store.dispatch(setType(type.PEN)); break;
-            case "e": store.dispatch(setType(type.ERASER)); break;
+            case "p": store.dispatch(setType(type.PEN)); store.dispatch(setIsDraggable(false)); break;
+            case "1": store.dispatch(setType(type.PEN)); store.dispatch(setIsDraggable(false)); break;
+            case "e": store.dispatch(setType(type.ERASER)); store.dispatch(setIsDraggable(false)); break;
+            case "2": store.dispatch(setType(type.ERASER)); store.dispatch(setIsDraggable(false)); break;
             case "d": store.dispatch(setType(type.DRAG)); store.dispatch(setIsDraggable(true)); break;
+            case "3": store.dispatch(setType(type.DRAG)); store.dispatch(setIsDraggable(true)); break;
             default: break;
         }
     }
