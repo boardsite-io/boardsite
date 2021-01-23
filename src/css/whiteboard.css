@@ -1,16 +1,7 @@
-.viewport {
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    overflow: hidden;
-}
-
 .pagecollectionouter {
     width: 100vw;
     height: 100vh;
-    overflow-y: scroll;
+    overflow: visible;
 }
 
 .pagecollectioninner {

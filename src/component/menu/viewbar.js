@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import ZoomInIcon from "@material-ui/icons/ZoomIn"
 import ZoomOutIcon from "@material-ui/icons/ZoomOut"
 import ZoomOutMapIcon from "@material-ui/icons/ZoomOutMap"
@@ -10,15 +10,18 @@ import FullscreenIcon from "@material-ui/icons/Fullscreen"
 import OpenWithIcon from "@material-ui/icons/OpenWith"
 
 import store from "../../redux/store.js"
-import { setActive } from "../../redux/slice/drawcontrol.js"
+import { setIsActive } from "../../redux/slice/drawcontrol.js"
+import { useSelector } from "react-redux"
+
+import { CANVAS_WIDTH } from "../../constants.js"
 
 export default function Viewbar(props) {
-    const [displayPenMode, setDisplayPenMode] = useState(true)
+    const isActive = useSelector((state) => state.drawControl.isActive)
+    console.log("Viewbar Redraw");
 
     function toggleDrawMode() {
-        setDisplayPenMode((prev) => !prev)
         props.pan.disabled = !props.pan.disabled
-        store.dispatch(setActive(props.pan.disabled))
+        store.dispatch(setIsActive(props.pan.disabled))
     }
 
     function down(e) {
@@ -30,16 +33,14 @@ export default function Viewbar(props) {
     }
 
     function stretchToWindow() {
-        const newScale = window.innerWidth / 710
-        const y = (props.positionY / props.scale) * newScale
-        props.setScale(newScale, 0)
-        props.setPositionX(0, 0)
-        props.setPositionY(y, 0)
+        const newScale = window.innerWidth / CANVAS_WIDTH
+        // const y = (props.positionY / props.scale) * newScale
+        props.setTransform(0,0,newScale,1000, "linear")
     }
 
     function resetAndCenter() {
         const w = window.innerWidth
-        const x = (w - 710) / 2
+        const x = (w - CANVAS_WIDTH) / 2
         const y = props.positionY / props.scale
         props.setScale(1, 0)
         props.setPositionX(x, 0)
@@ -53,7 +54,7 @@ export default function Viewbar(props) {
                 title="toggle panning"
                 TransitionProps={{ timeout: 0 }}
                 placement="left">
-                {displayPenMode ? (
+                {isActive ? (
                     <IconButton
                         id="iconButton"
                         variant="contained"

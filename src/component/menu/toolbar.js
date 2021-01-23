@@ -15,7 +15,6 @@ import store from "../../redux/store.js"
 import { useSelector } from "react-redux"
 import { setColor, setWidth, setType, setIsDraggable } from "../../redux/slice/drawcontrol.js"
 import { type, WIDTH_MIN, WIDTH_MAX, WIDTH_STEP } from "../../constants.js"
-
 import UndoRedo from './undoredo'
 
 function Toolbar() {

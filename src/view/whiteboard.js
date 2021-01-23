@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import Page, { addPage } from "../component/board/page"
 import Toolbar from "../component/menu/toolbar"
 import Homebar from "../component/menu/homebar"
+import Viewbar from "../component/menu/viewbar"
 import AlertDialog from "../component/menu/session_dialog"
 // import { useParams } from 'react-router-dom';
 import { useSelector } from "react-redux"
@@ -13,14 +14,13 @@ import store from "../redux/store.js"
 // import * as proc from '../util/processing.js';
 // import * as control from '../util/boardcontrol';
 
-// import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch"
-// import { jsPDF } from "jspdf";
-
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch"
 
 export default function Whiteboard() {
     // const scaleRef = useRef(1)
-    // const defaultPositionX = ((1 - 0.8) / 2) * window.innerWidth
-    // const defaultPositionY = 60
+    const defaultPositionX = ((1 - 0.8) / 2) * window.innerWidth
+    const defaultPositionY = 60
+    const defaultScale = 1
     const [openSessionDialog, setOpenSessionDialog] = useState(false)
     const [sidInput, setSidInput] = useState("")
     const pageRank = useSelector(state => state.boardControl.present.pageRank)
@@ -98,36 +98,8 @@ export default function Whiteboard() {
         // setSidInput(e.target.value)
     }
 
-    function debug() {
-        // console.log(boardInfo);
-    }
-
-    function exportToPDF() {
-        // if (pageCollection.length === 0) {
-        //     return;
-        // }
-        // const pdf = new jsPDF();
-        // const width = pdf.internal.pageSize.getWidth();
-        // const height = pdf.internal.pageSize.getHeight();
-        // let canvasPage = pageCollection[0].canvasRef.current;
-        // let imgData = canvasPage.toDataURL('image/png');
-        // pdf.addImage(imgData, 'PNG', 0, 0, width, height);
-        // for (let i = 1; i < pageCollection.length; i++) {
-        //     canvasPage = pageCollection[i].canvasRef.current;
-        //     imgData = canvasPage.toDataURL('image/png');
-        //     pdf.addPage();
-        //     pdf.setPage(i + 1);
-        //     pdf.addImage(imgData, 'PNG', 0, 0, width, height);
-        // }
-        // pdf.save("a4.pdf");
-    }
-
-    function save() {
-        // TODO;
-    }
-
     return (
-        <div className="viewport">
+        <div>
             <AlertDialog
                 open={openSessionDialog}
                 setOpen={setOpenSessionDialog}
@@ -137,19 +109,15 @@ export default function Whiteboard() {
                 handleJoin={handleJoin}
                 handleCreate={handleCreate}
             />
-            <Toolbar/>
+            <Toolbar />
             <Homebar
                 setOpenSessionDialog={setOpenSessionDialog}
-                exportToPDF={exportToPDF}
-                save={save}
             />
-            {/* <TransformWrapper
+            <TransformWrapper
                 defaultPositionX={defaultPositionX}
                 defaultPositionY={defaultPositionY}
                 defaultScale={defaultScale}
-                onZoomChange={(e) => {
-                    scaleRef.current = e.scale
-                }}
+                // onZoomChange={}
                 options={{
                     disabled: false,
                     minScale: 0.5,
@@ -174,44 +142,45 @@ export default function Whiteboard() {
                     zoomIn,
                     zoomOut,
                     pan,
-                    scale,
                     positionX,
                     positionY,
+                    scale,
                     setPositionX,
                     setPositionY,
                     setScale,
+                    setTransform,
                 }) => (
                     <>
                         <Viewbar
                             pan={pan}
                             zoomIn={zoomIn}
                             zoomOut={zoomOut}
-                            setScale={setScale}
-                            scale={scale}
                             positionX={positionX}
                             positionY={positionY}
+                            scale={scale}
                             setPositionX={setPositionX}
                             setPositionY={setPositionY}
-                        /> */}
-            {/* <TransformComponent> */}
-            <div className="pagecollectionouter">
-                <div className="pagecollectioninner">
-                    {pageRank.map((pageId) => {
-                        return (
-                            <Page
-                                className="page"
-                                pageId={pageId}
-                                key={pageId}
-                            // scaleRef={scaleRef}
-                            />
-                        )
-                    })}
-                </div>
-            </div>
-            {/* </TransformComponent>
+                            setScale={setScale}
+                            setTransform={setTransform}
+                        />
+                        <TransformComponent>
+                            <div className="pagecollectionouter">
+                                <div className="pagecollectioninner">
+                                    {pageRank.map((pageId) => {
+                                        return (
+                                            <Page
+                                                className="page"
+                                                pageId={pageId}
+                                                key={pageId}
+                                            />
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        </TransformComponent>
                     </>
                 )}
-            </TransformWrapper> */}
+            </TransformWrapper>
         </div>
     )
 }

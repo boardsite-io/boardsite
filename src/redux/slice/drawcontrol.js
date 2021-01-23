@@ -10,7 +10,7 @@ import {
 const drawControlSlice = createSlice({
     name: "drawControl",
     initialState: {
-        active: DEFAULT_ACTIVE,
+        isActive: DEFAULT_ACTIVE,
         isMouseDown: false,
         isDraggable: false,
         liveStroke: {
@@ -36,9 +36,9 @@ const drawControlSlice = createSlice({
             const type = action.payload
             state.liveStroke.type = type
         },
-        setActive: (state, action) => {
-            const active = action.payload
-            state.active = active
+        setIsActive: (state, action) => {
+            const isActive = action.payload
+            state.isActive = isActive
         },
         setIsMouseDown: (state, action) => {
             const isMouseDown = action.payload
@@ -73,7 +73,7 @@ export const {
     setColor,
     setWidth,
     setType,
-    setActive,
+    setIsActive,
     setIsMouseDown,
     setIsDraggable,
     actStartLiveStroke,

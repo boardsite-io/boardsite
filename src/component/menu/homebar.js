@@ -1,10 +1,9 @@
 import React from "react"
 import GroupAddIcon from "@material-ui/icons/GroupAdd"
-import SaveIcon from "@material-ui/icons/Save"
-import GetAppIcon from "@material-ui/icons/GetApp"
+// import SaveIcon from "@material-ui/icons/Save"
+// import GetAppIcon from "@material-ui/icons/GetApp"
 import { IconButton } from "@material-ui/core"
 import Tooltip from "@material-ui/core/Tooltip"
-
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever"
 import AddIcon from "@material-ui/icons/Add"
 //import RemoveIcon from "@material-ui/icons/Remove"
@@ -26,7 +25,7 @@ export default function Homebar(props) {
                     <GroupAddIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
-            <Tooltip
+            {/* <Tooltip
                 id="tooltip"
                 title="save"
                 TransitionProps={{ timeout: 0 }}
@@ -34,11 +33,11 @@ export default function Homebar(props) {
                 <IconButton
                     id="iconButton"
                     variant="contained"
-                    onClick={props.save}>
+                    onClick={}>
                     <SaveIcon id="iconButtonInner" />
                 </IconButton>
-            </Tooltip>
-            <Tooltip
+            </Tooltip> */}
+            {/* <Tooltip
                 id="tooltip"
                 title="export to PDF"
                 TransitionProps={{ timeout: 0 }}
@@ -46,10 +45,10 @@ export default function Homebar(props) {
                 <IconButton
                     id="iconButton"
                     variant="contained"
-                    onClick={props.exportToPDF}>
+                    onClick={}>
                     <GetAppIcon id="iconButtonInner" />
                 </IconButton>
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip
                 id="tooltip"
                 title="delete all pages"
