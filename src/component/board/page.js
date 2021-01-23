@@ -23,19 +23,22 @@ import { MIN_SAMPLE_COUNT } from "../../constants.js"
 import { setIsMouseDown } from "../../redux/slice/drawcontrol"
 
 export default function Page(props) {
+    // console.log("Page Redraw");
     const pageId = props.pageId
     const liveStrokePts = useSelector((state) => state.drawControl.liveStroke.points[pageId])
     const pageCollection = useSelector((state) => state.boardControl.present.pageCollection[pageId])
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
     const isDraggable = useSelector((state) => state.drawControl.isDraggable)
+    const isActive = useSelector((state) => state.drawControl.isActive)
 
     let sampleCount = 0
 
     function onMouseDown(e) {
-        store.dispatch(setIsMouseDown(true))
-        if (e.evt.buttons === 2) {
+        if (e.evt.buttons === 2 || !isActive) {
             return
         }
+
+        store.dispatch(setIsMouseDown(true))
         //scaleFactor = 1 //CANVAS_PIXEL_RATIO / scaleRef.current
         sampleCount = 1
 
@@ -49,31 +52,27 @@ export default function Page(props) {
     }
 
     function onMouseMove(e) {
-        if (!isMouseDown || e.evt.buttons === 2) {
+        if (!isMouseDown || e.evt.buttons === 2 || !isActive) {
             return
         }
 
         sampleCount += 1
         if (sampleCount > MIN_SAMPLE_COUNT) {
             const pos = e.target.getStage().getPointerPosition()
-            // const relPos = {
-            //     x: (e.evt.clientX - pos.x) * scaleFactor,
-            //     y: (e.evt.clientY - pos.y) * scaleFactor,
-            // }
             moveLiveStroke(pos)
             sampleCount = 0
         }
     }
 
     function onMouseUp(e) {
-        if (!isMouseDown) {
+        
+        if (!isMouseDown || !isActive) {
             return
         } // Ignore reentering
         store.dispatch(setIsMouseDown(false))
 
         // update latest position
         const pos = e.target.getStage().getPointerPosition()
-
         registerLiveStroke(pos)
     }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, memo } from "react"
 import Page, { addPage } from "../component/board/page"
 import Toolbar from "../component/menu/toolbar"
 import Homebar from "../component/menu/homebar"
@@ -16,15 +16,36 @@ import store from "../redux/store.js"
 
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch"
 
+const Pages = () => {
+    const pageRank = useSelector((state) => state.boardControl.present.pageRank)
+    return (
+        <div className="pagecollectionouter">
+            <div className="pagecollectioninner">
+                {
+                    pageRank.map((pageId) => {
+                        return (
+                            <Page
+                                className="page"
+                                pageId={pageId}
+                                key={pageId}
+                            />
+                        )
+                    })
+                }
+            </div>
+        </div>)
+}
+const MemoPages = memo(Pages) // memo to prevent redundant rerender on zooming / panning
+const MemoViewbar = memo(Viewbar)
+
 export default function Whiteboard() {
-    // const scaleRef = useRef(1)
-    const defaultPositionX = ((1 - 0.8) / 2) * window.innerWidth
-    const defaultPositionY = 60
+    // console.log("Whiteboard Redraw");
+    const defaultPositionX = 0
+    const defaultPositionY = 0
     const defaultScale = 1
     const [openSessionDialog, setOpenSessionDialog] = useState(false)
     const [sidInput, setSidInput] = useState("")
-    const pageRank = useSelector(state => state.boardControl.present.pageRank)
-
+    // const pageRank = useSelector(state => state.boardControl.present.pageRank)
     // Connect to session if valid session link
     // useEffect(() => {
     //     if (id !== undefined) { // Check if id specified in link
@@ -37,7 +58,6 @@ export default function Whiteboard() {
         // setOpenSessionDialog(true);
         addPage()
         document.addEventListener('keypress', handleKeyPress)
-        // return document.removeEventListener('keypress', handleKeyPress)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -132,6 +152,7 @@ export default function Whiteboard() {
                 pan={{
                     disabled: true, //drawMode,
                     paddingSize: 0,
+                    velocity: false,
                 }}
                 wheel={{
                     disabled: false,
@@ -151,32 +172,17 @@ export default function Whiteboard() {
                     setTransform,
                 }) => (
                     <>
-                        <Viewbar
+                        <MemoViewbar
                             pan={pan}
                             zoomIn={zoomIn}
                             zoomOut={zoomOut}
-                            positionX={positionX}
-                            positionY={positionY}
-                            scale={scale}
                             setPositionX={setPositionX}
                             setPositionY={setPositionY}
                             setScale={setScale}
                             setTransform={setTransform}
                         />
                         <TransformComponent>
-                            <div className="pagecollectionouter">
-                                <div className="pagecollectioninner">
-                                    {pageRank.map((pageId) => {
-                                        return (
-                                            <Page
-                                                className="page"
-                                                pageId={pageId}
-                                                key={pageId}
-                                            />
-                                        )
-                                    })}
-                                </div>
-                            </div>
+                            <MemoPages />
                         </TransformComponent>
                     </>
                 )}

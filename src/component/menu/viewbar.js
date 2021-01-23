@@ -16,35 +16,27 @@ import { useSelector } from "react-redux"
 import { CANVAS_WIDTH } from "../../constants.js"
 
 export default function Viewbar(props) {
+    // console.log("Viewbar Redraw");
     const isActive = useSelector((state) => state.drawControl.isActive)
-    console.log("Viewbar Redraw");
-
+    
     function toggleDrawMode() {
         props.pan.disabled = !props.pan.disabled
         store.dispatch(setIsActive(props.pan.disabled))
     }
 
-    function down(e) {
-        props.setPositionY(props.positionY - 200)
-    }
-
-    function up(e) {
-        props.setPositionY(props.positionY + 200)
-    }
-
     function stretchToWindow() {
-        const newScale = window.innerWidth / CANVAS_WIDTH
-        // const y = (props.positionY / props.scale) * newScale
-        props.setTransform(0,0,newScale,1000, "linear")
+        // const newScale = window.innerWidth / CANVAS_WIDTH
+        // // const y = (props.positionY / props.scale) * newScale
+        // props.setTransform(0,0,newScale,1000, "linear")
     }
 
     function resetAndCenter() {
-        const w = window.innerWidth
-        const x = (w - CANVAS_WIDTH) / 2
-        const y = props.positionY / props.scale
-        props.setScale(1, 0)
-        props.setPositionX(x, 0)
-        props.setPositionY(y, 0)
+        // const w = window.innerWidth
+        // const x = (w - CANVAS_WIDTH) / 2
+        // const y = props.positionY / props.scale
+        // props.setScale(1, 0)
+        // props.setPositionX(x, 0)
+        // props.setPositionY(y, 0)
     }
 
     return (
@@ -111,7 +103,7 @@ export default function Viewbar(props) {
                 title="scroll up"
                 TransitionProps={{ timeout: 0 }}
                 placement="left">
-                <IconButton id="iconButton" variant="contained" onClick={up}>
+                <IconButton id="iconButton" variant="contained" onClick={props.up}>
                     <ExpandLessIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
@@ -120,7 +112,7 @@ export default function Viewbar(props) {
                 title="scroll down"
                 TransitionProps={{ timeout: 0 }}
                 placement="left">
-                <IconButton id="iconButton" variant="contained" onClick={down}>
+                <IconButton id="iconButton" variant="contained" onClick={props.down}>
                     <ExpandMoreIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
