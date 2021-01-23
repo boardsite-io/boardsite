@@ -6,7 +6,7 @@ import AlertDialog from "../component/menu/session_dialog"
 // import { useParams } from 'react-router-dom';
 import { useSelector } from "react-redux"
 import { type } from "../constants.js"
-import { setType } from "../redux/slice/drawcontrol.js"
+import { setType, setIsDraggable } from "../redux/slice/drawcontrol.js"
 import store from "../redux/store.js"
 
 // import * as api from '../util/api';
@@ -45,6 +45,7 @@ export default function Whiteboard() {
         switch (e.key) {
             case "p": store.dispatch(setType(type.PEN)); break;
             case "e": store.dispatch(setType(type.ERASER)); break;
+            case "d": store.dispatch(setType(type.DRAG)); store.dispatch(setIsDraggable(true)); break;
             default: break;
         }
     }
@@ -94,24 +95,6 @@ export default function Whiteboard() {
         // setSidInput(e.target.value)
     }
 
-    function handleUndo() {
-        // let undo = boardInfo.undoStack.pop();
-        // if (undo !== undefined) {
-        //     let pageId = undo[0].page_id;
-        //     let canvasRef = actData.getCanvasRef(pageId, pageCollection);
-        //     proc.processStrokes(undo, "undo", setBoardInfo, wsRef, canvasRef);
-        // }
-    }
-
-    function handleRedo() {
-        // let redo = boardInfo.redoStack.pop();
-        // if (redo !== undefined) {
-        //     let pageId = redo[0].page_id;
-        //     let canvasRef = actData.getCanvasRef(pageId, pageCollection);
-        //     proc.processStrokes(redo, "redo", setBoardInfo, wsRef, canvasRef);
-        // }
-    }
-
     function debug() {
         // console.log(boardInfo);
     }
@@ -151,11 +134,7 @@ export default function Whiteboard() {
                 handleJoin={handleJoin}
                 handleCreate={handleCreate}
             />
-            <Toolbar
-                debug={debug}
-                handleUndo={handleUndo}
-                handleRedo={handleRedo}
-            />
+            <Toolbar/>
             <Homebar
                 setOpenSessionDialog={setOpenSessionDialog}
                 exportToPDF={exportToPDF}

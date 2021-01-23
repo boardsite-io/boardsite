@@ -12,6 +12,7 @@ const drawControlSlice = createSlice({
     initialState: {
         active: DEFAULT_ACTIVE,
         isMouseDown: false,
+        isDraggable: false,
         liveStroke: {
             type: DEFAULT_TOOL,
             style: {
@@ -43,6 +44,10 @@ const drawControlSlice = createSlice({
             const isMouseDown = action.payload
             state.isMouseDown = isMouseDown
         },
+        setIsDraggable: (state, action) => {
+            const isDraggable = action.payload
+            state.isDraggable = isDraggable
+        },
         actStartLiveStroke: (state, action) => {
             const { page_id, points } = action.payload
             state.liveStroke.page_id = page_id
@@ -70,6 +75,7 @@ export const {
     setType,
     setActive,
     setIsMouseDown,
+    setIsDraggable,
     actStartLiveStroke,
     actUpdateLiveStrokePos,
     actEndLiveStroke,

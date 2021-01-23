@@ -16,5 +16,6 @@ export const type = {
     LINE: 2,
     TRIANGLE: 3,
     CIRCLE: 4,
+    DRAG: 5,
 }
 export const DEFAULT_TOOL = type.PEN

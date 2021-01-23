@@ -24,13 +24,10 @@ import { setIsMouseDown } from "../../redux/slice/drawcontrol"
 
 export default function Page(props) {
     const pageId = props.pageId
-    const liveStrokePts = useSelector(
-        (state) => state.drawControl.liveStroke.points[pageId]
-    )
-    const pageCollection = useSelector(
-        (state) => state.boardControl.present.pageCollection[pageId]
-    )
+    const liveStrokePts = useSelector((state) => state.drawControl.liveStroke.points[pageId])
+    const pageCollection = useSelector((state) => state.boardControl.present.pageCollection[pageId])
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
+    const isDraggable = useSelector((state) => state.drawControl.isDraggable)
 
     let sampleCount = 0
 
@@ -101,6 +98,7 @@ export default function Page(props) {
                                 <StrokeShape
                                     key={strokeId}
                                     stroke={pageCollection.strokes[strokeId]}
+                                    isDraggable={isDraggable}
                                 />
                             )
                         )}
@@ -112,6 +110,7 @@ export default function Page(props) {
                                     ...store.getState().drawControl.liveStroke,
                                     points: liveStrokePts, // remove page_id key in points
                                 }}
+                                isDraggable={isDraggable}
                             />
                         ) : (
                             <></>

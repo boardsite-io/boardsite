@@ -9,21 +9,23 @@ import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked"
 import BrushIcon from "@material-ui/icons/Brush"
 import HighlightOffIcon from "@material-ui/icons/HighlightOff"
 import Tooltip from "@material-ui/core/Tooltip"
+import ControlCameraIcon from '@material-ui/icons/ControlCamera';
 
 import store from "../../redux/store.js"
 import { useSelector } from "react-redux"
-import { setColor, setWidth, setType } from "../../redux/slice/drawcontrol.js"
+import { setColor, setWidth, setType, setIsDraggable } from "../../redux/slice/drawcontrol.js"
 import { type, WIDTH_MIN, WIDTH_MAX, WIDTH_STEP } from "../../constants.js"
 
 import UndoRedo from './undoredo'
 
-function Toolbar(props) {
+function Toolbar() {
     const [displayColorPicker, setDisplayColorPicker] = useState(false)
     const [displayWidthPicker, setDisplayWidthPicker] = useState(false)
     const [displayExtraTools, setDisplayExtraTools] = useState(false)
     const typeSelector = useSelector(state => state.drawControl.liveStroke.type)
     const widthSelector = useSelector(state => state.drawControl.liveStroke.style.width)
     const colorSelector = useSelector(state => state.drawControl.liveStroke.style.color)
+    const isDraggable = useSelector((state) => state.drawControl.isDraggable)
 
     function handlePaletteClick() {
         setDisplayColorPicker(!displayColorPicker)
@@ -63,9 +65,13 @@ function Toolbar(props) {
         }
     }
 
+    function debug() {
+        console.log("debug");
+    }
+
     return (
         <div className="toolbar">
-            <IconButton id="iconButton" style={{ backgroundColor: "grey" }} onClick={props.debug}>
+            <IconButton id="iconButton" style={{ backgroundColor: "grey" }} onClick={debug}>
                 D
             </IconButton>
             <UndoRedo />
@@ -80,6 +86,7 @@ function Toolbar(props) {
                             () => {
                                 setDisplayExtraTools(false)
                                 store.dispatch(setType(type.PEN))
+                                store.dispatch(setIsDraggable(false))
                             }
                         }>
                         <BrushIcon id={typeSelector === type.PEN ? "iconButtonActiveInner" : "iconButtonInner"} />
@@ -89,8 +96,22 @@ function Toolbar(props) {
                     <IconButton
                         id={typeSelector === type.ERASER ? "iconButtonActive" : "iconButton"}
                         variant="contained"
-                        onClick={() => store.dispatch(setType(type.ERASER))}>
+                        onClick={() => {
+                            store.dispatch(setType(type.ERASER))
+                            store.dispatch(setIsDraggable(false))
+                        }}>
                         <HighlightOffIcon id={typeSelector === type.ERASER ? "iconButtonActiveInner" : "iconButtonInner"} />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip id="tooltip" title="Drag (D)" TransitionProps={{ timeout: 0 }} placement="bottom">
+                    <IconButton
+                        id={isDraggable ? "iconButtonActive" : "iconButton"}
+                        variant="contained"
+                        onClick={() => {
+                            store.dispatch(setType(type.DRAG))
+                            store.dispatch(setIsDraggable(true))
+                        }}>
+                        <ControlCameraIcon id={isDraggable ? "iconButtonActiveInner" : "iconButtonInner"} />
                     </IconButton>
                 </Tooltip>
             </div>
@@ -100,10 +121,15 @@ function Toolbar(props) {
                         <IconButton
                             id={typeSelector === type.LINE ? "iconButtonActive" : "iconButton"}
                             variant="contained"
-                            onClick={typeSelector === type.LINE ? 
-                                () => setDisplayExtraTools(false)
-                                : 
-                                () => store.dispatch(setType(type.LINE))
+                            onClick={typeSelector === type.LINE ?
+                                () => {
+                                    setDisplayExtraTools(false)
+                                }
+                                :
+                                () => {
+                                    store.dispatch(setType(type.LINE))
+                                    store.dispatch(setIsDraggable(false))
+                                } 
                             }>
                             <RemoveIcon id={typeSelector === type.LINE ? "iconButtonActiveInner" : "iconButtonInner"} />
                         </IconButton>
@@ -112,10 +138,15 @@ function Toolbar(props) {
                         <IconButton
                             id={typeSelector === type.TRIANGLE ? "iconButtonActive" : "iconButton"}
                             variant="contained"
-                            onClick={typeSelector === type.TRIANGLE ? 
-                                () => setDisplayExtraTools(false)
-                                : 
-                                () => store.dispatch(setType(type.TRIANGLE))
+                            onClick={typeSelector === type.TRIANGLE ?
+                                () => {
+                                    setDisplayExtraTools(false)
+                                }
+                                :
+                                () => {
+                                    store.dispatch(setType(type.TRIANGLE))
+                                    store.dispatch(setIsDraggable(false))
+                                } 
                             }>
                             <ChangeHistoryIcon id={typeSelector === type.TRIANGLE ? "iconButtonActiveInner" : "iconButtonInner"} />
                         </IconButton>
@@ -124,10 +155,15 @@ function Toolbar(props) {
                         <IconButton
                             id={typeSelector === type.CIRCLE ? "iconButtonActive" : "iconButton"}
                             variant="contained"
-                            onClick={typeSelector === type.CIRCLE ? 
-                                () => setDisplayExtraTools(false)
-                                : 
-                                () => store.dispatch(setType(type.CIRCLE))
+                            onClick={typeSelector === type.CIRCLE ?
+                                () => {
+                                    setDisplayExtraTools(false)
+                                } 
+                                :
+                                () => {
+                                    store.dispatch(setType(type.CIRCLE))
+                                    store.dispatch(setIsDraggable(false))
+                                } 
                             }>
                             <RadioButtonUncheckedIcon id={typeSelector === type.CIRCLE ? "iconButtonActiveInner" : "iconButtonInner"} />
                         </IconButton>

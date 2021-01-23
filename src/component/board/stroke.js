@@ -27,6 +27,7 @@ export function StrokeShape(props) {
                     onMouseEnter={(e) =>
                         handleStrokeMouseEnter(e, props.stroke)
                     }
+                    draggable={props.isDraggable}
                 />
             )
             break
@@ -100,7 +101,7 @@ export async function registerLiveStroke(position) {
                 .substr(0, 4) + Date.now().toString(36).substr(4),
         points: liveStroke.points[liveStroke.page_id],
     }
-    
+
     // add stroke to collection
     store.dispatch(actAddStroke(liveStroke))
 
