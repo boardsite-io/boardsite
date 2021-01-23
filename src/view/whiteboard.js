@@ -6,7 +6,7 @@ import Viewbar from "../component/menu/viewbar"
 import AlertDialog from "../component/menu/session_dialog"
 // import { useParams } from 'react-router-dom';
 import { useSelector } from "react-redux"
-import { type } from "../constants.js"
+import { type, CANVAS_WIDTH } from "../constants.js"
 import { setType, setIsDraggable } from "../redux/slice/drawcontrol.js"
 import store from "../redux/store.js"
 
@@ -16,35 +16,11 @@ import store from "../redux/store.js"
 
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch"
 
-const Pages = () => {
-    const pageRank = useSelector((state) => state.boardControl.present.pageRank)
-    return (
-        <div className="pagecollectionouter">
-            <div className="pagecollectioninner">
-                {
-                    pageRank.map((pageId) => {
-                        return (
-                            <Page
-                                className="page"
-                                pageId={pageId}
-                                key={pageId}
-                            />
-                        )
-                    })
-                }
-            </div>
-        </div>)
-}
-const MemoPages = memo(Pages) // memo to prevent redundant rerender on zooming / panning
-const MemoViewbar = memo(Viewbar)
-
 export default function Whiteboard() {
     // console.log("Whiteboard Redraw");
-    const defaultPositionX = 0
-    const defaultPositionY = 0
-    const defaultScale = 1
     const [openSessionDialog, setOpenSessionDialog] = useState(false)
     const [sidInput, setSidInput] = useState("")
+
     // const pageRank = useSelector(state => state.boardControl.present.pageRank)
     // Connect to session if valid session link
     // useEffect(() => {
@@ -118,6 +94,26 @@ export default function Whiteboard() {
         // setSidInput(e.target.value)
     }
 
+    let _scale,
+        _positionX,
+        _positionY,
+        _setTransform
+    const defaultPositionX = (window.innerWidth - (CANVAS_WIDTH + 45)) / 2
+    const defaultPositionY = 60
+    const defaultScale = 1
+
+    function scrollUp() {
+        _setTransform(_positionX, _positionY + 200, _scale)
+    }
+
+    function scrollDown() {
+        _setTransform(_positionX, _positionY - 200, _scale)
+    }
+
+    function stretchToWindow() {
+        _setTransform(0, 0, window.innerWidth / (CANVAS_WIDTH + 45))
+    }
+
     return (
         <div>
             <AlertDialog
@@ -137,56 +133,146 @@ export default function Whiteboard() {
                 defaultPositionX={defaultPositionX}
                 defaultPositionY={defaultPositionY}
                 defaultScale={defaultScale}
-                // onZoomChange={}
                 options={{
                     disabled: false,
+                    transformEnabled: true,
+                    minPositionX: null,
+                    maxPositionX: null,
+                    minPositionY: null,
+                    maxPositionY: null,
                     minScale: 0.5,
                     maxScale: 2,
                     limitToBounds: false,
                     limitToWrapper: false,
-                    centerContent: false,
+                    centerContent: true
+                }}
+                wheel={{
+                    disabled: false,
+                    step: 200,
+                    wheelEnabled: true,
+                    touchPadEnabled: true,
+                    limitsOnWheel: true
+                }}
+                pan={{
+                    disabled: true, //drawMode,
+                    disableOnTarget: [],
+                    lockAxisX: false,
+                    lockAxisY: false,
+                    velocity: false,
+                    velocityEqualToMove: false,
+                    velocitySensitivity: 1,
+                    velocityMinSpeed: 1.2,
+                    velocityBaseTime: 1800,
+                    velocityAnimationType: "easeOut",
+                    padding: true,
+                    paddingSize: 40,
+                    animationTime: 200,
+                    animationType: "easeOut"
+                }}
+                pinch={{
+                    disabled: false
+                }}
+                zoomIn={{
+                    disabled: false,
+                    step: 70,
+                    animation: true,
+                    animationTime: 200,
+                    animationType: "easeOut"
+                }}
+                zoomOut={{
+                    disabled: false,
+                    step: 70,
+                    animation: true,
+                    animationTime: 200,
+                    animationType: "easeOut"
+                }}
+                doubleClick={{
+                    disabled: false,
+                    step: 70,
+                    animation: true,
+                    animationTime: 200,
+                    animationType: "easeOut",
+                    mode: "zoomIn"
+                }}
+                reset={{
+                    disabled: false,
+                    animation: true,
+                    animationTime: 200,
+                    animationType: "easeOut"
                 }}
                 scalePadding={{
                     disabled: true,
                 }}
-                pan={{
-                    disabled: true, //drawMode,
-                    paddingSize: 0,
-                    velocity: false,
-                }}
-                wheel={{
-                    disabled: false,
-                    wheelEnabled: true,
-                    step: 200,
-                }}>
+                // onWheelStart={}
+                // onWheel={}
+                // onWheelStop={}
+                // onPanningStart={}
+                // onPanning={}
+                // onPanningStop={}
+                // onPinchingStart={}
+                // onPinching={}
+                // onPinchingStop={}
+                // onZoomChange={}
+                // enablePadding={}
+                // enablePanPadding={}
+            >
                 {({
+                    pan,
                     zoomIn,
                     zoomOut,
-                    pan,
+                    resetTransform,
                     positionX,
                     positionY,
                     scale,
-                    setPositionX,
-                    setPositionY,
-                    setScale,
                     setTransform,
-                }) => (
-                    <>
-                        <MemoViewbar
-                            pan={pan}
-                            zoomIn={zoomIn}
-                            zoomOut={zoomOut}
-                            setPositionX={setPositionX}
-                            setPositionY={setPositionY}
-                            setScale={setScale}
-                            setTransform={setTransform}
-                        />
-                        <TransformComponent>
-                            <MemoPages />
-                        </TransformComponent>
-                    </>
-                )}
+                }) => {
+                    // refresh values
+                    _scale = scale
+                    _positionX = positionX
+                    _positionY = positionY
+                    _setTransform = setTransform
+
+                    return (
+                        <>
+                            <MemoViewbar
+                                pan={pan}
+                                zoomIn={zoomIn}
+                                zoomOut={zoomOut}
+                                resetTransform={resetTransform}
+                                up={scrollUp}
+                                down={scrollDown}
+                                stretchToWindow={stretchToWindow}
+                            />
+                            <TransformComponent>
+                                <MemoPages />
+                            </TransformComponent>
+                        </>
+                    )
+                }
+                }
             </TransformWrapper>
         </div>
     )
 }
+
+const Pages = () => {
+    const pageRank = useSelector((state) => state.boardControl.present.pageRank)
+    return (
+        <div className="pagecollectionouter">
+            <div className="pagecollectioninner">
+                {
+                    pageRank.map((pageId) => {
+                        return (
+                            <Page
+                                className="page"
+                                pageId={pageId}
+                                key={pageId}
+                            />
+                        )
+                    })
+                }
+            </div>
+        </div>)
+}
+const MemoPages = memo(Pages) // memo to prevent redundant rerender on zooming / panning
+const MemoViewbar = memo(Viewbar)
