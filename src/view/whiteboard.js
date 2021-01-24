@@ -1,4 +1,5 @@
 import React, { useState, useEffect, memo } from "react"
+import { ActionCreators as UndoActionCreators } from "redux-undo"
 import { useSelector } from "react-redux"
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch"
 
@@ -10,7 +11,7 @@ import Viewbar from "../component/menu/viewbar"
 import AlertDialog from "../component/menu/session_dialog"
 // import { useParams } from 'react-router-dom';
 import { toolType, CANVAS_WIDTH } from "../constants"
-import { setType, setIsDraggable } from "../redux/slice/drawcontrol"
+import { setType } from "../redux/slice/drawcontrol"
 import store from "../redux/store"
 
 // import * as api from '../util/api';
@@ -31,29 +32,51 @@ export default function Whiteboard() {
     // }, [id])
     function handleKeyPress(e) {
         switch (e.key) {
-            case "p":
+            case "p": // Pen
                 store.dispatch(setType(toolType.PEN))
-                store.dispatch(setIsDraggable(false))
                 break
-            case "1":
+            case "1": // Pen
                 store.dispatch(setType(toolType.PEN))
-                store.dispatch(setIsDraggable(false))
                 break
-            case "e":
+            case "e": // Eraser
                 store.dispatch(setType(toolType.ERASER))
-                store.dispatch(setIsDraggable(false))
                 break
-            case "2":
+            case "2": // Eraser
                 store.dispatch(setType(toolType.ERASER))
-                store.dispatch(setIsDraggable(false))
                 break
-            case "d":
+            case "d": // Drag
                 store.dispatch(setType(toolType.DRAG))
-                store.dispatch(setIsDraggable(true))
                 break
-            case "3":
+            case "3": // Drag
                 store.dispatch(setType(toolType.DRAG))
-                store.dispatch(setIsDraggable(true))
+                break
+            case "l": // Line
+                store.dispatch(setType(toolType.LINE))
+                break
+            case "4": // Line
+                store.dispatch(setType(toolType.LINE))
+                break
+            case "t": // Triangle
+                store.dispatch(setType(toolType.TRIANGLE))
+                break
+            case "5": // Triangle
+                store.dispatch(setType(toolType.TRIANGLE))
+                break
+            case "c": // Circle
+                store.dispatch(setType(toolType.CIRCLE))
+                break
+            case "6": // Circle
+                store.dispatch(setType(toolType.CIRCLE))
+                break
+            case "z": // Undo (Ctrl + Z)
+                if (e.ctrlKey && !e.repeat) {
+                    store.dispatch(UndoActionCreators.undo())
+                }
+                break
+            case "y": // Redo (Ctrl + Y)
+                if (e.ctrlKey && !e.repeat) {
+                    store.dispatch(UndoActionCreators.redo())
+                }
                 break
             default:
                 break
