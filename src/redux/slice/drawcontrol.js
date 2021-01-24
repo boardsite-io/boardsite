@@ -51,8 +51,6 @@ const drawControlSlice = createSlice({
         },
         actStartLiveStroke: (state, action) => {
             const { pageId, points } = action.payload
-            state.liveStroke.x = 0 // offset to update later when dragged
-            state.liveStroke.y = 0
             state.liveStroke.pageId = pageId
             state.liveStroke.points[pageId] = points
         },

@@ -23,7 +23,11 @@ export default function Page({ pageId }) {
     let sampleCount = 0
 
     function onMouseDown(e) {
-        if (e.evt.buttons === 2 || !isActive || tool === toolType.DRAG) {
+        if (
+            e.evt.buttons === 2 || // ignore right click eraser, i.e. dont start stroke
+            !isActive ||
+            tool === toolType.DRAG
+        ) {
             return
         }
 
@@ -37,10 +41,13 @@ export default function Page({ pageId }) {
     function onMouseMove(e) {
         if (
             !isMouseDown ||
-            e.evt.buttons === 2 ||
+            e.evt.buttons === 2 || // right mouse
+            e.evt.buttons === 3 || // left+right mouse
             !isActive ||
             toolType === toolType.DRAG
         ) {
+            // cancel stroke when right / left+right mouse is clicked
+            store.dispatch(setIsMouseDown(false))
             return
         }
 

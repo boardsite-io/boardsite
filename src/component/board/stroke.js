@@ -35,8 +35,8 @@ export function StrokeShape({ stroke, isDraggable }) {
     }
 
     function handleStrokeMouseEnter(e) {
-        const { isMouseDown } = store.getState().drawControl
-        if (stroke.id === undefined || !isMouseDown) {
+        // prevent to act on live stroke
+        if (stroke.id === undefined) {
             return
         }
 
