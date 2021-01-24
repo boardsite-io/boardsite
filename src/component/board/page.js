@@ -109,8 +109,6 @@ const PageComponent = ({ pageId, onMouseDown, onMouseMove, onMouseUp }) => {
                     {Object.keys(pageCollection.strokes).map((strokeId) => (
                         <StrokeShape
                             key={strokeId}
-                            strokeId={strokeId}
-                            pageId={pageId}
                             stroke={pageCollection.strokes[strokeId]}
                             isDraggable={isDraggable}
                         />

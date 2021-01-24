@@ -5,7 +5,6 @@ import {
     DEFAULT_COLOR,
     DEFAULT_WIDTH,
     CANVAS_PIXEL_RATIO,
-    toolType,
 } from "../../constants"
 
 const drawControlSlice = createSlice({
@@ -22,6 +21,8 @@ const drawControlSlice = createSlice({
             },
             pageId: "",
             points: {}, // {"pageid": [x1,y1,x2,y2,...]}
+            x: 0, // be consistent with stroke description
+            y: 0,
         },
     },
     reducers: {
@@ -58,33 +59,11 @@ const drawControlSlice = createSlice({
         // Update the current live stroke position
         actUpdateLiveStrokePos: (state, action) => {
             const points = action.payload
-            const { pageId, type } = state.liveStroke
-            switch (type) {
-                case toolType.PEN:
-                    state.liveStroke.points[pageId] = [
-                        ...state.liveStroke.points[pageId],
-                        ...points,
-                    ]
-                    break
-                // case toolType.LINE:
-                //     state.liveStroke.points[pageId][2] = points[0]
-                //     state.liveStroke.points[pageId][3] = points[1]
-                //     break
-                // // case type.TRIANGLE:
-                // //     state.liveStroke.points[pid][2] = points[0]
-                // //     state.liveStroke.points[pid][3] = points[1]
-                // //     break
-                // case type.CIRCLE:
-                //     state.liveStroke.x = state.liveStroke.points[pid][0]
-                //     state.liveStroke.y = state.liveStroke.points[pid][1]
-                //     const dx = points[0] - state.liveStroke.points[pid][0]
-                //     const dy = points[1] - state.liveStroke.points[pid][1]
-                //     const radius = Math.sqrt(Math.pow(dx,2) + Math.pow(dy,2))
-                //     state.liveStroke.radius = radius
-                //     break
-                default:
-                    break
-            }
+            const { pageId } = state.liveStroke
+            state.liveStroke.points[pageId] = [
+                ...state.liveStroke.points[pageId],
+                ...points,
+            ]
         },
         actEndLiveStroke: (state) => {
             state.liveStroke.pageId = ""

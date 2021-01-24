@@ -64,8 +64,8 @@ const boardControlSlice = createSlice({
 
         // Update stroke position after dragging
         actUpdateStroke(state, action) {
-            const { x, y, sid, pid } = action.payload
-            const stroke = state.pageCollection[pid].strokes[sid]
+            const { x, y, id, pageId } = action.payload
+            const stroke = state.pageCollection[pageId].strokes[id]
             stroke.x = x
             stroke.y = y
         },

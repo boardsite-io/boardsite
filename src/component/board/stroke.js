@@ -1,5 +1,5 @@
 import React from "react"
-import { Line, Circle } from "react-konva"
+import { Line, Ellipse } from "react-konva"
 import store from "../../redux/store"
 import {
     actAddStroke,
@@ -18,7 +18,7 @@ import { toolType } from "../../constants"
  * Super component implementing all stroke types and their visualization in the canvas
  * @param {{stroke: {}}} props
  */
-export function StrokeShape(props) {
+export function StrokeShape({ stroke, isDraggable }) {
     function onDragStart() {
         // succ
     }
@@ -28,13 +28,13 @@ export function StrokeShape(props) {
             actUpdateStroke({
                 x: e.target.attrs.x,
                 y: e.target.attrs.y,
-                sid: props.strokeId,
-                pid: props.pageId,
+                id: stroke.id,
+                pageId: stroke.pageId,
             })
         )
     }
 
-    function handleStrokeMouseEnter(e, stroke) {
+    function handleStrokeMouseEnter(e) {
         const { isMouseDown } = store.getState().drawControl
         if (stroke.id === undefined || !isMouseDown) {
             return
@@ -49,42 +49,38 @@ export function StrokeShape(props) {
     }
 
     let shape
-    switch (props.stroke.type) {
+    switch (stroke.type) {
         case toolType.PEN:
             shape = (
                 <Line
-                    points={props.stroke.points}
-                    stroke={props.stroke.style.color}
-                    strokeWidth={props.stroke.style.width}
+                    points={stroke.points}
+                    stroke={stroke.style.color}
+                    strokeWidth={stroke.style.width}
                     tension={0.5}
                     lineCap="round"
-                    onMouseEnter={(e) =>
-                        handleStrokeMouseEnter(e, props.stroke)
-                    }
-                    draggable={props.isDraggable}
+                    onMouseEnter={handleStrokeMouseEnter}
+                    draggable={isDraggable}
                     onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
-                    x={props.stroke.x}
-                    y={props.stroke.y}
+                    x={stroke.x}
+                    y={stroke.x}
                 />
             )
             break
         case toolType.LINE:
             shape = (
                 <Line
-                    points={props.stroke.points}
-                    stroke={props.stroke.style.color}
-                    strokeWidth={props.stroke.style.width}
+                    points={getStartEndPoints(stroke.points)}
+                    stroke={stroke.style.color}
+                    strokeWidth={stroke.style.width}
                     tension={1}
                     lineCap="round"
-                    onMouseEnter={(e) =>
-                        handleStrokeMouseEnter(e, props.stroke)
-                    }
-                    draggable={props.isDraggable}
+                    onMouseEnter={handleStrokeMouseEnter}
+                    draggable={isDraggable}
                     onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
-                    x={props.stroke.x}
-                    y={props.stroke.y}
+                    x={stroke.x}
+                    y={stroke.y}
                 />
             )
             break
@@ -105,24 +101,33 @@ export function StrokeShape(props) {
         //         />
         //     )
         //     break
-        case toolType.CIRCLE:
+        case toolType.CIRCLE: {
+            const rad = {
+                x:
+                    (stroke.points[stroke.points.length - 2] -
+                        stroke.points[0]) /
+                    2,
+                y:
+                    (stroke.points[stroke.points.length - 1] -
+                        stroke.points[1]) /
+                    2,
+            }
             shape = (
-                <Circle
-                    x={props.stroke.x}
-                    y={props.stroke.y}
-                    radius={props.stroke.radius}
-                    stroke={props.stroke.style.color}
-                    strokeWidth={props.stroke.style.width}
+                <Ellipse
+                    x={stroke.points[0] + rad.x}
+                    y={stroke.points[1] + rad.y}
+                    radius={{ x: Math.abs(rad.x), y: Math.abs(rad.y) }}
+                    stroke={stroke.style.color}
+                    strokeWidth={stroke.style.width}
                     // fill={props.stroke.style.color}
-                    onMouseEnter={(e) =>
-                        handleStrokeMouseEnter(e, props.stroke)
-                    }
-                    draggable={props.isDraggable}
+                    onMouseEnter={handleStrokeMouseEnter}
+                    draggable={isDraggable}
                     onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
                 />
             )
             break
+        }
         default:
             shape = <></>
     }
@@ -180,4 +185,17 @@ export async function registerLiveStroke() {
 
     // clear livestroke
     store.dispatch(actEndLiveStroke())
+}
+
+/**
+ * Helper function to get the end and start points of an array of points
+ * @param {Array} points
+ */
+function getStartEndPoints(points) {
+    if (points.length < 5) {
+        return points
+    }
+    return points
+        .slice(0, 2)
+        .concat(points.slice(points.length - 2, points.length))
 }
