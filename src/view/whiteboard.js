@@ -2,6 +2,7 @@ import React, { useState, useEffect, memo } from "react"
 import { ActionCreators as UndoActionCreators } from "redux-undo"
 import { useSelector } from "react-redux"
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch"
+import FPSStats from "react-fps-stats"
 
 import Page from "../component/board/page"
 import { addPage } from "../component/menu/pagemenu"
@@ -158,6 +159,7 @@ export default function Whiteboard() {
 
     return (
         <div>
+            <FPSStats />
             <AlertDialog
                 open={openSessionDialog}
                 setOpen={setOpenSessionDialog}

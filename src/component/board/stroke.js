@@ -64,6 +64,7 @@ export function StrokeShape({ stroke, isDraggable }) {
                     onDragEnd={onDragEnd}
                     x={stroke.x}
                     y={stroke.y}
+                    shadowForStrokeEnabled={false}
                 />
             )
             break
@@ -81,6 +82,7 @@ export function StrokeShape({ stroke, isDraggable }) {
                     onDragEnd={onDragEnd}
                     x={stroke.x}
                     y={stroke.y}
+                    shadowForStrokeEnabled={false}
                 />
             )
             break
@@ -124,6 +126,7 @@ export function StrokeShape({ stroke, isDraggable }) {
                     draggable={isDraggable}
                     onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
+                    shadowForStrokeEnabled={false}
                 />
             )
             break
