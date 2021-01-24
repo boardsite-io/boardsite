@@ -136,24 +136,24 @@ export default function Whiteboard() {
         // setSidInput(e.target.value)
     }
 
-    let scale
-    let positionX
-    let positionY
-    let setTransform
+    let scaleCopy
+    let positionXCopy
+    let positionYCopy
+    let setTransformCopy
     const defaultPositionX = (window.innerWidth - (CANVAS_WIDTH + 45)) / 2
     const defaultPositionY = 60
     const defaultScale = 1
 
     function scrollUp() {
-        setTransform(positionX, positionY + 200, scale)
+        setTransformCopy(positionXCopy, positionYCopy + 200, scaleCopy)
     }
 
     function scrollDown() {
-        setTransform(positionX, positionY - 200, scale)
+        setTransformCopy(positionXCopy, positionYCopy - 200, scaleCopy)
     }
 
     function stretchToWindow() {
-        setTransform(0, 0, window.innerWidth / (CANVAS_WIDTH + 45))
+        setTransformCopy(0, 0, window.innerWidth / (CANVAS_WIDTH + 45))
     }
 
     return (
@@ -261,16 +261,16 @@ export default function Whiteboard() {
                     zoomIn,
                     zoomOut,
                     resetTransform,
-                    newPositionX,
-                    newPositionY,
-                    newScale,
-                    newSetTransform,
+                    positionX,
+                    positionY,
+                    scale,
+                    setTransform,
                 }) => {
                     // refresh values
-                    scale = newScale
-                    positionX = newPositionX
-                    positionY = newPositionY
-                    setTransform = newSetTransform
+                    scaleCopy = scale
+                    positionXCopy = positionX
+                    positionYCopy = positionY
+                    setTransformCopy = setTransform
 
                     return (
                         <>
