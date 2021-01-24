@@ -10,6 +10,7 @@
     "rules": {
         "semi": 0,
         "no-param-reassign": 0, // redux slices
+        "no-use-before-define": 0, // hoisting
         "react/prop-types": 0,
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "prettier/prettier": [
