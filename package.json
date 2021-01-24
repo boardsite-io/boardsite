@@ -30,7 +30,8 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
-        "eject": "react-scripts eject"
+        "eject": "react-scripts eject",
+        "lint": "npx eslint ."
     },
     "eslintConfig": {
         "extends": "react-app"
@@ -48,6 +49,7 @@
         ]
     },
     "devDependencies": {
+        "eslint": "^7.18.0",
         "eslint-config-airbnb": "^18.2.1",
         "eslint-config-prettier": "^7.2.0",
         "eslint-plugin-jsx-a11y": "^6.4.1",
