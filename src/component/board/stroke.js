@@ -12,7 +12,6 @@ import {
     actEndLiveStroke,
 } from "../../redux/slice/drawcontrol"
 import { toolType } from "../../constants"
-// import * as constant from '../constants.js';
 
 /**
  * Super component implementing all stroke types and their visualization in the canvas

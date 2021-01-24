@@ -13,12 +13,7 @@ import ControlCameraIcon from "@material-ui/icons/ControlCamera"
 import { useSelector } from "react-redux"
 
 import store from "../../redux/store"
-import {
-    setColor,
-    setWidth,
-    setType,
-    setIsDraggable,
-} from "../../redux/slice/drawcontrol"
+import { setColor, setWidth, setType } from "../../redux/slice/drawcontrol"
 import { toolType, WIDTH_MIN, WIDTH_MAX, WIDTH_STEP } from "../../constants"
 import UndoRedo from "./undoredo"
 
@@ -108,7 +103,6 @@ function Toolbar() {
                                 : () => {
                                       setDisplayExtraTools(false)
                                       store.dispatch(setType(toolType.PEN))
-                                      store.dispatch(setIsDraggable(false))
                                   }
                         }>
                         <BrushIcon
@@ -134,7 +128,6 @@ function Toolbar() {
                         variant="contained"
                         onClick={() => {
                             store.dispatch(setType(toolType.ERASER))
-                            store.dispatch(setIsDraggable(false))
                         }}>
                         <HighlightOffIcon
                             id={
@@ -155,7 +148,6 @@ function Toolbar() {
                         variant="contained"
                         onClick={() => {
                             store.dispatch(setType(toolType.DRAG))
-                            store.dispatch(setIsDraggable(true))
                         }}>
                         <ControlCameraIcon
                             id={
@@ -171,7 +163,7 @@ function Toolbar() {
                 <div className="extratools">
                     <Tooltip
                         id="tooltip"
-                        title="Line"
+                        title="Line (4 or L)"
                         TransitionProps={{ timeout: 0 }}
                         placement="bottom">
                         <IconButton
@@ -188,7 +180,6 @@ function Toolbar() {
                                       }
                                     : () => {
                                           store.dispatch(setType(toolType.LINE))
-                                          store.dispatch(setIsDraggable(false))
                                       }
                             }>
                             <RemoveIcon
@@ -202,7 +193,7 @@ function Toolbar() {
                     </Tooltip>
                     <Tooltip
                         id="tooltip"
-                        title="Triangle"
+                        title="Triangle (5 or T)"
                         TransitionProps={{ timeout: 0 }}
                         placement="bottom">
                         <IconButton
@@ -221,7 +212,6 @@ function Toolbar() {
                                           store.dispatch(
                                               setType(toolType.TRIANGLE)
                                           )
-                                          store.dispatch(setIsDraggable(false))
                                       }
                             }>
                             <ChangeHistoryIcon
@@ -235,7 +225,7 @@ function Toolbar() {
                     </Tooltip>
                     <Tooltip
                         id="tooltip"
-                        title="Circle"
+                        title="Circle (6 or C)"
                         TransitionProps={{ timeout: 0 }}
                         placement="bottom">
                         <IconButton
@@ -254,7 +244,6 @@ function Toolbar() {
                                           store.dispatch(
                                               setType(toolType.CIRCLE)
                                           )
-                                          store.dispatch(setIsDraggable(false))
                                       }
                             }>
                             <RadioButtonUncheckedIcon
@@ -271,7 +260,7 @@ function Toolbar() {
             <div>
                 <Tooltip
                     id="tooltip"
-                    title="choose color"
+                    title="Color"
                     TransitionProps={{ timeout: 0 }}
                     placement="bottom">
                     <IconButton
@@ -305,7 +294,7 @@ function Toolbar() {
             <div>
                 <Tooltip
                     id="tooltip"
-                    title="choose width"
+                    title="Width"
                     TransitionProps={{ timeout: 0 }}
                     placement="bottom">
                     <IconButton

@@ -5,6 +5,7 @@ import {
     DEFAULT_COLOR,
     DEFAULT_WIDTH,
     CANVAS_PIXEL_RATIO,
+    toolType,
 } from "../../constants"
 
 const drawControlSlice = createSlice({
@@ -35,7 +36,9 @@ const drawControlSlice = createSlice({
             state.liveStroke.style.width = width
         },
         setType: (state, action) => {
-            state.liveStroke.type = action.payload
+            const type = action.payload
+            state.liveStroke.type = type
+            state.isDraggable = type === toolType.DRAG
         },
         setIsActive: (state, action) => {
             const isActive = action.payload
@@ -44,10 +47,6 @@ const drawControlSlice = createSlice({
         setIsMouseDown: (state, action) => {
             const isMouseDown = action.payload
             state.isMouseDown = isMouseDown
-        },
-        setIsDraggable: (state, action) => {
-            const isDraggable = action.payload
-            state.isDraggable = isDraggable
         },
         actStartLiveStroke: (state, action) => {
             const { pageId, points } = action.payload
@@ -76,7 +75,6 @@ export const {
     setType,
     setIsActive,
     setIsMouseDown,
-    setIsDraggable,
     actStartLiveStroke,
     actUpdateLiveStrokePos,
     actEndLiveStroke,
