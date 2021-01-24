@@ -81,17 +81,15 @@ export function StrokeShape(props) {
         //             draggable={props.isDraggable}
         //             onDragStart={onDragStart}
         //             onDragEnd={onDragEnd}
-                    // offsetX={props.stroke.xOffset}
-                    // offsetY={props.stroke.yOffset}
         //         />
         //     )
         //     break
         case type.CIRCLE:
             shape = (
                 <Circle
-                    x={props.stroke.points[0]}
-                    y={props.stroke.points[1]}
-                    radius={props.stroke.points[2]}
+                    x={props.stroke.x}
+                    y={props.stroke.y}
+                    radius={props.stroke.radius}
                     stroke={props.stroke.style.color}
                     strokeWidth={props.stroke.style.width}
                     // fill={props.stroke.style.color}
@@ -101,10 +99,6 @@ export function StrokeShape(props) {
                     draggable={props.isDraggable}
                     onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
-                    // x={props.stroke.xOffset}
-                    // y={props.stroke.yOffset}
-                    // offsetX={props.stroke.xOffset}
-                    // offsetY={props.stroke.yOffset}
                 />
             )
             break
@@ -176,8 +170,6 @@ export async function registerLiveStroke() {
                 .replace(/[^a-z]+/g, "")
                 .substr(0, 4) + Date.now().toString(36).substr(4),
         points: liveStroke.points[liveStroke.page_id],
-        x: 0, // offset to update later when dragged
-        y: 0,
     }
 
     // add stroke to collection

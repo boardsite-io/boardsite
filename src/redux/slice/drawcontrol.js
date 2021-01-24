@@ -51,6 +51,8 @@ const drawControlSlice = createSlice({
         },
         actStartLiveStroke: (state, action) => {
             const { page_id, points } = action.payload
+            state.liveStroke.x = 0 // offset to update later when dragged
+            state.liveStroke.y = 0
             state.liveStroke.page_id = page_id
             state.liveStroke.points[page_id] = points
         },
@@ -75,10 +77,12 @@ const drawControlSlice = createSlice({
                 //     state.liveStroke.points[pid][3] = points[1]
                 //     break
                 case type.CIRCLE:
+                    state.liveStroke.x = state.liveStroke.points[pid][0]
+                    state.liveStroke.y = state.liveStroke.points[pid][1]
                     const dx = points[0] - state.liveStroke.points[pid][0]
                     const dy = points[1] - state.liveStroke.points[pid][1]
                     const radius = Math.sqrt(Math.pow(dx,2) + Math.pow(dy,2))
-                    state.liveStroke.points[pid][2] = radius
+                    state.liveStroke.radius = radius
                     break
                 default:
                     break;
