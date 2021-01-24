@@ -60,7 +60,12 @@ export default function Page({ pageId }) {
         }
 
         sampleCount += 1
-        if (sampleCount > MIN_SAMPLE_COUNT) {
+        if (tool !== toolType.PEN) {
+            // for all tools except pen we want to redraw on every update
+            const pos = e.target.getStage().getPointerPosition()
+            moveLiveStroke(pos)
+        } else if (sampleCount > MIN_SAMPLE_COUNT) {
+            // for pen tool we skip some samples to improve performance
             const pos = e.target.getStage().getPointerPosition()
             moveLiveStroke(pos)
             sampleCount = 0
