@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
 import undoable from 'redux-undo'
-// import * as constant from '../../constants.js';
 
 const boardControlSlice = createSlice({
     name: "boardControl",
@@ -53,8 +52,6 @@ const boardControlSlice = createSlice({
         actAddStroke: (state, action) => {
             const stroke = action.payload
             const { page_id, id } = stroke
-
-            // add to collection
             state.pageCollection[page_id].strokes[id] = stroke
         },
 
@@ -63,6 +60,14 @@ const boardControlSlice = createSlice({
             const stroke = action.payload
             const { page_id, id } = stroke
             delete state.pageCollection[page_id].strokes[id]
+        },
+
+        // Update stroke position after dragging
+        actUpdateStroke(state, action) {
+            const { x, y, sid, pid } = action.payload
+            let stroke = state.pageCollection[pid].strokes[sid]
+            stroke.x = x
+            stroke.y = y
         },
     },
 })
@@ -74,6 +79,7 @@ export const {
     actDeleteAll,
     actAddStroke,
     actEraseStroke,
+    actUpdateStroke,
 } = boardControlSlice.actions
 
 const undoableTodos = undoable(boardControlSlice.reducer)

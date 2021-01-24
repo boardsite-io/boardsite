@@ -19,7 +19,7 @@ import {
     moveLiveStroke,
     registerLiveStroke,
 } from "./stroke.js"
-import { MIN_SAMPLE_COUNT } from "../../constants.js"
+import { MIN_SAMPLE_COUNT, type } from "../../constants.js"
 import { setIsMouseDown } from "../../redux/slice/drawcontrol"
 
 export default function Page(props) {
@@ -27,10 +27,11 @@ export default function Page(props) {
     const pageId = props.pageId
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
     const isActive = useSelector((state) => state.drawControl.isActive)
+    const toolType = useSelector((state) => state.drawControl.liveStroke.type)
     let sampleCount = 0
 
     function onMouseDown(e) {
-        if (e.evt.buttons === 2 || !isActive) {
+        if (e.evt.buttons === 2 || !isActive || toolType === type.DRAG) {
             return
         }
 
@@ -42,7 +43,7 @@ export default function Page(props) {
     }
 
     function onMouseMove(e) {
-        if (!isMouseDown || e.evt.buttons === 2 || !isActive) {
+        if (!isMouseDown || e.evt.buttons === 2 || !isActive || toolType === type.DRAG) {
             return
         }
 
@@ -55,7 +56,7 @@ export default function Page(props) {
     }
 
     function onMouseUp(e) {
-        if (!isMouseDown || !isActive) {
+        if (!isMouseDown || !isActive || toolType === type.DRAG) {
             return
         } // Ignore reentering
         store.dispatch(setIsMouseDown(false))
@@ -108,6 +109,8 @@ const PageComponent = (props) => {
                         (strokeId, i) => (
                             <StrokeShape
                                 key={strokeId}
+                                strokeId={strokeId}
+                                pageId={props.pageId}
                                 stroke={pageCollection.strokes[strokeId]}
                                 isDraggable={isDraggable}
                             />
@@ -121,7 +124,6 @@ const PageComponent = (props) => {
                                 ...store.getState().drawControl.liveStroke,
                                 points: liveStrokePts, // remove page_id key in points
                             }}
-                            isDraggable={isDraggable}
                         />
                     ) : (
                             <></>

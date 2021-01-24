@@ -1,5 +1,5 @@
 import store from "../../redux/store.js"
-import { actAddStroke, actEraseStroke } from "../../redux/slice/boardcontrol.js"
+import { actAddStroke, actEraseStroke, actUpdateStroke } from "../../redux/slice/boardcontrol.js"
 import {
     actStartLiveStroke,
     actUpdateLiveStrokePos,
@@ -14,6 +14,19 @@ import { type } from "../../constants.js"
  * @param {{stroke: {}}} props
  */
 export function StrokeShape(props) {
+    function onDragStart(e) {
+        // succ
+    }
+
+    function onDragEnd(e) {
+        store.dispatch(actUpdateStroke({
+            x: e.target.attrs.x,
+            y: e.target.attrs.y,
+            sid: props.strokeId, 
+            pid: props.pageId,
+        }))
+    }
+
     let shape
     switch (props.stroke.type) {
         case type.PEN:
@@ -28,6 +41,10 @@ export function StrokeShape(props) {
                         handleStrokeMouseEnter(e, props.stroke)
                     }
                     draggable={props.isDraggable}
+                    onDragStart={onDragStart}
+                    onDragEnd={onDragEnd}
+                    x={props.stroke.x}
+                    y={props.stroke.y}
                 />
             )
             break
@@ -43,6 +60,10 @@ export function StrokeShape(props) {
                         handleStrokeMouseEnter(e, props.stroke)
                     }
                     draggable={props.isDraggable}
+                    onDragStart={onDragStart}
+                    onDragEnd={onDragEnd}
+                    x={props.stroke.x}
+                    y={props.stroke.y}
                 />
             )
             break
@@ -58,6 +79,10 @@ export function StrokeShape(props) {
         //                 handleStrokeMouseEnter(e, props.stroke)
         //             }
         //             draggable={props.isDraggable}
+        //             onDragStart={onDragStart}
+        //             onDragEnd={onDragEnd}
+                    // offsetX={props.stroke.xOffset}
+                    // offsetY={props.stroke.yOffset}
         //         />
         //     )
         //     break
@@ -74,6 +99,12 @@ export function StrokeShape(props) {
                         handleStrokeMouseEnter(e, props.stroke)
                     }
                     draggable={props.isDraggable}
+                    onDragStart={onDragStart}
+                    onDragEnd={onDragEnd}
+                    // x={props.stroke.xOffset}
+                    // y={props.stroke.yOffset}
+                    // offsetX={props.stroke.xOffset}
+                    // offsetY={props.stroke.yOffset}
                 />
             )
             break
@@ -83,6 +114,7 @@ export function StrokeShape(props) {
 
     return shape
 }
+
 
 function handleStrokeMouseEnter(e, stroke) {
     const isMouseDown = store.getState().drawControl.isMouseDown
@@ -144,9 +176,9 @@ export async function registerLiveStroke() {
                 .replace(/[^a-z]+/g, "")
                 .substr(0, 4) + Date.now().toString(36).substr(4),
         points: liveStroke.points[liveStroke.page_id],
+        x: 0, // offset to update later when dragged
+        y: 0,
     }
-
-    console.log(liveStroke);
 
     // add stroke to collection
     store.dispatch(actAddStroke(liveStroke))
