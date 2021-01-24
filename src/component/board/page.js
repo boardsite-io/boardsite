@@ -31,6 +31,11 @@ export default function Page({ pageId }) {
             return
         }
 
+        if (tool === toolType.ERASER) {
+            store.dispatch(setIsMouseDown(true))
+            return
+        }
+
         store.dispatch(setIsMouseDown(true))
         sampleCount = 1
 
@@ -41,13 +46,16 @@ export default function Page({ pageId }) {
     function onMouseMove(e) {
         if (
             !isMouseDown ||
+            !isActive ||
             e.evt.buttons === 2 || // right mouse
             e.evt.buttons === 3 || // left+right mouse
-            !isActive ||
-            toolType === toolType.DRAG
+            tool === toolType.DRAG
         ) {
             // cancel stroke when right / left+right mouse is clicked
             store.dispatch(setIsMouseDown(false))
+            return
+        }
+        if (tool === toolType.ERASER) {
             return
         }
 
@@ -63,6 +71,10 @@ export default function Page({ pageId }) {
         if (!isMouseDown || !isActive || toolType === toolType.DRAG) {
             return
         } // Ignore reentering
+        if (tool === toolType.ERASER) {
+            store.dispatch(setIsMouseDown(false))
+            return
+        }
         store.dispatch(setIsMouseDown(false))
 
         // update last position

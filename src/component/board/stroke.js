@@ -41,7 +41,8 @@ export function StrokeShape({ stroke, isDraggable }) {
         }
 
         if (
-            store.getState().drawControl.liveStroke.type === toolType.ERASER ||
+            (store.getState().drawControl.liveStroke.type === toolType.ERASER &&
+                store.getState().drawControl.isMouseDown) ||
             e.evt.buttons === 2
         ) {
             store.dispatch(actEraseStroke(stroke))
@@ -63,7 +64,7 @@ export function StrokeShape({ stroke, isDraggable }) {
                     onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
                     x={stroke.x}
-                    y={stroke.x}
+                    y={stroke.y}
                 />
             )
             break
