@@ -14,18 +14,18 @@ const baseURL = `http${ssl}://${hostname}:${port}`
 export function sendRequest(url, method, data = {}) {
     return new Promise((resolve, reject) => {
         fetch(`${baseURL}${url}`, {
-            method: method,
+            method,
             body: JSON.stringify(data),
         })
             .then((response) =>
                 response
                     .json()
-                    .then((data) => {
+                    .then((responseData) => {
                         if (!response.ok) {
                             // in case of error, api returns obj with 'error' key
-                            reject({ ...data, status: response.status })
+                            reject(new Error())
                         } else {
-                            resolve(data) // successful fetch
+                            resolve(responseData) // successful fetch
                         }
                     })
                     .catch(() => resolve({}))
@@ -48,7 +48,7 @@ export function createWebsocket(
     onCloseHandle
 ) {
     return new Promise((resolve, reject) => {
-        let socket = new WebSocket(
+        const socket = new WebSocket(
             `${baseURL.replace("http", "ws")}/board/${sessionID}`
         )
         socket.onmessage = onMsgHandle
@@ -58,7 +58,7 @@ export function createWebsocket(
         // check after 1 second if connection is ok
         setTimeout(() => {
             if (socket.readyState !== socket.OPEN) {
-                reject({ error: "can connect to websocket" })
+                reject(new Error("cannot connect to websocket"))
             } else {
                 resolve(socket)
             }
