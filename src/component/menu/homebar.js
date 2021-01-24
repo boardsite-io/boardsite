@@ -6,9 +6,9 @@ import { IconButton } from "@material-ui/core"
 import Tooltip from "@material-ui/core/Tooltip"
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever"
 import AddIcon from "@material-ui/icons/Add"
-//import RemoveIcon from "@material-ui/icons/Remove"
+// import RemoveIcon from "@material-ui/icons/Remove"
 
-import { addPage, deleteAllPages } from "../board/page.js"
+import { addPage, deleteAllPages } from "./pagemenu"
 
 export default function Homebar(props) {
     return (

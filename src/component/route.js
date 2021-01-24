@@ -1,7 +1,7 @@
 import React from "react"
 import { Route } from "react-router-dom"
 
-import Whiteboard from "../view/whiteboard.js"
+import Whiteboard from "../view/whiteboard"
 
 export default (
     <Route>

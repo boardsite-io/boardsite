@@ -1,18 +1,49 @@
 import React, { useState } from "react"
+import { nanoid } from "@reduxjs/toolkit"
 import { IconButton } from "@material-ui/core"
 import ClearIcon from "@material-ui/icons/Clear"
 import AddIcon from "@material-ui/icons/Add"
 import RemoveIcon from "@material-ui/icons/Remove"
 import Tooltip from "@material-ui/core/Tooltip"
 import MenuIcon from "@material-ui/icons/Menu"
+import {
+    actAddPage,
+    actClearPage,
+    actDeletePage,
+    actDeleteAll,
+} from "../../redux/slice/boardcontrol"
+import store from "../../redux/store"
 
-import { addPage, clearPage, deletePage } from "../board/page.js"
+// helper functions
+
+export function addPage(pageId) {
+    store.dispatch(
+        actAddPage({
+            pageId: nanoid(),
+            pageIndex: store
+                .getState()
+                .boardControl.present.pageRank.indexOf(pageId),
+        })
+    )
+}
+
+export function clearPage(pageId) {
+    store.dispatch(actClearPage(pageId))
+}
+
+export function deletePage(pageId) {
+    store.dispatch(actDeletePage(pageId))
+}
+
+export function deleteAllPages() {
+    store.dispatch(actDeleteAll())
+}
 
 /**
- * 
- * @param {{pageId: string}} props 
+ *
+ * @param {{pageId: string}} props
  */
-export default function PageMenu(props) {
+export default function PageMenu({ pageId }) {
     // console.log("PageMenu Redraw");
     const [displayPageSettings, setDisplayPageSettings] = useState(false)
 
@@ -42,7 +73,12 @@ export default function PageMenu(props) {
                 // Palette Popup
                 displayPageSettings ? (
                     <div className="pagesettingspopup">
-                        <div className="cover" onClick={closePageSettings} />
+                        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+                        <div
+                            className="cover"
+                            onClick={closePageSettings}
+                            onKeyPress={() => {}}
+                        />
                         <div className="pagesettings">
                             <Tooltip
                                 id="tooltip"
@@ -53,7 +89,7 @@ export default function PageMenu(props) {
                                     id="iconButton"
                                     variant="contained"
                                     onClick={() => {
-                                        clearPage(props.pageId)
+                                        clearPage(pageId)
                                         closePageSettings()
                                     }}>
                                     <ClearIcon
@@ -71,7 +107,7 @@ export default function PageMenu(props) {
                                     id="iconButton"
                                     variant="contained"
                                     onClick={() => {
-                                        addPage(props.pageId)
+                                        addPage(pageId)
                                         closePageSettings()
                                     }}>
                                     <AddIcon
@@ -89,7 +125,7 @@ export default function PageMenu(props) {
                                     id="iconButton"
                                     variant="contained"
                                     onClick={() => {
-                                        deletePage(props.pageId)
+                                        deletePage(pageId)
                                         closePageSettings()
                                     }}>
                                     <RemoveIcon

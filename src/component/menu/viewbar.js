@@ -8,18 +8,26 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import Tooltip from "@material-ui/core/Tooltip"
 import FullscreenIcon from "@material-ui/icons/Fullscreen"
 import OpenWithIcon from "@material-ui/icons/OpenWith"
-
-import store from "../../redux/store.js"
-import { setIsActive } from "../../redux/slice/drawcontrol.js"
 import { useSelector } from "react-redux"
 
-export default function Viewbar(props) {
+import store from "../../redux/store"
+import { setIsActive } from "../../redux/slice/drawcontrol"
+
+export default function Viewbar({
+    pan,
+    zoomIn,
+    zoomOut,
+    stretchToWindow,
+    up,
+    down,
+    resetTransform,
+}) {
     // console.log("Viewbar Redraw");
     const isActive = useSelector((state) => state.drawControl.isActive)
-    
+
     function toggleDrawMode() {
-        props.pan.disabled = !props.pan.disabled
-        store.dispatch(setIsActive(props.pan.disabled))
+        pan.disabled = !pan.disabled
+        store.dispatch(setIsActive(pan.disabled))
     }
 
     return (
@@ -53,7 +61,7 @@ export default function Viewbar(props) {
                 <IconButton
                     id="iconButton"
                     variant="contained"
-                    onClick={props.zoomIn}>
+                    onClick={zoomIn}>
                     <ZoomInIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
@@ -65,7 +73,7 @@ export default function Viewbar(props) {
                 <IconButton
                     id="iconButton"
                     variant="contained"
-                    onClick={props.zoomOut}>
+                    onClick={zoomOut}>
                     <ZoomOutIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
@@ -77,7 +85,7 @@ export default function Viewbar(props) {
                 <IconButton
                     id="iconButton"
                     variant="contained"
-                    onClick={props.stretchToWindow}>
+                    onClick={stretchToWindow}>
                     <ZoomOutMapIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
@@ -86,7 +94,7 @@ export default function Viewbar(props) {
                 title="Scroll Up"
                 TransitionProps={{ timeout: 0 }}
                 placement="left">
-                <IconButton id="iconButton" variant="contained" onClick={props.up}>
+                <IconButton id="iconButton" variant="contained" onClick={up}>
                     <ExpandLessIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
@@ -95,7 +103,7 @@ export default function Viewbar(props) {
                 title="Scroll Down"
                 TransitionProps={{ timeout: 0 }}
                 placement="left">
-                <IconButton id="iconButton" variant="contained" onClick={props.down}>
+                <IconButton id="iconButton" variant="contained" onClick={down}>
                     <ExpandMoreIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
@@ -107,7 +115,7 @@ export default function Viewbar(props) {
                 <IconButton
                     id="iconButton"
                     variant="contained"
-                    onClick={props.resetTransform}>
+                    onClick={resetTransform}>
                     <FullscreenIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>

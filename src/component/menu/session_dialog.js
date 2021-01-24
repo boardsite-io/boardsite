@@ -7,16 +7,22 @@ import DialogContent from "@material-ui/core/DialogContent"
 // import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from "@material-ui/core/DialogTitle"
 
-export default function AlertDialog(props) {
+export default function AlertDialog({
+    open,
+    setOpen,
+    handleCreate,
+    handleJoin,
+    handleTextFieldChange,
+}) {
     return (
         <div>
             <Dialog
-                open={props.open}
-                onClose={() => props.setOpen(false)}
+                open={open}
+                onClose={() => setOpen(false)}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description">
                 <DialogTitle id="alert-dialog-title">
-                    {"Create or join a session!"}
+                    Create or join a session!
                 </DialogTitle>
                 <DialogContent style={{ height: 200 }}>
                     {/* <DialogContentText id="alert-dialog-description">
@@ -27,20 +33,20 @@ export default function AlertDialog(props) {
                             id="buttonDialog"
                             variant="contained"
                             color="primary"
-                            onClick={() => props.handleCreate()}>
+                            onClick={() => handleCreate()}>
                             Create Session
                         </Button>
                         <Button
                             id="buttonDialog"
                             variant="contained"
                             color="primary"
-                            onClick={() => props.handleJoin()}>
+                            onClick={() => handleJoin()}>
                             Join Session
                         </Button>
                         <TextField
                             id="textField"
-                            defaultValue={""}
-                            onChange={(e) => props.handleTextFieldChange(e)}
+                            defaultValue=""
+                            onChange={(e) => handleTextFieldChange(e)}
                             label="Insert Session ID"
                             variant="outlined"
                         />
@@ -49,7 +55,7 @@ export default function AlertDialog(props) {
                 <DialogActions>
                     <Button
                         id="buttonDialog"
-                        onClick={() => props.setOpen(false)}
+                        onClick={() => setOpen(false)}
                         color="primary"
                         autoFocus>
                         Close

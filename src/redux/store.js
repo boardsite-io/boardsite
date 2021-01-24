@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit"
-import rootReducer from "./reducer.js"
+import rootReducer from "./reducer"
 
 export default configureStore({
     reducer: rootReducer,
-    middleware: [] // disable middleware
+    middleware: [], // disable middleware
 })

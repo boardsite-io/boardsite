@@ -1,37 +1,29 @@
 import React, { memo } from "react"
-import { nanoid } from "@reduxjs/toolkit"
-import PageMenu from "../menu/pagemenu.js"
-import { Stage, Layer } from "react-konva"
-import { StrokeShape } from "./stroke.js"
-import * as constant from "../../constants.js"
-
-import store from "../../redux/store.js"
-import {
-    actAddPage,
-    actClearPage,
-    actDeletePage,
-    actDeleteAll,
-} from "../../redux/slice/boardcontrol.js"
 import { useSelector } from "react-redux"
+import { Stage, Layer } from "react-konva"
+import PageMenu from "../menu/pagemenu"
+import * as constant from "../../constants"
+
+import store from "../../redux/store"
 
 import {
+    StrokeShape,
     startLiveStroke,
     moveLiveStroke,
     registerLiveStroke,
-} from "./stroke.js"
-import { MIN_SAMPLE_COUNT, type } from "../../constants.js"
+} from "./stroke"
+import { MIN_SAMPLE_COUNT, toolType } from "../../constants"
 import { setIsMouseDown } from "../../redux/slice/drawcontrol"
 
-export default function Page(props) {
+export default function Page({ pageId }) {
     // console.log("Page Redraw");
-    const pageId = props.pageId
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
     const isActive = useSelector((state) => state.drawControl.isActive)
-    const toolType = useSelector((state) => state.drawControl.liveStroke.type)
+    const tool = useSelector((state) => state.drawControl.liveStroke.type)
     let sampleCount = 0
 
     function onMouseDown(e) {
-        if (e.evt.buttons === 2 || !isActive || toolType === type.DRAG) {
+        if (e.evt.buttons === 2 || !isActive || tool === toolType.DRAG) {
             return
         }
 
@@ -43,7 +35,12 @@ export default function Page(props) {
     }
 
     function onMouseMove(e) {
-        if (!isMouseDown || e.evt.buttons === 2 || !isActive || toolType === type.DRAG) {
+        if (
+            !isMouseDown ||
+            e.evt.buttons === 2 ||
+            !isActive ||
+            toolType === toolType.DRAG
+        ) {
             return
         }
 
@@ -56,7 +53,7 @@ export default function Page(props) {
     }
 
     function onMouseUp(e) {
-        if (!isMouseDown || !isActive || toolType === type.DRAG) {
+        if (!isMouseDown || !isActive || toolType === toolType.DRAG) {
             return
         } // Ignore reentering
         store.dispatch(setIsMouseDown(false))
@@ -75,19 +72,23 @@ export default function Page(props) {
                 pageId={pageId}
                 onMouseDown={onMouseDown}
                 onMouseMove={onMouseMove}
-                onMouseUp={onMouseUp} />
+                onMouseUp={onMouseUp}
+            />
             <MemoPageMenu pageId={pageId} />
         </div>
     )
 }
-
 // memo for performance
-const PageMenuComponent = (props) => { return <PageMenu pageId={props.pageId} /> }
+const PageMenuComponent = ({ pageId }) => <PageMenu pageId={pageId} />
 const MemoPageMenu = memo(PageMenuComponent)
 
-const PageComponent = (props) => {
-    const liveStrokePts = useSelector((state) => state.drawControl.liveStroke.points[props.pageId])
-    const pageCollection = useSelector((state) => state.boardControl.present.pageCollection[props.pageId])
+const PageComponent = ({ pageId, onMouseDown, onMouseMove, onMouseUp }) => {
+    const liveStrokePts = useSelector(
+        (state) => state.drawControl.liveStroke.points[pageId]
+    )
+    const pageCollection = useSelector(
+        (state) => state.boardControl.present.pageCollection[pageId]
+    )
     const isDraggable = useSelector((state) => state.drawControl.isDraggable)
 
     return (
@@ -96,67 +97,39 @@ const PageComponent = (props) => {
                 className="canvas"
                 width={constant.CANVAS_WIDTH}
                 height={constant.CANVAS_HEIGHT}
-                onMouseDown={props.onMouseDown}
-                onMousemove={props.onMouseMove}
-                onMouseUp={props.onMouseUp}
-                onMouseLeave={props.onMouseUp}
+                onMouseDown={onMouseDown}
+                onMousemove={onMouseMove}
+                onMouseUp={onMouseUp}
+                onMouseLeave={onMouseUp}
                 onContextMenu={(e) => e.evt.preventDefault()}
-                onTouchStart={props.onMouseDown}
-                onTouchMove={props.onMouseMove}
-                onTouchEnd={props.onMouseUp}>
+                onTouchStart={onMouseDown}
+                onTouchMove={onMouseMove}
+                onTouchEnd={onMouseUp}>
                 <Layer>
-                    {Object.keys(pageCollection.strokes).map(
-                        (strokeId, i) => (
-                            <StrokeShape
-                                key={strokeId}
-                                strokeId={strokeId}
-                                pageId={props.pageId}
-                                stroke={pageCollection.strokes[strokeId]}
-                                isDraggable={isDraggable}
-                            />
-                        )
-                    )}
+                    {Object.keys(pageCollection.strokes).map((strokeId) => (
+                        <StrokeShape
+                            key={strokeId}
+                            strokeId={strokeId}
+                            pageId={pageId}
+                            stroke={pageCollection.strokes[strokeId]}
+                            isDraggable={isDraggable}
+                        />
+                    ))}
                 </Layer>
                 <Layer>
                     {liveStrokePts !== undefined ? (
                         <StrokeShape
                             stroke={{
                                 ...store.getState().drawControl.liveStroke,
-                                points: liveStrokePts, // remove page_id key in points
+                                points: liveStrokePts, // remove pageId key in points
                             }}
                         />
                     ) : (
-                            <></>
-                        )}
+                        <></>
+                    )}
                 </Layer>
             </Stage>
         </div>
     )
 }
 const MemoPage = memo(PageComponent)
-
-
-// helper functions
-
-export function addPage(pageId) {
-    store.dispatch(
-        actAddPage({
-            pageId: nanoid(),
-            pageIndex: store
-                .getState()
-                .boardControl.present.pageRank.indexOf(pageId),
-        })
-    )
-}
-
-export function clearPage(pageId) {
-    store.dispatch(actClearPage(pageId))
-}
-
-export function deletePage(pageId) {
-    store.dispatch(actDeletePage(pageId))
-}
-
-export function deleteAllPages(pageId) {
-    store.dispatch(actDeleteAll())
-}

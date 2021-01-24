@@ -1,20 +1,21 @@
 import React, { useState, useEffect, memo } from "react"
-import Page, { addPage } from "../component/board/page"
+import { useSelector } from "react-redux"
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch"
+
+import Page from "../component/board/page"
+import { addPage } from "../component/menu/pagemenu"
 import Toolbar from "../component/menu/toolbar"
 import Homebar from "../component/menu/homebar"
 import Viewbar from "../component/menu/viewbar"
 import AlertDialog from "../component/menu/session_dialog"
 // import { useParams } from 'react-router-dom';
-import { useSelector } from "react-redux"
-import { type, CANVAS_WIDTH } from "../constants.js"
-import { setType, setIsDraggable } from "../redux/slice/drawcontrol.js"
-import store from "../redux/store.js"
+import { toolType, CANVAS_WIDTH } from "../constants"
+import { setType, setIsDraggable } from "../redux/slice/drawcontrol"
+import store from "../redux/store"
 
 // import * as api from '../util/api';
 // import * as proc from '../util/processing.js';
 // import * as control from '../util/boardcontrol';
-
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch"
 
 export default function Whiteboard() {
     // console.log("Whiteboard Redraw");
@@ -28,26 +29,44 @@ export default function Whiteboard() {
     //         setSessionID(id); // Set session id and connect to session
     //     }
     // }, [id])
+    function handleKeyPress(e) {
+        switch (e.key) {
+            case "p":
+                store.dispatch(setType(toolType.PEN))
+                store.dispatch(setIsDraggable(false))
+                break
+            case "1":
+                store.dispatch(setType(toolType.PEN))
+                store.dispatch(setIsDraggable(false))
+                break
+            case "e":
+                store.dispatch(setType(toolType.ERASER))
+                store.dispatch(setIsDraggable(false))
+                break
+            case "2":
+                store.dispatch(setType(toolType.ERASER))
+                store.dispatch(setIsDraggable(false))
+                break
+            case "d":
+                store.dispatch(setType(toolType.DRAG))
+                store.dispatch(setIsDraggable(true))
+                break
+            case "3":
+                store.dispatch(setType(toolType.DRAG))
+                store.dispatch(setIsDraggable(true))
+                break
+            default:
+                break
+        }
+    }
 
     // Open dialog on mount
     useEffect(() => {
         // setOpenSessionDialog(true);
         addPage()
-        document.addEventListener('keypress', handleKeyPress)
+        document.addEventListener("keypress", handleKeyPress)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
-    function handleKeyPress(e) {
-        switch (e.key) {
-            case "p": store.dispatch(setType(type.PEN)); store.dispatch(setIsDraggable(false)); break;
-            case "1": store.dispatch(setType(type.PEN)); store.dispatch(setIsDraggable(false)); break;
-            case "e": store.dispatch(setType(type.ERASER)); store.dispatch(setIsDraggable(false)); break;
-            case "2": store.dispatch(setType(type.ERASER)); store.dispatch(setIsDraggable(false)); break;
-            case "d": store.dispatch(setType(type.DRAG)); store.dispatch(setIsDraggable(true)); break;
-            case "3": store.dispatch(setType(type.DRAG)); store.dispatch(setIsDraggable(true)); break;
-            default: break;
-        }
-    }
 
     // Verify session id and try to connect to session
     // useEffect(() => {
@@ -75,7 +94,7 @@ export default function Whiteboard() {
     //     }
     // }
 
-    function handleCreate(e) {
+    function handleCreate() {
         // let boardDim = { x: 10, y: 10 };
         // api.createBoardRequest(boardDim).then((data) => {
         //     api.getPages(data.id).then((data) => {
@@ -90,28 +109,28 @@ export default function Whiteboard() {
         // setSessionID(sidInput);
     }
 
-    function handleTextFieldChange(e) {
+    function handleTextFieldChange() {
         // setSidInput(e.target.value)
     }
 
-    let _scale,
-        _positionX,
-        _positionY,
-        _setTransform
+    let scale
+    let positionX
+    let positionY
+    let setTransform
     const defaultPositionX = (window.innerWidth - (CANVAS_WIDTH + 45)) / 2
     const defaultPositionY = 60
     const defaultScale = 1
 
     function scrollUp() {
-        _setTransform(_positionX, _positionY + 200, _scale)
+        setTransform(positionX, positionY + 200, scale)
     }
 
     function scrollDown() {
-        _setTransform(_positionX, _positionY - 200, _scale)
+        setTransform(positionX, positionY - 200, scale)
     }
 
     function stretchToWindow() {
-        _setTransform(0, 0, window.innerWidth / (CANVAS_WIDTH + 45))
+        setTransform(0, 0, window.innerWidth / (CANVAS_WIDTH + 45))
     }
 
     return (
@@ -126,9 +145,7 @@ export default function Whiteboard() {
                 handleCreate={handleCreate}
             />
             <Toolbar />
-            <Homebar
-                setOpenSessionDialog={setOpenSessionDialog}
-            />
+            <Homebar setOpenSessionDialog={setOpenSessionDialog} />
             <TransformWrapper
                 defaultPositionX={defaultPositionX}
                 defaultPositionY={defaultPositionY}
@@ -144,17 +161,17 @@ export default function Whiteboard() {
                     maxScale: 2,
                     limitToBounds: false,
                     limitToWrapper: false,
-                    centerContent: true
+                    centerContent: true,
                 }}
                 wheel={{
                     disabled: false,
                     step: 200,
                     wheelEnabled: true,
                     touchPadEnabled: true,
-                    limitsOnWheel: true
+                    limitsOnWheel: true,
                 }}
                 pan={{
-                    disabled: true, //drawMode,
+                    disabled: true, // drawMode,
                     disableOnTarget: [],
                     lockAxisX: false,
                     lockAxisY: false,
@@ -167,24 +184,24 @@ export default function Whiteboard() {
                     padding: true,
                     paddingSize: 40,
                     animationTime: 200,
-                    animationType: "easeOut"
+                    animationType: "easeOut",
                 }}
                 pinch={{
-                    disabled: false
+                    disabled: false,
                 }}
                 zoomIn={{
                     disabled: false,
                     step: 70,
                     animation: true,
                     animationTime: 200,
-                    animationType: "easeOut"
+                    animationType: "easeOut",
                 }}
                 zoomOut={{
                     disabled: false,
                     step: 70,
                     animation: true,
                     animationTime: 200,
-                    animationType: "easeOut"
+                    animationType: "easeOut",
                 }}
                 doubleClick={{
                     disabled: false,
@@ -192,13 +209,13 @@ export default function Whiteboard() {
                     animation: true,
                     animationTime: 200,
                     animationType: "easeOut",
-                    mode: "zoomIn"
+                    mode: "zoomIn",
                 }}
                 reset={{
                     disabled: false,
                     animation: true,
                     animationTime: 200,
-                    animationType: "easeOut"
+                    animationType: "easeOut",
                 }}
                 scalePadding={{
                     disabled: true,
@@ -221,16 +238,16 @@ export default function Whiteboard() {
                     zoomIn,
                     zoomOut,
                     resetTransform,
-                    positionX,
-                    positionY,
-                    scale,
-                    setTransform,
+                    newPositionX,
+                    newPositionY,
+                    newScale,
+                    newSetTransform,
                 }) => {
                     // refresh values
-                    _scale = scale
-                    _positionX = positionX
-                    _positionY = positionY
-                    _setTransform = setTransform
+                    scale = newScale
+                    positionX = newPositionX
+                    positionY = newPositionY
+                    setTransform = newSetTransform
 
                     return (
                         <>
@@ -248,8 +265,7 @@ export default function Whiteboard() {
                             </TransformComponent>
                         </>
                     )
-                }
-                }
+                }}
             </TransformWrapper>
         </div>
     )
@@ -260,19 +276,12 @@ const Pages = () => {
     return (
         <div className="pagecollectionouter">
             <div className="pagecollectioninner">
-                {
-                    pageRank.map((pageId) => {
-                        return (
-                            <Page
-                                className="page"
-                                pageId={pageId}
-                                key={pageId}
-                            />
-                        )
-                    })
-                }
+                {pageRank.map((pageId) => (
+                    <Page className="page" pageId={pageId} key={pageId} />
+                ))}
             </div>
-        </div>)
+        </div>
+    )
 }
 const MemoPages = memo(Pages) // memo to prevent redundant rerender on zooming / panning
 const MemoViewbar = memo(Viewbar)

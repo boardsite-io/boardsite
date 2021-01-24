@@ -9,6 +9,8 @@
     "plugins": ["jsx-a11y", "prettier"],
     "rules": {
         "semi": 0,
+        "no-param-reassign": 0, // redux slices
+        "react/prop-types": 0,
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "prettier/prettier": [
             "error",

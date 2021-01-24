@@ -1,6 +1,9 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import { BrowserRouter as Router } from "react-router-dom"
+import { Provider } from "react-redux"
 
+import CssBaseline from "@material-ui/core/CssBaseline"
 import "./css/theme.css"
 import "./css/index.css"
 import "./css/whiteboard.css"
@@ -9,22 +12,16 @@ import "./css/buttons.css"
 import "./css/popup.css"
 
 import routes from "./component/route"
-import { BrowserRouter as Router } from "react-router-dom"
 
-import CssBaseline from "@material-ui/core/CssBaseline"
+import store from "./redux/store"
 
-import store from "./redux/store.js"
-import { Provider } from "react-redux"
-
-class Boardsite extends React.Component {
-    render() {
-        return (
-            <div className="rootdiv">
-                <CssBaseline />
-                <Router>{routes}</Router>
-            </div>
-        )
-    }
+function Boardsite() {
+    return (
+        <div className="rootdiv">
+            <CssBaseline />
+            <Router>{routes}</Router>
+        </div>
+    )
 }
 
 // ========================================

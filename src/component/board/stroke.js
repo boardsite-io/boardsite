@@ -1,12 +1,17 @@
-import store from "../../redux/store.js"
-import { actAddStroke, actEraseStroke, actUpdateStroke } from "../../redux/slice/boardcontrol.js"
+import React from "react"
+import { Line, Circle } from "react-konva"
+import store from "../../redux/store"
+import {
+    actAddStroke,
+    actEraseStroke,
+    actUpdateStroke,
+} from "../../redux/slice/boardcontrol"
 import {
     actStartLiveStroke,
     actUpdateLiveStrokePos,
     actEndLiveStroke,
-} from "../../redux/slice/drawcontrol.js"
-import { Line, Circle } from "react-konva"
-import { type } from "../../constants.js"
+} from "../../redux/slice/drawcontrol"
+import { toolType } from "../../constants"
 // import * as constant from '../constants.js';
 
 /**
@@ -14,22 +19,38 @@ import { type } from "../../constants.js"
  * @param {{stroke: {}}} props
  */
 export function StrokeShape(props) {
-    function onDragStart(e) {
+    function onDragStart() {
         // succ
     }
 
     function onDragEnd(e) {
-        store.dispatch(actUpdateStroke({
-            x: e.target.attrs.x,
-            y: e.target.attrs.y,
-            sid: props.strokeId, 
-            pid: props.pageId,
-        }))
+        store.dispatch(
+            actUpdateStroke({
+                x: e.target.attrs.x,
+                y: e.target.attrs.y,
+                sid: props.strokeId,
+                pid: props.pageId,
+            })
+        )
+    }
+
+    function handleStrokeMouseEnter(e, stroke) {
+        const { isMouseDown } = store.getState().drawControl
+        if (stroke.id === undefined || !isMouseDown) {
+            return
+        }
+
+        if (
+            store.getState().drawControl.liveStroke.type === toolType.ERASER ||
+            e.evt.buttons === 2
+        ) {
+            store.dispatch(actEraseStroke(stroke))
+        }
     }
 
     let shape
     switch (props.stroke.type) {
-        case type.PEN:
+        case toolType.PEN:
             shape = (
                 <Line
                     points={props.stroke.points}
@@ -48,7 +69,7 @@ export function StrokeShape(props) {
                 />
             )
             break
-        case type.LINE:
+        case toolType.LINE:
             shape = (
                 <Line
                     points={props.stroke.points}
@@ -84,7 +105,7 @@ export function StrokeShape(props) {
         //         />
         //     )
         //     break
-        case type.CIRCLE:
+        case toolType.CIRCLE:
             shape = (
                 <Circle
                     x={props.stroke.x}
@@ -109,21 +130,6 @@ export function StrokeShape(props) {
     return shape
 }
 
-
-function handleStrokeMouseEnter(e, stroke) {
-    const isMouseDown = store.getState().drawControl.isMouseDown
-    if (stroke.id === undefined || !isMouseDown) {
-        return
-    }
-
-    if (
-        store.getState().drawControl.liveStroke.type === type.ERASER ||
-        e.evt.buttons === 2
-    ) {
-        store.dispatch(actEraseStroke(stroke))
-    }
-}
-
 /**
  * Start the current stroke when mouse is pressed down
  * @param {*} position
@@ -131,7 +137,7 @@ function handleStrokeMouseEnter(e, stroke) {
 export function startLiveStroke(position, pageId) {
     store.dispatch(
         actStartLiveStroke({
-            page_id: pageId,
+            pageId,
             points: [position.x, position.y],
         })
     )
@@ -142,10 +148,7 @@ export function startLiveStroke(position, pageId) {
  * @param {*} position
  */
 export function moveLiveStroke(position) {
-    store.dispatch(
-        actUpdateLiveStrokePos([position.x, position.y])
-    )
-    //console.log(store.getState().drawControl.liveStroke)
+    store.dispatch(actUpdateLiveStrokePos([position.x, position.y]))
 }
 
 /**
@@ -153,12 +156,12 @@ export function moveLiveStroke(position) {
  * @param {*} pageId
  */
 export async function registerLiveStroke() {
-    let liveStroke = store.getState().drawControl.liveStroke
+    let { liveStroke } = store.getState().drawControl
     // empty livestrokes e.g. rightmouse eraser
-    if (liveStroke.points[liveStroke.page_id] === undefined) {
+    if (liveStroke.points[liveStroke.pageId] === undefined) {
         return
     }
-    if (liveStroke.type === type.ERASER) {
+    if (liveStroke.type === toolType.ERASER) {
         return
     }
 
@@ -169,7 +172,7 @@ export async function registerLiveStroke() {
                 .toString(36)
                 .replace(/[^a-z]+/g, "")
                 .substr(0, 4) + Date.now().toString(36).substr(4),
-        points: liveStroke.points[liveStroke.page_id],
+        points: liveStroke.points[liveStroke.pageId],
     }
 
     // add stroke to collection

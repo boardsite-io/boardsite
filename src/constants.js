@@ -10,7 +10,7 @@ export const DEFAULT_ACTIVE = "true"
 export const MIN_SAMPLE_COUNT = 5
 
 // drawing stuff
-export const type = {
+export const toolType = {
     PEN: 0,
     ERASER: 1,
     LINE: 2,
@@ -18,4 +18,4 @@ export const type = {
     CIRCLE: 4,
     DRAG: 5,
 }
-export const DEFAULT_TOOL = type.PEN
+export const DEFAULT_TOOL = toolType.PEN
