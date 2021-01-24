@@ -35,22 +35,19 @@
 
 .canvas {
     position: absolute;
-    top: 0px;
-    left: 0px;
+    /* top: 0px;
+    left: 0px; */
     background-color: var(--canvasBackgroundColor);
     background-size: var(--canvasBackgroundSize);
     background-image: var(--canvasBackgroundImage);
     background-position: var(--canvasBackgroundPosition);
-}
-
-.canvas {
     height: var(--canvasHeight);
     width: var(--canvasWidth);
+    border: var(--canvasBorder);
     touch-action: none;
     -webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */
     -webkit-user-select: none; /* prevent copy paste, to allow, change 'none' to 'text' */
-    border: var(--canvasBorder);
     cursor: crosshair;
 }
 
