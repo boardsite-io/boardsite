@@ -1,8 +1,5 @@
 import React, { useState } from "react"
-import { IconButton, Input, Slider } from "@material-ui/core"
-import PaletteIcon from "@material-ui/icons/Palette"
-import CreateIcon from "@material-ui/icons/Create"
-import { SketchPicker } from "react-color"
+import { IconButton } from "@material-ui/core"
 import RemoveIcon from "@material-ui/icons/Remove"
 import ChangeHistoryIcon from "@material-ui/icons/ChangeHistory"
 import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked"
@@ -11,65 +8,19 @@ import HighlightOffIcon from "@material-ui/icons/HighlightOff"
 import Tooltip from "@material-ui/core/Tooltip"
 import ControlCameraIcon from "@material-ui/icons/ControlCamera"
 import { useSelector } from "react-redux"
-
+import WidthPicker from "./widthpicker"
+import ColorPicker from "./colorpicker"
 import store from "../../redux/store"
-import { setColor, setWidth, setType } from "../../redux/slice/drawcontrol"
-import { toolType, WIDTH_MIN, WIDTH_MAX, WIDTH_STEP } from "../../constants"
+import { setType } from "../../redux/slice/drawcontrol"
+import { toolType } from "../../constants"
 import UndoRedo from "./undoredo"
 
 function Toolbar() {
-    const [displayColorPicker, setDisplayColorPicker] = useState(false)
-    const [displayWidthPicker, setDisplayWidthPicker] = useState(false)
     const [displayExtraTools, setDisplayExtraTools] = useState(false)
     const typeSelector = useSelector(
         (state) => state.drawControl.liveStroke.type
     )
-    const widthSelector = useSelector(
-        (state) => state.drawControl.liveStroke.style.width
-    )
-    const colorSelector = useSelector(
-        (state) => state.drawControl.liveStroke.style.color
-    )
     const isDraggable = useSelector((state) => state.drawControl.isDraggable)
-
-    function handlePaletteClick() {
-        setDisplayColorPicker(!displayColorPicker)
-    }
-
-    function handleWidthClick() {
-        setDisplayWidthPicker(!displayWidthPicker)
-    }
-
-    function handlePaletteClose() {
-        setDisplayColorPicker(false)
-    }
-
-    function handleWidthClose() {
-        setDisplayWidthPicker(false)
-    }
-
-    function handlePaletteChange(color) {
-        store.dispatch(setColor(color.hex))
-    }
-
-    const handleSliderChange = (event, width) => {
-        store.dispatch(setWidth(width))
-    }
-
-    const handleInputChange = (event) => {
-        const width =
-            event.target.value === "" ? "" : Number(event.target.value)
-        store.dispatch(setWidth(width))
-    }
-
-    // Slider Functions
-    const handleBlur = () => {
-        if (widthSelector < WIDTH_MIN) {
-            store.dispatch(setWidth(WIDTH_MIN))
-        } else if (widthSelector > WIDTH_MAX) {
-            store.dispatch(setWidth(WIDTH_MAX))
-        }
-    }
 
     function debug() {
         // console.log("debug")
@@ -257,93 +208,8 @@ function Toolbar() {
                     </Tooltip>
                 </div>
             ) : null}
-            <div>
-                <Tooltip
-                    id="tooltip"
-                    title="Color"
-                    TransitionProps={{ timeout: 0 }}
-                    placement="bottom">
-                    <IconButton
-                        id="iconButton"
-                        variant="contained"
-                        onClick={handlePaletteClick}>
-                        <PaletteIcon id="iconButtonInner" />
-                    </IconButton>
-                </Tooltip>
-                {
-                    // Palette Popup
-                    displayColorPicker ? (
-                        <div className="popup">
-                            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-                            <div
-                                className="cover"
-                                onClick={handlePaletteClose}
-                                onKeyPress={() => {}}
-                            />
-                            <div className="colorpicker">
-                                <SketchPicker
-                                    disableAlpha
-                                    color={colorSelector}
-                                    onChange={handlePaletteChange}
-                                />
-                            </div>
-                        </div>
-                    ) : null
-                }
-            </div>
-            <div>
-                <Tooltip
-                    id="tooltip"
-                    title="Width"
-                    TransitionProps={{ timeout: 0 }}
-                    placement="bottom">
-                    <IconButton
-                        id="iconButton"
-                        variant="contained"
-                        onClick={handleWidthClick}>
-                        <CreateIcon id="iconButtonInner" />
-                    </IconButton>
-                </Tooltip>
-                {
-                    // Width Slider Popup
-                    displayWidthPicker ? (
-                        <div className="popup">
-                            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-                            <div
-                                className="cover"
-                                onClick={handleWidthClose}
-                                onKeyPress={() => {}}
-                            />
-                            <div className="widthpicker">
-                                <Slider
-                                    value={
-                                        typeof widthSelector === "number"
-                                            ? widthSelector
-                                            : 0
-                                    }
-                                    onChange={handleSliderChange}
-                                    aria-labelledby="input-slider"
-                                    min={WIDTH_MIN}
-                                    max={WIDTH_MAX}
-                                />
-                                <Input
-                                    value={widthSelector}
-                                    margin="dense"
-                                    onChange={handleInputChange}
-                                    onBlur={handleBlur}
-                                    inputProps={{
-                                        step: WIDTH_STEP,
-                                        min: WIDTH_MIN,
-                                        max: WIDTH_MAX,
-                                        type: "number",
-                                        "aria-labelledby": "input-slider",
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    ) : null
-                }
-            </div>
+            <ColorPicker />
+            <WidthPicker />
         </div>
     )
 }
