@@ -11,7 +11,7 @@ import OpenWithIcon from "@material-ui/icons/OpenWith"
 import { useSelector } from "react-redux"
 
 import store from "../../redux/store"
-import { setIsActive } from "../../redux/slice/drawcontrol"
+import { SET_ISACTIVE } from "../../redux/slice/drawcontrol"
 
 export default function Viewbar({
     pan,
@@ -27,7 +27,7 @@ export default function Viewbar({
 
     function toggleDrawMode() {
         pan.disabled = !pan.disabled
-        store.dispatch(setIsActive(pan.disabled))
+        store.dispatch(SET_ISACTIVE(pan.disabled))
     }
 
     return (

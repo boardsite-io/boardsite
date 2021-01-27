@@ -2,14 +2,14 @@ import React from "react"
 import { Line, Ellipse } from "react-konva"
 import store from "../../redux/store"
 import {
-    actAddStroke,
-    actEraseStroke,
-    actUpdateStroke,
+    ADD_STROKE,
+    ERASE_STROKE,
+    UPDATE_STROKE,
 } from "../../redux/slice/boardcontrol"
 import {
-    actStartLiveStroke,
-    actUpdateLiveStrokePos,
-    actEndLiveStroke,
+    START_LIVESTROKE,
+    UPDATE_LIVESTROKE,
+    END_LIVESTROKE,
 } from "../../redux/slice/drawcontrol"
 import { toolType } from "../../constants"
 
@@ -24,7 +24,7 @@ export function StrokeShape({ stroke, isDraggable }) {
 
     function onDragEnd(e) {
         store.dispatch(
-            actUpdateStroke({
+            UPDATE_STROKE({
                 x: e.target.attrs.x,
                 y: e.target.attrs.y,
                 id: stroke.id,
@@ -44,7 +44,7 @@ export function StrokeShape({ stroke, isDraggable }) {
                 store.getState().drawControl.isMouseDown) ||
             e.evt.buttons === 2
         ) {
-            store.dispatch(actEraseStroke(stroke))
+            store.dispatch(ERASE_STROKE(stroke))
         }
     }
 
@@ -147,7 +147,7 @@ export function StrokeShape({ stroke, isDraggable }) {
  */
 export function startLiveStroke(position, pageId) {
     store.dispatch(
-        actStartLiveStroke({
+        START_LIVESTROKE({
             pageId,
             points: [position.x, position.y],
         })
@@ -159,7 +159,7 @@ export function startLiveStroke(position, pageId) {
  * @param {*} position
  */
 export function moveLiveStroke(position) {
-    store.dispatch(actUpdateLiveStrokePos([position.x, position.y]))
+    store.dispatch(UPDATE_LIVESTROKE([position.x, position.y]))
 }
 
 /**
@@ -187,10 +187,10 @@ export async function registerLiveStroke() {
     }
 
     // add stroke to collection
-    store.dispatch(actAddStroke(liveStroke))
+    store.dispatch(ADD_STROKE(liveStroke))
 
     // clear livestroke
-    store.dispatch(actEndLiveStroke())
+    store.dispatch(END_LIVESTROKE())
 }
 
 /**

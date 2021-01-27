@@ -6,6 +6,8 @@ import {
     DEFAULT_WIDTH,
     CANVAS_PIXEL_RATIO,
     toolType,
+    WIDTH_MAX,
+    WIDTH_MIN,
 } from "../../constants"
 
 const drawControlSlice = createSlice({
@@ -27,34 +29,44 @@ const drawControlSlice = createSlice({
         },
     },
     reducers: {
-        setColor: (state, action) => {
+        SET_COLOR: (state, action) => {
             const color = action.payload
             state.liveStroke.style.color = color
         },
-        setWidth: (state, action) => {
+        SET_WIDTH: (state, action) => {
             const width = action.payload
             state.liveStroke.style.width = width
         },
-        setType: (state, action) => {
+        INCREMENT_WIDTH: (state) => {
+            if (state.liveStroke.style.width !== WIDTH_MAX) {
+                state.liveStroke.style.width += 1
+            }
+        },
+        DECREMENT_WIDTH: (state) => {
+            if (state.liveStroke.style.width !== WIDTH_MIN) {
+                state.liveStroke.style.width -= 1
+            }
+        },
+        SET_TYPE: (state, action) => {
             const type = action.payload
             state.liveStroke.type = type
             state.isDraggable = type === toolType.DRAG
         },
-        setIsActive: (state, action) => {
+        SET_ISACTIVE: (state, action) => {
             const isActive = action.payload
             state.isActive = isActive
         },
-        setIsMouseDown: (state, action) => {
+        SET_ISMOUSEDOWN: (state, action) => {
             const isMouseDown = action.payload
             state.isMouseDown = isMouseDown
         },
-        actStartLiveStroke: (state, action) => {
+        START_LIVESTROKE: (state, action) => {
             const { pageId, points } = action.payload
             state.liveStroke.pageId = pageId
             state.liveStroke.points[pageId] = points
         },
         // Update the current live stroke position
-        actUpdateLiveStrokePos: (state, action) => {
+        UPDATE_LIVESTROKE: (state, action) => {
             const points = action.payload
             const { pageId } = state.liveStroke
             state.liveStroke.points[pageId] = [
@@ -62,7 +74,7 @@ const drawControlSlice = createSlice({
                 ...points,
             ]
         },
-        actEndLiveStroke: (state) => {
+        END_LIVESTROKE: (state) => {
             state.liveStroke.pageId = ""
             state.liveStroke.points = {}
         },
@@ -70,13 +82,15 @@ const drawControlSlice = createSlice({
 })
 
 export const {
-    setColor,
-    setWidth,
-    setType,
-    setIsActive,
-    setIsMouseDown,
-    actStartLiveStroke,
-    actUpdateLiveStrokePos,
-    actEndLiveStroke,
+    SET_COLOR,
+    SET_WIDTH,
+    INCREMENT_WIDTH,
+    DECREMENT_WIDTH,
+    SET_TYPE,
+    SET_ISACTIVE,
+    SET_ISMOUSEDOWN,
+    START_LIVESTROKE,
+    UPDATE_LIVESTROKE,
+    END_LIVESTROKE,
 } = drawControlSlice.actions
 export default drawControlSlice.reducer

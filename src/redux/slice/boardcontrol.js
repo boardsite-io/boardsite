@@ -11,7 +11,7 @@ const boardControlSlice = createSlice({
     },
     reducers: {
         // Add a new page
-        actAddPage: (state, action) => {
+        ADD_PAGE: (state, action) => {
             const { pageId, pageIndex } = action.payload
             state.pageCollection[pageId] = {
                 strokes: {},
@@ -25,14 +25,14 @@ const boardControlSlice = createSlice({
         },
 
         // Clear page
-        actClearPage: (state, action) => {
+        CLEAR_PAGE: (state, action) => {
             // delete page data
             const pageId = action.payload
             state.pageCollection[pageId].strokes = {}
         },
 
         // Delete page
-        actDeletePage: (state, action) => {
+        DELETE_PAGE: (state, action) => {
             // delete page data
             const pageId = action.payload
             delete state.pageCollection[pageId]
@@ -43,27 +43,27 @@ const boardControlSlice = createSlice({
         },
 
         // Delete all pages
-        actDeleteAll: (state) => {
+        DELETE_ALL_PAGES: (state) => {
             state.pageRank = []
             state.pageCollection = {}
         },
 
         // Add stroke to collection
-        actAddStroke: (state, action) => {
+        ADD_STROKE: (state, action) => {
             const stroke = action.payload
             const { pageId, id } = stroke
             state.pageCollection[pageId].strokes[id] = stroke
         },
 
         // Erase stroke from collection
-        actEraseStroke(state, action) {
+        ERASE_STROKE(state, action) {
             const stroke = action.payload
             const { pageId, id } = stroke
             delete state.pageCollection[pageId].strokes[id]
         },
 
         // Update stroke position after dragging
-        actUpdateStroke(state, action) {
+        UPDATE_STROKE(state, action) {
             const { x, y, id, pageId } = action.payload
             const stroke = state.pageCollection[pageId].strokes[id]
             stroke.x = x
@@ -73,13 +73,13 @@ const boardControlSlice = createSlice({
 })
 
 export const {
-    actAddPage,
-    actClearPage,
-    actDeletePage,
-    actDeleteAll,
-    actAddStroke,
-    actEraseStroke,
-    actUpdateStroke,
+    ADD_PAGE,
+    CLEAR_PAGE,
+    DELETE_PAGE,
+    DELETE_ALL_PAGES,
+    ADD_STROKE,
+    ERASE_STROKE,
+    UPDATE_STROKE,
 } = boardControlSlice.actions
 
 const undoableTodos = undoable(boardControlSlice.reducer)

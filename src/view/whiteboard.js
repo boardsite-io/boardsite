@@ -12,7 +12,7 @@ import Viewbar from "../component/menu/viewbar"
 import AlertDialog from "../component/menu/session_dialog"
 // import { useParams } from 'react-router-dom';
 import { toolType, CANVAS_WIDTH } from "../constants"
-import { setType } from "../redux/slice/drawcontrol"
+import { SET_TYPE } from "../redux/slice/drawcontrol"
 import store from "../redux/store"
 
 // import * as api from '../util/api';
@@ -34,40 +34,40 @@ export default function Whiteboard() {
     function handleKeyPress(e) {
         switch (e.key) {
             case "p": // Pen
-                store.dispatch(setType(toolType.PEN))
+                store.dispatch(SET_TYPE(toolType.PEN))
                 break
             case "1": // Pen
-                store.dispatch(setType(toolType.PEN))
+                store.dispatch(SET_TYPE(toolType.PEN))
                 break
             case "e": // Eraser
-                store.dispatch(setType(toolType.ERASER))
+                store.dispatch(SET_TYPE(toolType.ERASER))
                 break
             case "2": // Eraser
-                store.dispatch(setType(toolType.ERASER))
+                store.dispatch(SET_TYPE(toolType.ERASER))
                 break
             case "d": // Drag
-                store.dispatch(setType(toolType.DRAG))
+                store.dispatch(SET_TYPE(toolType.DRAG))
                 break
             case "3": // Drag
-                store.dispatch(setType(toolType.DRAG))
+                store.dispatch(SET_TYPE(toolType.DRAG))
                 break
             case "l": // Line
-                store.dispatch(setType(toolType.LINE))
+                store.dispatch(SET_TYPE(toolType.LINE))
                 break
             case "4": // Line
-                store.dispatch(setType(toolType.LINE))
+                store.dispatch(SET_TYPE(toolType.LINE))
                 break
             case "t": // Triangle
-                store.dispatch(setType(toolType.TRIANGLE))
+                store.dispatch(SET_TYPE(toolType.TRIANGLE))
                 break
             case "5": // Triangle
-                store.dispatch(setType(toolType.TRIANGLE))
+                store.dispatch(SET_TYPE(toolType.TRIANGLE))
                 break
             case "c": // Circle
-                store.dispatch(setType(toolType.CIRCLE))
+                store.dispatch(SET_TYPE(toolType.CIRCLE))
                 break
             case "6": // Circle
-                store.dispatch(setType(toolType.CIRCLE))
+                store.dispatch(SET_TYPE(toolType.CIRCLE))
                 break
             case "z": // Undo (Ctrl + Z)
                 if (e.ctrlKey && !e.repeat) {

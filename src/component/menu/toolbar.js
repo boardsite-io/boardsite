@@ -11,7 +11,7 @@ import { useSelector } from "react-redux"
 import WidthPicker from "./widthpicker"
 import ColorPicker from "./colorpicker"
 import store from "../../redux/store"
-import { setType } from "../../redux/slice/drawcontrol"
+import { SET_TYPE } from "../../redux/slice/drawcontrol"
 import { toolType } from "../../constants"
 import UndoRedo from "./undoredo"
 
@@ -53,7 +53,7 @@ function Toolbar() {
                                 ? () => setDisplayExtraTools((prev) => !prev)
                                 : () => {
                                       setDisplayExtraTools(false)
-                                      store.dispatch(setType(toolType.PEN))
+                                      store.dispatch(SET_TYPE(toolType.PEN))
                                   }
                         }>
                         <BrushIcon
@@ -78,7 +78,7 @@ function Toolbar() {
                         }
                         variant="contained"
                         onClick={() => {
-                            store.dispatch(setType(toolType.ERASER))
+                            store.dispatch(SET_TYPE(toolType.ERASER))
                         }}>
                         <HighlightOffIcon
                             id={
@@ -98,7 +98,7 @@ function Toolbar() {
                         id={isDraggable ? "iconButtonActive" : "iconButton"}
                         variant="contained"
                         onClick={() => {
-                            store.dispatch(setType(toolType.DRAG))
+                            store.dispatch(SET_TYPE(toolType.DRAG))
                         }}>
                         <ControlCameraIcon
                             id={
@@ -130,7 +130,9 @@ function Toolbar() {
                                           setDisplayExtraTools(false)
                                       }
                                     : () => {
-                                          store.dispatch(setType(toolType.LINE))
+                                          store.dispatch(
+                                              SET_TYPE(toolType.LINE)
+                                          )
                                       }
                             }>
                             <RemoveIcon
@@ -161,7 +163,7 @@ function Toolbar() {
                                       }
                                     : () => {
                                           store.dispatch(
-                                              setType(toolType.TRIANGLE)
+                                              SET_TYPE(toolType.TRIANGLE)
                                           )
                                       }
                             }>
@@ -193,7 +195,7 @@ function Toolbar() {
                                       }
                                     : () => {
                                           store.dispatch(
-                                              setType(toolType.CIRCLE)
+                                              SET_TYPE(toolType.CIRCLE)
                                           )
                                       }
                             }>

@@ -7,10 +7,10 @@ import RemoveIcon from "@material-ui/icons/Remove"
 import Tooltip from "@material-ui/core/Tooltip"
 import MenuIcon from "@material-ui/icons/Menu"
 import {
-    actAddPage,
-    actClearPage,
-    actDeletePage,
-    actDeleteAll,
+    ADD_PAGE,
+    CLEAR_PAGE,
+    DELETE_PAGE,
+    DELETE_ALL_PAGES,
 } from "../../redux/slice/boardcontrol"
 import store from "../../redux/store"
 
@@ -18,7 +18,7 @@ import store from "../../redux/store"
 
 export function addPage(pageId) {
     store.dispatch(
-        actAddPage({
+        ADD_PAGE({
             pageId: nanoid(),
             pageIndex: store
                 .getState()
@@ -28,15 +28,15 @@ export function addPage(pageId) {
 }
 
 export function clearPage(pageId) {
-    store.dispatch(actClearPage(pageId))
+    store.dispatch(CLEAR_PAGE(pageId))
 }
 
 export function deletePage(pageId) {
-    store.dispatch(actDeletePage(pageId))
+    store.dispatch(DELETE_PAGE(pageId))
 }
 
 export function deleteAllPages() {
-    store.dispatch(actDeleteAll())
+    store.dispatch(DELETE_ALL_PAGES())
 }
 
 /**

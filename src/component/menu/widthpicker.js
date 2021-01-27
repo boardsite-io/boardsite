@@ -6,7 +6,11 @@ import Tooltip from "@material-ui/core/Tooltip"
 import CreateIcon from "@material-ui/icons/Create"
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown"
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp"
-import { setWidth } from "../../redux/slice/drawcontrol"
+import {
+    SET_WIDTH,
+    DECREMENT_WIDTH,
+    INCREMENT_WIDTH,
+} from "../../redux/slice/drawcontrol"
 import { WIDTH_MIN, WIDTH_MAX } from "../../constants"
 
 import store from "../../redux/store"
@@ -18,7 +22,7 @@ export default function WidthPicker() {
     )
 
     const handleSliderChange = (newWidth) => {
-        store.dispatch(setWidth(newWidth))
+        store.dispatch(SET_WIDTH(newWidth))
     }
 
     function handleWidthClick() {
@@ -27,6 +31,14 @@ export default function WidthPicker() {
 
     function handleWidthClose() {
         setDisplayWidthPicker(false)
+    }
+
+    function handleUpClick() {
+        store.dispatch(DECREMENT_WIDTH())
+    }
+
+    function handleDownClick() {
+        store.dispatch(INCREMENT_WIDTH())
     }
 
     // const handleInputChange = (event) => {
@@ -108,13 +120,7 @@ export default function WidthPicker() {
                                 <IconButton
                                     id="iconButton"
                                     variant="contained"
-                                    onClick={() => {
-                                        if (widthSelector !== WIDTH_MIN) {
-                                            store.dispatch(
-                                                setWidth(widthSelector - 1)
-                                            )
-                                        }
-                                    }}>
+                                    onClick={handleUpClick}>
                                     <KeyboardArrowUpIcon id="iconButtonInner" />
                                 </IconButton>
                             </Tooltip>
@@ -126,13 +132,7 @@ export default function WidthPicker() {
                                 <IconButton
                                     id="iconButton"
                                     variant="contained"
-                                    onClick={() => {
-                                        if (widthSelector !== WIDTH_MAX) {
-                                            store.dispatch(
-                                                setWidth(widthSelector + 1)
-                                            )
-                                        }
-                                    }}>
+                                    onClick={handleDownClick}>
                                     <KeyboardArrowDownIcon id="iconButtonInner" />
                                 </IconButton>
                             </Tooltip>
