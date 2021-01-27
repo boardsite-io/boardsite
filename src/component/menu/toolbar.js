@@ -1,8 +1,5 @@
 import React, { useState } from "react"
 import { IconButton } from "@material-ui/core"
-import PaletteIcon from "@material-ui/icons/Palette"
-import CreateIcon from "@material-ui/icons/Create"
-import { SketchPicker } from "react-color"
 import RemoveIcon from "@material-ui/icons/Remove"
 import ChangeHistoryIcon from "@material-ui/icons/ChangeHistory"
 import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked"
@@ -11,44 +8,19 @@ import HighlightOffIcon from "@material-ui/icons/HighlightOff"
 import Tooltip from "@material-ui/core/Tooltip"
 import ControlCameraIcon from "@material-ui/icons/ControlCamera"
 import { useSelector } from "react-redux"
-import WidthSlider from "./widthslider"
-
+import WidthPicker from "./widthpicker"
+import ColorPicker from "./colorpicker"
 import store from "../../redux/store"
-import { setColor, setType } from "../../redux/slice/drawcontrol"
+import { setType } from "../../redux/slice/drawcontrol"
 import { toolType } from "../../constants"
 import UndoRedo from "./undoredo"
 
 function Toolbar() {
-    const [displayColorPicker, setDisplayColorPicker] = useState(false)
-    const [displayWidthPicker, setDisplayWidthPicker] = useState(false)
     const [displayExtraTools, setDisplayExtraTools] = useState(false)
     const typeSelector = useSelector(
         (state) => state.drawControl.liveStroke.type
     )
-    const colorSelector = useSelector(
-        (state) => state.drawControl.liveStroke.style.color
-    )
     const isDraggable = useSelector((state) => state.drawControl.isDraggable)
-
-    function handlePaletteClick() {
-        setDisplayColorPicker(!displayColorPicker)
-    }
-
-    function handleWidthClick() {
-        setDisplayWidthPicker(!displayWidthPicker)
-    }
-
-    function handlePaletteClose() {
-        setDisplayColorPicker(false)
-    }
-
-    function handleWidthClose() {
-        setDisplayWidthPicker(false)
-    }
-
-    function handlePaletteChange(color) {
-        store.dispatch(setColor(color.hex))
-    }
 
     function debug() {
         // console.log("debug")
@@ -236,87 +208,8 @@ function Toolbar() {
                     </Tooltip>
                 </div>
             ) : null}
-            <div>
-                <Tooltip
-                    id="tooltip"
-                    title="Color"
-                    TransitionProps={{ timeout: 0 }}
-                    placement="bottom">
-                    <IconButton
-                        id="iconButton"
-                        variant="contained"
-                        onClick={handlePaletteClick}>
-                        <PaletteIcon id="iconButtonInner" />
-                    </IconButton>
-                </Tooltip>
-                {
-                    // Palette Popup
-                    displayColorPicker ? (
-                        <div className="popup">
-                            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-                            <div
-                                className="cover"
-                                onClick={handlePaletteClose}
-                                onKeyPress={() => {}}
-                            />
-                            <div className="colorpicker">
-                                <SketchPicker
-                                    width={250}
-                                    className="color"
-                                    presetColors={[
-                                        "#D0021B",
-                                        "#F5A623",
-                                        "#F8E71C",
-                                        "#8B572A",
-                                        "#7ED321",
-                                        "#417505",
-                                        "#BD10E0",
-                                        "#9013FE",
-                                        "#4A90E2",
-                                        "#50E3C2",
-                                        "#B8E986",
-                                        "#000000",
-                                        "#4A4A4A",
-                                        "#9B9B9B",
-                                        "#FFFFFF",
-                                    ]}
-                                    disableAlpha
-                                    color={colorSelector}
-                                    onChange={handlePaletteChange}
-                                />
-                            </div>
-                        </div>
-                    ) : null
-                }
-            </div>
-            <div>
-                <Tooltip
-                    id="tooltip"
-                    title="Width"
-                    TransitionProps={{ timeout: 0 }}
-                    placement="bottom">
-                    <IconButton
-                        id="iconButton"
-                        variant="contained"
-                        onClick={handleWidthClick}>
-                        <CreateIcon id="iconButtonInner" />
-                    </IconButton>
-                </Tooltip>
-                {
-                    // Width Slider Popup
-                    displayWidthPicker ? (
-                        <div className="popup">
-                            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-                            <div
-                                className="cover"
-                                onClick={handleWidthClose}
-                                onKeyPress={() => {}}
-                            />
-                            <WidthSlider />
-                        </div>
-                    ) : null
-                }
-            </div>
+            <ColorPicker />
+            <WidthPicker />
         </div>
     )
 }

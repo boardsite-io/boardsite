@@ -81,7 +81,6 @@
     width: 40px;
     background-image: var(--barBackgroundImage);
     border-radius: 4px;
-    /* border: 1px solid black; */
     box-shadow: var(--boxShadow);
 }
 
