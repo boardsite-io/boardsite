@@ -49,17 +49,17 @@ export default function WidthPicker() {
         <div {...props}>{state.valueNow}</div>
     )
 
-    const Track = (props, state) => {
-        const { className, key, style } = props
-        return (
-            <div
-                className={className}
-                key={key}
-                style={style}
-                index={state.index}
-            />
-        )
-    }
+    // const Track = (props, state) => {
+    //     const { className, key, style } = props
+    //     return (
+    //         <div
+    //             className={className}
+    //             key={key}
+    //             style={style}
+    //             index={state.index}
+    //         />
+    //     )
+    // }
 
     return (
         <div>
@@ -92,16 +92,12 @@ export default function WidthPicker() {
                                 // trackClassName="width-slider-track"
                                 invert={false}
                                 orientation="vertical"
-                                value={
-                                    typeof widthSelector === "number"
-                                        ? widthSelector
-                                        : 0
-                                }
+                                value={widthSelector}
                                 onAfterChange={handleSliderChange}
                                 // onChange={handleSliderChange}
                                 min={WIDTH_MIN}
                                 max={WIDTH_MAX}
-                                renderTrack={Track}
+                                // renderTrack={Track}
                                 renderThumb={Thumb}
                             />
                             <Tooltip
