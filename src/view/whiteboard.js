@@ -1,17 +1,16 @@
 import React, { useState, useEffect, memo } from "react"
 import { ActionCreators as UndoActionCreators } from "redux-undo"
 import { useSelector } from "react-redux"
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch"
 import FPSStats from "react-fps-stats"
 
 import Page from "../component/board/page"
 import { addPage } from "../component/menu/pagemenu"
 import Toolbar from "../component/menu/toolbar"
 import Homebar from "../component/menu/homebar"
-import Viewbar from "../component/menu/viewbar"
+// import Viewbar from "../component/menu/viewbar"
 import AlertDialog from "../component/menu/session_dialog"
 // import { useParams } from 'react-router-dom';
-import { toolType, CANVAS_WIDTH } from "../constants"
+import { toolType } from "../constants"
 import { SET_TYPE } from "../redux/slice/drawcontrol"
 import store from "../redux/store"
 
@@ -137,25 +136,25 @@ export default function Whiteboard() {
         // setSidInput(e.target.value)
     }
 
-    let scaleCopy
-    let positionXCopy
-    let positionYCopy
-    let setTransformCopy
-    const defaultPositionX = (window.innerWidth - (CANVAS_WIDTH + 45)) / 2
-    const defaultPositionY = 60
-    const defaultScale = 1
+    // let scaleCopy
+    // let positionXCopy
+    // let positionYCopy
+    // let setTransformCopy
+    // const defaultPositionX = (window.innerWidth - (CANVAS_WIDTH + 45)) / 2
+    // const defaultPositionY = 60
+    // const defaultScale = 1
 
-    function scrollUp() {
-        setTransformCopy(positionXCopy, positionYCopy + 200, scaleCopy)
-    }
+    // function scrollUp() {
+    //     setTransformCopy(positionXCopy, positionYCopy + 200, scaleCopy)
+    // }
 
-    function scrollDown() {
-        setTransformCopy(positionXCopy, positionYCopy - 200, scaleCopy)
-    }
+    // function scrollDown() {
+    //     setTransformCopy(positionXCopy, positionYCopy - 200, scaleCopy)
+    // }
 
-    function stretchToWindow() {
-        setTransformCopy(0, 0, window.innerWidth / (CANVAS_WIDTH + 45))
-    }
+    // function stretchToWindow() {
+    //     setTransformCopy(0, 0, window.innerWidth / (CANVAS_WIDTH + 45))
+    // }
 
     return (
         <div>
@@ -171,127 +170,17 @@ export default function Whiteboard() {
             />
             <Toolbar />
             <Homebar setOpenSessionDialog={setOpenSessionDialog} />
-            <TransformWrapper
-                defaultPositionX={defaultPositionX}
-                defaultPositionY={defaultPositionY}
-                defaultScale={defaultScale}
-                options={{
-                    disabled: false,
-                    transformEnabled: true,
-                    minPositionX: null,
-                    maxPositionX: null,
-                    minPositionY: null,
-                    maxPositionY: null,
-                    minScale: 0.5,
-                    maxScale: 2,
-                    limitToBounds: false,
-                    limitToWrapper: false,
-                    centerContent: true,
-                }}
-                wheel={{
-                    disabled: false,
-                    step: 200,
-                    wheelEnabled: true,
-                    touchPadEnabled: true,
-                    limitsOnWheel: true,
-                }}
-                pan={{
-                    disabled: true, // drawMode,
-                    disableOnTarget: [],
-                    lockAxisX: false,
-                    lockAxisY: false,
-                    velocity: false,
-                    velocityEqualToMove: false,
-                    velocitySensitivity: 1,
-                    velocityMinSpeed: 1.2,
-                    velocityBaseTime: 1800,
-                    velocityAnimationType: "easeOut",
-                    padding: true,
-                    paddingSize: 40,
-                    animationTime: 200,
-                    animationType: "easeOut",
-                }}
-                pinch={{
-                    disabled: false,
-                }}
-                zoomIn={{
-                    disabled: false,
-                    step: 70,
-                    animation: true,
-                    animationTime: 200,
-                    animationType: "easeOut",
-                }}
-                zoomOut={{
-                    disabled: false,
-                    step: 70,
-                    animation: true,
-                    animationTime: 200,
-                    animationType: "easeOut",
-                }}
-                doubleClick={{
-                    disabled: false,
-                    step: 70,
-                    animation: true,
-                    animationTime: 200,
-                    animationType: "easeOut",
-                    mode: "zoomIn",
-                }}
-                reset={{
-                    disabled: false,
-                    animation: true,
-                    animationTime: 200,
-                    animationType: "easeOut",
-                }}
-                scalePadding={{
-                    disabled: true,
-                }}
-                // onWheelStart={}
-                // onWheel={}
-                // onWheelStop={}
-                // onPanningStart={}
-                // onPanning={}
-                // onPanningStop={}
-                // onPinchingStart={}
-                // onPinching={}
-                // onPinchingStop={}
-                // onZoomChange={}
-                // enablePadding={}
-                // enablePanPadding={}
-            >
-                {({
-                    pan,
-                    zoomIn,
-                    zoomOut,
-                    resetTransform,
-                    positionX,
-                    positionY,
-                    scale,
-                    setTransform,
-                }) => {
-                    // refresh values
-                    scaleCopy = scale
-                    positionXCopy = positionX
-                    positionYCopy = positionY
-                    setTransformCopy = setTransform
 
-                    return (
-                        <>
-                            <MemoViewbar
-                                pan={pan}
-                                zoomIn={zoomIn}
-                                zoomOut={zoomOut}
-                                resetTransform={resetTransform}
-                                up={scrollUp}
-                                down={scrollDown}
-                                stretchToWindow={stretchToWindow}
-                            />
-                            <TransformComponent>
-                                <MemoPages />
-                            </TransformComponent>
-                        </>
-                    )
-                }}
-            </TransformWrapper>
+            {/* <MemoViewbar
+                pan={pan}
+                zoomIn={zoomIn}
+                zoomOut={zoomOut}
+                resetTransform={resetTransform}
+                up={scrollUp}
+                down={scrollDown}
+                stretchToWindow={stretchToWindow}
+            /> */}
+            <MemoPages />
         </div>
     )
 }
@@ -309,4 +198,4 @@ const Pages = () => {
     )
 }
 const MemoPages = memo(Pages) // memo to prevent redundant rerender on zooming / panning
-const MemoViewbar = memo(Viewbar)
+// const MemoViewbar = memo(Viewbar)
