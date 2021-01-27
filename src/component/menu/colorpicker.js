@@ -4,7 +4,7 @@ import { SketchPicker } from "react-color"
 import { useSelector } from "react-redux"
 import { IconButton } from "@material-ui/core"
 import Tooltip from "@material-ui/core/Tooltip"
-import { setColor } from "../../redux/slice/drawcontrol"
+import { SET_COLOR } from "../../redux/slice/drawcontrol"
 import store from "../../redux/store"
 
 export default function ColorPicker() {
@@ -21,7 +21,7 @@ export default function ColorPicker() {
     }
 
     function handlePaletteChange(color) {
-        store.dispatch(setColor(color.hex))
+        store.dispatch(SET_COLOR(color.hex))
     }
 
     const [displayColorPicker, setDisplayColorPicker] = useState(false)

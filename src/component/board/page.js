@@ -13,7 +13,7 @@ import {
     registerLiveStroke,
 } from "./stroke"
 import { MIN_SAMPLE_COUNT, toolType } from "../../constants"
-import { setIsMouseDown } from "../../redux/slice/drawcontrol"
+import { SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
 
 export default function Page({ pageId }) {
     // console.log("Page Redraw");
@@ -32,11 +32,11 @@ export default function Page({ pageId }) {
         }
 
         if (tool === toolType.ERASER) {
-            store.dispatch(setIsMouseDown(true))
+            store.dispatch(SET_ISMOUSEDOWN(true))
             return
         }
 
-        store.dispatch(setIsMouseDown(true))
+        store.dispatch(SET_ISMOUSEDOWN(true))
         sampleCount = 1
 
         const pos = e.target.getStage().getPointerPosition()
@@ -52,7 +52,7 @@ export default function Page({ pageId }) {
             tool === toolType.DRAG
         ) {
             // cancel stroke when right / left+right mouse is clicked
-            store.dispatch(setIsMouseDown(false))
+            store.dispatch(SET_ISMOUSEDOWN(false))
             return
         }
         if (tool === toolType.ERASER) {
@@ -77,10 +77,10 @@ export default function Page({ pageId }) {
             return
         } // Ignore reentering
         if (tool === toolType.ERASER) {
-            store.dispatch(setIsMouseDown(false))
+            store.dispatch(SET_ISMOUSEDOWN(false))
             return
         }
-        store.dispatch(setIsMouseDown(false))
+        store.dispatch(SET_ISMOUSEDOWN(false))
 
         // update last position
         const pos = e.target.getStage().getPointerPosition()
