@@ -28,7 +28,7 @@ export function StrokeShape({ stroke, isDraggable }) {
                 x: e.target.attrs.x,
                 y: e.target.attrs.y,
                 id: stroke.id,
-                pageId: stroke.pageId,
+                // pageId: stroke.pageId,
             })
         )
     }

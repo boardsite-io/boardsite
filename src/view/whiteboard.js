@@ -205,7 +205,7 @@ export default function Whiteboard() {
             tool === toolType.DRAG
         ) {
             // cancel stroke when right / left+right mouse is clicked
-            store.dispatch(SET_ISMOUSEDOWN(false))
+            // store.dispatch(SET_ISMOUSEDOWN(false))
             return
         }
         if (tool === toolType.ERASER) {
@@ -292,6 +292,8 @@ export default function Whiteboard() {
                         className="stage"
                         width={CANVAS_WIDTH}
                         height={CANVAS_HEIGHT}
+                        // width={window.innerWidth}
+                        // height={CANVAS_HEIGHT}
                         onMouseDown={onMouseDown}
                         onMousemove={onMouseMove}
                         onMouseUp={onMouseUp}

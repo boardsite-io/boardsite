@@ -60,14 +60,17 @@ const boardControlSlice = createSlice({
         // Erase stroke from collection
         ERASE_STROKE(state, action) {
             const stroke = action.payload
-            const { pageId, id } = stroke
-            delete state.pageCollection[pageId].strokes[id]
+            // const { pageId, id } = stroke
+            // delete state.pageCollection[pageId].strokes[id]
+            delete state.strokeCollection[stroke.id]
         },
 
         // Update stroke position after dragging
         UPDATE_STROKE(state, action) {
-            const { x, y, id, pageId } = action.payload
-            const stroke = state.pageCollection[pageId].strokes[id]
+            // const { x, y, id, pageId } = action.payload
+            // const stroke = state.pageCollection[pageId].strokes[id]
+            const { x, y, id } = action.payload
+            const stroke = state.strokeCollection[id]
             stroke.x = x
             stroke.y = y
         },

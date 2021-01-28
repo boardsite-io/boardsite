@@ -39,14 +39,13 @@
     width: 100%; */
     /* top: 0px;
     left: 0px; */
-    /* background-color: var(--canvasBackgroundColor);
-    background-size: var(--canvasBackgroundSize);
-    background-image: var(--canvasBackgroundImage);
+    background-color: var(--canvasBackgroundColor);
+    /* background-size: var(--canvasBackgroundSize);
+    background-image: var(--canvasBackgroundImage); */
     background-position: var(--canvasBackgroundPosition);
-    height: var(--canvasHeight);
-    width: var(--canvasWidth);
-    border: var(--canvasBorder); */
-    background-color: azure;
+    /* height: var(--canvasHeight); */
+    /* width: var(--canvasWidth); */
+    border: var(--canvasBorder);
     touch-action: none;
     -webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */
