@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect } from "react"
 import { ActionCreators as UndoActionCreators } from "redux-undo"
 import { useSelector } from "react-redux"
 import FPSStats from "react-fps-stats"
@@ -35,7 +35,6 @@ export default function Whiteboard() {
     // console.log("Whiteboard Redraw");
     const [openSessionDialog, setOpenSessionDialog] = useState(false)
     const [sidInput, setSidInput] = useState("")
-    const stageRef = useRef(null)
 
     // const pageRank = useSelector(state => state.boardControl.present.pageRank)
     // Connect to session if valid session link
@@ -150,25 +149,6 @@ export default function Whiteboard() {
         // setSidInput(e.target.value)
     }
 
-    // let scaleCopy
-    // let positionXCopy
-    // let positionYCopy
-    // let setTransformCopy
-    // const defaultPositionX = (window.innerWidth - (CANVAS_WIDTH + 45)) / 2
-    // const defaultPositionY = 60
-    // const defaultScale = 1
-
-    // function scrollUp() {
-    //     setTransformCopy(positionXCopy, positionYCopy + 200, scaleCopy)
-    // }
-
-    // function scrollDown() {
-    //     setTransformCopy(positionXCopy, positionYCopy - 200, scaleCopy)
-    // }
-
-    // function stretchToWindow() {
-    //     setTransformCopy(0, 0, window.innerWidth / (CANVAS_WIDTH + 45))
-    // }
     const pageRank = useSelector((state) => state.boardControl.present.pageRank)
     const liveStrokePts = useSelector(
         (state) => state.drawControl.liveStroke.points
@@ -182,8 +162,6 @@ export default function Whiteboard() {
     const isActive = useSelector((state) => state.drawControl.isActive)
     const tool = useSelector((state) => state.drawControl.liveStroke.type)
     let sampleCount = 0
-    let dragX = 0
-    let dragY = 0
 
     function getScaledPointerPosition(e) {
         const stage = e.target.getStage()
@@ -260,10 +238,31 @@ export default function Whiteboard() {
         registerLiveStroke()
     }
 
+    const zoomWheelStep = 1.1
+    function onWheel(e) {
+        e.evt.preventDefault()
+        const stage = e.target.getStage()
+        const oldScale = stage.scaleX()
+        const pointer = stage.getPointerPosition()
+        const mousePointTo = {
+            x: (pointer.x - stage.x()) / oldScale,
+            y: (pointer.y - stage.y()) / oldScale,
+        }
+        const newScale =
+            e.evt.deltaY > 0
+                ? oldScale * zoomWheelStep
+                : oldScale / zoomWheelStep
+        stage.scale({ x: newScale, y: newScale })
+        const newPos = {
+            x: pointer.x - mousePointTo.x * newScale,
+            y: pointer.y - mousePointTo.y * newScale,
+        }
+        stage.position(newPos)
+        stage.batchDraw()
+    }
+
     function onDragEnd(e) {
-        dragX = e.currentTarget.attrs.x
-        dragY = e.currentTarget.attrs.y
-        console.log(e, dragX, dragY, stageRef.current)
+        console.log(e)
     }
 
     return (
@@ -284,7 +283,6 @@ export default function Whiteboard() {
             <div className="pagecollectionouter">
                 <div className="pagecollectioninner">
                     <Stage
-                        ref={stageRef}
                         draggable={!isActive}
                         className="stage"
                         width={CANVAS_WIDTH}
@@ -297,7 +295,8 @@ export default function Whiteboard() {
                         onTouchStart={onMouseDown}
                         onTouchMove={onMouseMove}
                         onTouchEnd={onMouseUp}
-                        onDragEnd={onDragEnd}>
+                        onDragEnd={onDragEnd}
+                        onWheel={onWheel}>
                         <Layer>
                             {pageRank.map((pageId) => (
                                 <Page
