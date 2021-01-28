@@ -1,4 +1,4 @@
-import React from "react"
+import React, { memo } from "react"
 import { Line, Ellipse } from "react-konva"
 import store from "../../redux/store"
 import {
@@ -17,7 +17,8 @@ import { toolType } from "../../constants"
  * Super component implementing all stroke types and their visualization in the canvas
  * @param {{stroke: {}}} props
  */
-export function StrokeShape({ stroke, isDraggable }) {
+export const StrokeShape = memo(StrokeShapeNonMemo)
+function StrokeShapeNonMemo({ stroke, isDraggable }) {
     function onDragStart() {
         // succ
     }
