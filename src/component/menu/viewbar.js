@@ -1,33 +1,24 @@
 import React from "react"
-import ZoomInIcon from "@material-ui/icons/ZoomIn"
-import ZoomOutIcon from "@material-ui/icons/ZoomOut"
-import ZoomOutMapIcon from "@material-ui/icons/ZoomOutMap"
+// import ZoomInIcon from "@material-ui/icons/ZoomIn"
+// import ZoomOutIcon from "@material-ui/icons/ZoomOut"
+// import ZoomOutMapIcon from "@material-ui/icons/ZoomOutMap"
 import { IconButton } from "@material-ui/core"
-import ExpandLessIcon from "@material-ui/icons/ExpandLess"
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
+// import ExpandLessIcon from "@material-ui/icons/ExpandLess"
+// import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import Tooltip from "@material-ui/core/Tooltip"
-import FullscreenIcon from "@material-ui/icons/Fullscreen"
+// import FullscreenIcon from "@material-ui/icons/Fullscreen"
 import OpenWithIcon from "@material-ui/icons/OpenWith"
 import { useSelector } from "react-redux"
 
 import store from "../../redux/store"
-import { SET_ISACTIVE } from "../../redux/slice/drawcontrol"
+import { TOGGLE_DRAWMODE } from "../../redux/slice/drawcontrol"
 
-export default function Viewbar({
-    pan,
-    zoomIn,
-    zoomOut,
-    stretchToWindow,
-    up,
-    down,
-    resetTransform,
-}) {
+export default function Viewbar() {
     // console.log("Viewbar Redraw");
     const isActive = useSelector((state) => state.drawControl.isActive)
 
     function toggleDrawMode() {
-        pan.disabled = !pan.disabled
-        store.dispatch(SET_ISACTIVE(pan.disabled))
+        store.dispatch(TOGGLE_DRAWMODE())
     }
 
     return (
@@ -53,7 +44,7 @@ export default function Viewbar({
                     </IconButton>
                 )}
             </Tooltip>
-            <Tooltip
+            {/* <Tooltip
                 id="tooltip"
                 title="zoom in"
                 TransitionProps={{ timeout: 0 }}
@@ -61,7 +52,7 @@ export default function Viewbar({
                 <IconButton
                     id="iconButton"
                     variant="contained"
-                    onClick={zoomIn}>
+                    onClick={}>
                     <ZoomInIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
@@ -118,7 +109,7 @@ export default function Viewbar({
                     onClick={resetTransform}>
                     <FullscreenIcon id="iconButtonInner" />
                 </IconButton>
-            </Tooltip>
+            </Tooltip> */}
         </div>
     )
 }

@@ -23,7 +23,7 @@ const drawControlSlice = createSlice({
                 width: DEFAULT_WIDTH * CANVAS_PIXEL_RATIO,
             },
             pageId: "",
-            points: {}, // {"pageid": [x1,y1,x2,y2,...]}
+            points: [], // {"pageid": [x1,y1,x2,y2,...]}
             x: 0, // be consistent with stroke description
             y: 0,
         },
@@ -56,6 +56,9 @@ const drawControlSlice = createSlice({
             const isActive = action.payload
             state.isActive = isActive
         },
+        TOGGLE_DRAWMODE: (state) => {
+            state.isActive = !state.isActive
+        },
         SET_ISMOUSEDOWN: (state, action) => {
             const isMouseDown = action.payload
             state.isMouseDown = isMouseDown
@@ -63,20 +66,16 @@ const drawControlSlice = createSlice({
         START_LIVESTROKE: (state, action) => {
             const { pageId, points } = action.payload
             state.liveStroke.pageId = pageId
-            state.liveStroke.points[pageId] = points
+            state.liveStroke.points = points
         },
         // Update the current live stroke position
         UPDATE_LIVESTROKE: (state, action) => {
             const points = action.payload
-            const { pageId } = state.liveStroke
-            state.liveStroke.points[pageId] = [
-                ...state.liveStroke.points[pageId],
-                ...points,
-            ]
+            state.liveStroke.points = [...state.liveStroke.points, ...points]
         },
         END_LIVESTROKE: (state) => {
             state.liveStroke.pageId = ""
-            state.liveStroke.points = {}
+            state.liveStroke.points = []
         },
     },
 })
@@ -88,6 +87,7 @@ export const {
     DECREMENT_WIDTH,
     SET_TYPE,
     SET_ISACTIVE,
+    TOGGLE_DRAWMODE,
     SET_ISMOUSEDOWN,
     START_LIVESTROKE,
     UPDATE_LIVESTROKE,

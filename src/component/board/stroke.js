@@ -145,10 +145,9 @@ export function StrokeShape({ stroke, isDraggable }) {
  * Start the current stroke when mouse is pressed down
  * @param {*} position
  */
-export function startLiveStroke(position, pageId) {
+export function startLiveStroke(position) {
     store.dispatch(
         START_LIVESTROKE({
-            pageId,
             points: [position.x, position.y],
         })
     )

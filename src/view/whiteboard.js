@@ -1,18 +1,31 @@
-import React, { useState, useEffect, memo } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { ActionCreators as UndoActionCreators } from "redux-undo"
 import { useSelector } from "react-redux"
 import FPSStats from "react-fps-stats"
+import { Stage, Layer } from "react-konva"
 
+import LiveLayer from "../component/board/livelayer"
 import Page from "../component/board/page"
 import { addPage } from "../component/menu/pagemenu"
 import Toolbar from "../component/menu/toolbar"
 import Homebar from "../component/menu/homebar"
-// import Viewbar from "../component/menu/viewbar"
+import Viewbar from "../component/menu/viewbar"
 import AlertDialog from "../component/menu/session_dialog"
 // import { useParams } from 'react-router-dom';
-import { toolType } from "../constants"
-import { SET_TYPE } from "../redux/slice/drawcontrol"
+import {
+    toolType,
+    MIN_SAMPLE_COUNT,
+    CANVAS_WIDTH,
+    CANVAS_HEIGHT,
+} from "../constants"
+import { SET_TYPE, SET_ISMOUSEDOWN } from "../redux/slice/drawcontrol"
 import store from "../redux/store"
+
+import {
+    startLiveStroke,
+    moveLiveStroke,
+    registerLiveStroke,
+} from "../component/board/stroke"
 
 // import * as api from '../util/api';
 // import * as proc from '../util/processing.js';
@@ -22,6 +35,7 @@ export default function Whiteboard() {
     // console.log("Whiteboard Redraw");
     const [openSessionDialog, setOpenSessionDialog] = useState(false)
     const [sidInput, setSidInput] = useState("")
+    const stageRef = useRef(null)
 
     // const pageRank = useSelector(state => state.boardControl.present.pageRank)
     // Connect to session if valid session link
@@ -155,6 +169,102 @@ export default function Whiteboard() {
     // function stretchToWindow() {
     //     setTransformCopy(0, 0, window.innerWidth / (CANVAS_WIDTH + 45))
     // }
+    const pageRank = useSelector((state) => state.boardControl.present.pageRank)
+    const liveStrokePts = useSelector(
+        (state) => state.drawControl.liveStroke.points
+    )
+    const pageCollection = useSelector(
+        (state) => state.boardControl.present.pageCollection
+    )
+    const isDraggable = useSelector((state) => state.drawControl.isDraggable)
+
+    const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
+    const isActive = useSelector((state) => state.drawControl.isActive)
+    const tool = useSelector((state) => state.drawControl.liveStroke.type)
+    let sampleCount = 0
+    let dragX = 0
+    let dragY = 0
+
+    function getScaledPointerPosition(e) {
+        const stage = e.target.getStage()
+        const position = stage.getPointerPosition()
+        const transform = stage.getAbsoluteTransform().copy().invert()
+        return transform.point(position)
+    }
+
+    function onMouseDown(e) {
+        if (
+            e.evt.buttons === 2 || // ignore right click eraser, i.e. dont start stroke
+            !isActive ||
+            tool === toolType.DRAG
+        ) {
+            return
+        }
+
+        if (tool === toolType.ERASER) {
+            store.dispatch(SET_ISMOUSEDOWN(true))
+            return
+        }
+
+        store.dispatch(SET_ISMOUSEDOWN(true))
+        sampleCount = 1
+
+        const pos = getScaledPointerPosition(e)
+        startLiveStroke(pos)
+    }
+
+    function onMouseMove(e) {
+        if (
+            !isMouseDown ||
+            !isActive ||
+            e.evt.buttons === 2 || // right mouse
+            e.evt.buttons === 3 || // left+right mouse
+            tool === toolType.DRAG
+        ) {
+            // cancel stroke when right / left+right mouse is clicked
+            store.dispatch(SET_ISMOUSEDOWN(false))
+            return
+        }
+        if (tool === toolType.ERASER) {
+            return
+        }
+
+        sampleCount += 1
+        if (tool !== toolType.PEN) {
+            // for all tools except pen we want to redraw on every update
+            const pos = getScaledPointerPosition(e)
+            moveLiveStroke(pos)
+        } else if (sampleCount > MIN_SAMPLE_COUNT) {
+            // for pen tool we skip some samples to improve performance
+            const pos = getScaledPointerPosition(e)
+            moveLiveStroke(pos)
+            sampleCount = 0
+        }
+    }
+
+    function onMouseUp(e) {
+        if (!isMouseDown || !isActive || toolType === toolType.DRAG) {
+            return
+        } // Ignore reentering
+        if (tool === toolType.ERASER) {
+            store.dispatch(SET_ISMOUSEDOWN(false))
+            return
+        }
+        store.dispatch(SET_ISMOUSEDOWN(false))
+
+        // update last position
+        const pos = getScaledPointerPosition(e)
+        moveLiveStroke(pos)
+
+        // register finished stroke
+        registerLiveStroke()
+    }
+
+    function onDragEnd(e) {
+        dragX = e.currentTarget.attrs.x
+        dragY = e.currentTarget.attrs.y
+        console.log(e, dragX, dragY, stageRef.current)
+    }
 
     return (
         <div>
@@ -170,32 +280,39 @@ export default function Whiteboard() {
             />
             <Toolbar />
             <Homebar setOpenSessionDialog={setOpenSessionDialog} />
-
-            {/* <MemoViewbar
-                pan={pan}
-                zoomIn={zoomIn}
-                zoomOut={zoomOut}
-                resetTransform={resetTransform}
-                up={scrollUp}
-                down={scrollDown}
-                stretchToWindow={stretchToWindow}
-            /> */}
-            <MemoPages />
-        </div>
-    )
-}
-
-const Pages = () => {
-    const pageRank = useSelector((state) => state.boardControl.present.pageRank)
-    return (
-        <div className="pagecollectionouter">
-            <div className="pagecollectioninner">
-                {pageRank.map((pageId) => (
-                    <Page className="page" pageId={pageId} key={pageId} />
-                ))}
+            <Viewbar />
+            <div className="pagecollectionouter">
+                <div className="pagecollectioninner">
+                    <Stage
+                        ref={stageRef}
+                        draggable={!isActive}
+                        className="stage"
+                        width={CANVAS_WIDTH}
+                        height={CANVAS_HEIGHT}
+                        onMouseDown={onMouseDown}
+                        onMousemove={onMouseMove}
+                        onMouseUp={onMouseUp}
+                        onMouseLeave={onMouseUp}
+                        onContextMenu={(e) => e.evt.preventDefault()}
+                        onTouchStart={onMouseDown}
+                        onTouchMove={onMouseMove}
+                        onTouchEnd={onMouseUp}
+                        onDragEnd={onDragEnd}>
+                        <Layer>
+                            {pageRank.map((pageId) => (
+                                <Page
+                                    className="page"
+                                    pageId={pageId}
+                                    key={pageId}
+                                    pageCollection={pageCollection}
+                                    isDraggable={isDraggable}
+                                />
+                            ))}
+                        </Layer>
+                        <LiveLayer sel={liveStrokePts} />
+                    </Stage>
+                </div>
             </div>
         </div>
     )
 }
-const MemoPages = memo(Pages) // memo to prevent redundant rerender on zooming / panning
-// const MemoViewbar = memo(Viewbar)
