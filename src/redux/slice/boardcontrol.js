@@ -6,6 +6,7 @@ const boardControlSlice = createSlice({
     initialState: {
         pageRank: [], // ["id1", "id2", ...]
         pageCollection: {}, // {id1: canvasRef1, id2: canvasRef2, ...}
+        strokeCollection: {}, // FOR NOW WE CAN USE 1 COLLECTION
         sessionID: "",
         websocket: null,
     },
@@ -51,8 +52,9 @@ const boardControlSlice = createSlice({
         // Add stroke to collection
         ADD_STROKE: (state, action) => {
             const stroke = action.payload
-            const { pageId, id } = stroke
-            state.pageCollection[pageId].strokes[id] = stroke
+            const { id } = stroke
+            // state.pageCollection.strokes[id] = stroke
+            state.strokeCollection[id] = stroke
         },
 
         // Erase stroke from collection

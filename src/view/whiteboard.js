@@ -5,7 +5,8 @@ import FPSStats from "react-fps-stats"
 import { Stage, Layer } from "react-konva"
 
 import LiveLayer from "../component/board/livelayer"
-import Page from "../component/board/page"
+
+// import Page from "../component/board/page"
 import { addPage } from "../component/menu/pagemenu"
 import Toolbar from "../component/menu/toolbar"
 import Homebar from "../component/menu/homebar"
@@ -25,6 +26,7 @@ import {
     startLiveStroke,
     moveLiveStroke,
     registerLiveStroke,
+    StrokeShape,
 } from "../component/board/stroke"
 
 // import * as api from '../util/api';
@@ -149,12 +151,15 @@ export default function Whiteboard() {
         // setSidInput(e.target.value)
     }
 
-    const pageRank = useSelector((state) => state.boardControl.present.pageRank)
+    // const pageRank = useSelector((state) => state.boardControl.present.pageRank)
     const liveStrokePts = useSelector(
         (state) => state.drawControl.liveStroke.points
     )
-    const pageCollection = useSelector(
-        (state) => state.boardControl.present.pageCollection
+    // const pageCollection = useSelector(
+    //     (state) => state.boardControl.present.pageCollection
+    // )
+    const strokeCollection = useSelector(
+        (state) => state.boardControl.present.strokeCollection
     )
     const isDraggable = useSelector((state) => state.drawControl.isDraggable)
 
@@ -238,7 +243,7 @@ export default function Whiteboard() {
         registerLiveStroke()
     }
 
-    const zoomWheelStep = 1.1
+    const zoomWheelStep = 0.9
     function onWheel(e) {
         e.evt.preventDefault()
         const stage = e.target.getStage()
@@ -298,12 +303,10 @@ export default function Whiteboard() {
                         onDragEnd={onDragEnd}
                         onWheel={onWheel}>
                         <Layer>
-                            {pageRank.map((pageId) => (
-                                <Page
-                                    className="page"
-                                    pageId={pageId}
-                                    key={pageId}
-                                    pageCollection={pageCollection}
+                            {Object.keys(strokeCollection).map((strokeId) => (
+                                <StrokeShape
+                                    key={strokeId}
+                                    stroke={strokeCollection[strokeId]}
                                     isDraggable={isDraggable}
                                 />
                             ))}

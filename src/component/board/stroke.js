@@ -146,11 +146,7 @@ export function StrokeShape({ stroke, isDraggable }) {
  * @param {*} position
  */
 export function startLiveStroke(position) {
-    store.dispatch(
-        START_LIVESTROKE({
-            points: [position.x, position.y],
-        })
-    )
+    store.dispatch(START_LIVESTROKE([position.x, position.y]))
 }
 
 /**
@@ -163,12 +159,11 @@ export function moveLiveStroke(position) {
 
 /**
  * Generate API serialized stroke object, draw & save it to redux store
- * @param {*} pageId
  */
 export async function registerLiveStroke() {
     let { liveStroke } = store.getState().drawControl
     // empty livestrokes e.g. rightmouse eraser
-    if (liveStroke.points[liveStroke.pageId] === undefined) {
+    if (liveStroke.points === undefined) {
         return
     }
     if (liveStroke.type === toolType.ERASER) {
@@ -182,7 +177,6 @@ export async function registerLiveStroke() {
                 .toString(36)
                 .replace(/[^a-z]+/g, "")
                 .substr(0, 4) + Date.now().toString(36).substr(4),
-        points: liveStroke.points[liveStroke.pageId],
     }
 
     // add stroke to collection
