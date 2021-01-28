@@ -12,6 +12,7 @@ import store from "../../redux/store"
 import { toolType, MIN_SAMPLE_COUNT } from "../../constants"
 
 export default function BoardStage() {
+    console.log("boardstage redraw")
     const pageRank = useSelector((state) => state.boardControl.present.pageRank)
     const isDraggable = useSelector((state) => state.drawControl.isDraggable)
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
