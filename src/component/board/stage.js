@@ -124,49 +124,47 @@ export default function BoardStage() {
     // }
 
     return (
-        <div className="pagecollectionouter">
-            <div className="pagecollectioninner">
-                <ReactReduxContext.Consumer>
-                    {(value) => (
-                        <Stage
-                            draggable={!isActive}
-                            className="stage"
-                            width={window.innerWidth}
-                            height={window.innerHeight}
-                            onMouseDown={onMouseDown}
-                            onMousemove={onMouseMove}
-                            onMouseUp={onMouseUp}
-                            onMouseLeave={onMouseUp}
-                            onContextMenu={(e) => e.evt.preventDefault()}
-                            onTouchStart={onMouseDown}
-                            onTouchMove={onMouseMove}
-                            onTouchEnd={onMouseUp}
-                            // onDragEnd={onDragEnd}
-                            onWheel={onWheel}>
-                            <ReactReduxContext.Provider value={value}>
-                                <Layer>
-                                    {pageRank.map((pageId) => (
-                                        <PageBackground
-                                            key={pageId}
-                                            pageId={pageId}
-                                        />
-                                    ))}
-                                </Layer>
-                                <Layer>
-                                    {pageRank.map((pageId) => (
-                                        <Page
-                                            key={pageId}
-                                            pageId={pageId}
-                                            isDraggable={isDraggable}
-                                        />
-                                    ))}
-                                </Layer>
-                                <LiveLayer />
-                            </ReactReduxContext.Provider>
-                        </Stage>
-                    )}
-                </ReactReduxContext.Consumer>
-            </div>
+        <div className="wrap">
+            <ReactReduxContext.Consumer>
+                {(value) => (
+                    <Stage
+                        draggable={!isActive}
+                        className="stage"
+                        width={window.innerWidth}
+                        height={window.innerHeight}
+                        onMouseDown={onMouseDown}
+                        onMousemove={onMouseMove}
+                        onMouseUp={onMouseUp}
+                        onMouseLeave={onMouseUp}
+                        onContextMenu={(e) => e.evt.preventDefault()}
+                        onTouchStart={onMouseDown}
+                        onTouchMove={onMouseMove}
+                        onTouchEnd={onMouseUp}
+                        // onDragEnd={onDragEnd}
+                        onWheel={onWheel}>
+                        <ReactReduxContext.Provider value={value}>
+                            <Layer>
+                                {pageRank.map((pageId) => (
+                                    <PageBackground
+                                        key={pageId}
+                                        pageId={pageId}
+                                    />
+                                ))}
+                            </Layer>
+                            <Layer>
+                                {pageRank.map((pageId) => (
+                                    <Page
+                                        key={pageId}
+                                        pageId={pageId}
+                                        isDraggable={isDraggable}
+                                    />
+                                ))}
+                            </Layer>
+                            <LiveLayer />
+                        </ReactReduxContext.Provider>
+                    </Stage>
+                )}
+            </ReactReduxContext.Consumer>
         </div>
     )
 }
