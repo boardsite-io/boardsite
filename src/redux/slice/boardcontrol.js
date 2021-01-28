@@ -6,7 +6,6 @@ const boardControlSlice = createSlice({
     initialState: {
         pageRank: [], // ["id1", "id2", ...]
         pageCollection: {}, // {id1: canvasRef1, id2: canvasRef2, ...}
-        strokeCollection: {}, // FOR NOW WE CAN USE 1 COLLECTION
         sessionID: "",
         websocket: null,
     },
@@ -52,25 +51,21 @@ const boardControlSlice = createSlice({
         // Add stroke to collection
         ADD_STROKE: (state, action) => {
             const stroke = action.payload
-            const { id } = stroke
-            // state.pageCollection.strokes[id] = stroke
-            state.strokeCollection[id] = stroke
+            const { pageId, id } = stroke
+            state.pageCollection[pageId].strokes[id] = stroke
         },
 
         // Erase stroke from collection
         ERASE_STROKE(state, action) {
             const stroke = action.payload
-            // const { pageId, id } = stroke
-            // delete state.pageCollection[pageId].strokes[id]
-            delete state.strokeCollection[stroke.id]
+            const { pageId, id } = stroke
+            delete state.pageCollection[pageId].strokes[id]
         },
 
         // Update stroke position after dragging
         UPDATE_STROKE(state, action) {
-            // const { x, y, id, pageId } = action.payload
-            // const stroke = state.pageCollection[pageId].strokes[id]
-            const { x, y, id } = action.payload
-            const stroke = state.strokeCollection[id]
+            const { x, y, id, pageId } = action.payload
+            const stroke = state.pageCollection[pageId].strokes[id]
             stroke.x = x
             stroke.y = y
         },

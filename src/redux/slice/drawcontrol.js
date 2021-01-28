@@ -22,6 +22,7 @@ const drawControlSlice = createSlice({
                 color: DEFAULT_COLOR,
                 width: DEFAULT_WIDTH * CANVAS_PIXEL_RATIO,
             },
+            pageId: "",
             points: [], // {"pageid": [x1,y1,x2,y2,...]}
             x: 0, // be consistent with stroke description
             y: 0,
@@ -63,14 +64,17 @@ const drawControlSlice = createSlice({
             state.isMouseDown = isMouseDown
         },
         START_LIVESTROKE: (state, action) => {
-            const points = action.payload
+            const { pageId, points } = action.payload
+            state.liveStroke.pageId = pageId
             state.liveStroke.points = points
         },
+        // Update the current live stroke position
         UPDATE_LIVESTROKE: (state, action) => {
             const points = action.payload
             state.liveStroke.points = [...state.liveStroke.points, ...points]
         },
         END_LIVESTROKE: (state) => {
+            state.liveStroke.pageId = ""
             state.liveStroke.points = []
         },
     },

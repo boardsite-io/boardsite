@@ -1,13 +1,13 @@
-import React from "react"
+import React, { memo } from "react"
 import { useSelector } from "react-redux"
 import { Rect } from "react-konva"
 import { StrokeShape } from "./stroke"
 import { CANVAS_WIDTH, CANVAS_HEIGHT } from "../../constants"
 import store from "../../redux/store"
 
-export default function Page({ pageId, isDraggable }) {
+export default memo(({ pageId, isDraggable }) => {
     const strokes = useSelector(
-        (state) => state.boardControl.present.pageCollection[pageId]
+        (state) => state.boardControl.present.pageCollection[pageId].strokes
     )
 
     return (
@@ -26,13 +26,13 @@ export default function Page({ pageId, isDraggable }) {
                 strokeWidth={5}
                 fill="#eee"
             />
-            {strokes.map((stroke) => (
+            {Object.keys(strokes).map((id) => (
                 <StrokeShape
-                    key={stroke.id}
-                    stroke={stroke}
+                    key={id}
+                    stroke={strokes[id]}
                     isDraggable={isDraggable}
                 />
             ))}
         </>
     )
-}
+})

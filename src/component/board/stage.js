@@ -1,5 +1,5 @@
 import React from "react"
-import { useSelector } from "react-redux"
+import { ReactReduxContext, useSelector } from "react-redux"
 import { Stage, Layer } from "react-konva"
 
 import Page from "./page"
@@ -11,8 +11,8 @@ import { toolType, MIN_SAMPLE_COUNT } from "../../constants"
 
 export default function BoardStage() {
     const pageRank = useSelector((state) => state.boardControl.present.pageRank)
-    const isDraggable = useSelector((state) => state.drawControl.isDraggable)
 
+    const isDraggable = useSelector((state) => state.drawControl.isDraggable)
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
     const isActive = useSelector((state) => state.drawControl.isActive)
     const tool = useSelector((state) => state.drawControl.liveStroke.type)
@@ -44,7 +44,7 @@ export default function BoardStage() {
         sampleCount = 1
 
         const pos = getScaledPointerPosition(e)
-        startLiveStroke(pos)
+        startLiveStroke(pos, pageRank[0]) // todo get pageid
     }
 
     function onMouseMove(e) {
@@ -124,28 +124,38 @@ export default function BoardStage() {
     return (
         <div className="pagecollectionouter">
             <div className="pagecollectioninner">
-                <Stage
-                    draggable={!isActive}
-                    className="stage"
-                    width={window.innerWidth}
-                    height={window.innerHeight}
-                    onMouseDown={onMouseDown}
-                    onMousemove={onMouseMove}
-                    onMouseUp={onMouseUp}
-                    onMouseLeave={onMouseUp}
-                    onContextMenu={(e) => e.evt.preventDefault()}
-                    onTouchStart={onMouseDown}
-                    onTouchMove={onMouseMove}
-                    onTouchEnd={onMouseUp}
-                    onDragEnd={onDragEnd}
-                    onWheel={onWheel}>
-                    <Layer>
-                        {pageRank.map((pageId) => (
-                            <Page pageId={pageId} isDraggable={isDraggable} />
-                        ))}
-                    </Layer>
-                    <LiveLayer />
-                </Stage>
+                <ReactReduxContext.Consumer>
+                    {(value) => (
+                        <Stage
+                            draggable={!isActive}
+                            className="stage"
+                            width={window.innerWidth}
+                            height={window.innerHeight}
+                            onMouseDown={onMouseDown}
+                            onMousemove={onMouseMove}
+                            onMouseUp={onMouseUp}
+                            onMouseLeave={onMouseUp}
+                            onContextMenu={(e) => e.evt.preventDefault()}
+                            onTouchStart={onMouseDown}
+                            onTouchMove={onMouseMove}
+                            onTouchEnd={onMouseUp}
+                            onDragEnd={onDragEnd}
+                            onWheel={onWheel}>
+                            <ReactReduxContext.Provider value={value}>
+                                <Layer>
+                                    {pageRank.map((pageId) => (
+                                        <Page
+                                            key={pageId}
+                                            pageId={pageId}
+                                            isDraggable={isDraggable}
+                                        />
+                                    ))}
+                                </Layer>
+                                <LiveLayer />
+                            </ReactReduxContext.Provider>
+                        </Stage>
+                    )}
+                </ReactReduxContext.Consumer>
             </div>
         </div>
     )
