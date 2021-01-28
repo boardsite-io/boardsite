@@ -1,37 +1,15 @@
 import React, { useState, useEffect } from "react"
 import { ActionCreators as UndoActionCreators } from "redux-undo"
-import { useSelector } from "react-redux"
 import FPSStats from "react-fps-stats"
-import { Stage, Layer, Rect } from "react-konva"
-
-import LiveLayer from "../component/board/livelayer"
-
-// import Page from "../component/board/page"
 import { addPage } from "../component/menu/pagemenu"
 import Toolbar from "../component/menu/toolbar"
 import Homebar from "../component/menu/homebar"
 import Viewbar from "../component/menu/viewbar"
 import AlertDialog from "../component/menu/session_dialog"
-// import { useParams } from 'react-router-dom';
-import {
-    toolType,
-    MIN_SAMPLE_COUNT,
-    CANVAS_WIDTH,
-    CANVAS_HEIGHT,
-} from "../constants"
-import { SET_TYPE, SET_ISMOUSEDOWN } from "../redux/slice/drawcontrol"
+import BoardStage from "../component/board/stage"
+import { toolType } from "../constants"
+import { SET_TYPE } from "../redux/slice/drawcontrol"
 import store from "../redux/store"
-
-import {
-    startLiveStroke,
-    moveLiveStroke,
-    registerLiveStroke,
-    StrokeShape,
-} from "../component/board/stroke"
-
-// import * as api from '../util/api';
-// import * as proc from '../util/processing.js';
-// import * as control from '../util/boardcontrol';
 
 export default function Whiteboard() {
     // console.log("Whiteboard Redraw");
@@ -151,125 +129,6 @@ export default function Whiteboard() {
         // setSidInput(e.target.value)
     }
 
-    // const pageRank = useSelector((state) => state.boardControl.present.pageRank)
-    const liveStrokePts = useSelector(
-        (state) => state.drawControl.liveStroke.points
-    )
-    // const pageCollection = useSelector(
-    //     (state) => state.boardControl.present.pageCollection
-    // )
-    const strokeCollection = useSelector(
-        (state) => state.boardControl.present.strokeCollection
-    )
-    const isDraggable = useSelector((state) => state.drawControl.isDraggable)
-
-    const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
-    const isActive = useSelector((state) => state.drawControl.isActive)
-    const tool = useSelector((state) => state.drawControl.liveStroke.type)
-    let sampleCount = 0
-
-    function getScaledPointerPosition(e) {
-        const stage = e.target.getStage()
-        const position = stage.getPointerPosition()
-        const transform = stage.getAbsoluteTransform().copy().invert()
-        return transform.point(position)
-    }
-
-    function onMouseDown(e) {
-        if (
-            e.evt.buttons === 2 || // ignore right click eraser, i.e. dont start stroke
-            !isActive ||
-            tool === toolType.DRAG
-        ) {
-            return
-        }
-
-        if (tool === toolType.ERASER) {
-            store.dispatch(SET_ISMOUSEDOWN(true))
-            return
-        }
-
-        store.dispatch(SET_ISMOUSEDOWN(true))
-        sampleCount = 1
-
-        const pos = getScaledPointerPosition(e)
-        startLiveStroke(pos)
-    }
-
-    function onMouseMove(e) {
-        if (
-            !isMouseDown ||
-            !isActive ||
-            e.evt.buttons === 2 || // right mouse
-            e.evt.buttons === 3 || // left+right mouse
-            tool === toolType.DRAG
-        ) {
-            // cancel stroke when right / left+right mouse is clicked
-            // store.dispatch(SET_ISMOUSEDOWN(false))
-            return
-        }
-        if (tool === toolType.ERASER) {
-            return
-        }
-
-        sampleCount += 1
-        if (tool !== toolType.PEN) {
-            // for all tools except pen we want to redraw on every update
-            const pos = getScaledPointerPosition(e)
-            moveLiveStroke(pos)
-        } else if (sampleCount > MIN_SAMPLE_COUNT) {
-            // for pen tool we skip some samples to improve performance
-            const pos = getScaledPointerPosition(e)
-            moveLiveStroke(pos)
-            sampleCount = 0
-        }
-    }
-
-    function onMouseUp(e) {
-        if (!isMouseDown || !isActive || toolType === toolType.DRAG) {
-            return
-        } // Ignore reentering
-        if (tool === toolType.ERASER) {
-            store.dispatch(SET_ISMOUSEDOWN(false))
-            return
-        }
-        store.dispatch(SET_ISMOUSEDOWN(false))
-
-        // update last position
-        const pos = getScaledPointerPosition(e)
-        moveLiveStroke(pos)
-
-        // register finished stroke
-        registerLiveStroke()
-    }
-
-    const zoomWheelStep = 0.9
-    function onWheel(e) {
-        e.evt.preventDefault()
-        const stage = e.target.getStage()
-        const oldScale = stage.scaleX()
-        const pointer = stage.getPointerPosition()
-        const mousePointTo = {
-            x: (pointer.x - stage.x()) / oldScale,
-            y: (pointer.y - stage.y()) / oldScale,
-        }
-        const newScale =
-            e.evt.deltaY > 0
-                ? oldScale * zoomWheelStep
-                : oldScale / zoomWheelStep
-        stage.scale({ x: newScale, y: newScale })
-        const newPos = {
-            x: pointer.x - mousePointTo.x * newScale,
-            y: pointer.y - mousePointTo.y * newScale,
-        }
-        stage.position(newPos)
-        stage.batchDraw()
-    }
-
-    function onDragEnd(e) {
-        console.log(e)
-    }
-
     return (
         <div>
             <FPSStats />
@@ -285,58 +144,7 @@ export default function Whiteboard() {
             <Toolbar />
             <Homebar setOpenSessionDialog={setOpenSessionDialog} />
             <Viewbar />
-            <div className="pagecollectionouter">
-                <div className="pagecollectioninner">
-                    <Stage
-                        draggable={!isActive}
-                        className="stage"
-                        width={CANVAS_WIDTH}
-                        height={CANVAS_HEIGHT}
-                        // width={window.innerWidth}
-                        // height={CANVAS_HEIGHT}
-                        onMouseDown={onMouseDown}
-                        onMousemove={onMouseMove}
-                        onMouseUp={onMouseUp}
-                        onMouseLeave={onMouseUp}
-                        onContextMenu={(e) => e.evt.preventDefault()}
-                        onTouchStart={onMouseDown}
-                        onTouchMove={onMouseMove}
-                        onTouchEnd={onMouseUp}
-                        onDragEnd={onDragEnd}
-                        onWheel={onWheel}>
-                        <Layer>
-                            <Rect // Page 1 - Preview what this could look like
-                                height={CANVAS_HEIGHT}
-                                width={CANVAS_WIDTH}
-                                x={0}
-                                y={0}
-                                stroke="#0f0"
-                                strokeWidth={5}
-                                fill="#eee"
-                            />
-                            <Rect // Page 2
-                                height={CANVAS_HEIGHT}
-                                width={CANVAS_WIDTH}
-                                x={0}
-                                y={CANVAS_HEIGHT + 20}
-                                stroke="#0f0"
-                                strokeWidth={5}
-                                fill="#eee"
-                            />
-                        </Layer>
-                        <Layer>
-                            {Object.keys(strokeCollection).map((strokeId) => (
-                                <StrokeShape
-                                    key={strokeId}
-                                    stroke={strokeCollection[strokeId]}
-                                    isDraggable={isDraggable}
-                                />
-                            ))}
-                        </Layer>
-                        <LiveLayer sel={liveStrokePts} />
-                    </Stage>
-                </div>
-            </div>
+            <BoardStage />
         </div>
     )
 }
