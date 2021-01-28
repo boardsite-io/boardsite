@@ -118,9 +118,9 @@ export default function BoardStage() {
         stage.batchDraw()
     }
 
-    function onDragEnd(e) {
-        console.log(e)
-    }
+    // function onDragEnd(e) {
+    //     console.log(e)
+    // }
 
     return (
         <div className="pagecollectionouter">
@@ -140,7 +140,7 @@ export default function BoardStage() {
                             onTouchStart={onMouseDown}
                             onTouchMove={onMouseMove}
                             onTouchEnd={onMouseUp}
-                            onDragEnd={onDragEnd}
+                            // onDragEnd={onDragEnd}
                             onWheel={onWheel}>
                             <ReactReduxContext.Provider value={value}>
                                 <Layer>
