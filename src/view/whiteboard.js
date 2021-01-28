@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { ActionCreators as UndoActionCreators } from "redux-undo"
 import { useSelector } from "react-redux"
 import FPSStats from "react-fps-stats"
-import { Stage, Layer } from "react-konva"
+import { Stage, Layer, Rect } from "react-konva"
 
 import LiveLayer from "../component/board/livelayer"
 
@@ -304,6 +304,26 @@ export default function Whiteboard() {
                         onTouchEnd={onMouseUp}
                         onDragEnd={onDragEnd}
                         onWheel={onWheel}>
+                        <Layer>
+                            <Rect // Page 1 - Preview what this could look like
+                                height={CANVAS_HEIGHT}
+                                width={CANVAS_WIDTH}
+                                x={0}
+                                y={0}
+                                stroke="#0f0"
+                                strokeWidth={5}
+                                fill="#eee"
+                            />
+                            <Rect // Page 2
+                                height={CANVAS_HEIGHT}
+                                width={CANVAS_WIDTH}
+                                x={0}
+                                y={CANVAS_HEIGHT + 20}
+                                stroke="#0f0"
+                                strokeWidth={5}
+                                fill="#eee"
+                            />
+                        </Layer>
                         <Layer>
                             {Object.keys(strokeCollection).map((strokeId) => (
                                 <StrokeShape
