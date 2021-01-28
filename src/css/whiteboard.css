@@ -6,7 +6,8 @@
 
 .pagecollectioninner {
     width: fit-content;
-    background-color: var(--pagesBackground);
+    /* background-color: var(--pagesBackground); */
+    background-color: aquamarine;
     -webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */
     -webkit-user-select: none; /* prevent copy paste, to allow, change 'none' to 'text' */
@@ -14,8 +15,8 @@
     box-shadow: 0px 0px 5px 5px #00000044;
     display: flex;
     flex-flow: column;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    /* padding-top: 5px;
+    padding-bottom: 5px; */
     gap: 20px;
 }
 
@@ -39,7 +40,8 @@
     width: 100%; */
     /* top: 0px;
     left: 0px; */
-    background-color: var(--canvasBackgroundColor);
+    background-color: var(--pagesBackground);
+    /* background-color: var(--canvasBackgroundColor); */
     /* background-size: var(--canvasBackgroundSize);
     background-image: var(--canvasBackgroundImage); */
     background-position: var(--canvasBackgroundPosition);

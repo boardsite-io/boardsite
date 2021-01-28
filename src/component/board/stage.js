@@ -3,6 +3,8 @@ import { ReactReduxContext, useSelector } from "react-redux"
 import { Stage, Layer } from "react-konva"
 
 import Page from "./page"
+import PageBackground from "./pagebackground"
+
 import LiveLayer from "./livelayer"
 import { startLiveStroke, moveLiveStroke, registerLiveStroke } from "./stroke"
 import { SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
@@ -11,7 +13,6 @@ import { toolType, MIN_SAMPLE_COUNT } from "../../constants"
 
 export default function BoardStage() {
     const pageRank = useSelector((state) => state.boardControl.present.pageRank)
-
     const isDraggable = useSelector((state) => state.drawControl.isDraggable)
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
     const isActive = useSelector((state) => state.drawControl.isActive)
@@ -142,6 +143,14 @@ export default function BoardStage() {
                             onDragEnd={onDragEnd}
                             onWheel={onWheel}>
                             <ReactReduxContext.Provider value={value}>
+                                <Layer>
+                                    {pageRank.map((pageId) => (
+                                        <PageBackground
+                                            key={pageId}
+                                            pageId={pageId}
+                                        />
+                                    ))}
+                                </Layer>
                                 <Layer>
                                     {pageRank.map((pageId) => (
                                         <Page
