@@ -1,5 +1,5 @@
 import React from "react"
-import { Layer } from "react-konva"
+import { FastLayer } from "react-konva"
 import store from "../../redux/store"
 import { StrokeShape } from "./stroke"
 
@@ -8,7 +8,7 @@ export default function LiveLayer(props) {
     const pts = props.sel
 
     return (
-        <Layer>
+        <FastLayer>
             {pts !== undefined ? (
                 <StrokeShape
                     stroke={{
@@ -19,6 +19,6 @@ export default function LiveLayer(props) {
             ) : (
                 <></>
             )}
-        </Layer>
+        </FastLayer>
     )
 }
