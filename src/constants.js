@@ -6,7 +6,6 @@ export const WIDTH_MAX = 40
 export const DEFAULT_WIDTH = 4
 export const DEFAULT_COLOR = "#000000"
 export const DEFAULT_ACTIVE = "true"
-export const MIN_SAMPLE_COUNT = 5
 
 // drawing stuff
 export const toolType = {
@@ -18,3 +17,6 @@ export const toolType = {
     DRAG: 5,
 }
 export const DEFAULT_TOOL = toolType.PEN
+export const MIN_SAMPLE_COUNT = 5
+// maximum number of points a livestroke can have until cached
+export const MAX_LIVESTROKE_PTS = 100

@@ -12,7 +12,7 @@ export default memo(({ pageId, isDraggable }) => {
             {Object.keys(strokes).map((id) => (
                 <StrokeShape
                     key={id}
-                    stroke={strokes[id]}
+                    {...strokes[id]}
                     isDraggable={isDraggable}
                 />
             ))}

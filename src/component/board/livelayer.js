@@ -1,19 +1,38 @@
 import React, { memo } from "react"
 import { Layer } from "react-konva"
 import { useSelector } from "react-redux"
+import { toolType } from "../../constants"
 import store from "../../redux/store"
 import { StrokeShape } from "./stroke"
 
 export default memo(() => {
     const pts = useSelector((state) => state.drawControl.liveStroke.points)
 
-    return (
-        <Layer listening={false}>
-            {pts.length > 0 ? (
-                <StrokeShape stroke={store.getState().drawControl.liveStroke} />
-            ) : (
-                <></>
-            )}
-        </Layer>
-    )
+    const { liveStroke } = store.getState().drawControl
+    let shape = null
+
+    // for continuous shapes we draw all sub arrays
+    if (liveStroke.type === toolType.PEN) {
+        shape = pts.map((subPts, i) => (
+            <StrokeShape
+                // we can use the array index as key here
+                // since the array's order is not changed
+                // eslint-disable-next-line react/no-array-index-key
+                key={i}
+                {...liveStroke}
+                points={subPts}
+            />
+        ))
+    } // for other types (e.g. circle) we only need the endpoints
+    else if (liveStroke.points.length > 0) {
+        shape = (
+            <StrokeShape
+                {...liveStroke}
+                points={liveStroke.points[0].concat(
+                    liveStroke.points[liveStroke.points.length - 1]
+                )}
+            />
+        )
+    }
+    return <Layer listening={false}>{shape}</Layer>
 })

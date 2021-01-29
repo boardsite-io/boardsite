@@ -15,132 +15,131 @@ import { toolType } from "../../constants"
 
 /**
  * Super component implementing all stroke types and their visualization in the canvas
+ * In order for memo to work correctly, we have to pass the stroke props by value
+ * referencing an object will result in unwanted rerenders, since we just compare
+ * the object references.
  * @param {{stroke: {}}} props
  */
-export const StrokeShape = memo(StrokeShapeNonMemo)
-function StrokeShapeNonMemo({ stroke, isDraggable }) {
-    function onDragStart() {
-        // succ
-    }
-
-    function onDragEnd(e) {
-        store.dispatch(
-            UPDATE_STROKE({
-                x: e.target.attrs.x,
-                y: e.target.attrs.y,
-                id: stroke.id,
-                pageId: stroke.pageId,
-            })
-        )
-    }
-
-    function handleStrokeMouseEnter(e) {
-        // prevent to act on live stroke
-        if (stroke.id === undefined) {
-            return
+export const StrokeShape = memo(
+    ({ id, pageId, type, style, points, x, y, isDraggable }) => {
+        function onDragStart() {
+            // succ
         }
 
-        if (
-            (store.getState().drawControl.liveStroke.type === toolType.ERASER &&
-                store.getState().drawControl.isMouseDown) ||
-            e.evt.buttons === 2
-        ) {
-            store.dispatch(ERASE_STROKE(stroke))
+        function onDragEnd(e) {
+            store.dispatch(
+                UPDATE_STROKE({
+                    x: e.target.attrs.x,
+                    y: e.target.attrs.y,
+                    id,
+                    pageId,
+                })
+            )
         }
-    }
 
-    let shape
-    switch (stroke.type) {
-        case toolType.PEN:
-            shape = (
-                <Line
-                    points={stroke.points}
-                    stroke={stroke.style.color}
-                    strokeWidth={stroke.style.width}
-                    tension={0.5}
-                    lineCap="round"
-                    onMouseEnter={handleStrokeMouseEnter}
-                    draggable={isDraggable}
-                    onDragStart={onDragStart}
-                    onDragEnd={onDragEnd}
-                    x={stroke.x}
-                    y={stroke.y}
-                    shadowForStrokeEnabled={false}
-                    perfectDrawEnabled={false}
-                />
-            )
-            break
-        case toolType.LINE:
-            shape = (
-                <Line
-                    points={getStartEndPoints(stroke.points)}
-                    stroke={stroke.style.color}
-                    strokeWidth={stroke.style.width}
-                    tension={1}
-                    lineCap="round"
-                    onMouseEnter={handleStrokeMouseEnter}
-                    draggable={isDraggable}
-                    onDragStart={onDragStart}
-                    onDragEnd={onDragEnd}
-                    x={stroke.x}
-                    y={stroke.y}
-                    shadowForStrokeEnabled={false}
-                    perfectDrawEnabled={false}
-                />
-            )
-            break
-        // case type.TRIANGLE:
-        //     shape = (
-        //         <Line
-        //             points={props.stroke.points}
-        //             stroke={props.stroke.style.color}
-        //             strokeWidth={props.stroke.style.width}
-        //             tension={1}
-        //             lineCap="round"
-        //             onMouseEnter={(e) =>
-        //                 handleStrokeMouseEnter(e, props.stroke)
-        //             }
-        //             draggable={props.isDraggable}
-        //             onDragStart={onDragStart}
-        //             onDragEnd={onDragEnd}
-        //         />
-        //     )
-        //     break
-        case toolType.CIRCLE: {
-            const rad = {
-                x:
-                    (stroke.points[stroke.points.length - 2] -
-                        stroke.points[0]) /
-                    2,
-                y:
-                    (stroke.points[stroke.points.length - 1] -
-                        stroke.points[1]) /
-                    2,
+        function handleStrokeMouseEnter(e) {
+            // prevent to act on live stroke
+            if (id === undefined) {
+                return
             }
-            shape = (
-                <Ellipse
-                    x={stroke.points[0] + rad.x}
-                    y={stroke.points[1] + rad.y}
-                    radius={{ x: Math.abs(rad.x), y: Math.abs(rad.y) }}
-                    stroke={stroke.style.color}
-                    strokeWidth={stroke.style.width}
-                    // fill={props.stroke.style.color}
-                    onMouseEnter={handleStrokeMouseEnter}
-                    draggable={isDraggable}
-                    onDragStart={onDragStart}
-                    onDragEnd={onDragEnd}
-                    shadowForStrokeEnabled={false}
-                    perfectDrawEnabled={false}
-                />
-            )
-            break
-        }
-        default:
-            shape = <></>
-    }
 
-    return shape
-}
+            if (
+                (store.getState().drawControl.liveStroke.type ===
+                    toolType.ERASER &&
+                    store.getState().drawControl.isMouseDown) ||
+                e.evt.buttons === 2
+            ) {
+                store.dispatch(ERASE_STROKE({ pageId, id }))
+            }
+        }
+
+        let shape
+        switch (type) {
+            case toolType.PEN:
+                shape = (
+                    <Line
+                        points={points}
+                        stroke={style.color}
+                        strokeWidth={style.width}
+                        tension={0.5}
+                        lineCap="round"
+                        onMouseEnter={handleStrokeMouseEnter}
+                        draggable={isDraggable}
+                        onDragStart={onDragStart}
+                        onDragEnd={onDragEnd}
+                        x={x}
+                        y={y}
+                        shadowForStrokeEnabled={false}
+                        perfectDrawEnabled={false}
+                    />
+                )
+                break
+            case toolType.LINE:
+                shape = (
+                    <Line
+                        points={getStartEndPoints(points)}
+                        stroke={style.color}
+                        strokeWidth={style.width}
+                        tension={1}
+                        lineCap="round"
+                        onMouseEnter={handleStrokeMouseEnter}
+                        draggable={isDraggable}
+                        onDragStart={onDragStart}
+                        onDragEnd={onDragEnd}
+                        x={x}
+                        y={y}
+                        shadowForStrokeEnabled={false}
+                        perfectDrawEnabled={false}
+                    />
+                )
+                break
+            // case type.TRIANGLE:
+            //     shape = (
+            //         <Line
+            //             points={props.stroke.points}
+            //             stroke={props.stroke.style.color}
+            //             strokeWidth={props.stroke.style.width}
+            //             tension={1}
+            //             lineCap="round"
+            //             onMouseEnter={(e) =>
+            //                 handleStrokeMouseEnter(e, props.stroke)
+            //             }
+            //             draggable={props.isDraggable}
+            //             onDragStart={onDragStart}
+            //             onDragEnd={onDragEnd}
+            //         />
+            //     )
+            //     break
+            case toolType.CIRCLE: {
+                const rad = {
+                    x: (points[points.length - 2] - points[0]) / 2,
+                    y: (points[points.length - 1] - points[1]) / 2,
+                }
+                shape = (
+                    <Ellipse
+                        x={points[0] + rad.x}
+                        y={points[1] + rad.y}
+                        radius={{ x: Math.abs(rad.x), y: Math.abs(rad.y) }}
+                        stroke={style.color}
+                        strokeWidth={style.width}
+                        // fill={props.stroke.style.color}
+                        onMouseEnter={handleStrokeMouseEnter}
+                        draggable={isDraggable}
+                        onDragStart={onDragStart}
+                        onDragEnd={onDragEnd}
+                        shadowForStrokeEnabled={false}
+                        perfectDrawEnabled={false}
+                    />
+                )
+                break
+            }
+            default:
+                shape = <></>
+        }
+
+        return shape
+    }
+)
 
 /**
  * Start the current stroke when mouse is pressed down
@@ -167,7 +166,7 @@ export function moveLiveStroke(position) {
  * Generate API serialized stroke object, draw & save it to redux store
  */
 export async function registerLiveStroke() {
-    let { liveStroke } = store.getState().drawControl
+    const { liveStroke } = store.getState().drawControl
     // empty livestrokes e.g. rightmouse eraser
     if (liveStroke.points === undefined) {
         return
@@ -176,18 +175,9 @@ export async function registerLiveStroke() {
         return
     }
 
-    liveStroke = {
-        ...liveStroke,
-        id:
-            Math.random()
-                .toString(36)
-                .replace(/[^a-z]+/g, "")
-                .substr(0, 4) + Date.now().toString(36).substr(4),
-    }
-
+    const stroke = createStroke(liveStroke)
     // add stroke to collection
-    store.dispatch(ADD_STROKE(liveStroke))
-
+    store.dispatch(ADD_STROKE(stroke))
     // clear livestroke
     store.dispatch(END_LIVESTROKE())
 }
@@ -203,4 +193,39 @@ function getStartEndPoints(points) {
     return points
         .slice(0, 2)
         .concat(points.slice(points.length - 2, points.length))
+}
+
+/**
+ * Creates a new stroke with unique ID and processes the points
+ * @param {*} liveStroke
+ */
+function createStroke(liveStroke) {
+    const stroke = { ...liveStroke }
+    stroke.points = stroke.points.flat()
+
+    // for some types we only need a few points
+    switch (liveStroke.type) {
+        case toolType.PEN:
+            // TODO compression function
+            break
+        case toolType.LINE:
+            stroke.points = getStartEndPoints(stroke.points)
+            break
+        case toolType.CIRCLE:
+            stroke.points = getStartEndPoints(stroke.points)
+            break
+        default:
+    }
+
+    // allow a reasonable precision
+    stroke.points = stroke.points.map((p) => Math.round(p * 10) / 10)
+
+    // generate a unique id
+    stroke.id =
+        Math.random()
+            .toString(36)
+            .replace(/[^a-z]+/g, "")
+            .substr(0, 4) + Date.now().toString(36).substr(4)
+
+    return stroke
 }

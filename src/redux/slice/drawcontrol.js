@@ -8,6 +8,7 @@ import {
     toolType,
     WIDTH_MAX,
     WIDTH_MIN,
+    MAX_LIVESTROKE_PTS,
 } from "../../constants"
 
 const drawControlSlice = createSlice({
@@ -66,12 +67,23 @@ const drawControlSlice = createSlice({
         START_LIVESTROKE: (state, action) => {
             const { pageId, points } = action.payload
             state.liveStroke.pageId = pageId
-            state.liveStroke.points = points
+            state.liveStroke.points = [points]
         },
         // Update the current live stroke position
         UPDATE_LIVESTROKE: (state, action) => {
             const points = action.payload
-            state.liveStroke.points = [...state.liveStroke.points, ...points]
+            const p =
+                state.liveStroke.points[state.liveStroke.points.length - 1]
+            if (p.length < MAX_LIVESTROKE_PTS) {
+                p.push(...points)
+            } else {
+                // create a new subarray
+                // with the last point from the previous subarray as entry
+                // in order to not get a gap in the stroke
+                state.liveStroke.points.push(
+                    p.slice(p.length - 2, p.length).concat(points)
+                )
+            }
         },
         END_LIVESTROKE: (state) => {
             state.liveStroke.pageId = ""
