@@ -43,9 +43,13 @@ const boardControlSlice = createSlice({
         },
 
         // Delete all pages
-        DELETE_ALL_PAGES: (state) => {
-            state.pageRank = []
+        DELETE_ALL_PAGES: (state, action) => {
+            const { pageId } = action.payload
+            state.pageRank = [pageId]
             state.pageCollection = {}
+            state.pageCollection[pageId] = {
+                strokes: {},
+            }
         },
 
         // Add stroke to collection

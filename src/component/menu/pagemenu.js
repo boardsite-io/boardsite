@@ -36,7 +36,7 @@ export function deletePage(pageId) {
 }
 
 export function deleteAllPages() {
-    store.dispatch(DELETE_ALL_PAGES())
+    store.dispatch(DELETE_ALL_PAGES({ pageid: nanoid() }))
 }
 
 /**

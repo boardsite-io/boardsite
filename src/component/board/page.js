@@ -3,9 +3,12 @@ import { useSelector } from "react-redux"
 import { StrokeShape } from "./stroke"
 
 export default memo(({ pageId, isDraggable }) => {
-    const strokes = useSelector(
-        (state) => state.boardControl.present.pageCollection[pageId].strokes
-    )
+    const strokes = useSelector((state) => {
+        if (state.boardControl.present.pageCollection[pageId] !== undefined) {
+            return state.boardControl.present.pageCollection[pageId].strokes
+        }
+        return {}
+    })
 
     return (
         <>
