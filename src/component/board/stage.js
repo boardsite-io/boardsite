@@ -28,7 +28,19 @@ export default function BoardStage() {
     const isActive = useSelector((state) => state.drawControl.isActive)
     const tool = useSelector((state) => state.drawControl.liveStroke.type)
 
+    const [stageX, setStageX] = useState(0)
+    const [stageY, setStageY] = useState(0)
+    const [stageWidth, setStageWidth] = useState(window.innerWidth)
+    const [stageHeight, setStageHeight] = useState(window.innerHeight)
+    const [stageScale, setStageScale] = useState({ x: 1, y: 1 })
+
     let sampleCount = 0
+
+    useEffect(() => {
+        window.addEventListener("resize", onWindowResize) // listen for resize to update stage dimensions
+        centerPages()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     function getScaledPointerPosition(e) {
         const stage = e.target.getStage()
@@ -105,46 +117,45 @@ export default function BoardStage() {
         registerLiveStroke()
     }
 
-    useEffect(() => {
-        window.addEventListener("resize", onResize) // listen for resize to update stage dimensions
-        center()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-    function center() {
+    /**
+     * Center the page or fit to page if zoomed in to page
+     */
+    function centerPages() {
         const x = (stageWidth - CANVAS_WIDTH * stageScale.x) / 2
-        setStageX(x)
-        // setStageY(100)
+        if (x >= 0) {
+            setStageX(x)
+        } else {
+            fitToPage()
+        }
+        // setStageY()
     }
 
+    /**
+     * Fit page to window size while maintaining the y position
+     */
     function fitToPage() {
-        setStageX(0)
+        const oldScale = stageScale.x
         const newScale = window.innerWidth / CANVAS_WIDTH
         setStageScale({ x: newScale, y: newScale })
+        setStageX(0)
+        setStageY(
+            stageHeight / 2 - ((stageHeight / 2 - stageY) / oldScale) * newScale
+        )
     }
 
-    const [stageX, setStageX] = useState(0)
-    const [stageY, setStageY] = useState(0)
-    const [stageWidth, setStageWidth] = useState(window.innerWidth)
-    const [stageHeight, setStageHeight] = useState(window.innerHeight)
-    const [stageScale, setStageScale] = useState({ x: 1, y: 1 })
-
-    // function test() {
-    //     console.log("TEST")
-    //     setStageScale((lastScale) => {
-    //         console.log(lastScale)
-    //         lastScale.x *= 0.9
-    //         lastScale.y *= 0.9
-    //         return { ...lastScale }
-    //     })
-    // }
-
-    function onResize() {
+    /**
+     * Handles window resize events
+     */
+    function onWindowResize() {
         setStageWidth(window.innerWidth)
         setStageHeight(window.innerHeight)
-        center()
+        centerPages()
     }
 
+    /**
+     * Handles updating the states after stage drag events
+     * @param {event} e
+     */
     function onDragEnd(e) {
         // if stage drag => update position states
         if (e.target.attrs.className === "stage") {
@@ -213,7 +224,7 @@ export default function BoardStage() {
         <div className="wrap">
             <Viewbar
                 fitToPage={fitToPage}
-                center={center}
+                center={centerPages}
                 zoomIn={zoomIn}
                 zoomOut={zoomOut}
             />
