@@ -1,6 +1,7 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { ReactReduxContext, useSelector } from "react-redux"
 import { Stage, Layer } from "react-konva"
+import Viewbar from "../menu/viewbar"
 
 import Page from "./page"
 import PageBackground from "./pagebackground"
@@ -9,7 +10,7 @@ import LiveLayer from "./livelayer"
 import { startLiveStroke, moveLiveStroke, registerLiveStroke } from "./stroke"
 import { SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
 import store from "../../redux/store"
-import { toolType, MIN_SAMPLE_COUNT } from "../../constants"
+import { toolType, MIN_SAMPLE_COUNT, CANVAS_WIDTH } from "../../constants"
 
 export default function BoardStage() {
     const pageRank = useSelector((state) => state.boardControl.present.pageRank)
@@ -109,28 +110,71 @@ export default function BoardStage() {
             e.evt.deltaY > 0
                 ? oldScale * zoomWheelStep
                 : oldScale / zoomWheelStep
-        stage.scale({ x: newScale, y: newScale })
-        const newPos = {
-            x: pointer.x - mousePointTo.x * newScale,
-            y: pointer.y - mousePointTo.y * newScale,
-        }
-        stage.position(newPos)
-        stage.batchDraw()
+        setStageScale({ x: newScale, y: newScale })
+        setStageX(pointer.x - mousePointTo.x * newScale)
+        setStageY(pointer.y - mousePointTo.y * newScale)
     }
 
-    // function onDragEnd(e) {
-    //     console.log(e)
+    useEffect(() => {
+        window.addEventListener("resize", onResize)
+        center()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    function center() {
+        const x = (stageWidth - CANVAS_WIDTH * stageScale.x) / 2
+        setStageX(x)
+        // setStageY(100)
+    }
+
+    function fitToPage() {
+        setStageX(0)
+        const newScale = window.innerWidth / CANVAS_WIDTH
+        setStageScale({ x: newScale, y: newScale })
+    }
+
+    const [stageX, setStageX] = useState(0)
+    const [stageY, setStageY] = useState(0)
+    const [stageWidth, setStageWidth] = useState(window.innerWidth)
+    const [stageHeight, setStageHeight] = useState(window.innerHeight)
+    const [stageScale, setStageScale] = useState({ x: 1, y: 1 })
+
+    // function test() {
+    //     console.log("TEST")
+    //     setStageScale((lastScale) => {
+    //         console.log(lastScale)
+    //         lastScale.x *= 0.9
+    //         lastScale.y *= 0.9
+    //         return { ...lastScale }
+    //     })
     // }
 
+    function onResize() {
+        setStageWidth(window.innerWidth)
+        setStageHeight(window.innerHeight)
+        center()
+    }
+
+    function onDragEnd(e) {
+        // update states
+        setStageX(e.target.attrs.x)
+        setStageY(e.target.attrs.y)
+    }
+
     return (
-        <div className="wrap">
+        <div className="wrap" id="wrap">
+            <Viewbar fitToPage={fitToPage} center={center} />
             <ReactReduxContext.Consumer>
                 {(value) => (
                     <Stage
                         draggable={!isActive}
                         className="stage"
-                        width={window.innerWidth}
-                        height={window.innerHeight}
+                        width={stageWidth}
+                        height={stageHeight}
+                        scale={stageScale}
+                        x={stageX}
+                        y={stageY}
+                        onDragEnd={onDragEnd}
                         onMouseDown={onMouseDown}
                         onMousemove={onMouseMove}
                         onMouseUp={onMouseUp}
@@ -139,7 +183,6 @@ export default function BoardStage() {
                         onTouchStart={onMouseDown}
                         onTouchMove={onMouseMove}
                         onTouchEnd={onMouseUp}
-                        // onDragEnd={onDragEnd}
                         onWheel={onWheel}>
                         <ReactReduxContext.Provider value={value}>
                             <Layer>

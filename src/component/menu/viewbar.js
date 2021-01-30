@@ -13,7 +13,7 @@ import { useSelector } from "react-redux"
 import store from "../../redux/store"
 import { TOGGLE_DRAWMODE } from "../../redux/slice/drawcontrol"
 
-export default function Viewbar() {
+export default function Viewbar({ fitToPage, center }) {
     // console.log("Viewbar Redraw");
     const isActive = useSelector((state) => state.drawControl.isActive)
 
@@ -44,6 +44,18 @@ export default function Viewbar() {
                     </IconButton>
                 )}
             </Tooltip>
+            <IconButton
+                id="iconButton"
+                style={{ backgroundColor: "blue" }}
+                onClick={fitToPage}>
+                1
+            </IconButton>
+            <IconButton
+                id="iconButton"
+                style={{ backgroundColor: "green" }}
+                onClick={center}>
+                2
+            </IconButton>
             {/* <Tooltip
                 id="tooltip"
                 title="zoom in"

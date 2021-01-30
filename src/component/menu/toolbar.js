@@ -22,18 +22,8 @@ function Toolbar() {
     )
     const isDraggable = useSelector((state) => state.drawControl.isDraggable)
 
-    function debug() {
-        // console.log("debug")
-    }
-
     return (
         <div className="toolbar">
-            <IconButton
-                id="iconButton"
-                style={{ backgroundColor: "grey" }}
-                onClick={debug}>
-                D
-            </IconButton>
             <UndoRedo />
             <div className="toolring">
                 <Tooltip
