@@ -172,11 +172,18 @@ export default function BoardStage() {
     function onWheel(e) {
         e.evt.preventDefault()
         if (isActive) {
+            let newY
             if (e.evt.deltaY > 0) {
-                setStageY((y) => y - SCROLL_WHEEL_STEP)
+                newY = stageY - SCROLL_WHEEL_STEP
             } else {
-                setStageY((y) => y + SCROLL_WHEEL_STEP)
+                newY = stageY + SCROLL_WHEEL_STEP
             }
+            // scroll animation
+            e.target.getStage().to({
+                y: newY,
+                duration: 0.1,
+            })
+            setStageY(newY)
         } else {
             const curserPosition = e.target.getStage().getPointerPosition()
             if (e.evt.deltaY > 0) {

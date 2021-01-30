@@ -47,18 +47,6 @@ export default function Viewbar({ fitToPage, center, zoomIn, zoomOut }) {
                     </IconButton>
                 )}
             </Tooltip>
-            <IconButton
-                id="iconButton"
-                style={{ backgroundColor: "blue" }}
-                onClick={fitToPage}>
-                1
-            </IconButton>
-            <IconButton
-                id="iconButton"
-                style={{ backgroundColor: "green" }}
-                onClick={center}>
-                2
-            </IconButton>
             <Tooltip
                 id="tooltip"
                 title="zoom in"
