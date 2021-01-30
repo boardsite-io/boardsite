@@ -1,6 +1,6 @@
 import React, { memo } from "react"
 import { nanoid } from "@reduxjs/toolkit"
-import { Rect } from "react-konva"
+import { Rect, Text } from "react-konva"
 import {
     ADD_PAGE,
     CLEAR_PAGE,
@@ -48,6 +48,18 @@ export default memo(({ pageId }) => (
             cornerRadius={4}
             onClick={() => addPage(pageId)}
         />
+        <Text
+            x={CANVAS_WIDTH + 26.5}
+            y={
+                1.5 +
+                (CANVAS_HEIGHT + 20) *
+                    store
+                        .getState()
+                        .boardControl.present.pageRank.indexOf(pageId)
+            }
+            text="+"
+            fontSize={30}
+        />
         <Rect
             height={30}
             width={30}
@@ -69,6 +81,18 @@ export default memo(({ pageId }) => (
             cornerRadius={4}
             onClick={() => clearPage(pageId)}
         />
+        <Text
+            x={CANVAS_WIDTH + 32}
+            y={
+                55 +
+                (CANVAS_HEIGHT + 20) *
+                    store
+                        .getState()
+                        .boardControl.present.pageRank.indexOf(pageId)
+            }
+            text="/"
+            fontSize={25}
+        />
         <Rect
             height={30}
             width={30}
@@ -89,6 +113,18 @@ export default memo(({ pageId }) => (
             shadowOpacity={0.5}
             cornerRadius={4}
             onClick={() => deletePage(pageId)}
+        />
+        <Text
+            x={CANVAS_WIDTH + 30}
+            y={
+                100 +
+                (CANVAS_HEIGHT + 20) *
+                    store
+                        .getState()
+                        .boardControl.present.pageRank.indexOf(pageId)
+            }
+            text="-"
+            fontSize={30}
         />
     </>
 ))

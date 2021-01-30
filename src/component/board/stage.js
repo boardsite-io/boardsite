@@ -19,7 +19,6 @@ import {
     ZOOM_OUT_WHEEL_SCALE,
     ZOOM_IN_SCALE,
     ZOOM_OUT_SCALE,
-    // SCROLL_WHEEL_STEP,
 } from "../../constants"
 
 export default function BoardStage() {
