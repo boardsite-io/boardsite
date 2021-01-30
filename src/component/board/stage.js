@@ -146,8 +146,8 @@ export default function BoardStage() {
     }
 
     function onDragEnd(e) {
-        // update states
-        if (e.target === Stage) {
+        // if stage drag => update position states
+        if (e.target.attrs.className === "stage") {
             // if stage is the drag object then update XY
             setStageX(e.target.attrs.x)
             setStageY(e.target.attrs.y)
