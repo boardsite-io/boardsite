@@ -5,6 +5,7 @@ import Viewbar from "../menu/viewbar"
 
 import Page from "./page"
 import PageBackground from "./pagebackground"
+import PageSettings from "./pagesettings"
 
 import LiveLayer from "./livelayer"
 import { startLiveStroke, moveLiveStroke, registerLiveStroke } from "./stroke"
@@ -18,7 +19,7 @@ import {
     ZOOM_OUT_WHEEL_SCALE,
     ZOOM_IN_SCALE,
     ZOOM_OUT_SCALE,
-    SCROLL_WHEEL_STEP,
+    // SCROLL_WHEEL_STEP,
 } from "../../constants"
 
 export default function BoardStage() {
@@ -29,7 +30,7 @@ export default function BoardStage() {
     const tool = useSelector((state) => state.drawControl.liveStroke.type)
 
     const [stageX, setStageX] = useState(0)
-    const [stageY, setStageY] = useState(0)
+    const [stageY, setStageY] = useState(60)
     const [stageWidth, setStageWidth] = useState(window.innerWidth)
     const [stageHeight, setStageHeight] = useState(window.innerHeight)
     const [stageScale, setStageScale] = useState({ x: 1, y: 1 })
@@ -165,6 +166,7 @@ export default function BoardStage() {
         }
     }
 
+    let scrollActive = false
     /**
      * Wheel event handler function
      * @param {event} e
@@ -172,18 +174,20 @@ export default function BoardStage() {
     function onWheel(e) {
         e.evt.preventDefault()
         if (isActive) {
-            let newY
-            if (e.evt.deltaY > 0) {
-                newY = stageY - SCROLL_WHEEL_STEP
-            } else {
-                newY = stageY + SCROLL_WHEEL_STEP
+            const newY = stageY - e.evt.deltaY
+
+            if (!scrollActive) {
+                scrollActive = true
+                const stage = e.target.getStage()
+                stage.to({
+                    y: newY,
+                    duration: 0.1,
+                    onFinish: () => {
+                        setStageY(newY)
+                        scrollActive = false
+                    },
+                })
             }
-            // scroll animation
-            e.target.getStage().to({
-                y: newY,
-                duration: 0.1,
-            })
-            setStageY(newY)
         } else {
             const curserPosition = e.target.getStage().getPointerPosition()
             if (e.evt.deltaY > 0) {
@@ -270,6 +274,14 @@ export default function BoardStage() {
                                         key={pageId}
                                         pageId={pageId}
                                         isDraggable={isDraggable}
+                                    />
+                                ))}
+                            </Layer>
+                            <Layer>
+                                {pageRank.map((pageId) => (
+                                    <PageSettings
+                                        key={pageId}
+                                        pageId={pageId}
                                     />
                                 ))}
                             </Layer>

@@ -16,8 +16,9 @@ export default memo(({ pageId }) => (
         strokeWidth={0.2}
         fill="#eee"
         shadowColor="#000000"
-        shadowBlur={5}
-        shadowOffset={{ x: 5, y: 5 }}
+        shadowBlur={10}
+        shadowOffset={{ x: 0, y: 0 }}
         shadowOpacity={0.5}
+        cornerRadius={4}
     />
 ))

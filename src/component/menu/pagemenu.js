@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import { nanoid } from "@reduxjs/toolkit"
 import { IconButton } from "@material-ui/core"
 import ClearIcon from "@material-ui/icons/Clear"
@@ -43,9 +43,12 @@ export function deleteAllPages() {
  *
  * @param {{pageId: string}} props
  */
-export default function PageMenu({ pageId }) {
+export default function PageMenu({
+    pageId,
+    displayPageSettings,
+    setDisplayPageSettings,
+}) {
     // console.log("PageMenu Redraw");
-    const [displayPageSettings, setDisplayPageSettings] = useState(false)
 
     function openPageSettings() {
         setDisplayPageSettings(true)
