@@ -21,6 +21,7 @@ export default function Viewbar({ fitToPage, center, zoomIn, zoomOut }) {
     const isDraggable = useSelector((state) => state.drawControl.isDraggable)
     const isListening = useSelector((state) => state.drawControl.isListening)
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
+    const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
 
     function togglePanMode() {
         store.dispatch(TOGGLE_PANMODE())
@@ -28,6 +29,15 @@ export default function Viewbar({ fitToPage, center, zoomIn, zoomOut }) {
 
     return (
         <div className="viewbar">
+            {isMouseDown ? (
+                <IconButton id="iconButtonActive" variant="contained">
+                    M
+                </IconButton>
+            ) : (
+                <IconButton id="iconButton" variant="contained">
+                    M
+                </IconButton>
+            )}
             {isDraggable ? (
                 <IconButton id="iconButtonActive" variant="contained">
                     D

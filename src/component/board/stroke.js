@@ -46,7 +46,7 @@ export const StrokeShape = memo(
             if (
                 (store.getState().drawControl.liveStroke.type ===
                     toolType.ERASER &&
-                    store.getState().drawControl.isMouseDown) ||
+                    e.evt.buttons === 1) ||
                 e.evt.buttons === 2
             ) {
                 store.dispatch(ERASE_STROKE({ pageId, id }))
@@ -132,6 +132,7 @@ export const StrokeShape = memo(
                         onDragEnd={onDragEnd}
                         shadowForStrokeEnabled={false}
                         perfectDrawEnabled={false}
+                        fillEnabled={false} // Remove inner hitbox from empty circles
                     />
                 )
                 break

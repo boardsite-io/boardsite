@@ -26,19 +26,17 @@ export default memo(({ pageId }) => {
 
     function onMouseDown(e) {
         if (
-            e.evt.buttons === 2 || // ignore right click eraser, i.e. dont start stroke
-            isPanMode ||
-            tool === toolType.DRAG
+            e.evt.buttons === 2 // ignore right click eraser, i.e. dont start stroke
         ) {
             return
         }
 
-        if (tool === toolType.ERASER) {
-            store.dispatch(SET_ISMOUSEDOWN(true))
-            return
-        }
-
         store.dispatch(SET_ISMOUSEDOWN(true))
+
+        // if (tool === toolType.ERASER) {
+        //     return
+        // }
+
         sampleCount = 1
 
         const pos = getScaledPointerPosition(e)
@@ -48,17 +46,11 @@ export default memo(({ pageId }) => {
     function onMouseMove(e) {
         if (
             !isMouseDown ||
-            isPanMode ||
             e.evt.buttons === 2 || // right mouse
-            e.evt.buttons === 3 || // left+right mouse
-            tool === toolType.DRAG
+            e.evt.buttons === 3 // left+right mouse
         ) {
             // cancel stroke when right / left+right mouse is clicked
             // store.dispatch(SET_ISMOUSEDOWN(false))
-            return
-        }
-        // probably obsolete due to disabling eventlistener on pages during eraser tool
-        if (tool === toolType.ERASER) {
             return
         }
 
@@ -76,13 +68,10 @@ export default memo(({ pageId }) => {
     }
 
     function onMouseUp(e) {
-        if (!isMouseDown || isPanMode || toolType === toolType.DRAG) {
+        if (!isMouseDown) {
             return
         } // Ignore reentering
-        if (tool === toolType.ERASER) {
-            store.dispatch(SET_ISMOUSEDOWN(false))
-            return
-        }
+
         store.dispatch(SET_ISMOUSEDOWN(false))
 
         // update last position
@@ -95,8 +84,9 @@ export default memo(({ pageId }) => {
 
     return (
         <Rect
-            // fillEnabled={tool !== toolType.DRAG && tool !== toolType.ERASER} // fill toggles hitbox
-            listening={tool !== toolType.DRAG && tool !== toolType.ERASER}
+            listening={
+                !isPanMode && tool !== toolType.ERASER && tool !== toolType.DRAG
+            }
             height={CANVAS_HEIGHT}
             width={CANVAS_WIDTH}
             x={0}
