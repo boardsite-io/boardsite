@@ -4,7 +4,6 @@ import { Stage, Layer } from "react-konva"
 import Viewbar from "../menu/viewbar"
 
 import Page from "./page"
-import PageBackground from "./pagebackground"
 import PageListener from "./pagelistener"
 
 import LiveLayer from "./livelayer"
@@ -170,7 +169,7 @@ export default function BoardStage() {
                         <ReactReduxContext.Provider value={value}>
                             <Layer>
                                 {pageRank.map((pageId) => (
-                                    <PageBackground
+                                    <PageListener
                                         key={pageId}
                                         pageId={pageId}
                                     />
@@ -183,14 +182,6 @@ export default function BoardStage() {
                                         pageId={pageId}
                                         isDraggable={isDraggable}
                                         isListening={isListening}
-                                    />
-                                ))}
-                            </Layer>
-                            <Layer>
-                                {pageRank.map((pageId) => (
-                                    <PageListener
-                                        key={pageId}
-                                        pageId={pageId}
                                     />
                                 ))}
                             </Layer>
