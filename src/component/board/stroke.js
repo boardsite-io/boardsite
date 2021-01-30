@@ -145,13 +145,8 @@ export const StrokeShape = memo(
  * Start the current stroke when mouse is pressed down
  * @param {*} position
  */
-export function startLiveStroke(position, pageId) {
-    store.dispatch(
-        START_LIVESTROKE({
-            pageId,
-            points: [position.x, position.y],
-        })
-    )
+export function startLiveStroke(position) {
+    store.dispatch(START_LIVESTROKE([position.x, position.y]))
 }
 
 /**
@@ -165,7 +160,7 @@ export function moveLiveStroke(position) {
 /**
  * Generate API serialized stroke object, draw & save it to redux store
  */
-export async function registerLiveStroke() {
+export async function registerLiveStroke(pageId) {
     const { liveStroke } = store.getState().drawControl
     // empty livestrokes e.g. rightmouse eraser
     if (liveStroke.points === undefined) {
@@ -175,7 +170,7 @@ export async function registerLiveStroke() {
         return
     }
 
-    const stroke = createStroke(liveStroke)
+    const stroke = createStroke(liveStroke, pageId)
     // add stroke to collection
     store.dispatch(ADD_STROKE(stroke))
     // clear livestroke
@@ -199,9 +194,19 @@ function getStartEndPoints(points) {
  * Creates a new stroke with unique ID and processes the points
  * @param {*} liveStroke
  */
-function createStroke(liveStroke) {
+function createStroke(liveStroke, pageId) {
     const stroke = { ...liveStroke }
     stroke.points = stroke.points.flat()
+
+    // add page id
+    stroke.pageId = pageId
+
+    // generate a unique stroke id
+    stroke.id =
+        Math.random()
+            .toString(36)
+            .replace(/[^a-z]+/g, "")
+            .substr(0, 4) + Date.now().toString(36).substr(4)
 
     // for some types we only need a few points
     switch (liveStroke.type) {
@@ -219,13 +224,6 @@ function createStroke(liveStroke) {
 
     // allow a reasonable precision
     stroke.points = stroke.points.map((p) => Math.round(p * 10) / 10)
-
-    // generate a unique id
-    stroke.id =
-        Math.random()
-            .toString(36)
-            .replace(/[^a-z]+/g, "")
-            .substr(0, 4) + Date.now().toString(36).substr(4)
 
     return stroke
 }

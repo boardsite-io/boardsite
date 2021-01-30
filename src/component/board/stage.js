@@ -5,15 +5,10 @@ import Viewbar from "../menu/viewbar"
 
 import Page from "./page"
 import PageBackground from "./pagebackground"
-import PageSettings from "./pagesettings"
+import PageListener from "./pagelistener"
 
 import LiveLayer from "./livelayer"
-import { startLiveStroke, moveLiveStroke, registerLiveStroke } from "./stroke"
-import { SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
-import store from "../../redux/store"
 import {
-    toolType,
-    MIN_SAMPLE_COUNT,
     CANVAS_WIDTH,
     ZOOM_IN_WHEEL_SCALE,
     ZOOM_OUT_WHEEL_SCALE,
@@ -24,9 +19,7 @@ import {
 export default function BoardStage() {
     const pageRank = useSelector((state) => state.boardControl.present.pageRank)
     const isDraggable = useSelector((state) => state.drawControl.isDraggable)
-    const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
     const isActive = useSelector((state) => state.drawControl.isActive)
-    const tool = useSelector((state) => state.drawControl.liveStroke.type)
 
     const [stageX, setStageX] = useState(0)
     const [stageY, setStageY] = useState(60)
@@ -34,88 +27,11 @@ export default function BoardStage() {
     const [stageHeight, setStageHeight] = useState(window.innerHeight)
     const [stageScale, setStageScale] = useState({ x: 1, y: 1 })
 
-    let sampleCount = 0
-
     useEffect(() => {
         window.addEventListener("resize", onWindowResize) // listen for resize to update stage dimensions
         centerPages()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
-    function getScaledPointerPosition(e) {
-        const stage = e.target.getStage()
-        const position = stage.getPointerPosition()
-        const transform = stage.getAbsoluteTransform().copy().invert()
-        return transform.point(position)
-    }
-
-    function onMouseDown(e) {
-        if (
-            e.evt.buttons === 2 || // ignore right click eraser, i.e. dont start stroke
-            !isActive ||
-            tool === toolType.DRAG
-        ) {
-            return
-        }
-
-        if (tool === toolType.ERASER) {
-            store.dispatch(SET_ISMOUSEDOWN(true))
-            return
-        }
-
-        store.dispatch(SET_ISMOUSEDOWN(true))
-        sampleCount = 1
-
-        const pos = getScaledPointerPosition(e)
-        startLiveStroke(pos, pageRank[0]) // todo get pageid
-    }
-
-    function onMouseMove(e) {
-        if (
-            !isMouseDown ||
-            !isActive ||
-            e.evt.buttons === 2 || // right mouse
-            e.evt.buttons === 3 || // left+right mouse
-            tool === toolType.DRAG
-        ) {
-            // cancel stroke when right / left+right mouse is clicked
-            // store.dispatch(SET_ISMOUSEDOWN(false))
-            return
-        }
-        if (tool === toolType.ERASER) {
-            return
-        }
-
-        sampleCount += 1
-        if (tool !== toolType.PEN) {
-            // for all tools except pen we want to redraw on every update
-            const pos = getScaledPointerPosition(e)
-            moveLiveStroke(pos)
-        } else if (sampleCount > MIN_SAMPLE_COUNT) {
-            // for pen tool we skip some samples to improve performance
-            const pos = getScaledPointerPosition(e)
-            moveLiveStroke(pos)
-            sampleCount = 0
-        }
-    }
-
-    function onMouseUp(e) {
-        if (!isMouseDown || !isActive || toolType === toolType.DRAG) {
-            return
-        } // Ignore reentering
-        if (tool === toolType.ERASER) {
-            store.dispatch(SET_ISMOUSEDOWN(false))
-            return
-        }
-        store.dispatch(SET_ISMOUSEDOWN(false))
-
-        // update last position
-        const pos = getScaledPointerPosition(e)
-        moveLiveStroke(pos)
-
-        // register finished stroke
-        registerLiveStroke()
-    }
 
     /**
      * Center the page or fit to page if zoomed in to page
@@ -249,14 +165,7 @@ export default function BoardStage() {
                         x={stageX}
                         y={stageY}
                         onDragEnd={onDragEnd}
-                        onMouseDown={onMouseDown}
-                        onMousemove={onMouseMove}
-                        onMouseUp={onMouseUp}
-                        onMouseLeave={onMouseUp}
                         onContextMenu={(e) => e.evt.preventDefault()}
-                        onTouchStart={onMouseDown}
-                        onTouchMove={onMouseMove}
-                        onTouchEnd={onMouseUp}
                         onWheel={onWheel}>
                         <ReactReduxContext.Provider value={value}>
                             <Layer>
@@ -278,7 +187,7 @@ export default function BoardStage() {
                             </Layer>
                             <Layer>
                                 {pageRank.map((pageId) => (
-                                    <PageSettings
+                                    <PageListener
                                         key={pageId}
                                         pageId={pageId}
                                     />
