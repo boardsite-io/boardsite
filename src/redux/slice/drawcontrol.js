@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 import {
-    DEFAULT_ACTIVE,
+    DEFAULT_ISPANMODE,
     DEFAULT_TOOL,
     DEFAULT_COLOR,
     DEFAULT_WIDTH,
@@ -14,9 +14,10 @@ import {
 const drawControlSlice = createSlice({
     name: "drawControl",
     initialState: {
-        isActive: DEFAULT_ACTIVE,
-        isMouseDown: false,
+        isPanMode: DEFAULT_ISPANMODE,
         isDraggable: false,
+        isListening: false,
+        isMouseDown: false,
         liveStroke: {
             type: DEFAULT_TOOL,
             style: {
@@ -51,13 +52,23 @@ const drawControlSlice = createSlice({
             const type = action.payload
             state.liveStroke.type = type
             state.isDraggable = type === toolType.DRAG
+            state.isListening =
+                type === toolType.DRAG || type === toolType.ERASER
         },
-        SET_ISACTIVE: (state, action) => {
-            const isActive = action.payload
-            state.isActive = isActive
+        SET_ISPANMODE: (state, action) => {
+            state.isPanMode = action.payload
         },
-        TOGGLE_DRAWMODE: (state) => {
-            state.isActive = !state.isActive
+        TOGGLE_PANMODE: (state) => {
+            const { type } = state.liveStroke
+            state.isPanMode = !state.isPanMode
+            if (state.isPanMode) {
+                state.isDraggable = false
+                state.isListening = false
+            } else {
+                state.isDraggable = type === toolType.DRAG
+                state.isListening =
+                    type === toolType.DRAG || type === toolType.ERASER
+            }
         },
         SET_ISMOUSEDOWN: (state, action) => {
             const isMouseDown = action.payload
@@ -95,8 +106,8 @@ export const {
     INCREMENT_WIDTH,
     DECREMENT_WIDTH,
     SET_TYPE,
-    SET_ISACTIVE,
-    TOGGLE_DRAWMODE,
+    SET_ISPANMODE,
+    TOGGLE_PANMODE,
     SET_ISMOUSEDOWN,
     START_LIVESTROKE,
     UPDATE_LIVESTROKE,

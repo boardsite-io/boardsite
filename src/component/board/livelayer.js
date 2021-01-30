@@ -21,6 +21,8 @@ export default memo(() => {
                 key={i}
                 {...liveStroke}
                 points={subPts}
+                isDraggable={false}
+                isListening={false}
             />
         ))
     } // for other types (e.g. circle) we only need the endpoints
@@ -31,6 +33,8 @@ export default memo(() => {
                 points={liveStroke.points[0].concat(
                     liveStroke.points[liveStroke.points.length - 1]
                 )}
+                isDraggable={false}
+                isListening={false}
             />
         )
     }

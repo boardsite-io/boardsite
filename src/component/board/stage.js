@@ -19,7 +19,8 @@ import {
 export default function BoardStage() {
     const pageRank = useSelector((state) => state.boardControl.present.pageRank)
     const isDraggable = useSelector((state) => state.drawControl.isDraggable)
-    const isActive = useSelector((state) => state.drawControl.isActive)
+    const isListening = useSelector((state) => state.drawControl.isListening)
+    const isPanMode = useSelector((state) => state.drawControl.isPanMode)
 
     const [stageX, setStageX] = useState(0)
     const [stageY, setStageY] = useState(60)
@@ -88,9 +89,15 @@ export default function BoardStage() {
      */
     function onWheel(e) {
         e.evt.preventDefault()
-        if (isActive) {
+        if (isPanMode) {
+            const curserPosition = e.target.getStage().getPointerPosition()
+            if (e.evt.deltaY > 0) {
+                zoomTo(curserPosition, ZOOM_OUT_WHEEL_SCALE)
+            } else {
+                zoomTo(curserPosition, ZOOM_IN_WHEEL_SCALE)
+            }
+        } else {
             const newY = stageY - e.evt.deltaY
-
             if (!scrollActive) {
                 scrollActive = true
                 const stage = e.target.getStage()
@@ -102,13 +109,6 @@ export default function BoardStage() {
                         scrollActive = false
                     },
                 })
-            }
-        } else {
-            const curserPosition = e.target.getStage().getPointerPosition()
-            if (e.evt.deltaY > 0) {
-                zoomTo(curserPosition, ZOOM_OUT_WHEEL_SCALE)
-            } else {
-                zoomTo(curserPosition, ZOOM_IN_WHEEL_SCALE)
             }
         }
     }
@@ -157,7 +157,7 @@ export default function BoardStage() {
             <ReactReduxContext.Consumer>
                 {(value) => (
                     <Stage
-                        draggable={!isActive}
+                        draggable={isPanMode}
                         className="stage"
                         width={stageWidth}
                         height={stageHeight}
@@ -182,6 +182,7 @@ export default function BoardStage() {
                                         key={pageId}
                                         pageId={pageId}
                                         isDraggable={isDraggable}
+                                        isListening={isListening}
                                     />
                                 ))}
                             </Layer>

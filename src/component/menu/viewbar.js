@@ -14,36 +14,56 @@ import OpenWithIcon from "@material-ui/icons/OpenWith"
 import { useSelector } from "react-redux"
 
 import store from "../../redux/store"
-import { TOGGLE_DRAWMODE } from "../../redux/slice/drawcontrol"
+import { TOGGLE_PANMODE } from "../../redux/slice/drawcontrol"
 
 export default function Viewbar({ fitToPage, center, zoomIn, zoomOut }) {
     // console.log("Viewbar Redraw");
-    const isActive = useSelector((state) => state.drawControl.isActive)
+    const isDraggable = useSelector((state) => state.drawControl.isDraggable)
+    const isListening = useSelector((state) => state.drawControl.isListening)
+    const isPanMode = useSelector((state) => state.drawControl.isPanMode)
 
-    function toggleDrawMode() {
-        store.dispatch(TOGGLE_DRAWMODE())
+    function togglePanMode() {
+        store.dispatch(TOGGLE_PANMODE())
     }
 
     return (
         <div className="viewbar">
+            {isDraggable ? (
+                <IconButton id="iconButtonActive" variant="contained">
+                    D
+                </IconButton>
+            ) : (
+                <IconButton id="iconButton" variant="contained">
+                    D
+                </IconButton>
+            )}
+            {isListening ? (
+                <IconButton id="iconButtonActive" variant="contained">
+                    L
+                </IconButton>
+            ) : (
+                <IconButton id="iconButton" variant="contained">
+                    L
+                </IconButton>
+            )}
             <Tooltip
                 id="tooltip"
                 title="toggle panning"
                 TransitionProps={{ timeout: 0 }}
                 placement="left">
-                {isActive ? (
-                    <IconButton
-                        id="iconButton"
-                        variant="contained"
-                        onClick={toggleDrawMode}>
-                        <OpenWithIcon id="iconButtonInner" />
-                    </IconButton>
-                ) : (
+                {isPanMode ? (
                     <IconButton
                         id="iconButtonActive"
                         variant="contained"
-                        onClick={toggleDrawMode}>
+                        onClick={togglePanMode}>
                         <OpenWithIcon id="iconButtonActiveInner" />
+                    </IconButton>
+                ) : (
+                    <IconButton
+                        id="iconButton"
+                        variant="contained"
+                        onClick={togglePanMode}>
+                        <OpenWithIcon id="iconButtonInner" />
                     </IconButton>
                 )}
             </Tooltip>
@@ -71,7 +91,6 @@ export default function Viewbar({ fitToPage, center, zoomIn, zoomOut }) {
                     <ZoomOutIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
-
             <Tooltip
                 id="tooltip"
                 title="Fit to Page Width"

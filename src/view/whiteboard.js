@@ -7,7 +7,7 @@ import Homebar from "../component/menu/homebar"
 import AlertDialog from "../component/menu/session_dialog"
 import BoardStage from "../component/board/stage"
 import { toolType } from "../constants"
-import { SET_TYPE, TOGGLE_DRAWMODE } from "../redux/slice/drawcontrol"
+import { SET_TYPE, TOGGLE_PANMODE } from "../redux/slice/drawcontrol"
 import store from "../redux/store"
 
 export default function Whiteboard() {
@@ -71,7 +71,7 @@ export default function Whiteboard() {
                 }
                 break
             case " ": // Undo (Ctrl + Z)
-                store.dispatch(TOGGLE_DRAWMODE())
+                store.dispatch(TOGGLE_PANMODE())
                 break
             default:
                 break

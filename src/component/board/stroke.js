@@ -21,7 +21,7 @@ import { toolType } from "../../constants"
  * @param {{stroke: {}}} props
  */
 export const StrokeShape = memo(
-    ({ id, pageId, type, style, points, x, y, isDraggable }) => {
+    ({ id, pageId, type, style, points, x, y, isDraggable, isListening }) => {
         function onDragStart() {
             // succ
         }
@@ -65,6 +65,7 @@ export const StrokeShape = memo(
                         lineCap="round"
                         onMouseEnter={handleStrokeMouseEnter}
                         draggable={isDraggable}
+                        listening={isListening}
                         onDragStart={onDragStart}
                         onDragEnd={onDragEnd}
                         x={x}
@@ -84,6 +85,7 @@ export const StrokeShape = memo(
                         lineCap="round"
                         onMouseEnter={handleStrokeMouseEnter}
                         draggable={isDraggable}
+                        listening={isListening}
                         onDragStart={onDragStart}
                         onDragEnd={onDragEnd}
                         x={x}
@@ -125,6 +127,7 @@ export const StrokeShape = memo(
                         // fill={props.stroke.style.color}
                         onMouseEnter={handleStrokeMouseEnter}
                         draggable={isDraggable}
+                        listening={isListening}
                         onDragStart={onDragStart}
                         onDragEnd={onDragEnd}
                         shadowForStrokeEnabled={false}

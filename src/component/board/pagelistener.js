@@ -14,7 +14,7 @@ import { SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
 export default memo(({ pageId }) => {
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
     const tool = useSelector((state) => state.drawControl.liveStroke.type)
-    const isActive = useSelector((state) => state.drawControl.isActive)
+    const isPanMode = useSelector((state) => state.drawControl.isPanMode)
     let sampleCount = 0
 
     function getScaledPointerPosition(e) {
@@ -27,7 +27,7 @@ export default memo(({ pageId }) => {
     function onMouseDown(e) {
         if (
             e.evt.buttons === 2 || // ignore right click eraser, i.e. dont start stroke
-            !isActive ||
+            isPanMode ||
             tool === toolType.DRAG
         ) {
             return
@@ -48,7 +48,7 @@ export default memo(({ pageId }) => {
     function onMouseMove(e) {
         if (
             !isMouseDown ||
-            !isActive ||
+            isPanMode ||
             e.evt.buttons === 2 || // right mouse
             e.evt.buttons === 3 || // left+right mouse
             tool === toolType.DRAG
@@ -57,6 +57,7 @@ export default memo(({ pageId }) => {
             // store.dispatch(SET_ISMOUSEDOWN(false))
             return
         }
+        // probably obsolete due to disabling eventlistener on pages during eraser tool
         if (tool === toolType.ERASER) {
             return
         }
@@ -75,7 +76,7 @@ export default memo(({ pageId }) => {
     }
 
     function onMouseUp(e) {
-        if (!isMouseDown || !isActive || toolType === toolType.DRAG) {
+        if (!isMouseDown || isPanMode || toolType === toolType.DRAG) {
             return
         } // Ignore reentering
         if (tool === toolType.ERASER) {
@@ -94,6 +95,8 @@ export default memo(({ pageId }) => {
 
     return (
         <Rect
+            // fillEnabled={tool !== toolType.DRAG && tool !== toolType.ERASER} // fill toggles hitbox
+            listening={tool !== toolType.DRAG && tool !== toolType.ERASER}
             height={CANVAS_HEIGHT}
             width={CANVAS_WIDTH}
             x={0}
