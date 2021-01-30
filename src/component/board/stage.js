@@ -10,7 +10,15 @@ import LiveLayer from "./livelayer"
 import { startLiveStroke, moveLiveStroke, registerLiveStroke } from "./stroke"
 import { SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
 import store from "../../redux/store"
-import { toolType, MIN_SAMPLE_COUNT, CANVAS_WIDTH } from "../../constants"
+import {
+    toolType,
+    MIN_SAMPLE_COUNT,
+    CANVAS_WIDTH,
+    ZOOM_IN_WHEEL_SCALE,
+    ZOOM_OUT_WHEEL_SCALE,
+    ZOOM_IN_SCALE,
+    ZOOM_OUT_SCALE,
+} from "../../constants"
 
 export default function BoardStage() {
     const pageRank = useSelector((state) => state.boardControl.present.pageRank)
@@ -96,27 +104,8 @@ export default function BoardStage() {
         registerLiveStroke()
     }
 
-    function onWheel(e) {
-        e.evt.preventDefault()
-        const zoomWheelStep = 0.9
-        const stage = e.target.getStage()
-        const oldScale = stage.scaleX()
-        const pointer = stage.getPointerPosition()
-        const mousePointTo = {
-            x: (pointer.x - stage.x()) / oldScale,
-            y: (pointer.y - stage.y()) / oldScale,
-        }
-        const newScale =
-            e.evt.deltaY > 0
-                ? oldScale * zoomWheelStep
-                : oldScale / zoomWheelStep
-        setStageScale({ x: newScale, y: newScale })
-        setStageX(pointer.x - mousePointTo.x * newScale)
-        setStageY(pointer.y - mousePointTo.y * newScale)
-    }
-
     useEffect(() => {
-        window.addEventListener("resize", onResize)
+        window.addEventListener("resize", onResize) // listen for resize to update stage dimensions
         center()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -161,9 +150,69 @@ export default function BoardStage() {
         setStageY(e.target.attrs.y)
     }
 
+    /**
+     * Wheel event handler function
+     * @param {event} e
+     */
+    function onWheel(e) {
+        e.evt.preventDefault()
+        if (isActive) {
+            if (e.evt.deltaY > 0) {
+                setStageY((y) => y - 100)
+            } else {
+                setStageY((y) => y + 100)
+            }
+        } else {
+            const curserPosition = e.target.getStage().getPointerPosition()
+            if (e.evt.deltaY > 0) {
+                zoomTo(curserPosition, ZOOM_OUT_WHEEL_SCALE)
+            } else {
+                zoomTo(curserPosition, ZOOM_IN_WHEEL_SCALE)
+            }
+        }
+    }
+
+    /**
+     * Zoom in canvas
+     */
+    function zoomIn() {
+        const centerOfScreen = { x: stageWidth / 2, y: stageHeight / 2 }
+        zoomTo(centerOfScreen, ZOOM_IN_SCALE)
+    }
+
+    /**
+     * Zoom out canvas
+     */
+    function zoomOut() {
+        const centerOfScreen = { x: stageWidth / 2, y: stageHeight / 2 }
+        zoomTo(centerOfScreen, ZOOM_OUT_SCALE)
+    }
+
+    /**
+     *
+     * @param {object} position Desired zooming position.
+     * @param {number} zoomScale The zooming step size.
+     */
+    function zoomTo(position, zoomScale) {
+        const oldScale = stageScale.x
+        const mousePointTo = {
+            x: (position.x - stageX) / oldScale,
+            y: (position.y - stageY) / oldScale,
+        }
+        const newScale = oldScale * zoomScale
+        setStageScale({ x: newScale, y: newScale })
+        setStageX(position.x - mousePointTo.x * newScale)
+        setStageY(position.y - mousePointTo.y * newScale)
+    }
+
     return (
-        <div className="wrap" id="wrap">
-            <Viewbar fitToPage={fitToPage} center={center} />
+        <div className="wrap">
+            <Viewbar
+                fitToPage={fitToPage}
+                center={center}
+                zoomIn={zoomIn}
+                zoomOut={zoomOut}
+            />
             <ReactReduxContext.Consumer>
                 {(value) => (
                     <Stage

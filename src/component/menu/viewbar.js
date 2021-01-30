@@ -1,6 +1,6 @@
 import React from "react"
-// import ZoomInIcon from "@material-ui/icons/ZoomIn"
-// import ZoomOutIcon from "@material-ui/icons/ZoomOut"
+import ZoomInIcon from "@material-ui/icons/ZoomIn"
+import ZoomOutIcon from "@material-ui/icons/ZoomOut"
 // import ZoomOutMapIcon from "@material-ui/icons/ZoomOutMap"
 import { IconButton } from "@material-ui/core"
 // import ExpandLessIcon from "@material-ui/icons/ExpandLess"
@@ -13,7 +13,7 @@ import { useSelector } from "react-redux"
 import store from "../../redux/store"
 import { TOGGLE_DRAWMODE } from "../../redux/slice/drawcontrol"
 
-export default function Viewbar({ fitToPage, center }) {
+export default function Viewbar({ fitToPage, center, zoomIn, zoomOut }) {
     // console.log("Viewbar Redraw");
     const isActive = useSelector((state) => state.drawControl.isActive)
 
@@ -56,7 +56,7 @@ export default function Viewbar({ fitToPage, center }) {
                 onClick={center}>
                 2
             </IconButton>
-            {/* <Tooltip
+            <Tooltip
                 id="tooltip"
                 title="zoom in"
                 TransitionProps={{ timeout: 0 }}
@@ -64,7 +64,7 @@ export default function Viewbar({ fitToPage, center }) {
                 <IconButton
                     id="iconButton"
                     variant="contained"
-                    onClick={}>
+                    onClick={zoomIn}>
                     <ZoomInIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
@@ -80,7 +80,7 @@ export default function Viewbar({ fitToPage, center }) {
                     <ZoomOutIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
-            <Tooltip
+            {/* <Tooltip
                 id="tooltip"
                 title="fit page width"
                 TransitionProps={{ timeout: 0 }}

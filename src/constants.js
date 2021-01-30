@@ -6,6 +6,10 @@ export const WIDTH_MAX = 40
 export const DEFAULT_WIDTH = 4
 export const DEFAULT_COLOR = "#000000"
 export const DEFAULT_ACTIVE = "true"
+export const ZOOM_IN_WHEEL_SCALE = 1.1
+export const ZOOM_OUT_WHEEL_SCALE = 0.9
+export const ZOOM_IN_SCALE = 1.1
+export const ZOOM_OUT_SCALE = 0.9
 
 // drawing stuff
 export const toolType = {
