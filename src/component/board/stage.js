@@ -88,7 +88,7 @@ export default function BoardStage() {
      */
     function onWheel(e) {
         e.evt.preventDefault()
-        if (isPanMode) {
+        if (isPanMode || e.evt.ctrlKey) {
             const curserPosition = e.target.getStage().getPointerPosition()
             if (e.evt.deltaY > 0) {
                 zoomTo(curserPosition, ZOOM_OUT_WHEEL_SCALE)
