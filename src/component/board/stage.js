@@ -18,6 +18,7 @@ import {
     ZOOM_OUT_WHEEL_SCALE,
     ZOOM_IN_SCALE,
     ZOOM_OUT_SCALE,
+    SCROLL_WHEEL_STEP,
 } from "../../constants"
 
 export default function BoardStage() {
@@ -146,8 +147,11 @@ export default function BoardStage() {
 
     function onDragEnd(e) {
         // update states
-        setStageX(e.target.attrs.x)
-        setStageY(e.target.attrs.y)
+        if (e.target === Stage) {
+            // if stage is the drag object then update XY
+            setStageX(e.target.attrs.x)
+            setStageY(e.target.attrs.y)
+        }
     }
 
     /**
@@ -158,9 +162,9 @@ export default function BoardStage() {
         e.evt.preventDefault()
         if (isActive) {
             if (e.evt.deltaY > 0) {
-                setStageY((y) => y - 100)
+                setStageY((y) => y - SCROLL_WHEEL_STEP)
             } else {
-                setStageY((y) => y + 100)
+                setStageY((y) => y + SCROLL_WHEEL_STEP)
             }
         } else {
             const curserPosition = e.target.getStage().getPointerPosition()

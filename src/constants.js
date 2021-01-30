@@ -10,6 +10,7 @@ export const ZOOM_IN_WHEEL_SCALE = 1.1
 export const ZOOM_OUT_WHEEL_SCALE = 0.9
 export const ZOOM_IN_SCALE = 1.1
 export const ZOOM_OUT_SCALE = 0.9
+export const SCROLL_WHEEL_STEP = 50
 
 // drawing stuff
 export const toolType = {
