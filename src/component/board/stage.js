@@ -2,6 +2,7 @@ import React, { useEffect, useState, memo } from "react"
 import { ReactReduxContext, useSelector } from "react-redux"
 import { Stage, Layer } from "react-konva"
 import Viewbar from "../menu/viewbar"
+import { SET_CURR_PAGE_IDX } from "../../redux/slice/drawcontrol"
 
 import Page from "./page"
 import PageListener from "./pagelistener"
@@ -17,12 +18,11 @@ import {
     ZOOM_SCALE_MIN,
     CANVAS_HEIGHT,
 } from "../../constants"
+import store from "../../redux/store"
 
 export default function BoardStage() {
     // console.log("BoardStage Memo Redraw")
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
-
-    const [currentPage, setCurrentPage] = useState(0)
     const [stageX, setStageX] = useState(0)
     const [stageY, setStageY] = useState(60)
     const [stageWidth, setStageWidth] = useState(window.innerWidth)
@@ -32,7 +32,7 @@ export default function BoardStage() {
     useEffect(() => {
         const canvasY = (stageHeight / 2 - stageY) / stageScale.y
         const currentPageIndex = Math.floor(canvasY / CANVAS_HEIGHT)
-        setCurrentPage(currentPageIndex)
+        store.dispatch(SET_CURR_PAGE_IDX(currentPageIndex))
     }, [stageY, stageHeight, stageScale.y])
 
     useEffect(() => {
@@ -166,7 +166,6 @@ export default function BoardStage() {
                 center={centerPages}
                 zoomIn={zoomIn}
                 zoomOut={zoomOut}
-                currentPage={currentPage}
             />
             <ReactReduxContext.Consumer>
                 {(value) => (
@@ -193,6 +192,20 @@ export default function BoardStage() {
 
 const StageContent = memo(() => {
     // console.log("StageContent memo draw")
+    // const pageRank = useSelector((state) => {
+    //     // const pageR = state.boardControl.present.pageRank
+    //     // const currPage = state.drawControl
+    //     // const prlen = pageR.len
+    //     // const minPage = currentPage - 2
+    //     // const maxPage = currentPage + 2
+    //     // const startPage = Math.max(minPage, 0)
+    //     // const endPage = Math.min(minPage, prlen - 1)
+
+    //     return state.boardControl.present.pageRank[
+    //         state.drawControl.currPageIndex
+    //     ]
+    // })
+
     const pageRank = useSelector((state) => state.boardControl.present.pageRank)
 
     return (
