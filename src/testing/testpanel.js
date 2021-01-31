@@ -13,15 +13,36 @@ export default function TestPanel() {
                 id="tooltip"
                 title="zoom out"
                 TransitionProps={{ timeout: 0 }}
-                placement="left">
-                <Button>xD</Button>
+                placement="right">
+                <Button id="testPanelButtons">☯ TESTING ☯</Button>
             </Tooltip>
-
-            <Button className="testPanelButtons" onClick={overload}>
-                !
-            </Button>
-            <Button onClick={dispatchTest}>2</Button>
-            <Button onClick={dispatchTestSingle}>3</Button>
+            <Tooltip
+                id="tooltip"
+                title="zoom out"
+                TransitionProps={{ timeout: 0 }}
+                placement="right">
+                <Button id="testPanelButtons" onClick={overload}>
+                    Stress Test
+                </Button>
+            </Tooltip>
+            <Tooltip
+                id="tooltip"
+                title="zoom out"
+                TransitionProps={{ timeout: 0 }}
+                placement="right">
+                <Button id="testPanelButtons" onClick={dispatchTest}>
+                    Update All Test
+                </Button>
+            </Tooltip>
+            <Tooltip
+                id="tooltip"
+                title="zoom out"
+                TransitionProps={{ timeout: 0 }}
+                placement="right">
+                <Button id="testPanelButtons" onClick={dispatchTestSingle}>
+                    Update One Test
+                </Button>
+            </Tooltip>
         </div>
     )
 }

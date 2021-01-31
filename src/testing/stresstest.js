@@ -6,6 +6,9 @@ import store from "../redux/store"
 export default function overload() {
     const numStrokes = 100
     const numPointsPerStroke = 3
+    // eslint-disable-next-line
+    console.log("Stress test: generating", numStrokes,"strokes with", numPointsPerStroke, "points per stroke.")
+
     const { pageRank } = store.getState().boardControl.present
 
     for (let j = 0; j < numStrokes; j += 1) {
