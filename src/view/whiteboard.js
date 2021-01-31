@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import { ActionCreators as UndoActionCreators } from "redux-undo"
 import FPSStats from "react-fps-stats"
 import { addPage } from "../component/menu/pagemenu"
+import TestPanel from "../testing/testpanel"
 import Toolbar from "../component/menu/toolbar"
 import Homebar from "../component/menu/homebar"
 import AlertDialog from "../component/menu/session_dialog"
@@ -134,6 +135,7 @@ export default function Whiteboard() {
     return (
         <div>
             <FPSStats />
+            <TestPanel />
             <AlertDialog
                 open={openSessionDialog}
                 setOpen={setOpenSessionDialog}

@@ -1,0 +1,13 @@
+.testPanel {
+    position: fixed;
+    flex-direction: column;
+    left: 20px;
+    top: 100px;
+    background-color: aquamarine;
+    border-radius: 4px;
+    z-index: 1337;
+}
+
+.testPanelButtons {
+    background-color: blueviolet;
+}
