@@ -42,6 +42,7 @@ export default function overload() {
     }
 }
 
+// All shapes update for N_OF_RUNS times
 export function dispatchTest() {
     const N_OF_RUNS = 10
     const start = performance.now()
@@ -66,4 +67,29 @@ export function dispatchTest() {
     const end = performance.now()
     console.log("sum time", end - start)
     console.log("avg time", (end - start) / N_OF_RUNS)
+}
+
+// Single shape update
+export function dispatchTestSingle() {
+    const N_OF_RUNS = 1
+    const start = performance.now()
+    const { pageCollection } = store.getState().boardControl.present
+
+    for (let i = 0; i < N_OF_RUNS; i += 1) {
+        const firstPageId = Object.keys(pageCollection)[0]
+        const { strokes } = pageCollection[firstPageId]
+        const firstStrokeId = Object.keys(strokes)[0]
+        const stroke = strokes[firstStrokeId]
+        store.dispatch(
+            UPDATE_STROKE({
+                x: stroke.x + (Math.random() - 0.5) * 50,
+                y: stroke.y + (Math.random() - 0.5) * 50,
+                id: firstStrokeId,
+                pageId: firstPageId,
+            })
+        )
+    }
+
+    const end = performance.now()
+    console.log("time", end - start)
 }

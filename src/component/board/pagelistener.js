@@ -13,11 +13,16 @@ import { SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
 
 export default function PageListener({ pageId }) {
     // console.log("PageListener Redraw")
+
+    const listeningSelector = useSelector((state) => {
+        const { isPanMode } = state.drawControl
+        const tool = state.drawControl.liveStroke.type
+        return !isPanMode && tool !== toolType.ERASER && tool !== toolType.DRAG
+    })
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
     const tool = useSelector((state) => state.drawControl.liveStroke.type)
-    const isPanMode = useSelector((state) => state.drawControl.isPanMode)
-    let sampleCount = 0
 
+    let sampleCount = 0
     function getScaledPointerPosition(e) {
         const stage = e.target.getStage()
         const position = stage.getPointerPosition()
@@ -85,9 +90,7 @@ export default function PageListener({ pageId }) {
 
     return (
         <Rect
-            listening={
-                !isPanMode && tool !== toolType.ERASER && tool !== toolType.DRAG
-            }
+            listening={listeningSelector}
             height={CANVAS_HEIGHT}
             width={CANVAS_WIDTH}
             x={0}

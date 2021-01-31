@@ -3,11 +3,12 @@ import { useSelector } from "react-redux"
 import { StrokeShape } from "./stroke"
 
 export default function Page({ pageId, isDraggable, isListening }) {
-    // console.log("Page Redraw")
+    console.log("Page Redraw")
     const strokes = useSelector((state) => {
         if (state.boardControl.present.pageCollection[pageId] !== undefined) {
             return state.boardControl.present.pageCollection[pageId].strokes
         }
+        console.log("pageCollection[pageId] is undefined")
         return {}
     })
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, memo } from "react"
 import { ReactReduxContext, useSelector } from "react-redux"
 import { Stage, Layer } from "react-konva"
 import Viewbar from "../menu/viewbar"
@@ -17,9 +17,6 @@ import {
 
 export default function BoardStage() {
     // console.log("BoardStage Memo Redraw")
-    const pageRank = useSelector((state) => state.boardControl.present.pageRank)
-    const isDraggable = useSelector((state) => state.drawControl.isDraggable)
-    const isListening = useSelector((state) => state.drawControl.isListening)
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
 
     const [stageX, setStageX] = useState(0)
@@ -168,25 +165,7 @@ export default function BoardStage() {
                         onContextMenu={(e) => e.evt.preventDefault()}
                         onWheel={onWheel}>
                         <ReactReduxContext.Provider value={value}>
-                            <Layer>
-                                {pageRank.map((pageId) => (
-                                    <PageListener
-                                        key={pageId}
-                                        pageId={pageId}
-                                    />
-                                ))}
-                            </Layer>
-                            <Layer>
-                                {pageRank.map((pageId) => (
-                                    <Page
-                                        key={pageId}
-                                        pageId={pageId}
-                                        isDraggable={isDraggable}
-                                        isListening={isListening}
-                                    />
-                                ))}
-                            </Layer>
-                            <LiveLayer />
+                            <StageContent value={value} />
                         </ReactReduxContext.Provider>
                     </Stage>
                 )}
@@ -194,3 +173,24 @@ export default function BoardStage() {
         </div>
     )
 }
+
+const StageContent = memo(() => {
+    console.log("StageContent memo draw")
+    const pageRank = useSelector((state) => state.boardControl.present.pageRank)
+
+    return (
+        <>
+            <Layer>
+                {pageRank.map((pageId) => (
+                    <PageListener key={pageId} pageId={pageId} />
+                ))}
+            </Layer>
+            <Layer>
+                {pageRank.map((pageId) => (
+                    <Page key={pageId} pageId={pageId} />
+                ))}
+            </Layer>
+            <LiveLayer />
+        </>
+    )
+})

@@ -15,7 +15,10 @@ import { useSelector } from "react-redux"
 
 import store from "../../redux/store"
 import { TOGGLE_PANMODE } from "../../redux/slice/drawcontrol"
-import overload, { dispatchTest } from "../../testing/stresstest"
+import overload, {
+    dispatchTest,
+    dispatchTestSingle,
+} from "../../testing/stresstest"
 
 export default function Viewbar({ fitToPage, center, zoomIn, zoomOut }) {
     // console.log("Viewbar Redraw")
@@ -30,15 +33,10 @@ export default function Viewbar({ fitToPage, center, zoomIn, zoomOut }) {
 
     return (
         <div className="viewbar">
-            <IconButton id="iconButton" variant="contained" onClick={overload}>
-                ST
-            </IconButton>
-            <IconButton
-                id="iconButton"
-                variant="contained"
-                onClick={dispatchTest}>
-                DT
-            </IconButton>
+            <IconButton onClick={overload}>!</IconButton>
+            <IconButton onClick={dispatchTest}>2</IconButton>
+            <IconButton onClick={dispatchTestSingle}>3</IconButton>
+
             {isMouseDown ? (
                 <IconButton id="iconButtonActive" variant="contained">
                     M
