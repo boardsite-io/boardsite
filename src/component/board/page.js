@@ -1,9 +1,9 @@
-import React, { memo } from "react"
+import React from "react"
 import { useSelector } from "react-redux"
 import { StrokeShape } from "./stroke"
 
-export default memo(({ pageId, isDraggable, isListening }) => {
-    console.log("Page Memo Redraw")
+export default function Page({ pageId, isDraggable, isListening }) {
+    // console.log("Page Redraw")
     const strokes = useSelector((state) => {
         if (state.boardControl.present.pageCollection[pageId] !== undefined) {
             return state.boardControl.present.pageCollection[pageId].strokes
@@ -23,4 +23,4 @@ export default memo(({ pageId, isDraggable, isListening }) => {
             ))}
         </>
     )
-})
+}

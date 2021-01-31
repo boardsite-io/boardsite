@@ -22,7 +22,7 @@ import { toolType } from "../../constants"
  */
 export const StrokeShape = memo(
     ({ id, pageId, type, style, points, x, y, isDraggable, isListening }) => {
-        console.log("StrokeShape Memo Redraw")
+        // console.log("StrokeShape Memo Redraw")
         function onDragStart() {
             // succ
         }

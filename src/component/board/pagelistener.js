@@ -1,4 +1,4 @@
-import React, { memo } from "react"
+import React from "react"
 import { useSelector } from "react-redux"
 import { Rect } from "react-konva"
 import store from "../../redux/store"
@@ -11,8 +11,8 @@ import {
 } from "../../constants"
 import { SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
 
-export default memo(({ pageId }) => {
-    console.log("PageListener Memo Redraw")
+export default function PageListener({ pageId }) {
+    // console.log("PageListener Redraw")
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
     const tool = useSelector((state) => state.drawControl.liveStroke.type)
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
@@ -112,4 +112,4 @@ export default memo(({ pageId }) => {
             onTouchEnd={onMouseUp}
         />
     )
-})
+}

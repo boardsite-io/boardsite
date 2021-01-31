@@ -1,28 +1,24 @@
+import Konva from "konva"
 import { CANVAS_HEIGHT, CANVAS_WIDTH, toolType } from "../constants"
-import { ADD_STROKE } from "../redux/slice/boardcontrol"
+import { ADD_STROKE, UPDATE_STROKE } from "../redux/slice/boardcontrol"
 import store from "../redux/store"
 
 export default function overload() {
-    const numStrokes = 5
-    const numPointsPerStroke = 30
+    const numStrokes = 100
+    const numPointsPerStroke = 3
     const { pageRank } = store.getState().boardControl.present
 
     for (let j = 0; j < numStrokes; j += 1) {
         const pageIndex = Math.floor(Math.random() * pageRank.length)
         const points = []
-        for (let i = 0; i < numPointsPerStroke; i += 2) {
+        for (let i = 0; i < numPointsPerStroke; i += 1) {
             const randomX = Math.random() * CANVAS_WIDTH
             const randomY = (pageIndex + Math.random()) * CANVAS_HEIGHT
             points.push(randomX, randomY)
         }
-
-        const randomColor = `#${`000000${Math.random()
-            .toString(16)
-            .slice(2, 8)
-            .toUpperCase()}`.slice(-6)}`
         const stroke = {
             style: {
-                color: randomColor,
+                color: Konva.Util.getRandomColor(),
                 width: 3,
             },
         }
@@ -30,6 +26,8 @@ export default function overload() {
         stroke.points = points
         stroke.points = stroke.points.flat()
         stroke.pageId = pageRank[pageIndex]
+        stroke.x = 0
+        stroke.y = 0
 
         // generate a unique stroke id
         stroke.id =
@@ -42,4 +40,30 @@ export default function overload() {
         stroke.points = stroke.points.map((p) => Math.round(p * 10) / 10)
         store.dispatch(ADD_STROKE(stroke))
     }
+}
+
+export function dispatchTest() {
+    const N_OF_RUNS = 10
+    const start = performance.now()
+    for (let i = 0; i < N_OF_RUNS; i += 1) {
+        const { pageCollection } = store.getState().boardControl.present
+        Object.keys(pageCollection).forEach((pageId) => {
+            const { strokes } = pageCollection[pageId]
+            Object.keys(strokes).forEach((id) => {
+                const stroke = strokes[id]
+                store.dispatch(
+                    UPDATE_STROKE({
+                        x: stroke.x + (Math.random() - 0.5) * 50,
+                        y: stroke.y + (Math.random() - 0.5) * 50,
+                        id,
+                        pageId,
+                    })
+                )
+            })
+        })
+    }
+
+    const end = performance.now()
+    console.log("sum time", end - start)
+    console.log("avg time", (end - start) / N_OF_RUNS)
 }
