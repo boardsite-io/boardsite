@@ -17,11 +17,8 @@ import store from "../../redux/store"
 import { TOGGLE_PANMODE } from "../../redux/slice/drawcontrol"
 
 export default function Viewbar({ fitToPage, center, zoomIn, zoomOut }) {
-    console.log("Viewbar Redraw")
-    const isDraggable = useSelector((state) => state.drawControl.isDraggable)
-    const isListening = useSelector((state) => state.drawControl.isListening)
+    // console.log("Viewbar Redraw")
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
-    const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
 
     function togglePanMode() {
         store.dispatch(TOGGLE_PANMODE())
@@ -29,36 +26,9 @@ export default function Viewbar({ fitToPage, center, zoomIn, zoomOut }) {
 
     return (
         <div className="viewbar">
-            {isMouseDown ? (
-                <IconButton id="iconButtonActive" variant="contained">
-                    M
-                </IconButton>
-            ) : (
-                <IconButton id="iconButton" variant="contained">
-                    M
-                </IconButton>
-            )}
-            {isDraggable ? (
-                <IconButton id="iconButtonActive" variant="contained">
-                    D
-                </IconButton>
-            ) : (
-                <IconButton id="iconButton" variant="contained">
-                    D
-                </IconButton>
-            )}
-            {isListening ? (
-                <IconButton id="iconButtonActive" variant="contained">
-                    L
-                </IconButton>
-            ) : (
-                <IconButton id="iconButton" variant="contained">
-                    L
-                </IconButton>
-            )}
             <Tooltip
                 id="tooltip"
-                title="toggle panning"
+                title="Toggle Panning"
                 TransitionProps={{ timeout: 0 }}
                 placement="left">
                 {isPanMode ? (
@@ -79,7 +49,7 @@ export default function Viewbar({ fitToPage, center, zoomIn, zoomOut }) {
             </Tooltip>
             <Tooltip
                 id="tooltip"
-                title="zoom in"
+                title="Zoom In"
                 TransitionProps={{ timeout: 0 }}
                 placement="left">
                 <IconButton
@@ -91,7 +61,7 @@ export default function Viewbar({ fitToPage, center, zoomIn, zoomOut }) {
             </Tooltip>
             <Tooltip
                 id="tooltip"
-                title="zoom out"
+                title="Zoom Out"
                 TransitionProps={{ timeout: 0 }}
                 placement="left">
                 <IconButton
