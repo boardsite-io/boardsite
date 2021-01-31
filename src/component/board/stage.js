@@ -192,21 +192,15 @@ export default function BoardStage() {
 
 const StageContent = memo(() => {
     // console.log("StageContent memo draw")
-    // const pageRank = useSelector((state) => {
-    //     // const pageR = state.boardControl.present.pageRank
-    //     // const currPage = state.drawControl
-    //     // const prlen = pageR.len
-    //     // const minPage = currentPage - 2
-    //     // const maxPage = currentPage + 2
-    //     // const startPage = Math.max(minPage, 0)
-    //     // const endPage = Math.min(minPage, prlen - 1)
-
-    //     return state.boardControl.present.pageRank[
-    //         state.drawControl.currPageIndex
-    //     ]
-    // })
-
-    const pageRank = useSelector((state) => state.boardControl.present.pageRank)
+    const pageRank = useSelector((state) => {
+        const { currPageIndex } = state.drawControl
+        const prlen = state.boardControl.present.pageRank.length // length of pageRank array
+        const minPage = currPageIndex - 2 // Get min page candidate
+        const maxPage = currPageIndex + 2 // Get max page candidate
+        const startPage = Math.max(minPage, 0) // Set start page index to candidate or to 0 if negative index
+        const endPage = Math.min(maxPage + 1, prlen) // Set end page index; +1 because of slice indexing
+        return state.boardControl.present.pageRank.slice(startPage, endPage)
+    })
 
     return (
         <>
