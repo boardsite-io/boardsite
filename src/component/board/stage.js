@@ -13,6 +13,8 @@ import {
     ZOOM_OUT_WHEEL_SCALE,
     ZOOM_IN_SCALE,
     ZOOM_OUT_SCALE,
+    ZOOM_SCALE_MAX,
+    ZOOM_SCALE_MIN,
 } from "../../constants"
 
 export default function BoardStage() {
@@ -137,7 +139,13 @@ export default function BoardStage() {
             x: (position.x - stageX) / oldScale,
             y: (position.y - stageY) / oldScale,
         }
-        const newScale = oldScale * zoomScale
+        let newScale = oldScale * zoomScale
+        if (newScale > ZOOM_SCALE_MAX) {
+            newScale = ZOOM_SCALE_MAX
+        } else if (newScale < ZOOM_SCALE_MIN) {
+            newScale = ZOOM_SCALE_MIN
+        }
+
         setStageScale({ x: newScale, y: newScale })
         setStageX(position.x - mousePointTo.x * newScale)
         setStageY(position.y - mousePointTo.y * newScale)
