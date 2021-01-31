@@ -12,6 +12,7 @@ import {
 import { SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
 
 export default memo(({ pageId }) => {
+    console.log("PageListener Memo Redraw")
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
     const tool = useSelector((state) => state.drawControl.liveStroke.type)
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)

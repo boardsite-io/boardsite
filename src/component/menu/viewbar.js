@@ -18,7 +18,7 @@ import { TOGGLE_PANMODE } from "../../redux/slice/drawcontrol"
 import overload from "../../testing/stresstest"
 
 export default function Viewbar({ fitToPage, center, zoomIn, zoomOut }) {
-    // console.log("Viewbar Redraw");
+    console.log("Viewbar Redraw")
     const isDraggable = useSelector((state) => state.drawControl.isDraggable)
     const isListening = useSelector((state) => state.drawControl.isListening)
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)

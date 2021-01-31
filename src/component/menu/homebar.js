@@ -11,6 +11,7 @@ import AddIcon from "@material-ui/icons/Add"
 import { addPage, deleteAllPages } from "./pagemenu"
 
 export default function Homebar(props) {
+    console.log("Homebar Redraw")
     return (
         <div className="homebar">
             <Tooltip

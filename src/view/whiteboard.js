@@ -11,7 +11,7 @@ import { SET_TYPE, TOGGLE_PANMODE } from "../redux/slice/drawcontrol"
 import store from "../redux/store"
 
 export default function Whiteboard() {
-    // console.log("Whiteboard Redraw");
+    console.log("Whiteboard Redraw")
     const [openSessionDialog, setOpenSessionDialog] = useState(false)
     const [sidInput, setSidInput] = useState("")
 

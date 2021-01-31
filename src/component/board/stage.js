@@ -16,6 +16,7 @@ import {
 } from "../../constants"
 
 export default function BoardStage() {
+    console.log("BoardStage Memo Redraw")
     const pageRank = useSelector((state) => state.boardControl.present.pageRank)
     const isDraggable = useSelector((state) => state.drawControl.isDraggable)
     const isListening = useSelector((state) => state.drawControl.isListening)
