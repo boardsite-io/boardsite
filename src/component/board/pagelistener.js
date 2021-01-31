@@ -31,9 +31,7 @@ export default function PageListener({ pageId }) {
     }
 
     function onMouseDown(e) {
-        if (
-            e.evt.buttons === 2 // ignore right click eraser, i.e. dont start stroke
-        ) {
+        if (e.evt.buttons === 2) {
             return
         }
 

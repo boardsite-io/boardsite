@@ -65,7 +65,9 @@ export function dispatchTest() {
     }
 
     const end = performance.now()
+    // eslint-disable-next-line
     console.log("sum time", end - start)
+    // eslint-disable-next-line
     console.log("avg time", (end - start) / N_OF_RUNS)
 }
 
@@ -91,5 +93,6 @@ export function dispatchTestSingle() {
     }
 
     const end = performance.now()
+    // eslint-disable-next-line
     console.log("time", end - start)
 }

@@ -175,7 +175,7 @@ export default function BoardStage() {
 }
 
 const StageContent = memo(() => {
-    console.log("StageContent memo draw")
+    // console.log("StageContent memo draw")
     const pageRank = useSelector((state) => state.boardControl.present.pageRank)
 
     return (
