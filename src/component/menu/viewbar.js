@@ -16,7 +16,13 @@ import { useSelector } from "react-redux"
 import store from "../../redux/store"
 import { TOGGLE_PANMODE } from "../../redux/slice/drawcontrol"
 
-export default function Viewbar({ fitToPage, center, zoomIn, zoomOut }) {
+export default function Viewbar({
+    fitToPage,
+    center,
+    zoomIn,
+    zoomOut,
+    currentPage,
+}) {
     // console.log("Viewbar Redraw")
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
 
@@ -26,6 +32,13 @@ export default function Viewbar({ fitToPage, center, zoomIn, zoomOut }) {
 
     return (
         <div className="viewbar">
+            <IconButton
+                id="iconButton"
+                style={{ color: "#00d2be" }}
+                variant="contained"
+                onClick={togglePanMode}>
+                {currentPage}
+            </IconButton>
             <Tooltip
                 id="tooltip"
                 title="Toggle Panning"

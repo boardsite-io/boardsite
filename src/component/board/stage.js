@@ -15,17 +15,25 @@ import {
     ZOOM_OUT_SCALE,
     ZOOM_SCALE_MAX,
     ZOOM_SCALE_MIN,
+    CANVAS_HEIGHT,
 } from "../../constants"
 
 export default function BoardStage() {
     // console.log("BoardStage Memo Redraw")
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
 
+    const [currentPage, setCurrentPage] = useState(0)
     const [stageX, setStageX] = useState(0)
     const [stageY, setStageY] = useState(60)
     const [stageWidth, setStageWidth] = useState(window.innerWidth)
     const [stageHeight, setStageHeight] = useState(window.innerHeight)
     const [stageScale, setStageScale] = useState({ x: 1, y: 1 })
+
+    useEffect(() => {
+        const canvasY = (stageHeight / 2 - stageY) / stageScale.y
+        const currentPageIndex = Math.floor(canvasY / CANVAS_HEIGHT)
+        setCurrentPage(currentPageIndex)
+    }, [stageY, stageHeight, stageScale.y])
 
     useEffect(() => {
         window.addEventListener("resize", onWindowResize) // listen for resize to update stage dimensions
@@ -158,6 +166,7 @@ export default function BoardStage() {
                 center={centerPages}
                 zoomIn={zoomIn}
                 zoomOut={zoomOut}
+                currentPage={currentPage}
             />
             <ReactReduxContext.Consumer>
                 {(value) => (
