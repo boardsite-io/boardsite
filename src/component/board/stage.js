@@ -17,6 +17,7 @@ import {
     ZOOM_SCALE_MAX,
     ZOOM_SCALE_MIN,
     CANVAS_HEIGHT,
+    CANVAS_GAP,
 } from "../../constants"
 import store from "../../redux/store"
 
@@ -25,13 +26,16 @@ export default function BoardStage() {
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
     const [stageX, setStageX] = useState(0)
     const [stageY, setStageY] = useState(60)
+    const [stageScale, setStageScale] = useState({ x: 1, y: 1 })
+
     const [stageWidth, setStageWidth] = useState(window.innerWidth)
     const [stageHeight, setStageHeight] = useState(window.innerHeight)
-    const [stageScale, setStageScale] = useState({ x: 1, y: 1 })
 
     useEffect(() => {
         const canvasY = (stageHeight / 2 - stageY) / stageScale.y
-        const currentPageIndex = Math.floor(canvasY / CANVAS_HEIGHT)
+        const currentPageIndex = Math.floor(
+            canvasY / (CANVAS_HEIGHT + CANVAS_GAP)
+        )
         store.dispatch(SET_CURR_PAGE_IDX(currentPageIndex))
     }, [stageY, stageHeight, stageScale.y])
 

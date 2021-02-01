@@ -1,5 +1,6 @@
 export const CANVAS_WIDTH = 620
 export const CANVAS_HEIGHT = 877
+export const CANVAS_GAP = 20
 export const CANVAS_PIXEL_RATIO = 1 // css forces canvas to be in a smaller frame but with high res for better clarity
 export const WIDTH_MIN = 1
 export const WIDTH_MAX = 40

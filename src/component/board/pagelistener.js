@@ -6,6 +6,7 @@ import { startLiveStroke, moveLiveStroke, registerLiveStroke } from "./stroke"
 import {
     CANVAS_WIDTH,
     CANVAS_HEIGHT,
+    CANVAS_GAP,
     toolType,
     MIN_SAMPLE_COUNT,
 } from "../../constants"
@@ -93,7 +94,7 @@ export default function PageListener({ pageId }) {
             width={CANVAS_WIDTH}
             x={0}
             y={
-                (CANVAS_HEIGHT + 20) *
+                (CANVAS_HEIGHT + CANVAS_GAP) *
                 store.getState().boardControl.present.pageRank.indexOf(pageId)
             }
             stroke="#000"
