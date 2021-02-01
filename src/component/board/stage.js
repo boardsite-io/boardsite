@@ -26,17 +26,12 @@ export default function BoardStage() {
     const stageScale = useSelector((state) => state.viewControl.stageScale)
 
     useEffect(() => {
-        window.addEventListener("resize", onWindowResize) // listen for resize to update stage dimensions
+        window.addEventListener("resize", () =>
+            store.dispatch(ON_WINDOW_RESIZE())
+        ) // listen for resize to update stage dimensions
         store.dispatch(CENTER_VIEW())
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
-    /**
-     * Handles window resize events
-     */
-    function onWindowResize() {
-        store.dispatch(ON_WINDOW_RESIZE())
-    }
 
     /**
      * Handles updating the states after stage drag events

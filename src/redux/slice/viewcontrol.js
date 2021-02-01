@@ -49,6 +49,14 @@ function zoomToPointWithScale(state, zoomPoint, zoomScale) {
     state.stageScale = { x: newScale, y: newScale }
     state.stageX = zoomPoint.x - mousePointTo.x * newScale
     state.stageY = zoomPoint.y - mousePointTo.y * newScale
+    updateCurrentActivePageId(state) // check if pageId changed by zooming
+}
+
+function updateCurrentActivePageId(state) {
+    const canvasY = (state.stageHeight / 2 - state.stageY) / state.stageScale.y
+    state.currentActivePageId = Math.floor(
+        canvasY / (CANVAS_HEIGHT + CANVAS_GAP)
+    )
 }
 
 const drawControlSlice = createSlice({
@@ -67,11 +75,7 @@ const drawControlSlice = createSlice({
         },
         SET_STAGE_Y: (state, action) => {
             state.stageY = action.payload
-            const canvasY =
-                (state.stageHeight / 2 - state.stageY) / state.stageScale.y
-            state.currentActivePageId = Math.floor(
-                canvasY / (CANVAS_HEIGHT + CANVAS_GAP)
-            )
+            updateCurrentActivePageId(state)
         },
         SET_STAGE_SCALE: (state, action) => {
             state.stageScale = action.payload
