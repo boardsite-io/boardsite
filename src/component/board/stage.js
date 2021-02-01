@@ -1,5 +1,6 @@
 import React, { useEffect, memo } from "react"
 import { ReactReduxContext, useSelector } from "react-redux"
+import { createSelector } from "reselect"
 import { Stage, Layer } from "react-konva"
 import {
     CENTER_VIEW,
@@ -114,15 +115,19 @@ export default function BoardStage() {
 
 const StageContent = memo(() => {
     // console.log("StageContent memo draw")
-    const pageSelector = useSelector((state) => {
-        const { currentPageId } = state.viewControl
-        const prlen = state.boardControl.present.pageRank.length // length of pageRank array
-        const minPage = currentPageId - 2 // Get min page candidate
-        const maxPage = currentPageId + 2 // Get max page candidate
-        const startPage = Math.max(minPage, 0) // Set start page index to candidate or to 0 if negative index
-        const endPage = Math.min(maxPage + 1, prlen) // Set end page index; +1 because of slice indexing
-        return state.boardControl.present.pageRank.slice(startPage, endPage)
-    })
+    const pageCreateSelector = createSelector(
+        (state) => state.boardControl.present.pageRank,
+        (state) => state.viewControl.currentPageId,
+        (pageRank, currentPageId) => {
+            const minPage = currentPageId - 2 // Get min page candidate
+            const maxPage = currentPageId + 2 // Get max page candidate
+            const startPage = Math.max(minPage, 0) // Set start page index to candidate or to 0 if negative index
+            const endPage = Math.min(maxPage + 1, pageRank.length) // Set end page index; +1 because of slice indexing
+            return pageRank.slice(startPage, endPage)
+        }
+    )
+
+    const pageSelector = useSelector(pageCreateSelector)
 
     return (
         <>
