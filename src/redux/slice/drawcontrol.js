@@ -18,7 +18,6 @@ const drawControlSlice = createSlice({
         isDraggable: false,
         isListening: false,
         isMouseDown: false,
-        currPageIndex: 0,
         liveStroke: {
             type: DEFAULT_TOOL,
             style: {
@@ -31,9 +30,6 @@ const drawControlSlice = createSlice({
         },
     },
     reducers: {
-        SET_CURR_PAGE_IDX: (state, action) => {
-            state.currPageIndex = action.payload
-        },
         SET_COLOR: (state, action) => {
             const color = action.payload
             state.liveStroke.style.color = color
@@ -105,7 +101,6 @@ const drawControlSlice = createSlice({
 })
 
 export const {
-    SET_CURR_PAGE_IDX,
     SET_COLOR,
     SET_WIDTH,
     INCREMENT_WIDTH,

@@ -14,6 +14,12 @@ export const ZOOM_OUT_SCALE = 0.9
 export const ZOOM_SCALE_MAX = 2.0
 export const ZOOM_SCALE_MIN = 0.5
 
+export const DEFAULT_STAGE_WIDTH = window.innerWidth
+export const DEFAULT_STAGE_HEIGHT = window.innerHeight
+export const DEFAULT_STAGE_X = 0
+export const DEFAULT_STAGE_Y = 60
+export const DEFAULT_STAGE_SCALE = { x: 1, y: 1 }
+
 // drawing stuff
 export const toolType = {
     PEN: 0,

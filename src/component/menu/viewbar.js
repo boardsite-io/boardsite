@@ -15,12 +15,18 @@ import { useSelector } from "react-redux"
 
 import store from "../../redux/store"
 import { TOGGLE_PANMODE } from "../../redux/slice/drawcontrol"
+import {
+    ZOOM_IN_CENTER,
+    ZOOM_OUT_CENTER,
+    FIT_WIDTH_TO_PAGE,
+    CENTER_VIEW,
+} from "../../redux/slice/viewcontrol"
 
-export default function Viewbar({ fitToPage, center, zoomIn, zoomOut }) {
+export default function Viewbar() {
     // console.log("Viewbar Redraw")
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
     const currPageIndex = useSelector(
-        (state) => state.drawControl.currPageIndex
+        (state) => state.viewControl.currentActivePageId
     )
 
     function togglePanMode() {
@@ -65,7 +71,7 @@ export default function Viewbar({ fitToPage, center, zoomIn, zoomOut }) {
                 <IconButton
                     id="iconButton"
                     variant="contained"
-                    onClick={zoomIn}>
+                    onClick={() => store.dispatch(ZOOM_IN_CENTER())}>
                     <ZoomInIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
@@ -77,7 +83,7 @@ export default function Viewbar({ fitToPage, center, zoomIn, zoomOut }) {
                 <IconButton
                     id="iconButton"
                     variant="contained"
-                    onClick={zoomOut}>
+                    onClick={() => store.dispatch(ZOOM_OUT_CENTER())}>
                     <ZoomOutIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
@@ -89,7 +95,7 @@ export default function Viewbar({ fitToPage, center, zoomIn, zoomOut }) {
                 <IconButton
                     id="iconButton"
                     variant="contained"
-                    onClick={fitToPage}>
+                    onClick={() => store.dispatch(FIT_WIDTH_TO_PAGE())}>
                     <ZoomOutMapIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
@@ -101,7 +107,7 @@ export default function Viewbar({ fitToPage, center, zoomIn, zoomOut }) {
                 <IconButton
                     id="iconButton"
                     variant="contained"
-                    onClick={center}>
+                    onClick={() => store.dispatch(CENTER_VIEW())}>
                     <FilterCenterFocusIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>

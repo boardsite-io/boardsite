@@ -5,6 +5,8 @@ import { addPage } from "../component/menu/pagemenu"
 import TestPanel from "../testing/testpanel"
 import Toolbar from "../component/menu/toolbar"
 import Homebar from "../component/menu/homebar"
+import Viewbar from "../component/menu/viewbar"
+
 import AlertDialog from "../component/menu/session_dialog"
 import BoardStage from "../component/board/stage"
 import { toolType } from "../constants"
@@ -145,6 +147,7 @@ export default function Whiteboard() {
                 handleJoin={handleJoin}
                 handleCreate={handleCreate}
             />
+            <Viewbar />
             <Toolbar />
             <Homebar setOpenSessionDialog={setOpenSessionDialog} />
             <BoardStage />
