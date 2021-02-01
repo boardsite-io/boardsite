@@ -5,6 +5,7 @@ import {
     DEFAULT_STAGE_X,
     DEFAULT_STAGE_Y,
     DEFAULT_STAGE_SCALE,
+    DEFAULT_CURRENT_PAGE_ID,
     CANVAS_WIDTH,
     CANVAS_HEIGHT,
     CANVAS_GAP,
@@ -14,60 +15,15 @@ import {
     ZOOM_OUT_SCALE,
 } from "../../constants"
 
-function centerView(state) {
-    const x = (window.innerWidth - CANVAS_WIDTH * state.stageScale.x) / 2
-    if (x >= 0) {
-        state.stageX = x
-    } else {
-        fitToPage()
-    }
-}
-
-function fitToPage(state) {
-    const oldScale = state.stageScale.y
-    const newScale = window.innerWidth / CANVAS_WIDTH
-    state.stageScale = { x: newScale, y: newScale }
-    state.stageX = 0
-    state.stageY =
-        state.stageHeight / 2 -
-        ((state.stageHeight / 2 - state.stageY) / oldScale) * newScale
-}
-
-function zoomToPointWithScale(state, zoomPoint, zoomScale) {
-    const oldScale = state.stageScale.x
-    const mousePointTo = {
-        x: (zoomPoint.x - state.stageX) / oldScale,
-        y: (zoomPoint.y - state.stageY) / oldScale,
-    }
-    let newScale = oldScale * zoomScale
-    if (newScale > ZOOM_SCALE_MAX) {
-        newScale = ZOOM_SCALE_MAX
-    } else if (newScale < ZOOM_SCALE_MIN) {
-        newScale = ZOOM_SCALE_MIN
-    }
-
-    state.stageScale = { x: newScale, y: newScale }
-    state.stageX = zoomPoint.x - mousePointTo.x * newScale
-    state.stageY = zoomPoint.y - mousePointTo.y * newScale
-    updateCurrentActivePageId(state) // check if pageId changed by zooming
-}
-
-function updateCurrentActivePageId(state) {
-    const canvasY = (state.stageHeight / 2 - state.stageY) / state.stageScale.y
-    state.currentActivePageId = Math.floor(
-        canvasY / (CANVAS_HEIGHT + CANVAS_GAP)
-    )
-}
-
-const drawControlSlice = createSlice({
-    name: "drawControl",
+const viewControlSlice = createSlice({
+    name: "viewControl",
     initialState: {
         stageWidth: DEFAULT_STAGE_WIDTH,
         stageHeight: DEFAULT_STAGE_HEIGHT,
         stageX: DEFAULT_STAGE_X,
         stageY: DEFAULT_STAGE_Y,
         stageScale: DEFAULT_STAGE_SCALE,
-        currentActivePageId: 0,
+        currentPageId: DEFAULT_CURRENT_PAGE_ID,
     },
     reducers: {
         SET_STAGE_X: (state, action) => {
@@ -75,7 +31,7 @@ const drawControlSlice = createSlice({
         },
         SET_STAGE_Y: (state, action) => {
             state.stageY = action.payload
-            updateCurrentActivePageId(state)
+            updateCurrentPageId(state)
         },
         SET_STAGE_SCALE: (state, action) => {
             state.stageScale = action.payload
@@ -122,5 +78,48 @@ export const {
     ZOOM_TO,
     ZOOM_IN_CENTER,
     ZOOM_OUT_CENTER,
-} = drawControlSlice.actions
-export default drawControlSlice.reducer
+} = viewControlSlice.actions
+export default viewControlSlice.reducer
+
+function centerView(state) {
+    const x = (window.innerWidth - CANVAS_WIDTH * state.stageScale.x) / 2
+    if (x >= 0) {
+        state.stageX = x
+    } else {
+        fitToPage(state)
+    }
+}
+
+function fitToPage(state) {
+    const oldScale = state.stageScale.y
+    const newScale = window.innerWidth / CANVAS_WIDTH
+    state.stageScale = { x: newScale, y: newScale }
+    state.stageX = 0
+    state.stageY =
+        state.stageHeight / 2 -
+        ((state.stageHeight / 2 - state.stageY) / oldScale) * newScale
+}
+
+function zoomToPointWithScale(state, zoomPoint, zoomScale) {
+    const oldScale = state.stageScale.x
+    const mousePointTo = {
+        x: (zoomPoint.x - state.stageX) / oldScale,
+        y: (zoomPoint.y - state.stageY) / oldScale,
+    }
+    let newScale = oldScale * zoomScale
+    if (newScale > ZOOM_SCALE_MAX) {
+        newScale = ZOOM_SCALE_MAX
+    } else if (newScale < ZOOM_SCALE_MIN) {
+        newScale = ZOOM_SCALE_MIN
+    }
+
+    state.stageScale = { x: newScale, y: newScale }
+    state.stageX = zoomPoint.x - mousePointTo.x * newScale
+    state.stageY = zoomPoint.y - mousePointTo.y * newScale
+    updateCurrentPageId(state) // check if pageId changed by zooming
+}
+
+function updateCurrentPageId(state) {
+    const canvasY = (state.stageHeight / 2 - state.stageY) / state.stageScale.y
+    state.currentPageId = Math.floor(canvasY / (CANVAS_HEIGHT + CANVAS_GAP))
+}
