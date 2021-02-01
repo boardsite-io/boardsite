@@ -1,5 +1,5 @@
 import Konva from "konva"
-import { CANVAS_HEIGHT, CANVAS_WIDTH, toolType } from "../constants"
+import { CANVAS_HEIGHT, CANVAS_WIDTH, CANVAS_GAP, toolType } from "../constants"
 import { ADD_STROKE, UPDATE_STROKE } from "../redux/slice/boardcontrol"
 import store from "../redux/store"
 
@@ -7,7 +7,13 @@ export default function overload() {
     const numStrokes = 100
     const numPointsPerStroke = 3
     // eslint-disable-next-line
-    console.log("Stress test: generating", numStrokes,"strokes with", numPointsPerStroke, "points per stroke.")
+    console.log(
+        "Stress test: generating",
+        numStrokes,
+        "strokes with",
+        numPointsPerStroke,
+        "points per stroke."
+    )
 
     const { pageRank } = store.getState().boardControl.present
 
@@ -16,7 +22,8 @@ export default function overload() {
         const points = []
         for (let i = 0; i < numPointsPerStroke; i += 1) {
             const randomX = Math.random() * CANVAS_WIDTH
-            const randomY = (pageIndex + Math.random()) * CANVAS_HEIGHT
+            const randomY =
+                (pageIndex + Math.random()) * (CANVAS_HEIGHT + CANVAS_GAP)
             points.push(randomX, randomY)
         }
         const stroke = {
