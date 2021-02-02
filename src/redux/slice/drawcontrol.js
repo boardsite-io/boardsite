@@ -9,7 +9,12 @@ import {
     WIDTH_MAX,
     WIDTH_MIN,
     MAX_LIVESTROKE_PTS,
+    MIN_SAMPLE_COUNT,
 } from "../../constants"
+
+let counter
+let sumX
+let sumY
 
 const drawControlSlice = createSlice({
     name: "drawControl",
@@ -75,14 +80,39 @@ const drawControlSlice = createSlice({
             state.isMouseDown = isMouseDown
         },
         START_LIVESTROKE: (state, action) => {
+            counter = 0
             const points = action.payload
+            // eslint-disable-next-line prefer-destructuring
+            sumX = 0
+            // eslint-disable-next-line prefer-destructuring
+            sumY = 0
             state.liveStroke.points = [points]
         },
         // Update the current live stroke position
         UPDATE_LIVESTROKE: (state, action) => {
-            const points = action.payload
-            const p =
-                state.liveStroke.points[state.liveStroke.points.length - 1]
+            let points = action.payload
+            const pLen = state.liveStroke.points.length
+            const p = state.liveStroke.points[pLen - 1]
+            const { type } = state.liveStroke
+
+            if (type === toolType.PEN) {
+                counter += 1
+                sumX += points[0]
+                sumY += points[1]
+                if (counter >= MIN_SAMPLE_COUNT) {
+                    points = [sumX / MIN_SAMPLE_COUNT, sumY / MIN_SAMPLE_COUNT]
+                    counter = 0
+                    sumX = 0
+                    sumY = 0
+                    p.splice(p.length - 2, 2, ...points)
+                    return
+                }
+                if (counter !== 1) {
+                    p.splice(p.length - 2, 2, ...points)
+                    return
+                }
+            }
+
             if (p.length < MAX_LIVESTROKE_PTS) {
                 p.push(...points)
             } else {

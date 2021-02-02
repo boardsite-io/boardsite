@@ -3,22 +3,14 @@ import { useSelector } from "react-redux"
 import { Rect } from "react-konva"
 import store from "../../redux/store"
 import { startLiveStroke, moveLiveStroke, registerLiveStroke } from "./stroke"
-import {
-    CANVAS_WIDTH,
-    CANVAS_HEIGHT,
-    CANVAS_GAP,
-    toolType,
-    MIN_SAMPLE_COUNT,
-} from "../../constants"
+import { CANVAS_WIDTH, CANVAS_HEIGHT, CANVAS_GAP } from "../../constants"
 import { SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
 
 export default function PageListener({ pageId }) {
     // console.log("PageListener Redraw")
 
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
-    const tool = useSelector((state) => state.drawControl.liveStroke.type)
 
-    let sampleCount = 0
     function getScaledPointerPosition(e) {
         const stage = e.target.getStage()
         const position = stage.getPointerPosition()
@@ -37,8 +29,6 @@ export default function PageListener({ pageId }) {
         //     return
         // }
 
-        sampleCount = 1
-
         const pos = getScaledPointerPosition(e)
         startLiveStroke(pos)
     }
@@ -54,17 +44,8 @@ export default function PageListener({ pageId }) {
             return
         }
 
-        sampleCount += 1
-        if (tool !== toolType.PEN) {
-            // for all tools except pen we want to redraw on every update
-            const pos = getScaledPointerPosition(e)
-            moveLiveStroke(pos)
-        } else if (sampleCount > MIN_SAMPLE_COUNT) {
-            // for pen tool we skip some samples to improve performance
-            const pos = getScaledPointerPosition(e)
-            moveLiveStroke(pos)
-            sampleCount = 0
-        }
+        const pos = getScaledPointerPosition(e)
+        moveLiveStroke(pos)
     }
 
     function onMouseUp(e) {

@@ -126,6 +126,8 @@ export default function BoardStage() {
             <ReactReduxContext.Consumer>
                 {(value) => (
                     <Stage
+                        shadowForStrokeEnabled={false}
+                        perfectDrawEnabled={false}
                         preventDefault
                         draggable={isPanMode}
                         className="stage"
