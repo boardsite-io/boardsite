@@ -14,7 +14,12 @@ import Page from "./page"
 import PageListener from "./pagelistener"
 
 import LiveLayer from "./livelayer"
-import { ZOOM_IN_WHEEL_SCALE, ZOOM_OUT_WHEEL_SCALE } from "../../constants"
+import {
+    ZOOM_IN_WHEEL_SCALE,
+    ZOOM_OUT_WHEEL_SCALE,
+    SCROLL_WHEEL_STEP,
+    SCROLL_WHEEL_STEP_DURATION,
+} from "../../constants"
 import store from "../../redux/store"
 
 export default function BoardStage() {
@@ -48,43 +53,83 @@ export default function BoardStage() {
     }
 
     let scrollActive = false
+    let scrollBuffer = 0
+    let newY
     /**
      * Wheel event handler function
      * @param {event} e
      */
     function onWheel(e) {
         e.evt.preventDefault()
+        const isUp = e.evt.deltaY < 0
+
         if (isPanMode || e.evt.ctrlKey) {
             const curserPosition = e.target.getStage().getPointerPosition()
-            if (e.evt.deltaY > 0) {
-                store.dispatch(
-                    ZOOM_TO({
-                        zoomPoint: curserPosition,
-                        zoomScale: ZOOM_OUT_WHEEL_SCALE,
-                    })
-                )
+            let zoomScale
+            if (isUp) {
+                zoomScale = ZOOM_IN_WHEEL_SCALE
             } else {
-                store.dispatch(
-                    ZOOM_TO({
-                        zoomPoint: curserPosition,
-                        zoomScale: ZOOM_IN_WHEEL_SCALE,
-                    })
-                )
+                zoomScale = ZOOM_OUT_WHEEL_SCALE
+            }
+            store.dispatch(
+                ZOOM_TO({
+                    zoomPoint: curserPosition,
+                    zoomScale,
+                })
+            )
+        } else if (scrollActive) {
+            if (isUp) {
+                scrollBuffer += 1
+            } else {
+                scrollBuffer -= 1
             }
         } else {
-            const newY = stageY - e.evt.deltaY
-            if (!scrollActive) {
-                scrollActive = true
-                const stage = e.target.getStage()
-                stage.to({
-                    y: newY,
-                    duration: 0.1,
-                    onFinish: () => {
-                        store.dispatch(SET_STAGE_Y(newY))
-                        scrollActive = false
-                    },
-                })
+            scrollActive = true
+            const stage = e.target.getStage()
+            if (isUp) {
+                newY = stageY + SCROLL_WHEEL_STEP
+            } else {
+                newY = stageY - SCROLL_WHEEL_STEP
             }
+            stage.to({
+                y: newY,
+                duration: SCROLL_WHEEL_STEP_DURATION,
+                onFinish: () => handleFinish(newY, stage, isUp),
+            })
+        }
+    }
+
+    function handleFinish(updatedY, stage, isUp) {
+        if (scrollBuffer !== 0) {
+            let bufferY
+            if (isUp) {
+                if (scrollBuffer > 0) {
+                    scrollBuffer -= 1
+                    bufferY = updatedY + SCROLL_WHEEL_STEP
+                } else {
+                    // handle direction change
+                    scrollBuffer = 0
+                    handleFinish(updatedY, stage, isUp)
+                    return
+                }
+            } else if (scrollBuffer < 0) {
+                scrollBuffer += 1
+                bufferY = updatedY - SCROLL_WHEEL_STEP
+            } else {
+                // handle direction change
+                scrollBuffer = 0
+                handleFinish(updatedY, stage, isUp)
+                return
+            }
+
+            stage.to({
+                y: bufferY,
+                duration: SCROLL_WHEEL_STEP_DURATION,
+                onFinish: () => handleFinish(bufferY, stage, isUp),
+            })
+        } else {
+            scrollActive = false
+            store.dispatch(SET_STAGE_Y(updatedY)) // dispatch on the end of scrolling combo
         }
     }
 
