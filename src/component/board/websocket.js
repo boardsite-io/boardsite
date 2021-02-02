@@ -1,4 +1,15 @@
-import { SYNC_ALL_PAGES } from "../../redux/slice/boardcontrol"
+import {
+    SYNC_ALL_PAGES,
+    ADD_PAGE,
+    CLEAR_PAGE,
+    DELETE_PAGE,
+    DELETE_ALL_PAGES,
+    ADD_STROKE,
+    ERASE_STROKE,
+    UPDATE_STROKE,
+} from "../../redux/slice/boardcontrol"
+// import { toolType } from "../../constants"
+import store from "../../redux/store"
 
 const baseURL = "http://heat.port0.org:8000"
 // const baseURL = "https://cors-anywhere.herokuapp.com/http://heat.port0.org:8000";
@@ -82,23 +93,38 @@ export function createBoardRequest(boardDim) {
     return sendRequest("/board/create", "POST", boardDim)
 }
 
-function onMessage(data) {
-    // eslint-disable-next-line no-console
-    console.log("dosmth", data)
-    // const strokeObjectArray = JSON.parse(data.data)
-    // switch (messageType) {
-    //     case "SYNC_ALL_PAGES":
-    //         store.dispatch(SYNC_ALL_PAGES({pageRank: , pageCollection: }}))
-    //         break
-    //     case "1": // Pen
-    //         store.dispatch(SET_TYPE(toolType.PEN))
-    //         break
-    //     case "2": // Eraser
-    //         store.dispatch(SET_TYPE(toolType.ERASER))
-    //         break
-    //     default:
-    //         break
-    // }
+function onMessage(payload) {
+    const data = JSON.parse(payload.data)
+    switch (data.messageType) {
+        case "SYNC_ALL_PAGES":
+            store.dispatch(SYNC_ALL_PAGES(data.pageRank, data.pageCollection))
+            break
+        case "ADD_PAGE": // Pen
+            store.dispatch(ADD_PAGE())
+            break
+        case "CLEAR_PAGE": // Pen
+            store.dispatch(CLEAR_PAGE())
+            break
+        case "DELETE_PAGE": // Pen
+            store.dispatch(DELETE_PAGE())
+            break
+        case "DELETE_ALL_PAGES": // Pen
+            store.dispatch(DELETE_ALL_PAGES())
+            break
+        case "ADD_STROKE": // Pen
+            store.dispatch(ADD_STROKE())
+            break
+        case "ERASE_STROKE": // Eraser
+            store.dispatch(ERASE_STROKE())
+            break
+        case "UPDATE_STROKE": // Eraser
+            store.dispatch(UPDATE_STROKE())
+            break
+        default:
+            // eslint-disable-next-line no-console
+            console.log("dosmth", payload)
+            break
+    }
 }
 
 // // Handles messages from the websocket
