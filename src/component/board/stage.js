@@ -100,36 +100,24 @@ export default function BoardStage() {
     }
 
     function handleFinish(updatedY, stage, isUp) {
-        if (scrollBuffer !== 0) {
-            let bufferY
-            if (isUp) {
-                if (scrollBuffer > 0) {
-                    scrollBuffer -= 1
-                    bufferY = updatedY + SCROLL_WHEEL_STEP
-                } else {
-                    // handle direction change
-                    scrollBuffer = 0
-                    handleFinish(updatedY, stage, isUp)
-                    return
-                }
-            } else if (scrollBuffer < 0) {
-                scrollBuffer += 1
-                bufferY = updatedY - SCROLL_WHEEL_STEP
-            } else {
-                // handle direction change
-                scrollBuffer = 0
-                handleFinish(updatedY, stage, isUp)
-                return
-            }
-
-            stage.to({
-                y: bufferY,
-                duration: SCROLL_WHEEL_STEP_DURATION,
-                onFinish: () => handleFinish(bufferY, stage, isUp),
-            })
-        } else {
+        if (
+            scrollBuffer === 0 ||
+            (isUp && scrollBuffer < 0) ||
+            (!isUp && scrollBuffer > 0)
+        ) {
+            // handle direction change and finished animations
             scrollActive = false
             store.dispatch(SET_STAGE_Y(updatedY)) // dispatch on the end of scrolling combo
+        } else {
+            const bufferY = updatedY + scrollBuffer * SCROLL_WHEEL_STEP
+            const bufferDur =
+                Math.abs(scrollBuffer) * SCROLL_WHEEL_STEP_DURATION
+            scrollBuffer = 0
+            stage.to({
+                y: bufferY,
+                duration: bufferDur,
+                onFinish: () => handleFinish(bufferY, stage, isUp),
+            })
         }
     }
 
