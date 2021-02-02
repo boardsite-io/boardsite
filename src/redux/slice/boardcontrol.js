@@ -10,6 +10,11 @@ const boardControlSlice = createSlice({
         websocket: null,
     },
     reducers: {
+        SYNC_ALL_PAGES: (state, action) => {
+            const { pageRank, pageCollection } = action.payload
+            state.pageRank = pageRank
+            state.pageCollection = pageCollection
+        },
         // Add a new page
         ADD_PAGE: (state, action) => {
             const { pageId, pageIndex } = action.payload
@@ -77,6 +82,7 @@ const boardControlSlice = createSlice({
 })
 
 export const {
+    SYNC_ALL_PAGES,
     ADD_PAGE,
     CLEAR_PAGE,
     DELETE_PAGE,

@@ -1,3 +1,5 @@
+import { SYNC_ALL_PAGES } from "../../redux/slice/boardcontrol"
+
 const baseURL = "http://heat.port0.org:8000"
 // const baseURL = "https://cors-anywhere.herokuapp.com/http://heat.port0.org:8000";
 
@@ -85,14 +87,11 @@ function onMessage(data) {
     console.log("dosmth", data)
     // const strokeObjectArray = JSON.parse(data.data)
     // switch (messageType) {
-    //     case "p": // Pen
-    //         store.dispatch(SET_TYPE(toolType.PEN))
+    //     case "SYNC_ALL_PAGES":
+    //         store.dispatch(SYNC_ALL_PAGES({pageRank: , pageCollection: }}))
     //         break
     //     case "1": // Pen
     //         store.dispatch(SET_TYPE(toolType.PEN))
-    //         break
-    //     case "e": // Eraser
-    //         store.dispatch(SET_TYPE(toolType.ERASER))
     //         break
     //     case "2": // Eraser
     //         store.dispatch(SET_TYPE(toolType.ERASER))
