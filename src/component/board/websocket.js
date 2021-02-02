@@ -68,9 +68,11 @@ export function createWebsocket(sessionId) {
     createWebsocketPromise(sessionId, onMessage, null, null)
         .then((socket) => {
             // wsRef.current = socket;
+            // eslint-disable-next-line no-console
             console.log(sessionId, socket)
             navigator.clipboard.writeText(sessionId) // copy session ID to clipboard
         })
+        // eslint-disable-next-line no-console
         .catch(() => console.log(`cannot connect websocket on '/${sessionId}'`))
 }
 
@@ -79,6 +81,7 @@ export function createBoardRequest(boardDim) {
 }
 
 function onMessage(data) {
+    // eslint-disable-next-line no-console
     console.log("dosmth", data)
     // const strokeObjectArray = JSON.parse(data.data)
     // switch (messageType) {

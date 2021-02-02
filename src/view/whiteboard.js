@@ -96,7 +96,7 @@ export default function Whiteboard() {
 
     // Verify session id and try to connect to session
     useEffect(() => {
-        if (sessionId !== "") {
+        if (sessionId !== "" && sessionId !== undefined) {
             createWebsocket(sessionId)
         }
     }, [sessionId])
