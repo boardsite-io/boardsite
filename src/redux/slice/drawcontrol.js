@@ -4,6 +4,9 @@ import {
     DEFAULT_TOOL,
     DEFAULT_COLOR,
     DEFAULT_WIDTH,
+    DEFAULT_ISDRAGGABLE,
+    DEFAULT_ISLISTENING,
+    DEFAULT_ISMOUSEDOWN,
     CANVAS_PIXEL_RATIO,
     toolType,
     WIDTH_MAX,
@@ -19,9 +22,9 @@ const drawControlSlice = createSlice({
     name: "drawControl",
     initialState: {
         isPanMode: DEFAULT_ISPANMODE,
-        isDraggable: false,
-        isListening: false,
-        isMouseDown: false,
+        isDraggable: DEFAULT_ISDRAGGABLE,
+        isListening: DEFAULT_ISLISTENING,
+        isMouseDown: DEFAULT_ISMOUSEDOWN,
         liveStroke: {
             type: DEFAULT_TOOL,
             style: {

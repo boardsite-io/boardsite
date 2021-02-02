@@ -21,6 +21,9 @@ export const DEFAULT_STAGE_HEIGHT = window.innerHeight
 export const DEFAULT_STAGE_X = 0
 export const DEFAULT_STAGE_Y = 60
 export const DEFAULT_STAGE_SCALE = { x: 1, y: 1 }
+export const DEFAULT_ISDRAGGABLE = false
+export const DEFAULT_ISLISTENING = false
+export const DEFAULT_ISMOUSEDOWN = false
 
 // drawing stuff
 export const toolType = {
