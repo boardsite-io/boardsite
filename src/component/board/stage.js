@@ -19,6 +19,7 @@ import {
     ZOOM_OUT_WHEEL_SCALE,
     SCROLL_WHEEL_STEP,
     SCROLL_WHEEL_STEP_DURATION,
+    toolType,
 } from "../../constants"
 import store from "../../redux/store"
 
@@ -126,6 +127,7 @@ export default function BoardStage() {
             <ReactReduxContext.Consumer>
                 {(value) => (
                     <Stage
+                        preventDefault
                         draggable={isPanMode}
                         className="stage"
                         width={stageWidth}
@@ -161,20 +163,29 @@ const StageContent = memo(() => {
     )
 
     const pageSelector = useSelector(pageCreateSelector)
+    const isDraggable = useSelector((state) => state.drawControl.isDraggable)
+    const isListening = useSelector((state) => state.drawControl.isListening)
+    const listeningSelector = useSelector((state) => {
+        const { isPanMode } = state.drawControl
+        const tool = state.drawControl.liveStroke.type
+        return !isPanMode && tool !== toolType.ERASER && tool !== toolType.DRAG
+    })
 
     return (
         <>
-            <Layer>
+            <Layer draggable={isDraggable} listening={listeningSelector}>
                 {pageSelector.map((pageId) => (
                     <PageListener key={pageId} pageId={pageId} />
                 ))}
             </Layer>
-            <Layer>
+            <Layer draggable={isDraggable} listening={isListening}>
                 {pageSelector.map((pageId) => (
                     <Page key={pageId} pageId={pageId} />
                 ))}
             </Layer>
-            <LiveLayer />
+            <Layer draggable={false} listening={false}>
+                <LiveLayer />
+            </Layer>
         </>
     )
 })

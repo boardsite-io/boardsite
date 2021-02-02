@@ -1,5 +1,4 @@
 import React, { memo } from "react"
-import { useSelector } from "react-redux"
 import { Line, Ellipse } from "react-konva"
 import store from "../../redux/store"
 import {
@@ -24,22 +23,23 @@ import { toolType } from "../../constants"
 export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
     // console.log("StrokeShape Memo Redraw")
 
-    const isDraggable = useSelector((state) => state.drawControl.isDraggable)
-    const isListening = useSelector((state) => state.drawControl.isListening)
-
     function onDragStart() {
-        // succ
+        if (store.getState().drawControl.liveStroke.type === toolType.ERASER) {
+            store.dispatch(ERASE_STROKE({ pageId, id }))
+        }
     }
 
     function onDragEnd(e) {
-        store.dispatch(
-            UPDATE_STROKE({
-                x: e.target.attrs.x,
-                y: e.target.attrs.y,
-                id,
-                pageId,
-            })
-        )
+        if (store.getState().drawControl.liveStroke.type !== toolType.ERASER) {
+            store.dispatch(
+                UPDATE_STROKE({
+                    x: e.target.attrs.x,
+                    y: e.target.attrs.y,
+                    id,
+                    pageId,
+                })
+            )
+        }
     }
 
     function handleStrokeMouseEnter(e) {
@@ -68,8 +68,8 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
                     tension={0.5}
                     lineCap="round"
                     onMouseEnter={handleStrokeMouseEnter}
-                    draggable={isDraggable}
-                    listening={isListening}
+                    draggable
+                    listening
                     onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
                     x={x}
@@ -88,8 +88,8 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
                     tension={1}
                     lineCap="round"
                     onMouseEnter={handleStrokeMouseEnter}
-                    draggable={isDraggable}
-                    listening={isListening}
+                    draggable
+                    listening
                     onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
                     x={x}
@@ -130,8 +130,8 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
                     strokeWidth={style.width}
                     // fill={props.stroke.style.color}
                     onMouseEnter={handleStrokeMouseEnter}
-                    draggable={isDraggable}
-                    listening={isListening}
+                    draggable
+                    listening
                     onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
                     shadowForStrokeEnabled={false}

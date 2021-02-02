@@ -1,5 +1,4 @@
 import React, { memo } from "react"
-import { Layer } from "react-konva"
 import { useSelector } from "react-redux"
 import { toolType } from "../../constants"
 import store from "../../redux/store"
@@ -8,7 +7,6 @@ import { StrokeShape } from "./stroke"
 export default memo(() => {
     // console.log("LiveLayer Memo Redraw")
     const pts = useSelector((state) => state.drawControl.liveStroke.points)
-
     const { liveStroke } = store.getState().drawControl
     let shape = null
 
@@ -39,5 +37,5 @@ export default memo(() => {
             />
         )
     }
-    return <Layer listening={false}>{shape}</Layer>
+    return <>{shape}</>
 })
