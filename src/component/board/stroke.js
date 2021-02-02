@@ -72,6 +72,10 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
                     onDragEnd={onDragEnd}
                     x={x}
                     y={y}
+                    draggable
+                    listening
+                    perfectDrawEnabled={false}
+                    shadowForStrokeEnabled={false}
                 />
             )
             break
@@ -88,6 +92,10 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
                     onDragEnd={onDragEnd}
                     x={x}
                     y={y}
+                    draggable
+                    listening
+                    perfectDrawEnabled={false}
+                    shadowForStrokeEnabled={false}
                 />
             )
             break
@@ -105,6 +113,8 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
         //             draggable={props.isDraggable}
         //             onDragStart={onDragStart}
         //             onDragEnd={onDragEnd}
+        //             draggable
+        //             listening
         //         />
         //     )
         //     break
@@ -125,6 +135,10 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
                     onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
                     fillEnabled={false} // Remove inner hitbox from empty circles
+                    draggable
+                    listening
+                    perfectDrawEnabled={false}
+                    shadowForStrokeEnabled={false}
                 />
             )
             break

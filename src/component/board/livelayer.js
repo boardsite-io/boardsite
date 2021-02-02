@@ -22,6 +22,9 @@ export default memo(() => {
                 points={subPts}
                 isDraggable={false}
                 isListening={false}
+                fillEnabled={false}
+                perfectDrawEnabled={false}
+                shadowForStrokeEnabled={false}
             />
         ))
     } // for other types (e.g. circle) we only need the endpoints
@@ -34,6 +37,9 @@ export default memo(() => {
                 )}
                 isDraggable={false}
                 isListening={false}
+                fillEnabled={false}
+                perfectDrawEnabled={false}
+                shadowForStrokeEnabled={false}
             />
         )
     }
