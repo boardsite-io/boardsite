@@ -33,20 +33,20 @@ export default function AlertDialog({
                             id="buttonDialog"
                             variant="contained"
                             color="primary"
-                            onClick={() => handleCreate()}>
+                            onClick={handleCreate}>
                             Create Session
                         </Button>
                         <Button
                             id="buttonDialog"
                             variant="contained"
                             color="primary"
-                            onClick={() => handleJoin()}>
+                            onClick={handleJoin}>
                             Join Session
                         </Button>
                         <TextField
                             id="textField"
                             defaultValue=""
-                            onChange={(e) => handleTextFieldChange(e)}
+                            onChange={handleTextFieldChange}
                             label="Insert Session ID"
                             variant="outlined"
                         />

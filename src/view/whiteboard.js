@@ -7,8 +7,9 @@ import Toolbar from "../component/menu/toolbar"
 import Homebar from "../component/menu/homebar"
 import Viewbar from "../component/menu/viewbar"
 
-import AlertDialog from "../component/menu/session_dialog"
+import SessionDialog from "../component/menu/sessiondialog"
 import BoardStage from "../component/board/stage"
+import { createWebsocket } from "../component/board/websocket"
 import { toolType } from "../constants"
 import { SET_TYPE, TOGGLE_PANMODE } from "../redux/slice/drawcontrol"
 import store from "../redux/store"
@@ -16,15 +17,18 @@ import store from "../redux/store"
 export default function Whiteboard() {
     // console.log("Whiteboard Redraw")
     const [openSessionDialog, setOpenSessionDialog] = useState(false)
+    const [sessionId, setSessionId] = useState()
     const [sidInput, setSidInput] = useState("")
 
     // const pageRank = useSelector(state => state.boardControl.present.pageRank)
     // Connect to session if valid session link
     // useEffect(() => {
-    //     if (id !== undefined) { // Check if id specified in link
-    //         setSessionID(id); // Set session id and connect to session
+    //     if (sidInput !== undefined) {
+    //         // Check if id specified in link
+    //         setSessionId(sidInput) // Set session id and connect to session
     //     }
-    // }, [id])
+    // }, [sidInput])
+
     function handleKeyPress(e) {
         switch (e.key) {
             case "p": // Pen
@@ -86,34 +90,16 @@ export default function Whiteboard() {
         // setOpenSessionDialog(true);
         addPage()
         document.addEventListener("keypress", handleKeyPress)
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // Verify session id and try to connect to session
-    // useEffect(() => {
-    //     if (sessionID !== "") {
-    //         api.createWebsocket(sessionID, onMsgHandle, null, null,).then((socket) => {
-    //             // wsRef.current = socket;
-    //             console.log(sessionID);
-    //             navigator.clipboard.writeText(sessionID); // copy session ID to clipboard
-    //         }).catch(() => console.log(`cannot connect websocket on '/${sessionID}'`));
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [sessionID])
-
-    // Handles messages from the websocket
-    // function onMsgHandle(data) {
-    //     const strokeObjectArray = JSON.parse(data.data);
-    //     if (strokeObjectArray.length === 0) {
-    //         actPage.deleteAll(setStrokeCollection, setHitboxCollection, setUndoStack, setRedoStack, pageCollection, setPageCollection);
-    //     }
-    //     else {
-    //         let pageId = strokeObjectArray[0].pageId;
-    //         let canvasRef = pageCollection[pageId];
-    //         proc.processStrokes(strokeObjectArray, "message", setStrokeCollection, setHitboxCollection,
-    //             setUndoStack, wsRef, canvasRef);
-    //     }
-    // }
+    useEffect(() => {
+        if (sessionId !== "") {
+            createWebsocket(sessionId)
+        }
+    }, [sessionId])
 
     function handleCreate() {
         // let boardDim = { x: 10, y: 10 };
@@ -127,18 +113,18 @@ export default function Whiteboard() {
     }
 
     function handleJoin() {
-        // setSessionID(sidInput);
+        setSessionId(sidInput)
     }
 
-    function handleTextFieldChange() {
-        // setSidInput(e.target.value)
+    function handleTextFieldChange(e) {
+        setSidInput(e.target.value)
     }
 
     return (
         <div>
             <FPSStats />
             <TestPanel />
-            <AlertDialog
+            <SessionDialog
                 open={openSessionDialog}
                 setOpen={setOpenSessionDialog}
                 sessionID_input={sidInput}
