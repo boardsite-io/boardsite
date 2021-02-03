@@ -9,7 +9,7 @@ import Viewbar from "../component/menu/viewbar"
 
 import SessionDialog from "../component/menu/sessiondialog"
 import BoardStage from "../component/board/stage"
-import { createWebsocket } from "../component/board/websocket"
+import { createWebsocket } from "../api/websocket"
 import { toolType } from "../constants"
 import { SET_TYPE, TOGGLE_PANMODE } from "../redux/slice/drawcontrol"
 import store from "../redux/store"

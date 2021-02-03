@@ -7,9 +7,9 @@ import {
     ADD_STROKE,
     ERASE_STROKE,
     UPDATE_STROKE,
-} from "../../redux/slice/boardcontrol"
+} from "../redux/slice/boardcontrol"
 // import { toolType } from "../../constants"
-import store from "../../redux/store"
+import store from "../redux/store"
 
 const baseURL = "http://heat.port0.org:8000"
 // const baseURL = "https://cors-anywhere.herokuapp.com/http://heat.port0.org:8000";
