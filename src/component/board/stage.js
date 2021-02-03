@@ -18,7 +18,7 @@ import {
     ZOOM_IN_WHEEL_SCALE,
     ZOOM_OUT_WHEEL_SCALE,
     SCROLL_WHEEL_STEP,
-    SCROLL_WHEEL_STEP_DURATION,
+    CANVAS_WIDTH,
 } from "../../constants"
 import store from "../../redux/store"
 
@@ -40,85 +40,49 @@ export default function BoardStage() {
     }, [])
 
     /**
-     * Handles updating the states after stage drag events
-     * @param {event} e
-     */
-    function onDragEnd(e) {
-        // if stage drag => update position states
-        if (e.target.attrs.className === "stage") {
-            // if stage is the drag object then update XY
-            store.dispatch(SET_STAGE_X(e.target.attrs.x))
-            store.dispatch(SET_STAGE_Y(e.target.attrs.y))
-        }
-    }
-
-    let scrollActive = false
-    let scrollBuffer = 0
-    let newY
-    /**
      * Wheel event handler function
      * @param {event} e
      */
     function onWheel(e) {
         e.evt.preventDefault()
-        const isUp = e.evt.deltaY < 0
-
         if (isPanMode || e.evt.ctrlKey) {
-            const curserPosition = e.target.getStage().getPointerPosition()
             let zoomScale
-            if (isUp) {
+            if (e.evt.deltaY < 0) {
                 zoomScale = ZOOM_IN_WHEEL_SCALE
             } else {
                 zoomScale = ZOOM_OUT_WHEEL_SCALE
             }
             store.dispatch(
                 ZOOM_TO({
-                    zoomPoint: curserPosition,
+                    zoomPoint: e.target.getStage().getPointerPosition(),
                     zoomScale,
                 })
             )
-        } else if (scrollActive) {
-            if (isUp) {
-                scrollBuffer += 1
-            } else {
-                scrollBuffer -= 1
-            }
         } else {
-            scrollActive = true
-            const stage = e.target.getStage()
-            if (isUp) {
-                newY = stageY + SCROLL_WHEEL_STEP
-            } else {
-                newY = stageY - SCROLL_WHEEL_STEP
-            }
-            stage.to({
-                y: newY,
-                duration: SCROLL_WHEEL_STEP_DURATION,
-                onFinish: () => handleFinish(newY, stage, isUp),
-            })
+            store.dispatch(
+                SET_STAGE_Y(
+                    stageY - Math.sign(e.evt.deltaY) * SCROLL_WHEEL_STEP
+                )
+            )
         }
     }
 
-    function handleFinish(updatedY, stage, isUp) {
-        if (
-            scrollBuffer === 0 ||
-            (isUp && scrollBuffer < 0) ||
-            (!isUp && scrollBuffer > 0)
-        ) {
-            // handle direction change and finished animations
-            scrollActive = false
-            store.dispatch(SET_STAGE_Y(updatedY)) // dispatch on the end of scrolling combo
-        } else {
-            const bufferY = updatedY + scrollBuffer * SCROLL_WHEEL_STEP
-            const bufferDur =
-                Math.abs(scrollBuffer) * SCROLL_WHEEL_STEP_DURATION
-            scrollBuffer = 0
-            stage.to({
-                y: bufferY,
-                duration: bufferDur,
-                onFinish: () => handleFinish(bufferY, stage, isUp),
-            })
+    /**
+     * Handles updating the states after stage drag events
+     * @param {event} e
+     */
+    function onDragEnd(e) {
+        store.dispatch(SET_STAGE_X(e.target.attrs.x))
+        store.dispatch(SET_STAGE_Y(e.target.attrs.y))
+    }
+
+    function dragBound(pos) {
+        const x = (stageWidth - CANVAS_WIDTH * stageScale.x) / 2
+        if (x >= 0) {
+            return { x, y: pos.y }
         }
+
+        return pos
     }
 
     return (
@@ -130,12 +94,15 @@ export default function BoardStage() {
                         perfectDrawEnabled={false}
                         preventDefault
                         draggable={isPanMode}
+                        dragBoundFunc={dragBound}
                         className="stage"
                         width={stageWidth}
                         height={stageHeight}
                         scale={stageScale}
                         x={stageX}
                         y={stageY}
+                        // onDragStart={onDragStart}
+                        // onDragMove={onDragMove}
                         onDragEnd={onDragEnd}
                         onContextMenu={(e) => e.evt.preventDefault()}
                         onWheel={onWheel}>

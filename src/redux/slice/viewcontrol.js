@@ -11,8 +11,8 @@ import {
     CANVAS_GAP,
     ZOOM_SCALE_MAX,
     ZOOM_SCALE_MIN,
-    ZOOM_IN_SCALE,
-    ZOOM_OUT_SCALE,
+    ZOOM_IN_BUTTON_SCALE,
+    ZOOM_OUT_BUTTON_SCALE,
 } from "../../constants"
 
 const viewControlSlice = createSlice({
@@ -56,14 +56,14 @@ const viewControlSlice = createSlice({
                 x: state.stageWidth / 2,
                 y: state.stageHeight / 2,
             }
-            zoomToPointWithScale(state, centerOfScreen, ZOOM_IN_SCALE)
+            zoomToPointWithScale(state, centerOfScreen, ZOOM_IN_BUTTON_SCALE)
         },
         ZOOM_OUT_CENTER: (state) => {
             const centerOfScreen = {
                 x: state.stageWidth / 2,
                 y: state.stageHeight / 2,
             }
-            zoomToPointWithScale(state, centerOfScreen, ZOOM_OUT_SCALE)
+            zoomToPointWithScale(state, centerOfScreen, ZOOM_OUT_BUTTON_SCALE)
         },
     },
 })
@@ -114,7 +114,15 @@ function zoomToPointWithScale(state, zoomPoint, zoomScale) {
     }
 
     state.stageScale = { x: newScale, y: newScale }
-    state.stageX = zoomPoint.x - mousePointTo.x * newScale
+
+    // if zoomed out then center, else zoom to mouse coords
+    const x = (window.innerWidth - CANVAS_WIDTH * newScale) / 2
+    if (x >= 0) {
+        state.stageX = x
+    } else {
+        state.stageX = zoomPoint.x - mousePointTo.x * newScale
+    }
+
     state.stageY = zoomPoint.y - mousePointTo.y * newScale
     updateCurrentPageId(state) // check if pageId changed by zooming
 }
