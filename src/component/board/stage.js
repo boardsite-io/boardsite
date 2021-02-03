@@ -72,8 +72,10 @@ export default function BoardStage() {
      * @param {event} e
      */
     function onDragEnd(e) {
-        store.dispatch(SET_STAGE_X(e.target.attrs.x))
-        store.dispatch(SET_STAGE_Y(e.target.attrs.y))
+        if (e.target.attrs.className === "stage") {
+            store.dispatch(SET_STAGE_X(e.target.attrs.x))
+            store.dispatch(SET_STAGE_Y(e.target.attrs.y))
+        }
     }
 
     function dragBound(pos) {
