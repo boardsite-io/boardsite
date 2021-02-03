@@ -7,6 +7,7 @@ import {
     ON_WINDOW_RESIZE,
     SET_STAGE_X,
     SET_STAGE_Y,
+    SCROLL_STAGE_Y,
     ZOOM_TO,
 } from "../../redux/slice/viewcontrol"
 
@@ -58,7 +59,7 @@ export default function BoardStage() {
                 })
             )
         } else {
-            store.dispatch(SET_STAGE_Y(stageY - e.evt.deltaY))
+            store.dispatch(SCROLL_STAGE_Y(e.evt.deltaY))
         }
     }
 
@@ -73,6 +74,10 @@ export default function BoardStage() {
         }
     }
 
+    /**
+     *
+     * @param {object} pos current position of drag event on stage, e.g. {x: 12, y: 34}
+     */
     function dragBound(pos) {
         const x = (stageWidth - CANVAS_WIDTH * stageScale.x) / 2
         if (x >= 0) {
@@ -113,6 +118,7 @@ export default function BoardStage() {
     )
 }
 
+// all pages and content are in this component
 const StageContent = memo(() => {
     // console.log("StageContent memo draw")
     const pageCreateSelector = createSelector(

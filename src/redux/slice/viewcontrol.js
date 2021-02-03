@@ -33,6 +33,10 @@ const viewControlSlice = createSlice({
             state.stageY = action.payload
             updateCurrentPageId(state)
         },
+        SCROLL_STAGE_Y: (state, action) => {
+            state.stageY -= action.payload
+            updateCurrentPageId(state)
+        },
         SET_STAGE_SCALE: (state, action) => {
             state.stageScale = action.payload
         },
@@ -71,6 +75,7 @@ const viewControlSlice = createSlice({
 export const {
     SET_STAGE_X,
     SET_STAGE_Y,
+    SCROLL_STAGE_Y,
     SET_STAGE_SCALE,
     ON_WINDOW_RESIZE,
     CENTER_VIEW,
