@@ -17,7 +17,6 @@ import LiveLayer from "./livelayer"
 import {
     ZOOM_IN_WHEEL_SCALE,
     ZOOM_OUT_WHEEL_SCALE,
-    SCROLL_WHEEL_STEP,
     CANVAS_WIDTH,
 } from "../../constants"
 import store from "../../redux/store"
@@ -59,11 +58,7 @@ export default function BoardStage() {
                 })
             )
         } else {
-            store.dispatch(
-                SET_STAGE_Y(
-                    stageY - Math.sign(e.evt.deltaY) * SCROLL_WHEEL_STEP
-                )
-            )
+            store.dispatch(SET_STAGE_Y(stageY - e.evt.deltaY))
         }
     }
 
