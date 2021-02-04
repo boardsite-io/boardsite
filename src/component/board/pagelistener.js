@@ -74,7 +74,7 @@ export default function PageListener({ pageId }) {
             }
             stroke="#000"
             strokeWidth={0.2}
-            fill="#eee"
+            fill="#ffffff"
             shadowColor="#000000"
             shadowBlur={10}
             shadowOffset={{ x: 0, y: 0 }}
