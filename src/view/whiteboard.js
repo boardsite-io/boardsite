@@ -9,25 +9,17 @@ import Viewbar from "../component/menu/viewbar"
 
 import SessionDialog from "../component/menu/sessiondialog"
 import BoardStage from "../component/board/stage"
-import { createWebsocket } from "../api/websocket"
 import { toolType } from "../constants"
 import { SET_TYPE, TOGGLE_PANMODE } from "../redux/slice/drawcontrol"
 import store from "../redux/store"
+import { createWebsocket } from "../api/websocket"
+import { createSession } from "../api/request"
 
 export default function Whiteboard() {
     // console.log("Whiteboard Redraw")
     const [openSessionDialog, setOpenSessionDialog] = useState(false)
     const [sessionId, setSessionId] = useState()
     const [sidInput, setSidInput] = useState("")
-
-    // const pageRank = useSelector(state => state.boardControl.present.pageRank)
-    // Connect to session if valid session link
-    // useEffect(() => {
-    //     if (sidInput !== undefined) {
-    //         // Check if id specified in link
-    //         setSessionId(sidInput) // Set session id and connect to session
-    //     }
-    // }, [sidInput])
 
     function handleKeyPress(e) {
         switch (e.key) {
@@ -94,14 +86,30 @@ export default function Whiteboard() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    useEffect(() => {
+        if (sidInput !== undefined) {
+            // Check if id specified in link
+            setSessionId(sidInput) // Set session id and connect to session
+        }
+    }, [sidInput])
+
     // Verify session id and try to connect to session
     useEffect(() => {
         if (sessionId !== "" && sessionId !== undefined) {
-            createWebsocket(sessionId)
+            if (sessionId.length === 6) {
+                createWebsocket(sessionId).then(setOpenSessionDialog(false))
+            }
         }
     }, [sessionId])
 
     function handleCreate() {
+        createSession()
+            .then((data) => {
+                console.log(data)
+                createWebsocket(data.id)
+                setOpenSessionDialog(false)
+            })
+            .catch(() => console.log("Session creation failed"))
         // let boardDim = { x: 10, y: 10 };
         // api.createBoardRequest(boardDim).then((data) => {
         //     api.getPages(data.id).then((data) => {
@@ -113,7 +121,8 @@ export default function Whiteboard() {
     }
 
     function handleJoin() {
-        setSessionId(sidInput)
+        createWebsocket(sidInput)
+        setOpenSessionDialog(false)
     }
 
     function handleTextFieldChange(e) {

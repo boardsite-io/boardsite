@@ -36,3 +36,10 @@ export const DEFAULT_TOOL = toolType.PEN
 export const MIN_SAMPLE_COUNT = 5
 // maximum number of points a livestroke can have until cached
 export const MAX_LIVESTROKE_PTS = 100
+
+// api
+export const API_URL = `http${
+    process.env.REACT_APP_B_SSL === "1" ? "s" : ""
+}://${process.env.REACT_APP_B_API_HOSTNAME}:${process.env.REACT_APP_B_API_PORT}`
+
+export const API_SESSION_URL = `${API_URL}/b`
