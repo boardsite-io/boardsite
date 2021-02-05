@@ -9,28 +9,20 @@ import { API_URL } from "../constants"
  */
 export function sendRequest(url, method, data = {}) {
     return new Promise((resolve, reject) => {
-        // axios({
-        //     url: `${API_URL}${url}`,
-        //     method,
-        //     data,
-        // })
-        if (method === "post") {
-            axios
-                .post(`${API_URL}${url}`)
-                .then((response) => {
-                    console.log(response)
-                    if (response.statusText === "OK") {
-                        console.log("OK")
-                        resolve(response)
-                    } else {
-                        // in case of error, api returns obj with 'error' key
-                        reject(new Error())
-                    }
-                })
-                .catch(() => reject())
-        } else {
-            console.log(data)
-        }
+        axios({
+            url: `${API_URL}${url}`,
+            method,
+            data: JSON.stringify({ data }),
+        })
+            .then((response) => {
+                if (response.statusText === "OK") {
+                    resolve(response)
+                } else {
+                    // in case of error, api returns obj with 'error' key
+                    reject(new Error())
+                }
+            })
+            .catch(() => reject())
     })
 }
 
