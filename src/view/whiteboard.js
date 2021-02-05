@@ -97,34 +97,49 @@ export default function Whiteboard() {
     useEffect(() => {
         if (sessionId !== "" && sessionId !== undefined) {
             if (sessionId.length === 6) {
-                createWebsocket(sessionId).then(setOpenSessionDialog(false))
+                createWS(sessionId)
             }
         }
     }, [sessionId])
 
+    /**
+     * Helper function for creating websocket connection and handling the resolve / reject
+     * @param {string} sid
+     */
+    function createWS(sid) {
+        createWebsocket(sid)
+            .then(() => setOpenSessionDialog(false))
+            .catch((error) =>
+                // eslint-disable-next-line no-console
+                console.error("Websocket creation failed!", error)
+            )
+    }
+
+    /**
+     * Handle the create session button click in the session dialog
+     */
     function handleCreate() {
         createSession()
             .then((data) => {
+                // eslint-disable-next-line no-console
                 console.log(data)
-                createWebsocket(data.id)
-                setOpenSessionDialog(false)
+                createWS(data.id)
             })
-            .catch(() => console.log("Session creation failed"))
-        // let boardDim = { x: 10, y: 10 };
-        // api.createBoardRequest(boardDim).then((data) => {
-        //     api.getPages(data.id).then((data) => {
-        //         console.log(data);
-        //         setSessionID(data.id);
-        //         setOpenSessionDialog(false); // close dialog
-        //     }).catch(() => console.log("server cannot get pages"));
-        // }).catch(() => console.log("server cannot create session"));
+            // eslint-disable-next-line no-console
+            .catch(() => console.log("Session creation failed!"))
     }
 
+    /**
+     * Handle the join session button click in the session dialog
+     */
     function handleJoin() {
-        createWebsocket(sidInput)
-        setOpenSessionDialog(false)
+        createWS(sidInput)
     }
 
+    /**
+     * Handle textfield events in the session dialog
+     * @param {event} e event object
+     */
     function handleTextFieldChange(e) {
         setSidInput(e.target.value)
     }
