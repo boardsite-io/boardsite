@@ -1,3 +1,4 @@
+import axios from "axios"
 import { API_URL } from "../constants"
 
 /**
@@ -8,9 +9,10 @@ import { API_URL } from "../constants"
  */
 export function sendRequest(url, method, data = {}) {
     return new Promise((resolve, reject) => {
-        fetch(`${API_URL}${url}`, {
+        axios({
+            url: `${API_URL}${url}`,
             method,
-            body: JSON.stringify(data),
+            data,
         })
             .then((response) =>
                 response
@@ -30,21 +32,21 @@ export function sendRequest(url, method, data = {}) {
 }
 
 export function createSession() {
-    return sendRequest("/b/create", "POST")
+    return sendRequest("/b/create", "post")
 }
 
 export function getPages(sessionId) {
-    return sendRequest(`/b/${sessionId}/pages`, "GET")
+    return sendRequest(`/b/${sessionId}/pages`, "get")
 }
 
 export function addPage(sessionID, pageId, index) {
-    return sendRequest(`/b/${sessionID}/pages`, "POST", { pageId, index })
+    return sendRequest(`/b/${sessionID}/pages`, "post", { pageId, index })
 }
 
 export function clearPage(sessionId, pageId) {
-    return sendRequest(`/b/${sessionId}/pages/${pageId}`, "PUT", {})
+    return sendRequest(`/b/${sessionId}/pages/${pageId}`, "put", {})
 }
 
 export function deletePage(sessionId, pageId) {
-    return sendRequest(`/b/${sessionId}/pages/${pageId}`, "DELETE")
+    return sendRequest(`/b/${sessionId}/pages/${pageId}`, "delete")
 }
