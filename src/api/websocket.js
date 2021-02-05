@@ -13,6 +13,7 @@ export async function createWebsocket(sessionId) {
         const ws = new WebSocket(
             `${API_SESSION_URL.replace("http", "ws", 1)}/${sessionId}`
         )
+        ws.name = "XD"
         ws.onopen = () => {
             store.dispatch(CREATE_WS(ws))
             resolve()

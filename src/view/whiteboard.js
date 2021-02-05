@@ -123,7 +123,7 @@ export default function Whiteboard() {
             .then((data) => {
                 // eslint-disable-next-line no-console
                 console.log(data)
-                createWS(data.id)
+                createWS(data.data.id)
             })
             // eslint-disable-next-line no-console
             .catch(() => console.log("Session creation failed!"))
