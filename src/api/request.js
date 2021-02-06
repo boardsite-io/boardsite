@@ -50,3 +50,8 @@ export function clearPage(sessionId, pageId) {
 export function deletePage(sessionId, pageId) {
     return sendRequest(`/b/${sessionId}/pages/${pageId}`, "delete")
 }
+
+export function deleteAllPages(sessionId) {
+    // TODO
+    console.log(sessionId)
+}
