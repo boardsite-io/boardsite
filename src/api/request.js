@@ -13,7 +13,7 @@ export function sendRequest(url, method, data = {}) {
         axios({
             url: `${API_URL}${url}`,
             method,
-            data: JSON.stringify({ data }),
+            data: JSON.stringify(data),
         })
             .then((response) => {
                 if (response.statusText === "OK") {
@@ -37,7 +37,10 @@ export function getPages(sessionId) {
 
 export function addPage(sessionId, index) {
     const pageId = nanoid()
-    return sendRequest(`/b/${sessionId}/pages`, "post", { pageId, index })
+    return sendRequest(`/b/${sessionId}/pages`, "post", {
+        pageId,
+        index,
+    })
 }
 
 export function clearPage(sessionId, pageId) {
