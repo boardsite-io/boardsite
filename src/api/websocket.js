@@ -14,7 +14,7 @@ export async function createWebsocket(sessionId) {
             `${API_SESSION_URL.replace("http", "ws", 1)}/${sessionId}`
         )
         ws.onopen = () => {
-            store.dispatch(CREATE_WS(ws))
+            store.dispatch(CREATE_WS({ ws, sessionId }))
             resolve()
         }
         ws.onerror = (ev) => reject(ev)

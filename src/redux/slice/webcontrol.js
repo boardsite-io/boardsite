@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit"
-import store from "../store"
 
 const webControlSlice = createSlice({
     name: "webControl",
@@ -11,9 +10,12 @@ const webControlSlice = createSlice({
     },
     reducers: {
         CREATE_WS: (state, action) => {
-            const { websocket, sessionId } = action.payload
-            state.webSocket = websocket
-            state.webSocket.onmessage = (data) => onMessage(JSON.parse(data))
+            const { ws, sessionId } = action.payload
+            state.webSocket = ws
+            state.webSocket.onmessage = (data) => {
+                onMessage(state, data)
+            }
+
             state.webSocket.onclose = onClose
             state.webSocket.onopen = onOpen
             state.sessionId = sessionId
@@ -26,25 +28,17 @@ const webControlSlice = createSlice({
         SEND_WS: (state) => {
             state.webSocket.send(JSON.stringify(state.strokeOutBuf))
         },
-        RECEIVE_WS: (state, payload) => {
-            const { strokes } = payload
-            state.webSocket.strokesInBuf = state.webSocket.strokesInBuf.concat(
-                strokes
-            )
-        },
     },
 })
 
-export const {
-    CREATE_WS,
-    CLOSE_WS,
-    SEND_WS,
-    RECEIVE_WS,
-} = webControlSlice.actions
+export const { CREATE_WS, CLOSE_WS, SEND_WS } = webControlSlice.actions
 export default webControlSlice.reducer
 
-export function onMessage(states) {
-    store.dispatch(RECEIVE_WS(states))
+export function onMessage(state, data) {
+    // eslint-disable-next-line no-console
+    console.log(data)
+    // const strokes = data.data
+    // state.strokesInBuf = state.strokesInBuf.concat(strokes)
 }
 
 export function onClose(event) {

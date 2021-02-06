@@ -121,8 +121,6 @@ export default function Whiteboard() {
     function handleCreate() {
         createSession()
             .then((data) => {
-                // eslint-disable-next-line no-console
-                console.log(data)
                 createWS(data.data.id)
             })
             // eslint-disable-next-line no-console

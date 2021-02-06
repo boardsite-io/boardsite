@@ -7,11 +7,22 @@ import Tooltip from "@material-ui/core/Tooltip"
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever"
 import AddIcon from "@material-ui/icons/Add"
 // import RemoveIcon from "@material-ui/icons/Remove"
-
-import { addPage, deleteAllPages } from "./pagemenu"
+import { addPage as addPageOnline } from "../../api/request"
+import { addPage as addPageOffline, deleteAllPages } from "./pagemenu"
+import store from "../../redux/store"
 
 export default function Homebar(props) {
     // console.log("Homebar Redraw")
+
+    function handleAddPage() {
+        const sid = store.getState().webControl.sessionId
+        if (sid !== "") {
+            addPageOnline(sid, -1)
+        } else {
+            addPageOffline()
+        }
+    }
+
     return (
         <div className="homebar">
             <Tooltip
@@ -70,7 +81,7 @@ export default function Homebar(props) {
                 <IconButton
                     id="iconButton"
                     variant="contained"
-                    onClick={() => addPage()}>
+                    onClick={handleAddPage}>
                     <AddIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>

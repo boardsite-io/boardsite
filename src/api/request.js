@@ -1,4 +1,5 @@
 import axios from "axios"
+import { nanoid } from "@reduxjs/toolkit"
 import { API_URL } from "../constants"
 
 /**
@@ -34,8 +35,9 @@ export function getPages(sessionId) {
     return sendRequest(`/b/${sessionId}/pages`, "get")
 }
 
-export function addPage(sessionID, pageId, index) {
-    return sendRequest(`/b/${sessionID}/pages`, "post", { pageId, index })
+export function addPage(sessionId, index) {
+    const pageId = nanoid()
+    return sendRequest(`/b/${sessionId}/pages`, "post", { pageId, index })
 }
 
 export function clearPage(sessionId, pageId) {
