@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { ActionCreators as UndoActionCreators } from "redux-undo"
 import FPSStats from "react-fps-stats"
-import { addPage } from "../component/menu/pagemenu"
+import { handleAddPage } from "../component/board/requestHandlers"
 import TestPanel from "../testing/testpanel"
 import Toolbar from "../component/menu/toolbar"
 import Homebar from "../component/menu/homebar"
@@ -80,7 +80,7 @@ export default function Whiteboard() {
     // Open dialog on mount
     useEffect(() => {
         // setOpenSessionDialog(true);
-        addPage()
+        handleAddPage()
         document.addEventListener("keypress", handleKeyPress)
 
         // eslint-disable-next-line react-hooks/exhaustive-deps

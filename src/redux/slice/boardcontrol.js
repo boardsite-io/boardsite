@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, nanoid } from "@reduxjs/toolkit"
 import undoable from "redux-undo"
 
 const boardControlSlice = createSlice({
@@ -15,7 +15,8 @@ const boardControlSlice = createSlice({
         },
         // Add a new page
         ADD_PAGE: (state, action) => {
-            const { pageId, pageIndex } = action.payload
+            const pageIndex = action.payload
+            const pageId = nanoid()
             state.pageCollection[pageId] = {
                 strokes: {},
             }
@@ -46,8 +47,8 @@ const boardControlSlice = createSlice({
         },
 
         // Delete all pages
-        DELETE_ALL_PAGES: (state, action) => {
-            const { pageId } = action.payload
+        DELETE_ALL_PAGES: (state) => {
+            const pageId = nanoid()
             state.pageRank = [pageId]
             state.pageCollection = {}
             state.pageCollection[pageId] = {
