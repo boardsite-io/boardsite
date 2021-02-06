@@ -108,7 +108,10 @@ export default function Whiteboard() {
      */
     function createWS(sid) {
         createWebsocket(sid)
-            .then(() => setOpenSessionDialog(false))
+            .then(() => {
+                navigator.clipboard.writeText(sid)
+                setOpenSessionDialog(false)
+            })
             .catch((error) =>
                 // eslint-disable-next-line no-console
                 console.error("Websocket creation failed!", error)
