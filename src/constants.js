@@ -25,8 +25,8 @@ export const DEFAULT_ISMOUSEDOWN = false
 
 // drawing stuff
 export const toolType = {
-    PEN: 0,
-    ERASER: 1,
+    ERASER: 0,
+    PEN: 1,
     LINE: 2,
     TRIANGLE: 3,
     CIRCLE: 4,
