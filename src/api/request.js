@@ -52,5 +52,6 @@ export async function deletePage(sessionId, pageId) {
 
 export async function deleteAllPages(sessionId) {
     // TODO
+    // eslint-disable-next-line no-console
     console.log(sessionId)
 }

@@ -96,6 +96,7 @@ export default function Whiteboard() {
                 setOpenSessionDialog(false)
             })
             .catch((error) =>
+                // eslint-disable-next-line no-console
                 console.error("Websocket creation failed!", error)
             )
     }

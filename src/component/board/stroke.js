@@ -21,147 +21,135 @@ import { sendStroke } from "../../api/websocket"
  * the object references.
  * @param {{stroke: {}}} props
  */
-export const StrokeShape = memo(
-    ({ id, pageId, type, style, points, x, y, currentPageIndex }) => {
-        // console.log("StrokeShape Memo Redraw")
+export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
+    // console.log("StrokeShape Memo Redraw")
 
-        function onDragStart() {
-            if (
-                store.getState().drawControl.liveStroke.type === toolType.ERASER
-            ) {
-                store.dispatch(ERASE_STROKE({ pageId, id }))
-            }
+    function onDragStart() {
+        if (store.getState().drawControl.liveStroke.type === toolType.ERASER) {
+            store.dispatch(ERASE_STROKE({ pageId, id }))
         }
-
-        function onDragEnd(e) {
-            if (
-                store.getState().drawControl.liveStroke.type !== toolType.ERASER
-            ) {
-                store.dispatch(
-                    UPDATE_STROKE({
-                        x: e.target.attrs.x,
-                        y:
-                            e.target.attrs.y -
-                            currentPageIndex * (CANVAS_HEIGHT + CANVAS_GAP),
-                        id,
-                        pageId,
-                    })
-                )
-            }
-        }
-
-        function handleStrokeMouseEnter(e) {
-            // prevent to act on live stroke
-            if (id === undefined) {
-                return
-            }
-
-            if (
-                (store.getState().drawControl.liveStroke.type ===
-                    toolType.ERASER &&
-                    e.evt.buttons === 1) ||
-                e.evt.buttons === 2
-            ) {
-                store.dispatch(ERASE_STROKE({ pageId, id }))
-            }
-        }
-
-        // add page offset to y
-        y += currentPageIndex * (CANVAS_HEIGHT + CANVAS_GAP)
-
-        let shape
-        switch (type) {
-            case toolType.PEN:
-                shape = (
-                    <Line
-                        points={points}
-                        stroke={style.color}
-                        strokeWidth={style.width}
-                        tension={0.5}
-                        lineCap="round"
-                        onMouseEnter={handleStrokeMouseEnter}
-                        onDragStart={onDragStart}
-                        onDragEnd={onDragEnd}
-                        x={x}
-                        y={y}
-                        draggable
-                        listening
-                        perfectDrawEnabled={false}
-                        shadowForStrokeEnabled={false}
-                    />
-                )
-                break
-            case toolType.LINE:
-                shape = (
-                    <Line
-                        points={getStartEndPoints(points)}
-                        stroke={style.color}
-                        strokeWidth={style.width}
-                        tension={1}
-                        lineCap="round"
-                        onMouseEnter={handleStrokeMouseEnter}
-                        onDragStart={onDragStart}
-                        onDragEnd={onDragEnd}
-                        x={x}
-                        y={y}
-                        draggable
-                        listening
-                        perfectDrawEnabled={false}
-                        shadowForStrokeEnabled={false}
-                    />
-                )
-                break
-            // case type.TRIANGLE:
-            //     shape = (
-            //         <Line
-            //             points={props.stroke.points}
-            //             stroke={props.stroke.style.color}
-            //             strokeWidth={props.stroke.style.width}
-            //             tension={1}
-            //             lineCap="round"
-            //             onMouseEnter={(e) =>
-            //                 handleStrokeMouseEnter(e, props.stroke)
-            //             }
-            //             draggable={props.isDraggable}
-            //             onDragStart={onDragStart}
-            //             onDragEnd={onDragEnd}
-            //             draggable
-            //             listening
-            //         />
-            //     )
-            //     break
-            case toolType.CIRCLE: {
-                const rad = {
-                    x: (points[points.length - 2] - points[0]) / 2,
-                    y: (points[points.length - 1] - points[1]) / 2,
-                }
-                shape = (
-                    <Ellipse
-                        x={points[0] + rad.x}
-                        y={points[1] + rad.y}
-                        radius={{ x: Math.abs(rad.x), y: Math.abs(rad.y) }}
-                        stroke={style.color}
-                        strokeWidth={style.width}
-                        // fill={props.stroke.style.color}
-                        onMouseEnter={handleStrokeMouseEnter}
-                        onDragStart={onDragStart}
-                        onDragEnd={onDragEnd}
-                        fillEnabled={false} // Remove inner hitbox from empty circles
-                        draggable
-                        listening
-                        perfectDrawEnabled={false}
-                        shadowForStrokeEnabled={false}
-                    />
-                )
-                break
-            }
-            default:
-                shape = <></>
-        }
-
-        return shape
     }
-)
+
+    function onDragEnd(e) {
+        if (store.getState().drawControl.liveStroke.type !== toolType.ERASER) {
+            store.dispatch(
+                UPDATE_STROKE({
+                    x: e.target.attrs.x,
+                    y: e.target.attrs.y,
+                    id,
+                    pageId,
+                })
+            )
+        }
+    }
+
+    function handleStrokeMouseEnter(e) {
+        // prevent to act on live stroke
+        if (id === undefined) {
+            return
+        }
+
+        if (
+            (store.getState().drawControl.liveStroke.type === toolType.ERASER &&
+                e.evt.buttons === 1) ||
+            e.evt.buttons === 2
+        ) {
+            store.dispatch(ERASE_STROKE({ pageId, id }))
+        }
+    }
+
+    let shape
+    switch (type) {
+        case toolType.PEN:
+            shape = (
+                <Line
+                    points={points}
+                    stroke={style.color}
+                    strokeWidth={style.width}
+                    tension={0.5}
+                    lineCap="round"
+                    onMouseEnter={handleStrokeMouseEnter}
+                    onDragStart={onDragStart}
+                    onDragEnd={onDragEnd}
+                    x={x}
+                    y={y}
+                    draggable
+                    listening
+                    perfectDrawEnabled={false}
+                    shadowForStrokeEnabled={false}
+                />
+            )
+            break
+        case toolType.LINE:
+            shape = (
+                <Line
+                    points={getStartEndPoints(points)}
+                    stroke={style.color}
+                    strokeWidth={style.width}
+                    tension={1}
+                    lineCap="round"
+                    onMouseEnter={handleStrokeMouseEnter}
+                    onDragStart={onDragStart}
+                    onDragEnd={onDragEnd}
+                    x={x}
+                    y={y}
+                    draggable
+                    listening
+                    perfectDrawEnabled={false}
+                    shadowForStrokeEnabled={false}
+                />
+            )
+            break
+        // case type.TRIANGLE:
+        //     shape = (
+        //         <Line
+        //             points={props.stroke.points}
+        //             stroke={props.stroke.style.color}
+        //             strokeWidth={props.stroke.style.width}
+        //             tension={1}
+        //             lineCap="round"
+        //             onMouseEnter={(e) =>
+        //                 handleStrokeMouseEnter(e, props.stroke)
+        //             }
+        //             draggable={props.isDraggable}
+        //             onDragStart={onDragStart}
+        //             onDragEnd={onDragEnd}
+        //             draggable
+        //             listening
+        //         />
+        //     )
+        //     break
+        case toolType.CIRCLE: {
+            const rad = {
+                x: (points[points.length - 2] - points[0]) / 2,
+                y: (points[points.length - 1] - points[1]) / 2,
+            }
+            shape = (
+                <Ellipse
+                    x={points[0] + rad.x}
+                    y={points[1] + rad.y}
+                    radius={{ x: Math.abs(rad.x), y: Math.abs(rad.y) }}
+                    stroke={style.color}
+                    strokeWidth={style.width}
+                    // fill={props.stroke.style.color}
+                    onMouseEnter={handleStrokeMouseEnter}
+                    onDragStart={onDragStart}
+                    onDragEnd={onDragEnd}
+                    fillEnabled={false} // Remove inner hitbox from empty circles
+                    draggable
+                    listening
+                    perfectDrawEnabled={false}
+                    shadowForStrokeEnabled={false}
+                />
+            )
+            break
+        }
+        default:
+            shape = <></>
+    }
+
+    return shape
+})
 
 /**
  * Start the current stroke when mouse is pressed down
