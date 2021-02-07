@@ -2,7 +2,7 @@ import React from "react"
 import { useSelector } from "react-redux"
 import { StrokeShape } from "./stroke"
 
-export default function Page({ pageId }) {
+export default function Page({ pageId, currentPageIndex }) {
     // console.log("Page Redraw")
     const strokes = useSelector(
         (state) => state.boardControl.present.pageCollection[pageId].strokes
@@ -11,7 +11,11 @@ export default function Page({ pageId }) {
     return (
         <>
             {Object.keys(strokes).map((id) => (
-                <StrokeShape key={id} {...strokes[id]} />
+                <StrokeShape
+                    key={id}
+                    {...strokes[id]}
+                    currentPageIndex={currentPageIndex}
+                />
             ))}
         </>
     )

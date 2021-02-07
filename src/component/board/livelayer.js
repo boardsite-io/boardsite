@@ -25,6 +25,7 @@ export default memo(() => {
                 fillEnabled={false}
                 perfectDrawEnabled={false}
                 shadowForStrokeEnabled={false}
+                currentPageIndex={0}
             />
         ))
     } // for other types (e.g. circle) we only need the endpoints
@@ -40,6 +41,7 @@ export default memo(() => {
                 fillEnabled={false}
                 perfectDrawEnabled={false}
                 shadowForStrokeEnabled={false}
+                currentPageIndex={0}
             />
         )
     }

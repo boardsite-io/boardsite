@@ -6,7 +6,7 @@ import { startLiveStroke, moveLiveStroke, registerLiveStroke } from "./stroke"
 import { CANVAS_WIDTH, CANVAS_HEIGHT, CANVAS_GAP } from "../../constants"
 import { SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
 
-export default function PageListener({ pageId }) {
+export default function PageListener({ pageId, currentPageIndex }) {
     // console.log("PageListener Redraw")
 
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
@@ -68,10 +68,7 @@ export default function PageListener({ pageId }) {
             height={CANVAS_HEIGHT}
             width={CANVAS_WIDTH}
             x={0}
-            y={
-                (CANVAS_HEIGHT + CANVAS_GAP) *
-                store.getState().boardControl.present.pageRank.indexOf(pageId)
-            }
+            y={(CANVAS_HEIGHT + CANVAS_GAP) * currentPageIndex}
             stroke="#000"
             strokeWidth={0.2}
             fill="#ffffff"

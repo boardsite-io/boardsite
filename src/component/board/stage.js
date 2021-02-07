@@ -121,6 +121,7 @@ export default function BoardStage() {
 // all pages and content are in this component
 const StageContent = memo(() => {
     // console.log("StageContent memo draw")
+
     const pageCreateSelector = createSelector(
         (state) => state.boardControl.present.pageRank,
         (state) => state.viewControl.currentPageId,
@@ -129,7 +130,8 @@ const StageContent = memo(() => {
             const maxPage = currentPageId + 2 // Get max page candidate
             const startPage = Math.max(minPage, 0) // Set start page index to candidate or to 0 if negative index
             const endPage = Math.min(maxPage + 1, pageRank.length) // Set end page index; +1 because of slice indexing
-            return pageRank.slice(startPage, endPage)
+            const pageSlice = pageRank.slice(startPage, endPage)
+            return { pageSlice, startPage } // todo: draw at correct position
         }
     )
 
@@ -143,15 +145,23 @@ const StageContent = memo(() => {
             <Layer
                 draggable={isDraggable}
                 listening={!isPanMode && !isListening}>
-                {pageSelector.map((pageId) => (
-                    <PageListener key={pageId} pageId={pageId} />
+                {pageSelector.pageSlice.map((pageId, i) => (
+                    <PageListener
+                        key={pageId}
+                        pageId={pageId}
+                        currentPageIndex={pageSelector.startPage + i}
+                    />
                 ))}
             </Layer>
             <Layer
                 draggable={isDraggable}
                 listening={!isPanMode && isListening}>
-                {pageSelector.map((pageId) => (
-                    <Page key={pageId} pageId={pageId} />
+                {pageSelector.pageSlice.map((pageId, i) => (
+                    <Page
+                        key={pageId}
+                        pageId={pageId}
+                        currentPageIndex={pageSelector.startPage + i}
+                    />
                 ))}
             </Layer>
             <Layer draggable={false} listening={false}>
