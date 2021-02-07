@@ -21,6 +21,11 @@ import {
     FIT_WIDTH_TO_PAGE,
     CENTER_VIEW,
 } from "../../redux/slice/viewcontrol"
+import {
+    handleAddPageAt,
+    handleClearPage,
+    handleDeletePage,
+} from "../board/requestHandlers"
 
 export default function Viewbar() {
     // console.log("Viewbar Redraw")
@@ -35,6 +40,27 @@ export default function Viewbar() {
 
     return (
         <div className="viewbar">
+            <IconButton
+                id="iconButton"
+                style={{ color: "#00d2be" }}
+                variant="contained"
+                onClick={() => handleAddPageAt(currPageIndex)}>
+                A
+            </IconButton>
+            <IconButton
+                id="iconButton"
+                style={{ color: "#00d2be" }}
+                variant="contained"
+                onClick={() => handleClearPage(currPageIndex)}>
+                C
+            </IconButton>
+            <IconButton
+                id="iconButton"
+                style={{ color: "#00d2be" }}
+                variant="contained"
+                onClick={() => handleDeletePage(currPageIndex)}>
+                D
+            </IconButton>
             <IconButton
                 id="iconButton"
                 style={{ color: "#00d2be" }}

@@ -22,16 +22,30 @@ export function handleAddPage() {
     }
 }
 
-export function handleAddPageAt(pageId) {
+export function handleAddPageAt(pageIndex) {
     const sid = store.getState().webControl.sessionId
     if (sid !== "") {
-        addPage(sid, pageId)
+        addPage(sid, pageIndex)
     } else {
-        store.dispatch(
-            ADD_PAGE(
-                store.getState().boardControl.present.pageRank.indexOf(pageId)
-            )
-        )
+        store.dispatch(ADD_PAGE(pageIndex))
+    }
+}
+
+export function handleClearPage(pageIndex) {
+    const sid = store.getState().webControl.sessionId
+    if (sid !== "") {
+        clearPage(sid, pageIndex)
+    } else {
+        store.dispatch(CLEAR_PAGE(pageIndex))
+    }
+}
+
+export function handleDeletePage(pageIndex) {
+    const sid = store.getState().webControl.sessionId
+    if (sid !== "") {
+        deletePage(sid, pageIndex)
+    } else {
+        store.dispatch(DELETE_PAGE(pageIndex))
     }
 }
 
@@ -41,23 +55,5 @@ export function handleDeleteAllPages() {
         deleteAllPages(sid)
     } else {
         store.dispatch(DELETE_ALL_PAGES())
-    }
-}
-
-export function handleClearPage(pageId) {
-    const sid = store.getState().webControl.sessionId
-    if (sid !== "") {
-        clearPage(sid, pageId)
-    } else {
-        store.dispatch(CLEAR_PAGE(pageId))
-    }
-}
-
-export function handleDeletePage(pageId) {
-    const sid = store.getState().webControl.sessionId
-    if (sid !== "") {
-        deletePage(sid, pageId)
-    } else {
-        store.dispatch(DELETE_PAGE(pageId))
     }
 }

@@ -20,7 +20,6 @@ const boardControlSlice = createSlice({
             state.pageCollection[pageId] = {
                 strokes: {},
             }
-
             if (pageIndex >= 0) {
                 state.pageRank.splice(pageIndex, 0, pageId)
             } else {
@@ -30,30 +29,27 @@ const boardControlSlice = createSlice({
 
         // Clear page
         CLEAR_PAGE: (state, action) => {
-            // delete page data
-            const pageId = action.payload
-            state.pageCollection[pageId].strokes = {}
+            const pageIndex = action.payload
+            const pageId = state.pageRank[pageIndex]
+            if (pageId !== undefined) {
+                state.pageCollection[pageId].strokes = {}
+            }
         },
 
         // Delete page
         DELETE_PAGE: (state, action) => {
-            // delete page data
-            const pageId = action.payload
-            delete state.pageCollection[pageId]
-
-            // delete page
-            const pageIndex = state.pageRank.indexOf(pageId)
-            state.pageRank.splice(pageIndex, 1)
+            const pageIndex = action.payload
+            const pageId = state.pageRank[pageIndex]
+            if (pageId !== undefined) {
+                delete state.pageCollection[pageId]
+                state.pageRank.splice(pageIndex, 1)
+            }
         },
 
         // Delete all pages
         DELETE_ALL_PAGES: (state) => {
-            const pageId = nanoid()
-            state.pageRank = [pageId]
+            state.pageRank = []
             state.pageCollection = {}
-            state.pageCollection[pageId] = {
-                strokes: {},
-            }
         },
 
         // Add stroke to collection
