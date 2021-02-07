@@ -1,57 +1,40 @@
-import Axios from "axios"
+import axios from "axios"
 import { nanoid } from "@reduxjs/toolkit"
 import { API_URL } from "../constants"
 
-const axios = Axios.create({
+const apiRequest = axios.create({
     baseURL: API_URL,
+    transformRequest: [(data) => JSON.stringify(data)],
+    transformResponse: [(data) => JSON.parse(data)],
     headers: {
-        post: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-        },
-        put: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-        },
-        patch: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-        },
+        // eslint-disable-next-line prettier/prettier
+        "Accept": "application/json",
+        "Content-Type": "application/json",
     },
     timeout: 3000,
 })
 
 /**
  * Send data request to API.
- * @param {string} url
- * @param {*} data
- * @param {string} method
  */
-export function sendRequest(url, method, data = {}) {
-    data = JSON.stringify(data)
-    return new Promise((resolve, reject) => {
-        axios({ url, method, data })
-            .then((response) => {
-                if (response.statusText === "OK") {
-                    resolve(response)
-                } else {
-                    // in case of error, api returns obj with 'error' key
-                    reject(new Error())
-                }
-            })
-            .catch(() => reject())
-    })
+export async function sendRequest(url, method, data = {}) {
+    try {
+        const response = await apiRequest({ url, method, data })
+        return response.data
+    } catch (error) {
+        return error
+    }
 }
 
-export function createSession() {
+export async function createSession() {
     return sendRequest("/b/create", "post")
 }
 
-export function getPages(sessionId) {
+export async function getPages(sessionId) {
     return sendRequest(`/b/${sessionId}/pages`, "get")
 }
 
-export function addPage(sessionId, index) {
+export async function addPage(sessionId, index) {
     const pageId = nanoid()
     return sendRequest(`/b/${sessionId}/pages`, "post", {
         pageId,
@@ -59,15 +42,15 @@ export function addPage(sessionId, index) {
     })
 }
 
-export function clearPage(sessionId, pageId) {
+export async function clearPage(sessionId, pageId) {
     return sendRequest(`/b/${sessionId}/pages/${pageId}`, "put", {})
 }
 
-export function deletePage(sessionId, pageId) {
+export async function deletePage(sessionId, pageId) {
     return sendRequest(`/b/${sessionId}/pages/${pageId}`, "delete")
 }
 
-export function deleteAllPages(sessionId) {
+export async function deleteAllPages(sessionId) {
     // TODO
     console.log(sessionId)
 }
