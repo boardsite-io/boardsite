@@ -1,6 +1,25 @@
-import axios from "axios"
+import Axios from "axios"
 import { nanoid } from "@reduxjs/toolkit"
 import { API_URL } from "../constants"
+
+const axios = Axios.create({
+    baseURL: API_URL,
+    headers: {
+        post: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+        put: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+        patch: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+    },
+    timeout: 3000,
+})
 
 /**
  * Send data request to API.
@@ -9,26 +28,9 @@ import { API_URL } from "../constants"
  * @param {string} method
  */
 export function sendRequest(url, method, data = {}) {
+    data = JSON.stringify(data)
     return new Promise((resolve, reject) => {
-        axios({
-            url: `${API_URL}${url}`,
-            method,
-            data: JSON.stringify(data),
-            headers: {
-                post: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                put: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                patch: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-            },
-        })
+        axios({ url, method, data })
             .then((response) => {
                 if (response.statusText === "OK") {
                     resolve(response)
