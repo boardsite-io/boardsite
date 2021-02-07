@@ -60,7 +60,7 @@ export default function PageListener({ pageId, currentPageIndex }) {
         moveLiveStroke(pos)
 
         // register finished stroke
-        registerLiveStroke(pageId)
+        registerLiveStroke(pageId, currentPageIndex)
     }
 
     return (

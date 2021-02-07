@@ -182,7 +182,7 @@ export function moveLiveStroke(position) {
 /**
  * Generate API serialized stroke object, draw & save it to redux store
  */
-export async function registerLiveStroke(pageId) {
+export async function registerLiveStroke(pageId, currentPageIndex) {
     const { liveStroke } = store.getState().drawControl
     // empty livestrokes e.g. rightmouse eraser
     if (liveStroke.points === undefined) {
@@ -192,7 +192,7 @@ export async function registerLiveStroke(pageId) {
         return
     }
 
-    const stroke = createStroke(liveStroke, pageId)
+    const stroke = createStroke(liveStroke, pageId, currentPageIndex)
     // add stroke to collection
     store.dispatch(ADD_STROKE(stroke))
     // clear livestroke
@@ -218,7 +218,7 @@ function getStartEndPoints(points) {
  * Creates a new stroke with unique ID and processes the points
  * @param {*} liveStroke
  */
-function createStroke(liveStroke, pageId) {
+function createStroke(liveStroke, pageId, currentPageIndex) {
     const stroke = { ...liveStroke }
     stroke.points = stroke.points.flat()
 
@@ -251,7 +251,7 @@ function createStroke(liveStroke, pageId) {
 
     // make y coordinates relative to page
     for (let i = 1; i < stroke.points.length; i += 2) {
-        stroke.points[i] %= CANVAS_HEIGHT + CANVAS_GAP // relative y position
+        stroke.points[i] -= currentPageIndex * (CANVAS_HEIGHT + CANVAS_GAP) // relative y position
     }
 
     return stroke
