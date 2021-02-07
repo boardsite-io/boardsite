@@ -5,10 +5,9 @@ import {
     DEFAULT_STAGE_X,
     DEFAULT_STAGE_Y,
     DEFAULT_STAGE_SCALE,
-    DEFAULT_CURRENT_PAGE_ID,
+    DEFAULT_CURRENT_PAGE_INDEX,
     CANVAS_WIDTH,
-    CANVAS_HEIGHT,
-    CANVAS_GAP,
+    CANVAS_FULL_HEIGHT,
     ZOOM_SCALE_MAX,
     ZOOM_SCALE_MIN,
     ZOOM_IN_BUTTON_SCALE,
@@ -23,7 +22,7 @@ const viewControlSlice = createSlice({
         stageX: DEFAULT_STAGE_X,
         stageY: DEFAULT_STAGE_Y,
         stageScale: DEFAULT_STAGE_SCALE,
-        currentPageId: DEFAULT_CURRENT_PAGE_ID,
+        currentPageIndex: DEFAULT_CURRENT_PAGE_INDEX,
     },
     reducers: {
         SET_STAGE_X: (state, action) => {
@@ -31,11 +30,11 @@ const viewControlSlice = createSlice({
         },
         SET_STAGE_Y: (state, action) => {
             state.stageY = action.payload
-            updateCurrentPageId(state)
+            updateCurrentPageIndex(state)
         },
         SCROLL_STAGE_Y: (state, action) => {
             state.stageY -= action.payload
-            updateCurrentPageId(state)
+            updateCurrentPageIndex(state)
         },
         SET_STAGE_SCALE: (state, action) => {
             state.stageScale = action.payload
@@ -69,6 +68,15 @@ const viewControlSlice = createSlice({
             }
             zoomToPointWithScale(state, centerOfScreen, ZOOM_OUT_BUTTON_SCALE)
         },
+        JUMP_TO_NEXT_PAGE: (state) => {
+            goToPage(state, state.currentPageIndex + 1)
+        },
+        JUMP_TO_PREV_PAGE: (state) => {
+            goToPage(state, state.currentPageIndex - 1)
+        },
+        JUMP_TO_FIRST_PAGE: (state) => {
+            goToPage(state, 0)
+        },
     },
 })
 
@@ -83,8 +91,17 @@ export const {
     ZOOM_TO,
     ZOOM_IN_CENTER,
     ZOOM_OUT_CENTER,
+    JUMP_TO_NEXT_PAGE,
+    JUMP_TO_PREV_PAGE,
+    JUMP_TO_FIRST_PAGE,
 } = viewControlSlice.actions
 export default viewControlSlice.reducer
+
+function goToPage(state, pageIndex) {
+    state.currentPageIndex = pageIndex
+    state.stageY = -pageIndex * CANVAS_FULL_HEIGHT
+    centerView(state)
+}
 
 function centerView(state) {
     const x = (window.innerWidth - CANVAS_WIDTH * state.stageScale.x) / 2
@@ -129,10 +146,10 @@ function zoomToPointWithScale(state, zoomPoint, zoomScale) {
     }
 
     state.stageY = zoomPoint.y - mousePointTo.y * newScale
-    updateCurrentPageId(state) // check if pageId changed by zooming
+    updateCurrentPageIndex(state) // check if pageId changed by zooming
 }
 
-function updateCurrentPageId(state) {
+function updateCurrentPageIndex(state) {
     const canvasY = (state.stageHeight / 2 - state.stageY) / state.stageScale.y
-    state.currentPageId = Math.floor(canvasY / (CANVAS_HEIGHT + CANVAS_GAP))
+    state.currentPageIndex = Math.floor(canvasY / CANVAS_FULL_HEIGHT)
 }

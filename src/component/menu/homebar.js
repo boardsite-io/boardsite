@@ -1,4 +1,5 @@
 import React from "react"
+import { useSelector } from "react-redux"
 import GroupAddIcon from "@material-ui/icons/GroupAdd"
 // import SaveIcon from "@material-ui/icons/Save"
 // import GetAppIcon from "@material-ui/icons/GetApp"
@@ -7,12 +8,44 @@ import Tooltip from "@material-ui/core/Tooltip"
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever"
 import AddIcon from "@material-ui/icons/Add"
 // import RemoveIcon from "@material-ui/icons/Remove"
-import { handleAddPage, handleDeleteAllPages } from "../board/requestHandlers"
+import {
+    handleAddPage,
+    handleAddPageAt,
+    handleClearPage,
+    handleDeletePage,
+    handleDeleteAllPages,
+} from "../board/requestHandlers"
 
 export default function Homebar(props) {
     // console.log("Homebar Redraw")
+
+    const currPageIndex = useSelector(
+        (state) => state.viewControl.currentPageIndex
+    )
+
     return (
         <div className="homebar">
+            <IconButton
+                id="iconButton"
+                style={{ color: "#00d2be" }}
+                variant="contained"
+                onClick={() => handleAddPageAt(currPageIndex)}>
+                A
+            </IconButton>
+            <IconButton
+                id="iconButton"
+                style={{ color: "#00d2be" }}
+                variant="contained"
+                onClick={() => handleClearPage(currPageIndex)}>
+                C
+            </IconButton>
+            <IconButton
+                id="iconButton"
+                style={{ color: "#00d2be" }}
+                variant="contained"
+                onClick={() => handleDeletePage(currPageIndex)}>
+                D
+            </IconButton>
             <Tooltip
                 id="tooltip"
                 title="join or create session"

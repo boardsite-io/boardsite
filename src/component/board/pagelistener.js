@@ -3,7 +3,11 @@ import { useSelector } from "react-redux"
 import { Rect } from "react-konva"
 import store from "../../redux/store"
 import { startLiveStroke, moveLiveStroke, registerLiveStroke } from "./stroke"
-import { CANVAS_WIDTH, CANVAS_HEIGHT, CANVAS_GAP } from "../../constants"
+import {
+    CANVAS_WIDTH,
+    CANVAS_HEIGHT,
+    CANVAS_FULL_HEIGHT,
+} from "../../constants"
 import { SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
 
 export default function PageListener({ pageId, currentPageIndex }) {
@@ -68,7 +72,7 @@ export default function PageListener({ pageId, currentPageIndex }) {
             height={CANVAS_HEIGHT}
             width={CANVAS_WIDTH}
             x={0}
-            y={(CANVAS_HEIGHT + CANVAS_GAP) * currentPageIndex}
+            y={CANVAS_FULL_HEIGHT * currentPageIndex}
             stroke="#000"
             strokeWidth={0.2}
             fill="#ffffff"

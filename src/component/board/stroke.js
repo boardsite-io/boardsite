@@ -12,7 +12,7 @@ import {
     END_LIVESTROKE,
 } from "../../redux/slice/drawcontrol"
 
-import { toolType, CANVAS_HEIGHT, CANVAS_GAP } from "../../constants"
+import { toolType, CANVAS_FULL_HEIGHT } from "../../constants"
 import { sendStroke } from "../../api/websocket"
 /**
  * Super component implementing all stroke types and their visualization in the canvas
@@ -239,7 +239,7 @@ function createStroke(liveStroke, pageId, currentPageIndex) {
 
     // make y coordinates relative to page
     for (let i = 1; i < stroke.points.length; i += 2) {
-        stroke.points[i] -= currentPageIndex * (CANVAS_HEIGHT + CANVAS_GAP) // relative y position
+        stroke.points[i] -= currentPageIndex * CANVAS_FULL_HEIGHT // relative y position
     }
 
     return stroke

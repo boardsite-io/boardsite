@@ -124,10 +124,10 @@ const StageContent = memo(() => {
 
     const pageCreateSelector = createSelector(
         (state) => state.boardControl.present.pageRank,
-        (state) => state.viewControl.currentPageId,
-        (pageRank, currentPageId) => {
-            const minPage = currentPageId - 2 // Get min page candidate
-            const maxPage = currentPageId + 2 // Get max page candidate
+        (state) => state.viewControl.currentPageIndex,
+        (pageRank, currentPageIndex) => {
+            const minPage = currentPageIndex - 2 // Get min page candidate
+            const maxPage = currentPageIndex + 2 // Get max page candidate
             const startPage = Math.max(minPage, 0) // Set start page index to candidate or to 0 if negative index
             const endPage = Math.min(maxPage + 1, pageRank.length) // Set end page index; +1 because of slice indexing
             const pageSlice = pageRank.slice(startPage, endPage)

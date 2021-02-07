@@ -1,6 +1,7 @@
 export const CANVAS_WIDTH = 620
 export const CANVAS_HEIGHT = 877
 export const CANVAS_GAP = 20
+export const CANVAS_FULL_HEIGHT = CANVAS_HEIGHT + CANVAS_GAP
 export const CANVAS_PIXEL_RATIO = 1 // css forces canvas to be in a smaller frame but with high res for better clarity
 export const WIDTH_MIN = 1
 export const WIDTH_MAX = 40
@@ -13,7 +14,7 @@ export const ZOOM_IN_BUTTON_SCALE = 1.1
 export const ZOOM_OUT_BUTTON_SCALE = 0.9
 export const ZOOM_SCALE_MAX = 5.0
 export const ZOOM_SCALE_MIN = 0.5
-export const DEFAULT_CURRENT_PAGE_ID = 0
+export const DEFAULT_CURRENT_PAGE_INDEX = 0
 export const DEFAULT_STAGE_WIDTH = window.innerWidth
 export const DEFAULT_STAGE_HEIGHT = window.innerHeight
 export const DEFAULT_STAGE_X = 0

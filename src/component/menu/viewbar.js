@@ -3,8 +3,8 @@ import ZoomInIcon from "@material-ui/icons/ZoomIn"
 import ZoomOutIcon from "@material-ui/icons/ZoomOut"
 import ZoomOutMapIcon from "@material-ui/icons/ZoomOutMap"
 import { IconButton } from "@material-ui/core"
-// import ExpandLessIcon from "@material-ui/icons/ExpandLess"
-// import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
+import ExpandLessIcon from "@material-ui/icons/ExpandLess"
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 // import AspectRatioIcon from "@material-ui/icons/AspectRatio"
 // import SettingsOverscanIcon from "@material-ui/icons/SettingsOverscan"
 import FilterCenterFocusIcon from "@material-ui/icons/FilterCenterFocus"
@@ -20,54 +20,64 @@ import {
     ZOOM_OUT_CENTER,
     FIT_WIDTH_TO_PAGE,
     CENTER_VIEW,
+    JUMP_TO_NEXT_PAGE,
+    JUMP_TO_PREV_PAGE,
+    JUMP_TO_FIRST_PAGE,
 } from "../../redux/slice/viewcontrol"
-import {
-    handleAddPageAt,
-    handleClearPage,
-    handleDeletePage,
-} from "../board/requestHandlers"
 
 export default function Viewbar() {
     // console.log("Viewbar Redraw")
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
     const currPageIndex = useSelector(
-        (state) => state.viewControl.currentPageId
+        (state) => state.viewControl.currentPageIndex
     )
 
     function togglePanMode() {
         store.dispatch(TOGGLE_PANMODE())
     }
 
+    function up() {
+        store.dispatch(JUMP_TO_PREV_PAGE())
+    }
+
+    function down() {
+        store.dispatch(JUMP_TO_NEXT_PAGE())
+    }
+
     return (
         <div className="viewbar">
-            <IconButton
-                id="iconButton"
-                style={{ color: "#00d2be" }}
-                variant="contained"
-                onClick={() => handleAddPageAt(currPageIndex)}>
-                A
-            </IconButton>
-            <IconButton
-                id="iconButton"
-                style={{ color: "#00d2be" }}
-                variant="contained"
-                onClick={() => handleClearPage(currPageIndex)}>
-                C
-            </IconButton>
-            <IconButton
-                id="iconButton"
-                style={{ color: "#00d2be" }}
-                variant="contained"
-                onClick={() => handleDeletePage(currPageIndex)}>
-                D
-            </IconButton>
-            <IconButton
-                id="iconButton"
-                style={{ color: "#00d2be" }}
-                variant="contained"
-                onClick={togglePanMode}>
-                {currPageIndex}
-            </IconButton>
+            <Tooltip
+                id="tooltip"
+                title="Page Up"
+                TransitionProps={{ timeout: 0 }}
+                placement="left">
+                <IconButton id="iconButton" variant="contained" onClick={up}>
+                    <ExpandLessIcon id="iconButtonInner" />
+                </IconButton>
+            </Tooltip>
+            <Tooltip
+                id="tooltip"
+                title="Return to First Page"
+                TransitionProps={{ timeout: 0 }}
+                placement="left">
+                <IconButton
+                    id="iconButton"
+                    style={{ color: "#00d2be" }}
+                    variant="contained"
+                    onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
+                    {currPageIndex}
+                </IconButton>
+            </Tooltip>
+            <Tooltip
+                id="tooltip"
+                title="Page Down"
+                TransitionProps={{ timeout: 0 }}
+                placement="left">
+                <IconButton id="iconButton" variant="contained" onClick={down}>
+                    <ExpandMoreIcon id="iconButtonInner" />
+                </IconButton>
+            </Tooltip>
+
             <Tooltip
                 id="tooltip"
                 title="Toggle Panning"
@@ -137,24 +147,6 @@ export default function Viewbar() {
                     <FilterCenterFocusIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
-            {/* <Tooltip
-                id="tooltip"
-                title="Scroll Up"
-                TransitionProps={{ timeout: 0 }}
-                placement="left">
-                <IconButton id="iconButton" variant="contained" onClick={up}>
-                    <ExpandLessIcon id="iconButtonInner" />
-                </IconButton>
-            </Tooltip>
-            <Tooltip
-                id="tooltip"
-                title="Scroll Down"
-                TransitionProps={{ timeout: 0 }}
-                placement="left">
-                <IconButton id="iconButton" variant="contained" onClick={down}>
-                    <ExpandMoreIcon id="iconButtonInner" />
-                </IconButton>
-            </Tooltip> */}
         </div>
     )
 }
