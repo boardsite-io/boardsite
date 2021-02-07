@@ -14,6 +14,20 @@ export function sendRequest(url, method, data = {}) {
             url: `${API_URL}${url}`,
             method,
             data: JSON.stringify(data),
+            headers: {
+                post: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                put: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                patch: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+            },
         })
             .then((response) => {
                 if (response.statusText === "OK") {
