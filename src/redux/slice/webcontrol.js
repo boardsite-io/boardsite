@@ -21,12 +21,15 @@ const webControlSlice = createSlice({
         },
         RECEIVE_STROKES: (state, action) => {
             const { data } = action.payload
+            console.log(data)
             state.strokesInBuf.concat(JSON.parse(data))
         },
         // for now we only send one stroke at a time
         SEND_STROKE: (state, action) => {
             const stroke = action.payload
-            state.webSocket.send(JSON.stringify([stroke]))
+            if (state.sessionId !== "") {
+                state.webSocket.send(JSON.stringify([stroke]))
+            }
         },
     },
 })

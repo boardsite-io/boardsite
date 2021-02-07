@@ -1,11 +1,7 @@
 import store from "../redux/store"
 import { API_SESSION_URL } from "../constants"
 
-import {
-    CREATE_WS,
-    RECEIVE_STROKES,
-    SEND_STROKE,
-} from "../redux/slice/webcontrol"
+import { CREATE_WS, RECEIVE_STROKES } from "../redux/slice/webcontrol"
 
 /**
  * Connect to Websocket.
@@ -28,6 +24,7 @@ export function createWebsocket(sessionId) {
 }
 
 function onMessage(data) {
+    console.log(data)
     store.dispatch(RECEIVE_STROKES(data))
 }
 
@@ -37,12 +34,6 @@ function onClose(event) {
 
 function onOpen() {
     console.log("WebSocket is open now.")
-}
-
-export function sendStroke(stroke) {
-    if (store.getState().webControl.sessionId !== "") {
-        store.dispatch(SEND_STROKE(stroke))
-    }
 }
 
 export function receiveStrokes() {}

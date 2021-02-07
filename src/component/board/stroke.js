@@ -11,9 +11,9 @@ import {
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
 } from "../../redux/slice/drawcontrol"
+import { SEND_STROKE } from "../../redux/slice/webcontrol"
 
 import { toolType, CANVAS_FULL_HEIGHT } from "../../constants"
-import { sendStroke } from "../../api/websocket"
 /**
  * Super component implementing all stroke types and their visualization in the canvas
  * In order for memo to work correctly, we have to pass the stroke props by value
@@ -181,10 +181,10 @@ export async function registerLiveStroke(pageId, currentPageIndex) {
     const stroke = createStroke(liveStroke, pageId, currentPageIndex)
     // add stroke to collection
     store.dispatch(ADD_STROKE(stroke))
+    // relay stroke in session
+    store.dispatch(SEND_STROKE(stroke))
     // clear livestroke
     store.dispatch(END_LIVESTROKE())
-    // relay stroke in session
-    sendStroke(stroke)
 }
 
 /**
