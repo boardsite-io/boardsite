@@ -39,7 +39,9 @@ export const StrokeShape = memo(
                 store.dispatch(
                     UPDATE_STROKE({
                         x: e.target.attrs.x,
-                        y: e.target.attrs.y,
+                        y:
+                            e.target.attrs.y -
+                            currentPageIndex * (CANVAS_HEIGHT + CANVAS_GAP),
                         id,
                         pageId,
                     })
