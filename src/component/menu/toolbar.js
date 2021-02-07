@@ -16,7 +16,6 @@ import { toolType } from "../../constants"
 import UndoRedo from "./undoredo"
 
 function Toolbar() {
-    // console.log("Toolbar Redraw")
     const [displayExtraTools, setDisplayExtraTools] = useState(false)
     const typeSelector = useSelector(
         (state) => state.drawControl.liveStroke.type

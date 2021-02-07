@@ -16,7 +16,6 @@ import { createWebsocket } from "../api/websocket"
 import { createSession } from "../api/request"
 
 export default function Whiteboard() {
-    // console.log("Whiteboard Redraw")
     const [openSessionDialog, setOpenSessionDialog] = useState(false)
     const [sidInput, setSidInput] = useState("")
 
@@ -81,8 +80,6 @@ export default function Whiteboard() {
         // setOpenSessionDialog(true);
         handleAddPage()
         document.addEventListener("keypress", handleKeyPress)
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     /**
@@ -96,7 +93,6 @@ export default function Whiteboard() {
                 setOpenSessionDialog(false)
             })
             .catch((error) =>
-                // eslint-disable-next-line no-console
                 console.error("Websocket creation failed!", error)
             )
     }
@@ -109,7 +105,6 @@ export default function Whiteboard() {
             .then(({ sessionId }) => {
                 createWS(sessionId)
             })
-            // eslint-disable-next-line no-console
             .catch(() => console.log("Session creation failed!"))
     }
 

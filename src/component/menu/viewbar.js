@@ -26,7 +26,6 @@ import {
 } from "../../redux/slice/viewcontrol"
 
 export default function Viewbar() {
-    // console.log("Viewbar Redraw")
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
     const currPageIndex = useSelector(
         (state) => state.viewControl.currentPageIndex

@@ -22,8 +22,6 @@ import { sendStroke } from "../../api/websocket"
  * @param {{stroke: {}}} props
  */
 export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
-    // console.log("StrokeShape Memo Redraw")
-
     function onDragStart() {
         if (store.getState().drawControl.liveStroke.type === toolType.ERASER) {
             store.dispatch(ERASE_STROKE({ pageId, id }))

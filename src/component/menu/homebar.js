@@ -17,8 +17,6 @@ import {
 } from "../board/requestHandlers"
 
 export default function Homebar(props) {
-    // console.log("Homebar Redraw")
-
     const currPageIndex = useSelector(
         (state) => state.viewControl.currentPageIndex
     )

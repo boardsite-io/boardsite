@@ -5,7 +5,6 @@ import { CANVAS_FULL_HEIGHT } from "../../constants"
 import { StrokeShape } from "./stroke"
 
 export default function Page({ pageId, currentPageIndex }) {
-    // console.log("Page Redraw")
     const strokes = useSelector(
         (state) => state.boardControl.present.pageCollection[pageId].strokes
     )

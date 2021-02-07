@@ -11,8 +11,6 @@ import {
 import { SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
 
 export default function PageListener({ pageId, currentPageIndex }) {
-    // console.log("PageListener Redraw")
-
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
 
     function getScaledPointerPosition(e) {

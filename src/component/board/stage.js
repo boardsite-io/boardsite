@@ -23,7 +23,6 @@ import {
 import store from "../../redux/store"
 
 export default function BoardStage() {
-    // console.log("BoardStage Memo Redraw")
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
     const stageWidth = useSelector((state) => state.viewControl.stageWidth)
     const stageHeight = useSelector((state) => state.viewControl.stageHeight)
@@ -120,8 +119,6 @@ export default function BoardStage() {
 
 // all pages and content are in this component
 const StageContent = memo(() => {
-    // console.log("StageContent memo draw")
-
     const pageCreateSelector = createSelector(
         (state) => state.boardControl.present.pageRank,
         (state) => state.viewControl.currentPageIndex,
