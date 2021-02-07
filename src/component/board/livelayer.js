@@ -5,6 +5,7 @@ import store from "../../redux/store"
 import { StrokeShape } from "./stroke"
 
 export default memo(() => {
+    // console.log("LiveLayer Memo Redraw")
     const pts = useSelector((state) => state.drawControl.liveStroke.points)
     const { liveStroke } = store.getState().drawControl
     let shape = null
