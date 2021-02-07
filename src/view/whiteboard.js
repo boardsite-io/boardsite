@@ -18,7 +18,6 @@ import { createSession } from "../api/request"
 export default function Whiteboard() {
     // console.log("Whiteboard Redraw")
     const [openSessionDialog, setOpenSessionDialog] = useState(false)
-    const [sessionId, setSessionId] = useState()
     const [sidInput, setSidInput] = useState("")
 
     function handleKeyPress(e) {
@@ -86,22 +85,6 @@ export default function Whiteboard() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    useEffect(() => {
-        if (sidInput !== undefined) {
-            // Check if id specified in link
-            setSessionId(sidInput) // Set session id and connect to session
-        }
-    }, [sidInput])
-
-    // Verify session id and try to connect to session
-    useEffect(() => {
-        if (sessionId !== "" && sessionId !== undefined) {
-            if (sessionId.length === 6) {
-                createWS(sessionId)
-            }
-        }
-    }, [sessionId])
-
     /**
      * Helper function for creating websocket connection and handling the resolve / reject
      * @param {string} sid
@@ -113,7 +96,6 @@ export default function Whiteboard() {
                 setOpenSessionDialog(false)
             })
             .catch((error) =>
-                // eslint-disable-next-line no-console
                 console.error("Websocket creation failed!", error)
             )
     }
@@ -123,8 +105,8 @@ export default function Whiteboard() {
      */
     function handleCreate() {
         createSession()
-            .then((data) => {
-                createWS(data.data.id)
+            .then(({ sessionId }) => {
+                createWS(sessionId)
             })
             // eslint-disable-next-line no-console
             .catch(() => console.log("Session creation failed!"))
@@ -152,11 +134,9 @@ export default function Whiteboard() {
             <SessionDialog
                 open={openSessionDialog}
                 setOpen={setOpenSessionDialog}
-                sessionID_input={sidInput}
-                setSessionID_input={setSidInput}
-                handleTextFieldChange={handleTextFieldChange}
                 handleJoin={handleJoin}
                 handleCreate={handleCreate}
+                handleTextFieldChange={handleTextFieldChange}
             />
             <Viewbar />
             <Toolbar />

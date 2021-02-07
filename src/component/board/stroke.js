@@ -11,6 +11,7 @@ import {
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
 } from "../../redux/slice/drawcontrol"
+import { sendStroke } from "../../api/websocket"
 import { toolType } from "../../constants"
 
 /**
@@ -184,6 +185,8 @@ export async function registerLiveStroke(pageId) {
     store.dispatch(ADD_STROKE(stroke))
     // clear livestroke
     store.dispatch(END_LIVESTROKE())
+    // relay stroke in session
+    sendStroke(stroke)
 }
 
 /**
