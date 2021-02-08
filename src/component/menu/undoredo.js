@@ -1,10 +1,8 @@
 import React from "react"
 import { ActionCreators as UndoActionCreators } from "redux-undo"
 import { useSelector } from "react-redux"
-import UndoIcon from "@material-ui/icons/Undo"
-import RedoIcon from "@material-ui/icons/Redo"
+import { MdRedo, MdUndo } from "react-icons/md"
 import Tooltip from "@material-ui/core/Tooltip"
-import { IconButton } from "@material-ui/core"
 import store from "../../redux/store"
 
 export default function UndoRedo() {
@@ -19,15 +17,15 @@ export default function UndoRedo() {
                 TransitionProps={{ timeout: 0 }}
                 placement="bottom">
                 <span>
-                    <IconButton
-                        id="iconButton"
-                        variant="contained"
+                    <button
+                        type="button"
+                        id="icon-button"
                         disabled={!canUndo}
-                        onClick={() =>
+                        onClick={() => {
                             store.dispatch(UndoActionCreators.undo())
-                        }>
-                        <UndoIcon id="iconButtonInner" />
-                    </IconButton>
+                        }}>
+                        <MdUndo id="icon" />
+                    </button>
                 </span>
             </Tooltip>
             <Tooltip
@@ -36,15 +34,15 @@ export default function UndoRedo() {
                 TransitionProps={{ timeout: 0 }}
                 placement="bottom">
                 <span>
-                    <IconButton
-                        id="iconButton"
-                        variant="contained"
+                    <button
+                        type="button"
+                        id="icon-button"
                         disabled={!canRedo}
-                        onClick={() =>
+                        onClick={() => {
                             store.dispatch(UndoActionCreators.redo())
-                        }>
-                        <RedoIcon id="iconButtonInner" />
-                    </IconButton>
+                        }}>
+                        <MdRedo id="icon" />
+                    </button>
                 </span>
             </Tooltip>
         </>

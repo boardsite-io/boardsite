@@ -3,7 +3,7 @@ import ReactSlider from "react-slider"
 import { useSelector } from "react-redux"
 import { IconButton } from "@material-ui/core"
 import Tooltip from "@material-ui/core/Tooltip"
-import CreateIcon from "@material-ui/icons/Create"
+import { MdCreate } from "react-icons/md"
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown"
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp"
 import {
@@ -80,12 +80,12 @@ export default function WidthPicker() {
                 title="Width"
                 TransitionProps={{ timeout: 0 }}
                 placement="bottom">
-                <IconButton
-                    id="iconButton"
-                    variant="contained"
+                <button
+                    type="button"
+                    id="icon-button"
                     onClick={handleWidthClick}>
-                    <CreateIcon id="iconButtonInner" />
-                </IconButton>
+                    <MdCreate id="icon" />
+                </button>
             </Tooltip>
             {
                 // Width Slider Popup

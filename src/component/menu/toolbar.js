@@ -1,12 +1,13 @@
 import React, { useState } from "react"
-import { IconButton } from "@material-ui/core"
-import RemoveIcon from "@material-ui/icons/Remove"
-import ChangeHistoryIcon from "@material-ui/icons/ChangeHistory"
-import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked"
-import BrushIcon from "@material-ui/icons/Brush"
-import HighlightOffIcon from "@material-ui/icons/HighlightOff"
+import {
+    MdBrush,
+    MdChangeHistory,
+    MdHighlightOff,
+    MdRadioButtonUnchecked,
+    MdRemove,
+} from "react-icons/md"
+import { RiDragMoveFill } from "react-icons/ri"
 import Tooltip from "@material-ui/core/Tooltip"
-import ControlCameraIcon from "@material-ui/icons/ControlCamera"
 import { useSelector } from "react-redux"
 import WidthPicker from "./widthpicker"
 import ColorPicker from "./colorpicker"
@@ -20,7 +21,6 @@ function Toolbar() {
     const typeSelector = useSelector(
         (state) => state.drawControl.liveStroke.type
     )
-    const isDraggable = useSelector((state) => state.drawControl.isDraggable)
 
     return (
         <div className="toolbar">
@@ -31,73 +31,76 @@ function Toolbar() {
                     title="Pen (1 or P)"
                     TransitionProps={{ timeout: 0 }}
                     placement="bottom">
-                    <IconButton
-                        id={
-                            typeSelector === toolType.PEN
-                                ? "iconButtonActive"
-                                : "iconButton"
-                        }
-                        variant="contained"
-                        onClick={
-                            typeSelector === toolType.PEN
-                                ? () => setDisplayExtraTools((prev) => !prev)
-                                : () => {
-                                      setDisplayExtraTools(false)
-                                      store.dispatch(SET_TYPE(toolType.PEN))
-                                  }
-                        }>
-                        <BrushIcon
-                            id={
-                                typeSelector === toolType.PEN
-                                    ? "iconButtonActiveInner"
-                                    : "iconButtonInner"
-                            }
-                        />
-                    </IconButton>
+                    {typeSelector === toolType.PEN ? (
+                        <button
+                            type="button"
+                            id="icon-button-active"
+                            onClick={() =>
+                                setDisplayExtraTools((prev) => !prev)
+                            }>
+                            <MdBrush id="icon" />
+                        </button>
+                    ) : (
+                        <button
+                            type="button"
+                            id="icon-button"
+                            onClick={() => {
+                                setDisplayExtraTools(false)
+                                store.dispatch(SET_TYPE(toolType.PEN))
+                            }}>
+                            <MdBrush id="icon" />
+                        </button>
+                    )}
                 </Tooltip>
                 <Tooltip
                     id="tooltip"
                     title="Eraser (2 or E)"
                     TransitionProps={{ timeout: 0 }}
                     placement="bottom">
-                    <IconButton
-                        id={
-                            typeSelector === toolType.ERASER
-                                ? "iconButtonActive"
-                                : "iconButton"
-                        }
-                        variant="contained"
-                        onClick={() => {
-                            store.dispatch(SET_TYPE(toolType.ERASER))
-                        }}>
-                        <HighlightOffIcon
-                            id={
-                                typeSelector === toolType.ERASER
-                                    ? "iconButtonActiveInner"
-                                    : "iconButtonInner"
-                            }
-                        />
-                    </IconButton>
+                    {typeSelector === toolType.ERASER ? (
+                        <button
+                            type="button"
+                            id="icon-button-active"
+                            onClick={() => {
+                                store.dispatch(SET_TYPE(toolType.ERASER))
+                            }}>
+                            <MdHighlightOff id="icon" />
+                        </button>
+                    ) : (
+                        <button
+                            type="button"
+                            id="icon-button"
+                            onClick={() => {
+                                store.dispatch(SET_TYPE(toolType.ERASER))
+                            }}>
+                            <MdHighlightOff id="icon" />
+                        </button>
+                    )}
                 </Tooltip>
                 <Tooltip
                     id="tooltip"
                     title="Drag (3 or D)"
                     TransitionProps={{ timeout: 0 }}
                     placement="bottom">
-                    <IconButton
-                        id={isDraggable ? "iconButtonActive" : "iconButton"}
-                        variant="contained"
-                        onClick={() => {
-                            store.dispatch(SET_TYPE(toolType.DRAG))
-                        }}>
-                        <ControlCameraIcon
-                            id={
-                                isDraggable
-                                    ? "iconButtonActiveInner"
-                                    : "iconButtonInner"
-                            }
-                        />
-                    </IconButton>
+                    {typeSelector === toolType.DRAG ? (
+                        <button
+                            type="button"
+                            id="icon-button-active"
+                            onClick={() => {
+                                store.dispatch(SET_TYPE(toolType.DRAG))
+                            }}>
+                            <RiDragMoveFill id="icon" />
+                        </button>
+                    ) : (
+                        <button
+                            type="button"
+                            id="icon-button"
+                            onClick={() => {
+                                store.dispatch(SET_TYPE(toolType.DRAG))
+                            }}>
+                            <RiDragMoveFill id="icon" />
+                        </button>
+                    )}
                 </Tooltip>
             </div>
             {displayExtraTools ? (
@@ -107,96 +110,75 @@ function Toolbar() {
                         title="Line (4 or L)"
                         TransitionProps={{ timeout: 0 }}
                         placement="bottom">
-                        <IconButton
-                            id={
-                                typeSelector === toolType.LINE
-                                    ? "iconButtonActive"
-                                    : "iconButton"
-                            }
-                            variant="contained"
-                            onClick={
-                                typeSelector === toolType.LINE
-                                    ? () => {
-                                          setDisplayExtraTools(false)
-                                      }
-                                    : () => {
-                                          store.dispatch(
-                                              SET_TYPE(toolType.LINE)
-                                          )
-                                      }
-                            }>
-                            <RemoveIcon
-                                id={
-                                    typeSelector === toolType.LINE
-                                        ? "iconButtonActiveInner"
-                                        : "iconButtonInner"
-                                }
-                            />
-                        </IconButton>
+                        {typeSelector === toolType.LINE ? (
+                            <button
+                                type="button"
+                                id="icon-button-active"
+                                onClick={() => {
+                                    setDisplayExtraTools(false)
+                                }}>
+                                <MdRemove id="icon" />
+                            </button>
+                        ) : (
+                            <button
+                                type="button"
+                                id="icon-button"
+                                onClick={() => {
+                                    store.dispatch(SET_TYPE(toolType.LINE))
+                                }}>
+                                <MdRemove id="icon" />
+                            </button>
+                        )}
                     </Tooltip>
                     <Tooltip
                         id="tooltip"
                         title="Triangle (5 or T)"
                         TransitionProps={{ timeout: 0 }}
                         placement="bottom">
-                        <IconButton
-                            id={
-                                typeSelector === toolType.TRIANGLE
-                                    ? "iconButtonActive"
-                                    : "iconButton"
-                            }
-                            variant="contained"
-                            onClick={
-                                typeSelector === toolType.TRIANGLE
-                                    ? () => {
-                                          setDisplayExtraTools(false)
-                                      }
-                                    : () => {
-                                          store.dispatch(
-                                              SET_TYPE(toolType.TRIANGLE)
-                                          )
-                                      }
-                            }>
-                            <ChangeHistoryIcon
-                                id={
-                                    typeSelector === toolType.TRIANGLE
-                                        ? "iconButtonActiveInner"
-                                        : "iconButtonInner"
-                                }
-                            />
-                        </IconButton>
+                        {typeSelector === toolType.TRIANGLE ? (
+                            <button
+                                type="button"
+                                id="icon-button-active"
+                                onClick={() => {
+                                    setDisplayExtraTools(false)
+                                }}>
+                                <MdChangeHistory id="icon" />
+                            </button>
+                        ) : (
+                            <button
+                                type="button"
+                                id="icon-button"
+                                onClick={() => {
+                                    store.dispatch(SET_TYPE(toolType.TRIANGLE))
+                                }}>
+                                <MdChangeHistory id="icon" />
+                            </button>
+                        )}
                     </Tooltip>
                     <Tooltip
                         id="tooltip"
                         title="Circle (6 or C)"
                         TransitionProps={{ timeout: 0 }}
                         placement="bottom">
-                        <IconButton
-                            id={
-                                typeSelector === toolType.CIRCLE
-                                    ? "iconButtonActive"
-                                    : "iconButton"
-                            }
-                            variant="contained"
-                            onClick={
-                                typeSelector === toolType.CIRCLE
-                                    ? () => {
-                                          setDisplayExtraTools(false)
-                                      }
-                                    : () => {
-                                          store.dispatch(
-                                              SET_TYPE(toolType.CIRCLE)
-                                          )
-                                      }
-                            }>
-                            <RadioButtonUncheckedIcon
-                                id={
-                                    typeSelector === toolType.CIRCLE
-                                        ? "iconButtonActiveInner"
-                                        : "iconButtonInner"
-                                }
-                            />
-                        </IconButton>
+                        {typeSelector === toolType.CIRCLE ? (
+                            <button
+                                type="button"
+                                id="icon-button-active"
+                                onClick={() => {
+                                    setDisplayExtraTools(false)
+                                }}>
+                                <MdRadioButtonUnchecked id="icon" />
+                            </button>
+                        ) : (
+                            <button
+                                type="button"
+                                id="icon-button"
+                                onClick={() => {
+                                    store.dispatch(SET_TYPE(toolType.CIRCLE))
+                                }}>
+                                <MdRadioButtonUnchecked id="icon" />
+                            </button>
+                        )}
                     </Tooltip>
                 </div>
             ) : null}

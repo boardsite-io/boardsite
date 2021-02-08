@@ -1,8 +1,7 @@
 import React, { useState } from "react"
-import PaletteIcon from "@material-ui/icons/Palette"
 import { SketchPicker } from "react-color"
 import { useSelector } from "react-redux"
-import { IconButton } from "@material-ui/core"
+import { MdPalette } from "react-icons/md"
 import Tooltip from "@material-ui/core/Tooltip"
 import { SET_COLOR } from "../../redux/slice/drawcontrol"
 import store from "../../redux/store"
@@ -33,12 +32,12 @@ export default function ColorPicker() {
                 title="Color"
                 TransitionProps={{ timeout: 0 }}
                 placement="bottom">
-                <IconButton
-                    id="iconButton"
-                    variant="contained"
+                <button
+                    type="button"
+                    id="icon-button"
                     onClick={handlePaletteClick}>
-                    <PaletteIcon id="iconButtonInner" />
-                </IconButton>
+                    <MdPalette id="icon" />
+                </button>
             </Tooltip>
             {
                 // Palette Popup
