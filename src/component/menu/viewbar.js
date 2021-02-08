@@ -31,18 +31,6 @@ export default function Viewbar() {
         (state) => state.viewControl.currentPageIndex
     )
 
-    function togglePanMode() {
-        store.dispatch(TOGGLE_PANMODE())
-    }
-
-    function up() {
-        store.dispatch(JUMP_TO_PREV_PAGE())
-    }
-
-    function down() {
-        store.dispatch(JUMP_TO_NEXT_PAGE())
-    }
-
     return (
         <div className="viewbar">
             <Tooltip
@@ -50,7 +38,10 @@ export default function Viewbar() {
                 title="Page Up"
                 TransitionProps={{ timeout: 0 }}
                 placement="left">
-                <IconButton id="iconButton" variant="contained" onClick={up}>
+                <IconButton
+                    id="iconButton"
+                    variant="contained"
+                    onClick={() => store.dispatch(JUMP_TO_PREV_PAGE())}>
                     <ExpandLessIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
@@ -72,7 +63,10 @@ export default function Viewbar() {
                 title="Page Down"
                 TransitionProps={{ timeout: 0 }}
                 placement="left">
-                <IconButton id="iconButton" variant="contained" onClick={down}>
+                <IconButton
+                    id="iconButton"
+                    variant="contained"
+                    onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE())}>
                     <ExpandMoreIcon id="iconButtonInner" />
                 </IconButton>
             </Tooltip>
@@ -86,14 +80,14 @@ export default function Viewbar() {
                     <IconButton
                         id="iconButtonActive"
                         variant="contained"
-                        onClick={togglePanMode}>
+                        onClick={() => store.dispatch(TOGGLE_PANMODE())}>
                         <OpenWithIcon id="iconButtonActiveInner" />
                     </IconButton>
                 ) : (
                     <IconButton
                         id="iconButton"
                         variant="contained"
-                        onClick={togglePanMode}>
+                        onClick={() => store.dispatch(TOGGLE_PANMODE())}>
                         <OpenWithIcon id="iconButtonInner" />
                     </IconButton>
                 )}
