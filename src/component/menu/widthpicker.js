@@ -1,11 +1,12 @@
 import React, { useState } from "react"
 import ReactSlider from "react-slider"
 import { useSelector } from "react-redux"
-import { IconButton } from "@material-ui/core"
 import Tooltip from "@material-ui/core/Tooltip"
-import { MdCreate } from "react-icons/md"
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown"
-import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp"
+import {
+    MdCreate,
+    MdKeyboardArrowDown,
+    MdKeyboardArrowUp,
+} from "react-icons/md"
 import {
     SET_WIDTH,
     DECREMENT_WIDTH,
@@ -117,24 +118,24 @@ export default function WidthPicker() {
                                 title="Decrease Width"
                                 TransitionProps={{ timeout: 0 }}
                                 placement="left">
-                                <IconButton
-                                    id="iconButton"
-                                    variant="contained"
+                                <button
+                                    type="button"
+                                    id="icon-button"
                                     onClick={handleUpClick}>
-                                    <KeyboardArrowUpIcon id="iconButtonInner" />
-                                </IconButton>
+                                    <MdKeyboardArrowUp id="icon" />
+                                </button>
                             </Tooltip>
                             <Tooltip
                                 id="tooltip"
                                 title="Increase Width"
                                 TransitionProps={{ timeout: 0 }}
                                 placement="left">
-                                <IconButton
-                                    id="iconButton"
-                                    variant="contained"
+                                <button
+                                    type="button"
+                                    id="icon-button"
                                     onClick={handleDownClick}>
-                                    <KeyboardArrowDownIcon id="iconButtonInner" />
-                                </IconButton>
+                                    <MdKeyboardArrowDown id="icon" />
+                                </button>
                             </Tooltip>
                             {/* <input
                 type="number"
