@@ -1,17 +1,15 @@
 import React from "react"
-import ZoomInIcon from "@material-ui/icons/ZoomIn"
-import ZoomOutIcon from "@material-ui/icons/ZoomOut"
-import ZoomOutMapIcon from "@material-ui/icons/ZoomOutMap"
-import { IconButton } from "@material-ui/core"
-import ExpandLessIcon from "@material-ui/icons/ExpandLess"
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
-// import AspectRatioIcon from "@material-ui/icons/AspectRatio"
-// import SettingsOverscanIcon from "@material-ui/icons/SettingsOverscan"
-import FilterCenterFocusIcon from "@material-ui/icons/FilterCenterFocus"
 import Tooltip from "@material-ui/core/Tooltip"
-// import FullscreenIcon from "@material-ui/icons/Fullscreen"
-import OpenWithIcon from "@material-ui/icons/OpenWith"
 import { useSelector } from "react-redux"
+import {
+    MdExpandLess,
+    MdExpandMore,
+    MdFilterCenterFocus,
+    MdOpenWith,
+    MdZoomIn,
+    MdZoomOut,
+    MdZoomOutMap,
+} from "react-icons/md"
 
 import store from "../../redux/store"
 import { TOGGLE_PANMODE } from "../../redux/slice/drawcontrol"
@@ -38,58 +36,56 @@ export default function Viewbar() {
                 title="Page Up"
                 TransitionProps={{ timeout: 0 }}
                 placement="left">
-                <IconButton
-                    id="iconButton"
-                    variant="contained"
+                <button
+                    type="button"
+                    id="icon-button"
                     onClick={() => store.dispatch(JUMP_TO_PREV_PAGE())}>
-                    <ExpandLessIcon id="iconButtonInner" />
-                </IconButton>
+                    <MdExpandLess id="icon" />
+                </button>
             </Tooltip>
             <Tooltip
                 id="tooltip"
                 title="Return to First Page"
                 TransitionProps={{ timeout: 0 }}
                 placement="left">
-                <IconButton
-                    id="iconButton"
-                    style={{ color: "#00d2be" }}
-                    variant="contained"
+                <button
+                    type="button"
+                    id="icon-button"
                     onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
                     {currPageIndex}
-                </IconButton>
+                </button>
             </Tooltip>
             <Tooltip
                 id="tooltip"
                 title="Page Down"
                 TransitionProps={{ timeout: 0 }}
                 placement="left">
-                <IconButton
-                    id="iconButton"
-                    variant="contained"
+                <button
+                    type="button"
+                    id="icon-button"
                     onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE())}>
-                    <ExpandMoreIcon id="iconButtonInner" />
-                </IconButton>
+                    <MdExpandMore id="icon" />
+                </button>
             </Tooltip>
-
             <Tooltip
                 id="tooltip"
                 title="Toggle Panning"
                 TransitionProps={{ timeout: 0 }}
                 placement="left">
                 {isPanMode ? (
-                    <IconButton
-                        id="iconButtonActive"
-                        variant="contained"
+                    <button
+                        type="button"
+                        id="icon-button"
                         onClick={() => store.dispatch(TOGGLE_PANMODE())}>
-                        <OpenWithIcon id="iconButtonActiveInner" />
-                    </IconButton>
+                        <MdOpenWith id="icon" />
+                    </button>
                 ) : (
-                    <IconButton
-                        id="iconButton"
-                        variant="contained"
+                    <button
+                        type="button"
+                        id="icon-button"
                         onClick={() => store.dispatch(TOGGLE_PANMODE())}>
-                        <OpenWithIcon id="iconButtonInner" />
-                    </IconButton>
+                        <MdOpenWith id="icon" />
+                    </button>
                 )}
             </Tooltip>
             <Tooltip
@@ -97,48 +93,48 @@ export default function Viewbar() {
                 title="Zoom In"
                 TransitionProps={{ timeout: 0 }}
                 placement="left">
-                <IconButton
-                    id="iconButton"
-                    variant="contained"
+                <button
+                    type="button"
+                    id="icon-button"
                     onClick={() => store.dispatch(ZOOM_IN_CENTER())}>
-                    <ZoomInIcon id="iconButtonInner" />
-                </IconButton>
+                    <MdZoomIn id="icon" />
+                </button>
             </Tooltip>
             <Tooltip
                 id="tooltip"
                 title="Zoom Out"
                 TransitionProps={{ timeout: 0 }}
                 placement="left">
-                <IconButton
-                    id="iconButton"
-                    variant="contained"
+                <button
+                    type="button"
+                    id="icon-button"
                     onClick={() => store.dispatch(ZOOM_OUT_CENTER())}>
-                    <ZoomOutIcon id="iconButtonInner" />
-                </IconButton>
+                    <MdZoomOut id="icon" />
+                </button>
             </Tooltip>
             <Tooltip
                 id="tooltip"
                 title="Fit to Page Width"
                 TransitionProps={{ timeout: 0 }}
                 placement="left">
-                <IconButton
-                    id="iconButton"
-                    variant="contained"
+                <button
+                    type="button"
+                    id="icon-button"
                     onClick={() => store.dispatch(FIT_WIDTH_TO_PAGE())}>
-                    <ZoomOutMapIcon id="iconButtonInner" />
-                </IconButton>
+                    <MdZoomOutMap id="icon" />
+                </button>
             </Tooltip>
             <Tooltip
                 id="tooltip"
                 title="Center View"
                 TransitionProps={{ timeout: 0 }}
                 placement="left">
-                <IconButton
-                    id="iconButton"
-                    variant="contained"
+                <button
+                    type="button"
+                    id="icon-button"
                     onClick={() => store.dispatch(CENTER_VIEW())}>
-                    <FilterCenterFocusIcon id="iconButtonInner" />
-                </IconButton>
+                    <MdFilterCenterFocus id="icon" />
+                </button>
             </Tooltip>
         </div>
     )
