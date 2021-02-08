@@ -1,0 +1,78 @@
+#sessionDialog{
+    /* width: 100%;
+    height: 100%; */
+    overflow: hidden;
+}
+
+.dialog-wrap {
+    display: grid;
+    grid-auto-flow: row;
+    width: 100%;
+    gap: 10px;
+    justify-content: space-evenly;
+}
+
+.dialog-buttons-wrap {
+    -webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none; /* prevent copy paste, to allow, change 'none' to 'text' */
+    border-radius: 4px;
+    gap: 10px;
+    margin: auto;
+    /* width: 100%; */
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: 50% 50%;
+    justify-content: space-between;
+}
+
+.sessionDialogInput {
+    height: 30px;
+    width: 100%;
+    color: var(--primary);
+    background-color: var(--secondary);
+    border-width: 0ch;
+    border-radius: 4px;
+    outline: none;
+    text-align: center;
+}
+
+#buttonIcon {
+    height: 80%;
+    width: 80%;
+    /* margin: auto; */
+}
+
+#buttonDialog {
+    text-align:center; 
+    border-radius: 4px;
+    height: 70px;
+    width: 80px;
+    color: var(--primary);
+    background-color: var(--secondary);
+    outline: none;
+    border-width: 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+#buttonDialog:hover {
+    color: var(--secondary);
+    background-color: var(--primary);
+}
+
+#close-button {
+    text-align:center; 
+    border-radius: 4px;
+    height: 30px;
+    width: 30px;
+    color: var(--primary);
+    background-color: var(--secondary);
+    outline: none;
+    border-width: 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+#close-button:hover {
+    color: var(--secondary);
+    background-color: var(--primary);
+}

@@ -11,15 +11,29 @@ import BoardStage from "../component/board/stage"
 import { toolType } from "../constants"
 import { SET_TYPE, TOGGLE_PANMODE } from "../redux/slice/drawcontrol"
 import store from "../redux/store"
-import { createWebsocket } from "../api/websocket"
-import { createSession } from "../api/request"
+
+import {
+    JUMP_TO_NEXT_PAGE,
+    JUMP_TO_PREV_PAGE,
+} from "../redux/slice/viewcontrol"
 
 export default function Whiteboard() {
     const [openSessionDialog, setOpenSessionDialog] = useState(false)
-    const [sidInput, setSidInput] = useState("")
 
-    function handleKeyPress(e) {
+    function handleKeyDown(e) {
         switch (e.key) {
+            case "ArrowUp": // Previous Page
+                store.dispatch(JUMP_TO_PREV_PAGE())
+                break
+            case "ArrowDown": // Next Page
+                store.dispatch(JUMP_TO_NEXT_PAGE())
+                break
+            // case "ArrowLeft": // ???
+            //     store.dispatch(FUNC())
+            //     break
+            // case "ArrowRight": // ???
+            //     store.dispatch(FUNC())
+            //     break
             case "p": // Pen
                 store.dispatch(SET_TYPE(toolType.PEN))
                 break
@@ -78,49 +92,8 @@ export default function Whiteboard() {
     useEffect(() => {
         // setOpenSessionDialog(true);
         handleAddPage()
-        document.addEventListener("keypress", handleKeyPress)
+        document.addEventListener("keydown", handleKeyDown)
     }, [])
-
-    /**
-     * Helper function for creating websocket connection and handling the resolve / reject
-     * @param {string} sid
-     */
-    function createWS(sid) {
-        createWebsocket(sid)
-            .then(() => {
-                navigator.clipboard.writeText(sid)
-                setOpenSessionDialog(false)
-            })
-            .catch((error) =>
-                console.error("Websocket creation failed!", error)
-            )
-    }
-
-    /**
-     * Handle the create session button click in the session dialog
-     */
-    function handleCreate() {
-        createSession()
-            .then(({ sessionId }) => {
-                createWS(sessionId)
-            })
-            .catch(() => console.log("Session creation failed!"))
-    }
-
-    /**
-     * Handle the join session button click in the session dialog
-     */
-    function handleJoin() {
-        createWS(sidInput)
-    }
-
-    /**
-     * Handle textfield events in the session dialog
-     * @param {event} e event object
-     */
-    function handleTextFieldChange(e) {
-        setSidInput(e.target.value)
-    }
 
     return (
         <div>
@@ -128,9 +101,6 @@ export default function Whiteboard() {
             <SessionDialog
                 open={openSessionDialog}
                 setOpen={setOpenSessionDialog}
-                handleJoin={handleJoin}
-                handleCreate={handleCreate}
-                handleTextFieldChange={handleTextFieldChange}
             />
             <Viewbar />
             <Toolbar />

@@ -1,65 +1,106 @@
 import React from "react"
-import { TextField } from "@material-ui/core"
-import Button from "@material-ui/core/Button"
+import { GrClose } from "react-icons/gr"
+import { SiReact } from "react-icons/si"
+import { MdSettingsPower } from "react-icons/md"
 import Dialog from "@material-ui/core/Dialog"
 import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 // import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from "@material-ui/core/DialogTitle"
+import { createWebsocket } from "../../api/websocket"
+import { createSession } from "../../api/request"
 
-export default function AlertDialog({
-    open,
-    setOpen,
-    handleCreate,
-    handleJoin,
-    handleTextFieldChange,
-}) {
+import "../../css/sessiondialog.css"
+
+export default function AlertDialog({ open, setOpen }) {
+    /**
+     * Helper function for creating websocket connection and handling the resolve / reject
+     * @param {string} sid
+     */
+    function createWS(sid) {
+        createWebsocket(sid)
+            .then(() => {
+                navigator.clipboard.writeText(sid)
+                setOpen(false)
+            })
+            .catch((error) =>
+                console.error("Websocket creation failed!", error)
+            )
+    }
+
+    /**
+     * Handle the create session button click in the session dialog
+     */
+    function handleCreate() {
+        createSession()
+            .then(({ sessionId }) => {
+                createWS(sessionId)
+            })
+            .catch(() => console.log("Session creation failed!"))
+    }
+
+    /**
+     * Handle the join session button click in the session dialog
+     */
+    function handleJoin() {
+        // createWS(sidInput)
+        console.log("XD")
+    }
+
+    /**
+     * Handle textfield events in the session dialog
+     * @param {event} e event object
+     */
+    function handleTextFieldChange(e) {
+        if (e.target.value.length === 6) {
+            console.log(e.target.value)
+            createWS(e.target.value)
+        }
+    }
+
     return (
         <div>
             <Dialog
+                id="sessionDialog"
                 open={open}
-                onClose={() => setOpen(false)}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description">
+                onClose={() => setOpen(false)}>
                 <DialogTitle id="alert-dialog-title">
                     Create or join a session!
                 </DialogTitle>
-                <DialogContent style={{ height: 200 }}>
+                <DialogContent>
                     {/* <DialogContentText id="alert-dialog-description">
                         Let Google scam you.
                     </DialogContentText> */}
-                    <div className="dialogbuttons">
-                        <Button
-                            id="buttonDialog"
-                            variant="contained"
-                            color="primary"
-                            onClick={handleCreate}>
-                            Create Session
-                        </Button>
-                        <Button
-                            id="buttonDialog"
-                            variant="contained"
-                            color="primary"
-                            onClick={handleJoin}>
-                            Join Session
-                        </Button>
-                        <TextField
-                            id="textField"
-                            defaultValue=""
+                    <div className="dialog-wrap">
+                        <div className="dialog-buttons-wrap">
+                            <button
+                                type="button"
+                                id="buttonDialog"
+                                onClick={handleCreate}>
+                                <SiReact id="buttonIcon" />
+                            </button>
+                            <button
+                                type="button"
+                                id="buttonDialog"
+                                onClick={handleJoin}>
+                                <MdSettingsPower id="buttonIcon" />
+                            </button>
+                        </div>
+                        <input
+                            className="sessionDialogInput"
+                            type="search"
+                            defaultValue="hi"
                             onChange={handleTextFieldChange}
-                            label="Insert Session ID"
-                            variant="outlined"
                         />
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    <Button
-                        id="buttonDialog"
-                        onClick={() => setOpen(false)}
-                        color="primary"
-                        autoFocus>
-                        Close
-                    </Button>
+                    <button
+                        type="button"
+                        id="close-button"
+                        onClick={() => setOpen(false)}>
+                        <GrClose id="buttonIcon" />
+                    </button>
                 </DialogActions>
             </Dialog>
         </div>

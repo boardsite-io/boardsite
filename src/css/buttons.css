@@ -1,15 +1,22 @@
-#buttonDialog {
+#icon-button {
+    text-align:center; 
+    border-radius: 4px;
+    height: 40px;
+    width: 40px;
     color: var(--primary);
     background-color: var(--secondary);
+    outline: none;
+    border-width: 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
-
-#buttonDialog:hover {
+#icon-button:hover {
     color: var(--secondary);
     background-color: var(--primary);
 }
 
-#textField {
-    color: var(--primary);
+#icon {
+    height: 100%;
+    width: 100%;
 }
 
 #iconButtonInner {

@@ -2,15 +2,3 @@
     background-color: var(--backgroundColor);
     background-image: var(--backgroundImage);
 }
-
-.dialogbuttons {
-    -webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */
-    -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */
-    -webkit-user-select: none; /* prevent copy paste, to allow, change 'none' to 'text' */
-    border-radius: 4px;
-    display: grid;
-    grid-template-rows: 50px 50px 40px;
-    gap: 10px;
-    margin: auto;
-    width: 300px;
-}
