@@ -4,7 +4,7 @@ const webControlSlice = createSlice({
     name: "webControl",
     initialState: {
         // strokesOutBuf: [],
-        strokesInBuf: [],
+        // strokesInBuf: [],
         webSocket: null,
         sessionId: "",
     },
@@ -19,11 +19,11 @@ const webControlSlice = createSlice({
             state.webSocket = null
             state.sessionId = ""
         },
-        RECEIVE_STROKES: (state, action) => {
-            const { data } = action.payload
-            console.log(data)
-            state.strokesInBuf.concat(JSON.parse(data))
-        },
+        // RECEIVE_STROKES: (state, action) => {
+        //     const { data } = action.payload
+        //     console.log(data)
+        //     state.strokesInBuf.concat(JSON.parse(data))
+        // },
         // for now we only send one stroke at a time
         SEND_STROKE: (state, action) => {
             const stroke = action.payload

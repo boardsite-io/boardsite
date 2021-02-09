@@ -7,44 +7,29 @@ import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 // import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from "@material-ui/core/DialogTitle"
-import { createWebsocket } from "../../api/websocket"
-import { createSession } from "../../api/request"
+import { newSession, joinSession } from "../../api/websocket"
 
 import "../../css/sessiondialog.css"
 
 export default function AlertDialog({ open, setOpen }) {
     /**
-     * Helper function for creating websocket connection and handling the resolve / reject
-     * @param {string} sid
-     */
-    function createWS(sid) {
-        createWebsocket(sid)
-            .then(() => {
-                navigator.clipboard.writeText(sid)
-                setOpen(false)
-            })
-            .catch((error) =>
-                console.error("Websocket creation failed!", error)
-            )
-    }
-
-    /**
      * Handle the create session button click in the session dialog
      */
     function handleCreate() {
-        createSession()
-            .then(({ sessionId }) => {
-                createWS(sessionId)
-            })
-            .catch(() => console.log("Session creation failed!"))
+        newSession()
+            .then((sessionId) => handleJoin(sessionId))
+            .catch((err) => console.log("cant create session: ", err))
     }
 
     /**
      * Handle the join session button click in the session dialog
      */
-    function handleJoin() {
+    function handleJoin(sessionId) {
         // createWS(sidInput)
-        console.log("XD")
+        // request data?
+        joinSession(sessionId)
+            .then(() => setOpen(false))
+            .catch(() => console.log("cant connect"))
     }
 
     /**
@@ -54,7 +39,7 @@ export default function AlertDialog({ open, setOpen }) {
     function handleTextFieldChange(e) {
         if (e.target.value.length === 6) {
             console.log(e.target.value)
-            createWS(e.target.value)
+            handleJoin(e.target.value)
         }
     }
 

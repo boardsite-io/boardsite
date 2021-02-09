@@ -1,13 +1,20 @@
 import axios from "axios"
-import { nanoid } from "@reduxjs/toolkit"
 import { API_URL } from "../constants"
 
 const apiRequest = axios.create({
     baseURL: API_URL,
     transformRequest: [(data) => JSON.stringify(data)],
-    transformResponse: [(data) => JSON.parse(data)],
+    transformResponse: [
+        (data) => {
+            try {
+                return JSON.parse(data)
+            } catch {
+                return {}
+            }
+        },
+    ],
     headers: {
-        // eslint-disable-next-line prettier/prettier
+        // prettier-ignore
         "Accept": "application/json",
         "Content-Type": "application/json",
     },
@@ -18,24 +25,31 @@ const apiRequest = axios.create({
  * Send data request to API.
  */
 export async function sendRequest(url, method, data = {}) {
-    try {
-        const response = await apiRequest({ url, method, data })
-        return response.data
-    } catch (error) {
-        return error
-    }
+    const response = await apiRequest({ url, method, data })
+    return response.data
 }
 
+/**
+ * @returns {{sessionId: string}}
+ */
 export async function createSession() {
     return sendRequest("/b/create", "post")
 }
 
+/**
+ *
+ * @param {*} sessionId
+ * @returns {pageRank: []}
+ */
 export async function getPages(sessionId) {
     return sendRequest(`/b/${sessionId}/pages`, "get")
 }
 
-export async function addPage(sessionId, index) {
-    const pageId = nanoid()
+export async function getStrokes(sessionId, pageId) {
+    return sendRequest(`/b/${sessionId}/pages/${pageId}`, "get")
+}
+
+export async function addPage(sessionId, pageId, index) {
     return sendRequest(`/b/${sessionId}/pages`, "post", {
         pageId,
         index,
