@@ -1,7 +1,7 @@
 :root {
     --primary: #00d2be;
     --secondary: #1b1b1b;
-    --menubarBackgroundImage: linear-gradient(
+    --menubarBackground: linear-gradient(
         90deg,
         #d3d3d388,
         #cacaca88

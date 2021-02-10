@@ -2,7 +2,7 @@
 .toolbar,
 .viewbar,
 .extratools {
-    background-image: var(--menubarBackgroundImage);
+    background: var(--menubarBackground);
     -webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */
     -webkit-user-select: none; /* prevent copy paste, to allow, change 'none' to 'text' */
@@ -51,7 +51,7 @@
     margin-left: 20px;
     margin-right: 20px;
     gap: 15px;
-    background-color: var(--toolRing);
+    background: var(--toolRing);
     border-radius: 4px;
     width: fit-content;
     height: var(--buttonHeight);
@@ -63,10 +63,4 @@
     top: 50px;
     left: 100px;
     grid-auto-flow: column;
-}
-
-.colorpicker {
-    position: absolute;
-    top: 20px;
-    right: -30px;
 }

@@ -1,9 +1,8 @@
 import React from "react"
-
-import WidthPicker from "./widthpicker"
-import ColorPicker from "./colorpicker"
 import UndoRedo from "./undoredo"
 import ToolRing from "./toolring"
+import ColorPicker from "./colorpicker"
+import WidthPicker from "./widthpicker"
 
 function Toolbar() {
     return (

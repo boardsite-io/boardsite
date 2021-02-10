@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { SketchPicker } from "react-color"
 import { useSelector } from "react-redux"
 import { MdPalette } from "react-icons/md"
+import "../../css/colorpicker.css"
 import Tooltip from "@material-ui/core/Tooltip"
 import { SET_COLOR } from "../../redux/slice/drawcontrol"
 import store from "../../redux/store"
@@ -26,7 +27,7 @@ export default function ColorPicker() {
     const [displayColorPicker, setDisplayColorPicker] = useState(false)
 
     return (
-        <div>
+        <div className="color-picker-div">
             <Tooltip
                 id="tooltip"
                 title="Color"
@@ -49,7 +50,7 @@ export default function ColorPicker() {
                             onClick={handlePaletteClose}
                             onKeyPress={() => {}}
                         />
-                        <div className="colorpicker">
+                        <div className="color-picker">
                             <SketchPicker
                                 width={250}
                                 className="color"

@@ -1,4 +1,4 @@
 .rootdiv {
-    background-color: var(--backgroundColor);
+    background: var(--backgroundColor);
     background-image: var(--backgroundImage);
 }

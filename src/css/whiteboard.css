@@ -5,8 +5,8 @@
 }
 
 .stage {
-    background-color: var(--pagesBackground);
-    /* background-color: var(--canvasBackgroundColor); */
+    background: var(--pagesBackground);
+    /* background: var(--canvasBackgroundColor); */
     /* background-size: var(--canvasBackgroundSize);
     background-image: var(--canvasBackgroundImage); */
     /* background-position: var(--canvasBackgroundPosition); */

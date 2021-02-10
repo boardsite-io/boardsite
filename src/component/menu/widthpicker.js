@@ -75,7 +75,7 @@ export default function WidthPicker() {
     // }
 
     return (
-        <div>
+        <div className="width-picker-div">
             <Tooltip
                 id="tooltip"
                 title="Width"
