@@ -1,17 +1,18 @@
 :root {
     --primary: #00d2be;
     --secondary: #1b1b1b;
-    --barBackgroundImage: linear-gradient(
+    --menubarBackgroundImage: linear-gradient(
         90deg,
         #d3d3d388,
         #cacaca88
     ); /* bar background */
-    --barBoxShadow: 0px 0px 0px 2px var(--primary);
+    --menubarBoxShadow: 0px 0px 0px 2px var(--primary);
+    --menubarBorderRadius: 4px;
     --backgroundColor: #000000;
     --backgroundImage: linear-gradient(#504444, #464040);
     --pagesBackground: #88888888;
-    --buttonHeight: 40px;
-    --buttonWidth: 40px;
+    --buttonHeight: 30px;
+    --buttonWidth: 30px;
     --buttonShadow: 0px 0px 3px #00000088;
     --buttonBorderRadius: 4px;
     --boxShadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);

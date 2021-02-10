@@ -7,7 +7,7 @@ import CssBaseline from "@material-ui/core/CssBaseline"
 import "./css/theme.css"
 import "./css/index.css"
 import "./css/whiteboard.css"
-import "./css/toolbars.css"
+import "./css/menubars.css"
 import "./css/buttons.css"
 import "./css/popup.css"
 

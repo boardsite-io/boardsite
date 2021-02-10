@@ -1,7 +1,7 @@
 #icon-button,
 #icon-button-active{
+    padding: 3px;
     text-align: center;
-    font-size: xx-large;
     border-radius: var(--buttonBorderRadius);
     height: var(--buttonHeight);
     width: var(--buttonWidth);

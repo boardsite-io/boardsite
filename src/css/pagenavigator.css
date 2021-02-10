@@ -4,8 +4,8 @@
 }
 
 .button-pagenav, .button-pagenav-top, .button-pagenav-bottom {
+    padding: 0px;
     text-align: center;
-    font-size: xx-large;
     height: var(--buttonHeight);
     width: var(--buttonWidth);
     outline: none;
@@ -13,6 +13,10 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
     color: var(--primary);
     background-color: var(--secondary);
+}
+
+.button-pagenav {
+    font-size: 200%;
 }
 
 .button-pagenav:hover, .button-pagenav-top:hover, .button-pagenav-bottom:hover {
@@ -23,11 +27,11 @@
 .button-pagenav-bottom{
     border-bottom-left-radius: var(--buttonBorderRadius);
     border-bottom-right-radius: var(--buttonBorderRadius);
-    border-top: 1px solid var(--primary);
+    /* border-top: 1px solid var(--primary); */
 }
 
 .button-pagenav-top{
     border-top-left-radius: var(--buttonBorderRadius);
     border-top-right-radius: var(--buttonBorderRadius);
-    border-bottom: 1px solid var(--primary);
+    /* border-bottom: 1px solid var(--primary); */
 }
