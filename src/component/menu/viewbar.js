@@ -2,8 +2,6 @@ import React from "react"
 import Tooltip from "@material-ui/core/Tooltip"
 import { useSelector } from "react-redux"
 import {
-    MdExpandLess,
-    MdExpandMore,
     MdFilterCenterFocus,
     MdOpenWith,
     MdZoomIn,
@@ -18,55 +16,15 @@ import {
     ZOOM_OUT_CENTER,
     FIT_WIDTH_TO_PAGE,
     CENTER_VIEW,
-    JUMP_TO_NEXT_PAGE,
-    JUMP_TO_PREV_PAGE,
-    JUMP_TO_FIRST_PAGE,
 } from "../../redux/slice/viewcontrol"
+import PageNav from "./pagenavigator"
 
 export default function Viewbar() {
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
-    const currPageIndex = useSelector(
-        (state) => state.viewControl.currentPageIndex
-    )
 
     return (
         <div className="viewbar">
-            <Tooltip
-                id="tooltip"
-                title="Page Up"
-                TransitionProps={{ timeout: 0 }}
-                placement="left">
-                <button
-                    type="button"
-                    id="icon-button"
-                    onClick={() => store.dispatch(JUMP_TO_PREV_PAGE())}>
-                    <MdExpandLess id="icon" />
-                </button>
-            </Tooltip>
-            <Tooltip
-                id="tooltip"
-                title="Return to First Page"
-                TransitionProps={{ timeout: 0 }}
-                placement="left">
-                <button
-                    type="button"
-                    id="icon-button"
-                    onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
-                    {currPageIndex}
-                </button>
-            </Tooltip>
-            <Tooltip
-                id="tooltip"
-                title="Page Down"
-                TransitionProps={{ timeout: 0 }}
-                placement="left">
-                <button
-                    type="button"
-                    id="icon-button"
-                    onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE())}>
-                    <MdExpandMore id="icon" />
-                </button>
-            </Tooltip>
+            <PageNav />
             <Tooltip
                 id="tooltip"
                 title="Toggle Panning"

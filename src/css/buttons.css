@@ -1,8 +1,8 @@
 #icon-button,
-#icon-button-active {
+#icon-button-active{
     text-align: center;
     font-size: xx-large;
-    border-radius: 4px;
+    border-radius: var(--buttonBorderRadius);
     height: var(--buttonHeight);
     width: var(--buttonWidth);
     outline: none;
@@ -14,11 +14,7 @@
     color: var(--primary);
     background-color: var(--secondary);
 }
-#icon-button-active {
-    color: var(--secondary);
-    background-color: var(--primary);
-}
-#icon-button:hover {
+#icon-button-active, #icon-button:hover {
     color: var(--secondary);
     background-color: var(--primary);
 }
