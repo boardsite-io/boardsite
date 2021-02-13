@@ -24,7 +24,7 @@ export default function ViewOptions() {
                 {isPanMode ? (
                     <button
                         type="button"
-                        id="icon-button"
+                        id="icon-button-active"
                         onClick={() => store.dispatch(TOGGLE_PANMODE())}>
                         <MdOpenWith id="icon" />
                     </button>
@@ -39,18 +39,6 @@ export default function ViewOptions() {
             </Tooltip>
             <Tooltip
                 id="tooltip"
-                title="Fit to Page Width"
-                TransitionProps={{ timeout: 0 }}
-                placement="left">
-                <button
-                    type="button"
-                    id="icon-button"
-                    onClick={() => store.dispatch(FIT_WIDTH_TO_PAGE())}>
-                    <MdZoomOutMap id="icon" />
-                </button>
-            </Tooltip>
-            <Tooltip
-                id="tooltip"
                 title="Center View"
                 TransitionProps={{ timeout: 0 }}
                 placement="left">
@@ -59,6 +47,18 @@ export default function ViewOptions() {
                     id="icon-button"
                     onClick={() => store.dispatch(CENTER_VIEW())}>
                     <MdFilterCenterFocus id="icon" />
+                </button>
+            </Tooltip>
+            <Tooltip
+                id="tooltip"
+                title="Fit to Page Width"
+                TransitionProps={{ timeout: 0 }}
+                placement="left">
+                <button
+                    type="button"
+                    id="icon-button"
+                    onClick={() => store.dispatch(FIT_WIDTH_TO_PAGE())}>
+                    <MdZoomOutMap id="icon" />
                 </button>
             </Tooltip>
         </div>

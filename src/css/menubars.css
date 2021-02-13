@@ -24,7 +24,7 @@
 } */
 
 .viewbar {
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--menubarBackground);
     position: fixed;
     display: grid;
     gap: var(--buttonGap);

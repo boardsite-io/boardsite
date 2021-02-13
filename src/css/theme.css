@@ -1,11 +1,7 @@
 :root {
     --primary: #00d2be;
     --secondary: #1b1b1b;
-    --menubarBackground: linear-gradient(
-        90deg,
-        #d3d3d388,
-        #cacaca88
-    ); /* bar background */
+    --menubarBackground: rgba(0, 0, 0, 0.40);
     --menubarBoxShadow: 0px 0px 0px 2px var(--primary);
     --menubarBorderRadius: 4px;
     --backgroundColor: #000000;
