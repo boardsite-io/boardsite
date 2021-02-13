@@ -3,7 +3,7 @@ import { ActionCreators as UndoActionCreators } from "redux-undo"
 // import { useSelector } from "react-redux"
 import { MdRedo, MdUndo } from "react-icons/md"
 import Tooltip from "@material-ui/core/Tooltip"
-import store from "../../redux/store"
+import store from "../../../redux/store"
 
 export default function UndoRedo() {
     // const canUndo = useSelector((state) => state.boardControl.past.length > 0)

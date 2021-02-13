@@ -9,9 +9,9 @@ import {
 } from "react-icons/md"
 import { RiDragMoveFill } from "react-icons/ri"
 import Tooltip from "@material-ui/core/Tooltip"
-import store from "../../redux/store"
-import { SET_TYPE } from "../../redux/slice/drawcontrol"
-import { toolType } from "../../constants"
+import store from "../../../redux/store"
+import { SET_TYPE } from "../../../redux/slice/drawcontrol"
+import { toolType } from "../../../constants"
 
 export default function ToolRing() {
     const [displayExtraTools, setDisplayExtraTools] = useState(false)

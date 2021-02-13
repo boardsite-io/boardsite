@@ -1,9 +1,13 @@
-.page-nav {
+.pn {
     display: grid;
-    grid-auto-flow: row;
+    grid-auto-flow: column;
 }
 
-.button-pagenav, .button-pagenav-top, .button-pagenav-bottom {
+.pn-firstpage,
+.pn-prevpage,
+.pn-pageindex,
+.pn-nextpage,
+.pn-lastpage {
     padding: 0px;
     text-align: center;
     height: var(--buttonHeight);
@@ -15,23 +19,27 @@
     background: var(--secondary);
 }
 
-.button-pagenav {
+.pn-pageindex {
     font-size: 200%;
 }
 
-.button-pagenav:hover, .button-pagenav-top:hover, .button-pagenav-bottom:hover {
+.pn-firstpage:hover,
+.pn-prevpage:hover,
+.pn-pageindex:hover,
+.pn-nextpage:hover,
+.pn-lastpage:hover {
     color: var(--secondary);
     background: var(--primary);
 }
 
-.button-pagenav-bottom{
+.pn-firstpage {
+    border-top-left-radius: var(--buttonBorderRadius);
     border-bottom-left-radius: var(--buttonBorderRadius);
-    border-bottom-right-radius: var(--buttonBorderRadius);
     /* border-top: 1px solid var(--primary); */
 }
 
-.button-pagenav-top{
-    border-top-left-radius: var(--buttonBorderRadius);
+.pn-lastpage {
     border-top-right-radius: var(--buttonBorderRadius);
+    border-bottom-right-radius: var(--buttonBorderRadius);
     /* border-bottom: 1px solid var(--primary); */
 }

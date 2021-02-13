@@ -2,10 +2,10 @@ import React, { useState } from "react"
 import { SketchPicker } from "react-color"
 import { useSelector } from "react-redux"
 import { MdPalette } from "react-icons/md"
-import "../../css/colorpicker.css"
+import "../../../css/colorpicker.css"
 import Tooltip from "@material-ui/core/Tooltip"
-import { SET_COLOR } from "../../redux/slice/drawcontrol"
-import store from "../../redux/store"
+import { SET_COLOR } from "../../../redux/slice/drawcontrol"
+import store from "../../../redux/store"
 
 export default function ColorPicker() {
     const colorSelector = useSelector(

@@ -77,6 +77,9 @@ const viewControlSlice = createSlice({
         JUMP_TO_FIRST_PAGE: (state) => {
             goToPage(state, 0)
         },
+        JUMP_PAGE_WITH_INDEX: (state, action) => {
+            goToPage(state, action.payload)
+        },
     },
 })
 
@@ -94,6 +97,7 @@ export const {
     JUMP_TO_NEXT_PAGE,
     JUMP_TO_PREV_PAGE,
     JUMP_TO_FIRST_PAGE,
+    JUMP_PAGE_WITH_INDEX,
 } = viewControlSlice.actions
 export default viewControlSlice.reducer
 

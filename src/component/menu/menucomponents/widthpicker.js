@@ -11,10 +11,10 @@ import {
     SET_WIDTH,
     DECREMENT_WIDTH,
     INCREMENT_WIDTH,
-} from "../../redux/slice/drawcontrol"
-import { WIDTH_MIN, WIDTH_MAX } from "../../constants"
-import "../../css/widthpicker.css"
-import store from "../../redux/store"
+} from "../../../redux/slice/drawcontrol"
+import { WIDTH_MIN, WIDTH_MAX } from "../../../constants"
+import "../../../css/widthpicker.css"
+import store from "../../../redux/store"
 
 export default function WidthPicker() {
     const [displayWidthPicker, setDisplayWidthPicker] = useState(false)

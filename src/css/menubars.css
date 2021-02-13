@@ -1,6 +1,5 @@
 .homebar,
 .toolbar,
-.viewbar,
 .extratools {
     background: var(--menubarBackground);
     -webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */
@@ -8,7 +7,7 @@
     -webkit-user-select: none; /* prevent copy paste, to allow, change 'none' to 'text' */
     position: fixed;
     display: grid;
-    gap: 10px;
+    gap: var(--buttonGap);
     width: auto;
     justify-content: space-evenly;
     padding: 5px;
@@ -16,19 +15,29 @@
     z-index: 10;
 }
 
-.homebar:hover,
+/* .homebar:hover,
 .toolbar:hover,
 .viewbar:hover,
 .extratools:hover,
 .width-picker:hover {
     box-shadow: var(--menubarBoxShadow);
-}
+} */
 
 .viewbar {
-    right: 5px;
-    top: 50%;
-    transform: translateY(-50%);
-    grid-auto-flow: row;
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    display: grid;
+    gap: var(--buttonGap);
+    width: auto;
+    justify-content: space-between;
+    padding: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    /* border-radius: var(--menubarBorderRadius); */
+    z-index: 10;
+    width: 100%;
+    bottom: 0px;
+    grid-auto-flow: column;
 }
 
 .homebar {
