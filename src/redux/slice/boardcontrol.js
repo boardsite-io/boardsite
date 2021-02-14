@@ -83,6 +83,7 @@ const boardControlSlice = createSlice({
         // Add multiple strokes to collection
         ADD_MULTIPLE_STROKES: (state, action) => {
             const strokes = action.payload
+            strokes.sort((a, b) => a.id > b.id)
             strokes.forEach((stroke) => {
                 const { pageId, id } = stroke
                 state.pageCollection[pageId].strokes[id] = stroke

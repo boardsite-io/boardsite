@@ -217,10 +217,8 @@ function createStroke(liveStroke, pageId, currentPageIndex) {
 
     // generate a unique stroke id
     stroke.id =
-        Math.random()
-            .toString(36)
-            .replace(/[^a-z]+/g, "")
-            .substr(0, 4) + Date.now().toString(36).substr(4)
+        Date.now().toString(36).substr(2) +
+        Math.random().toString(36).substr(2, 10)
 
     // for some types we only need a few points
     switch (liveStroke.type) {
