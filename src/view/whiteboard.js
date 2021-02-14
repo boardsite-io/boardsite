@@ -3,7 +3,6 @@ import { ActionCreators as UndoActionCreators } from "redux-undo"
 import FPSStats from "react-fps-stats"
 import { handleAddPage } from "../component/board/requestHandlers"
 import Toolbar from "../component/menu/toolbar"
-import Homebar from "../component/menu/homebar"
 import Viewbar from "../component/menu/viewbar"
 import BoardStage from "../component/board/stage"
 import { toolType } from "../constants"
@@ -97,7 +96,6 @@ export default function Whiteboard() {
             <FPSStats />
             <Viewbar />
             <Toolbar />
-            <Homebar />
         </div>
     )
 }

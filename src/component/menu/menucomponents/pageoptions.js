@@ -1,23 +1,20 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import { MdAdd, MdClear, MdDelete, MdDeleteForever } from "react-icons/md"
+import { MdAdd, MdClear, MdDelete } from "react-icons/md"
 import {
-    handleAddPage,
     handleAddPageAt,
     handleClearPage,
     handleDeletePage,
-    handleDeleteAllPages,
-} from "../board/requestHandlers"
-import SessionDialog from "./menucomponents/sessiondialog"
+} from "../../board/requestHandlers"
+import "../../../css/menucomponents/pageoptions.css"
 
-export default function Homebar() {
+export default function PageOptions() {
     const currPageIndex = useSelector(
         (state) => state.viewControl.currentPageIndex
     )
 
     return (
-        <div className="homebar">
-            <SessionDialog />
+        <div className="pageoptions-wrap">
             <button
                 type="button"
                 id="icon-button"
@@ -35,15 +32,6 @@ export default function Homebar() {
                 id="icon-button"
                 onClick={() => handleDeletePage(currPageIndex)}>
                 <MdDelete id="icon" />
-            </button>
-            <button
-                type="button"
-                id="icon-button"
-                onClick={handleDeleteAllPages}>
-                <MdDeleteForever id="icon" />
-            </button>
-            <button type="button" id="icon-button" onClick={handleAddPage}>
-                <MdAdd id="icon" />
             </button>
         </div>
     )
