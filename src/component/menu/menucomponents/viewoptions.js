@@ -10,7 +10,7 @@ import {
     FIT_WIDTH_TO_PAGE,
     CENTER_VIEW,
 } from "../../../redux/slice/viewcontrol"
-import "../../../css/viewoptions.css"
+import "../../../css/menucomponents/viewoptions.css"
 
 export default function ViewOptions() {
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)

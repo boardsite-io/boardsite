@@ -97,15 +97,15 @@ export default function Whiteboard() {
 
     return (
         <div>
+            <BoardStage />
             <FPSStats />
+            <Viewbar />
+            <Toolbar />
+            <Homebar setOpenSessionDialog={setOpenSessionDialog} />
             <SessionDialog
                 open={openSessionDialog}
                 setOpen={setOpenSessionDialog}
             />
-            <Viewbar />
-            <Toolbar />
-            <Homebar setOpenSessionDialog={setOpenSessionDialog} />
-            <BoardStage />
         </div>
     )
 }

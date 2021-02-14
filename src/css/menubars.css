@@ -12,16 +12,7 @@
     justify-content: space-evenly;
     padding: 5px;
     border-radius: var(--menubarBorderRadius);
-    z-index: 10;
 }
-
-/* .homebar:hover,
-.toolbar:hover,
-.viewbar:hover,
-.extratools:hover,
-.width-picker:hover {
-    box-shadow: var(--menubarBoxShadow);
-} */
 
 .viewbar {
     background: var(--menubarBackground);
@@ -33,8 +24,6 @@
     padding: 2px;
     padding-left: 5px;
     padding-right: 5px;
-    /* border-radius: var(--menubarBorderRadius); */
-    z-index: 10;
     width: 100%;
     bottom: 0px;
     grid-auto-flow: column;

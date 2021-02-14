@@ -9,7 +9,7 @@ import "./css/index.css"
 import "./css/whiteboard.css"
 import "./css/menubars.css"
 import "./css/buttons.css"
-import "./css/popup.css"
+import "./css/menucomponents/popup.css"
 
 import routes from "./component/route"
 

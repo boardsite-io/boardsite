@@ -13,7 +13,7 @@ import {
     JUMP_TO_FIRST_PAGE,
     JUMP_PAGE_WITH_INDEX,
 } from "../../../redux/slice/viewcontrol"
-import "../../../css/viewnavigation.css"
+import "../../../css/menucomponents/viewnavigation.css"
 import store from "../../../redux/store"
 
 export default function ViewNavigation() {
