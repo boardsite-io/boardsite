@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect } from "react"
 import { ActionCreators as UndoActionCreators } from "redux-undo"
 import FPSStats from "react-fps-stats"
 import { handleAddPage } from "../component/board/requestHandlers"
 import Toolbar from "../component/menu/toolbar"
 import Homebar from "../component/menu/homebar"
 import Viewbar from "../component/menu/viewbar"
-
-import SessionDialog from "../component/menu/sessiondialog"
 import BoardStage from "../component/board/stage"
 import { toolType } from "../constants"
 import { SET_TYPE, TOGGLE_PANMODE } from "../redux/slice/drawcontrol"
@@ -18,8 +16,6 @@ import {
 } from "../redux/slice/viewcontrol"
 
 export default function Whiteboard() {
-    const [openSessionDialog, setOpenSessionDialog] = useState(false)
-
     function handleKeyDown(e) {
         switch (e.key) {
             case "ArrowUp": // Previous Page
@@ -96,16 +92,12 @@ export default function Whiteboard() {
     }, [])
 
     return (
-        <div>
+        <div className="whiteboard">
             <BoardStage />
             <FPSStats />
             <Viewbar />
             <Toolbar />
-            <Homebar setOpenSessionDialog={setOpenSessionDialog} />
-            <SessionDialog
-                open={openSessionDialog}
-                setOpen={setOpenSessionDialog}
-            />
+            <Homebar />
         </div>
     )
 }

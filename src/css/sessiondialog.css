@@ -1,15 +1,23 @@
-#sessionDialog{
-    /* width: 100%;
-    height: 100%; */
-    overflow: hidden;
+.session-dialog-div{
+    width: var(--buttonWidth);
+    height: var(--buttonHeight);
 }
 
-.dialog-wrap {
+.session-dialog {
+    position: fixed;
+    top: 0px;
+    left: 110%;
+}
+
+.session-dialog-wrap {
     display: grid;
     grid-auto-flow: row;
-    width: 100%;
+    width: 200px;
+    height: 200px;
     gap: 10px;
     justify-content: space-evenly;
+    background: var(--menubarBackground);
+    border-radius: var(--menubarBorderRadius);
 }
 
 .dialog-buttons-wrap {

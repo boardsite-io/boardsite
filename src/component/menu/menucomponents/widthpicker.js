@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import ReactSlider from "react-slider"
 import { useSelector } from "react-redux"
-import Tooltip from "@material-ui/core/Tooltip"
 import {
     MdCreate,
     MdKeyboardArrowDown,
@@ -76,18 +75,9 @@ export default function WidthPicker() {
 
     return (
         <div className="width-picker-div">
-            <Tooltip
-                id="tooltip"
-                title="Width"
-                TransitionProps={{ timeout: 0 }}
-                placement="bottom">
-                <button
-                    type="button"
-                    id="icon-button"
-                    onClick={handleWidthClick}>
-                    <MdCreate id="icon" />
-                </button>
-            </Tooltip>
+            <button type="button" id="icon-button" onClick={handleWidthClick}>
+                <MdCreate id="icon" />
+            </button>
             {
                 // Width Slider Popup
                 displayWidthPicker ? (
@@ -113,30 +103,18 @@ export default function WidthPicker() {
                                 // renderTrack={Track}
                                 renderThumb={Thumb}
                             />
-                            <Tooltip
-                                id="tooltip"
-                                title="Decrease Width"
-                                TransitionProps={{ timeout: 0 }}
-                                placement="left">
-                                <button
-                                    type="button"
-                                    id="icon-button"
-                                    onClick={handleUpClick}>
-                                    <MdKeyboardArrowUp id="icon" />
-                                </button>
-                            </Tooltip>
-                            <Tooltip
-                                id="tooltip"
-                                title="Increase Width"
-                                TransitionProps={{ timeout: 0 }}
-                                placement="left">
-                                <button
-                                    type="button"
-                                    id="icon-button"
-                                    onClick={handleDownClick}>
-                                    <MdKeyboardArrowDown id="icon" />
-                                </button>
-                            </Tooltip>
+                            <button
+                                type="button"
+                                id="icon-button"
+                                onClick={handleUpClick}>
+                                <MdKeyboardArrowUp id="icon" />
+                            </button>
+                            <button
+                                type="button"
+                                id="icon-button"
+                                onClick={handleDownClick}>
+                                <MdKeyboardArrowDown id="icon" />
+                            </button>
                             {/* <input
                 type="number"
                 min={WIDTH_MIN}

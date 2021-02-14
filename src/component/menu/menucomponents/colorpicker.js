@@ -3,7 +3,6 @@ import { SketchPicker } from "react-color"
 import { useSelector } from "react-redux"
 import { MdPalette } from "react-icons/md"
 import "../../../css/menucomponents/colorpicker.css"
-import Tooltip from "@material-ui/core/Tooltip"
 import { SET_COLOR } from "../../../redux/slice/drawcontrol"
 import store from "../../../redux/store"
 
@@ -28,18 +27,9 @@ export default function ColorPicker() {
 
     return (
         <div className="color-picker-div">
-            <Tooltip
-                id="tooltip"
-                title="Color"
-                TransitionProps={{ timeout: 0 }}
-                placement="bottom">
-                <button
-                    type="button"
-                    id="icon-button"
-                    onClick={handlePaletteClick}>
-                    <MdPalette id="icon" />
-                </button>
-            </Tooltip>
+            <button type="button" id="icon-button" onClick={handlePaletteClick}>
+                <MdPalette id="icon" />
+            </button>
             {
                 // Palette Popup
                 displayColorPicker ? (

@@ -1,6 +1,5 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import Tooltip from "@material-ui/core/Tooltip"
 import {
     MdFirstPage,
     MdLastPage,
@@ -28,66 +27,36 @@ export default function ViewNavigation() {
 
     return (
         <div className="pn">
-            <Tooltip
-                id="tooltip"
-                title="Page Up"
-                TransitionProps={{ timeout: 0 }}
-                placement="left">
-                <button
-                    type="button"
-                    className="pn-firstpage"
-                    onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
-                    <MdFirstPage id="icon" />
-                </button>
-            </Tooltip>
-            <Tooltip
-                id="tooltip"
-                title="Page Up"
-                TransitionProps={{ timeout: 0 }}
-                placement="left">
-                <button
-                    type="button"
-                    className="pn-prevpage"
-                    onClick={() => store.dispatch(JUMP_TO_PREV_PAGE())}>
-                    <MdChevronLeft id="icon" />
-                </button>
-            </Tooltip>
-            <Tooltip
-                id="tooltip"
-                title="Return to First Page"
-                TransitionProps={{ timeout: 0 }}
-                placement="left">
-                <button
-                    type="button"
-                    className="pn-pageindex"
-                    onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
-                    {currPageIndex + 1}
-                </button>
-            </Tooltip>
-            <Tooltip
-                id="tooltip"
-                title="Page Down"
-                TransitionProps={{ timeout: 0 }}
-                placement="left">
-                <button
-                    type="button"
-                    className="pn-nextpage"
-                    onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE())}>
-                    <MdChevronRight id="icon" />
-                </button>
-            </Tooltip>
-            <Tooltip
-                id="tooltip"
-                title="Page Up"
-                TransitionProps={{ timeout: 0 }}
-                placement="left">
-                <button
-                    type="button"
-                    className="pn-lastpage"
-                    onClick={goToLastPage}>
-                    <MdLastPage id="icon" />
-                </button>
-            </Tooltip>
+            <button
+                type="button"
+                className="pn-firstpage"
+                onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
+                <MdFirstPage id="icon" />
+            </button>
+            <button
+                type="button"
+                className="pn-prevpage"
+                onClick={() => store.dispatch(JUMP_TO_PREV_PAGE())}>
+                <MdChevronLeft id="icon" />
+            </button>
+            <button
+                type="button"
+                className="pn-pageindex"
+                onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
+                {currPageIndex + 1}
+            </button>
+            <button
+                type="button"
+                className="pn-nextpage"
+                onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE())}>
+                <MdChevronRight id="icon" />
+            </button>
+            <button
+                type="button"
+                className="pn-lastpage"
+                onClick={goToLastPage}>
+                <MdLastPage id="icon" />
+            </button>
         </div>
     )
 }
