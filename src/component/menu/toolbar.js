@@ -1,5 +1,5 @@
 import React from "react"
-import UndoRedo from "./menucomponents/undoredo"
+// import UndoRedo from "./menucomponents/undoredo"
 import ToolRing from "./menucomponents/toolring"
 import ColorPicker from "./menucomponents/colorpicker"
 import WidthPicker from "./menucomponents/widthpicker"
@@ -7,7 +7,7 @@ import WidthPicker from "./menucomponents/widthpicker"
 function Toolbar() {
     return (
         <div className="toolbar">
-            <UndoRedo />
+            {/* <UndoRedo /> */}
             <ToolRing />
             <ColorPicker />
             <WidthPicker />
