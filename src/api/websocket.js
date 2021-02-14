@@ -1,13 +1,14 @@
 import { nanoid } from "@reduxjs/toolkit"
 import store from "../redux/store"
 import { addPage, createSession, getPages, getStrokes } from "./request"
-import { API_SESSION_URL } from "../constants"
-import { CREATE_WS } from "../redux/slice/webcontrol"
+import { toolType, API_SESSION_URL } from "../constants"
+import { CREATE_WS, SEND_STROKE } from "../redux/slice/webcontrol"
 import {
     DELETE_ALL_PAGES,
     ADD_STROKE,
     ADD_MULTIPLE_STROKES,
     SET_PAGERANK,
+    ERASE_STROKE,
 } from "../redux/slice/boardcontrol"
 
 /**
@@ -33,12 +34,37 @@ function onMessage(msg) {
     // store.dispatch(RECEIVE_STROKES(data))
 }
 
-export function receiveStrokes(strokes) {
+function receiveStrokes(strokes) {
     strokes.forEach((stroke) => {
         if (stroke.type > 0) {
+            // add stroke
             store.dispatch(ADD_STROKE(stroke))
+        } else if (stroke.type === 0) {
+            // delete stroke
+            store.dispatch(ERASE_STROKE(stroke))
+        } else {
+            // non-stroke type, e.g. pageRank update, messages
+            receiveGeneric(stroke)
         }
     })
+}
+
+// Non-stroke types (type < 0) receive handler
+function receiveGeneric(stroke) {
+    // properties are mutually exclusive
+    // we may assume the server sends correct data
+    if (Object.prototype.hasOwnProperty.call(stroke, "pageRank")) {
+        store.dispatch(SET_PAGERANK(stroke.pageRank))
+    } else if (Object.prototype.hasOwnProperty.call(stroke, "pageClear")) {
+        // TODO refactor CLEAR_PAGE
+    }
+}
+
+function isConnected() {
+    return (
+        store.getState().webControl.sessionId !== "" &&
+        store.getState().webControl.webSocket.readyState === WebSocket.OPEN
+    )
 }
 
 export async function newSession() {
@@ -61,4 +87,17 @@ export async function joinSession(sessionId) {
         const strokes = await getStrokes(sessionId, pageId)
         store.dispatch(ADD_MULTIPLE_STROKES(strokes))
     })
+}
+
+export function sendStroke(stroke) {
+    if (isConnected()) {
+        store.dispatch(SEND_STROKE(stroke))
+    }
+}
+
+export function eraseStroke({ id, pageId }) {
+    if (isConnected()) {
+        const stroke = { id, pageId, type: toolType.ERASER }
+        store.dispatch(SEND_STROKE(stroke))
+    }
 }

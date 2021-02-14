@@ -27,11 +27,7 @@ const webControlSlice = createSlice({
         // for now we only send one stroke at a time
         SEND_STROKE: (state, action) => {
             const stroke = action.payload
-            if (state.webSocket !== null) {
-                if (state.webSocket.readyState === WebSocket.OPEN) {
-                    state.webSocket.send(JSON.stringify([stroke]))
-                }
-            }
+            state.webSocket.send(JSON.stringify([stroke]))
         },
     },
 })
