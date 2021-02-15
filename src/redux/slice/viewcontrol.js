@@ -25,6 +25,19 @@ const viewControlSlice = createSlice({
         currentPageIndex: DEFAULT_CURRENT_PAGE_INDEX,
     },
     reducers: {
+        RESET_VIEW: (state) => {
+            const oldScale = state.stageScale.y
+            const newScale = 1
+            state.stageScale = { x: newScale, y: newScale }
+            state.stageX = 0
+            state.stageY =
+                state.stageHeight / 2 -
+                ((state.stageHeight / 2 - state.stageY) / oldScale) * newScale
+            centerView(state)
+        },
+        CENTER_VIEW: (state) => {
+            centerView(state)
+        },
         SET_STAGE_X: (state, action) => {
             state.stageX = action.payload
         },
@@ -42,9 +55,6 @@ const viewControlSlice = createSlice({
         ON_WINDOW_RESIZE: (state) => {
             state.stageWidth = window.innerWidth
             state.stageHeight = window.innerHeight
-            centerView(state)
-        },
-        CENTER_VIEW: (state) => {
             centerView(state)
         },
         FIT_WIDTH_TO_PAGE: (state) => {
@@ -84,12 +94,13 @@ const viewControlSlice = createSlice({
 })
 
 export const {
+    CENTER_VIEW,
+    RESET_VIEW,
     SET_STAGE_X,
     SET_STAGE_Y,
     SCROLL_STAGE_Y,
     SET_STAGE_SCALE,
     ON_WINDOW_RESIZE,
-    CENTER_VIEW,
     FIT_WIDTH_TO_PAGE,
     ZOOM_TO,
     ZOOM_IN_CENTER,

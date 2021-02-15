@@ -1,11 +1,11 @@
 import React from "react"
 import { useSelector } from "react-redux"
 import {
-    MdFirstPage,
-    MdLastPage,
-    MdChevronLeft,
-    MdChevronRight,
-} from "react-icons/md"
+    CgPushChevronLeft,
+    CgChevronLeft,
+    CgChevronRight,
+    CgPushChevronRight,
+} from "react-icons/cg"
 import {
     JUMP_TO_NEXT_PAGE,
     JUMP_TO_PREV_PAGE,
@@ -31,13 +31,13 @@ export default function ViewNavigation() {
                 type="button"
                 className="pn-firstpage"
                 onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
-                <MdFirstPage id="icon" />
+                <CgPushChevronLeft id="icon" />
             </button>
             <button
                 type="button"
                 className="pn-prevpage"
                 onClick={() => store.dispatch(JUMP_TO_PREV_PAGE())}>
-                <MdChevronLeft id="icon" />
+                <CgChevronLeft id="icon" />
             </button>
             <button
                 type="button"
@@ -49,13 +49,13 @@ export default function ViewNavigation() {
                 type="button"
                 className="pn-nextpage"
                 onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE())}>
-                <MdChevronRight id="icon" />
+                <CgChevronRight id="icon" />
             </button>
             <button
                 type="button"
                 className="pn-lastpage"
                 onClick={goToLastPage}>
-                <MdLastPage id="icon" />
+                <CgPushChevronRight id="icon" />
             </button>
         </div>
     )

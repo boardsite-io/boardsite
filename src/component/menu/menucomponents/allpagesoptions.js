@@ -1,5 +1,7 @@
 import React from "react"
-import { MdAdd, MdDeleteForever } from "react-icons/md"
+import { MdDeleteForever } from "react-icons/md"
+import { VscNewFile } from "react-icons/vsc"
+
 import {
     handleAddPage,
     handleDeleteAllPages,
@@ -16,7 +18,7 @@ export default function AllPagesOptions() {
                 <MdDeleteForever id="icon" />
             </button>
             <button type="button" id="icon-button" onClick={handleAddPage}>
-                <MdAdd id="icon" />
+                <VscNewFile id="icon" />
             </button>
         </div>
     )
