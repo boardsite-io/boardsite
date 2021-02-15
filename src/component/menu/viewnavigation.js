@@ -1,19 +1,19 @@
 import React from "react"
 import { useSelector } from "react-redux"
 import {
-    CgPushChevronLeft,
-    CgChevronLeft,
-    CgChevronRight,
-    CgPushChevronRight,
+    CgPushChevronUp,
+    CgChevronUp,
+    CgChevronDown,
+    CgPushChevronDown,
 } from "react-icons/cg"
 import {
     JUMP_TO_NEXT_PAGE,
     JUMP_TO_PREV_PAGE,
     JUMP_TO_FIRST_PAGE,
     JUMP_PAGE_WITH_INDEX,
-} from "../../../redux/slice/viewcontrol"
-import "../../../css/menucomponents/viewnavigation.css"
-import store from "../../../redux/store"
+} from "../../redux/slice/viewcontrol"
+import "../../css/menucomponents/viewnavigation.css"
+import store from "../../redux/store"
 
 export default function ViewNavigation() {
     const currPageIndex = useSelector(
@@ -26,34 +26,33 @@ export default function ViewNavigation() {
     }
 
     return (
-        <div className="pn">
+        <div className="view-nav">
             <button
                 type="button"
-                id="icon-button"
+                id="icon-button-nav"
                 onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
-                <CgPushChevronLeft id="icon" />
+                <CgPushChevronUp id="icon-nav" />
             </button>
             <button
                 type="button"
-                id="icon-button"
+                id="icon-button-nav"
                 onClick={() => store.dispatch(JUMP_TO_PREV_PAGE())}>
-                <CgChevronLeft id="icon" />
+                <CgChevronUp id="icon-nav" />
             </button>
             <button
                 type="button"
-                id="icon-button"
-                className="page-index"
+                className="icon-button-page-index"
                 onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
                 {currPageIndex + 1}
             </button>
             <button
                 type="button"
-                id="icon-button"
+                id="icon-button-nav"
                 onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE())}>
-                <CgChevronRight id="icon" />
+                <CgChevronDown id="icon-nav" />
             </button>
-            <button type="button" id="icon-button" onClick={goToLastPage}>
-                <CgPushChevronRight id="icon" />
+            <button type="button" id="icon-button-nav" onClick={goToLastPage}>
+                <CgPushChevronDown id="icon-nav" />
             </button>
         </div>
     )

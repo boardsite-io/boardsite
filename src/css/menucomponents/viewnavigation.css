@@ -1,10 +1,44 @@
-.pn {
+.view-nav {
+    position: fixed;
     display: grid;
-    grid-auto-flow: column;
+    grid-auto-flow: row;
+    background: var(--menubarBackground);
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    border-radius: var(--menubarBorderRadius);
+    overflow: hidden;
 }
 
-.page-index {
+#icon-button-nav {
+    padding: 0px;
+    text-align: center;
+    height: 20px;
+    width: 20px;
+    outline: none;
+    border-width: 0;
+    color: var(--primary);
+    background: 00000000;
+}
+
+.icon-button-page-index {
     padding: 0px;
     text-align: center;
     font-size: 130%;
+    height: 40px;
+    width: 20px;
+    outline: none;
+    border-width: 0;
+    color: var(--primary);
+    background: 00000000;
+}
+
+#icon-nav {
+    height: 100%;
+    width: 100%;
+}
+
+#icon-button-nav:hover, .icon-button-page-index:hover {
+    color: var(--secondary);
+    background: var(--primary);
 }
