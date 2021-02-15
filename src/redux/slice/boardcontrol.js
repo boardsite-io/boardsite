@@ -50,8 +50,8 @@ const boardControlSlice = createSlice({
 
         // Clear page
         CLEAR_PAGE: (state, action) => {
-            const pageIndex = action.payload
-            const pageId = state.pageRank[pageIndex]
+            const pageId = action.payload
+            // if pageindex is OOB -> pageid is undefined
             if (pageId !== undefined) {
                 state.pageCollection[pageId].strokes = {}
             }
@@ -59,11 +59,10 @@ const boardControlSlice = createSlice({
 
         // Delete page
         DELETE_PAGE: (state, action) => {
-            const pageIndex = action.payload
-            const pageId = state.pageRank[pageIndex]
+            const pageId = action.payload
             if (pageId !== undefined) {
                 delete state.pageCollection[pageId]
-                state.pageRank.splice(pageIndex, 1)
+                state.pageRank.splice(state.pageRank.indexOf(pageId), 1)
             }
         },
 

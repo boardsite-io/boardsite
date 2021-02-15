@@ -63,8 +63,3 @@ export async function clearPage(sessionId, pageId) {
 export async function deletePage(sessionId, pageId) {
     return sendRequest(`/b/${sessionId}/pages/${pageId}`, "delete")
 }
-
-export async function deleteAllPages(sessionId) {
-    // TODO
-    console.log(sessionId)
-}
