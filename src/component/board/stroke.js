@@ -11,7 +11,7 @@ import {
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
 } from "../../redux/slice/drawcontrol"
-import { SEND_STROKE } from "../../redux/slice/webcontrol"
+import { sendStroke, eraseStroke } from "../../api/websocket"
 
 import { toolType, CANVAS_FULL_HEIGHT } from "../../constants"
 /**
@@ -22,22 +22,25 @@ import { toolType, CANVAS_FULL_HEIGHT } from "../../constants"
  * @param {{stroke: {}}} props
  */
 export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
-    function onDragStart() {
-        if (store.getState().drawControl.liveStroke.type === toolType.ERASER) {
-            store.dispatch(ERASE_STROKE({ pageId, id }))
-        }
-    }
+    // function onDragStart() {
+    //     if (store.getState().drawControl.liveStroke.type === toolType.ERASER) {
+    //         store.dispatch(ERASE_STROKE({ pageId, id }))
+    //     }
+    // }
 
     function onDragEnd(e) {
         if (store.getState().drawControl.liveStroke.type !== toolType.ERASER) {
-            store.dispatch(
-                UPDATE_STROKE({
-                    x: e.target.attrs.x,
-                    y: e.target.attrs.y,
-                    id,
-                    pageId,
-                })
-            )
+            const s = {
+                x: e.target.attrs.x,
+                y: e.target.attrs.y,
+                id,
+                type,
+                pageId,
+                style,
+                points,
+            }
+            store.dispatch(UPDATE_STROKE(s))
+            sendStroke(s) // ws
         }
     }
 
@@ -53,6 +56,7 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
             e.evt.buttons === 2
         ) {
             store.dispatch(ERASE_STROKE({ pageId, id }))
+            eraseStroke({ pageId, id }) // ws
         }
     }
 
@@ -67,7 +71,7 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
                     tension={0.5}
                     lineCap="round"
                     onMouseEnter={handleStrokeMouseEnter}
-                    onDragStart={onDragStart}
+                    // onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
                     x={x}
                     y={y}
@@ -87,7 +91,7 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
                     tension={1}
                     lineCap="round"
                     onMouseEnter={handleStrokeMouseEnter}
-                    onDragStart={onDragStart}
+                    // onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
                     x={x}
                     y={y}
@@ -131,7 +135,7 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
                     strokeWidth={style.width}
                     // fill={props.stroke.style.color}
                     onMouseEnter={handleStrokeMouseEnter}
-                    onDragStart={onDragStart}
+                    // onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
                     fillEnabled={false} // Remove inner hitbox from empty circles
                     draggable
@@ -181,10 +185,10 @@ export async function registerLiveStroke(pageId, currentPageIndex) {
     const stroke = createStroke(liveStroke, pageId, currentPageIndex)
     // add stroke to collection
     store.dispatch(ADD_STROKE(stroke))
-    // relay stroke in session
-    store.dispatch(SEND_STROKE(stroke))
     // clear livestroke
     store.dispatch(END_LIVESTROKE())
+    // relay stroke in session
+    sendStroke(stroke)
 }
 
 /**
@@ -213,10 +217,8 @@ function createStroke(liveStroke, pageId, currentPageIndex) {
 
     // generate a unique stroke id
     stroke.id =
-        Math.random()
-            .toString(36)
-            .replace(/[^a-z]+/g, "")
-            .substr(0, 4) + Date.now().toString(36).substr(4)
+        Date.now().toString(36).substr(2) +
+        Math.random().toString(36).substr(2, 10)
 
     // for some types we only need a few points
     switch (liveStroke.type) {
