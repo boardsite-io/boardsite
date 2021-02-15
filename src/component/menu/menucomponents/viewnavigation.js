@@ -29,32 +29,30 @@ export default function ViewNavigation() {
         <div className="pn">
             <button
                 type="button"
-                className="pn-firstpage"
+                id="icon-button"
                 onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
                 <CgPushChevronLeft id="icon" />
             </button>
             <button
                 type="button"
-                className="pn-prevpage"
+                id="icon-button"
                 onClick={() => store.dispatch(JUMP_TO_PREV_PAGE())}>
                 <CgChevronLeft id="icon" />
             </button>
             <button
                 type="button"
-                className="pn-pageindex"
+                id="icon-button"
+                className="page-index"
                 onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
                 {currPageIndex + 1}
             </button>
             <button
                 type="button"
-                className="pn-nextpage"
+                id="icon-button"
                 onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE())}>
                 <CgChevronRight id="icon" />
             </button>
-            <button
-                type="button"
-                className="pn-lastpage"
-                onClick={goToLastPage}>
+            <button type="button" id="icon-button" onClick={goToLastPage}>
                 <CgPushChevronRight id="icon" />
             </button>
         </div>

@@ -7,12 +7,13 @@
     width: var(--buttonWidth);
     outline: none;
     border-width: 0;
-    box-shadow: var(--buttonShadow);
+    /* box-shadow: var(--buttonShadow); */
 }
 
 #icon-button {
     color: var(--primary);
-    background: var(--secondary);
+    background: 00000000;
+    /* background: var(--secondary); */
 }
 #icon-button-active, #icon-button:hover {
     color: var(--secondary);

@@ -1,44 +1,10 @@
 .pn {
     display: grid;
     grid-auto-flow: column;
-    box-shadow: var(--buttonShadow);
-    border-radius: var(--buttonBorderRadius);
 }
 
-.pn-firstpage,
-.pn-prevpage,
-.pn-pageindex,
-.pn-nextpage,
-.pn-lastpage {
+.page-index {
     padding: 0px;
     text-align: center;
-    height: var(--buttonHeight);
-    width: var(--buttonWidth);
-    outline: none;
-    border-width: 0;
-    color: var(--primary);
-    background: var(--secondary);
-}
-
-.pn-pageindex {
-    font-size: 160%;
-}
-
-.pn-firstpage:hover,
-.pn-prevpage:hover,
-.pn-pageindex:hover,
-.pn-nextpage:hover,
-.pn-lastpage:hover {
-    color: var(--secondary);
-    background: var(--primary);
-}
-
-.pn-firstpage {
-    border-top-left-radius: var(--buttonBorderRadius);
-    border-bottom-left-radius: var(--buttonBorderRadius);
-}
-
-.pn-lastpage {
-    border-top-right-radius: var(--buttonBorderRadius);
-    border-bottom-right-radius: var(--buttonBorderRadius);
+    font-size: 130%;
 }
