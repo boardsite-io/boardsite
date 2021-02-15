@@ -1,6 +1,8 @@
 .pn {
     display: grid;
     grid-auto-flow: column;
+    box-shadow: var(--buttonShadow);
+    border-radius: var(--buttonBorderRadius);
 }
 
 .pn-firstpage,
@@ -14,7 +16,6 @@
     width: var(--buttonWidth);
     outline: none;
     border-width: 0;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
     color: var(--primary);
     background: var(--secondary);
 }
@@ -35,11 +36,9 @@
 .pn-firstpage {
     border-top-left-radius: var(--buttonBorderRadius);
     border-bottom-left-radius: var(--buttonBorderRadius);
-    /* border-top: 1px solid var(--primary); */
 }
 
 .pn-lastpage {
     border-top-right-radius: var(--buttonBorderRadius);
     border-bottom-right-radius: var(--buttonBorderRadius);
-    /* border-bottom: 1px solid var(--primary); */
 }
