@@ -1,0 +1,40 @@
+.session-info {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: small;
+    width: max-content;
+    height: max-content;
+    position: fixed;
+    right: 10px;
+    top: 100px;
+    overflow: hidden;
+    border-radius: var(--menubarBorderRadius);
+    background: #c0c0c066;
+    /* background: var(--menubarBackground); */
+    width: fit-content;
+    max-width: 150px;
+    height: fit-content;
+    max-height: 200px;
+    padding: 4px;
+}
+
+.user-info {
+    /* background: #00000088; */
+    width: fit-content;
+    height: 20px;
+    display: grid;
+    grid-auto-flow: column;
+    gap: 5px;
+}
+
+.user-color {
+    background: #00000088;
+    width: 10px;
+    height: 10px;
+    border-radius: 100px;
+    margin: auto;
+}
+
+.user-alias {
+    width: fit-content;
+    margin: auto;
+}

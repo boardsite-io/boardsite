@@ -5,6 +5,7 @@ import boardKeyListener from "../component/board/keylistener"
 import Toolbar from "../component/menu/toolbar"
 import Viewbar from "../component/menu/viewbar"
 import BoardStage from "../component/board/stage"
+import SessionInfo from "../component/menu/sessioninfo"
 
 export default function Whiteboard() {
     // Open dialog on mount
@@ -20,6 +21,7 @@ export default function Whiteboard() {
             <FPSStats />
             <Viewbar />
             <Toolbar />
+            <SessionInfo />
         </div>
     )
 }
