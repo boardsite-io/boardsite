@@ -1,6 +1,13 @@
 import { nanoid } from "@reduxjs/toolkit"
 import store from "../redux/store"
-import { addPage, createSession, getPages, getStrokes } from "./request"
+import {
+    addPage,
+    clearPage,
+    createSession,
+    deletePage,
+    getPages,
+    getStrokes,
+} from "./request"
 import { toolType, API_SESSION_URL } from "../constants"
 import { CREATE_WS, SEND_STROKE } from "../redux/slice/webcontrol"
 import {
@@ -9,6 +16,7 @@ import {
     ADD_MULTIPLE_STROKES,
     SET_PAGERANK,
     ERASE_STROKE,
+    CLEAR_PAGE,
 } from "../redux/slice/boardcontrol"
 
 /**
@@ -56,11 +64,11 @@ function receiveGeneric(stroke) {
     if (Object.prototype.hasOwnProperty.call(stroke, "pageRank")) {
         store.dispatch(SET_PAGERANK(stroke.pageRank))
     } else if (Object.prototype.hasOwnProperty.call(stroke, "pageClear")) {
-        // TODO refactor CLEAR_PAGE
+        stroke.pageClear.forEach((pid) => store.dispatch(CLEAR_PAGE(pid)))
     }
 }
 
-function isConnected() {
+export function isConnected() {
     return (
         store.getState().webControl.sessionId !== "" &&
         store.getState().webControl.webSocket.readyState === WebSocket.OPEN
@@ -100,4 +108,16 @@ export function eraseStroke({ id, pageId }) {
         const stroke = { id, pageId, type: toolType.ERASER }
         store.dispatch(SEND_STROKE(stroke))
     }
+}
+
+export function addPageSession(pageIndex) {
+    addPage(store.getState().webControl.sessionId, nanoid(8), pageIndex)
+}
+
+export function clearPageSession(pageId) {
+    clearPage(store.getState().webControl.sessionId, pageId)
+}
+
+export function deletePageSession(pageId) {
+    deletePage(store.getState().webControl.sessionId, pageId)
 }

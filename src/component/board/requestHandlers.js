@@ -1,9 +1,9 @@
 import {
-    addPage,
-    deletePage,
-    clearPage,
-    deleteAllPages,
-} from "../../api/request"
+    addPageSession,
+    clearPageSession,
+    deletePageSession,
+    isConnected,
+} from "../../api/websocket"
 import {
     ADD_PAGE,
     CLEAR_PAGE,
@@ -14,45 +14,51 @@ import {
 import store from "../../redux/store"
 
 export function handleAddPage() {
-    const sid = store.getState().webControl.sessionId
-    if (sid !== "") {
-        addPage(sid, -1)
+    if (isConnected()) {
+        addPageSession(-1)
     } else {
         store.dispatch(ADD_PAGE())
     }
 }
 
-export function handleAddPageAt(pageIndex) {
-    const sid = store.getState().webControl.sessionId
-    if (sid !== "") {
-        addPage(sid, pageIndex)
+export function handleAddPageAt() {
+    const pageIndex = store.getState().viewControl.currentPageIndex
+    if (isConnected()) {
+        addPageSession(pageIndex)
     } else {
         store.dispatch(ADD_PAGE(pageIndex))
     }
 }
 
-export function handleClearPage(pageIndex) {
-    const sid = store.getState().webControl.sessionId
-    if (sid !== "") {
-        clearPage(sid, pageIndex)
+export function handleClearPage() {
+    const pageId = store.getState().boardControl.present.pageRank[
+        store.getState().viewControl.currentPageIndex
+    ]
+    if (isConnected()) {
+        clearPageSession(pageId)
     } else {
-        store.dispatch(CLEAR_PAGE(pageIndex))
+        store.dispatch(CLEAR_PAGE(pageId))
     }
 }
 
-export function handleDeletePage(pageIndex) {
-    const sid = store.getState().webControl.sessionId
-    if (sid !== "") {
-        deletePage(sid, pageIndex)
+export function handleDeletePage() {
+    const pageId = store.getState().boardControl.present.pageRank[
+        store.getState().viewControl.currentPageIndex
+    ]
+    if (isConnected()) {
+        deletePageSession(pageId)
     } else {
-        store.dispatch(DELETE_PAGE(pageIndex))
+        store.dispatch(DELETE_PAGE(pageId))
     }
 }
 
 export function handleDeleteAllPages() {
-    const sid = store.getState().webControl.sessionId
-    if (sid !== "") {
-        deleteAllPages(sid)
+    if (isConnected()) {
+        store
+            .getState()
+            .boardControl.present.pageRank.forEach((pid) =>
+                deletePageSession(pid)
+            )
     } else {
         store.dispatch(DELETE_ALL_PAGES())
     }

@@ -1,5 +1,4 @@
 import React from "react"
-import { useSelector } from "react-redux"
 import { MdAdd, MdClear, MdDelete } from "react-icons/md"
 import {
     handleAddPageAt,
@@ -9,28 +8,24 @@ import {
 import "../../../css/menucomponents/pageoptions.css"
 
 export default function PageOptions() {
-    const currPageIndex = useSelector(
-        (state) => state.viewControl.currentPageIndex
-    )
-
     return (
         <div className="pageoptions-wrap">
             <button
                 type="button"
                 id="icon-button"
-                onClick={() => handleAddPageAt(currPageIndex)}>
+                onClick={() => handleAddPageAt()}>
                 <MdAdd id="icon" />
             </button>
             <button
                 type="button"
                 id="icon-button"
-                onClick={() => handleClearPage(currPageIndex)}>
+                onClick={() => handleClearPage()}>
                 <MdClear id="icon" />
             </button>
             <button
                 type="button"
                 id="icon-button"
-                onClick={() => handleDeletePage(currPageIndex)}>
+                onClick={() => handleDeletePage()}>
                 <MdDelete id="icon" />
             </button>
         </div>
