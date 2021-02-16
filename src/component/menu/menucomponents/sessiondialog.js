@@ -12,6 +12,7 @@ import "../../../css/sessiondialog.css"
 
 export default function SessionDialog() {
     const [open, setOpen] = useState(false)
+    const [sid, setSid] = useState("")
     const handleClickOpen = () => {
         setOpen(true)
     }
@@ -24,17 +25,19 @@ export default function SessionDialog() {
      */
     function handleCreate() {
         newSession()
-            .then((sessionId) => handleJoin(sessionId))
+            .then((sessionId) => {
+                joinSession(sessionId).then(() => setOpen(false))
+            })
             .catch((err) => console.log("cant create session: ", err))
     }
 
     /**
      * Handle the join session button click in the session dialog
      */
-    function handleJoin(sessionId) {
+    function handleJoin() {
         // createWS(sidInput)
         // request data?
-        joinSession(sessionId)
+        joinSession(sid)
             .then(() => setOpen(false))
             .catch(() => console.log("cant connect"))
     }
@@ -44,10 +47,7 @@ export default function SessionDialog() {
      * @param {event} e event object
      */
     function handleTextFieldChange(e) {
-        if (e.target.value.length === 6) {
-            console.log(e.target.value)
-            handleJoin(e.target.value)
-        }
+        setSid(e.target.value)
     }
 
     return (
