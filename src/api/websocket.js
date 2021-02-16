@@ -4,12 +4,17 @@ import {
     addPage,
     clearPage,
     createSession,
+    createUser,
     deletePage,
     getPages,
     getStrokes,
 } from "./request"
 import { toolType, API_SESSION_URL } from "../constants"
-import { CREATE_WS, SEND_STROKE } from "../redux/slice/webcontrol"
+import {
+    CREATE_WS,
+    SEND_STROKE,
+    SET_SESSION_USERS,
+} from "../redux/slice/webcontrol"
 import {
     DELETE_ALL_PAGES,
     ADD_STROKE,
@@ -22,14 +27,16 @@ import {
 /**
  * Connect to Websocket.
  */
-export function createWebsocket(sessionId) {
+export function createWebsocket(sessionId, user) {
     return new Promise((resolve, reject) => {
         const ws = new WebSocket(
-            `${API_SESSION_URL.replace("http", "ws", 1)}/${sessionId}`
+            `${API_SESSION_URL.replace("http", "ws", 1)}/${sessionId}/users/${
+                user.id
+            }/socket`
         )
         ws.onmessage = onMessage
         ws.onopen = () => {
-            store.dispatch(CREATE_WS({ ws, sessionId }))
+            store.dispatch(CREATE_WS({ ws, sessionId, user }))
             resolve()
         }
         ws.onerror = (ev) => reject(ev)
@@ -65,6 +72,8 @@ function receiveGeneric(stroke) {
         store.dispatch(SET_PAGERANK(stroke.pageRank))
     } else if (Object.prototype.hasOwnProperty.call(stroke, "pageClear")) {
         stroke.pageClear.forEach((pid) => store.dispatch(CLEAR_PAGE(pid)))
+    } else if (Object.prototype.hasOwnProperty.call(stroke, "connectedUsers")) {
+        store.dispatch(SET_SESSION_USERS(stroke.connectedUsers))
     }
 }
 
@@ -83,8 +92,14 @@ export async function newSession() {
     return sessionId
 }
 
-export async function joinSession(sessionId) {
-    await createWebsocket(sessionId)
+export async function joinSession(
+    sessionId,
+    alias = "name",
+    color = "#ff00ff" // TODO
+) {
+    // create a new user for us
+    const user = await createUser(sessionId, { alias, color })
+    await createWebsocket(sessionId, user)
 
     // set the pages according to api
     const { pageRank } = await getPages(sessionId)
