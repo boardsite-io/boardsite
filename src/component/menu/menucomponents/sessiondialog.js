@@ -8,10 +8,14 @@ import DialogTitle from "@material-ui/core/DialogTitle"
 import { Grid, TextField } from "@material-ui/core"
 import { BsPeople } from "react-icons/bs"
 import { newSession, joinSession } from "../../../api/websocket"
+import ColorPicker from "./colorpicker"
 
 export default function SessionDialog() {
     const [open, setOpen] = useState(false)
     const [sid, setSid] = useState("")
+    const [alias, setAlias] = useState("TheLegend27")
+    const [color, setColor] = useState("")
+
     const handleClickOpen = () => {
         setOpen(true)
     }
@@ -49,6 +53,14 @@ export default function SessionDialog() {
         setSid(e.target.value)
     }
 
+    function handleAliasChange(e) {
+        setAlias(e.target.value)
+    }
+
+    function handleColorChange(e) {
+        setColor(e.hex)
+    }
+
     return (
         <>
             <button type="button" id="icon-button" onClick={handleClickOpen}>
@@ -63,15 +75,36 @@ export default function SessionDialog() {
                 aria-describedby="alert-dialog-description">
                 <DialogTitle id="alert-dialog-title">Settings</DialogTitle>
                 <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Change global settings here.
-                    </DialogContentText>
                     <Grid
                         container
                         spacing={2}
                         direction="column"
                         // justify="center"
                         alignItems="flex-start">
+                        <Grid item>
+                            <DialogContentText id="alert-dialog-description">
+                                Choose alias and color.
+                            </DialogContentText>
+                            <TextField
+                                value={alias}
+                                label="Insert alias"
+                                // variant="outlined"
+                                // defaultValue="hi"
+                                onChange={handleAliasChange}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <ColorPicker
+                                color={color}
+                                onChange={handleColorChange}
+                                onChangeComplete={handleColorChange}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <DialogContentText id="alert-dialog-description">
+                                Change global settings here.
+                            </DialogContentText>
+                        </Grid>
                         <Grid item>
                             <Button
                                 variant="contained"
@@ -90,7 +123,6 @@ export default function SessionDialog() {
                         </Grid>
                         <Grid item>
                             <TextField
-                                id="outlined-basic"
                                 label="Insert Session ID"
                                 // variant="outlined"
                                 // defaultValue="hi"
