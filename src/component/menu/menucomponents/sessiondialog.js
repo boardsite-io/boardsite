@@ -8,7 +8,6 @@ import DialogTitle from "@material-ui/core/DialogTitle"
 import { Grid, TextField } from "@material-ui/core"
 import { BsPeople } from "react-icons/bs"
 import { newSession, joinSession } from "../../../api/websocket"
-import "../../../css/sessiondialog.css"
 
 export default function SessionDialog() {
     const [open, setOpen] = useState(false)
@@ -51,7 +50,7 @@ export default function SessionDialog() {
     }
 
     return (
-        <div className="session-dialog-div">
+        <>
             <button type="button" id="icon-button" onClick={handleClickOpen}>
                 <BsPeople id="icon" />
             </button>
@@ -106,6 +105,6 @@ export default function SessionDialog() {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </div>
+        </>
     )
 }
