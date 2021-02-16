@@ -1,36 +1,23 @@
-import React, { useState } from "react"
+import React from "react"
 import ReactSlider from "react-slider"
 import { useSelector } from "react-redux"
-import {
-    MdCreate,
-    MdKeyboardArrowDown,
-    MdKeyboardArrowUp,
-} from "react-icons/md"
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md"
 import {
     SET_WIDTH,
     DECREMENT_WIDTH,
     INCREMENT_WIDTH,
 } from "../../../redux/slice/drawcontrol"
 import { WIDTH_MIN, WIDTH_MAX } from "../../../constants"
-import "../../../css/menucomponents/widthpicker.css"
+import "../../../css/stylepicker.css"
 import store from "../../../redux/store"
 
 export default function WidthPicker() {
-    const [displayWidthPicker, setDisplayWidthPicker] = useState(false)
     const widthSelector = useSelector(
         (state) => state.drawControl.liveStroke.style.width
     )
 
     const handleSliderChange = (newWidth) => {
         store.dispatch(SET_WIDTH(newWidth))
-    }
-
-    function handleWidthClick() {
-        setDisplayWidthPicker(!displayWidthPicker)
-    }
-
-    function handleWidthClose() {
-        setDisplayWidthPicker(false)
     }
 
     function handleUpClick() {
@@ -74,60 +61,27 @@ export default function WidthPicker() {
     // }
 
     return (
-        <div className="width-picker-div">
-            <button type="button" id="icon-button" onClick={handleWidthClick}>
-                <MdCreate id="icon" />
-            </button>
-            {
-                // Width Slider Popup
-                displayWidthPicker ? (
-                    <div className="popup">
-                        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-                        <div
-                            className="cover"
-                            onClick={handleWidthClose}
-                            onKeyPress={() => {}}
-                        />
-                        <div className="width-picker">
-                            <ReactSlider
-                                className="width-slider"
-                                thumbClassName="width-slider-thumb"
-                                // trackClassName="width-slider-track"
-                                invert={false}
-                                orientation="vertical"
-                                value={widthSelector}
-                                onAfterChange={handleSliderChange}
-                                // onChange={handleSliderChange}
-                                min={WIDTH_MIN}
-                                max={WIDTH_MAX}
-                                // renderTrack={Track}
-                                renderThumb={Thumb}
-                            />
-                            <button
-                                type="button"
-                                id="icon-button"
-                                onClick={handleUpClick}>
-                                <MdKeyboardArrowUp id="icon" />
-                            </button>
-                            <button
-                                type="button"
-                                id="icon-button"
-                                onClick={handleDownClick}>
-                                <MdKeyboardArrowDown id="icon" />
-                            </button>
-                            {/* <input
-                type="number"
+        <div className="width-picker">
+            <ReactSlider
+                className="width-slider"
+                thumbClassName="width-slider-thumb"
+                // trackClassName="width-slider-track"
+                invert={false}
+                orientation="vertical"
+                value={widthSelector}
+                onAfterChange={handleSliderChange}
+                // onChange={handleSliderChange}
                 min={WIDTH_MIN}
                 max={WIDTH_MAX}
-                className="width-input"
-                value={widthSelector}
-                onChange={handleInputChange}
-                onBlur={handleBlur}
-            /> */}
-                        </div>
-                    </div>
-                ) : null
-            }
+                // renderTrack={Track}
+                renderThumb={Thumb}
+            />
+            <button type="button" id="icon-button" onClick={handleUpClick}>
+                <MdKeyboardArrowUp id="icon" />
+            </button>
+            <button type="button" id="icon-button" onClick={handleDownClick}>
+                <MdKeyboardArrowDown id="icon" />
+            </button>
         </div>
     )
 }

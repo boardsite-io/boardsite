@@ -13,7 +13,7 @@ export default function SessionInfo() {
         <div className="session-info">
             {/* <h1>Session Info:</h1> */}
             {info.map((user) => (
-                <div className="user-info">
+                <div key={user.userid} className="user-info">
                     <div
                         className="user-color"
                         style={{ backgroundColor: user.color }}

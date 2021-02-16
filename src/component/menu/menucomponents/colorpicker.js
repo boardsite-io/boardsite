@@ -1,74 +1,73 @@
-import React, { useState } from "react"
-import { SketchPicker } from "react-color"
-import { useSelector } from "react-redux"
-import { MdPalette } from "react-icons/md"
-import "../../../css/menucomponents/colorpicker.css"
-import { SET_COLOR } from "../../../redux/slice/drawcontrol"
-import store from "../../../redux/store"
+import React from "react"
+import { CustomPicker } from "react-color"
+import "../../../css/stylepicker.css"
 
-export default function ColorPicker() {
-    const colorSelector = useSelector(
-        (state) => state.drawControl.liveStroke.style.color
-    )
+// const { Alpha } = require("react-color/lib/components/common")
+const { EditableInput } = require("react-color/lib/components/common")
+const { Hue } = require("react-color/lib/components/common")
+const { Saturation } = require("react-color/lib/components/common")
+// color, hex, hsl oldHue, onChange, rgb, source
 
-    function handlePaletteClick() {
-        setDisplayColorPicker(!displayColorPicker)
-    }
-
-    function handlePaletteClose() {
-        setDisplayColorPicker(false)
-    }
-
-    function handlePaletteChange(color) {
-        store.dispatch(SET_COLOR(color.hex))
-    }
-
-    const [displayColorPicker, setDisplayColorPicker] = useState(false)
-
+function ColorPicker({ color, hex, hsl, hsv, oldHue, onChange, rgb, source }) {
     return (
-        <div className="color-picker-div">
-            <button type="button" id="icon-button" onClick={handlePaletteClick}>
-                <MdPalette id="icon" />
-            </button>
-            {
-                // Palette Popup
-                displayColorPicker ? (
-                    <div className="popup">
-                        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-                        <div
-                            className="cover"
-                            onClick={handlePaletteClose}
-                            onKeyPress={() => {}}
-                        />
-                        <div className="color-picker">
-                            <SketchPicker
-                                width={250}
-                                className="color"
-                                presetColors={[
-                                    "#D0021B",
-                                    "#F5A623",
-                                    "#F8E71C",
-                                    "#8B572A",
-                                    "#7ED321",
-                                    "#417505",
-                                    "#BD10E0",
-                                    "#9013FE",
-                                    "#4A90E2",
-                                    "#50E3C2",
-                                    "#B8E986",
-                                    "#000000",
-                                    "#4A4A4A",
-                                    "#9B9B9B",
-                                    "#FFFFFF",
-                                ]}
-                                disableAlpha
-                                color={colorSelector}
-                                onChange={handlePaletteChange}
-                            />
-                        </div>
-                    </div>
-                ) : null
-            }
+        <div className="color-picker">
+            <div className="saturation">
+                <Saturation
+                    color={color}
+                    hex={hex}
+                    hsl={hsl}
+                    hsv={hsv}
+                    oldHue={oldHue}
+                    onChange={onChange}
+                    rgb={rgb}
+                    source={source}
+                />
+            </div>
+            <div className="hue">
+                <Hue
+                    color={color}
+                    hex={hex}
+                    hsl={hsl}
+                    hsv={hsv}
+                    oldHue={oldHue}
+                    onChange={onChange}
+                    rgb={rgb}
+                    source={source}
+                    direction="horizontal"
+                    pointer={() => <div className="hue-pointer" />} // leave css empty for no pointer
+                />
+            </div>
+            {/* <div className="alpha">
+                <Alpha
+                    color={color}
+                    hex={hex}
+                    hsl={hsl}
+                    hsv={hsv}
+                    oldHue={oldHue}
+                    onChange={onChange}
+                    rgb={rgb}
+                    source={source}
+                />
+            </div> */}
+            <div className="editableinput">
+                <EditableInput
+                    value={color}
+                    onChange={onChange}
+                    style={{
+                        input: {
+                            border: "none",
+                            outline: "none",
+                            width: "190px",
+                            height: "20px",
+                            padding: "0px",
+                            paddingLeft: "5px",
+                            paddingRight: "5px",
+                        },
+                    }}
+                />
+            </div>
         </div>
     )
 }
+
+export default CustomPicker(ColorPicker)

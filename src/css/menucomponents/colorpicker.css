@@ -1,9 +1,0 @@
-.color-picker-div {
-    height: var(--buttonHeight);
-}
-
-.color-picker {
-    position: absolute;
-    top: 20px;
-    right: -30px;
-}

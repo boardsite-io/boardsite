@@ -1,3 +1,63 @@
+.style-picker {
+    position: fixed;
+    top: 200px;
+    left: 200px;
+    display: grid;
+    grid-auto-flow: column;
+    gap: 5px;
+}
+
+/* .color-picker-div {
+    height: var(--buttonHeight);
+}
+
+.color-picker {
+    position: absolute;
+    top: 20px;
+    right: -30px;
+} */
+
+.color-picker {
+    padding: 10px;
+    border-radius: var(--menubarBorderRadius);
+    background-color: var(--menubarBackground);
+    display: grid;
+    grid-auto-flow: row;
+    width: fit-content;
+    height: 200px;
+}
+
+.saturation {
+    position: relative;
+    height: 160px;
+    width: 200px;
+}
+/* .alpha {
+    background-color: #f0f;  
+    position: relative;
+    height: 100%;
+    width: 100%;
+} */
+
+.hue {
+    position: relative;
+    height: 20px;
+    width: 200px;
+}
+
+/* .hue-pointer {
+    background-color: black;
+    height: 20px;
+    width: 4px;
+    border-radius: 100px;
+} */
+
+.editableinput {
+    position: relative;
+    width: 200px;
+    height: 20px;
+}
+
 .width-picker-div {
     height: var(--buttonHeight);
 }
@@ -5,13 +65,11 @@
 .width-picker {
     background: var(--menubarBackground);
     padding: 5px;
-    position: absolute;
-    top: 20px;
-    left: -5px;
     display: grid;
     grid-template-rows: auto var(--buttonHeight) var(--buttonHeight);
     gap: 10px;
-    height: 200px;
+    top: 0px;
+    bottom: 0px;
     width: var(--buttonWidth) + 10px;
     border-radius: var(--menubarBorderRadius);
     box-shadow: var(--boxShadow);
