@@ -1,21 +1,12 @@
 .style-picker {
-    position: fixed;
-    top: 200px;
-    left: 200px;
+    height: var(--buttonHeight);
+    position: absolute;
+    top: 10px;
+    left: 0px;
     display: grid;
     grid-auto-flow: column;
     gap: 5px;
 }
-
-/* .color-picker-div {
-    height: var(--buttonHeight);
-}
-
-.color-picker {
-    position: absolute;
-    top: 20px;
-    right: -30px;
-} */
 
 .color-picker {
     padding: 10px;
@@ -77,14 +68,14 @@
 
 .width-slider {
     width: var(--buttonWidth);
-    border-radius: 4px;
-    background: var(--secondary);
+    border-radius: 5px;
+    background: #00000069;
     box-shadow: var(--boxShadow);
 }
 
 .width-slider-thumb {
-    color: var(--secondary);
-    background: var(--primary);
+    color: var(--primary);
+    background: var(--menubarBackground);
     height: 20px;
     line-height: 20px;
     width: var(--buttonWidth);
@@ -92,7 +83,7 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
         Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
     font-size: 18px;
-    border-radius: 4px;
+    border-radius: 5px;
     box-shadow: var(--boxShadow);
     outline: none;
 }

@@ -5,7 +5,6 @@ import Toolbar from "../component/menu/toolbar"
 import BoardStage from "../component/board/stage"
 import SessionInfo from "../component/menu/sessioninfo"
 import ViewNav from "../component/menu/viewnavigation"
-import StylePicker from "../component/menu/stylepicker"
 
 export default function Whiteboard() {
     // Open dialog on mount
@@ -21,7 +20,6 @@ export default function Whiteboard() {
             <Toolbar />
             <SessionInfo />
             <ViewNav />
-            <StylePicker />
         </div>
     )
 }
