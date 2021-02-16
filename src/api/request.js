@@ -36,6 +36,13 @@ export async function createSession() {
     return sendRequest("/b/create", "post")
 }
 
+export async function createUser(sessionId, { alias, color }) {
+    return sendRequest(`/b/${sessionId}/users`, "post", {
+        alias,
+        color,
+    })
+}
+
 /**
  *
  * @param {*} sessionId
