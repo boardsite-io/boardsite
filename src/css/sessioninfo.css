@@ -4,37 +4,40 @@
     width: max-content;
     height: max-content;
     position: fixed;
-    right: 10px;
-    top: 100px;
+    left: 5px;
+    top: 50px;
     overflow: hidden;
     border-radius: var(--menubarBorderRadius);
-    background: #c0c0c066;
-    /* background: var(--menubarBackground); */
-    width: fit-content;
     max-width: 150px;
-    height: fit-content;
     max-height: 200px;
-    padding: 4px;
+    pointer-events: none;
+    display: grid;
+    grid-auto-flow: row;
+    gap: 0px;
 }
 
 .user-info {
-    /* background: #00000088; */
+    background: #00000066;
     width: fit-content;
-    height: 20px;
+    height: 18px;
     display: grid;
     grid-auto-flow: column;
     gap: 5px;
+    border-radius: 100px;
+    padding-left: 1.5px;
+    padding-right: 6px;
 }
 
 .user-color {
     background: #00000088;
-    width: 10px;
-    height: 10px;
+    width: 15px;
+    height: 15px;
     border-radius: 100px;
     margin: auto;
 }
 
 .user-alias {
+    color: white;
     width: fit-content;
     margin: auto;
 }

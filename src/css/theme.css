@@ -1,6 +1,7 @@
 :root {
     --primary: #ffffff;
     --secondary: #1a1a1a;
+    --activeToolColor: #7aff7a;
     --menubarBackground: #00000088;
     --menubarBoxShadow: 0px 0px 2px 0px #00000088;
     --menubarBorderRadius: 4px;

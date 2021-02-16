@@ -19,9 +19,11 @@ export default function ViewNavigation() {
     const currPageIndex = useSelector(
         (state) => state.viewControl.currentPageIndex
     )
+    const numPages = useSelector(
+        (state) => state.boardControl.present.pageRank.length
+    )
 
     function goToLastPage() {
-        const numPages = store.getState().boardControl.present.pageRank.length
         store.dispatch(JUMP_PAGE_WITH_INDEX(numPages - 1))
     }
 
@@ -43,7 +45,9 @@ export default function ViewNavigation() {
                 type="button"
                 className="icon-button-page-index"
                 onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
-                {currPageIndex + 1}
+                <p className="page-num">{currPageIndex + 1}</p>
+                <hr />
+                <p className="page-num">{numPages}</p>
             </button>
             <button
                 type="button"

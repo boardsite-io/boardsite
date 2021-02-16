@@ -11,7 +11,7 @@ export default function SessionInfo() {
     ]
     return (
         <div className="session-info">
-            <div>Session Info:</div>
+            {/* <h1>Session Info:</h1> */}
             {info.map((user) => (
                 <div className="user-info">
                     <div

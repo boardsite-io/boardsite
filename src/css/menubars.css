@@ -4,13 +4,14 @@
     grid-auto-flow: column;
     position: fixed;
     gap: var(--buttonGap);
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
     justify-content: space-between;
-    padding: 5px;
-    border-bottom-left-radius: var(--menubarBorderRadius);
-    border-bottom-right-radius: var(--menubarBorderRadius);
     top: 0px;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0px;
+    right: 0px;
     box-shadow: var(--menubarBoxShadow);
 }
 
@@ -22,8 +23,8 @@
     padding: 5px;
     border-radius: var(--menubarBorderRadius);
     position: absolute;
-    top: 50px;
-    left: 140px;
+    top: 40px;
+    left: 160px;
     box-shadow: var(--menubarBoxShadow);
 }
 
@@ -37,21 +38,4 @@
     border-radius: var(--menubarBorderRadius);
     width: fit-content;
     height: var(--buttonHeight);
-}
-
-.viewbar {
-    background: var(--menubarBackground);
-    display: grid;
-    grid-auto-flow: column;
-    position: fixed;
-    gap: var(--buttonGap);
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-left: 5px;
-    padding-right: 5px;
-    justify-content: space-between;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    box-shadow: var(--menubarBoxShadow);
 }
