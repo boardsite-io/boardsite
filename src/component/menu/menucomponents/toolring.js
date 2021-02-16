@@ -1,12 +1,10 @@
 import React, { useState } from "react"
 import { useSelector } from "react-redux"
-import {
-    MdBrush,
-    MdChangeHistory,
-    MdHighlightOff,
-    MdRadioButtonUnchecked,
-    MdRemove,
-} from "react-icons/md"
+import { MdRemove } from "react-icons/md"
+import { CgErase, CgShapeCircle, CgShapeTriangle } from "react-icons/cg"
+
+import { BsPencil } from "react-icons/bs"
+
 import { RiDragMoveFill } from "react-icons/ri"
 import store from "../../../redux/store"
 import { SET_TYPE } from "../../../redux/slice/drawcontrol"
@@ -28,7 +26,7 @@ export default function ToolRing() {
                             type="button"
                             id="icon-button-active"
                             onClick={() => setOpen(true)}>
-                            <MdBrush id="icon" />
+                            <BsPencil id="icon" />
                         </button>
                     ) : (
                         <button
@@ -37,7 +35,7 @@ export default function ToolRing() {
                             onClick={() => {
                                 store.dispatch(SET_TYPE(toolType.PEN))
                             }}>
-                            <MdBrush id="icon" />
+                            <BsPencil id="icon" />
                         </button>
                     )}
                     {
@@ -63,7 +61,7 @@ export default function ToolRing() {
                         onClick={() => {
                             store.dispatch(SET_TYPE(toolType.ERASER))
                         }}>
-                        <MdHighlightOff id="icon" />
+                        <CgErase id="icon" />
                     </button>
                 ) : (
                     <button
@@ -72,7 +70,7 @@ export default function ToolRing() {
                         onClick={() => {
                             store.dispatch(SET_TYPE(toolType.ERASER))
                         }}>
-                        <MdHighlightOff id="icon" />
+                        <CgErase id="icon" />
                     </button>
                 )}
                 <button
@@ -109,7 +107,7 @@ export default function ToolRing() {
                     onClick={() => {
                         store.dispatch(SET_TYPE(toolType.TRIANGLE))
                     }}>
-                    <MdChangeHistory id="icon" />
+                    <CgShapeTriangle id="icon" />
                 </button>
                 <button
                     type="button"
@@ -121,7 +119,7 @@ export default function ToolRing() {
                     onClick={() => {
                         store.dispatch(SET_TYPE(toolType.CIRCLE))
                     }}>
-                    <MdRadioButtonUnchecked id="icon" />
+                    <CgShapeCircle id="icon" />
                 </button>
             </div>
         </>

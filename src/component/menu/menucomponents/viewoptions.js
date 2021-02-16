@@ -1,6 +1,11 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import { CgController, CgMinimize, CgMaximizeAlt } from "react-icons/cg"
+import { CgController } from "react-icons/cg"
+import {
+    BsArrowsMove,
+    BsArrowsAngleContract,
+    BsArrowsAngleExpand,
+} from "react-icons/bs"
 import store from "../../../redux/store"
 import { TOGGLE_PANMODE } from "../../../redux/slice/drawcontrol"
 import { FIT_WIDTH_TO_PAGE, RESET_VIEW } from "../../../redux/slice/viewcontrol"
@@ -22,20 +27,20 @@ export default function ViewOptions() {
                     type="button"
                     id="icon-button"
                     onClick={() => store.dispatch(TOGGLE_PANMODE())}>
-                    <CgController id="icon" />
+                    <BsArrowsMove id="icon" />
                 </button>
             )}
             <button
                 type="button"
                 id="icon-button"
                 onClick={() => store.dispatch(RESET_VIEW())}>
-                <CgMinimize id="icon" />
+                <BsArrowsAngleContract id="icon" />
             </button>
             <button
                 type="button"
                 id="icon-button"
                 onClick={() => store.dispatch(FIT_WIDTH_TO_PAGE())}>
-                <CgMaximizeAlt id="icon" />
+                <BsArrowsAngleExpand id="icon" />
             </button>
         </div>
     )

@@ -1,12 +1,24 @@
 import React, { useState } from "react"
-import { SiReact } from "react-icons/si"
-import { MdSettingsPower, MdGroupAdd } from "react-icons/md"
+import Button from "@material-ui/core/Button"
+import Dialog from "@material-ui/core/Dialog"
+import DialogActions from "@material-ui/core/DialogActions"
+import DialogContent from "@material-ui/core/DialogContent"
+import DialogContentText from "@material-ui/core/DialogContentText"
+import DialogTitle from "@material-ui/core/DialogTitle"
+import { Grid, TextField } from "@material-ui/core"
+import { BsPeople } from "react-icons/bs"
 import { newSession, joinSession } from "../../../api/websocket"
-
 import "../../../css/sessiondialog.css"
 
 export default function SessionDialog() {
     const [open, setOpen] = useState(false)
+    const handleClickOpen = () => {
+        setOpen(true)
+    }
+
+    const handleClose = () => {
+        setOpen(false)
+    }
     /**
      * Handle the create session button click in the session dialog
      */
@@ -40,50 +52,60 @@ export default function SessionDialog() {
 
     return (
         <div className="session-dialog-div">
-            <button
-                type="button"
-                id="icon-button"
-                onClick={() => setOpen(true)}>
-                <MdGroupAdd id="icon" />
+            <button type="button" id="icon-button" onClick={handleClickOpen}>
+                <BsPeople id="icon" />
             </button>
-            {
-                // Palette Popup
-                open ? (
-                    <div className="popup">
-                        <div
-                            role="button"
-                            tabIndex="0"
-                            className="cover"
-                            onClick={() => setOpen(false)}
-                            onKeyPress={() => {}}
-                        />
-                        <div className="session-dialog">
-                            <div className="session-dialog-wrap">
-                                <div className="dialog-buttons-wrap">
-                                    <button
-                                        type="button"
-                                        id="buttonDialog"
-                                        onClick={handleCreate}>
-                                        <SiReact id="buttonIcon" />
-                                    </button>
-                                    <button
-                                        type="button"
-                                        id="buttonDialog"
-                                        onClick={handleJoin}>
-                                        <MdSettingsPower id="buttonIcon" />
-                                    </button>
-                                </div>
-                                <input
-                                    className="sessionDialogInput"
-                                    type="search"
-                                    defaultValue="hi"
-                                    onChange={handleTextFieldChange}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                ) : null
-            }
+            <Dialog
+                maxWidth="xs"
+                fullWidth
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description">
+                <DialogTitle id="alert-dialog-title">Settings</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Change global settings here.
+                    </DialogContentText>
+                    <Grid
+                        container
+                        spacing={2}
+                        direction="column"
+                        // justify="center"
+                        alignItems="flex-start">
+                        <Grid item>
+                            <Button
+                                variant="contained"
+                                onClick={handleCreate}
+                                color="primary">
+                                Create Session
+                            </Button>
+                        </Grid>
+                        <Grid container item>
+                            <Button
+                                variant="contained"
+                                onClick={handleJoin}
+                                color="primary">
+                                Join Session
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <TextField
+                                id="outlined-basic"
+                                label="Insert Session ID"
+                                // variant="outlined"
+                                // defaultValue="hi"
+                                onChange={handleTextFieldChange}
+                            />
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     )
 }

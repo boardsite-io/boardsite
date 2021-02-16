@@ -1,5 +1,5 @@
 import React from "react"
-import { MdAdd, MdClear, MdDelete } from "react-icons/md"
+import { BsFilePlus, BsFileMinus, BsFileRuled } from "react-icons/bs"
 import {
     handleAddPageAt,
     handleClearPage,
@@ -14,19 +14,19 @@ export default function PageOptions() {
                 type="button"
                 id="icon-button"
                 onClick={() => handleAddPageAt()}>
-                <MdAdd id="icon" />
-            </button>
-            <button
-                type="button"
-                id="icon-button"
-                onClick={() => handleClearPage()}>
-                <MdClear id="icon" />
+                <BsFilePlus id="icon" />
             </button>
             <button
                 type="button"
                 id="icon-button"
                 onClick={() => handleDeletePage()}>
-                <MdDelete id="icon" />
+                <BsFileMinus id="icon" />
+            </button>
+            <button
+                type="button"
+                id="icon-button"
+                onClick={() => handleClearPage()}>
+                <BsFileRuled id="icon" />
             </button>
         </div>
     )
