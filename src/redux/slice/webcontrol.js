@@ -1,16 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit"
+import Konva from "konva"
 
 const webControlSlice = createSlice({
     name: "webControl",
     initialState: {
+        sessionDialog: {
+            open: false,
+            invalidSid: false,
+            joinOnly: false,
+            sidInput: "",
+        },
         // strokesOutBuf: [],
         // strokesInBuf: [],
         webSocket: null,
         sessionId: "",
         user: {
             id: "", // Thats me!
-            alias: "",
-            color: "",
+            alias: "TheLegend27",
+            color: Konva.Util.getRandomColor(),
         },
         connectedUsers: {},
     },
@@ -41,6 +48,23 @@ const webControlSlice = createSlice({
         SET_SESSION_USERS: (state, action) => {
             state.connectedUsers = action.payload
         },
+        SET_SDIAG: (state, action) => {
+            state.sessionDialog = { ...state.sessionDialog, ...action.payload }
+        },
+        CLOSE_SDIAG: (state) => {
+            state.sessionDialog = {
+                open: false,
+                invalidSid: false,
+                joinOnly: false,
+                sidInput: "",
+            }
+        },
+        SET_USER_ALIAS: (state, action) => {
+            state.user.alias = action.payload
+        },
+        SET_USER_COLOR: (state) => {
+            state.user.color = Konva.Util.getRandomColor()
+        },
     },
 })
 
@@ -50,5 +74,10 @@ export const {
     RECEIVE_STROKES,
     SEND_STROKE,
     SET_SESSION_USERS,
+    SET_SID,
+    SET_SDIAG,
+    CLOSE_SDIAG,
+    SET_USER_ALIAS,
+    SET_USER_COLOR,
 } = webControlSlice.actions
 export default webControlSlice.reducer

@@ -80,6 +80,7 @@ function receiveGeneric(stroke) {
 export function isConnected() {
     return (
         store.getState().webControl.sessionId !== "" &&
+        store.getState().webControl.webSocket != null &&
         store.getState().webControl.webSocket.readyState === WebSocket.OPEN
     )
 }
@@ -93,9 +94,9 @@ export async function newSession() {
 }
 
 export async function joinSession(
-    sessionId,
-    alias = "name",
-    color = "#ff00ff" // TODO
+    sessionId = store.getState().webControl.sessionDialog.sidInput,
+    alias = store.getState().webControl.user.alias,
+    color = store.getState().webControl.user.color
 ) {
     // create a new user for us
     const user = await createUser(sessionId, { alias, color })
@@ -135,4 +136,15 @@ export function clearPageSession(pageId) {
 
 export function deletePageSession(pageId) {
     deletePage(store.getState().webControl.sessionId, pageId)
+}
+
+// returns the relative path to the session
+// based on either the sessionID or the URL
+export function getSessionPath(sessionURL) {
+    const url = sessionURL.split("/")
+    return `/b/${url[url.length - 1]}`
+}
+
+export function pingSession(sessionID) {
+    return getPages(sessionID)
 }

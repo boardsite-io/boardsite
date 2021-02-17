@@ -1,49 +1,87 @@
-import React, { useState } from "react"
-import Konva from "konva"
+import React from "react"
 import Button from "@material-ui/core/Button"
 import Dialog from "@material-ui/core/Dialog"
 import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
-import DialogContentText from "@material-ui/core/DialogContentText"
+// import DialogContentText from "@material-ui/core/DialogContentText"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import { Grid, TextField } from "@material-ui/core"
 import { BsPeople } from "react-icons/bs"
-import { newSession, joinSession } from "../../../api/websocket"
+import { useHistory } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+
+import store from "../../../redux/store"
+import {
+    SET_SDIAG,
+    CLOSE_SDIAG,
+    SET_USER_ALIAS,
+    SET_USER_COLOR,
+} from "../../../redux/slice/webcontrol"
+import {
+    getSessionPath,
+    isConnected,
+    joinSession,
+    newSession,
+} from "../../../api/websocket"
 import "../../../css/sessiondialog.css"
 
 export default function SessionDialog() {
-    const [open, setOpen] = useState(false)
-    const [sid, setSid] = useState("")
-    const [alias, setAlias] = useState("")
-    const [color, setColor] = useState(Konva.Util.getRandomColor())
+    const sDiagStatus = useSelector((state) => state.webControl.sessionDialog)
+    const alias = useSelector((state) => state.webControl.user.alias)
+    const color = useSelector((state) => state.webControl.user.color)
+
+    const dispatch = useDispatch()
+    const history = useHistory()
 
     const handleClickOpen = () => {
-        setOpen(true)
+        dispatch(
+            SET_SDIAG({
+                open: true,
+                invalidSid: false,
+                joinOnly: false,
+            })
+        )
     }
 
     const handleClose = () => {
-        setOpen(false)
+        dispatch(CLOSE_SDIAG())
+        if (!isConnected()) {
+            history.push("/")
+        }
     }
     /**
      * Handle the create session button click in the session dialog
      */
     function handleCreate() {
-        newSession()
-            .then((sessionId) => {
-                joinSession(sessionId).then(() => setOpen(false))
-            })
-            .catch((err) => console.log("cant create session: ", err))
+        newSession().then((sessionId) => {
+            dispatch(SET_SDIAG({ sidInput: sessionId }))
+            handleJoin()
+        })
+        // .catch((err) => console.log("cant create session: ", err))
     }
 
     /**
      * Handle the join session button click in the session dialog
      */
     function handleJoin() {
-        // createWS(sidInput)
-        // request data?
-        joinSession(sid)
-            .then(() => setOpen(false))
-            .catch(() => console.log("cant connect"))
+        joinSession()
+            .then(() => {
+                history.push(
+                    getSessionPath(
+                        store.getState().webControl.sessionDialog.sidInput
+                    )
+                )
+                dispatch(CLOSE_SDIAG())
+            })
+            .catch(() =>
+                dispatch(
+                    SET_SDIAG({
+                        open: true,
+                        invalidSid: true,
+                        joinOnly: false,
+                    })
+                )
+            )
     }
 
     /**
@@ -51,15 +89,15 @@ export default function SessionDialog() {
      * @param {event} e event object
      */
     function handleTextFieldChange(e) {
-        setSid(e.target.value)
+        dispatch(SET_SDIAG({ sidInput: e.target.value }))
     }
 
     function handleAliasChange(e) {
-        setAlias(e.target.value)
+        dispatch(SET_USER_ALIAS(e.target.value))
     }
 
     function newRandomColor() {
-        setColor(Konva.Util.getRandomColor())
+        dispatch(SET_USER_COLOR())
     }
 
     return (
@@ -70,12 +108,12 @@ export default function SessionDialog() {
             <Dialog
                 maxWidth="xs"
                 fullWidth
-                open={open}
+                open={sDiagStatus.open}
                 onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description">
                 <DialogTitle id="alert-dialog-title">
-                    Create or join a session{" "}
+                    Collaborative Session{" "}
                     <span role="img" aria-label="Panda">
                         👀
                     </span>
@@ -88,10 +126,10 @@ export default function SessionDialog() {
                         justify="center"
                         alignItems="stretch">
                         <Grid item>
-                            <DialogContentText id="alert-dialog-description">
+                            {/* <DialogContentText id="alert-dialog-description">
                                 Choose alias and color. Click on color to
                                 randomly generate a new color.
-                            </DialogContentText>
+                            </DialogContentText> */}
                             <Grid
                                 item
                                 container
@@ -121,13 +159,17 @@ export default function SessionDialog() {
                             </Grid>
                         </Grid>
                         <Grid item>
-                            <Button
-                                fullWidth
-                                variant="contained"
-                                onClick={handleCreate}
-                                color="primary">
-                                Create Session
-                            </Button>
+                            {!sDiagStatus.joinOnly ? (
+                                <Button
+                                    fullWidth
+                                    variant="contained"
+                                    onClick={handleCreate}
+                                    color="primary">
+                                    Create Session
+                                </Button>
+                            ) : (
+                                <></>
+                            )}
                         </Grid>
                         <Grid item>
                             <Button
@@ -139,13 +181,24 @@ export default function SessionDialog() {
                             </Button>
                         </Grid>
                         <Grid item>
-                            <TextField
-                                fullWidth
-                                label="Insert Session ID"
-                                // variant="outlined"
-                                // defaultValue="hi"
-                                onChange={handleTextFieldChange}
-                            />
+                            {!sDiagStatus.joinOnly ? (
+                                <TextField
+                                    fullWidth
+                                    label="Insert ID"
+                                    // variant="outlined"
+                                    // defaultValue="hi"
+                                    value={sDiagStatus.sidInput}
+                                    onChange={handleTextFieldChange}
+                                    error={sDiagStatus.invalidSid}
+                                    helperText={
+                                        sDiagStatus.invalidSid
+                                            ? "Looks like the session you're trying to join does not exist 🤖"
+                                            : ""
+                                    }
+                                />
+                            ) : (
+                                <></>
+                            )}
                         </Grid>
                     </Grid>
                 </DialogContent>
