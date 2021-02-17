@@ -1,6 +1,5 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import { CgController } from "react-icons/cg"
 import {
     BsArrowsMove,
     BsArrowsAngleContract,
@@ -20,7 +19,7 @@ export default function ViewOptions() {
                     type="button"
                     id="icon-button-active"
                     onClick={() => store.dispatch(TOGGLE_PANMODE())}>
-                    <CgController id="icon" />
+                    <BsArrowsMove id="icon" />
                 </button>
             ) : (
                 <button

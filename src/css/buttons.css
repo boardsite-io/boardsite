@@ -1,5 +1,5 @@
 #icon-button,
-#icon-button-active{
+#icon-button-active {
     padding: 3px;
     text-align: center;
     border-radius: var(--buttonBorderRadius);
@@ -19,7 +19,7 @@
 }
 
 #icon-button-active {
-    color: var(--activeToolColor)
+    color: var(--activeToolColor);
 }
 
 #icon {

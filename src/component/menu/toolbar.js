@@ -11,8 +11,10 @@ import PageOptions from "./menucomponents/pageoptions"
 function Toolbar() {
     return (
         <div className="toolbar">
-            <Settings />
-            <SessionDialog />
+            <div>
+                <Settings />
+                <SessionDialog />
+            </div>
             <AllPagesOptions />
             <UndoRedo />
             <ToolRing />

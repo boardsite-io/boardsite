@@ -1,11 +1,13 @@
 import React, { useState } from "react"
 import { useSelector } from "react-redux"
 import { MdRemove } from "react-icons/md"
-import { CgErase, CgShapeCircle, CgShapeTriangle } from "react-icons/cg"
-
+import {
+    CgErase,
+    CgShapeCircle,
+    CgShapeTriangle,
+    CgController,
+} from "react-icons/cg"
 import { BsPencil } from "react-icons/bs"
-
-import { RiDragMoveFill } from "react-icons/ri"
 import store from "../../../redux/store"
 import { SET_TYPE } from "../../../redux/slice/drawcontrol"
 import { toolType } from "../../../constants"
@@ -16,6 +18,9 @@ export default function ToolRing() {
     const typeSelector = useSelector(
         (state) => state.drawControl.liveStroke.type
     )
+    const colorSelector = useSelector(
+        (state) => state.drawControl.liveStroke.style.color
+    )
 
     return (
         <>
@@ -24,6 +29,7 @@ export default function ToolRing() {
                     {typeSelector === toolType.PEN ? (
                         <button
                             type="button"
+                            style={{ color: colorSelector }}
                             id="icon-button-active"
                             onClick={() => setOpen(true)}>
                             <BsPencil id="icon" />
@@ -56,6 +62,7 @@ export default function ToolRing() {
                 </div>
                 {typeSelector === toolType.ERASER ? (
                     <button
+                        style={{ color: colorSelector }}
                         type="button"
                         id="icon-button-active"
                         onClick={() => {
@@ -74,6 +81,11 @@ export default function ToolRing() {
                     </button>
                 )}
                 <button
+                    style={
+                        typeSelector === toolType.DRAG
+                            ? { color: colorSelector }
+                            : null
+                    }
                     type="button"
                     id={
                         typeSelector === toolType.DRAG
@@ -83,9 +95,14 @@ export default function ToolRing() {
                     onClick={() => {
                         store.dispatch(SET_TYPE(toolType.DRAG))
                     }}>
-                    <RiDragMoveFill id="icon" />
+                    <CgController id="icon" />
                 </button>
                 <button
+                    style={
+                        typeSelector === toolType.LINE
+                            ? { color: colorSelector }
+                            : null
+                    }
                     type="button"
                     id={
                         typeSelector === toolType.LINE
@@ -98,6 +115,11 @@ export default function ToolRing() {
                     <MdRemove id="icon" />
                 </button>
                 <button
+                    style={
+                        typeSelector === toolType.TRIANGLE
+                            ? { color: colorSelector }
+                            : null
+                    }
                     type="button"
                     id={
                         typeSelector === toolType.TRIANGLE
@@ -110,6 +132,11 @@ export default function ToolRing() {
                     <CgShapeTriangle id="icon" />
                 </button>
                 <button
+                    style={
+                        typeSelector === toolType.CIRCLE
+                            ? { color: colorSelector }
+                            : null
+                    }
                     type="button"
                     id={
                         typeSelector === toolType.CIRCLE
