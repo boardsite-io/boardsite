@@ -1,5 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit"
 import Konva from "konva"
+import {
+    adjectives,
+    animals,
+    colors,
+    uniqueNamesGenerator,
+} from "unique-names-generator"
 
 const webControlSlice = createSlice({
     name: "webControl",
@@ -16,7 +22,11 @@ const webControlSlice = createSlice({
         sessionId: "",
         user: {
             id: "", // Thats me!
-            alias: "TheLegend27",
+            alias: uniqueNamesGenerator({
+                dictionaries: [adjectives, colors, animals],
+                separator: "",
+                style: "capital",
+            }),
             color: Konva.Util.getRandomColor(),
         },
         connectedUsers: {},
