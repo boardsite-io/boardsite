@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import Konva from "konva"
 import Button from "@material-ui/core/Button"
 import Dialog from "@material-ui/core/Dialog"
 import DialogActions from "@material-ui/core/DialogActions"
@@ -8,13 +9,13 @@ import DialogTitle from "@material-ui/core/DialogTitle"
 import { Grid, TextField } from "@material-ui/core"
 import { BsPeople } from "react-icons/bs"
 import { newSession, joinSession } from "../../../api/websocket"
-import ColorPicker from "./colorpicker"
+import "../../../css/sessiondialog.css"
 
 export default function SessionDialog() {
     const [open, setOpen] = useState(false)
     const [sid, setSid] = useState("")
-    const [alias, setAlias] = useState("TheLegend27")
-    const [color, setColor] = useState("")
+    const [alias, setAlias] = useState("")
+    const [color, setColor] = useState(Konva.Util.getRandomColor())
 
     const handleClickOpen = () => {
         setOpen(true)
@@ -57,8 +58,8 @@ export default function SessionDialog() {
         setAlias(e.target.value)
     }
 
-    function handleColorChange(e) {
-        setColor(e.hex)
+    function newRandomColor() {
+        setColor(Konva.Util.getRandomColor())
     }
 
     return (
@@ -73,48 +74,64 @@ export default function SessionDialog() {
                 onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description">
-                <DialogTitle id="alert-dialog-title">Settings</DialogTitle>
+                <DialogTitle id="alert-dialog-title">
+                    Create or join a session{" "}
+                    <span role="img" aria-label="Panda">
+                        👀
+                    </span>
+                </DialogTitle>
                 <DialogContent>
                     <Grid
                         container
                         spacing={2}
                         direction="column"
-                        // justify="center"
-                        alignItems="flex-start">
+                        justify="center"
+                        alignItems="stretch">
                         <Grid item>
                             <DialogContentText id="alert-dialog-description">
-                                Choose alias and color.
+                                Choose alias and color. Click on color to
+                                randomly generate a new color.
                             </DialogContentText>
-                            <TextField
-                                value={alias}
-                                label="Insert alias"
-                                // variant="outlined"
-                                // defaultValue="hi"
-                                onChange={handleAliasChange}
-                            />
-                        </Grid>
-                        <Grid item>
-                            <ColorPicker
-                                color={color}
-                                onChange={handleColorChange}
-                                onChangeComplete={handleColorChange}
-                            />
-                        </Grid>
-                        <Grid item>
-                            <DialogContentText id="alert-dialog-description">
-                                Change global settings here.
-                            </DialogContentText>
+                            <Grid
+                                item
+                                container
+                                spacing={2}
+                                direction="row"
+                                justify="flex-start"
+                                alignItems="center">
+                                <Grid item>
+                                    <button
+                                        className="userColor"
+                                        type="button"
+                                        style={{ background: color }}
+                                        onClick={newRandomColor}
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        // style={{ width: "100%" }}
+                                        fullWidth
+                                        value={alias}
+                                        label="Choose alias"
+                                        // variant="outlined"
+                                        // defaultValue="hi"
+                                        onChange={handleAliasChange}
+                                    />
+                                </Grid>
+                            </Grid>
                         </Grid>
                         <Grid item>
                             <Button
+                                fullWidth
                                 variant="contained"
                                 onClick={handleCreate}
                                 color="primary">
                                 Create Session
                             </Button>
                         </Grid>
-                        <Grid container item>
+                        <Grid item>
                             <Button
+                                fullWidth
                                 variant="contained"
                                 onClick={handleJoin}
                                 color="primary">
@@ -123,6 +140,7 @@ export default function SessionDialog() {
                         </Grid>
                         <Grid item>
                             <TextField
+                                fullWidth
                                 label="Insert Session ID"
                                 // variant="outlined"
                                 // defaultValue="hi"

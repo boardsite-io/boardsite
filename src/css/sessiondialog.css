@@ -1,0 +1,13 @@
+.userColor {
+    height: 20px;
+    width: 20px;
+    border-radius: 100px;
+    border: none;
+    outline: none;
+    margin-top: 18px;
+}
+
+.userColor:focus {
+    border: none;
+    outline: none;
+}
