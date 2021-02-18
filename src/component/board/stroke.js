@@ -44,7 +44,7 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
         }
     }
 
-    function handleStrokeMouseEnter(e) {
+    function handleStrokeMovement(e) {
         // prevent to act on live stroke
         if (id === undefined) {
             return
@@ -70,7 +70,9 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
                     strokeWidth={style.width}
                     tension={0.5}
                     lineCap="round"
-                    onMouseEnter={handleStrokeMouseEnter}
+                    onMouseDown={handleStrokeMovement}
+                    onMouseMove={handleStrokeMovement}
+                    onMouseEnter={handleStrokeMovement}
                     // onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
                     x={x}
@@ -90,7 +92,9 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
                     strokeWidth={style.width}
                     tension={1}
                     lineCap="round"
-                    onMouseEnter={handleStrokeMouseEnter}
+                    onMouseDown={handleStrokeMovement}
+                    onMouseMove={handleStrokeMovement}
+                    onMouseEnter={handleStrokeMovement}
                     // onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
                     x={x}
@@ -110,9 +114,9 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
         //             strokeWidth={props.stroke.style.width}
         //             tension={1}
         //             lineCap="round"
-        //             onMouseEnter={(e) =>
-        //                 handleStrokeMouseEnter(e, props.stroke)
-        //             }
+        //             onMouseDown={handleStrokeMovement}
+        //             onMouseMove={handleStrokeMovement}
+        //             onMouseEnter={handleStrokeMovement}
         //             draggable={props.isDraggable}
         //             onDragStart={onDragStart}
         //             onDragEnd={onDragEnd}
@@ -134,7 +138,9 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
                     stroke={style.color}
                     strokeWidth={style.width}
                     // fill={props.stroke.style.color}
-                    onMouseEnter={handleStrokeMouseEnter}
+                    onMouseDown={handleStrokeMovement}
+                    onMouseMove={handleStrokeMovement}
+                    onMouseEnter={handleStrokeMovement}
                     // onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
                     fillEnabled={false} // Remove inner hitbox from empty circles
