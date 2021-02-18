@@ -114,7 +114,7 @@ export default viewControlSlice.reducer
 
 function goToPage(state, pageIndex) {
     state.currentPageIndex = pageIndex
-    state.stageY = -pageIndex * CANVAS_FULL_HEIGHT
+    state.stageY = -pageIndex * CANVAS_FULL_HEIGHT * state.stageScale.x
     centerView(state)
 }
 
