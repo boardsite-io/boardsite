@@ -1,6 +1,6 @@
 import React from "react"
 import Settings from "./menucomponents/settings"
-import UndoRedo from "./menucomponents/undoredo"
+// import UndoRedo from "./menucomponents/undoredo"
 import ToolRing from "./menucomponents/toolring"
 import SessionDialog from "./menucomponents/sessiondialog"
 import ViewZoom from "./menucomponents/viewzoom"
@@ -16,7 +16,7 @@ function Toolbar() {
                 <SessionDialog />
             </div>
             <AllPagesOptions />
-            <UndoRedo />
+            {/* <UndoRedo /> */}
             <ToolRing />
             <PageOptions />
             <ViewZoom />

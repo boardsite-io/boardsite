@@ -4,7 +4,6 @@ import "../../css/sessioninfo.css"
 
 export default function SessionInfo() {
     const userInfo = useSelector((state) => state.webControl.connectedUsers)
-    console.log(userInfo)
     return (
         <div className="session-info">
             {Object.keys(userInfo).map((userId) => {
