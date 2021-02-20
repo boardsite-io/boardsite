@@ -1,7 +1,7 @@
 import React, { useEffect, memo } from "react"
 import { ReactReduxContext, useSelector } from "react-redux"
 import { createSelector } from "reselect"
-import { Stage, Layer } from "react-konva"
+import { Stage, Layer, Group } from "react-konva"
 import {
     CENTER_VIEW,
     ON_WINDOW_RESIZE,
@@ -137,18 +137,16 @@ const StageContent = memo(() => {
         <>
             <Layer>
                 {pageSelector.pageSlice.map((pageId, i) => (
-                    <>
+                    <Group key={pageId}>
                         <PageListener
-                            key={pageId}
                             pageId={pageId}
                             currentPageIndex={pageSelector.startPage + i}
                         />
                         <Page
-                            key={pageId}
                             pageId={pageId}
                             currentPageIndex={pageSelector.startPage + i}
                         />
-                    </>
+                    </Group>
                 ))}
             </Layer>
             <Layer draggable={false} listening={false}>

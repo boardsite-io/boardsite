@@ -1,17 +1,13 @@
-import React, { memo } from "react"
+import React, { memo, useState } from "react"
 import { Line, Ellipse } from "react-konva"
 import store from "../../redux/store"
-import {
-    ADD_STROKE,
-    ERASE_STROKE,
-    UPDATE_STROKE,
-} from "../../redux/slice/boardcontrol"
+import { ADD_STROKE } from "../../redux/slice/boardcontrol"
 import {
     START_LIVESTROKE,
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
 } from "../../redux/slice/drawcontrol"
-import { sendStroke, eraseStroke } from "../../api/websocket"
+import { sendStroke } from "../../api/websocket"
 
 import { toolType, CANVAS_FULL_HEIGHT } from "../../constants"
 /**
@@ -21,88 +17,54 @@ import { toolType, CANVAS_FULL_HEIGHT } from "../../constants"
  * the object references.
  * @param {{stroke: {}}} props
  */
-export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
-    // function onDragStart() {
-    //     if (store.getState().drawControl.liveStroke.type === toolType.ERASER) {
-    //         store.dispatch(ERASE_STROKE({ pageId, id }))
-    //     }
-    // }
-
-    function onDragEnd(e) {
-        if (store.getState().drawControl.liveStroke.type !== toolType.ERASER) {
-            const s = {
-                x: e.target.attrs.x,
-                y: e.target.attrs.y,
-                id,
-                type,
-                pageId,
-                style,
-                points,
-            }
-            store.dispatch(UPDATE_STROKE(s))
-            sendStroke(s) // ws
-        }
-    }
-
-    function handleStrokeMovement(e) {
-        // prevent to act on live stroke
-        if (id === undefined) {
-            return
-        }
-
-        if (
-            (store.getState().drawControl.liveStroke.type === toolType.ERASER &&
-                e.evt.buttons === 1) ||
-            e.evt.buttons === 2
-        ) {
-            store.dispatch(ERASE_STROKE({ pageId, id }))
-            eraseStroke({ pageId, id }) // ws
-        }
-    }
+export const StrokeShape = memo(({ id, type, style, points, x, y }) => {
+    const [isDragging, setDragging] = useState(false)
 
     let shape
     switch (type) {
         case toolType.PEN:
             shape = (
                 <Line
+                    id={id}
                     points={points}
                     stroke={style.color}
                     strokeWidth={style.width}
                     tension={0.5}
                     lineCap="round"
-                    onMouseDown={handleStrokeMovement}
-                    onMouseMove={handleStrokeMovement}
-                    onMouseEnter={handleStrokeMovement}
-                    // onDragStart={onDragStart}
-                    onDragEnd={onDragEnd}
                     x={x}
                     y={y}
                     draggable
+                    onDragStart={() => setDragging(true)}
+                    onDragEnd={() => setDragging(false)}
+                    shadowForStrokeEnabled={isDragging}
+                    shadowEnabled={isDragging}
+                    shadowBlur={isDragging ? 5 : 0}
+                    shadowColor="#00ff00"
                     listening
                     perfectDrawEnabled={false}
-                    shadowForStrokeEnabled={false}
                 />
             )
             break
         case toolType.LINE:
             shape = (
                 <Line
+                    id={id}
                     points={getStartEndPoints(points)}
                     stroke={style.color}
                     strokeWidth={style.width}
                     tension={1}
                     lineCap="round"
-                    onMouseDown={handleStrokeMovement}
-                    onMouseMove={handleStrokeMovement}
-                    onMouseEnter={handleStrokeMovement}
-                    // onDragStart={onDragStart}
-                    onDragEnd={onDragEnd}
                     x={x}
                     y={y}
                     draggable
+                    onDragStart={() => setDragging(true)}
+                    onDragEnd={() => setDragging(false)}
+                    shadowForStrokeEnabled={isDragging}
+                    shadowEnabled={isDragging}
+                    shadowBlur={isDragging ? 5 : 0}
+                    shadowColor="#00ff00"
                     listening
                     perfectDrawEnabled={false}
-                    shadowForStrokeEnabled={false}
                 />
             )
             break
@@ -114,12 +76,7 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
         //             strokeWidth={props.stroke.style.width}
         //             tension={1}
         //             lineCap="round"
-        //             onMouseDown={handleStrokeMovement}
-        //             onMouseMove={handleStrokeMovement}
-        //             onMouseEnter={handleStrokeMovement}
         //             draggable={props.isDraggable}
-        //             onDragStart={onDragStart}
-        //             onDragEnd={onDragEnd}
         //             draggable
         //             listening
         //         />
@@ -132,22 +89,23 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
             }
             shape = (
                 <Ellipse
+                    id={id}
                     x={points[0] + rad.x}
                     y={points[1] + rad.y}
                     radius={{ x: Math.abs(rad.x), y: Math.abs(rad.y) }}
                     stroke={style.color}
                     strokeWidth={style.width}
                     // fill={props.stroke.style.color}
-                    onMouseDown={handleStrokeMovement}
-                    onMouseMove={handleStrokeMovement}
-                    onMouseEnter={handleStrokeMovement}
-                    // onDragStart={onDragStart}
-                    onDragEnd={onDragEnd}
                     fillEnabled={false} // Remove inner hitbox from empty circles
                     draggable
+                    onDragStart={() => setDragging(true)}
+                    onDragEnd={() => setDragging(false)}
+                    shadowForStrokeEnabled={isDragging}
+                    shadowEnabled={isDragging}
+                    shadowBlur={isDragging ? 5 : 0}
+                    shadowColor="#00ff00"
                     listening
                     perfectDrawEnabled={false}
-                    shadowForStrokeEnabled={false}
                 />
             )
             break
