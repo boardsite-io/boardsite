@@ -5,7 +5,7 @@ import { VscNewFile } from "react-icons/vsc"
 import {
     handleAddPage,
     handleDeleteAllPages,
-} from "../../board/requestHandlers"
+} from "../../board/request_handlers"
 import "../../../css/menucomponents/pageoptions.css"
 
 export default function AllPagesOptions() {

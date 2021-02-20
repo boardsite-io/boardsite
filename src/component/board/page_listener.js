@@ -2,7 +2,11 @@ import React from "react"
 import { useSelector } from "react-redux"
 import { Rect } from "react-konva"
 import store from "../../redux/store"
-import { startLiveStroke, moveLiveStroke, registerLiveStroke } from "./stroke"
+import {
+    startLiveStroke,
+    moveLiveStroke,
+    registerLiveStroke,
+} from "./stroke_actions"
 import {
     CANVAS_WIDTH,
     CANVAS_HEIGHT,

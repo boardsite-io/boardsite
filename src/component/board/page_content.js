@@ -5,7 +5,7 @@ import { eraseStroke, sendStroke } from "../../api/websocket"
 import { CANVAS_FULL_HEIGHT, toolType } from "../../constants"
 import { UPDATE_STROKE, ERASE_STROKE } from "../../redux/slice/boardcontrol"
 import store from "../../redux/store"
-import { StrokeShape } from "./stroke"
+import StrokeShape from "./stroke_shapes"
 
 export default function Page({ pageId, currentPageIndex }) {
     const strokes = useSelector(
@@ -33,11 +33,7 @@ export default function Page({ pageId, currentPageIndex }) {
             return
         }
 
-        if (
-            (store.getState().drawControl.liveStroke.type === toolType.ERASER &&
-                e.evt.buttons === 1) ||
-            e.evt.buttons === 2
-        ) {
+        if (store.getState().drawControl.liveStroke.type === toolType.ERASER) {
             store.dispatch(ERASE_STROKE({ pageId, id }))
             eraseStroke({ pageId, id }) // ws
         }

@@ -4,7 +4,7 @@ import {
     handleAddPageAt,
     handleClearPage,
     handleDeletePage,
-} from "../../board/requestHandlers"
+} from "../../board/request_handlers"
 import "../../../css/menucomponents/pageoptions.css"
 
 export default function PageOptions() {

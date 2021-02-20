@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { useParams } from "react-router-dom"
-import { handleAddPage } from "../component/board/requestHandlers"
+import { handleAddPage } from "../component/board/request_handlers"
 import boardKeyListener from "../component/board/keylistener"
 import Toolbar from "../component/menu/toolbar"
 import BoardStage from "../component/board/stage"

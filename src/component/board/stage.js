@@ -11,8 +11,8 @@ import {
     ZOOM_TO,
 } from "../../redux/slice/viewcontrol"
 
-import Page from "./page"
-import PageListener from "./pagelistener"
+import PageContent from "./page_content"
+import PageListener from "./page_listener"
 
 import LiveLayer from "./livelayer"
 import {
@@ -142,7 +142,7 @@ const StageContent = memo(() => {
                             pageId={pageId}
                             currentPageIndex={pageSelector.startPage + i}
                         />
-                        <Page
+                        <PageContent
                             pageId={pageId}
                             currentPageIndex={pageSelector.startPage + i}
                         />
