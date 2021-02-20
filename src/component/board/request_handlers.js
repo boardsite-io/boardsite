@@ -13,20 +13,21 @@ import {
 
 import store from "../../redux/store"
 
-export function handleAddPage() {
-    if (isConnected()) {
-        addPageSession(-1)
-    } else {
-        store.dispatch(ADD_PAGE())
-    }
-}
-
-export function handleAddPageAt() {
+export function handleAddPageOver() {
     const pageIndex = store.getState().viewControl.currentPageIndex
     if (isConnected()) {
         addPageSession(pageIndex)
     } else {
         store.dispatch(ADD_PAGE(pageIndex))
+    }
+}
+
+export function handleAddPageUnder() {
+    const pageIndex = store.getState().viewControl.currentPageIndex
+    if (isConnected()) {
+        addPageSession(pageIndex + 1)
+    } else {
+        store.dispatch(ADD_PAGE(pageIndex + 1))
     }
 }
 

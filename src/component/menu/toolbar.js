@@ -5,20 +5,18 @@ import ToolRing from "./menucomponents/toolring"
 import SessionDialog from "./menucomponents/sessiondialog"
 import ViewZoom from "./menucomponents/viewzoom"
 import ViewOptions from "./menucomponents/viewoptions"
-import AllPagesOptions from "./menucomponents/allpagesoptions"
 import PageOptions from "./menucomponents/pageoptions"
 
 function Toolbar() {
     return (
         <div className="toolbar">
-            <div>
+            <div className="mainoptions">
                 <Settings />
                 <SessionDialog />
+                <PageOptions />
             </div>
-            <AllPagesOptions />
             <UndoRedo />
             <ToolRing />
-            <PageOptions />
             <ViewZoom />
             <ViewOptions />
         </div>
