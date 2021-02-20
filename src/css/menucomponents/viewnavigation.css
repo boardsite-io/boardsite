@@ -1,0 +1,57 @@
+.view-nav {
+    position: fixed;
+    display: grid;
+    grid-auto-flow: row;
+    background: var(--menubarBackground);
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    border-radius: var(--menubarBorderRadius);
+    overflow: hidden;
+    width: fit-content;
+    gap: 0px;
+}
+
+#icon-button-nav {
+    padding: 0px;
+    text-align: center;
+    height: 15px;
+    width: 20px;
+    border-width: 0;
+    color: var(--primary);
+    outline: none;
+    background: none;
+    margin: auto;
+}
+
+.page-num {
+    margin: auto;
+    width: fit-content;
+}
+
+.icon-button-page-index {
+    margin: auto;
+    padding-left: 2px;
+    padding-right: 2px;
+    text-align: center;
+    font-size: 100%;
+    height: fit-content;
+    width: fit-content;
+    min-width: 20px;
+    border-width: 0;
+    color: var(--primary);
+    outline: none;
+    background: none;
+    gap: 0px;
+}
+
+#icon-nav {
+    height: 100%;
+    width: 100%;
+}
+
+#icon-button-nav:hover,
+.icon-button-page-index:hover {
+    color: var(--secondary);
+    background: var(--primary);
+}

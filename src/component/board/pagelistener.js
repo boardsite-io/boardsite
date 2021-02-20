@@ -3,12 +3,14 @@ import { useSelector } from "react-redux"
 import { Rect } from "react-konva"
 import store from "../../redux/store"
 import { startLiveStroke, moveLiveStroke, registerLiveStroke } from "./stroke"
-import { CANVAS_WIDTH, CANVAS_HEIGHT, CANVAS_GAP } from "../../constants"
+import {
+    CANVAS_WIDTH,
+    CANVAS_HEIGHT,
+    CANVAS_FULL_HEIGHT,
+} from "../../constants"
 import { SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
 
-export default function PageListener({ pageId }) {
-    // console.log("PageListener Redraw")
-
+export default function PageListener({ pageId, currentPageIndex }) {
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
 
     function getScaledPointerPosition(e) {
@@ -60,7 +62,7 @@ export default function PageListener({ pageId }) {
         moveLiveStroke(pos)
 
         // register finished stroke
-        registerLiveStroke(pageId)
+        registerLiveStroke(pageId, currentPageIndex)
     }
 
     return (
@@ -68,13 +70,10 @@ export default function PageListener({ pageId }) {
             height={CANVAS_HEIGHT}
             width={CANVAS_WIDTH}
             x={0}
-            y={
-                (CANVAS_HEIGHT + CANVAS_GAP) *
-                store.getState().boardControl.present.pageRank.indexOf(pageId)
-            }
+            y={CANVAS_FULL_HEIGHT * currentPageIndex}
             stroke="#000"
             strokeWidth={0.2}
-            fill="#eee"
+            fill="#ffffff"
             shadowColor="#000000"
             shadowBlur={10}
             shadowOffset={{ x: 0, y: 0 }}

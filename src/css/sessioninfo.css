@@ -1,0 +1,43 @@
+.session-info {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: small;
+    width: max-content;
+    height: max-content;
+    position: fixed;
+    left: 5px;
+    top: 50px;
+    overflow: hidden;
+    border-radius: var(--menubarBorderRadius);
+    max-height: 200px;
+    pointer-events: none;
+    display: grid;
+    grid-auto-flow: row;
+    gap: 0px;
+}
+
+.user-info {
+    max-width: 300px;
+    background: #00000066;
+    width: fit-content;
+    height: 18px;
+    display: grid;
+    grid-auto-flow: column;
+    gap: 5px;
+    border-radius: 100px;
+    padding-left: 1.5px;
+    padding-right: 6px;
+}
+
+.user-color {
+    background: #00000088;
+    width: 15px;
+    height: 15px;
+    border-radius: 100px;
+    margin: auto;
+}
+
+.user-alias {
+    color: white;
+    width: fit-content;
+    margin: auto;
+}

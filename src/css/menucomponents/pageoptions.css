@@ -1,0 +1,6 @@
+.pageoptions-wrap {
+    display: grid;
+    height: var(--buttonHeight);
+    grid-auto-flow: column;
+    gap: var(--buttonGap);
+}

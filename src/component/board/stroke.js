@@ -11,8 +11,9 @@ import {
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
 } from "../../redux/slice/drawcontrol"
-import { toolType } from "../../constants"
+import { sendStroke, eraseStroke } from "../../api/websocket"
 
+import { toolType, CANVAS_FULL_HEIGHT } from "../../constants"
 /**
  * Super component implementing all stroke types and their visualization in the canvas
  * In order for memo to work correctly, we have to pass the stroke props by value
@@ -21,28 +22,29 @@ import { toolType } from "../../constants"
  * @param {{stroke: {}}} props
  */
 export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
-    // console.log("StrokeShape Memo Redraw")
-
-    function onDragStart() {
-        if (store.getState().drawControl.liveStroke.type === toolType.ERASER) {
-            store.dispatch(ERASE_STROKE({ pageId, id }))
-        }
-    }
+    // function onDragStart() {
+    //     if (store.getState().drawControl.liveStroke.type === toolType.ERASER) {
+    //         store.dispatch(ERASE_STROKE({ pageId, id }))
+    //     }
+    // }
 
     function onDragEnd(e) {
         if (store.getState().drawControl.liveStroke.type !== toolType.ERASER) {
-            store.dispatch(
-                UPDATE_STROKE({
-                    x: e.target.attrs.x,
-                    y: e.target.attrs.y,
-                    id,
-                    pageId,
-                })
-            )
+            const s = {
+                x: e.target.attrs.x,
+                y: e.target.attrs.y,
+                id,
+                type,
+                pageId,
+                style,
+                points,
+            }
+            store.dispatch(UPDATE_STROKE(s))
+            sendStroke(s) // ws
         }
     }
 
-    function handleStrokeMouseEnter(e) {
+    function handleStrokeMovement(e) {
         // prevent to act on live stroke
         if (id === undefined) {
             return
@@ -54,6 +56,7 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
             e.evt.buttons === 2
         ) {
             store.dispatch(ERASE_STROKE({ pageId, id }))
+            eraseStroke({ pageId, id }) // ws
         }
     }
 
@@ -67,11 +70,17 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
                     strokeWidth={style.width}
                     tension={0.5}
                     lineCap="round"
-                    onMouseEnter={handleStrokeMouseEnter}
-                    onDragStart={onDragStart}
+                    onMouseDown={handleStrokeMovement}
+                    onMouseMove={handleStrokeMovement}
+                    onMouseEnter={handleStrokeMovement}
+                    // onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
                     x={x}
                     y={y}
+                    draggable
+                    listening
+                    perfectDrawEnabled={false}
+                    shadowForStrokeEnabled={false}
                 />
             )
             break
@@ -83,11 +92,17 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
                     strokeWidth={style.width}
                     tension={1}
                     lineCap="round"
-                    onMouseEnter={handleStrokeMouseEnter}
-                    onDragStart={onDragStart}
+                    onMouseDown={handleStrokeMovement}
+                    onMouseMove={handleStrokeMovement}
+                    onMouseEnter={handleStrokeMovement}
+                    // onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
                     x={x}
                     y={y}
+                    draggable
+                    listening
+                    perfectDrawEnabled={false}
+                    shadowForStrokeEnabled={false}
                 />
             )
             break
@@ -99,12 +114,14 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
         //             strokeWidth={props.stroke.style.width}
         //             tension={1}
         //             lineCap="round"
-        //             onMouseEnter={(e) =>
-        //                 handleStrokeMouseEnter(e, props.stroke)
-        //             }
+        //             onMouseDown={handleStrokeMovement}
+        //             onMouseMove={handleStrokeMovement}
+        //             onMouseEnter={handleStrokeMovement}
         //             draggable={props.isDraggable}
         //             onDragStart={onDragStart}
         //             onDragEnd={onDragEnd}
+        //             draggable
+        //             listening
         //         />
         //     )
         //     break
@@ -121,10 +138,16 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
                     stroke={style.color}
                     strokeWidth={style.width}
                     // fill={props.stroke.style.color}
-                    onMouseEnter={handleStrokeMouseEnter}
-                    onDragStart={onDragStart}
+                    onMouseDown={handleStrokeMovement}
+                    onMouseMove={handleStrokeMovement}
+                    onMouseEnter={handleStrokeMovement}
+                    // onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
                     fillEnabled={false} // Remove inner hitbox from empty circles
+                    draggable
+                    listening
+                    perfectDrawEnabled={false}
+                    shadowForStrokeEnabled={false}
                 />
             )
             break
@@ -155,7 +178,7 @@ export function moveLiveStroke(position) {
 /**
  * Generate API serialized stroke object, draw & save it to redux store
  */
-export async function registerLiveStroke(pageId) {
+export async function registerLiveStroke(pageId, currentPageIndex) {
     const { liveStroke } = store.getState().drawControl
     // empty livestrokes e.g. rightmouse eraser
     if (liveStroke.points === undefined) {
@@ -165,11 +188,13 @@ export async function registerLiveStroke(pageId) {
         return
     }
 
-    const stroke = createStroke(liveStroke, pageId)
+    const stroke = createStroke(liveStroke, pageId, currentPageIndex)
     // add stroke to collection
     store.dispatch(ADD_STROKE(stroke))
     // clear livestroke
     store.dispatch(END_LIVESTROKE())
+    // relay stroke in session
+    sendStroke(stroke)
 }
 
 /**
@@ -189,7 +214,7 @@ function getStartEndPoints(points) {
  * Creates a new stroke with unique ID and processes the points
  * @param {*} liveStroke
  */
-function createStroke(liveStroke, pageId) {
+function createStroke(liveStroke, pageId, currentPageIndex) {
     const stroke = { ...liveStroke }
     stroke.points = stroke.points.flat()
 
@@ -198,10 +223,8 @@ function createStroke(liveStroke, pageId) {
 
     // generate a unique stroke id
     stroke.id =
-        Math.random()
-            .toString(36)
-            .replace(/[^a-z]+/g, "")
-            .substr(0, 4) + Date.now().toString(36).substr(4)
+        Date.now().toString(36).substr(2) +
+        Math.random().toString(36).substr(2, 10)
 
     // for some types we only need a few points
     switch (liveStroke.type) {
@@ -219,6 +242,11 @@ function createStroke(liveStroke, pageId) {
 
     // allow a reasonable precision
     stroke.points = stroke.points.map((p) => Math.round(p * 10) / 10)
+
+    // make y coordinates relative to page
+    for (let i = 1; i < stroke.points.length; i += 2) {
+        stroke.points[i] -= currentPageIndex * CANVAS_FULL_HEIGHT // relative y position
+    }
 
     return stroke
 }

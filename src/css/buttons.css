@@ -1,54 +1,28 @@
-#buttonDialog {
+#icon-button,
+#icon-button-active {
+    padding: 3px;
+    text-align: center;
+    border-radius: var(--buttonBorderRadius);
+    height: var(--buttonHeight);
+    width: var(--buttonWidth);
+    outline: none;
+    border-width: 0;
+    background: none;
+    /* box-shadow: var(--buttonShadow); */
+}
+
+#icon-button {
     color: var(--primary);
-    background-color: var(--secondary);
 }
-
-#buttonDialog:hover {
-    color: var(--secondary);
-    background-color: var(--primary);
-}
-
-#textField {
-    color: var(--primary);
-}
-
-#iconButtonInner {
-    color: var(--primary);
-}
-
-#iconButton {
-    background-color: var(--secondary);
-    width: 30px;
-    height: 30px;
-    border-radius: 4px;
-    /* box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); */
-    box-shadow: var(--buttonShadow);
-}
-#iconButton:hover #iconButtonInner {
+#icon-button:hover {
     color: var(--secondary);
 }
-#iconButton:hover {
-    background-color: var(--primary);
-    box-shadow: 0px 0px 10px var(--primary);
-}
-#iconButton:active {
-    box-shadow: 0px 0px 20px var(--primary);
+
+#icon-button-active {
+    color: var(--activeToolColor);
 }
 
-#tooltip {
-    font-family: monospace;
-}
-
-#iconButtonActive {
-    color: var(--primary);
-    background-color: var(--primary);
-    width: 30px;
-    height: 30px;
-    border-radius: 4px;
-    background-color: var(--primary);
-    box-shadow: 0px 0px 10px var(--primary);
-}
-
-#iconButtonActiveInner {
-    color: var(--secondary);
+#icon {
+    height: 100%;
+    width: 100%;
 }

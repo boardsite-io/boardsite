@@ -1,18 +1,19 @@
 :root {
-    --primary: #00d2be;
-    --secondary: #141b1ace;
-    --barBackgroundImage: linear-gradient(
-        90deg,
-        #d3d3d388,
-        #cacaca88
-    ); /* bar background */
-    --barBoxShadow: 0px 0px 0px 2px var(--primary);
+    --primary: #ffffff;
+    --secondary: #1a1a1a;
+    --activeToolColor: #00ff00;
+    --menubarBackground: #00000088;
+    --menubarBoxShadow: 0px 0px 2px 0px #00000088;
+    --menubarBorderRadius: 4px;
     --backgroundColor: #000000;
-    --backgroundImage: linear-gradient(#504444, #464040);
+    --backgroundImage: linear-gradient(#888888, #696969);
     --pagesBackground: #88888888;
+    --buttonHeight: 30px;
+    --buttonWidth: 30px;
+    --buttonGap: 0px;
     --buttonShadow: 0px 0px 3px #00000088;
+    --buttonBorderRadius: 4px;
     --boxShadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    --toolRing: #88888888;
     --canvasBackgroundColor: #ffffff;
     --canvasBackgroundPosition: -10px -10px;
     --canvasBackgroundSize: 20px 20px;

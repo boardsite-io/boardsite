@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, nanoid } from "@reduxjs/toolkit"
 import undoable from "redux-undo"
 
 const boardControlSlice = createSlice({
@@ -6,17 +6,41 @@ const boardControlSlice = createSlice({
     initialState: {
         pageRank: [], // ["id1", "id2", ...]
         pageCollection: {}, // {id1: canvasRef1, id2: canvasRef2, ...}
-        sessionID: "",
-        websocket: null,
     },
     reducers: {
+        SYNC_ALL_PAGES: (state, action) => {
+            const { pageRank, pageCollection } = action.payload
+            state.pageRank = pageRank
+            state.pageCollection = pageCollection
+        },
+
+        SET_PAGERANK: (state, action) => {
+            const newPageRank = action.payload
+            const newPageCollection = {}
+            newPageRank.forEach((pid) => {
+                if (
+                    Object.prototype.hasOwnProperty.call(
+                        state.pageCollection,
+                        pid
+                    )
+                ) {
+                    newPageCollection[pid] = state.pageCollection[pid]
+                } else {
+                    newPageCollection[pid] = { strokes: {} }
+                }
+            })
+
+            state.pageCollection = newPageCollection
+            state.pageRank = newPageRank
+        },
+
         // Add a new page
         ADD_PAGE: (state, action) => {
-            const { pageId, pageIndex } = action.payload
+            const pageIndex = action.payload
+            const pageId = nanoid(8)
             state.pageCollection[pageId] = {
                 strokes: {},
             }
-
             if (pageIndex >= 0) {
                 state.pageRank.splice(pageIndex, 0, pageId)
             } else {
@@ -26,30 +50,26 @@ const boardControlSlice = createSlice({
 
         // Clear page
         CLEAR_PAGE: (state, action) => {
-            // delete page data
             const pageId = action.payload
-            state.pageCollection[pageId].strokes = {}
+            // if pageindex is OOB -> pageid is undefined
+            if (pageId !== undefined) {
+                state.pageCollection[pageId].strokes = {}
+            }
         },
 
         // Delete page
         DELETE_PAGE: (state, action) => {
-            // delete page data
             const pageId = action.payload
-            delete state.pageCollection[pageId]
-
-            // delete page
-            const pageIndex = state.pageRank.indexOf(pageId)
-            state.pageRank.splice(pageIndex, 1)
+            if (pageId !== undefined) {
+                delete state.pageCollection[pageId]
+                state.pageRank.splice(state.pageRank.indexOf(pageId), 1)
+            }
         },
 
         // Delete all pages
-        DELETE_ALL_PAGES: (state, action) => {
-            const { pageId } = action.payload
-            state.pageRank = [pageId]
+        DELETE_ALL_PAGES: (state) => {
+            state.pageRank = []
             state.pageCollection = {}
-            state.pageCollection[pageId] = {
-                strokes: {},
-            }
         },
 
         // Add stroke to collection
@@ -57,6 +77,16 @@ const boardControlSlice = createSlice({
             const stroke = action.payload
             const { pageId, id } = stroke
             state.pageCollection[pageId].strokes[id] = stroke
+        },
+
+        // Add multiple strokes to collection
+        ADD_MULTIPLE_STROKES: (state, action) => {
+            const strokes = action.payload
+            strokes.sort((a, b) => a.id > b.id)
+            strokes.forEach((stroke) => {
+                const { pageId, id } = stroke
+                state.pageCollection[pageId].strokes[id] = stroke
+            })
         },
 
         // Erase stroke from collection
@@ -77,11 +107,14 @@ const boardControlSlice = createSlice({
 })
 
 export const {
+    SYNC_ALL_PAGES,
+    SET_PAGERANK,
     ADD_PAGE,
     CLEAR_PAGE,
     DELETE_PAGE,
     DELETE_ALL_PAGES,
     ADD_STROKE,
+    ADD_MULTIPLE_STROKES,
     ERASE_STROKE,
     UPDATE_STROKE,
 } = boardControlSlice.actions

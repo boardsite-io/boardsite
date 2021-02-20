@@ -1,94 +1,72 @@
-// retrieve api host from environment
-const hostname = process.env.REACT_APP_B_API_HOSTNAME
-const port = process.env.REACT_APP_B_API_PORT
-const ssl = process.env.REACT_APP_B_SSL === "1" ? "s" : ""
+import axios from "axios"
+import { API_URL } from "../constants"
 
-const baseURL = `http${ssl}://${hostname}:${port}`
+const apiRequest = axios.create({
+    baseURL: API_URL,
+    transformRequest: [(data) => JSON.stringify(data)],
+    transformResponse: [
+        (data) => {
+            try {
+                return JSON.parse(data)
+            } catch {
+                return {}
+            }
+        },
+    ],
+    headers: {
+        // prettier-ignore
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+    },
+    timeout: 3000,
+})
 
 /**
  * Send data request to API.
- * @param {string} url
- * @param {*} data
- * @param {string} method
  */
-export function sendRequest(url, method, data = {}) {
-    return new Promise((resolve, reject) => {
-        fetch(`${baseURL}${url}`, {
-            method,
-            body: JSON.stringify(data),
-        })
-            .then((response) =>
-                response
-                    .json()
-                    .then((responseData) => {
-                        if (!response.ok) {
-                            // in case of error, api returns obj with 'error' key
-                            reject(new Error())
-                        } else {
-                            resolve(responseData) // successful fetch
-                        }
-                    })
-                    .catch(() => resolve({}))
-            )
-            .catch(() => reject())
-    })
+export async function sendRequest(url, method, data = {}) {
+    const response = await apiRequest({ url, method, data })
+    return response.data
 }
 
 /**
- * Connect to Websocket.
- * @param {string} sessionID
- * @param {function} onMsgHandle
- * @param {function} onConnectHandle
- * @param {function} onCloseHandle
+ * @returns {{sessionId: string}}
  */
-export function createWebsocket(
-    sessionID,
-    onMsgHandle,
-    onConnectHandle,
-    onCloseHandle
-) {
-    return new Promise((resolve, reject) => {
-        const socket = new WebSocket(
-            `${baseURL.replace("http", "ws")}/board/${sessionID}`
-        )
-        socket.onmessage = onMsgHandle
-        socket.onopen = onConnectHandle
-        socket.onclose = onCloseHandle
+export async function createSession() {
+    return sendRequest("/b/create", "post")
+}
 
-        // check after 1 second if connection is ok
-        setTimeout(() => {
-            if (socket.readyState !== socket.OPEN) {
-                reject(new Error("cannot connect to websocket"))
-            } else {
-                resolve(socket)
-            }
-        }, 1000)
+export async function createUser(sessionId, { alias, color }) {
+    return sendRequest(`/b/${sessionId}/users`, "post", {
+        alias,
+        color,
     })
 }
+
 /**
  *
- * @param {{x: number, y: number}} boardDim
+ * @param {*} sessionId
+ * @returns {pageRank: []}
  */
-export function createBoardRequest(boardDim) {
-    return sendRequest("/board/create", "POST", boardDim)
+export async function getPages(sessionId) {
+    return sendRequest(`/b/${sessionId}/pages`, "get")
 }
 
-/**
- * Clears the board.
- * @param {string} sessionID
- */
-export function clearBoard(sessionID) {
-    return sendRequest(`/board/${sessionID}`, "PUT", { action: "clear" })
+export async function getStrokes(sessionId, pageId) {
+    return sendRequest(`/b/${sessionId}/pages/${pageId}`, "get")
 }
 
-export function getPages(sessionID) {
-    return sendRequest(`board/${sessionID}/page`, "GET")
+export async function addPage(sessionId, pageId, index) {
+    return sendRequest(`/b/${sessionId}/pages`, "post", {
+        pageId,
+        index,
+    })
 }
 
-export function addPage(sessionID) {
-    return sendRequest(`board/${sessionID}/page`, "POST")
+export async function clearPage(sessionId, pageId) {
+    return sendRequest(`/b/${sessionId}/pages/${pageId}`, "put", {})
 }
 
-export function deletePage(sessionID, pageID) {
-    return sendRequest(`board/${sessionID}/page/${pageID}`, "DELETE")
+export async function deletePage(sessionId, pageId) {
+    return sendRequest(`/b/${sessionId}/pages/${pageId}`, "delete")
 }

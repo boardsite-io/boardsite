@@ -1,30 +1,13 @@
-.wrap {
-    width: 100vw;
-    height: 100vh;
+.whiteboard {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
-}
-
-.stage {
-    background-color: var(--pagesBackground);
-    /* background-color: var(--canvasBackgroundColor); */
-    /* background-size: var(--canvasBackgroundSize);
-    background-image: var(--canvasBackgroundImage); */
-    /* background-position: var(--canvasBackgroundPosition); */
-    /* height: 100vh;
-    width: 100vw; */
-    touch-action: none;
+    background: var(--backgroundColor);
+    background-image: var(--backgroundImage);
     -webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */
     -webkit-user-select: none; /* prevent copy paste, to allow, change 'none' to 'text' */
-    cursor: crosshair;
 }
-
-/* .pagesettings {
-    position: relative;
-    top: 0px;
-    left: 0px;
-    margin-top: 10px;
-    display: flex;
-    flex-flow: column;
-    gap: 10px;
-} */
