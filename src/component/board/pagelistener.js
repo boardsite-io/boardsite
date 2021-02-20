@@ -65,8 +65,14 @@ export default function PageListener({ pageId, currentPageIndex }) {
         registerLiveStroke(pageId, currentPageIndex)
     }
 
+    const isDraggable = useSelector((state) => state.drawControl.isDraggable)
+    const isListening = useSelector((state) => state.drawControl.isListening)
+    const isPanMode = useSelector((state) => state.drawControl.isPanMode)
+
     return (
         <Rect
+            draggable={isDraggable}
+            listening={!isPanMode && !isListening}
             height={CANVAS_HEIGHT}
             width={CANVAS_WIDTH}
             x={0}

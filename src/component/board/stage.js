@@ -133,32 +133,22 @@ const StageContent = memo(() => {
     )
 
     const pageSelector = useSelector(pageCreateSelector)
-    const isDraggable = useSelector((state) => state.drawControl.isDraggable)
-    const isListening = useSelector((state) => state.drawControl.isListening)
-    const isPanMode = useSelector((state) => state.drawControl.isPanMode)
-
     return (
         <>
-            <Layer
-                draggable={isDraggable}
-                listening={!isPanMode && !isListening}>
+            <Layer>
                 {pageSelector.pageSlice.map((pageId, i) => (
-                    <PageListener
-                        key={pageId}
-                        pageId={pageId}
-                        currentPageIndex={pageSelector.startPage + i}
-                    />
-                ))}
-            </Layer>
-            <Layer
-                draggable={isDraggable}
-                listening={!isPanMode && isListening}>
-                {pageSelector.pageSlice.map((pageId, i) => (
-                    <Page
-                        key={pageId}
-                        pageId={pageId}
-                        currentPageIndex={pageSelector.startPage + i}
-                    />
+                    <>
+                        <PageListener
+                            key={pageId}
+                            pageId={pageId}
+                            currentPageIndex={pageSelector.startPage + i}
+                        />
+                        <Page
+                            key={pageId}
+                            pageId={pageId}
+                            currentPageIndex={pageSelector.startPage + i}
+                        />
+                    </>
                 ))}
             </Layer>
             <Layer draggable={false} listening={false}>
