@@ -9,6 +9,8 @@ import {
     SET_STAGE_Y,
     SCROLL_STAGE_Y,
     ZOOM_TO,
+    MULTI_TOUCH_MOVE,
+    MULTI_TOUCH_END,
 } from "../../redux/slice/viewcontrol"
 
 import PageContent from "./page_content"
@@ -86,6 +88,28 @@ export default function BoardStage() {
         return pos
     }
 
+    const handleTouchMove = (e) => {
+        e.evt.preventDefault()
+        const touch1 = e.evt.touches[0]
+        const touch2 = e.evt.touches[1]
+
+        if (touch1 && touch2) {
+            const p1 = {
+                x: touch1.clientX,
+                y: touch1.clientY,
+            }
+            const p2 = {
+                x: touch2.clientX,
+                y: touch2.clientY,
+            }
+            store.dispatch(MULTI_TOUCH_MOVE({ p1, p2 }))
+        }
+    }
+
+    const handleTouchEnd = () => {
+        store.dispatch(MULTI_TOUCH_END())
+    }
+
     return (
         <div className="wrap">
             <ReactReduxContext.Consumer>
@@ -106,6 +130,8 @@ export default function BoardStage() {
                         // onDragMove={onDragMove}
                         onDragEnd={onDragEnd}
                         onContextMenu={(e) => e.evt.preventDefault()}
+                        onTouchMove={handleTouchMove}
+                        onTouchEnd={handleTouchEnd}
                         onWheel={onWheel}>
                         <ReactReduxContext.Provider value={value}>
                             <StageContent value={value} />

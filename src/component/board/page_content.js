@@ -7,7 +7,7 @@ import { UPDATE_STROKE, ERASE_STROKE } from "../../redux/slice/boardcontrol"
 import store from "../../redux/store"
 import StrokeShape from "./stroke_shapes"
 
-export default function Page({ pageId, currentPageIndex }) {
+export default function PageContent({ pageId, currentPageIndex }) {
     const strokes = useSelector(
         (state) => state.boardControl.present.pageCollection[pageId].strokes
     )
