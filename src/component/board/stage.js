@@ -128,11 +128,11 @@ const StageContent = memo(() => {
             const startPage = Math.max(minPage, 0) // Set start page index to candidate or to 0 if negative index
             const endPage = Math.min(maxPage + 1, pageRank.length) // Set end page index; +1 because of slice indexing
             const pageSlice = pageRank.slice(startPage, endPage)
-            return { pageSlice, startPage } // todo: draw at correct position
+            return pageSlice // todo: draw at correct position
         }
     )
 
-    const pageSelector = useSelector(pageCreateSelector)
+    const pageSlice = useSelector(pageCreateSelector)
     const isDraggable = useSelector((state) => state.drawControl.isDraggable)
     const isListening = useSelector((state) => state.drawControl.isListening)
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
@@ -142,23 +142,15 @@ const StageContent = memo(() => {
             <Layer
                 draggable={isDraggable}
                 listening={!isPanMode && !isListening}>
-                {pageSelector.pageSlice.map((pageId, i) => (
-                    <PageListener
-                        key={pageId}
-                        pageId={pageId}
-                        currentPageIndex={pageSelector.startPage + i}
-                    />
+                {pageSlice.map((pageId) => (
+                    <PageListener key={pageId} pageId={pageId} />
                 ))}
             </Layer>
             <Layer
                 draggable={isDraggable}
                 listening={!isPanMode && isListening}>
-                {pageSelector.pageSlice.map((pageId, i) => (
-                    <Page
-                        key={pageId}
-                        pageId={pageId}
-                        currentPageIndex={pageSelector.startPage + i}
-                    />
+                {pageSlice.map((pageId) => (
+                    <Page key={pageId} pageId={pageId} />
                 ))}
             </Layer>
             <Layer draggable={false} listening={false}>

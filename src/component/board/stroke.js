@@ -178,17 +178,17 @@ export function moveLiveStroke(position) {
 /**
  * Generate API serialized stroke object, draw & save it to redux store
  */
-export async function registerLiveStroke(pageId, currentPageIndex) {
+export async function registerLiveStroke(pageId) {
     const { liveStroke } = store.getState().drawControl
     // empty livestrokes e.g. rightmouse eraser
-    if (liveStroke.points === undefined) {
+    if (liveStroke.points.length === 0) {
         return
     }
     if (liveStroke.type === toolType.ERASER) {
         return
     }
 
-    const stroke = createStroke(liveStroke, pageId, currentPageIndex)
+    const stroke = createStroke(liveStroke, pageId)
     // add stroke to collection
     store.dispatch(ADD_STROKE(stroke))
     // clear livestroke
@@ -214,7 +214,7 @@ function getStartEndPoints(points) {
  * Creates a new stroke with unique ID and processes the points
  * @param {*} liveStroke
  */
-function createStroke(liveStroke, pageId, currentPageIndex) {
+function createStroke(liveStroke, pageId) {
     const stroke = { ...liveStroke }
     stroke.points = stroke.points.flat()
 
@@ -240,13 +240,20 @@ function createStroke(liveStroke, pageId, currentPageIndex) {
         default:
     }
 
-    // allow a reasonable precision
-    stroke.points = stroke.points.map((p) => Math.round(p * 10) / 10)
-
-    // make y coordinates relative to page
-    for (let i = 1; i < stroke.points.length; i += 2) {
-        stroke.points[i] -= currentPageIndex * CANVAS_FULL_HEIGHT // relative y position
-    }
+    const currentPageIndex = getPageIndex(pageId)
+    stroke.points = stroke.points.map((p, i) => {
+        // allow a reasonable precision
+        let pt = Math.round(p * 10) / 10
+        if (i % 2) {
+            // make y coordinates relative to page
+            pt -= currentPageIndex * CANVAS_FULL_HEIGHT // relative y position
+        }
+        return pt
+    })
 
     return stroke
+}
+
+export function getPageIndex(pageId) {
+    return store.getState().boardControl.present.pageRank.indexOf(pageId)
 }
