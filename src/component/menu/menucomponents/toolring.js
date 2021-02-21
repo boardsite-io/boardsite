@@ -19,81 +19,79 @@ export default function ToolRing() {
 
     return (
         <>
-            <div className="toolring">
-                <div className="session-dialog-div">
-                    {typeSelector === toolType.PEN ? (
-                        <button
-                            type="button"
-                            style={{ color: colorSelector }}
-                            id="icon-button-active"
-                            onClick={() => setOpen(true)}>
-                            <BsPencil id="icon" />
-                        </button>
-                    ) : (
-                        <button
-                            type="button"
-                            id="icon-button"
-                            onClick={() => {
-                                store.dispatch(SET_TYPE(toolType.PEN))
-                            }}>
-                            <BsPencil id="icon" />
-                        </button>
-                    )}
-                    {
-                        // Palette Popup
-                        open ? (
-                            <div className="popup">
-                                <div
-                                    role="button"
-                                    tabIndex="0"
-                                    className="cover"
-                                    onClick={() => setOpen(false)}
-                                    onKeyPress={() => {}}
-                                />
-                                <StylePicker />
-                            </div>
-                        ) : null
-                    }
-                </div>
-                {typeSelector === toolType.ERASER ? (
+            <div className="session-dialog-div">
+                {typeSelector === toolType.PEN ? (
                     <button
-                        style={{ color: colorSelector }}
                         type="button"
+                        style={{ color: colorSelector }}
                         id="icon-button-active"
-                        onClick={() => {
-                            store.dispatch(SET_TYPE(toolType.ERASER))
-                        }}>
-                        <CgErase id="icon" />
+                        onClick={() => setOpen(true)}>
+                        <BsPencil id="icon" />
                     </button>
                 ) : (
                     <button
                         type="button"
                         id="icon-button"
                         onClick={() => {
-                            store.dispatch(SET_TYPE(toolType.ERASER))
+                            store.dispatch(SET_TYPE(toolType.PEN))
                         }}>
-                        <CgErase id="icon" />
+                        <BsPencil id="icon" />
                     </button>
                 )}
-                <button
-                    style={
-                        typeSelector === toolType.DRAG
-                            ? { color: colorSelector }
-                            : null
-                    }
-                    type="button"
-                    id={
-                        typeSelector === toolType.DRAG
-                            ? "icon-button-active"
-                            : "icon-button"
-                    }
-                    onClick={() => {
-                        store.dispatch(SET_TYPE(toolType.DRAG))
-                    }}>
-                    <CgController id="icon" />
-                </button>
-                <ShapeTools />
+                {
+                    // Palette Popup
+                    open ? (
+                        <div className="popup">
+                            <div
+                                role="button"
+                                tabIndex="0"
+                                className="cover"
+                                onClick={() => setOpen(false)}
+                                onKeyPress={() => {}}
+                            />
+                            <StylePicker />
+                        </div>
+                    ) : null
+                }
             </div>
+            {typeSelector === toolType.ERASER ? (
+                <button
+                    style={{ color: colorSelector }}
+                    type="button"
+                    id="icon-button-active"
+                    onClick={() => {
+                        store.dispatch(SET_TYPE(toolType.ERASER))
+                    }}>
+                    <CgErase id="icon" />
+                </button>
+            ) : (
+                <button
+                    type="button"
+                    id="icon-button"
+                    onClick={() => {
+                        store.dispatch(SET_TYPE(toolType.ERASER))
+                    }}>
+                    <CgErase id="icon" />
+                </button>
+            )}
+            <button
+                style={
+                    typeSelector === toolType.DRAG
+                        ? { color: colorSelector }
+                        : null
+                }
+                type="button"
+                id={
+                    typeSelector === toolType.DRAG
+                        ? "icon-button-active"
+                        : "icon-button"
+                }
+                onClick={() => {
+                    store.dispatch(SET_TYPE(toolType.DRAG))
+                }}>
+                <CgController id="icon" />
+            </button>
+            <ShapeTools />
         </>
     )
 }

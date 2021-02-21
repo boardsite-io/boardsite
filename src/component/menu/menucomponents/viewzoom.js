@@ -5,11 +5,10 @@ import {
     ZOOM_OUT_CENTER,
 } from "../../../redux/slice/viewcontrol"
 import store from "../../../redux/store"
-import "../../../css/menucomponents/viewzoom.css"
 
 export default function ViewZoom() {
     return (
-        <div className="viewzoom-wrap">
+        <>
             <button
                 type="button"
                 id="icon-button"
@@ -22,6 +21,6 @@ export default function ViewZoom() {
                 onClick={() => store.dispatch(ZOOM_OUT_CENTER())}>
                 <MdZoomOut id="icon" />
             </button>
-        </div>
+        </>
     )
 }

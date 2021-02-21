@@ -15,6 +15,12 @@
     box-shadow: var(--menubarBoxShadow);
 }
 
+.toolbar-group {
+    display: grid;
+    grid-auto-flow: column;
+    gap: var(--buttonGap);
+}
+
 .extratools {
     background: var(--menubarBackground);
     display: grid;
@@ -26,24 +32,6 @@
     top: 40px;
     left: 160px;
     box-shadow: var(--menubarBoxShadow);
-}
-
-.toolring {
-    background: var(--toolRing);
-    display: grid;
-    grid-auto-flow: column;
-    margin-left: 20px;
-    margin-right: 20px;
-    gap: var(--buttonGap);
-    border-radius: var(--menubarBorderRadius);
-    width: fit-content;
-    height: var(--buttonHeight);
-}
-
-.mainoptions {
-    display: grid;
-    grid-auto-flow: column;
-    gap: var(--buttonGap);
 }
 
 .shapetools {

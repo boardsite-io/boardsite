@@ -42,6 +42,7 @@ export default function PageContent({ pageId, currentPageIndex }) {
     const isDraggable = useSelector((state) => state.drawControl.isDraggable)
     const isListening = useSelector((state) => state.drawControl.isListening)
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
+    console.log(isDraggable, isListening, isPanMode)
 
     return (
         <Group
