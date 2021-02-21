@@ -28,8 +28,8 @@ export default function PageContent({ pageId, currentPageIndex }) {
 
     function handleStrokeMovement(e) {
         const { id } = e.target.attrs
-        // prevent to act on live stroke
-        if (id === undefined) {
+        // prevent to act on live stroke and hovering without clicking
+        if (id === undefined || e.evt.buttons === 0) {
             return
         }
 
@@ -42,7 +42,6 @@ export default function PageContent({ pageId, currentPageIndex }) {
     const isDraggable = useSelector((state) => state.drawControl.isDraggable)
     const isListening = useSelector((state) => state.drawControl.isListening)
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
-    console.log(isDraggable, isListening, isPanMode)
 
     return (
         <Group
@@ -52,6 +51,8 @@ export default function PageContent({ pageId, currentPageIndex }) {
             onMouseDown={handleStrokeMovement}
             onMouseMove={handleStrokeMovement}
             onMouseEnter={handleStrokeMovement}
+            onTouchStart={handleStrokeMovement}
+            onTouchMove={handleStrokeMovement}
             listening={!isPanMode && isListening}
             y={currentPageIndex * CANVAS_FULL_HEIGHT}>
             {Object.keys(strokes).map((id) => (
