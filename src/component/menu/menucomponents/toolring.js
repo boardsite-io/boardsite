@@ -5,7 +5,7 @@ import { BsPencil } from "react-icons/bs"
 import store from "../../../redux/store"
 import { SET_TYPE } from "../../../redux/slice/drawcontrol"
 import { toolType } from "../../../constants"
-import StylePicker from "../stylepicker"
+import StylePicker from "./stylepicker"
 import ShapeTools from "./shapetools"
 
 export default function ToolRing() {

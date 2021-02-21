@@ -1,6 +1,6 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import "../../css/sessioninfo.css"
+import "../../../css/sessioninfo.css"
 
 export default function SessionInfo() {
     const userInfo = useSelector((state) => state.webControl.connectedUsers)
