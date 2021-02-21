@@ -32,6 +32,7 @@ export const toolType = {
     TRIANGLE: 3,
     CIRCLE: 4,
     DRAG: 5,
+    RECTANGLE: 6,
 }
 export const DEFAULT_TOOL = toolType.PEN
 export const MIN_SAMPLE_COUNT = 5

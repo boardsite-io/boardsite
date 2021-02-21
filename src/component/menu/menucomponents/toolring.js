@@ -1,17 +1,12 @@
 import React, { useState } from "react"
 import { useSelector } from "react-redux"
-import { MdRemove } from "react-icons/md"
-import {
-    CgErase,
-    CgShapeCircle,
-    CgShapeTriangle,
-    CgController,
-} from "react-icons/cg"
+import { CgErase, CgController } from "react-icons/cg"
 import { BsPencil } from "react-icons/bs"
 import store from "../../../redux/store"
 import { SET_TYPE } from "../../../redux/slice/drawcontrol"
 import { toolType } from "../../../constants"
 import StylePicker from "../stylepicker"
+import ShapeTools from "./shapetools"
 
 export default function ToolRing() {
     const [open, setOpen] = useState(false)
@@ -97,57 +92,7 @@ export default function ToolRing() {
                     }}>
                     <CgController id="icon" />
                 </button>
-                <button
-                    style={
-                        typeSelector === toolType.LINE
-                            ? { color: colorSelector }
-                            : null
-                    }
-                    type="button"
-                    id={
-                        typeSelector === toolType.LINE
-                            ? "icon-button-active"
-                            : "icon-button"
-                    }
-                    onClick={() => {
-                        store.dispatch(SET_TYPE(toolType.LINE))
-                    }}>
-                    <MdRemove id="icon" />
-                </button>
-                <button
-                    style={
-                        typeSelector === toolType.TRIANGLE
-                            ? { color: colorSelector }
-                            : null
-                    }
-                    type="button"
-                    id={
-                        typeSelector === toolType.TRIANGLE
-                            ? "icon-button-active"
-                            : "icon-button"
-                    }
-                    onClick={() => {
-                        store.dispatch(SET_TYPE(toolType.TRIANGLE))
-                    }}>
-                    <CgShapeTriangle id="icon" />
-                </button>
-                <button
-                    style={
-                        typeSelector === toolType.CIRCLE
-                            ? { color: colorSelector }
-                            : null
-                    }
-                    type="button"
-                    id={
-                        typeSelector === toolType.CIRCLE
-                            ? "icon-button-active"
-                            : "icon-button"
-                    }
-                    onClick={() => {
-                        store.dispatch(SET_TYPE(toolType.CIRCLE))
-                    }}>
-                    <CgShapeCircle id="icon" />
-                </button>
+                <ShapeTools />
             </div>
         </>
     )
