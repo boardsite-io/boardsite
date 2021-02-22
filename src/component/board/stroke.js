@@ -1,5 +1,5 @@
 import React, { memo } from "react"
-import { Line, Ellipse } from "react-konva"
+import { Line, Ellipse, Circle } from "react-konva"
 import store from "../../redux/store"
 import {
     ADD_STROKE,
@@ -13,7 +13,12 @@ import {
 } from "../../redux/slice/drawcontrol"
 import { sendStroke, eraseStroke } from "../../api/websocket"
 
-import { toolType, CANVAS_FULL_HEIGHT } from "../../constants"
+import {
+    toolType,
+    CANVAS_FULL_HEIGHT,
+    RDP_EPSILON,
+    LIVESTROKE_PTS_OVERLAP,
+} from "../../constants"
 import { simplifyRDP } from "../../util/simplify"
 /**
  * Super component implementing all stroke types and their visualization in the canvas
@@ -69,7 +74,7 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
                     points={points}
                     stroke={style.color}
                     strokeWidth={style.width}
-                    tension={0.5}
+                    tension={0.3}
                     lineCap="round"
                     lineJoin="round"
                     onMouseDown={handleStrokeMovement}
@@ -162,6 +167,33 @@ export const StrokeShape = memo(({ id, pageId, type, style, points, x, y }) => {
 })
 
 /**
+ * Function to draw circles at stroke points.
+ * @param {*} points
+ * @param {*} width
+ */
+export function debugStrokePoints(points, width) {
+    const pts = []
+    for (let i = 0; i < points.length; i += 2) {
+        pts.push({ x: points[i], y: points[i + 1] })
+    }
+    return (
+        <>
+            {pts.map((pt, i) => (
+                <Circle
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={i}
+                    x={pt.x}
+                    y={pt.y}
+                    radius={width / 2}
+                    fill="#ff0000"
+                    strokeWidth={0}
+                />
+            ))}
+        </>
+    )
+}
+
+/**
  * Start the current stroke when mouse is pressed down
  * @param {*} position
  */
@@ -218,9 +250,9 @@ function getStartEndPoints(points) {
  */
 function createStroke(liveStroke, pageId) {
     const stroke = { ...liveStroke }
-    stroke.points = stroke.points.flat()
+    stroke.points = flatLiveStroke(stroke.points)
 
-    // add page id
+    // add page ids
     stroke.pageId = pageId
 
     // generate a unique stroke id
@@ -228,21 +260,10 @@ function createStroke(liveStroke, pageId) {
         Date.now().toString(36).substr(2) +
         Math.random().toString(36).substr(2, 10)
 
-    // debugging
-    // console.log("unsampled: ", stroke.points.length)
-    // store.dispatch(
-    //     ADD_STROKE({
-    //         ...stroke,
-    //         id: `ewffwef${stroke.id}`,
-    //         points: [...stroke.points],
-    //         style: { color: "#ff0000", width: stroke.style.width },
-    //     })
-    // )
-
     // for some types we only need a few points
     switch (liveStroke.type) {
         case toolType.PEN:
-            stroke.points = simplifyRDP(stroke.points, 1.5)
+            stroke.points = simplifyRDP(stroke.points, RDP_EPSILON)
             break
         case toolType.LINE:
             stroke.points = getStartEndPoints(stroke.points)
@@ -252,7 +273,6 @@ function createStroke(liveStroke, pageId) {
             break
         default:
     }
-    // console.log("sampled: ", stroke.points.length)
 
     const currentPageIndex = getPageIndex(pageId)
     stroke.points = stroke.points.map((p, i) => {
@@ -270,4 +290,26 @@ function createStroke(liveStroke, pageId) {
 
 export function getPageIndex(pageId) {
     return store.getState().boardControl.present.pageRank.indexOf(pageId)
+}
+
+/**
+ * Combine the substrokes and delete the overlapping points.
+ * @param {[[number]]} points array of sub livestrokes
+ */
+function flatLiveStroke(points) {
+    if (points.length === 0) {
+        return []
+    }
+    if (points.length === 1) {
+        return points[0]
+    }
+    let pts = []
+    for (let i = 0; i < points.length - 1; i += 1) {
+        pts = pts.concat(
+            points[i].slice(0, points[i].length - 2 * LIVESTROKE_PTS_OVERLAP)
+        )
+    }
+    pts = pts.concat(points[points.length - 1])
+
+    return pts
 }

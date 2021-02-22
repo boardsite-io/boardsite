@@ -12,10 +12,9 @@ import {
     WIDTH_MAX,
     WIDTH_MIN,
     MAX_LIVESTROKE_PTS,
+    MIN_SAMPLE_COUNT,
+    LIVESTROKE_PTS_OVERLAP,
 } from "../../constants"
-
-// let counter = 0
-// let bufferPoints = []
 
 const drawControlSlice = createSlice({
     name: "drawControl",
@@ -24,6 +23,7 @@ const drawControlSlice = createSlice({
         isDraggable: DEFAULT_ISDRAGGABLE,
         isListening: DEFAULT_ISLISTENING,
         isMouseDown: DEFAULT_ISMOUSEDOWN,
+        strokeSample: 0,
         liveStroke: {
             type: DEFAULT_TOOL,
             style: {
@@ -81,8 +81,6 @@ const drawControlSlice = createSlice({
             state.isMouseDown = isMouseDown
         },
         START_LIVESTROKE: (state, action) => {
-            // counter = 0 // 0 because we dont want to include first point
-            // bufferPoints = []
             const point = action.payload
             state.liveStroke.points = [point]
         },
@@ -91,37 +89,34 @@ const drawControlSlice = createSlice({
             const point = action.payload
             const pLen = state.liveStroke.points.length
             const p = state.liveStroke.points[pLen - 1]
-            // const { type } = state.liveStroke
-
-            // if (type === toolType.PEN) {
-            //     counter += 1
-            //     bufferPoints.push(point)
-            //     if (counter >= MIN_SAMPLE_COUNT) {
-            //         point = calcSmoothPoint(bufferPoints)
-            //         counter = 0
-            //         bufferPoints = []
-            //         p.splice(p.length - 2, 2, ...point)
-            //         return
-            //     }
-            //     if (counter !== 1) {
-            //         p.splice(p.length - 2, 2, ...point)
-            //         return
-            //     }
-            // }
 
             if (p.length < MAX_LIVESTROKE_PTS) {
-                p.push(...point)
+                if (state.strokeSample === 0) {
+                    // append new point
+                    p.push(...point)
+                } else {
+                    // update the latest point
+                    p.splice(p.length - 2, 2, ...point)
+                }
             } else {
                 // create a new subarray
                 // with the last point from the previous subarray as entry
                 // in order to not get a gap in the stroke
                 state.liveStroke.points.push(
-                    p.slice(p.length - 2, p.length).concat(point)
+                    p
+                        .slice(p.length - LIVESTROKE_PTS_OVERLAP * 2, p.length)
+                        .concat(point)
                 )
+            }
+
+            state.strokeSample += 1
+            if (state.strokeSample >= MIN_SAMPLE_COUNT) {
+                state.strokeSample = 0
             }
         },
         END_LIVESTROKE: (state) => {
             state.liveStroke.points = []
+            state.strokeSample = 0
         },
     },
 })
