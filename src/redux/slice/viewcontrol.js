@@ -12,11 +12,17 @@ import {
     ZOOM_SCALE_MIN,
     ZOOM_IN_BUTTON_SCALE,
     ZOOM_OUT_BUTTON_SCALE,
+    DEFAULT_KEEP_CENTERED,
 } from "../../constants"
+
+// variables for multitouch zoom
+let lastCenter = null
+let lastDist = 0
 
 const viewControlSlice = createSlice({
     name: "viewControl",
     initialState: {
+        keepCentered: DEFAULT_KEEP_CENTERED,
         stageWidth: DEFAULT_STAGE_WIDTH,
         stageHeight: DEFAULT_STAGE_HEIGHT,
         stageX: DEFAULT_STAGE_X,
@@ -25,6 +31,50 @@ const viewControlSlice = createSlice({
         currentPageIndex: DEFAULT_CURRENT_PAGE_INDEX,
     },
     reducers: {
+        TOGGLE_SHOULD_CENTER: (state) => {
+            state.keepCentered = !state.keepCentered
+        },
+        MULTI_TOUCH_MOVE: (state, action) => {
+            const { p1, p2 } = action.payload
+            if (!lastCenter) {
+                lastCenter = getCenter(p1, p2)
+                return
+            }
+            const newCenter = getCenter(p1, p2)
+            const dist = getDistance(p1, p2)
+
+            if (!lastDist) {
+                lastDist = dist
+            }
+
+            // local coordinates of center point
+            const pointTo = {
+                x: (newCenter.x - state.stageX) / state.stageScale.x,
+                y: (newCenter.y - state.stageY) / state.stageScale.x,
+            }
+
+            // OPTION 1:
+            const scale = state.stageScale.x * (dist / lastDist)
+            state.stageScale = { x: scale, y: scale }
+
+            // calculate new position of the stage
+            const dx = newCenter.x - lastCenter.x
+            const dy = newCenter.y - lastCenter.y
+
+            state.stageX = newCenter.x - pointTo.x * scale + dx
+            state.stageY = newCenter.y - pointTo.y * scale + dy
+
+            // OPTION 2
+            // zoomToPointWithScale(state, pointTo, dist / lastDist)
+
+            // update info
+            lastDist = dist
+            lastCenter = newCenter
+        },
+        MULTI_TOUCH_END: () => {
+            lastDist = 0
+            lastCenter = null
+        },
         RESET_VIEW: (state) => {
             const oldScale = state.stageScale.y
             const newScale = 1
@@ -94,6 +144,9 @@ const viewControlSlice = createSlice({
 })
 
 export const {
+    TOGGLE_SHOULD_CENTER,
+    MULTI_TOUCH_MOVE,
+    MULTI_TOUCH_END,
     CENTER_VIEW,
     RESET_VIEW,
     SET_STAGE_X,
@@ -152,10 +205,14 @@ function zoomToPointWithScale(state, zoomPoint, zoomScale) {
 
     state.stageScale = { x: newScale, y: newScale }
 
-    // if zoomed out then center, else zoom to mouse coords
-    const x = (window.innerWidth - CANVAS_WIDTH * newScale) / 2
-    if (x >= 0) {
-        state.stageX = x
+    if (state.keepCentered) {
+        // if zoomed out then center, else zoom to mouse coords
+        const x = (window.innerWidth - CANVAS_WIDTH * newScale) / 2
+        if (x >= 0) {
+            state.stageX = x
+        } else {
+            state.stageX = zoomPoint.x - mousePointTo.x * newScale
+        }
     } else {
         state.stageX = zoomPoint.x - mousePointTo.x * newScale
     }
@@ -167,4 +224,25 @@ function zoomToPointWithScale(state, zoomPoint, zoomScale) {
 function updateCurrentPageIndex(state) {
     const canvasY = (state.stageHeight / 2 - state.stageY) / state.stageScale.y
     state.currentPageIndex = Math.floor(canvasY / CANVAS_FULL_HEIGHT)
+}
+
+/**
+ * Helper function for calculating the distance between 2 touch points
+ * @param {*} p1
+ * @param {*} p2
+ */
+function getDistance(p1, p2) {
+    return Math.sqrt((p2.x - p1.x) ** 2 + (p2.y - p1.y) ** 2)
+}
+
+/**
+ * Helper function for calculating the center between 2 touch points
+ * @param {*} p1
+ * @param {*} p2
+ */
+function getCenter(p1, p2) {
+    return {
+        x: (p1.x + p2.x) / 2,
+        y: (p1.y + p2.y) / 2,
+    }
 }

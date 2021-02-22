@@ -1,7 +1,7 @@
 import React, { useEffect, memo } from "react"
 import { ReactReduxContext, useSelector } from "react-redux"
 import { createSelector } from "reselect"
-import { Stage, Layer } from "react-konva"
+import { Stage, Layer, Group } from "react-konva"
 import {
     CENTER_VIEW,
     ON_WINDOW_RESIZE,
@@ -9,10 +9,12 @@ import {
     SET_STAGE_Y,
     SCROLL_STAGE_Y,
     ZOOM_TO,
+    MULTI_TOUCH_MOVE,
+    MULTI_TOUCH_END,
 } from "../../redux/slice/viewcontrol"
 
-import Page from "./page"
-import PageListener from "./pagelistener"
+import PageContent from "./page_content"
+import PageListener from "./page_listener"
 
 import LiveLayer from "./livelayer"
 import {
@@ -29,6 +31,7 @@ export default function BoardStage() {
     const stageX = useSelector((state) => state.viewControl.stageX)
     const stageY = useSelector((state) => state.viewControl.stageY)
     const stageScale = useSelector((state) => state.viewControl.stageScale)
+    const keepCentered = useSelector((state) => state.viewControl.keepCentered)
 
     useEffect(() => {
         window.addEventListener("resize", () =>
@@ -78,12 +81,36 @@ export default function BoardStage() {
      * @param {object} pos current position of drag event on stage, e.g. {x: 12, y: 34}
      */
     function dragBound(pos) {
-        const x = (stageWidth - CANVAS_WIDTH * stageScale.x) / 2
-        if (x >= 0) {
-            return { x, y: pos.y }
+        if (keepCentered) {
+            const x = (stageWidth - CANVAS_WIDTH * stageScale.x) / 2
+            if (x >= 0) {
+                return { x, y: pos.y }
+            }
         }
 
         return pos
+    }
+
+    const handleTouchMove = (e) => {
+        e.evt.preventDefault()
+        const touch1 = e.evt.touches[0]
+        const touch2 = e.evt.touches[1]
+
+        if (touch1 && touch2) {
+            const p1 = {
+                x: touch1.clientX,
+                y: touch1.clientY,
+            }
+            const p2 = {
+                x: touch2.clientX,
+                y: touch2.clientY,
+            }
+            store.dispatch(MULTI_TOUCH_MOVE({ p1, p2 }))
+        }
+    }
+
+    const handleTouchEnd = () => {
+        store.dispatch(MULTI_TOUCH_END())
     }
 
     return (
@@ -106,6 +133,8 @@ export default function BoardStage() {
                         // onDragMove={onDragMove}
                         onDragEnd={onDragEnd}
                         onContextMenu={(e) => e.evt.preventDefault()}
+                        onTouchMove={handleTouchMove}
+                        onTouchEnd={handleTouchEnd}
                         onWheel={onWheel}>
                         <ReactReduxContext.Provider value={value}>
                             <StageContent value={value} />
@@ -133,24 +162,14 @@ const StageContent = memo(() => {
     )
 
     const pageSlice = useSelector(pageCreateSelector)
-    const isDraggable = useSelector((state) => state.drawControl.isDraggable)
-    const isListening = useSelector((state) => state.drawControl.isListening)
-    const isPanMode = useSelector((state) => state.drawControl.isPanMode)
-
     return (
         <>
-            <Layer
-                draggable={isDraggable}
-                listening={!isPanMode && !isListening}>
+            <Layer>
                 {pageSlice.map((pageId) => (
-                    <PageListener key={pageId} pageId={pageId} />
-                ))}
-            </Layer>
-            <Layer
-                draggable={isDraggable}
-                listening={!isPanMode && isListening}>
-                {pageSlice.map((pageId) => (
-                    <Page key={pageId} pageId={pageId} />
+                    <Group key={pageId}>
+                        <PageListener pageId={pageId} />
+                        <PageContent pageId={pageId} />
+                    </Group>
                 ))}
             </Layer>
             <Layer draggable={false} listening={false}>

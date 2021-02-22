@@ -8,12 +8,11 @@ import {
 import store from "../../../redux/store"
 import { TOGGLE_PANMODE } from "../../../redux/slice/drawcontrol"
 import { FIT_WIDTH_TO_PAGE, RESET_VIEW } from "../../../redux/slice/viewcontrol"
-import "../../../css/menucomponents/viewoptions.css"
 
 export default function ViewOptions() {
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
     return (
-        <div className="viewoptions-wrap">
+        <>
             {isPanMode ? (
                 <button
                     type="button"
@@ -41,6 +40,6 @@ export default function ViewOptions() {
                 onClick={() => store.dispatch(FIT_WIDTH_TO_PAGE())}>
                 <BsArrowsAngleExpand id="icon" />
             </button>
-        </div>
+        </>
     )
 }

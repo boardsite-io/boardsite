@@ -7,13 +7,13 @@ import {
     moveLiveStroke,
     registerLiveStroke,
     getPageIndex,
-} from "./stroke"
+} from "./stroke_actions"
 import {
     CANVAS_WIDTH,
     CANVAS_HEIGHT,
     CANVAS_FULL_HEIGHT,
 } from "../../constants"
-import { SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
+import { END_LIVESTROKE, SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
 
 export default function PageListener({ pageId }) {
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
@@ -29,13 +29,7 @@ export default function PageListener({ pageId }) {
         if (e.evt.buttons === 2) {
             return
         }
-
         store.dispatch(SET_ISMOUSEDOWN(true))
-
-        // if (tool === toolType.ERASER) {
-        //     return
-        // }
-
         const pos = getScaledPointerPosition(e)
         startLiveStroke(pos)
     }
@@ -70,8 +64,54 @@ export default function PageListener({ pageId }) {
         registerLiveStroke(pageId)
     }
 
+    const onTouchStart = (e) => {
+        e.evt.preventDefault()
+        const touch1 = e.evt.touches[0]
+        const touch2 = e.evt.touches[1]
+
+        if (!(touch1 && touch2)) {
+            store.dispatch(SET_ISMOUSEDOWN(true))
+            const pos = getScaledPointerPosition(e)
+            startLiveStroke(pos)
+        }
+    }
+
+    const onTouchMove = (e) => {
+        e.evt.preventDefault()
+        const touch1 = e.evt.touches[0]
+        const touch2 = e.evt.touches[1]
+
+        if (!(touch1 && touch2)) {
+            onMouseMove(e)
+        } else {
+            abortLiveStroke()
+        }
+    }
+
+    const onTouchEnd = (e) => {
+        e.evt.preventDefault()
+        const touch1 = e.evt.touches[0]
+        const touch2 = e.evt.touches[1]
+
+        if (!(touch1 && touch2)) {
+            onMouseUp(e)
+        } else {
+            abortLiveStroke()
+        }
+    }
+
+    const abortLiveStroke = () => {
+        store.dispatch(SET_ISMOUSEDOWN(false))
+        store.dispatch(END_LIVESTROKE())
+    }
+
+    const isListening = useSelector((state) => state.drawControl.isListening)
+    const isPanMode = useSelector((state) => state.drawControl.isPanMode)
+
     return (
         <Rect
+            draggable={false}
+            listening={!isPanMode && !isListening}
             height={CANVAS_HEIGHT}
             width={CANVAS_WIDTH}
             x={0}
@@ -88,9 +128,9 @@ export default function PageListener({ pageId }) {
             onMousemove={onMouseMove}
             onMouseUp={onMouseUp}
             onMouseLeave={onMouseUp}
-            onTouchStart={onMouseDown}
-            onTouchMove={onMouseMove}
-            onTouchEnd={onMouseUp}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
         />
     )
 }

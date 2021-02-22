@@ -9,7 +9,7 @@ export default function UndoRedo() {
     // const canRedo = useSelector((state) => state.boardControl.future.length > 0)
 
     return (
-        <div>
+        <>
             <button
                 type="button"
                 id="icon-button"
@@ -28,6 +28,6 @@ export default function UndoRedo() {
                 }}>
                 <MdRedo id="icon" />
             </button>
-        </div>
+        </>
     )
 }

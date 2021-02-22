@@ -23,6 +23,7 @@ export const DEFAULT_STAGE_SCALE = { x: 1, y: 1 }
 export const DEFAULT_ISDRAGGABLE = false
 export const DEFAULT_ISLISTENING = false
 export const DEFAULT_ISMOUSEDOWN = false
+export const DEFAULT_KEEP_CENTERED = false
 
 // drawing stuff
 export const toolType = {
@@ -32,6 +33,7 @@ export const toolType = {
     TRIANGLE: 3,
     CIRCLE: 4,
     DRAG: 5,
+    RECTANGLE: 6,
 }
 export const DEFAULT_TOOL = toolType.PEN
 export const MIN_SAMPLE_COUNT = 2

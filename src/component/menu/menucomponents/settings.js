@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { useSelector } from "react-redux"
 import { BsGear } from "react-icons/bs"
 import Button from "@material-ui/core/Button"
 import Dialog from "@material-ui/core/Dialog"
@@ -11,10 +12,14 @@ import FormControl from "@material-ui/core/FormControl"
 import FormGroup from "@material-ui/core/FormGroup"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
 import Switch from "@material-ui/core/Switch"
+import { TOGGLE_SHOULD_CENTER } from "../../../redux/slice/viewcontrol"
+import store from "../../../redux/store"
 
 export default function SettingsButton() {
     const [open, setOpen] = useState(false)
     const [check1, setCheck1] = useState(false)
+
+    const keepCentered = useSelector((state) => state.viewControl.keepCentered)
 
     const handleClickOpen = () => {
         setOpen(true)
@@ -63,12 +68,16 @@ export default function SettingsButton() {
                             <FormControlLabel
                                 control={
                                     <Switch
-                                        checked={check1}
-                                        onChange={handleChange}
+                                        checked={keepCentered}
+                                        onChange={() =>
+                                            store.dispatch(
+                                                TOGGLE_SHOULD_CENTER()
+                                            )
+                                        }
                                         name="jason"
                                     />
                                 }
-                                label="Jason Killian"
+                                label="Center on zoom"
                             />
                             <FormControlLabel
                                 control={
