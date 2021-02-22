@@ -12,6 +12,7 @@ import {
     ZOOM_SCALE_MIN,
     ZOOM_IN_BUTTON_SCALE,
     ZOOM_OUT_BUTTON_SCALE,
+    DEFAULT_KEEP_CENTERED,
 } from "../../constants"
 
 // variables for multitouch zoom
@@ -21,6 +22,7 @@ let lastDist = 0
 const viewControlSlice = createSlice({
     name: "viewControl",
     initialState: {
+        keepCentered: DEFAULT_KEEP_CENTERED,
         stageWidth: DEFAULT_STAGE_WIDTH,
         stageHeight: DEFAULT_STAGE_HEIGHT,
         stageX: DEFAULT_STAGE_X,
@@ -29,6 +31,9 @@ const viewControlSlice = createSlice({
         currentPageIndex: DEFAULT_CURRENT_PAGE_INDEX,
     },
     reducers: {
+        TOGGLE_SHOULD_CENTER: (state) => {
+            state.keepCentered = !state.keepCentered
+        },
         MULTI_TOUCH_MOVE: (state, action) => {
             const { p1, p2 } = action.payload
             if (!lastCenter) {
@@ -139,6 +144,7 @@ const viewControlSlice = createSlice({
 })
 
 export const {
+    TOGGLE_SHOULD_CENTER,
     MULTI_TOUCH_MOVE,
     MULTI_TOUCH_END,
     CENTER_VIEW,
@@ -199,10 +205,14 @@ function zoomToPointWithScale(state, zoomPoint, zoomScale) {
 
     state.stageScale = { x: newScale, y: newScale }
 
-    // if zoomed out then center, else zoom to mouse coords
-    const x = (window.innerWidth - CANVAS_WIDTH * newScale) / 2
-    if (x >= 0) {
-        state.stageX = x
+    if (state.keepCentered) {
+        // if zoomed out then center, else zoom to mouse coords
+        const x = (window.innerWidth - CANVAS_WIDTH * newScale) / 2
+        if (x >= 0) {
+            state.stageX = x
+        } else {
+            state.stageX = zoomPoint.x - mousePointTo.x * newScale
+        }
     } else {
         state.stageX = zoomPoint.x - mousePointTo.x * newScale
     }

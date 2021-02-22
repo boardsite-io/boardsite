@@ -31,6 +31,7 @@ export default function BoardStage() {
     const stageX = useSelector((state) => state.viewControl.stageX)
     const stageY = useSelector((state) => state.viewControl.stageY)
     const stageScale = useSelector((state) => state.viewControl.stageScale)
+    const keepCentered = useSelector((state) => state.viewControl.keepCentered)
 
     useEffect(() => {
         window.addEventListener("resize", () =>
@@ -80,9 +81,11 @@ export default function BoardStage() {
      * @param {object} pos current position of drag event on stage, e.g. {x: 12, y: 34}
      */
     function dragBound(pos) {
-        const x = (stageWidth - CANVAS_WIDTH * stageScale.x) / 2
-        if (x >= 0) {
-            return { x, y: pos.y }
+        if (keepCentered) {
+            const x = (stageWidth - CANVAS_WIDTH * stageScale.x) / 2
+            if (x >= 0) {
+                return { x, y: pos.y }
+            }
         }
 
         return pos

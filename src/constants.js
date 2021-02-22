@@ -23,6 +23,7 @@ export const DEFAULT_STAGE_SCALE = { x: 1, y: 1 }
 export const DEFAULT_ISDRAGGABLE = false
 export const DEFAULT_ISLISTENING = false
 export const DEFAULT_ISMOUSEDOWN = false
+export const DEFAULT_KEEP_CENTERED = false
 
 // drawing stuff
 export const toolType = {
