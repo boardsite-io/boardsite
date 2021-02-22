@@ -12,11 +12,10 @@ import {
     WIDTH_MAX,
     WIDTH_MIN,
     MAX_LIVESTROKE_PTS,
-    MIN_SAMPLE_COUNT,
 } from "../../constants"
 
-let counter = 0
-let bufferPoints = []
+// let counter = 0
+// let bufferPoints = []
 
 const drawControlSlice = createSlice({
     name: "drawControl",
@@ -82,33 +81,33 @@ const drawControlSlice = createSlice({
             state.isMouseDown = isMouseDown
         },
         START_LIVESTROKE: (state, action) => {
-            counter = 0 // 0 because we dont want to include first point
-            bufferPoints = []
+            // counter = 0 // 0 because we dont want to include first point
+            // bufferPoints = []
             const point = action.payload
             state.liveStroke.points = [point]
         },
         // Update the current live stroke position
         UPDATE_LIVESTROKE: (state, action) => {
-            let point = action.payload
+            const point = action.payload
             const pLen = state.liveStroke.points.length
             const p = state.liveStroke.points[pLen - 1]
-            const { type } = state.liveStroke
+            // const { type } = state.liveStroke
 
-            if (type === toolType.PEN) {
-                counter += 1
-                bufferPoints.push(point)
-                if (counter >= MIN_SAMPLE_COUNT) {
-                    point = calcSmoothPoint(bufferPoints)
-                    counter = 0
-                    bufferPoints = []
-                    p.splice(p.length - 2, 2, ...point)
-                    return
-                }
-                if (counter !== 1) {
-                    p.splice(p.length - 2, 2, ...point)
-                    return
-                }
-            }
+            // if (type === toolType.PEN) {
+            //     counter += 1
+            //     bufferPoints.push(point)
+            //     if (counter >= MIN_SAMPLE_COUNT) {
+            //         point = calcSmoothPoint(bufferPoints)
+            //         counter = 0
+            //         bufferPoints = []
+            //         p.splice(p.length - 2, 2, ...point)
+            //         return
+            //     }
+            //     if (counter !== 1) {
+            //         p.splice(p.length - 2, 2, ...point)
+            //         return
+            //     }
+            // }
 
             if (p.length < MAX_LIVESTROKE_PTS) {
                 p.push(...point)
@@ -131,19 +130,19 @@ const drawControlSlice = createSlice({
  * calculates the mean x and y of all bufferpoints
  * @param {array} pts buffer points in form [[p1x, p2y], [p2x, p2y], ...]
  */
-function calcSmoothPoint(pts) {
-    const numBufferPoints = pts.length
-    let x = 0
-    let y = 0
-    for (let i = 0; i < numBufferPoints; i += 1) {
-        x += pts[i][0]
-        y += pts[i][1]
-    }
-    const smoothX = x / numBufferPoints
-    const smoothY = y / numBufferPoints
+// function calcSmoothPoint(pts) {
+//     const numBufferPoints = pts.length
+//     let x = 0
+//     let y = 0
+//     for (let i = 0; i < numBufferPoints; i += 1) {
+//         x += pts[i][0]
+//         y += pts[i][1]
+//     }
+//     const smoothX = x / numBufferPoints
+//     const smoothY = y / numBufferPoints
 
-    return [smoothX, smoothY]
-}
+//     return [smoothX, smoothY]
+// }
 
 export const {
     SET_COLOR,
