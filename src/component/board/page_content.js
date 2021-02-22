@@ -1,9 +1,8 @@
 import React from "react"
 import { Group } from "react-konva"
 import { useSelector } from "react-redux"
-import { eraseStroke, sendStroke } from "../../api/websocket"
+import { handleDeleteStroke, handleUpdateStroke } from "./request_handlers"
 import { CANVAS_FULL_HEIGHT, toolType } from "../../constants"
-import { UPDATE_STROKE, ERASE_STROKE } from "../../redux/slice/boardcontrol"
 import store from "../../redux/store"
 import { getPageIndex } from "./stroke_actions"
 import StrokeShape from "./stroke_shapes"
@@ -16,14 +15,7 @@ export default function PageContent({ pageId }) {
     const handleDragEnd = (e) => {
         const { x, y, id } = e.target.attrs
         if (store.getState().drawControl.liveStroke.type !== toolType.ERASER) {
-            const s = {
-                x,
-                y,
-                id,
-                pageId,
-            }
-            store.dispatch(UPDATE_STROKE(s))
-            sendStroke(s) // ws
+            handleUpdateStroke({ x, y, id, pageId })
         }
     }
 
@@ -35,8 +27,7 @@ export default function PageContent({ pageId }) {
         }
 
         if (store.getState().drawControl.liveStroke.type === toolType.ERASER) {
-            store.dispatch(ERASE_STROKE({ pageId, id }))
-            eraseStroke({ pageId, id }) // ws
+            handleDeleteStroke({ pageId, id })
         }
     }
 

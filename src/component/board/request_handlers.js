@@ -2,13 +2,18 @@ import {
     addPageSession,
     clearPageSession,
     deletePageSession,
+    eraseStroke,
     isConnected,
+    sendStroke,
 } from "../../api/websocket"
 import {
     ADD_PAGE,
     CLEAR_PAGE,
     DELETE_PAGE,
     DELETE_ALL_PAGES,
+    UPDATE_STROKE,
+    ERASE_STROKE,
+    ADD_STROKE,
 } from "../../redux/slice/boardcontrol"
 
 import store from "../../redux/store"
@@ -62,5 +67,32 @@ export function handleDeleteAllPages() {
             )
     } else {
         store.dispatch(DELETE_ALL_PAGES())
+    }
+}
+
+export function handleAddStroke(stroke) {
+    // add stroke to collection
+    store.dispatch(ADD_STROKE(stroke))
+    if (isConnected()) {
+        // relay stroke in session
+        sendStroke(stroke)
+    }
+}
+
+export function handleUpdateStroke({ x, y, id, pageId }) {
+    store.dispatch(UPDATE_STROKE({ x, y, id, pageId }))
+    if (isConnected()) {
+        // send updated stroke
+        sendStroke(
+            store.getState().boardControl.present.pageCollection[pageId]
+                .strokes[id]
+        )
+    }
+}
+
+export function handleDeleteStroke({ pageId, id }) {
+    store.dispatch(ERASE_STROKE({ pageId, id }))
+    if (isConnected()) {
+        eraseStroke({ pageId, id })
     }
 }

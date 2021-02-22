@@ -114,16 +114,12 @@ export async function joinSession(
 }
 
 export function sendStroke(stroke) {
-    if (isConnected()) {
-        store.dispatch(SEND_STROKE(stroke))
-    }
+    store.dispatch(SEND_STROKE(stroke))
 }
 
 export function eraseStroke({ id, pageId }) {
-    if (isConnected()) {
-        const stroke = { id, pageId, type: toolType.ERASER }
-        store.dispatch(SEND_STROKE(stroke))
-    }
+    const stroke = { id, pageId, type: toolType.ERASER }
+    store.dispatch(SEND_STROKE(stroke))
 }
 
 export function addPageSession(pageIndex) {

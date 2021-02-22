@@ -1,11 +1,9 @@
 import store from "../../redux/store"
-import { ADD_STROKE } from "../../redux/slice/boardcontrol"
 import {
     START_LIVESTROKE,
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
 } from "../../redux/slice/drawcontrol"
-import { sendStroke } from "../../api/websocket"
 import { simplifyRDP } from "../../util/simplify"
 
 import {
@@ -14,6 +12,7 @@ import {
     RDP_EPSILON,
     LIVESTROKE_PTS_OVERLAP,
 } from "../../constants"
+import { handleAddStroke } from "./request_handlers"
 
 /**
  * Start the current stroke when mouse is pressed down
@@ -45,12 +44,10 @@ export async function registerLiveStroke(pageId, currentPageIndex) {
     }
 
     const stroke = createStroke(liveStroke, pageId, currentPageIndex)
-    // add stroke to collection
-    store.dispatch(ADD_STROKE(stroke))
+
+    handleAddStroke(stroke)
     // clear livestroke
     store.dispatch(END_LIVESTROKE())
-    // relay stroke in session
-    sendStroke(stroke)
 }
 
 /**
