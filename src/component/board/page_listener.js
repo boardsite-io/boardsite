@@ -6,6 +6,7 @@ import {
     startLiveStroke,
     moveLiveStroke,
     registerLiveStroke,
+    getPageIndex,
 } from "./stroke_actions"
 import {
     CANVAS_WIDTH,
@@ -14,7 +15,7 @@ import {
 } from "../../constants"
 import { END_LIVESTROKE, SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
 
-export default function PageListener({ pageId, currentPageIndex }) {
+export default function PageListener({ pageId }) {
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
 
     function getScaledPointerPosition(e) {
@@ -60,7 +61,7 @@ export default function PageListener({ pageId, currentPageIndex }) {
         moveLiveStroke(pos)
 
         // register finished stroke
-        registerLiveStroke(pageId, currentPageIndex)
+        registerLiveStroke(pageId)
     }
 
     const onTouchStart = (e) => {
@@ -114,7 +115,7 @@ export default function PageListener({ pageId, currentPageIndex }) {
             height={CANVAS_HEIGHT}
             width={CANVAS_WIDTH}
             x={0}
-            y={CANVAS_FULL_HEIGHT * currentPageIndex}
+            y={CANVAS_FULL_HEIGHT * getPageIndex(pageId)}
             stroke="#000"
             strokeWidth={0.2}
             fill="#ffffff"

@@ -157,24 +157,18 @@ const StageContent = memo(() => {
             const startPage = Math.max(minPage, 0) // Set start page index to candidate or to 0 if negative index
             const endPage = Math.min(maxPage + 1, pageRank.length) // Set end page index; +1 because of slice indexing
             const pageSlice = pageRank.slice(startPage, endPage)
-            return { pageSlice, startPage } // todo: draw at correct position
+            return pageSlice // todo: draw at correct position
         }
     )
 
-    const pageSelector = useSelector(pageCreateSelector)
+    const pageSlice = useSelector(pageCreateSelector)
     return (
         <>
             <Layer>
-                {pageSelector.pageSlice.map((pageId, i) => (
+                {pageSlice.map((pageId) => (
                     <Group key={pageId}>
-                        <PageListener
-                            pageId={pageId}
-                            currentPageIndex={pageSelector.startPage + i}
-                        />
-                        <PageContent
-                            pageId={pageId}
-                            currentPageIndex={pageSelector.startPage + i}
-                        />
+                        <PageListener pageId={pageId} />
+                        <PageContent pageId={pageId} />
                     </Group>
                 ))}
             </Layer>

@@ -6,8 +6,14 @@ import {
     END_LIVESTROKE,
 } from "../../redux/slice/drawcontrol"
 import { sendStroke } from "../../api/websocket"
+import { simplifyRDP } from "../../util/simplify"
 
-import { toolType, CANVAS_FULL_HEIGHT } from "../../constants"
+import {
+    toolType,
+    CANVAS_FULL_HEIGHT,
+    RDP_EPSILON,
+    LIVESTROKE_PTS_OVERLAP,
+} from "../../constants"
 
 /**
  * Start the current stroke when mouse is pressed down
@@ -64,11 +70,11 @@ export function getStartEndPoints(points) {
  * Creates a new stroke with unique ID and processes the points
  * @param {*} liveStroke
  */
-function createStroke(liveStroke, pageId, currentPageIndex) {
+function createStroke(liveStroke, pageId) {
     const stroke = { ...liveStroke }
-    stroke.points = stroke.points.flat()
+    stroke.points = flatLiveStroke(stroke.points)
 
-    // add page id
+    // add page ids
     stroke.pageId = pageId
 
     // generate a unique stroke id
@@ -79,7 +85,7 @@ function createStroke(liveStroke, pageId, currentPageIndex) {
     // for some types we only need a few points
     switch (liveStroke.type) {
         case toolType.PEN:
-            // TODO compression function
+            stroke.points = simplifyRDP(stroke.points, RDP_EPSILON)
             break
         case toolType.LINE:
             stroke.points = getStartEndPoints(stroke.points)
@@ -90,13 +96,42 @@ function createStroke(liveStroke, pageId, currentPageIndex) {
         default:
     }
 
-    // allow a reasonable precision
-    stroke.points = stroke.points.map((p) => Math.round(p * 10) / 10)
-
-    // make y coordinates relative to page
-    for (let i = 1; i < stroke.points.length; i += 2) {
-        stroke.points[i] -= currentPageIndex * CANVAS_FULL_HEIGHT // relative y position
-    }
+    const currentPageIndex = getPageIndex(pageId)
+    stroke.points = stroke.points.map((p, i) => {
+        // allow a reasonable precision
+        let pt = Math.round(p * 10) / 10
+        if (i % 2) {
+            // make y coordinates relative to page
+            pt -= currentPageIndex * CANVAS_FULL_HEIGHT // relative y position
+        }
+        return pt
+    })
 
     return stroke
+}
+
+export function getPageIndex(pageId) {
+    return store.getState().boardControl.present.pageRank.indexOf(pageId)
+}
+
+/**
+ * Combine the substrokes and delete the overlapping points.
+ * @param {[[number]]} points array of sub livestrokes
+ */
+function flatLiveStroke(points) {
+    if (points.length === 0) {
+        return []
+    }
+    if (points.length === 1) {
+        return points[0]
+    }
+    let pts = []
+    for (let i = 0; i < points.length - 1; i += 1) {
+        pts = pts.concat(
+            points[i].slice(0, points[i].length - 2 * LIVESTROKE_PTS_OVERLAP)
+        )
+    }
+    pts = pts.concat(points[points.length - 1])
+
+    return pts
 }

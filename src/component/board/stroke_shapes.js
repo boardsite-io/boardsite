@@ -1,5 +1,5 @@
 import React, { memo, useState } from "react"
-import { Line, Ellipse } from "react-konva"
+import { Line, Ellipse, Circle } from "react-konva"
 import { getStartEndPoints } from "./stroke_actions"
 import { toolType } from "../../constants"
 
@@ -10,7 +10,7 @@ import { toolType } from "../../constants"
  * the object references.
  * @param {{stroke: {}}} props
  */
-const StrokeShape = memo(({ id, type, style, points, x, y }) => {
+export default memo(({ id, type, style, points, x, y }) => {
     const [isDragging, setDragging] = useState(false)
 
     let shape
@@ -22,7 +22,7 @@ const StrokeShape = memo(({ id, type, style, points, x, y }) => {
                     points={points}
                     stroke={style.color}
                     strokeWidth={style.width}
-                    tension={0.5}
+                    tension={0.3}
                     lineCap="round"
                     x={x}
                     y={y}
@@ -110,4 +110,29 @@ const StrokeShape = memo(({ id, type, style, points, x, y }) => {
     return shape
 })
 
-export default StrokeShape
+/**
+ * Function to draw circles at stroke points.
+ * @param {*} points
+ * @param {*} width
+ */
+export function debugStrokePoints(points, width) {
+    const pts = []
+    for (let i = 0; i < points.length; i += 2) {
+        pts.push({ x: points[i], y: points[i + 1] })
+    }
+    return (
+        <>
+            {pts.map((pt, i) => (
+                <Circle
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={i}
+                    x={pt.x}
+                    y={pt.y}
+                    radius={width / 2}
+                    fill="#ff0000"
+                    strokeWidth={0}
+                />
+            ))}
+        </>
+    )
+}

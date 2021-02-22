@@ -36,9 +36,13 @@ export const toolType = {
     RECTANGLE: 6,
 }
 export const DEFAULT_TOOL = toolType.PEN
-export const MIN_SAMPLE_COUNT = 5
+export const MIN_SAMPLE_COUNT = 2
+// number of overlapping points for sub livestrokes
+export const LIVESTROKE_PTS_OVERLAP = 2
 // maximum number of points a livestroke can have until cached
 export const MAX_LIVESTROKE_PTS = 100
+// epsilon for the Ramer–Douglas–Peucker algorithm
+export const RDP_EPSILON = 1.5
 
 // api
 export const API_URL = `http${
