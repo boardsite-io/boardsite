@@ -1,7 +1,7 @@
 import React, { memo, useState } from "react"
 import { Line, Ellipse, Circle } from "react-konva"
 import { getStartEndPoints } from "./stroke_actions"
-import { toolType } from "../../constants"
+import { DRAG_SHADOW_BLUR, toolType } from "../../constants"
 
 /**
  * Super component implementing all stroke types and their visualization in the canvas
@@ -12,51 +12,34 @@ import { toolType } from "../../constants"
  */
 export default memo(({ id, type, style, points, x, y }) => {
     const [isDragging, setDragging] = useState(false)
-
+    const shapeProps = {
+        id,
+        x,
+        y,
+        lineCap: "round",
+        lineJoin: "round",
+        stroke: style.color,
+        // fill: style.color,
+        strokeWidth: style.width,
+        draggable: true,
+        listening: true,
+        perfectDrawEnabled: false,
+        onDragStart: () => setDragging(true),
+        onDragEnd: () => setDragging(false),
+        shadowForStrokeEnabled: isDragging,
+        shadowEnabled: isDragging,
+        shadowBlur: isDragging ? DRAG_SHADOW_BLUR : 0,
+        shadowColor: style.color,
+    }
     let shape
     switch (type) {
         case toolType.PEN:
-            shape = (
-                <Line
-                    id={id}
-                    points={points}
-                    stroke={style.color}
-                    strokeWidth={style.width}
-                    tension={0.3}
-                    lineCap="round"
-                    x={x}
-                    y={y}
-                    draggable
-                    onDragStart={() => setDragging(true)}
-                    onDragEnd={() => setDragging(false)}
-                    shadowForStrokeEnabled={isDragging}
-                    shadowEnabled={isDragging}
-                    shadowBlur={isDragging ? 5 : 0}
-                    shadowColor="#00ff00"
-                    listening
-                    perfectDrawEnabled={false}
-                />
-            )
+            shape = <Line {...shapeProps} points={points} tension={0.3} />
             break
         case toolType.LINE:
             shape = (
                 <Line
-                    id={id}
                     points={getStartEndPoints(points)}
-                    stroke={style.color}
-                    strokeWidth={style.width}
-                    tension={1}
-                    lineCap="round"
-                    x={x}
-                    y={y}
-                    draggable
-                    onDragStart={() => setDragging(true)}
-                    onDragEnd={() => setDragging(false)}
-                    shadowForStrokeEnabled={isDragging}
-                    shadowEnabled={isDragging}
-                    shadowBlur={isDragging ? 5 : 0}
-                    shadowColor="#00ff00"
-                    listening
                     perfectDrawEnabled={false}
                 />
             )
@@ -82,23 +65,11 @@ export default memo(({ id, type, style, points, x, y }) => {
             }
             shape = (
                 <Ellipse
-                    id={id}
+                    {...shapeProps}
                     x={points[0] + rad.x}
                     y={points[1] + rad.y}
                     radius={{ x: Math.abs(rad.x), y: Math.abs(rad.y) }}
-                    stroke={style.color}
-                    strokeWidth={style.width}
-                    // fill={props.stroke.style.color}
                     fillEnabled={false} // Remove inner hitbox from empty circles
-                    draggable
-                    onDragStart={() => setDragging(true)}
-                    onDragEnd={() => setDragging(false)}
-                    shadowForStrokeEnabled={isDragging}
-                    shadowEnabled={isDragging}
-                    shadowBlur={isDragging ? 5 : 0}
-                    shadowColor="#00ff00"
-                    listening
-                    perfectDrawEnabled={false}
                 />
             )
             break
