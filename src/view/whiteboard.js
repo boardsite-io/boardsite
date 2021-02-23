@@ -54,8 +54,8 @@ export default function Whiteboard() {
     return (
         <div className="whiteboard">
             <BoardStage />
-            <Toolbar />
             <SessionInfo />
+            <Toolbar />
             <ViewNav />
         </div>
     )

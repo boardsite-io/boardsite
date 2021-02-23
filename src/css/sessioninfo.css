@@ -1,27 +1,25 @@
 .session-info {
-    font-family: 'Courier New', Courier, monospace;
-    font-size: small;
-    width: max-content;
-    height: max-content;
     position: fixed;
-    left: 5px;
-    top: 50px;
+    left: 10px;
+    top: 90px;
     overflow: hidden;
     border-radius: var(--menubarBorderRadius);
-    max-height: 200px;
+    max-height: 500px;
     pointer-events: none;
     display: grid;
     grid-auto-flow: row;
-    gap: 0px;
+    gap: 10px;
 }
 
 .user-info {
-    max-width: 300px;
     background: #00000066;
-    width: fit-content;
-    height: 18px;
     display: grid;
     grid-auto-flow: column;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: small;
+    height: 18px;
+    width: fit-content;
+    max-width: 400px;
     gap: 5px;
     border-radius: 100px;
     padding-left: 1.5px;
