@@ -1,7 +1,7 @@
 import React, { useEffect, memo } from "react"
 import { ReactReduxContext, useSelector } from "react-redux"
 import { createSelector } from "reselect"
-import { Stage, Layer, Group } from "react-konva"
+import { Stage, Layer } from "react-konva"
 import {
     CENTER_VIEW,
     ON_WINDOW_RESIZE,
@@ -152,8 +152,8 @@ const StageContent = memo(() => {
         (state) => state.boardControl.present.pageRank,
         (state) => state.viewControl.currentPageIndex,
         (pageRank, currentPageIndex) => {
-            const minPage = currentPageIndex - 2 // Get min page candidate
-            const maxPage = currentPageIndex + 2 // Get max page candidate
+            const minPage = currentPageIndex - 1 // Get min page candidate
+            const maxPage = currentPageIndex + 1 // Get max page candidate
             const startPage = Math.max(minPage, 0) // Set start page index to candidate or to 0 if negative index
             const endPage = Math.min(maxPage + 1, pageRank.length) // Set end page index; +1 because of slice indexing
             const pageSlice = pageRank.slice(startPage, endPage)
@@ -164,14 +164,12 @@ const StageContent = memo(() => {
     const pageSlice = useSelector(pageCreateSelector)
     return (
         <>
-            <Layer>
-                {pageSlice.map((pageId) => (
-                    <Group key={pageId}>
-                        <PageListener pageId={pageId} />
-                        <PageContent pageId={pageId} />
-                    </Group>
-                ))}
-            </Layer>
+            {pageSlice.map((pageId) => (
+                <Layer key={pageId}>
+                    <PageListener pageId={pageId} />
+                    <PageContent pageId={pageId} />
+                </Layer>
+            ))}
             <Layer draggable={false} listening={false}>
                 <LiveLayer />
             </Layer>
