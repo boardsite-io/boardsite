@@ -19,6 +19,8 @@ export default function ViewNavigation() {
     const currPageIndex = useSelector(
         (state) => state.viewControl.currentPageIndex
     )
+
+    const hideNavBar = useSelector((state) => state.viewControl.hideNavBar)
     const numPages = useSelector(
         (state) => state.boardControl.present.pageRank.length
     )
@@ -27,7 +29,7 @@ export default function ViewNavigation() {
         store.dispatch(JUMP_PAGE_WITH_INDEX(numPages - 1))
     }
 
-    return (
+    return hideNavBar ? null : (
         <div className="view-nav">
             <button
                 type="button"

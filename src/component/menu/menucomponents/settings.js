@@ -5,21 +5,24 @@ import Button from "@material-ui/core/Button"
 import Dialog from "@material-ui/core/Dialog"
 import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
-import DialogContentText from "@material-ui/core/DialogContentText"
+// import DialogContentText from "@material-ui/core/DialogContentText"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import FormLabel from "@material-ui/core/FormLabel"
 import FormControl from "@material-ui/core/FormControl"
 import FormGroup from "@material-ui/core/FormGroup"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
 import Switch from "@material-ui/core/Switch"
-import { TOGGLE_SHOULD_CENTER } from "../../../redux/slice/viewcontrol"
+import {
+    TOGGLE_SHOULD_CENTER,
+    TOGGLE_HIDE_NAVBAR,
+} from "../../../redux/slice/viewcontrol"
 import store from "../../../redux/store"
 
 export default function SettingsButton() {
     const [open, setOpen] = useState(false)
-    const [check1, setCheck1] = useState(false)
 
     const keepCentered = useSelector((state) => state.viewControl.keepCentered)
+    const hideNavBar = useSelector((state) => state.viewControl.hideNavBar)
 
     const handleClickOpen = () => {
         setOpen(true)
@@ -27,10 +30,6 @@ export default function SettingsButton() {
 
     const handleClose = () => {
         setOpen(false)
-    }
-
-    const handleChange = (event) => {
-        setCheck1(event.target.checked)
     }
 
     return (
@@ -47,24 +46,14 @@ export default function SettingsButton() {
                 aria-describedby="alert-dialog-description">
                 <DialogTitle id="alert-dialog-title">Settings</DialogTitle>
                 <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
+                    {/* <DialogContentText id="alert-dialog-description">
                         Change global settings here.
-                    </DialogContentText>
+                    </DialogContentText> */}
                     <FormControl component="fieldset">
                         <FormLabel component="legend">
-                            Assign responsibility
+                            General Settings
                         </FormLabel>
                         <FormGroup>
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={open}
-                                        onChange={handleChange}
-                                        name="Open"
-                                    />
-                                }
-                                label="Open State"
-                            />
                             <FormControlLabel
                                 control={
                                     <Switch
@@ -77,17 +66,19 @@ export default function SettingsButton() {
                                         name="jason"
                                     />
                                 }
-                                label="Center on zoom"
+                                label="Keep view centered"
                             />
                             <FormControlLabel
                                 control={
                                     <Switch
-                                        checked={check1}
-                                        onChange={handleChange}
-                                        name="antoine"
+                                        checked={hideNavBar}
+                                        onChange={() =>
+                                            store.dispatch(TOGGLE_HIDE_NAVBAR())
+                                        }
+                                        name="jason"
                                     />
                                 }
-                                label="Antoine Llorca"
+                                label="Hide navigation bar"
                             />
                         </FormGroup>
                     </FormControl>

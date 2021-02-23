@@ -24,6 +24,7 @@ export const DEFAULT_ISDRAGGABLE = false
 export const DEFAULT_ISLISTENING = false
 export const DEFAULT_ISMOUSEDOWN = false
 export const DEFAULT_KEEP_CENTERED = false
+export const DEFAULT_HIDE_NAVBAR = false
 export const DRAG_SHADOW_BLUR = 4
 
 // drawing stuff
@@ -37,7 +38,7 @@ export const toolType = {
     RECTANGLE: 6,
 }
 export const DEFAULT_TOOL = toolType.PEN
-export const MIN_SAMPLE_COUNT = 2
+export const MIN_SAMPLE_COUNT = 5
 // number of overlapping points for sub livestrokes
 export const LIVESTROKE_PTS_OVERLAP = 2
 // maximum number of points a livestroke can have until cached

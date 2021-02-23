@@ -13,6 +13,7 @@ import {
     ZOOM_IN_BUTTON_SCALE,
     ZOOM_OUT_BUTTON_SCALE,
     DEFAULT_KEEP_CENTERED,
+    DEFAULT_HIDE_NAVBAR,
 } from "../../constants"
 
 // variables for multitouch zoom
@@ -23,6 +24,7 @@ const viewControlSlice = createSlice({
     name: "viewControl",
     initialState: {
         keepCentered: DEFAULT_KEEP_CENTERED,
+        hideNavBar: DEFAULT_HIDE_NAVBAR,
         stageWidth: DEFAULT_STAGE_WIDTH,
         stageHeight: DEFAULT_STAGE_HEIGHT,
         stageX: DEFAULT_STAGE_X,
@@ -33,6 +35,9 @@ const viewControlSlice = createSlice({
     reducers: {
         TOGGLE_SHOULD_CENTER: (state) => {
             state.keepCentered = !state.keepCentered
+        },
+        TOGGLE_HIDE_NAVBAR: (state) => {
+            state.hideNavBar = !state.hideNavBar
         },
         MULTI_TOUCH_MOVE: (state, action) => {
             const { p1, p2 } = action.payload
@@ -145,6 +150,7 @@ const viewControlSlice = createSlice({
 
 export const {
     TOGGLE_SHOULD_CENTER,
+    TOGGLE_HIDE_NAVBAR,
     MULTI_TOUCH_MOVE,
     MULTI_TOUCH_END,
     CENTER_VIEW,
