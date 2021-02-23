@@ -2,11 +2,11 @@
     position: fixed;
     display: grid;
     grid-auto-flow: row;
-    background: var(--menubarBackground);
+    background: var(--menubar-background);
     top: 50%;
     right: 5px;
     transform: translateY(-50%);
-    border-radius: var(--menubarBorderRadius);
+    border-radius: var(--menubar-border-radius);
     overflow: hidden;
     width: fit-content;
     gap: 0px;

@@ -2,13 +2,12 @@
 #icon-button-active {
     padding: 3px;
     text-align: center;
-    border-radius: var(--buttonBorderRadius);
-    height: var(--buttonHeight);
-    width: var(--buttonWidth);
+    border-radius: var(--button-border-radius);
+    height: var(--button-height);
+    width: var(--button-width);
     outline: none;
     border-width: 0;
     background: none;
-    /* box-shadow: var(--buttonShadow); */
 }
 
 #icon-button {
@@ -19,7 +18,7 @@
 }
 
 #icon-button-active {
-    color: var(--activeToolColor);
+    color: var(--active-tool-color);
 }
 
 #icon {

@@ -3,7 +3,7 @@
     left: 10px;
     top: 90px;
     overflow: hidden;
-    border-radius: var(--menubarBorderRadius);
+    border-radius: var(--menubar-border-radius);
     max-height: 500px;
     pointer-events: none;
     display: grid;
