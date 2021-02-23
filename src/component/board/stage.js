@@ -16,7 +16,7 @@ import {
 import PageContent from "./page_content"
 import PageListener from "./page_listener"
 
-import LiveLayer from "./livelayer"
+import LiveStroke from "./live_stroke"
 import {
     ZOOM_IN_WHEEL_SCALE,
     ZOOM_OUT_WHEEL_SCALE,
@@ -157,7 +157,7 @@ const StageContent = memo(() => {
             const startPage = Math.max(minPage, 0) // Set start page index to candidate or to 0 if negative index
             const endPage = Math.min(maxPage + 1, pageRank.length) // Set end page index; +1 because of slice indexing
             const pageSlice = pageRank.slice(startPage, endPage)
-            return pageSlice // todo: draw at correct position
+            return pageSlice
         }
     )
 
@@ -171,7 +171,7 @@ const StageContent = memo(() => {
                 </Layer>
             ))}
             <Layer draggable={false} listening={false}>
-                <LiveLayer />
+                <LiveStroke />
             </Layer>
         </>
     )
