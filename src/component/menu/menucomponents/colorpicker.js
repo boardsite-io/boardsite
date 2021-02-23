@@ -1,6 +1,5 @@
 import React from "react"
 import { CustomPicker } from "react-color"
-import "../../../css/stylepicker.css"
 
 // const { Alpha } = require("react-color/lib/components/common")
 const { EditableInput } = require("react-color/lib/components/common")

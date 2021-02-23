@@ -8,7 +8,6 @@ import {
     INCREMENT_WIDTH,
 } from "../../../redux/slice/drawcontrol"
 import { WIDTH_MIN, WIDTH_MAX } from "../../../constants"
-import "../../../css/stylepicker.css"
 import store from "../../../redux/store"
 
 export default function WidthPicker() {
