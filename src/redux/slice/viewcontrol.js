@@ -76,9 +76,10 @@ const viewControlSlice = createSlice({
             lastDist = dist
             lastCenter = newCenter
         },
-        MULTI_TOUCH_END: () => {
+        MULTI_TOUCH_END: (state) => {
             lastDist = 0
             lastCenter = null
+            updateCurrentPageIndex(state)
         },
         RESET_VIEW: (state) => {
             const oldScale = state.stageScale.y
