@@ -133,8 +133,8 @@ export default function BoardStage() {
                         // onDragMove={onDragMove}
                         onDragEnd={onDragEnd}
                         onContextMenu={(e) => e.evt.preventDefault()}
-                        onTouchMove={handleTouchMove}
-                        onTouchEnd={handleTouchEnd}
+                        onTouchMove={isPanMode ? null : handleTouchMove}
+                        onTouchEnd={isPanMode ? null : handleTouchEnd}
                         onWheel={onWheel}>
                         <ReactReduxContext.Provider value={value}>
                             <StageContent value={value} />
@@ -160,7 +160,6 @@ const StageContent = memo(() => {
             return pageSlice
         }
     )
-
     const pageSlice = useSelector(pageCreateSelector)
     return (
         <>
