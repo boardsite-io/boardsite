@@ -14,6 +14,7 @@ import {
     CANVAS_FULL_HEIGHT,
 } from "../../constants"
 import { END_LIVESTROKE, SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
+import { blankPaper, checkeredPaper, ruledPaper } from "./page_backgrounds"
 
 export default function PageListener({ pageId }) {
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
@@ -108,6 +109,16 @@ export default function PageListener({ pageId }) {
     const isListening = useSelector((state) => state.drawControl.isListening)
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
 
+    const i = 1
+    let pageBackground
+    if (i === 0) {
+        pageBackground = checkeredPaper
+    } else if (i === 1) {
+        pageBackground = ruledPaper
+    } else {
+        pageBackground = blankPaper
+    }
+
     return (
         <Rect
             draggable={false}
@@ -130,35 +141,7 @@ export default function PageListener({ pageId }) {
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
-            sceneFunc={(context, shape) => {
-                context.beginPath()
-                // don't need to set position of rect, Konva will handle it
-                const width = shape.getAttr("width")
-                const height = shape.getAttr("height")
-                context.rect(0, 0, width, height)
-                context.fillStrokeShape(shape)
-
-                // make checkered math paper
-                const gap = 20
-                const rows = Math.ceil(height / gap)
-                const columns = Math.ceil(width / gap)
-                for (let i = 1; i < rows; i += 1) {
-                    const y = i * gap
-                    context.moveTo(0, y)
-                    context.lineTo(width, y)
-                }
-                for (let i = 1; i < columns; i += 1) {
-                    const x = i * gap
-                    context.moveTo(x, 0)
-                    context.lineTo(x, height)
-                }
-                context.setAttr("strokeStyle", "#00000088")
-                context.stroke()
-
-                // (!) Konva specific method, it is very important
-                // it will apply are required styles
-                // context.fillStrokeShape(shape)
-            }}
+            sceneFunc={pageBackground}
         />
     )
 }

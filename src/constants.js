@@ -5,7 +5,7 @@ export const CANVAS_FULL_HEIGHT = CANVAS_HEIGHT + CANVAS_GAP
 export const CANVAS_PIXEL_RATIO = 1 // css forces canvas to be in a smaller frame but with high res for better clarity
 export const WIDTH_MIN = 1
 export const WIDTH_MAX = 40
-export const DEFAULT_WIDTH = 4
+export const DEFAULT_WIDTH = 2
 export const DEFAULT_COLOR = "#000000"
 export const DEFAULT_ISPANMODE = false
 export const ZOOM_IN_WHEEL_SCALE = 1.1
@@ -44,7 +44,7 @@ export const LIVESTROKE_PTS_OVERLAP = 1
 // maximum number of points a livestroke can have until cached
 export const MAX_LIVESTROKE_PTS = 50
 // epsilon for the Ramer–Douglas–Peucker algorithm
-export const RDP_EPSILON = 1.0
+export const RDP_EPSILON = 0.3
 
 // api
 export const API_URL = `http${
