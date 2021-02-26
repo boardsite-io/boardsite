@@ -1,31 +1,36 @@
 import React from "react"
 import { MdRedo, MdUndo } from "react-icons/md"
+import { useSelector } from "react-redux"
+import { REDO, UNDO } from "../../../redux/slice/boardcontrol"
 import store from "../../../redux/store"
 
 export default function UndoRedo() {
-    // const canUndo = useSelector((state) => state.boardControl.past.length > 0)
-    // const canRedo = useSelector((state) => state.boardControl.future.length > 0)
+    const displayUndo = useSelector(
+        (state) => state.boardControl.undoStack.length !== 0
+    )
+    const displayRedo = useSelector(
+        (state) => state.boardControl.redoStack.length !== 0
+    )
 
     return (
-        <>
+        <div>
             <button
                 type="button"
                 id="icon-button"
-                // disabled={!canUndo}
                 onClick={() => {
-                    store.dispatch()
+                    store.dispatch(UNDO())
                 }}>
-                <MdUndo id="icon" />
+                {displayUndo ? <MdUndo id="icon" /> : null}
             </button>
+
             <button
                 type="button"
                 id="icon-button"
-                // disabled={!canRedo}
                 onClick={() => {
-                    store.dispatch()
+                    store.dispatch(REDO())
                 }}>
-                <MdRedo id="icon" />
+                {displayRedo ? <MdRedo id="icon" /> : null}
             </button>
-        </>
+        </div>
     )
 }
