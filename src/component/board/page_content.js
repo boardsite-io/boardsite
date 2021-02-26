@@ -9,7 +9,7 @@ import StrokeShape from "./stroke_shapes"
 
 export default function PageContent({ pageId }) {
     const strokes = useSelector(
-        (state) => state.boardControl.present.pageCollection[pageId]?.strokes
+        (state) => state.boardControl.pageCollection[pageId]?.strokes
     )
 
     const handleDragEnd = (e) => {

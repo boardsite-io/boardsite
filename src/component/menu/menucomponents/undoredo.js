@@ -1,6 +1,4 @@
 import React from "react"
-import { ActionCreators as UndoActionCreators } from "redux-undo"
-// import { useSelector } from "react-redux"
 import { MdRedo, MdUndo } from "react-icons/md"
 import store from "../../../redux/store"
 
@@ -15,7 +13,7 @@ export default function UndoRedo() {
                 id="icon-button"
                 // disabled={!canUndo}
                 onClick={() => {
-                    store.dispatch(UndoActionCreators.undo())
+                    store.dispatch()
                 }}>
                 <MdUndo id="icon" />
             </button>
@@ -24,7 +22,7 @@ export default function UndoRedo() {
                 id="icon-button"
                 // disabled={!canRedo}
                 onClick={() => {
-                    store.dispatch(UndoActionCreators.redo())
+                    store.dispatch()
                 }}>
                 <MdRedo id="icon" />
             </button>

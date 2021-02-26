@@ -149,7 +149,7 @@ export default function BoardStage() {
 // all pages and content are in this component
 const StageContent = memo(() => {
     const pageCreateSelector = createSelector(
-        (state) => state.boardControl.present.pageRank,
+        (state) => state.boardControl.pageRank,
         (state) => state.viewControl.currentPageIndex,
         (pageRank, currentPageIndex) => {
             const minPage = currentPageIndex - 1 // Get min page candidate

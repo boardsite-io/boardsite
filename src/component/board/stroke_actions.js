@@ -108,7 +108,7 @@ function createStroke(liveStroke, pageId) {
 }
 
 export function getPageIndex(pageId) {
-    return store.getState().boardControl.present.pageRank.indexOf(pageId)
+    return store.getState().boardControl.pageRank.indexOf(pageId)
 }
 
 /**

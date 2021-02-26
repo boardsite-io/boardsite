@@ -21,9 +21,7 @@ export default function ViewNavigation() {
     )
 
     const hideNavBar = useSelector((state) => state.viewControl.hideNavBar)
-    const numPages = useSelector(
-        (state) => state.boardControl.present.pageRank.length
-    )
+    const numPages = useSelector((state) => state.boardControl.pageRank.length)
 
     function goToLastPage() {
         store.dispatch(JUMP_PAGE_WITH_INDEX(numPages - 1))

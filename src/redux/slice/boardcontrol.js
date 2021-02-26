@@ -1,11 +1,12 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit"
-import undoable from "redux-undo"
 
 const boardControlSlice = createSlice({
     name: "boardControl",
     initialState: {
         pageRank: [], // ["id1", "id2", ...]
         pageCollection: {}, // {id1: canvasRef1, id2: canvasRef2, ...}
+        redoStack: [],
+        undoStack: [],
     },
     reducers: {
         SYNC_ALL_PAGES: (state, action) => {
@@ -119,5 +120,4 @@ export const {
     UPDATE_STROKE,
 } = boardControlSlice.actions
 
-const undoableTodos = undoable(boardControlSlice.reducer)
-export default undoableTodos
+export default boardControlSlice.reducer

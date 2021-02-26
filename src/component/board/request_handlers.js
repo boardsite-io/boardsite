@@ -37,7 +37,7 @@ export function handleAddPageUnder() {
 }
 
 export function handleClearPage() {
-    const pageId = store.getState().boardControl.present.pageRank[
+    const pageId = store.getState().boardControl.pageRank[
         store.getState().viewControl.currentPageIndex
     ]
     if (isConnected()) {
@@ -48,7 +48,7 @@ export function handleClearPage() {
 }
 
 export function handleDeletePage() {
-    const pageId = store.getState().boardControl.present.pageRank[
+    const pageId = store.getState().boardControl.pageRank[
         store.getState().viewControl.currentPageIndex
     ]
     if (isConnected()) {
@@ -62,9 +62,7 @@ export function handleDeleteAllPages() {
     if (isConnected()) {
         store
             .getState()
-            .boardControl.present.pageRank.forEach((pid) =>
-                deletePageSession(pid)
-            )
+            .boardControl.pageRank.forEach((pid) => deletePageSession(pid))
     } else {
         store.dispatch(DELETE_ALL_PAGES())
     }
@@ -84,8 +82,7 @@ export function handleUpdateStroke({ x, y, id, pageId }) {
     if (isConnected()) {
         // send updated stroke
         sendStroke(
-            store.getState().boardControl.present.pageCollection[pageId]
-                .strokes[id]
+            store.getState().boardControl.pageCollection[pageId].strokes[id]
         )
     }
 }
