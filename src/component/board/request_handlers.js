@@ -2,23 +2,17 @@ import {
     addPageSession,
     clearPageSession,
     deletePageSession,
-    eraseStroke,
     isConnected,
-    sendStroke,
 } from "../../api/websocket"
 import {
     ADD_PAGE,
     CLEAR_PAGE,
     DELETE_PAGE,
     DELETE_ALL_PAGES,
-    UPDATE_STROKE,
-    ERASE_STROKE,
-    ADD_STROKE,
-    UNDO,
-    REDO,
 } from "../../redux/slice/boardcontrol"
 
 import store from "../../redux/store"
+import { addStroke, deleteStroke, redo, undo, updateStroke } from "./undoredo"
 
 export function handleAddPageOver() {
     const pageIndex = store.getState().viewControl.currentPageIndex
@@ -71,35 +65,21 @@ export function handleDeleteAllPages() {
 }
 
 export function handleAddStroke(stroke) {
-    // add stroke to collection
-    store.dispatch(ADD_STROKE(stroke))
-    if (isConnected()) {
-        // relay stroke in session
-        sendStroke(stroke)
-    }
+    addStroke(stroke)
 }
 
-export function handleUpdateStroke({ x, y, id, pageId }) {
-    store.dispatch(UPDATE_STROKE({ x, y, id, pageId }))
-    if (isConnected()) {
-        // send updated stroke
-        sendStroke(
-            store.getState().boardControl.pageCollection[pageId].strokes[id]
-        )
-    }
+export function handleUpdateStroke(stroke) {
+    updateStroke(stroke)
 }
 
-export function handleDeleteStroke({ pageId, id }) {
-    store.dispatch(ERASE_STROKE({ pageId, id }))
-    if (isConnected()) {
-        eraseStroke({ pageId, id })
-    }
+export function handleDeleteStroke(stroke) {
+    deleteStroke(stroke)
 }
 
 export function handleUndo() {
-    store.dispatch(UNDO())
+    undo()
 }
 
 export function handleRedo() {
-    store.dispatch(REDO())
+    redo()
 }

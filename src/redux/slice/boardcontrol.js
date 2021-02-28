@@ -5,26 +5,8 @@ const boardControlSlice = createSlice({
     initialState: {
         pageRank: [], // ["id1", "id2", ...]
         pageCollection: {}, // {id1: canvasRef1, id2: canvasRef2, ...}
-        redoStack: [],
-        undoStack: [],
     },
     reducers: {
-        // Undo
-        UNDO: (state) => {
-            const undoStroke = state.undoStack.pop()
-            if (undoStroke) {
-                undoStroke.handle(state, undoStroke.stroke)
-            }
-        },
-
-        // Redo
-        REDO: (state) => {
-            const redoStroke = state.redoStack.pop()
-            if (redoStroke) {
-                redoStroke.handle(state, redoStroke.stroke)
-            }
-        },
-
         SYNC_ALL_PAGES: (state, action) => {
             const { pageRank, pageCollection } = action.payload
             state.pageRank = pageRank
@@ -106,14 +88,22 @@ const boardControlSlice = createSlice({
 
         // Erase stroke from collection
         ERASE_STROKE(state, action) {
-            const stroke = action.payload
-            deleteStroke(state, stroke)
+            const { pageId, id } = action.payload
+            const page = state.pageCollection[pageId]
+            if (page) {
+                delete page.strokes[id]
+            }
         },
 
         // Update stroke position after dragging
         UPDATE_STROKE(state, action) {
             const { x, y, id, pageId } = action.payload
-            updateStroke(state, { x, y, id, pageId })
+            const page = state.pageCollection[pageId]
+            if (page) {
+                const stroke = page.strokes[id]
+                stroke.x = x
+                stroke.y = y
+            }
         },
     },
 })
@@ -123,98 +113,12 @@ function addStroke(state, stroke) {
     const page = state.pageCollection[pageId]
 
     if (page) {
-        // Add to UndoStack
-        state.undoStack.push({
-            stroke,
-            handle: undoAddStroke,
-        })
-
         // Add to pageCollection
         page.strokes[id] = stroke
     }
 }
 
-function deleteStroke(state, { pageId, id }) {
-    const page = state.pageCollection[pageId]
-    if (page) {
-        const stroke = page.strokes[id]
-        // Add to UndoStack
-        state.undoStack.push({
-            stroke,
-            handle: undoDeleteStroke,
-        })
-
-        // Delete from pageCollection
-        delete page.strokes[id]
-    }
-}
-
-function updateStroke(state, { x, y, id, pageId }) {
-    const page = state.pageCollection[pageId]
-
-    if (page) {
-        const stroke = page.strokes[id]
-
-        // Add to UndoStack
-        state.undoStack.push({
-            stroke: { ...stroke }, // make copy to redo update
-            handle: undoUpdateStroke,
-        })
-
-        // Update x,y position (onDragEnd)
-        stroke.x = x
-        stroke.y = y
-    }
-}
-
-function undoAddStroke(state, stroke) {
-    const { pageId, id } = stroke
-    const page = state.pageCollection[pageId]
-
-    if (page) {
-        state.redoStack.push({
-            stroke,
-            handle: addStroke,
-        })
-        delete page.strokes[id]
-    }
-}
-
-function undoDeleteStroke(state, stroke) {
-    const { pageId, id } = stroke
-    const page = state.pageCollection[pageId]
-
-    if (page) {
-        // Add to RedoStack
-        state.redoStack.push({
-            stroke,
-            handle: deleteStroke,
-        })
-        page.strokes[id] = stroke
-    }
-}
-
-function undoUpdateStroke(state, { x, y, id, pageId }) {
-    const page = state.pageCollection[pageId]
-
-    if (page) {
-        const stroke = page.strokes[id]
-
-        // Add to redoStack
-        state.redoStack.push({
-            stroke: { ...stroke },
-            handle: updateStroke,
-        })
-
-        // Update x,y position (onDragEnd)
-        stroke.x = x
-        stroke.y = y
-    }
-}
-
 export const {
-    UNDO,
-    REDO,
     SYNC_ALL_PAGES,
     SET_PAGERANK,
     ADD_PAGE,
