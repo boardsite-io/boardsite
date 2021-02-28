@@ -11,14 +11,14 @@ const redoStack = []
 
 export function undo() {
     const undoStroke = undoStack.pop()
-    if (undoStroke) {
+    if (undoStroke && undoStroke.stroke) {
         undoStroke.handle(undoStroke.stroke, true, redoStack)
     }
 }
 
 export function redo() {
     const redoStroke = redoStack.pop()
-    if (redoStroke) {
+    if (redoStroke && redoStroke.stroke) {
         redoStroke.handle(redoStroke.stroke, true, undoStack)
     }
 }
@@ -74,20 +74,23 @@ export function updateStroke(
     const page = store.getState().boardControl.pageCollection[pageId]
     if (page) {
         const stroke = page.strokes[id]
-        if (isRedoable) {
-            // Add to UndoStack
-            stack.push({
-                stroke: { x: stroke.x, y: stroke.y, id, pageId }, // make copy to redo update
-                handle: updateStroke,
-            })
-        }
+        if (stroke) {
+            if (isRedoable) {
+                // Add to UndoStack
+                stack.push({
+                    stroke: { x: stroke.x, y: stroke.y, id, pageId }, // make copy to redo update
+                    handle: updateStroke,
+                })
+            }
 
-        store.dispatch(UPDATE_STROKE({ x, y, id, pageId }))
-        if (isConnected()) {
-            // send updated stroke
-            sendStroke(
-                store.getState().boardControl.pageCollection[pageId].strokes[id]
-            )
+            store.dispatch(UPDATE_STROKE({ x, y, id, pageId }))
+            if (isConnected()) {
+                // send updated stroke
+                sendStroke(
+                    store.getState().boardControl.pageCollection[pageId]
+                        .strokes[id]
+                )
+            }
         }
     }
 }
