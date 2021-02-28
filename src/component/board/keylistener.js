@@ -7,6 +7,7 @@ import {
     JUMP_TO_NEXT_PAGE,
     JUMP_TO_PREV_PAGE,
 } from "../../redux/slice/viewcontrol"
+import { handleRedo, handleUndo } from "./request_handlers"
 
 export default function keyListener(e) {
     switch (e.key) {
@@ -58,16 +59,16 @@ export default function keyListener(e) {
         case "6": // Circle
             store.dispatch(SET_TYPE(toolType.CIRCLE))
             break
-        // case "z": // Undo (Ctrl + Z)
-        //     if (e.ctrlKey && !e.repeat) {
-        //         store.dispatch(UndoActionCreators.undo())
-        //     }
-        //     break
-        // case "y": // Redo (Ctrl + Y)
-        //     if (e.ctrlKey && !e.repeat) {
-        //         store.dispatch(UndoActionCreators.redo())
-        //     }
-        //     break
+        case "z": // Undo (Ctrl + Z)
+            if (e.ctrlKey && !e.repeat) {
+                handleUndo()
+            }
+            break
+        case "y": // Redo (Ctrl + Y)
+            if (e.ctrlKey && !e.repeat) {
+                handleRedo()
+            }
+            break
         case " ": // Undo (Ctrl + Z)
             store.dispatch(TOGGLE_PANMODE())
             break

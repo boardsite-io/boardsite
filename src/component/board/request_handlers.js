@@ -14,6 +14,8 @@ import {
     UPDATE_STROKE,
     ERASE_STROKE,
     ADD_STROKE,
+    UNDO,
+    REDO,
 } from "../../redux/slice/boardcontrol"
 
 import store from "../../redux/store"
@@ -92,4 +94,12 @@ export function handleDeleteStroke({ pageId, id }) {
     if (isConnected()) {
         eraseStroke({ pageId, id })
     }
+}
+
+export function handleUndo() {
+    store.dispatch(UNDO())
+}
+
+export function handleRedo() {
+    store.dispatch(REDO())
 }

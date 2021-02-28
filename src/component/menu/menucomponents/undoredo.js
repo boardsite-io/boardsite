@@ -1,8 +1,7 @@
 import React from "react"
 import { MdRedo, MdUndo } from "react-icons/md"
 import { useSelector } from "react-redux"
-import { REDO, UNDO } from "../../../redux/slice/boardcontrol"
-import store from "../../../redux/store"
+import { handleUndo, handleRedo } from "../../board/request_handlers"
 
 export default function UndoRedo() {
     const displayUndo = useSelector(
@@ -14,21 +13,11 @@ export default function UndoRedo() {
 
     return (
         <div>
-            <button
-                type="button"
-                id="icon-button"
-                onClick={() => {
-                    store.dispatch(UNDO())
-                }}>
+            <button type="button" id="icon-button" onClick={handleUndo}>
                 {displayUndo ? <MdUndo id="icon" /> : null}
             </button>
 
-            <button
-                type="button"
-                id="icon-button"
-                onClick={() => {
-                    store.dispatch(REDO())
-                }}>
+            <button type="button" id="icon-button" onClick={handleRedo}>
                 {displayRedo ? <MdRedo id="icon" /> : null}
             </button>
         </div>
