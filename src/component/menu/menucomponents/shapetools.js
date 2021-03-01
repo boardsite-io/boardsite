@@ -1,11 +1,7 @@
 import React, { useState } from "react"
-import {
-    BsSlash,
-    BsCircle,
-    BsTriangle,
-    BsTools,
-    BsSquare,
-} from "react-icons/bs"
+import { IoShapesOutline } from "react-icons/io5"
+import { FiMinus, FiCircle, FiSquare, FiTriangle } from "react-icons/fi"
+
 import { useSelector } from "react-redux"
 import { toolType } from "../../../constants"
 import store from "../../../redux/store"
@@ -24,19 +20,19 @@ export default function ShapeTools() {
     let style = { color: colorSelector }
     switch (typeSelector) {
         case toolType.LINE:
-            icon = <BsSlash id="icon" />
+            icon = <FiMinus id="icon" />
             break
         case toolType.RECTANGLE:
-            icon = <BsSquare id="icon" />
+            icon = <FiSquare id="icon" />
             break
         case toolType.TRIANGLE:
-            icon = <BsTriangle id="icon" />
+            icon = <FiTriangle id="icon" />
             break
         case toolType.CIRCLE:
-            icon = <BsCircle id="icon" />
+            icon = <FiCircle id="icon" />
             break
         default:
-            icon = <BsTools id="icon" />
+            icon = <IoShapesOutline id="icon" />
             style = null
             break
     }
@@ -69,7 +65,7 @@ export default function ShapeTools() {
                                     store.dispatch(SET_TYPE(toolType.LINE))
                                     setOpen(false)
                                 }}>
-                                <BsSlash id="icon" />
+                                <FiMinus id="icon" />
                             </button>
                             <button
                                 type="button"
@@ -78,7 +74,7 @@ export default function ShapeTools() {
                                     store.dispatch(SET_TYPE(toolType.RECTANGLE))
                                     setOpen(false)
                                 }}>
-                                <BsSquare id="icon" />
+                                <FiSquare id="icon" />
                             </button>
                             <button
                                 type="button"
@@ -87,7 +83,7 @@ export default function ShapeTools() {
                                     store.dispatch(SET_TYPE(toolType.TRIANGLE))
                                     setOpen(false)
                                 }}>
-                                <BsTriangle id="icon" />
+                                <FiTriangle id="icon" />
                             </button>
                             <button
                                 type="button"
@@ -96,7 +92,7 @@ export default function ShapeTools() {
                                     store.dispatch(SET_TYPE(toolType.CIRCLE))
                                     setOpen(false)
                                 }}>
-                                <BsCircle id="icon" />
+                                <FiCircle id="icon" />
                             </button>
                         </div>
                     </div>
