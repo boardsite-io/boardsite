@@ -154,6 +154,7 @@ export default function SessionDialog() {
                                         // variant="outlined"
                                         // defaultValue="hi"
                                         onChange={handleAliasChange}
+                                        inputProps={{ maxLength: 20 }}
                                     />
                                 </Grid>
                             </Grid>

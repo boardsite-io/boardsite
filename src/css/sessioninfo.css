@@ -19,7 +19,7 @@
     font-size: small;
     height: 18px;
     width: fit-content;
-    max-width: 400px;
+    max-width: 250px;
     gap: 5px;
     border-radius: 100px;
     padding-left: 1.5px;
@@ -35,7 +35,10 @@
 }
 
 .user-alias {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     color: white;
-    width: fit-content;
+    width: 100%;
     margin: auto;
 }
