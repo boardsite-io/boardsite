@@ -38,17 +38,10 @@ export const toolType = {
     RECTANGLE: 6,
 }
 export const DEFAULT_TOOL = toolType.PEN
-export const MIN_SAMPLE_COUNT = 3
+export const MIN_SAMPLE_COUNT = 1
 // number of overlapping points for sub livestrokes
 export const LIVESTROKE_PTS_OVERLAP = 1
 // maximum number of points a livestroke can have until cached
 export const MAX_LIVESTROKE_PTS = 50
 // epsilon for the Ramer–Douglas–Peucker algorithm
 export const RDP_EPSILON = 0.3
-
-// api
-export const API_URL = `http${
-    process.env.REACT_APP_B_SSL === "1" ? "s" : ""
-}://${process.env.REACT_APP_B_API_HOSTNAME}:${process.env.REACT_APP_B_API_PORT}`
-
-export const API_SESSION_URL = `${API_URL}/b`

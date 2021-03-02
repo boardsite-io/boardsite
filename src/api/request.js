@@ -1,13 +1,13 @@
 import axios from "axios"
-import { API_URL } from "../constants"
+import { API_URL } from "./types"
 
 const apiRequest = axios.create({
     baseURL: API_URL,
-    transformRequest: [(data) => JSON.stringify(data)],
+    transformRequest: [(data) => JSON.stringify({ content: data })], // for routes we dont need message type
     transformResponse: [
         (data) => {
             try {
-                return JSON.parse(data)
+                return JSON.parse(data).content // only need content
             } catch {
                 return {}
             }

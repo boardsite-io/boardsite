@@ -37,6 +37,7 @@ const webControlSlice = createSlice({
             state.webSocket = ws
             state.sessionId = sessionId
             state.user = user
+            state.connectedUsers[user.id] = user
         },
         CLOSE_WS: (state) => {
             state.webSocket.close()
@@ -50,13 +51,18 @@ const webControlSlice = createSlice({
         //     state.strokesInBuf.concat(JSON.parse(data))
         // },
         // for now we only send one stroke at a time
-        SEND_STROKE: (state, action) => {
-            // append userId
-            const stroke = { ...action.payload, userId: state.user.id }
-            state.webSocket.send(JSON.stringify([stroke]))
+        // SEND_STROKE: (state, action) => {
+        //     // append userId
+        //     const stroke = { ...action.payload, userId: state.user.id }
+        //     state.webSocket.send(JSON.stringify([stroke]))
+        // },
+        USER_CONNECT: (state, action) => {
+            const user = action.payload
+            state.connectedUsers[user.id] = user
         },
-        SET_SESSION_USERS: (state, action) => {
-            state.connectedUsers = action.payload
+        USER_DISCONNECT: (state, action) => {
+            const { id } = action.payload
+            delete state.connectedUsers[id]
         },
         SET_SDIAG: (state, action) => {
             state.sessionDialog = { ...state.sessionDialog, ...action.payload }
@@ -81,9 +87,8 @@ const webControlSlice = createSlice({
 export const {
     CREATE_WS,
     CLOSE_WS,
-    RECEIVE_STROKES,
-    SEND_STROKE,
-    SET_SESSION_USERS,
+    USER_CONNECT,
+    USER_DISCONNECT,
     SET_SID,
     SET_SDIAG,
     CLOSE_SDIAG,

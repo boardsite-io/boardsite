@@ -9,11 +9,11 @@ import {
     getPages,
     getStrokes,
 } from "./request"
-import { toolType, API_SESSION_URL } from "../constants"
+import { toolType } from "../constants"
 import {
     CREATE_WS,
-    SEND_STROKE,
-    SET_SESSION_USERS,
+    USER_CONNECT,
+    USER_DISCONNECT,
 } from "../redux/slice/webcontrol"
 import {
     DELETE_ALL_PAGES,
@@ -23,6 +23,7 @@ import {
     ERASE_STROKE,
     CLEAR_PAGE,
 } from "../redux/slice/boardcontrol"
+import { API_SESSION_URL, MessageType, newMessage } from "./types"
 
 /**
  * Connect to Websocket.
@@ -34,7 +35,9 @@ export function createWebsocket(sessionId, user) {
                 user.id
             }/socket`
         )
-        ws.onmessage = onMessage
+        ws.onmessage = (msg) => {
+            receive(JSON.parse(msg.data))
+        }
         ws.onopen = () => {
             store.dispatch(CREATE_WS({ ws, sessionId, user }))
             resolve()
@@ -43,10 +46,44 @@ export function createWebsocket(sessionId, user) {
     })
 }
 
-function onMessage(msg) {
-    const strokes = JSON.parse(msg.data)
-    receiveStrokes(strokes)
-    // store.dispatch(RECEIVE_STROKES(data))
+export function send(type = "", content = {}) {
+    const message = newMessage(
+        type,
+        store.getState().webControl.user.id,
+        content
+    )
+    store.getState().webControl.webSocket.send(JSON.stringify(message))
+}
+
+/**
+ * Receive a message via websocket connection.
+ * @param {{type: string, sender: string, content: any}} message message
+ */
+function receive(message) {
+    switch (message.type) {
+        case MessageType.Stroke:
+            receiveStrokes(message.content)
+            break
+
+        case MessageType.PageSync:
+            store.dispatch(SET_PAGERANK(message.content))
+            break
+
+        case MessageType.PageClear:
+            message.content.forEach((pid) => store.dispatch(CLEAR_PAGE(pid)))
+            break
+
+        case MessageType.UserConnected:
+            store.dispatch(USER_CONNECT(message.content))
+            break
+
+        case MessageType.UserDisconnected:
+            store.dispatch(USER_DISCONNECT(message.content))
+            break
+
+        default:
+            break
+    }
 }
 
 function receiveStrokes(strokes) {
@@ -57,24 +94,8 @@ function receiveStrokes(strokes) {
         } else if (stroke.type === 0) {
             // delete stroke
             store.dispatch(ERASE_STROKE(stroke))
-        } else {
-            // non-stroke type, e.g. pageRank update, messages
-            receiveGeneric(stroke)
         }
     })
-}
-
-// Non-stroke types (type < 0) receive handler
-function receiveGeneric(stroke) {
-    // properties are mutually exclusive
-    // we may assume the server sends correct data
-    if (Object.prototype.hasOwnProperty.call(stroke, "pageRank")) {
-        store.dispatch(SET_PAGERANK(stroke.pageRank))
-    } else if (Object.prototype.hasOwnProperty.call(stroke, "pageClear")) {
-        stroke.pageClear.forEach((pid) => store.dispatch(CLEAR_PAGE(pid)))
-    } else if (Object.prototype.hasOwnProperty.call(stroke, "connectedUsers")) {
-        store.dispatch(SET_SESSION_USERS(stroke.connectedUsers))
-    }
 }
 
 export function isConnected() {
@@ -86,7 +107,7 @@ export function isConnected() {
 }
 
 export async function newSession() {
-    const { sessionId } = await createSession()
+    const sessionId = await createSession()
     store.dispatch(DELETE_ALL_PAGES())
     // create a pageid which will be added when joining
     await addPage(sessionId, nanoid(8), 0)
@@ -103,7 +124,7 @@ export async function joinSession(
     await createWebsocket(sessionId, user)
 
     // set the pages according to api
-    const { pageRank } = await getPages(sessionId)
+    const pageRank = await getPages(sessionId)
     store.dispatch(SET_PAGERANK(pageRank))
 
     // fetch data from each page
@@ -114,12 +135,14 @@ export async function joinSession(
 }
 
 export function sendStroke(stroke) {
-    store.dispatch(SEND_STROKE(stroke))
+    // append the user id to stroke
+    send(MessageType.Stroke, [
+        { ...stroke, userId: store.getState().webControl.user.id },
+    ])
 }
 
 export function eraseStroke({ id, pageId }) {
-    const stroke = { id, pageId, type: toolType.ERASER }
-    store.dispatch(SEND_STROKE(stroke))
+    sendStroke({ id, pageId, type: toolType.ERASER })
 }
 
 export function addPageSession(pageIndex) {
