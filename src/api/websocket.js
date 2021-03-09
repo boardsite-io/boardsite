@@ -8,10 +8,12 @@ import {
     deletePage,
     getPages,
     getStrokes,
+    getUsers,
 } from "./request"
 import { toolType } from "../constants"
 import {
     CREATE_WS,
+    SET_SESSION_USERS,
     USER_CONNECT,
     USER_DISCONNECT,
 } from "../redux/slice/webcontrol"
@@ -22,6 +24,7 @@ import {
     SET_PAGERANK,
     ERASE_STROKE,
     CLEAR_PAGE,
+    SET_PAGEMETA,
 } from "../redux/slice/boardcontrol"
 import { API_SESSION_URL, MessageType, newMessage } from "./types"
 
@@ -66,7 +69,7 @@ function receive(message) {
             break
 
         case MessageType.PageSync:
-            store.dispatch(SET_PAGERANK(message.content))
+            syncPages(message.content)
             break
 
         case MessageType.PageClear:
@@ -98,6 +101,13 @@ function receiveStrokes(strokes) {
     })
 }
 
+function syncPages({ pageRank, meta }) {
+    store.dispatch(SET_PAGERANK(pageRank))
+    Object.keys(meta).forEach((pageId) =>
+        store.dispatch(SET_PAGEMETA({ pageId, meta: meta[pageId] }))
+    )
+}
+
 export function isConnected() {
     return (
         store.getState().webControl.sessionId !== "" &&
@@ -123,9 +133,12 @@ export async function joinSession(
     const user = await createUser(sessionId, { alias, color })
     await createWebsocket(sessionId, user)
 
+    store.dispatch(SET_SESSION_USERS(await getUsers(sessionId)))
+
     // set the pages according to api
-    const pageRank = await getPages(sessionId)
-    store.dispatch(SET_PAGERANK(pageRank))
+    store.dispatch(DELETE_ALL_PAGES())
+    const { pageRank, meta } = await getPages(sessionId)
+    syncPages({ pageRank, meta })
 
     // fetch data from each page
     pageRank.forEach(async (pageId) => {

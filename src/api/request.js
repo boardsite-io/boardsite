@@ -36,6 +36,10 @@ export async function createSession() {
     return sendRequest("/b/create", "post")
 }
 
+export async function getUsers(sessionId) {
+    return sendRequest(`/b/${sessionId}/users`, "get")
+}
+
 export async function createUser(sessionId, { alias, color }) {
     return sendRequest(`/b/${sessionId}/users`, "post", {
         alias,
@@ -56,10 +60,11 @@ export async function getStrokes(sessionId, pageId) {
     return sendRequest(`/b/${sessionId}/pages/${pageId}`, "get")
 }
 
-export async function addPage(sessionId, pageId, index) {
+export async function addPage(sessionId, pageId, index, meta) {
     return sendRequest(`/b/${sessionId}/pages`, "post", {
         pageId,
         index,
+        meta,
     })
 }
 

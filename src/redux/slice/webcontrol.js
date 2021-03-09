@@ -64,6 +64,9 @@ const webControlSlice = createSlice({
             const { id } = action.payload
             delete state.connectedUsers[id]
         },
+        SET_SESSION_USERS: (state, action) => {
+            state.connectedUsers = action.payload
+        },
         SET_SDIAG: (state, action) => {
             state.sessionDialog = { ...state.sessionDialog, ...action.payload }
         },
@@ -89,6 +92,7 @@ export const {
     CLOSE_WS,
     USER_CONNECT,
     USER_DISCONNECT,
+    SET_SESSION_USERS,
     SET_SID,
     SET_SDIAG,
     CLOSE_SDIAG,

@@ -40,14 +40,14 @@ export default function Whiteboard() {
                             })
                         )
                     })
+            } else {
+                // url is "/", add default page
+                handleAddPageOver()
             }
         }
     }, [sid, dispatch])
 
-    // Open dialog on mount
     useEffect(() => {
-        // setOpenSessionDialog(true);
-        handleAddPageOver()
         document.addEventListener("keydown", boardKeyListener)
     }, [])
 

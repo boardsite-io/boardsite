@@ -33,6 +33,11 @@ const boardControlSlice = createSlice({
             state.pageRank = newPageRank
         },
 
+        SET_PAGEMETA: (state, action) => {
+            const { pageId, meta } = action.payload
+            state.pageCollection[pageId].meta = meta
+        },
+
         // Add a new page
         ADD_PAGE: (state, action) => {
             const pageIndex = action.payload
@@ -122,6 +127,7 @@ export const {
     SYNC_ALL_PAGES,
     SET_PAGERANK,
     ADD_PAGE,
+    SET_PAGEMETA,
     CLEAR_PAGE,
     DELETE_PAGE,
     DELETE_ALL_PAGES,

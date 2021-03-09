@@ -1,4 +1,4 @@
-export const blankPaper = (context, shape) => {
+const blank = (context, shape) => {
     context.beginPath()
     // don't need to set position of rect, Konva will handle it
     const width = shape.getAttr("width")
@@ -7,7 +7,7 @@ export const blankPaper = (context, shape) => {
     context.fillStrokeShape(shape)
 }
 
-export const checkeredPaper = (context, shape) => {
+const checkered = (context, shape) => {
     context.beginPath()
     // don't need to set position of rect, Konva will handle it
     const width = shape.getAttr("width")
@@ -37,7 +37,7 @@ export const checkeredPaper = (context, shape) => {
     // context.fillStrokeShape(shape)
 }
 
-export const ruledPaper = (context, shape) => {
+const ruled = (context, shape) => {
     context.beginPath()
     // don't need to set position of rect, Konva will handle it
     const width = shape.getAttr("width")
@@ -55,4 +55,10 @@ export const ruledPaper = (context, shape) => {
     }
     context.setAttr("strokeStyle", "#00000088")
     context.stroke()
+}
+
+export default {
+    blank,
+    checkered,
+    ruled,
 }

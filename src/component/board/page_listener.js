@@ -14,7 +14,7 @@ import {
     CANVAS_FULL_HEIGHT,
 } from "../../constants"
 import { END_LIVESTROKE, SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
-import { blankPaper, checkeredPaper, ruledPaper } from "./page_backgrounds"
+import pageBackground from "./page_backgrounds"
 
 export default function PageListener({ pageId }) {
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
@@ -108,17 +108,9 @@ export default function PageListener({ pageId }) {
 
     const isListening = useSelector((state) => state.drawControl.isListening)
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
-
-    const i = 1
-    let pageBackground
-    if (i === 0) {
-        pageBackground = checkeredPaper
-    } else if (i === 1) {
-        pageBackground = ruledPaper
-    } else {
-        pageBackground = blankPaper
-    }
-
+    // const pageBg = useSelector(
+    //     (state) => state.boardControl.pageCollection[pageId].meta.background
+    // )
     return (
         <Rect
             draggable={false}
@@ -141,7 +133,7 @@ export default function PageListener({ pageId }) {
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
-            sceneFunc={pageBackground}
+            sceneFunc={pageBackground.checkered}
         />
     )
 }
