@@ -45,3 +45,9 @@ export const LIVESTROKE_PTS_OVERLAP = 1
 export const MAX_LIVESTROKE_PTS = 50
 // epsilon for the Ramer–Douglas–Peucker algorithm
 export const RDP_EPSILON = 0.3
+
+export const pageType = {
+    BLANK: "blank",
+    CHECKERED: "checkered",
+    RULED: "ruled",
+}

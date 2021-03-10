@@ -16,19 +16,31 @@ import { addStroke, deleteStroke, redo, undo, updateStroke } from "./undoredo"
 
 export function handleAddPageOver() {
     const pageIndex = store.getState().viewControl.currentPageIndex
+    const meta = { background: store.getState().drawControl.pageBG }
     if (isConnected()) {
-        addPageSession(pageIndex)
+        addPageSession(pageIndex, meta)
     } else {
-        store.dispatch(ADD_PAGE(pageIndex))
+        store.dispatch(
+            ADD_PAGE({
+                pageIndex,
+                meta,
+            })
+        )
     }
 }
 
 export function handleAddPageUnder() {
     const pageIndex = store.getState().viewControl.currentPageIndex
+    const meta = { background: store.getState().drawControl.pageBG }
     if (isConnected()) {
-        addPageSession(pageIndex + 1)
+        addPageSession(pageIndex + 1, meta)
     } else {
-        store.dispatch(ADD_PAGE(pageIndex + 1))
+        store.dispatch(
+            ADD_PAGE({
+                pageIndex: pageIndex + 1,
+                meta,
+            })
+        )
     }
 }
 

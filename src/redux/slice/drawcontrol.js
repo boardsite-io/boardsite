@@ -14,6 +14,7 @@ import {
     MAX_LIVESTROKE_PTS,
     MIN_SAMPLE_COUNT,
     LIVESTROKE_PTS_OVERLAP,
+    pageType,
 } from "../../constants"
 
 const drawControlSlice = createSlice({
@@ -34,6 +35,7 @@ const drawControlSlice = createSlice({
             x: 0, // be consistent with stroke description
             y: 0,
         },
+        pageBG: pageType.BLANK,
     },
     reducers: {
         SET_COLOR: (state, action) => {
@@ -118,6 +120,9 @@ const drawControlSlice = createSlice({
             state.liveStroke.points = []
             state.strokeSample = 0
         },
+        SET_DEFAULT_PAGEBG: (state, action) => {
+            state.pageBG = action.payload
+        },
     },
 })
 
@@ -151,5 +156,6 @@ export const {
     START_LIVESTROKE,
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
+    SET_DEFAULT_PAGEBG,
 } = drawControlSlice.actions
 export default drawControlSlice.reducer

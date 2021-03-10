@@ -25,7 +25,7 @@ const boardControlSlice = createSlice({
                 ) {
                     newPageCollection[pid] = state.pageCollection[pid]
                 } else {
-                    newPageCollection[pid] = { strokes: {} }
+                    newPageCollection[pid] = newPageCollectionEntry()
                 }
             })
 
@@ -40,11 +40,10 @@ const boardControlSlice = createSlice({
 
         // Add a new page
         ADD_PAGE: (state, action) => {
-            const pageIndex = action.payload
+            const { pageIndex, meta } = action.payload
             const pageId = nanoid(8)
-            state.pageCollection[pageId] = {
-                strokes: {},
-            }
+            state.pageCollection[pageId] = newPageCollectionEntry()
+            state.pageCollection[pageId].meta = { ...meta } // if undefined
             if (pageIndex >= 0) {
                 state.pageRank.splice(pageIndex, 0, pageId)
             } else {
@@ -120,6 +119,13 @@ function addStroke(state, stroke) {
     if (page) {
         // Add to pageCollection
         page.strokes[id] = stroke
+    }
+}
+
+function newPageCollectionEntry() {
+    return {
+        strokes: {},
+        meta: {},
     }
 }
 

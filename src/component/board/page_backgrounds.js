@@ -1,3 +1,5 @@
+import { pageType } from "../../constants"
+
 const blank = (context, shape) => {
     context.beginPath()
     // don't need to set position of rect, Konva will handle it
@@ -58,7 +60,7 @@ const ruled = (context, shape) => {
 }
 
 export default {
-    blank,
-    checkered,
-    ruled,
+    [pageType.BLANK]: blank,
+    [pageType.CHECKERED]: checkered,
+    [pageType.RULED]: ruled,
 }

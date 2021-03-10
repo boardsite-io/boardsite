@@ -108,9 +108,9 @@ export default function PageListener({ pageId }) {
 
     const isListening = useSelector((state) => state.drawControl.isListening)
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
-    // const pageBg = useSelector(
-    //     (state) => state.boardControl.pageCollection[pageId].meta.background
-    // )
+    const pageBg = useSelector(
+        (state) => state.boardControl.pageCollection[pageId]?.meta?.background
+    )
     return (
         <Rect
             draggable={false}
@@ -133,7 +133,7 @@ export default function PageListener({ pageId }) {
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
-            sceneFunc={pageBackground.checkered}
+            sceneFunc={pageBackground[pageBg]}
         />
     )
 }

@@ -7,6 +7,9 @@ import DialogContent from "@material-ui/core/DialogContent"
 // import DialogContentText from "@material-ui/core/DialogContentText"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import { Grid } from "@material-ui/core"
+import store from "../../../redux/store"
+import { SET_DEFAULT_PAGEBG } from "../../../redux/slice/drawcontrol"
+import { pageType } from "../../../constants"
 
 export default function PageSettings({ setOpenOther }) {
     const [open, setOpen] = useState(false)
@@ -21,17 +24,17 @@ export default function PageSettings({ setOpenOther }) {
     }
 
     const handleClickBlank = () => {
-        console.log("blank paper")
+        store.dispatch(SET_DEFAULT_PAGEBG(pageType.BLANK))
         handleClose()
     }
 
     const handleClickCheckered = () => {
-        console.log("checkered paper")
+        store.dispatch(SET_DEFAULT_PAGEBG(pageType.CHECKERED))
         handleClose()
     }
 
     const handleClickRuled = () => {
-        console.log("ruled paper")
+        store.dispatch(SET_DEFAULT_PAGEBG(pageType.RULED))
         handleClose()
     }
 

@@ -158,8 +158,8 @@ export function eraseStroke({ id, pageId }) {
     sendStroke({ id, pageId, type: toolType.ERASER })
 }
 
-export function addPageSession(pageIndex) {
-    addPage(store.getState().webControl.sessionId, nanoid(8), pageIndex)
+export function addPageSession(pageIndex, meta) {
+    addPage(store.getState().webControl.sessionId, nanoid(8), pageIndex, meta)
 }
 
 export function clearPageSession(pageId) {
