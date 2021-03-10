@@ -15,6 +15,7 @@ import {
     handleDeletePage,
 } from "../../board/request_handlers"
 import "../../../css/menucomponents/pageoptions.css"
+import PageSettings from "./pagesettings"
 
 export default function PageOptions() {
     const [open, setOpen] = useState(false)
@@ -69,6 +70,7 @@ export default function PageOptions() {
                                 onClick={handleDeleteAllPages}>
                                 <BsTrash id="icon" />
                             </button>
+                            <PageSettings setOpenOther={setOpen} />
                         </div>
                     </div>
                 ) : null
