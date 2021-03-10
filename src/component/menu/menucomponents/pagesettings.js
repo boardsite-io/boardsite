@@ -62,28 +62,25 @@ export default function PageSettings({ setOpenOther }) {
                         justify="center"
                         alignItems="center">
                         <Grid item>
-                            <Button
+                            <button
+                                type="button"
                                 onClick={handleClickBlank}
-                                color="primary"
-                                variant="contained">
-                                blank
-                            </Button>
+                                className="page-blank"
+                            />
                         </Grid>
                         <Grid item>
-                            <Button
+                            <button
+                                type="button"
                                 onClick={handleClickCheckered}
-                                color="primary"
-                                variant="contained">
-                                checkered
-                            </Button>
+                                className="page-checkered"
+                            />
                         </Grid>
                         <Grid item>
-                            <Button
+                            <button
+                                type="button"
                                 onClick={handleClickRuled}
-                                color="primary"
-                                variant="contained">
-                                ruled
-                            </Button>
+                                className="page-ruled"
+                            />
                         </Grid>
                     </Grid>
                 </DialogContent>
