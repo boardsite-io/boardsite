@@ -18,3 +18,30 @@
     border-radius: var(--menubar-border-radius);
     background-color: var(--menubar-background);
 }
+
+.page-blank,
+.page-checkered,
+.page-ruled {
+    height: 50px;
+    width: 50px;
+    outline: none;
+    border-radius: 5px;
+    border-width: 1px;
+}
+
+.page-blank {
+    background: white;
+}
+
+.page-checkered {
+    background-image: repeating-linear-gradient(90deg, transparent 0px, transparent 9px, teal 10px),
+        repeating-linear-gradient(0deg, white 0px, white 9px, teal 10px);
+}
+
+.page-ruled {
+    background-image: repeating-linear-gradient(
+        white 0px,
+        white 9px,
+        teal 10px
+    );
+}
