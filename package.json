@@ -1,6 +1,14 @@
 {
     "name": "boardsite",
-    "version": "0.1.0",
+    "version": "0.9.0",
+    "description": "",
+    "author": {
+        "name": "Patrick Willner",
+        "email": "50421879+heat1q@users.noreply.github.com"
+    },
+    "license": "GPLv3",
+    "homepage": "./",
+    "main": "public/electron.js",
     "private": true,
     "dependencies": {
         "@material-ui/core": "^4.11.3",
@@ -9,6 +17,7 @@
         "@testing-library/react": "^11.2.5",
         "@testing-library/user-event": "^12.7.2",
         "axios": "^0.21.1",
+        "electron-is-dev": "^2.0.0",
         "jspdf": "^2.3.0",
         "jss": "^10.5.1",
         "konva": "^7.2.4",
@@ -24,7 +33,6 @@
         "reactcss": "^1.2.3",
         "redux-undo": "^1.0.1",
         "reselect": "^4.0.0",
-        "typescript": "^4.1.5",
         "unique-names-generator": "^4.4.0"
     },
     "scripts": {
@@ -32,7 +40,10 @@
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "lint": "npx eslint ."
+        "lint": "eslint .",
+        "electron-start": "electron .",
+        "preelectron-pack": "build",
+        "electron-pack": "electron-builder --dir"
     },
     "eslintConfig": {
         "extends": "react-app"
@@ -50,6 +61,8 @@
         ]
     },
     "devDependencies": {
+        "electron": "^12.0.1",
+        "electron-builder": "^22.10.5",
         "eslint": "^7.20.0",
         "eslint-config-airbnb": "^18.2.1",
         "eslint-config-prettier": "^8.0.0",
@@ -58,6 +71,21 @@
         "eslint-plugin-node": "^11.1.0",
         "eslint-plugin-prettier": "^3.3.1",
         "eslint-plugin-promise": "^4.3.1",
-        "prettier": "^2.2.1"
+        "prettier": "^2.2.1",
+        "typescript": "^4.2.3"
+    },
+    "build": {
+        "appId": "nonExistentID",
+        "productName": "boardsite",
+        "directories": {
+            "buildResources": "build",
+            "output": "dist"
+        },
+        "linux": {
+            "target": {
+                "target": "pacman",
+                "arch": "x64"
+            }
+        }
     }
 }
