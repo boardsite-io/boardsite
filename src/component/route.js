@@ -1,11 +1,11 @@
 import React from "react"
-import { Route } from "react-router-dom"
+import { HashRouter, Route } from "react-router-dom"
 
 import Whiteboard from "../view/whiteboard"
 
 export default (
-    <Route>
+    <HashRouter>
         <Route exact path="/" component={Whiteboard} />
         <Route exact path="/b/:sid" component={Whiteboard} />
-    </Route>
+    </HashRouter>
 )
