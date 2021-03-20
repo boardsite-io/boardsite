@@ -6,7 +6,7 @@
         "name": "Patrick Willner",
         "email": "50421879+heat1q@users.noreply.github.com"
     },
-    "license": "GPLv3",
+    "license": "GPL-3.0",
     "homepage": "./",
     "main": "public/electron.js",
     "private": true,
@@ -42,8 +42,7 @@
         "eject": "react-scripts eject",
         "lint": "eslint .",
         "electron-start": "electron .",
-        "preelectron-pack": "build",
-        "electron-pack": "electron-builder --dir"
+        "electron-pack": "DOCKER_BUILDKIT=1 docker build . --rm --target bin --output dist/"
     },
     "eslintConfig": {
         "extends": "react-app"
@@ -81,11 +80,8 @@
             "buildResources": "build",
             "output": "dist"
         },
-        "linux": {
-            "target": {
-                "target": "pacman",
-                "arch": "x64"
-            }
-        }
+        "files": [
+            "build/**/*"
+        ]
     }
 }
