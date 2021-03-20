@@ -18,6 +18,7 @@
         "@testing-library/user-event": "^12.7.2",
         "axios": "^0.21.1",
         "electron-is-dev": "^2.0.0",
+        "is-electron": "^2.2.0",
         "jspdf": "^2.3.0",
         "jss": "^10.5.1",
         "konva": "^7.2.4",
