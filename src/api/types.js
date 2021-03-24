@@ -2,7 +2,6 @@
 export const API_URL = `http${
     process.env.REACT_APP_B_SSL === "1" ? "s" : ""
 }://${process.env.REACT_APP_B_API_HOSTNAME}:${process.env.REACT_APP_B_API_PORT}`
-export const API_SESSION_URL = `${API_URL}/b`
 
 export const MessageType = {
     Stroke: "stroke",

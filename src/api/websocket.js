@@ -26,17 +26,17 @@ import {
     CLEAR_PAGE,
     SET_PAGEMETA,
 } from "../redux/slice/boardcontrol"
-import { API_SESSION_URL, MessageType, newMessage } from "./types"
+import { MessageType, newMessage } from "./types"
 
 /**
  * Connect to Websocket.
  */
 export function createWebsocket(sessionId, user) {
     return new Promise((resolve, reject) => {
+        const url = new URL(store.getState().webControl.apiURL)
+        url.protocol = url.protocol.replace("http", "ws")
         const ws = new WebSocket(
-            `${API_SESSION_URL.replace("http", "ws", 1)}/${sessionId}/users/${
-                user.id
-            }/socket`
+            `${url.toString()}b/${sessionId}/users/${user.id}/socket`
         )
         ws.onmessage = (msg) => {
             receive(JSON.parse(msg.data))

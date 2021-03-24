@@ -19,6 +19,9 @@ import {
     TOGGLE_SHOULD_CENTER,
 } from "../../../redux/slice/viewcontrol"
 import store from "../../../redux/store"
+import { SET_API_URL } from "../../../redux/slice/webcontrol"
+import { API_URL } from "../../../api/types"
+import { isConnected } from "../../../api/websocket"
 
 const useStyles = makeStyles({
     paper: {
@@ -29,9 +32,12 @@ const useStyles = makeStyles({
 export default function SettingsButton() {
     const classes = useStyles()
     const [isOpen, setOpen] = useState(false)
+    const [url, setURL] = useState(API_URL)
+    const [isValidURL, setValidURL] = useState(true)
 
     const keepCentered = useSelector((state) => state.viewControl.keepCentered)
     const hideNavBar = useSelector((state) => state.viewControl.hideNavBar)
+    // const apiURL = useSelector((state) => state.webControl.apiURL)
 
     const toggleDrawer = (open) => (event) => {
         if (
@@ -41,6 +47,17 @@ export default function SettingsButton() {
             return
         }
         setOpen(open)
+    }
+
+    const handleURLChange = (event) => {
+        setURL(event.target.value)
+        try {
+            const u = new URL(event.target.value)
+            store.dispatch(SET_API_URL(u))
+            setValidURL(true)
+        } catch {
+            setValidURL(false)
+        }
     }
 
     return (
@@ -94,12 +111,15 @@ export default function SettingsButton() {
                         <TextField
                             id="standard-basic"
                             label="Custom API Server URL"
-                            defaultValue=""
                             inputMode="url"
                             InputLabelProps={{
                                 shrink: true,
                             }}
                             helperText="e.g. https://api.boardsite.io"
+                            value={url.toString()}
+                            onChange={handleURLChange}
+                            error={!isValidURL}
+                            disabled={isConnected()}
                         />
                     </ListItem>
                 </List>

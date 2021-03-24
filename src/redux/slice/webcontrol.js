@@ -6,6 +6,7 @@ import {
     colors,
     uniqueNamesGenerator,
 } from "unique-names-generator"
+import { API_URL } from "../../api/types"
 
 const webControlSlice = createSlice({
     name: "webControl",
@@ -30,6 +31,7 @@ const webControlSlice = createSlice({
             color: Konva.Util.getRandomColor(),
         },
         connectedUsers: {},
+        apiURL: new URL(API_URL),
     },
     reducers: {
         CREATE_WS: (state, action) => {
@@ -84,6 +86,9 @@ const webControlSlice = createSlice({
         SET_USER_COLOR: (state) => {
             state.user.color = Konva.Util.getRandomColor()
         },
+        SET_API_URL: (state, action) => {
+            state.apiURL = action.payload
+        },
     },
 })
 
@@ -98,5 +103,6 @@ export const {
     CLOSE_SDIAG,
     SET_USER_ALIAS,
     SET_USER_COLOR,
+    SET_API_URL,
 } = webControlSlice.actions
 export default webControlSlice.reducer

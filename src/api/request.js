@@ -1,8 +1,7 @@
 import axios from "axios"
-import { API_URL } from "./types"
+import store from "../redux/store"
 
 const apiRequest = axios.create({
-    baseURL: API_URL,
     transformRequest: [(data) => JSON.stringify({ content: data })], // for routes we dont need message type
     transformResponse: [
         (data) => {
@@ -25,7 +24,12 @@ const apiRequest = axios.create({
  * Send data request to API.
  */
 export async function sendRequest(url, method, data = {}) {
-    const response = await apiRequest({ url, method, data })
+    const baseURL = store.getState().webControl.apiURL.toString()
+    const response = await apiRequest({
+        url: `${baseURL}b/${url}`,
+        method,
+        data,
+    })
     return response.data
 }
 
@@ -33,15 +37,15 @@ export async function sendRequest(url, method, data = {}) {
  * @returns {{sessionId: string}}
  */
 export async function createSession() {
-    return sendRequest("/b/create", "post")
+    return sendRequest("create", "post")
 }
 
 export async function getUsers(sessionId) {
-    return sendRequest(`/b/${sessionId}/users`, "get")
+    return sendRequest(`${sessionId}/users`, "get")
 }
 
 export async function createUser(sessionId, { alias, color }) {
-    return sendRequest(`/b/${sessionId}/users`, "post", {
+    return sendRequest(`${sessionId}/users`, "post", {
         alias,
         color,
     })
@@ -53,15 +57,15 @@ export async function createUser(sessionId, { alias, color }) {
  * @returns {pageRank: []}
  */
 export async function getPages(sessionId) {
-    return sendRequest(`/b/${sessionId}/pages`, "get")
+    return sendRequest(`${sessionId}/pages`, "get")
 }
 
 export async function getStrokes(sessionId, pageId) {
-    return sendRequest(`/b/${sessionId}/pages/${pageId}`, "get")
+    return sendRequest(`${sessionId}/pages/${pageId}`, "get")
 }
 
 export async function addPage(sessionId, pageId, index, meta) {
-    return sendRequest(`/b/${sessionId}/pages`, "post", {
+    return sendRequest(`${sessionId}/pages`, "post", {
         pageId,
         index,
         meta,
@@ -69,9 +73,9 @@ export async function addPage(sessionId, pageId, index, meta) {
 }
 
 export async function clearPage(sessionId, pageId) {
-    return sendRequest(`/b/${sessionId}/pages/${pageId}`, "put", {})
+    return sendRequest(`${sessionId}/pages/${pageId}`, "put", {})
 }
 
 export async function deletePage(sessionId, pageId) {
-    return sendRequest(`/b/${sessionId}/pages/${pageId}`, "delete")
+    return sendRequest(`${sessionId}/pages/${pageId}`, "delete")
 }
