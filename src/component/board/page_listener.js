@@ -27,22 +27,18 @@ export default function PageListener({ pageId }) {
     }
 
     function onMouseDown(e) {
-        if (e.evt.buttons === 2) {
-            return
+        // start only if left mouse down
+        if (e.evt.buttons === 1) {
+            store.dispatch(SET_ISMOUSEDOWN(true))
+            const pos = getScaledPointerPosition(e)
+            startLiveStroke(pos)
         }
-        store.dispatch(SET_ISMOUSEDOWN(true))
-        const pos = getScaledPointerPosition(e)
-        startLiveStroke(pos)
     }
 
     function onMouseMove(e) {
-        if (
-            !isMouseDown ||
-            e.evt.buttons === 2 || // right mouse
-            e.evt.buttons === 3 // left+right mouse
-        ) {
+        if (!isMouseDown || e.evt.buttons !== 1) {
             // cancel stroke when right / left+right mouse is clicked
-            // store.dispatch(SET_ISMOUSEDOWN(false))
+            abortLiveStroke()
             return
         }
 
