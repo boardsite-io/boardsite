@@ -2,7 +2,7 @@ import { nanoid } from "@reduxjs/toolkit"
 import store from "../redux/store"
 import {
     addPage,
-    clearPage,
+    updatePage,
     createSession,
     createUser,
     deletePage,
@@ -72,8 +72,8 @@ function receive(message) {
             syncPages(message.content)
             break
 
-        case MessageType.PageClear:
-            message.content.forEach((pid) => store.dispatch(CLEAR_PAGE(pid)))
+        case MessageType.PageUpdate:
+            updatePageMeta(message.content)
             break
 
         case MessageType.UserConnected:
@@ -106,6 +106,13 @@ function syncPages({ pageRank, meta }) {
     Object.keys(meta).forEach((pageId) =>
         store.dispatch(SET_PAGEMETA({ pageId, meta: meta[pageId] }))
     )
+}
+
+function updatePageMeta({ pageId, meta, clear }) {
+    if (clear) {
+        store.dispatch(CLEAR_PAGE(pageId))
+    }
+    store.dispatch(SET_PAGEMETA({ pageId, meta }))
 }
 
 export function isConnected() {
@@ -162,10 +169,6 @@ export function addPageSession(pageIndex, meta) {
     addPage(store.getState().webControl.sessionId, nanoid(8), pageIndex, meta)
 }
 
-export function clearPageSession(pageId) {
-    clearPage(store.getState().webControl.sessionId, pageId)
-}
-
 export function deletePageSession(pageId) {
     deletePage(store.getState().webControl.sessionId, pageId)
 }
@@ -179,4 +182,8 @@ export function getSessionPath(sessionURL) {
 
 export function pingSession(sessionID) {
     return getPages(sessionID)
+}
+
+export function updatePageSession(pageId, meta = {}, clear = false) {
+    updatePage(store.getState().webControl.sessionId, pageId, { meta, clear })
 }

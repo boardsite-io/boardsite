@@ -35,7 +35,11 @@ const boardControlSlice = createSlice({
 
         SET_PAGEMETA: (state, action) => {
             const { pageId, meta } = action.payload
-            state.pageCollection[pageId].meta = meta
+            // update only fields that are different
+            state.pageCollection[pageId].meta = {
+                ...state.pageCollection[pageId].meta,
+                ...meta,
+            }
         },
 
         // Add a new page

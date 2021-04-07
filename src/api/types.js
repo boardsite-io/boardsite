@@ -8,7 +8,7 @@ export const MessageType = {
     UserConnected: "userconn",
     UserDisconnected: "userdisc",
     PageSync: "pagesync",
-    PageClear: "pageclear",
+    PageUpdate: "pageupdate",
 }
 
 export function newMessage(type = "", sender = "", content = {}) {

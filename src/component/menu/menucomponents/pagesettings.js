@@ -7,9 +7,8 @@ import DialogContent from "@material-ui/core/DialogContent"
 // import DialogContentText from "@material-ui/core/DialogContentText"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import { Grid } from "@material-ui/core"
-import store from "../../../redux/store"
-import { SET_DEFAULT_PAGEBG } from "../../../redux/slice/drawcontrol"
 import { pageType } from "../../../constants"
+import { handlePageBackground } from "../../board/request_handlers"
 
 export default function PageSettings({ setOpenOther }) {
     const [open, setOpen] = useState(false)
@@ -23,18 +22,8 @@ export default function PageSettings({ setOpenOther }) {
         setOpenOther(false)
     }
 
-    const handleClickBlank = () => {
-        store.dispatch(SET_DEFAULT_PAGEBG(pageType.BLANK))
-        handleClose()
-    }
-
-    const handleClickCheckered = () => {
-        store.dispatch(SET_DEFAULT_PAGEBG(pageType.CHECKERED))
-        handleClose()
-    }
-
-    const handleClickRuled = () => {
-        store.dispatch(SET_DEFAULT_PAGEBG(pageType.RULED))
+    const handleClick = (pageStyle) => () => {
+        handlePageBackground(pageStyle)
         handleClose()
     }
 
@@ -64,21 +53,21 @@ export default function PageSettings({ setOpenOther }) {
                         <Grid item>
                             <button
                                 type="button"
-                                onClick={handleClickBlank}
+                                onClick={handleClick(pageType.BLANK)}
                                 className="page-blank"
                             />
                         </Grid>
                         <Grid item>
                             <button
                                 type="button"
-                                onClick={handleClickCheckered}
+                                onClick={handleClick(pageType.CHECKERED)}
                                 className="page-checkered"
                             />
                         </Grid>
                         <Grid item>
                             <button
                                 type="button"
-                                onClick={handleClickRuled}
+                                onClick={handleClick(pageType.RULED)}
                                 className="page-ruled"
                             />
                         </Grid>

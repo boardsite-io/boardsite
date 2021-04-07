@@ -72,8 +72,8 @@ export async function addPage(sessionId, pageId, index, meta) {
     })
 }
 
-export async function clearPage(sessionId, pageId) {
-    return sendRequest(`${sessionId}/pages/${pageId}`, "put", {})
+export async function updatePage(sessionId, pageId, content) {
+    return sendRequest(`${sessionId}/pages/${pageId}`, "put", content)
 }
 
 export async function deletePage(sessionId, pageId) {

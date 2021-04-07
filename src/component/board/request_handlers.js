@@ -1,6 +1,6 @@
 import {
     addPageSession,
-    clearPageSession,
+    updatePageSession,
     deletePageSession,
     isConnected,
 } from "../../api/websocket"
@@ -9,7 +9,9 @@ import {
     CLEAR_PAGE,
     DELETE_PAGE,
     DELETE_ALL_PAGES,
+    SET_PAGEMETA,
 } from "../../redux/slice/boardcontrol"
+import { SET_DEFAULT_PAGEBG } from "../../redux/slice/drawcontrol"
 
 import store from "../../redux/store"
 import { addStroke, deleteStroke, redo, undo, updateStroke } from "./undoredo"
@@ -45,24 +47,18 @@ export function handleAddPageUnder() {
 }
 
 export function handleClearPage() {
-    const pageId = store.getState().boardControl.pageRank[
-        store.getState().viewControl.currentPageIndex
-    ]
     if (isConnected()) {
-        clearPageSession(pageId)
+        updatePageSession(getCurrentPageId(), {}, true)
     } else {
-        store.dispatch(CLEAR_PAGE(pageId))
+        store.dispatch(CLEAR_PAGE(getCurrentPageId()))
     }
 }
 
 export function handleDeletePage() {
-    const pageId = store.getState().boardControl.pageRank[
-        store.getState().viewControl.currentPageIndex
-    ]
     if (isConnected()) {
-        deletePageSession(pageId)
+        deletePageSession(getCurrentPageId())
     } else {
-        store.dispatch(DELETE_PAGE(pageId))
+        store.dispatch(DELETE_PAGE(getCurrentPageId()))
     }
 }
 
@@ -94,4 +90,24 @@ export function handleUndo() {
 
 export function handleRedo() {
     redo()
+}
+
+export function handlePageBackground(style) {
+    store.dispatch(SET_DEFAULT_PAGEBG(style))
+    if (isConnected()) {
+        updatePageSession(getCurrentPageId(), { background: style })
+    } else {
+        store.dispatch(
+            SET_PAGEMETA({
+                pageId: getCurrentPageId(),
+                meta: { background: style },
+            })
+        )
+    }
+}
+
+function getCurrentPageId() {
+    return store.getState().boardControl.pageRank[
+        store.getState().viewControl.currentPageIndex
+    ]
 }
