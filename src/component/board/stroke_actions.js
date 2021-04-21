@@ -4,12 +4,12 @@ import {
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
 } from "../../redux/slice/drawcontrol"
-import { simplifyRDP } from "../../util/simplify"
+// import { simplifyRDP } from "../../util/simplify"
 
 import {
     toolType,
     CANVAS_FULL_HEIGHT,
-    RDP_EPSILON,
+    // RDP_EPSILON,
     LIVESTROKE_PTS_OVERLAP,
 } from "../../constants"
 import { handleAddStroke } from "./request_handlers"
@@ -82,7 +82,7 @@ function createStroke(liveStroke, pageId) {
     // for some types we only need a few points
     switch (liveStroke.type) {
         case toolType.PEN:
-            stroke.points = simplifyRDP(stroke.points, RDP_EPSILON)
+            // stroke.points = simplifyRDP(stroke.points, RDP_EPSILON)
             break
         case toolType.LINE:
             stroke.points = getStartEndPoints(stroke.points)
