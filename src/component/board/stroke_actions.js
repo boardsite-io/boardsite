@@ -3,6 +3,7 @@ import {
     START_LIVESTROKE,
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
+    SET_TYPE,
 } from "../../redux/slice/drawcontrol"
 // import { simplifyRDP } from "../../util/simplify"
 
@@ -14,12 +15,20 @@ import {
 } from "../../constants"
 import { handleAddStroke } from "./request_handlers"
 
+let tid = 0
+
 /**
  * Start the current stroke when mouse is pressed down
  * @param {*} position
  */
 export function startLiveStroke(position) {
     store.dispatch(START_LIVESTROKE([position.x, position.y]))
+    // set Line type when mouse hasnt moved for 1 sec
+    if (getLiveStroke().type === toolType.PEN) {
+        tid = setTimeout(() => {
+            store.dispatch(SET_TYPE(toolType.LINE))
+        }, 1000)
+    }
 }
 
 /**
@@ -28,13 +37,24 @@ export function startLiveStroke(position) {
  */
 export function moveLiveStroke(position) {
     store.dispatch(UPDATE_LIVESTROKE([position.x, position.y]))
+    // check if mouse is stationary, else disable switchToLine
+    if (tid !== 0 && getLiveStroke().type === toolType.PEN) {
+        const { points } = getLiveStroke()
+        if (
+            Math.abs(points[0][0] - position.x) > 3 ||
+            Math.abs(points[0][1] - position.y) > 3
+        ) {
+            clearTimeout(tid)
+            tid = 0
+        }
+    }
 }
 
 /**
  * Generate API serialized stroke object, draw & save it to redux store
  */
 export async function registerLiveStroke(pageId, currentPageIndex) {
-    const { liveStroke } = store.getState().drawControl
+    const liveStroke = getLiveStroke()
     // empty livestrokes e.g. rightmouse eraser
     if (liveStroke.points === undefined) {
         return
@@ -48,6 +68,12 @@ export async function registerLiveStroke(pageId, currentPageIndex) {
     handleAddStroke(stroke)
     // clear livestroke
     store.dispatch(END_LIVESTROKE())
+
+    if (tid !== 0) {
+        store.dispatch(SET_TYPE(toolType.PEN))
+        clearTimeout(tid)
+        tid = 0
+    }
 }
 
 /**
@@ -131,4 +157,9 @@ function flatLiveStroke(points) {
     pts = pts.concat(points[points.length - 1])
 
     return pts
+}
+
+// helper function to get current livestroke
+function getLiveStroke() {
+    return store.getState().drawControl.liveStroke
 }

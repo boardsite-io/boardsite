@@ -39,7 +39,9 @@ export default memo(({ id, type, style, points, x, y }) => {
         case toolType.LINE:
             shape = (
                 <Line
+                    {...shapeProps}
                     points={getStartEndPoints(points)}
+                    tension={1}
                     perfectDrawEnabled={false}
                 />
             )

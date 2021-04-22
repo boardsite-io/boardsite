@@ -42,7 +42,7 @@ export default function PageListener({ pageId }) {
             e.evt.buttons === 3 // left+right mouse
         ) {
             // cancel stroke when right / left+right mouse is clicked
-            // store.dispatch(SET_ISMOUSEDOWN(false))
+            abortLiveStroke()
             return
         }
 
