@@ -24,6 +24,7 @@ const drawControlSlice = createSlice({
         isDraggable: DEFAULT_ISDRAGGABLE,
         isListening: DEFAULT_ISLISTENING,
         isMouseDown: DEFAULT_ISMOUSEDOWN,
+        samplesRequired: MIN_SAMPLE_COUNT,
         strokeSample: 0,
         liveStroke: {
             type: DEFAULT_TOOL,
@@ -112,7 +113,7 @@ const drawControlSlice = createSlice({
             }
 
             state.strokeSample += 1
-            if (state.strokeSample >= MIN_SAMPLE_COUNT) {
+            if (state.strokeSample >= state.samplesRequired) {
                 state.strokeSample = 0
             }
         },
@@ -122,6 +123,9 @@ const drawControlSlice = createSlice({
         },
         SET_DEFAULT_PAGEBG: (state, action) => {
             state.pageBG = action.payload
+        },
+        SET_SAMPLE_COUNT: (state, action) => {
+            state.samplesRequired = action.payload
         },
     },
 })
@@ -157,5 +161,6 @@ export const {
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
     SET_DEFAULT_PAGEBG,
+    SET_SAMPLE_COUNT,
 } = drawControlSlice.actions
 export default drawControlSlice.reducer

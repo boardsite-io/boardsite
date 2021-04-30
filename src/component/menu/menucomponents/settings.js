@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { useSelector } from "react-redux"
 import { BsGear } from "react-icons/bs"
+import { BiStats } from "react-icons/bi"
 import { VscDebugDisconnect } from "react-icons/vsc"
 
 import {
@@ -11,6 +12,7 @@ import {
     ListItemIcon,
     ListItemText,
     makeStyles,
+    Slider,
     Switch,
     TextField,
 } from "@material-ui/core"
@@ -22,6 +24,7 @@ import store from "../../../redux/store"
 import { SET_API_URL } from "../../../redux/slice/webcontrol"
 import { API_URL } from "../../../api/types"
 import { isConnected } from "../../../api/websocket"
+import { SET_SAMPLE_COUNT } from "../../../redux/slice/drawcontrol"
 
 const useStyles = makeStyles({
     paper: {
@@ -96,6 +99,31 @@ export default function SettingsButton() {
                                 store.dispatch(TOGGLE_HIDE_NAVBAR())
                             }
                             name="jason"
+                        />
+                    </ListItem>
+                    <ListItem>
+                        <ListItemIcon>
+                            <BiStats />
+                        </ListItemIcon>
+                        <ListItemText primary="Sampling Period" />
+                    </ListItem>
+                    <ListItem>
+                        <Slider
+                            defaultValue={
+                                store.getState().drawControl.samplesRequired
+                            }
+                            getAriaValueText={(val) =>
+                                store.dispatch(SET_SAMPLE_COUNT(val))
+                            }
+                            aria-labelledby="discrete-slider"
+                            valueLabelDisplay="auto"
+                            step={1}
+                            marks={[
+                                { value: 1, label: "Min" },
+                                { value: 5, label: "Max" },
+                            ]}
+                            min={1}
+                            max={5}
                         />
                     </ListItem>
                 </List>

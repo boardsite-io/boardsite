@@ -38,7 +38,7 @@ export const toolType = {
     RECTANGLE: 6,
 }
 export const DEFAULT_TOOL = toolType.PEN
-export const MIN_SAMPLE_COUNT = 2
+export const MIN_SAMPLE_COUNT = 1
 // number of overlapping points for sub livestrokes
 export const LIVESTROKE_PTS_OVERLAP = 1
 // maximum number of points a livestroke can have until cached
