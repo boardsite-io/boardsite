@@ -66,23 +66,13 @@ export default function PageListener({ pageId }) {
     }
 
     const onTouchStart = (e) => {
-        e.evt.preventDefault()
-        const touch1 = e.evt.touches[0]
-        const touch2 = e.evt.touches[1]
-
-        if (!(touch1 && touch2)) {
-            store.dispatch(SET_ISMOUSEDOWN(true))
-            const pos = getScaledPointerPosition(e)
-            startLiveStroke(pos)
+        if (isValidTouch(e)) {
+            onMouseDown(e)
         }
     }
 
     const onTouchMove = (e) => {
-        e.evt.preventDefault()
-        const touch1 = e.evt.touches[0]
-        const touch2 = e.evt.touches[1]
-
-        if (!(touch1 && touch2)) {
+        if (isValidTouch(e)) {
             onMouseMove(e)
         } else {
             abortLiveStroke()
@@ -90,20 +80,29 @@ export default function PageListener({ pageId }) {
     }
 
     const onTouchEnd = (e) => {
-        e.evt.preventDefault()
-        const touch1 = e.evt.touches[0]
-        const touch2 = e.evt.touches[1]
-
-        if (!(touch1 && touch2)) {
-            onMouseUp(e)
-        } else {
-            abortLiveStroke()
-        }
+        onMouseUp(e)
     }
 
     const abortLiveStroke = () => {
         store.dispatch(SET_ISMOUSEDOWN(false))
         store.dispatch(END_LIVESTROKE())
+    }
+
+    const isValidTouch = (e) => {
+        e.evt.preventDefault()
+        const touch1 = e.evt.touches[0]
+        const touch2 = e.evt.touches[1]
+        if (touch1.touchType === undefined) {
+            return false
+        }
+        if (
+            // exit if draw with finger is not set
+            !store.getState().drawControl.directDraw &&
+            touch1.touchType === "direct"
+        ) {
+            return false
+        }
+        return !(touch1 && touch2) // double finger
     }
 
     const isListening = useSelector((state) => state.drawControl.isListening)

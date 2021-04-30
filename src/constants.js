@@ -39,6 +39,8 @@ export const toolType = {
 }
 export const DEFAULT_TOOL = toolType.PEN
 export const MIN_SAMPLE_COUNT = 1
+// allow drawing with finger
+export const DEFAULT_DIRECTDRAW = false
 // number of overlapping points for sub livestrokes
 export const LIVESTROKE_PTS_OVERLAP = 1
 // maximum number of points a livestroke can have until cached

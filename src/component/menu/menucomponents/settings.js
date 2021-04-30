@@ -20,11 +20,14 @@ import {
     TOGGLE_HIDE_NAVBAR,
     TOGGLE_SHOULD_CENTER,
 } from "../../../redux/slice/viewcontrol"
+import {
+    SET_SAMPLE_COUNT,
+    TOGGLE_DIRECTDRAW,
+} from "../../../redux/slice/drawcontrol"
 import store from "../../../redux/store"
 import { SET_API_URL } from "../../../redux/slice/webcontrol"
 import { API_URL } from "../../../api/types"
 import { isConnected } from "../../../api/websocket"
-import { SET_SAMPLE_COUNT } from "../../../redux/slice/drawcontrol"
 
 const useStyles = makeStyles({
     paper: {
@@ -40,6 +43,7 @@ export default function SettingsButton() {
 
     const keepCentered = useSelector((state) => state.viewControl.keepCentered)
     const hideNavBar = useSelector((state) => state.viewControl.hideNavBar)
+    const directDraw = useSelector((state) => state.drawControl.directDraw)
     // const apiURL = useSelector((state) => state.webControl.apiURL)
 
     const toggleDrawer = (open) => (event) => {
@@ -98,6 +102,14 @@ export default function SettingsButton() {
                             onChange={() =>
                                 store.dispatch(TOGGLE_HIDE_NAVBAR())
                             }
+                            name="jason"
+                        />
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText primary="Enable Direct Drawing" />
+                        <Switch
+                            checked={directDraw}
+                            onChange={() => store.dispatch(TOGGLE_DIRECTDRAW())}
                             name="jason"
                         />
                     </ListItem>

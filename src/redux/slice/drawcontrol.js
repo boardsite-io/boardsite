@@ -15,6 +15,7 @@ import {
     MIN_SAMPLE_COUNT,
     LIVESTROKE_PTS_OVERLAP,
     pageType,
+    DEFAULT_DIRECTDRAW,
 } from "../../constants"
 
 const drawControlSlice = createSlice({
@@ -24,6 +25,7 @@ const drawControlSlice = createSlice({
         isDraggable: DEFAULT_ISDRAGGABLE,
         isListening: DEFAULT_ISLISTENING,
         isMouseDown: DEFAULT_ISMOUSEDOWN,
+        directDraw: DEFAULT_DIRECTDRAW,
         samplesRequired: MIN_SAMPLE_COUNT,
         strokeSample: 0,
         liveStroke: {
@@ -127,6 +129,9 @@ const drawControlSlice = createSlice({
         SET_SAMPLE_COUNT: (state, action) => {
             state.samplesRequired = action.payload
         },
+        TOGGLE_DIRECTDRAW: (state) => {
+            state.directDraw = !state.directDraw
+        },
     },
 })
 
@@ -162,5 +167,6 @@ export const {
     END_LIVESTROKE,
     SET_DEFAULT_PAGEBG,
     SET_SAMPLE_COUNT,
+    TOGGLE_DIRECTDRAW,
 } = drawControlSlice.actions
 export default drawControlSlice.reducer
