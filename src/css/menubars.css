@@ -42,11 +42,12 @@
     position: fixed;
     gap: 10px; /* var(--button-gap); */
     padding: 4px;
-    border-radius: var(--menubar-border-radius);
+    border-top-right-radius: var(--menubar-border-radius);
+    border-bottom-right-radius: var(--menubar-border-radius);
     justify-content: space-between;
     top: 50%;
     transform: translateY(-50%);
-    left: 10px;
+    left: 0px;
     box-shadow: var(--menubar-box-shadow);
 }
 
