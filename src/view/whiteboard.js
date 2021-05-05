@@ -9,6 +9,7 @@ import SessionInfo from "../component/menu/menucomponents/sessioninfo"
 import ViewNav from "../component/menu/viewnavigation"
 import { SET_SDIAG } from "../redux/slice/webcontrol"
 import { isConnected, pingSession } from "../api/websocket"
+import FavTools from "../component/menu/fav_tools"
 
 export default function Whiteboard() {
     const { sid } = useParams()
@@ -56,6 +57,7 @@ export default function Whiteboard() {
             <BoardStage />
             <SessionInfo />
             <Toolbar />
+            <FavTools />
             <ViewNav />
         </div>
     )

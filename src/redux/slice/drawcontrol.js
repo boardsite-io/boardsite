@@ -18,6 +18,28 @@ import {
     DEFAULT_DIRECTDRAW,
 } from "../../constants"
 
+const tool1 = {
+    type: DEFAULT_TOOL,
+    style: {
+        color: DEFAULT_COLOR,
+        width: DEFAULT_WIDTH,
+    },
+}
+const tool2 = {
+    type: toolType.RECTANGLE,
+    style: {
+        color: "#188425",
+        width: 30,
+    },
+}
+const tool3 = {
+    type: toolType.LINE,
+    style: {
+        color: "#ffee25",
+        width: 6,
+    },
+}
+
 const drawControlSlice = createSlice({
     name: "drawControl",
     initialState: {
@@ -39,8 +61,21 @@ const drawControlSlice = createSlice({
             y: 0,
         },
         pageBG: pageType.BLANK,
+        favTools: [tool1, tool2, tool3],
     },
     reducers: {
+        ADD_FAV_TOOL: (state) => {
+            const tool = {
+                type: state.liveStroke.type,
+                style: state.liveStroke.style,
+            }
+            state.favTools.push(tool)
+        },
+        SET_TOOL: (state, action) => {
+            const { type, style } = action.payload
+            state.liveStroke.type = type
+            state.liveStroke.style = style
+        },
         SET_COLOR: (state, action) => {
             const color = action.payload
             state.liveStroke.style.color = color
@@ -154,6 +189,8 @@ const drawControlSlice = createSlice({
 // }
 
 export const {
+    ADD_FAV_TOOL,
+    SET_TOOL,
     SET_COLOR,
     SET_WIDTH,
     INCREMENT_WIDTH,
