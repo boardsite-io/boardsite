@@ -16,29 +16,8 @@ import {
     LIVESTROKE_PTS_OVERLAP,
     pageType,
     DEFAULT_DIRECTDRAW,
+    DEFAULT_FAV_TOOLS,
 } from "../../constants"
-
-const tool1 = {
-    type: DEFAULT_TOOL,
-    style: {
-        color: DEFAULT_COLOR,
-        width: DEFAULT_WIDTH,
-    },
-}
-const tool2 = {
-    type: toolType.RECTANGLE,
-    style: {
-        color: "#188425",
-        width: 30,
-    },
-}
-const tool3 = {
-    type: toolType.LINE,
-    style: {
-        color: "#ffee25",
-        width: 6,
-    },
-}
 
 const drawControlSlice = createSlice({
     name: "drawControl",
@@ -61,7 +40,7 @@ const drawControlSlice = createSlice({
             y: 0,
         },
         pageBG: pageType.BLANK,
-        favTools: [tool1, tool2, tool3],
+        favTools: DEFAULT_FAV_TOOLS,
     },
     reducers: {
         REPLACE_FAV_TOOL: (state, action) => {

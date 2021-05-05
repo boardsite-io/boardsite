@@ -24,22 +24,26 @@ export default function FavToolButton({ icon, tool, index }) {
         store.dispatch(REMOVE_FAV_TOOL(index))
     }
 
-    let clickHoldEnough = false
+    let clickActive = false
+    let timeoutActive = false
 
     function startClick() {
-        clickHoldEnough = false
+        clickActive = true
+        timeoutActive = true
         setTimeout(() => {
-            clickHoldEnough = true
+            if (clickActive) {
+                setOpen(true)
+            }
+            timeoutActive = false
         }, 300)
     }
 
     function endClick() {
-        if (clickHoldEnough) {
-            setOpen(true)
-        } else {
+        if (timeoutActive) {
             setTool(tool)
+            timeoutActive = false
         }
-        clickHoldEnough = false
+        clickActive = false
     }
 
     return (
