@@ -76,6 +76,10 @@ const drawControlSlice = createSlice({
                 state.favTools[index] = tool
             }
         },
+        REMOVE_FAV_TOOL: (state, action) => {
+            const index = action.payload
+            state.favTools.splice(index, 1)
+        },
         ADD_FAV_TOOL: (state) => {
             const tool = {
                 type: state.liveStroke.type,
@@ -206,6 +210,7 @@ const drawControlSlice = createSlice({
 
 export const {
     REPLACE_FAV_TOOL,
+    REMOVE_FAV_TOOL,
     ADD_FAV_TOOL,
     SET_TOOL,
     SET_COLOR,

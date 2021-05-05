@@ -80,3 +80,14 @@
     text-align: center;
     font-size: 12px;
 }
+
+.favtooloptions {
+    position: absolute;
+    bottom: 3px; /* same as above bottom */
+    left: 45px;
+    display: grid;
+    grid-auto-flow: column;
+    border-radius: var(--menubar-border-radius);
+    background-color: var(--menubar-background);
+    box-shadow: var(--menubar-box-shadow);
+}
