@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import { useLongPress } from "react-use"
 import "../../../css/menucomponents/pageoptions.css"
 import { FiMinus, FiPlus } from "react-icons/fi"
 import {
@@ -25,23 +24,34 @@ export default function FavToolButton({ icon, tool, index }) {
         store.dispatch(REMOVE_FAV_TOOL(index))
     }
 
-    const defaultOptions = {
-        isPreventDefault: true,
-        delay: 300,
+    let clickHoldEnough = false
+
+    function startClick() {
+        clickHoldEnough = false
+        setTimeout(() => {
+            clickHoldEnough = true
+        }, 300)
     }
-    const onLongPress = () => {
-        setOpen(true)
+
+    function endClick() {
+        if (clickHoldEnough) {
+            setOpen(true)
+        } else {
+            setTool(tool)
+        }
+        clickHoldEnough = false
     }
-    const longPressEvent = useLongPress(onLongPress, defaultOptions)
 
     return (
         <div className="favtoolbox">
             <button
-                {...longPressEvent}
                 type="button"
                 className="favtool"
                 style={{ background: tool.style.color }}
-                onClick={() => setTool(tool)}>
+                onMouseDown={startClick}
+                onMouseUp={endClick}
+                onTouchStart={startClick}
+                onTouchEnd={endClick}>
                 {icon}
             </button>
             {
