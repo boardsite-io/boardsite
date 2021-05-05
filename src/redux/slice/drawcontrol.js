@@ -69,7 +69,11 @@ const drawControlSlice = createSlice({
                 type: state.liveStroke.type,
                 style: state.liveStroke.style,
             }
-            state.favTools.push(tool)
+
+            // validate tool candidate
+            if (tool.type !== toolType.ERASER && tool.type !== toolType.DRAG) {
+                state.favTools.push(tool)
+            }
         },
         SET_TOOL: (state, action) => {
             const { type, style } = action.payload

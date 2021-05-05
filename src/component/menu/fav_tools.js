@@ -2,7 +2,6 @@ import React from "react"
 import { BsPencil } from "react-icons/bs"
 import { CgController, CgErase } from "react-icons/cg"
 import { FiCircle, FiMinus, FiPlus, FiSquare, FiTriangle } from "react-icons/fi"
-import { IoShapesOutline } from "react-icons/io5"
 import { useSelector } from "react-redux"
 import { toolType } from "../../constants"
 import { ADD_FAV_TOOL, SET_TOOL } from "../../redux/slice/drawcontrol"
@@ -49,7 +48,6 @@ function FavTools() {
                         icon = <FiCircle id="icon" />
                         break
                     default:
-                        icon = <IoShapesOutline id="icon" />
                         break
                 }
                 return (
