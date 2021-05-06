@@ -16,6 +16,7 @@ import {
     LIVESTROKE_PTS_OVERLAP,
     pageType,
     DEFAULT_DIRECTDRAW,
+    DEFAULT_FAV_TOOLS,
 } from "../../constants"
 
 const drawControlSlice = createSlice({
@@ -39,8 +40,41 @@ const drawControlSlice = createSlice({
             y: 0,
         },
         pageBG: pageType.BLANK,
+        favTools: DEFAULT_FAV_TOOLS,
     },
     reducers: {
+        REPLACE_FAV_TOOL: (state, action) => {
+            const index = action.payload
+            const tool = {
+                type: state.liveStroke.type,
+                style: state.liveStroke.style,
+            }
+
+            // validate tool candidate
+            if (tool.type !== toolType.ERASER && tool.type !== toolType.DRAG) {
+                state.favTools[index] = tool
+            }
+        },
+        REMOVE_FAV_TOOL: (state, action) => {
+            const index = action.payload
+            state.favTools.splice(index, 1)
+        },
+        ADD_FAV_TOOL: (state) => {
+            const tool = {
+                type: state.liveStroke.type,
+                style: state.liveStroke.style,
+            }
+
+            // validate tool candidate
+            if (tool.type !== toolType.ERASER && tool.type !== toolType.DRAG) {
+                state.favTools.push(tool)
+            }
+        },
+        SET_TOOL: (state, action) => {
+            const { type, style } = action.payload
+            state.liveStroke.type = type
+            state.liveStroke.style = style
+        },
         SET_COLOR: (state, action) => {
             const color = action.payload
             state.liveStroke.style.color = color
@@ -154,6 +188,10 @@ const drawControlSlice = createSlice({
 // }
 
 export const {
+    REPLACE_FAV_TOOL,
+    REMOVE_FAV_TOOL,
+    ADD_FAV_TOOL,
+    SET_TOOL,
     SET_COLOR,
     SET_WIDTH,
     INCREMENT_WIDTH,

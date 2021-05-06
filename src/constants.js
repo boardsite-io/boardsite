@@ -53,3 +53,27 @@ export const pageType = {
     CHECKERED: "checkered",
     RULED: "ruled",
 }
+
+const tool1 = {
+    type: toolType.PEN,
+    style: {
+        color: "#000000",
+        width: 2,
+    },
+}
+const tool2 = {
+    type: toolType.PEN,
+    style: {
+        color: "#0211a3",
+        width: 2,
+    },
+}
+const tool3 = {
+    type: toolType.PEN,
+    style: {
+        color: "#ff0000",
+        width: 2,
+    },
+}
+
+export const DEFAULT_FAV_TOOLS = [tool1, tool2, tool3]
