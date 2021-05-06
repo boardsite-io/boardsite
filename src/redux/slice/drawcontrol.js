@@ -17,7 +17,10 @@ import {
     pageType,
     DEFAULT_DIRECTDRAW,
     DEFAULT_FAV_TOOLS,
+    RDP_EPSILON,
+    RDP_FORCE_SECTIONS,
 } from "../../constants"
+import { simplifyRDP } from "../../util/simplify"
 
 const drawControlSlice = createSlice({
     name: "drawControl",
@@ -125,26 +128,34 @@ const drawControlSlice = createSlice({
         },
         // Update the current live stroke position
         UPDATE_LIVESTROKE: (state, action) => {
-            const point = action.payload
+            const { point, scale } = action.payload
             const pLen = state.liveStroke.points.length
             const p = state.liveStroke.points[pLen - 1]
 
             if (p.length < MAX_LIVESTROKE_PTS) {
-                if (state.strokeSample === 0) {
+                if (
+                    state.strokeSample === 0 // &&
+                    // hasMinDist([point.x, point.y], p, scale)
+                ) {
                     // append new point
-                    p.push(...point)
+                    p.push(point.x, point.y)
                 } else {
                     // update the latest point
-                    p.splice(p.length - 2, 2, ...point)
+                    p.splice(p.length - 2, 2, point.x, point.y)
                 }
             } else {
+                state.liveStroke.points[pLen - 1] = simplifyRDP(
+                    p,
+                    RDP_EPSILON / scale,
+                    RDP_FORCE_SECTIONS
+                )
                 // create a new subarray
                 // with the last point from the previous subarray as entry
                 // in order to not get a gap in the stroke
                 state.liveStroke.points.push(
                     p
                         .slice(p.length - LIVESTROKE_PTS_OVERLAP * 2, p.length)
-                        .concat(point)
+                        .concat([point.x, point.y])
                 )
             }
 
@@ -185,6 +196,16 @@ const drawControlSlice = createSlice({
 //     const smoothY = y / numBufferPoints
 
 //     return [smoothX, smoothY]
+// }
+
+// function hasMinDist(cur, points, scale) {
+//     if (points.length < 4) {
+//         return true
+//     }
+//     return (
+//         Math.abs(cur[0] - points[points.length - 4]) > 2 / scale ||
+//         Math.abs(cur[1] - points[points.length - 3]) > 2 / scale
+//     )
 // }
 
 export const {
