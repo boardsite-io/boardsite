@@ -41,8 +41,10 @@ export function moveLiveStroke(position) {
     if (tid !== 0 && getLiveStroke().type === toolType.PEN) {
         const { points } = getLiveStroke()
         if (
-            Math.abs(points[0][0] - position.x) > 3 ||
-            Math.abs(points[0][1] - position.y) > 3
+            Math.abs(points[0][0] - position.x) >
+                2 / store.getState().viewControl.stageScale.x ||
+            Math.abs(points[0][1] - position.y) >
+                2 / store.getState().viewControl.stageScale.x
         ) {
             clearTimeout(tid)
             tid = 0
