@@ -36,7 +36,11 @@ export function getHitboxes(pageStrokes) {
     const strokeHitboxes = {}
     Object.keys(pageStrokes).forEach((strokeId) => {
         const stroke = pageStrokes[strokeId]
-        const strokePoints = stroke.points
+        const strokePoints = [...stroke.points]
+        for (let i = 0; i < strokePoints.length; i += 2) {
+            strokePoints[i] = strokePoints[i] * stroke.scaleX + stroke.x
+            strokePoints[i + 1] = strokePoints[i + 1] * stroke.scaleY + stroke.y
+        }
         const strokeWidth = stroke.style.width
         const strokeIdHitboxes = []
         for (let i = 0; i < strokePoints.length - 2; i += 2) {
