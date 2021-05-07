@@ -92,6 +92,18 @@ export default function ToolRing() {
                 <CgController id="icon" />
             </button>
             <ShapeTools />
+            <button
+                type="button"
+                id={
+                    typeSelector === toolType.SELECT
+                        ? "icon-button-active"
+                        : "icon-button"
+                }
+                onClick={() => {
+                    store.dispatch(SET_TYPE(toolType.SELECT))
+                }}>
+                <CgController id="icon" />
+            </button>
         </>
     )
 }

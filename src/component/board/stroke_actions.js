@@ -5,6 +5,7 @@ import {
     END_LIVESTROKE,
     SET_TYPE,
 } from "../../redux/slice/drawcontrol"
+import { SELECT } from "../../redux/slice/boardcontrol"
 // import { simplifyRDP } from "../../util/simplify"
 
 import {
@@ -60,6 +61,19 @@ export async function registerLiveStroke(pageId, currentPageIndex) {
         return
     }
     if (liveStroke.type === toolType.ERASER) {
+        return
+    }
+    if (liveStroke.type === toolType.SELECT) {
+        const plen = liveStroke.points.length
+        const x1 = liveStroke.points[0][0]
+        const y1 = liveStroke.points[0][1]
+        const x2 =
+            liveStroke.points[plen - 1][liveStroke.points[plen - 1].length - 2]
+        const y2 =
+            liveStroke.points[plen - 1][liveStroke.points[plen - 1].length - 1]
+
+        store.dispatch(SELECT({ pageId, x1, y1, x2, y2 }))
+        store.dispatch(END_LIVESTROKE())
         return
     }
 

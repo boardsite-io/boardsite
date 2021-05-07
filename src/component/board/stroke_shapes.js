@@ -1,5 +1,5 @@
 import React, { memo, useState } from "react"
-import { Line, Ellipse, Circle } from "react-konva"
+import { Line, Ellipse, Circle, Rect } from "react-konva"
 import { getStartEndPoints } from "./stroke_actions"
 import { DRAG_SHADOW_BLUR, toolType } from "../../constants"
 
@@ -71,6 +71,22 @@ export default memo(({ id, type, style, points, x, y }) => {
                     x={points[0] + rad.x}
                     y={points[1] + rad.y}
                     radius={{ x: Math.abs(rad.x), y: Math.abs(rad.y) }}
+                    fillEnabled={false} // Remove inner hitbox from empty circles
+                />
+            )
+            break
+        }
+        case toolType.SELECT: {
+            const plen = points.length
+            const width = points[plen - 2] - points[0]
+            const height = points[plen - 1] - points[1]
+            shape = (
+                <Rect
+                    {...shapeProps}
+                    x={points[0]}
+                    y={points[1]}
+                    width={width}
+                    height={height}
                     fillEnabled={false} // Remove inner hitbox from empty circles
                 />
             )

@@ -1,4 +1,9 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit"
+import {
+    getHitboxes,
+    getSelectedIds,
+    getSelectionHitbox,
+} from "../../util/hitboxDetection"
 
 const boardControlSlice = createSlice({
     name: "boardControl",
@@ -7,6 +12,13 @@ const boardControlSlice = createSlice({
         pageCollection: {}, // {id1: canvasRef1, id2: canvasRef2, ...}
     },
     reducers: {
+        SELECT: (state, action) => {
+            const { pageId, x1, y1, x2, y2 } = action.payload
+            const strokeHitboxes = getHitboxes(pageId, state.pageCollection)
+            const selectionHitbox = getSelectionHitbox(x1, y1, x2, y2)
+            const selectedIds = getSelectedIds(strokeHitboxes, selectionHitbox)
+            console.log(selectedIds)
+        },
         SYNC_ALL_PAGES: (state, action) => {
             const { pageRank, pageCollection } = action.payload
             state.pageRank = pageRank
@@ -134,6 +146,7 @@ function newPageCollectionEntry() {
 }
 
 export const {
+    SELECT,
     SYNC_ALL_PAGES,
     SET_PAGERANK,
     ADD_PAGE,

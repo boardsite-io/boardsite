@@ -36,9 +36,10 @@ export const toolType = {
     CIRCLE: 4,
     DRAG: 5,
     RECTANGLE: 6,
+    SELECT: 7,
 }
 export const DEFAULT_TOOL = toolType.PEN
-export const MIN_SAMPLE_COUNT = 1
+export const MIN_SAMPLE_COUNT = 3
 // allow drawing with finger
 export const DEFAULT_DIRECTDRAW = false
 // number of overlapping points for sub livestrokes
