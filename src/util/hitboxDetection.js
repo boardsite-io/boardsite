@@ -32,8 +32,7 @@ export function getHitbox(x1, y1, x2, y2, width) {
 }
 
 // calc the hitboxes of each segment of a stroke with the appropriate width
-export function getHitboxes(pageId, pageCollection) {
-    const pageStrokes = pageCollection[pageId].strokes
+export function getHitboxes(pageStrokes) {
     const strokeHitboxes = {}
     Object.keys(pageStrokes).forEach((strokeId) => {
         const stroke = pageStrokes[strokeId]
@@ -73,7 +72,7 @@ export function getSelectedIds(strokeHitboxes, selectionHitbox) {
         new V(selectionHitbox.v3.x, selectionHitbox.v3.y),
         new V(selectionHitbox.v4.x, selectionHitbox.v4.y),
     ])
-    const selectedIds = []
+    const selectedStrokeIds = []
     Object.keys(strokeHitboxes).forEach((strokeId) => {
         const hitboxes = strokeHitboxes[strokeId]
         for (let i = 0; i < hitboxes.length; i += 1) {
@@ -89,10 +88,10 @@ export function getSelectedIds(strokeHitboxes, selectionHitbox) {
                 selectionHitboxPolygon
             )
             if (idHasCollided) {
-                selectedIds.push(strokeId) // add id to selected ids array
+                selectedStrokeIds.push(strokeId) // add id to selected ids array
                 break // current id has a collision => no need to check rest of stroke for collisions
             }
         }
     })
-    return selectedIds
+    return selectedStrokeIds
 }

@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react"
+import React, { memo, useRef, useState } from "react"
 import { Line, Ellipse, Circle, Rect } from "react-konva"
 import { getStartEndPoints } from "./stroke_actions"
 import { DRAG_SHADOW_BLUR, toolType } from "../../constants"
@@ -10,22 +10,48 @@ import { DRAG_SHADOW_BLUR, toolType } from "../../constants"
  * the object references.
  * @param {{stroke: {}}} props
  */
-export default memo(({ id, type, style, points, x, y }) => {
+export default memo(({ id, type, style, points, x, y, isSelected }) => {
+    const shapeRef = useRef()
     const [isDragging, setDragging] = useState(false)
     const shapeProps = {
+        name: "shape",
+        ref: shapeRef,
         id,
         x,
         y,
         lineCap: "round",
         lineJoin: "round",
-        stroke: style.color,
+        stroke: isSelected ? "#ff00ff" : style.color,
         // fill: style.color,
         strokeWidth: style.width,
-        draggable: true,
-        listening: true,
+        draggable: !isSelected,
+        listening: !isSelected,
         perfectDrawEnabled: false,
         onDragStart: () => setDragging(true),
-        onDragEnd: () => setDragging(false),
+        onDragEnd: () => {
+            setDragging(false)
+        },
+        // onTransformEnd: (e) => {
+        //     // transformer is changing scale of the node
+        //     // and NOT its width or height
+        //     // but in the store we have only width and height
+        //     // to match the data better we will reset scale on transform end
+        //     const node = shapeRef.current
+        //     const scaleX = node.scaleX()
+        //     const scaleY = node.scaleY()
+
+        //     // we will reset it back
+        //     node.scaleX(1)
+        //     node.scaleY(1)
+        //     onChange({
+        //         ...shapeProps,
+        //         x: node.x(),
+        //         y: node.y(),
+        //         // set minimal value
+        //         width: Math.max(5, node.width() * scaleX),
+        //         height: Math.max(node.height() * scaleY),
+        //     })
+        // },
         shadowForStrokeEnabled: isDragging,
         shadowEnabled: isDragging,
         shadowBlur: isDragging ? DRAG_SHADOW_BLUR : 0,

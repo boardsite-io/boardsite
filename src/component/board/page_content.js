@@ -36,20 +36,22 @@ export default function PageContent({ pageId }) {
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
 
     return (
-        <Group
-            globalCompositeOperation="source-atop"
-            draggable={isDraggable}
-            onDragEnd={handleDragEnd}
-            onMouseDown={handleStrokeMovement}
-            onMouseMove={handleStrokeMovement}
-            onMouseEnter={handleStrokeMovement}
-            onTouchStart={handleStrokeMovement}
-            onTouchMove={handleStrokeMovement}
-            listening={!isPanMode && isListening}
-            y={getPageIndex(pageId) * CANVAS_FULL_HEIGHT}>
-            {Object.keys(strokes).map((id) => (
-                <StrokeShape key={id} {...strokes[id]} />
-            ))}
-        </Group>
+        <>
+            <Group
+                globalCompositeOperation="source-atop"
+                draggable={isDraggable}
+                onDragEnd={handleDragEnd}
+                onMouseDown={handleStrokeMovement}
+                onMouseMove={handleStrokeMovement}
+                onMouseEnter={handleStrokeMovement}
+                onTouchStart={handleStrokeMovement}
+                onTouchMove={handleStrokeMovement}
+                listening={!isPanMode && isListening}
+                y={getPageIndex(pageId) * CANVAS_FULL_HEIGHT}>
+                {Object.keys(strokes).map((id) => (
+                    <StrokeShape key={id} {...strokes[id]} />
+                ))}
+            </Group>
+        </>
     )
 }

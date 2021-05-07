@@ -1,7 +1,7 @@
-import React, { useEffect, memo } from "react"
+import React, { useEffect, memo, useRef } from "react"
 import { ReactReduxContext, useSelector } from "react-redux"
 import { createSelector } from "reselect"
-import { Stage, Layer } from "react-konva"
+import { Stage, Layer, Transformer } from "react-konva"
 import {
     CENTER_VIEW,
     ON_WINDOW_RESIZE,
@@ -161,12 +161,30 @@ const StageContent = memo(() => {
         }
     )
     const pageSlice = useSelector(pageCreateSelector)
+    const layerRef = useRef()
+    const trRef = useRef()
+
     return (
         <>
             {pageSlice.map((pageId) => (
-                <Layer key={pageId}>
-                    <PageListener pageId={pageId} />
-                    <PageContent pageId={pageId} />
+                <Layer key={pageId} ref={layerRef}>
+                    <PageListener
+                        pageId={pageId}
+                        trRef={trRef}
+                        layerRef={layerRef}
+                    />
+                    <PageContent pageId={pageId} layerRef={layerRef} />
+                    <Transformer
+                        // ref={trRef.current[getKey]}
+                        ref={trRef}
+                        boundBoxFunc={(oldBox, newBox) => {
+                            // limit resize
+                            if (newBox.width < 5 || newBox.height < 5) {
+                                return oldBox
+                            }
+                            return newBox
+                        }}
+                    />
                 </Layer>
             ))}
             <Layer draggable={false} listening={false}>

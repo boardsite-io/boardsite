@@ -54,7 +54,7 @@ export function moveLiveStroke(position) {
 /**
  * Generate API serialized stroke object, draw & save it to redux store
  */
-export async function registerLiveStroke(pageId, currentPageIndex) {
+export async function registerLiveStroke(pageId, trRef, layerRef) {
     const liveStroke = getLiveStroke()
     // empty livestrokes e.g. rightmouse eraser
     if (liveStroke.points === undefined) {
@@ -63,21 +63,19 @@ export async function registerLiveStroke(pageId, currentPageIndex) {
     if (liveStroke.type === toolType.ERASER) {
         return
     }
-    if (liveStroke.type === toolType.SELECT) {
-        const plen = liveStroke.points.length
-        const x1 = liveStroke.points[0][0]
-        const y1 = liveStroke.points[0][1]
-        const x2 =
-            liveStroke.points[plen - 1][liveStroke.points[plen - 1].length - 2]
-        const y2 =
-            liveStroke.points[plen - 1][liveStroke.points[plen - 1].length - 1]
 
-        store.dispatch(SELECT({ pageId, x1, y1, x2, y2 }))
+    const stroke = createStroke(liveStroke, pageId)
+
+    if (liveStroke.type === toolType.SELECT) {
+        const plen = stroke.points.length
+        const x1 = stroke.points[0]
+        const y1 = stroke.points[1]
+        const x2 = stroke.points[plen - 2]
+        const y2 = stroke.points[plen - 1]
+        store.dispatch(SELECT({ pageId, x1, y1, x2, y2, trRef, layerRef }))
         store.dispatch(END_LIVESTROKE())
         return
     }
-
-    const stroke = createStroke(liveStroke, pageId, currentPageIndex)
 
     handleAddStroke(stroke)
     // clear livestroke
