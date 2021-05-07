@@ -13,9 +13,9 @@ export default function PageContent({ pageId }) {
     )
 
     const handleDragEnd = (e) => {
-        const { x, y, id } = e.target.attrs
+        const { x, y, id, scaleX, scaleY, rotation } = e.target.attrs
         if (store.getState().drawControl.liveStroke.type !== toolType.ERASER) {
-            handleUpdateStroke({ x, y, id, pageId })
+            handleUpdateStroke({ x, y, id, scaleX, scaleY, rotation, pageId })
         }
     }
 
@@ -49,7 +49,7 @@ export default function PageContent({ pageId }) {
                 listening={!isPanMode && isListening}
                 y={getPageIndex(pageId) * CANVAS_FULL_HEIGHT}>
                 {Object.keys(strokes).map((id) => (
-                    <StrokeShape key={id} {...strokes[id]} />
+                    <StrokeShape key={id} {...strokes[id]} pageId={pageId} />
                 ))}
             </Group>
         </>

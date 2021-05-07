@@ -67,7 +67,7 @@ export function deleteStroke(
 }
 
 export function updateStroke(
-    { x, y, id, pageId },
+    { x, y, id, scaleX, scaleY, rotation, pageId },
     isRedoable = true,
     stack = undoStack
 ) {
@@ -78,12 +78,19 @@ export function updateStroke(
             if (isRedoable) {
                 // Add to UndoStack
                 stack.push({
-                    stroke: { x: stroke.x, y: stroke.y, id, pageId }, // make copy to redo update
+                    stroke: {
+                        x: stroke.x,
+                        y: stroke.y,
+                        id,
+                        pageId,
+                    }, // make copy to redo update
                     handle: updateStroke,
                 })
             }
 
-            store.dispatch(UPDATE_STROKE({ x, y, id, pageId }))
+            store.dispatch(
+                UPDATE_STROKE({ x, y, id, scaleX, scaleY, rotation, pageId })
+            )
             if (isConnected()) {
                 // send updated stroke
                 sendStroke(

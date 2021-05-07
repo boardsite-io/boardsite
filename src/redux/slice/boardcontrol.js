@@ -128,12 +128,23 @@ const boardControlSlice = createSlice({
 
         // Update stroke position after dragging
         UPDATE_STROKE(state, action) {
-            const { x, y, id, pageId } = action.payload
+            const {
+                x,
+                y,
+                id,
+                scaleX,
+                scaleY,
+                rotation,
+                pageId,
+            } = action.payload
             const page = state.pageCollection[pageId]
             if (page) {
                 const stroke = page.strokes[id]
                 stroke.x = x
                 stroke.y = y
+                stroke.scaleX = scaleX
+                stroke.scaleY = scaleY
+                stroke.rotation = rotation
             }
         },
     },

@@ -110,6 +110,7 @@ export default function PageListener({ pageId, trRef, layerRef }) {
     const pageBg = useSelector(
         (state) => state.boardControl.pageCollection[pageId]?.meta?.background
     )
+
     return (
         <Rect
             draggable={false}

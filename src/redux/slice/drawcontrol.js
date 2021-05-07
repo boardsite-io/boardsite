@@ -96,7 +96,8 @@ const drawControlSlice = createSlice({
         SET_TYPE: (state, action) => {
             const type = action.payload
             state.liveStroke.type = type
-            state.isDraggable = type === toolType.DRAG
+            state.isDraggable =
+                type === toolType.DRAG || type === toolType.SELECT
             state.isListening =
                 type === toolType.DRAG || type === toolType.ERASER
         },
