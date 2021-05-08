@@ -27,7 +27,6 @@ export default function PageListener({ pageId, trRef, layerRef }) {
     }
 
     function onMouseDown(e) {
-        console.log(trRef.current)
         if (e.evt.buttons === 2) {
             return
         }

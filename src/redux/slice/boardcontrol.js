@@ -1,5 +1,5 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit"
-import { getSelectedIds } from "../../util/hitboxDetection"
+import getSelectedIds from "../../util/hitboxDetection"
 
 const boardControlSlice = createSlice({
     name: "boardControl",

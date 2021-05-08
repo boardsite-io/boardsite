@@ -2,10 +2,9 @@ import SAT from "sat"
 import { toolType } from "../constants"
 
 const V = SAT.Vector
-// const C = SAT.Circle
 const P = SAT.Polygon
 
-export function getHitbox(x1, y1, x2, y2, strokeWidth, scaleX, scaleY) {
+function getHitbox(x1, y1, x2, y2, strokeWidth, scaleX, scaleY) {
     const dx = x2 - x1
     const dy = y2 - y1
     let dxw
@@ -36,7 +35,7 @@ export function getHitbox(x1, y1, x2, y2, strokeWidth, scaleX, scaleY) {
 }
 
 // calc the hitboxes of each segment of a stroke with the appropriate width
-export function getHitboxes(pageStrokes) {
+function getHitboxes(pageStrokes) {
     const strokeHitboxes = {}
     Object.keys(pageStrokes).forEach((strokeId) => {
         const stroke = pageStrokes[strokeId]
@@ -46,117 +45,113 @@ export function getHitboxes(pageStrokes) {
         const strokeIdHitboxes = []
         switch (stroke.type) {
             case toolType.PEN:
-                // compensate for the scale and offset
-                for (let i = 0; i < strokePoints.length; i += 2) {
-                    strokePoints[i] = strokePoints[i] * stroke.scaleX + stroke.x
-                    strokePoints[i + 1] =
-                        strokePoints[i + 1] * stroke.scaleY + stroke.y
-                }
-
-                // get hitboxes of all segments of the current stroke
-                for (let i = 0; i < strokePoints.length - 2; i += 2) {
-                    const x1 = strokePoints[i]
-                    const y1 = strokePoints[i + 1]
-                    const x2 = strokePoints[i + 2]
-                    const y2 = strokePoints[i + 3]
-                    const hitbox = getHitbox(
-                        x1,
-                        y1,
-                        x2,
-                        y2,
-                        stroke.style.width,
-                        stroke.scaleX,
-                        stroke.scaleY
-                    )
-                    strokeIdHitboxes.push(hitbox)
-                }
+                getPenHitbox(stroke, strokePoints, strokeIdHitboxes)
                 break
             case toolType.LINE:
-                // compensate for the scale and offset
-                strokePoints[0] = strokePoints[0] * stroke.scaleX + stroke.x
-                strokePoints[1] = strokePoints[1] * stroke.scaleY + stroke.y
-                strokePoints[2] = strokePoints[2] * stroke.scaleX + stroke.x
-                strokePoints[3] = strokePoints[3] * stroke.scaleY + stroke.y
-
-                strokeIdHitboxes.push(
-                    getHitbox(
-                        strokePoints[0],
-                        strokePoints[1],
-                        strokePoints[2],
-                        strokePoints[3],
-                        stroke.style.width,
-                        stroke.scaleX,
-                        stroke.scaleY
-                    )
-                )
+                getLineHitbox(stroke, strokePoints, strokeIdHitboxes)
                 break
             case toolType.RECTANGLE:
-                strokePoints[2] =
-                    stroke.x +
-                    (strokePoints[2] - strokePoints[0]) * stroke.scaleX
-                strokePoints[3] =
-                    stroke.y +
-                    (strokePoints[3] - strokePoints[1]) * stroke.scaleY
-                strokePoints[0] = stroke.x
-                strokePoints[1] = stroke.y
-                strokeIdHitboxes.push(
-                    getHitbox(
-                        strokePoints[0],
-                        strokePoints[1],
-                        strokePoints[0],
-                        strokePoints[3],
-                        stroke.style.width,
-                        stroke.scaleX,
-                        stroke.scaleY
-                    )
-                )
-                strokeIdHitboxes.push(
-                    getHitbox(
-                        strokePoints[0],
-                        strokePoints[3],
-                        strokePoints[2],
-                        strokePoints[3],
-                        stroke.style.width,
-                        stroke.scaleX,
-                        stroke.scaleY
-                    )
-                )
-                strokeIdHitboxes.push(
-                    getHitbox(
-                        strokePoints[2],
-                        strokePoints[3],
-                        strokePoints[2],
-                        strokePoints[1],
-                        stroke.style.width,
-                        stroke.scaleX,
-                        stroke.scaleY
-                    )
-                )
-                strokeIdHitboxes.push(
-                    getHitbox(
-                        strokePoints[2],
-                        strokePoints[1],
-                        strokePoints[0],
-                        strokePoints[1],
-                        stroke.style.width,
-                        stroke.scaleX,
-                        stroke.scaleY
-                    )
-                )
+                getRectangleHitbox(stroke, strokePoints, strokeIdHitboxes)
                 break
             case toolType.CIRCLE:
-                // TODO
+                getCircleHitbox(stroke, strokePoints, strokeIdHitboxes)
                 break
             default:
                 break
         }
-
+        // add the hitbox(es) of current shape
         strokeHitboxes[strokeId] = strokeIdHitboxes
     })
     return strokeHitboxes
 }
 
-export function getSelectionHitbox(x1, y1, x2, y2) {
+function getPenHitbox(stroke, strokePoints, strokeIdHitboxes) {
+    // compensate for the scale and offset
+    for (let i = 0; i < strokePoints.length; i += 2) {
+        strokePoints[i] = strokePoints[i] * stroke.scaleX + stroke.x
+        strokePoints[i + 1] = strokePoints[i + 1] * stroke.scaleY + stroke.y
+    }
+
+    // get hitboxes of all segments of the current stroke
+    for (let i = 0; i < strokePoints.length - 2; i += 2) {
+        const hitbox = getHitbox(
+            strokePoints[i],
+            strokePoints[i + 1],
+            strokePoints[i + 2],
+            strokePoints[i + 3],
+            stroke.style.width,
+            stroke.scaleX,
+            stroke.scaleY
+        )
+        strokeIdHitboxes.push(hitbox)
+    }
+}
+
+function getLineHitbox(stroke, strokePoints, strokeIdHitboxes) {
+    // compensate for the scale and offset
+    strokePoints[0] = strokePoints[0] * stroke.scaleX + stroke.x
+    strokePoints[1] = strokePoints[1] * stroke.scaleY + stroke.y
+    strokePoints[2] = strokePoints[2] * stroke.scaleX + stroke.x
+    strokePoints[3] = strokePoints[3] * stroke.scaleY + stroke.y
+
+    strokeIdHitboxes.push(
+        getHitbox(
+            strokePoints[0],
+            strokePoints[1],
+            strokePoints[2],
+            strokePoints[3],
+            stroke.style.width,
+            stroke.scaleX,
+            stroke.scaleY
+        )
+    )
+}
+
+function getRectangleHitbox(stroke, strokePoints, strokeIdHitboxes) {
+    const x1 = stroke.x
+    const y1 = stroke.y
+    const x2 = stroke.x + (strokePoints[2] - strokePoints[0]) * stroke.scaleX
+    const y2 = stroke.y + (strokePoints[3] - strokePoints[1]) * stroke.scaleY
+    const w = stroke.style.width
+    strokeIdHitboxes.push(
+        getHitbox(x1, y1, x1, y2, w, stroke.scaleX, stroke.scaleY)
+    )
+    strokeIdHitboxes.push(
+        getHitbox(x1, y2, x2, y2, w, stroke.scaleX, stroke.scaleY)
+    )
+    strokeIdHitboxes.push(
+        getHitbox(x2, y2, x2, y1, w, stroke.scaleX, stroke.scaleY)
+    )
+    strokeIdHitboxes.push(
+        getHitbox(x2, y1, x1, y1, w, stroke.scaleX, stroke.scaleY)
+    )
+}
+
+function getCircleHitbox(stroke, strokePoints, strokeIdHitboxes) {
+    const rad = {
+        x: (strokePoints[2] - strokePoints[0]) / 2,
+        y: (strokePoints[3] - strokePoints[1]) / 2,
+    }
+    const x1 = stroke.x - rad.x * stroke.scaleX
+    const y1 = stroke.y - rad.y * stroke.scaleY
+    const x2 = stroke.x + rad.x * stroke.scaleX
+    const y2 = stroke.y + rad.y * stroke.scaleY
+    const w = stroke.style.width
+    strokeIdHitboxes.push(
+        getHitbox(x1, y1, x1, y2, w, stroke.scaleX, stroke.scaleY)
+    )
+    strokeIdHitboxes.push(
+        getHitbox(x1, y2, x2, y2, w, stroke.scaleX, stroke.scaleY)
+    )
+    strokeIdHitboxes.push(
+        getHitbox(x2, y2, x2, y1, w, stroke.scaleX, stroke.scaleY)
+    )
+    strokeIdHitboxes.push(
+        getHitbox(x2, y1, x1, y1, w, stroke.scaleX, stroke.scaleY)
+    )
+}
+
+function getSelectionHitbox(x1, y1, x2, y2) {
     const minX = Math.min(x1, x2)
     const maxX = Math.max(x1, x2)
     const minY = Math.min(y1, y2)
@@ -169,7 +164,7 @@ export function getSelectionHitbox(x1, y1, x2, y2) {
     return selectionHitbox
 }
 
-export function getSelectedIds(strokes, x1, y1, x2, y2) {
+export default function getSelectedIds(strokes, x1, y1, x2, y2) {
     const selectionHitbox = getSelectionHitbox(x1, y1, x2, y2)
     const strokeHitboxes = getHitboxes(strokes)
 
