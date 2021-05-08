@@ -36,7 +36,7 @@ const drawControlSlice = createSlice({
                 width: DEFAULT_WIDTH * CANVAS_PIXEL_RATIO,
             },
             points: [],
-            x: 0, // be consistent with stroke description
+            x: 0,
             y: 0,
         },
         pageBG: pageType.BLANK,
@@ -121,8 +121,18 @@ const drawControlSlice = createSlice({
             state.isMouseDown = isMouseDown
         },
         START_LIVESTROKE: (state, action) => {
-            const point = action.payload
-            state.liveStroke.points = [point]
+            const [x, y] = action.payload
+            state.liveStroke.points = [[x, y]]
+            if (
+                state.liveStroke.type !== toolType.PEN &&
+                state.liveStroke.type !== toolType.LINE
+            ) {
+                state.liveStroke.x = x
+                state.liveStroke.y = y
+            } else {
+                state.liveStroke.x = 0
+                state.liveStroke.y = 0
+            }
         },
         // Update the current live stroke position
         UPDATE_LIVESTROKE: (state, action) => {

@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { IoShapesOutline } from "react-icons/io5"
-import { FiMinus, FiCircle, FiSquare, FiTriangle } from "react-icons/fi"
+import { FiMinus, FiCircle, FiSquare } from "react-icons/fi"
 
 import { useSelector } from "react-redux"
 import { toolType } from "../../../constants"
@@ -24,9 +24,6 @@ export default function ShapeTools() {
             break
         case toolType.RECTANGLE:
             icon = <FiSquare id="icon" />
-            break
-        case toolType.TRIANGLE:
-            icon = <FiTriangle id="icon" />
             break
         case toolType.CIRCLE:
             icon = <FiCircle id="icon" />
@@ -75,15 +72,6 @@ export default function ShapeTools() {
                                     setOpen(false)
                                 }}>
                                 <FiSquare id="icon" />
-                            </button>
-                            <button
-                                type="button"
-                                id="icon-button"
-                                onClick={() => {
-                                    store.dispatch(SET_TYPE(toolType.TRIANGLE))
-                                    setOpen(false)
-                                }}>
-                                <FiTriangle id="icon" />
                             </button>
                             <button
                                 type="button"

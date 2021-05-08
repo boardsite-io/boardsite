@@ -30,20 +30,47 @@ export default memo(() => {
         ))
     } // for other types (e.g. circle) we only need the endpoints
     else if (liveStroke.points.length > 0) {
-        shape = (
-            <StrokeShape
-                {...liveStroke}
-                points={liveStroke.points[0].concat(
-                    liveStroke.points[liveStroke.points.length - 1]
-                )}
-                isDraggable={false}
-                isListening={false}
-                fillEnabled={false}
-                perfectDrawEnabled={false}
-                shadowForStrokeEnabled={false}
-                currentPageIndex={0}
-            />
-        )
+        if (liveStroke.type === toolType.CIRCLE) {
+            const points = liveStroke.points[0].concat(
+                liveStroke.points[liveStroke.points.length - 1]
+            )
+            const rad = {
+                x: (points[points.length - 2] - points[0]) / 2,
+                y: (points[points.length - 1] - points[1]) / 2,
+            }
+
+            shape = (
+                <StrokeShape
+                    {...liveStroke}
+                    points={liveStroke.points[0].concat(
+                        liveStroke.points[liveStroke.points.length - 1]
+                    )}
+                    x={points[0] + rad.x}
+                    y={points[1] + rad.y}
+                    isDraggable={false}
+                    isListening={false}
+                    fillEnabled={false}
+                    perfectDrawEnabled={false}
+                    shadowForStrokeEnabled={false}
+                    currentPageIndex={0}
+                />
+            )
+        } else {
+            shape = (
+                <StrokeShape
+                    {...liveStroke}
+                    points={liveStroke.points[0].concat(
+                        liveStroke.points[liveStroke.points.length - 1]
+                    )}
+                    isDraggable={false}
+                    isListening={false}
+                    fillEnabled={false}
+                    perfectDrawEnabled={false}
+                    shadowForStrokeEnabled={false}
+                    currentPageIndex={0}
+                />
+            )
+        }
     }
     return <>{shape}</>
 })

@@ -82,6 +82,8 @@ export function updateStroke(
                         x: stroke.x,
                         y: stroke.y,
                         id,
+                        scaleX: stroke.scaleX,
+                        scaleY: stroke.scaleY,
                         pageId,
                     }, // make copy to redo update
                     handle: updateStroke,

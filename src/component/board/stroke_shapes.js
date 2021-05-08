@@ -1,8 +1,10 @@
 import React, { memo, useRef, useState } from "react"
 import { Line, Ellipse, Circle, Rect } from "react-konva"
+import { useSelector } from "react-redux"
 import { getStartEndPoints } from "./stroke_actions"
 import { DRAG_SHADOW_BLUR, toolType } from "../../constants"
 import { handleUpdateStroke } from "./request_handlers"
+import store from "../../redux/store"
 
 /**
  * Super component implementing all stroke types and their visualization in the canvas
@@ -13,6 +15,9 @@ import { handleUpdateStroke } from "./request_handlers"
  */
 export default memo(
     ({ x, y, id, scaleX, scaleY, rotation, pageId, type, style, points }) => {
+        const isDraggable = useSelector(
+            (state) => state.drawControl.isDraggable
+        )
         const shapeRef = useRef()
         const [isDragging, setDragging] = useState(false)
         const shapeProps = {
@@ -29,12 +34,26 @@ export default memo(
             stroke: style.color,
             // fill: style.color,
             strokeWidth: style.width,
-            draggable: true,
+            draggable: isDraggable,
             listening: true,
             perfectDrawEnabled: false,
             onDragStart: () => setDragging(true),
-            onDragEnd: () => {
+            onDragEnd: (e) => {
                 setDragging(false)
+                if (
+                    store.getState().drawControl.liveStroke.type !==
+                    toolType.ERASER
+                ) {
+                    handleUpdateStroke({
+                        x: e.target.attrs.x,
+                        y: e.target.attrs.y,
+                        id,
+                        scaleX: e.target.attrs.scaleX,
+                        scaleY: e.target.attrs.scaleY,
+                        rotation: e.target.attrs.rotation,
+                        pageId,
+                    })
+                }
             },
             onTransformEnd: (e) => {
                 handleUpdateStroke({
@@ -75,10 +94,22 @@ export default memo(
                 shape = (
                     <Ellipse
                         {...shapeProps}
-                        x={points[0] + rad.x}
-                        y={points[1] + rad.y}
                         radius={{ x: Math.abs(rad.x), y: Math.abs(rad.y) }}
                         fillEnabled={false} // Remove inner hitbox from empty circles
+                    />
+                )
+                break
+            }
+            case toolType.RECTANGLE: {
+                const plen = points.length
+                const width = points[plen - 2] - points[0]
+                const height = points[plen - 1] - points[1]
+                shape = (
+                    <Rect
+                        {...shapeProps}
+                        width={width}
+                        height={height}
+                        fillEnabled
                     />
                 )
                 break
@@ -90,8 +121,6 @@ export default memo(
                 shape = (
                     <Rect
                         {...shapeProps}
-                        x={points[0]}
-                        y={points[1]}
                         width={width}
                         height={height}
                         strokeEnabled={false}

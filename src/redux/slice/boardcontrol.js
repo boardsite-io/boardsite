@@ -140,11 +140,11 @@ const boardControlSlice = createSlice({
             const page = state.pageCollection[pageId]
             if (page) {
                 const stroke = page.strokes[id]
-                stroke.x = x
-                stroke.y = y
                 stroke.scaleX = scaleX
                 stroke.scaleY = scaleY
                 stroke.rotation = rotation
+                stroke.x = x
+                stroke.y = y
             }
         },
     },

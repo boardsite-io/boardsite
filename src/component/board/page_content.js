@@ -1,7 +1,7 @@
 import React from "react"
 import { Group } from "react-konva"
 import { useSelector } from "react-redux"
-import { handleDeleteStroke, handleUpdateStroke } from "./request_handlers"
+import { handleDeleteStroke } from "./request_handlers"
 import { CANVAS_FULL_HEIGHT, toolType } from "../../constants"
 import store from "../../redux/store"
 import { getPageIndex } from "./stroke_actions"
@@ -11,13 +11,6 @@ export default function PageContent({ pageId }) {
     const strokes = useSelector(
         (state) => state.boardControl.pageCollection[pageId]?.strokes
     )
-
-    const handleDragEnd = (e) => {
-        const { x, y, id, scaleX, scaleY, rotation } = e.target.attrs
-        if (store.getState().drawControl.liveStroke.type !== toolType.ERASER) {
-            handleUpdateStroke({ x, y, id, scaleX, scaleY, rotation, pageId })
-        }
-    }
 
     function handleStrokeMovement(e) {
         const { id } = e.target.attrs
@@ -31,7 +24,6 @@ export default function PageContent({ pageId }) {
         }
     }
 
-    const isDraggable = useSelector((state) => state.drawControl.isDraggable)
     const isListening = useSelector((state) => state.drawControl.isListening)
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
 
@@ -39,8 +31,6 @@ export default function PageContent({ pageId }) {
         <>
             <Group
                 globalCompositeOperation="source-atop"
-                draggable={isDraggable}
-                onDragEnd={handleDragEnd}
                 onMouseDown={handleStrokeMovement}
                 onMouseMove={handleStrokeMovement}
                 onMouseEnter={handleStrokeMovement}

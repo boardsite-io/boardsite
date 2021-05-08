@@ -25,7 +25,8 @@ let tid = 0
 export function startLiveStroke(position) {
     store.dispatch(START_LIVESTROKE([position.x, position.y]))
     // set Line type when mouse hasnt moved for 1 sec
-    if (getLiveStroke().type === toolType.PEN) {
+    const liveStroke = getLiveStroke()
+    if (liveStroke.type === toolType.PEN) {
         tid = setTimeout(() => {
             store.dispatch(SET_TYPE(toolType.LINE))
         }, 1000)
@@ -128,10 +129,18 @@ function createStroke(liveStroke, pageId) {
         case toolType.LINE:
             stroke.points = getStartEndPoints(stroke.points)
             break
-        case toolType.CIRCLE:
+        case toolType.RECTANGLE:
             stroke.points = getStartEndPoints(stroke.points)
             break
+        case toolType.CIRCLE:
+            stroke.points = getStartEndPoints(stroke.points)
+            stroke.x =
+                stroke.points[0] + (stroke.points[2] - stroke.points[0]) / 2
+            stroke.y =
+                stroke.points[1] + (stroke.points[3] - stroke.points[1]) / 2
+            break
         default:
+            break
     }
 
     const currentPageIndex = getPageIndex(pageId)
