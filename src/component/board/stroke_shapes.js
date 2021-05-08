@@ -67,20 +67,6 @@ export default memo(
                     />
                 )
                 break
-            // case type.TRIANGLE:
-            //     shape = (
-            //         <Line
-            //             points={props.stroke.points}
-            //             stroke={props.stroke.style.color}
-            //             strokeWidth={props.stroke.style.width}
-            //             tension={1}
-            //             lineCap="round"
-            //             draggable={props.isDraggable}
-            //             draggable
-            //             listening
-            //         />
-            //     )
-            //     break
             case toolType.CIRCLE: {
                 const rad = {
                     x: (points[points.length - 2] - points[0]) / 2,
@@ -108,7 +94,9 @@ export default memo(
                         y={points[1]}
                         width={width}
                         height={height}
-                        fillEnabled={false} // Remove inner hitbox from empty circles
+                        strokeEnabled={false}
+                        fill="#00a2ff38"
+                        fillEnabled
                     />
                 )
                 break

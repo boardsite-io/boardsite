@@ -30,37 +30,20 @@ export default memo(() => {
         ))
     } // for other types (e.g. circle) we only need the endpoints
     else if (liveStroke.points.length > 0) {
-        if (liveStroke.type === toolType.SELECT) {
-            shape = (
-                <StrokeShape
-                    {...liveStroke}
-                    points={liveStroke.points[0].concat(
-                        liveStroke.points[liveStroke.points.length - 1]
-                    )}
-                    isDraggable={false}
-                    isListening={false}
-                    fillEnabled={false}
-                    perfectDrawEnabled={false}
-                    shadowForStrokeEnabled={false}
-                    currentPageIndex={0}
-                />
-            )
-        } else {
-            shape = (
-                <StrokeShape
-                    {...liveStroke}
-                    points={liveStroke.points[0].concat(
-                        liveStroke.points[liveStroke.points.length - 1]
-                    )}
-                    isDraggable={false}
-                    isListening={false}
-                    fillEnabled={false}
-                    perfectDrawEnabled={false}
-                    shadowForStrokeEnabled={false}
-                    currentPageIndex={0}
-                />
-            )
-        }
+        shape = (
+            <StrokeShape
+                {...liveStroke}
+                points={liveStroke.points[0].concat(
+                    liveStroke.points[liveStroke.points.length - 1]
+                )}
+                isDraggable={false}
+                isListening={false}
+                fillEnabled={false}
+                perfectDrawEnabled={false}
+                shadowForStrokeEnabled={false}
+                currentPageIndex={0}
+            />
+        )
     }
     return <>{shape}</>
 })
