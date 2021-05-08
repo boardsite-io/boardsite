@@ -4,7 +4,7 @@ const V = SAT.Vector
 // const C = SAT.Circle
 const P = SAT.Polygon
 
-export function getHitbox(x1, y1, x2, y2, width) {
+export function getHitbox(x1, y1, x2, y2, width, scaleX, scaleY) {
     const dx = x2 - x1
     const dy = y2 - y1
     let dxw
@@ -22,6 +22,10 @@ export function getHitbox(x1, y1, x2, y2, width) {
         dyw = dxw * ratio
     }
 
+    // compensate the effect of the scale on the width
+    dxw *= scaleX
+    dyw *= scaleY
+
     // calc vertices
     const v1 = { x: x1 - dxw, y: y1 + dyw }
     const v2 = { x: x2 - dxw, y: y2 + dyw }
@@ -37,18 +41,29 @@ export function getHitboxes(pageStrokes) {
     Object.keys(pageStrokes).forEach((strokeId) => {
         const stroke = pageStrokes[strokeId]
         const strokePoints = [...stroke.points]
+
+        // compensate for the scale and offset
         for (let i = 0; i < strokePoints.length; i += 2) {
             strokePoints[i] = strokePoints[i] * stroke.scaleX + stroke.x
             strokePoints[i + 1] = strokePoints[i + 1] * stroke.scaleY + stroke.y
         }
-        const strokeWidth = stroke.style.width
+
+        // get hitboxes of all segments of the current stroke
         const strokeIdHitboxes = []
         for (let i = 0; i < strokePoints.length - 2; i += 2) {
             const x1 = strokePoints[i]
             const y1 = strokePoints[i + 1]
             const x2 = strokePoints[i + 2]
             const y2 = strokePoints[i + 3]
-            const hitbox = getHitbox(x1, y1, x2, y2, strokeWidth)
+            const hitbox = getHitbox(
+                x1,
+                y1,
+                x2,
+                y2,
+                stroke.style.width,
+                stroke.scaleX,
+                stroke.scaleY
+            )
             strokeIdHitboxes.push(hitbox)
         }
         strokeHitboxes[strokeId] = strokeIdHitboxes
