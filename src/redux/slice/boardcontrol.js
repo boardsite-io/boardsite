@@ -1,9 +1,5 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit"
-import {
-    getHitboxes,
-    getSelectedIds,
-    getSelectionHitbox,
-} from "../../util/hitboxDetection"
+import { getSelectedIds } from "../../util/hitboxDetection"
 
 const boardControlSlice = createSlice({
     name: "boardControl",
@@ -14,11 +10,13 @@ const boardControlSlice = createSlice({
     reducers: {
         SELECT: (state, action) => {
             const { pageId, x1, y1, x2, y2, trRef, layerRef } = action.payload
-            const page = state.pageCollection[pageId]
-            const pageStrokes = page.strokes
-            const strokeHitboxes = getHitboxes(pageStrokes)
-            const selectionHitbox = getSelectionHitbox(x1, y1, x2, y2)
-            const selectedIds = getSelectedIds(strokeHitboxes, selectionHitbox)
+            const selectedIds = getSelectedIds(
+                state.pageCollection[pageId].strokes,
+                x1,
+                y1,
+                x2,
+                y2
+            )
             const selectedShapes = []
             layerRef.current.find(".shape").forEach((elementNode) => {
                 for (let i = 0; i < selectedIds.length; i += 1) {

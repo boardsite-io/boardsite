@@ -169,7 +169,10 @@ export function getSelectionHitbox(x1, y1, x2, y2) {
     return selectionHitbox
 }
 
-export function getSelectedIds(strokeHitboxes, selectionHitbox) {
+export function getSelectedIds(strokes, x1, y1, x2, y2) {
+    const selectionHitbox = getSelectionHitbox(x1, y1, x2, y2)
+    const strokeHitboxes = getHitboxes(strokes)
+
     const selectionHitboxPolygon = new P(new V(0, 0), [
         new V(selectionHitbox.v1.x, selectionHitbox.v1.y),
         new V(selectionHitbox.v2.x, selectionHitbox.v2.y),
