@@ -111,7 +111,6 @@ function createStroke(liveStroke, pageId) {
     stroke.points = flatLiveStroke(stroke.points)
     stroke.scaleX = 1
     stroke.scaleY = 1
-    stroke.rotation = 0
 
     // add page ids
     stroke.pageId = pageId

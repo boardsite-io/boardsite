@@ -67,7 +67,7 @@ export function deleteStroke(
 }
 
 export function updateStroke(
-    { x, y, id, scaleX, scaleY, rotation, pageId },
+    { x, y, id, scaleX, scaleY, pageId },
     isRedoable = true,
     stack = undoStack
 ) {
@@ -90,9 +90,7 @@ export function updateStroke(
                 })
             }
 
-            store.dispatch(
-                UPDATE_STROKE({ x, y, id, scaleX, scaleY, rotation, pageId })
-            )
+            store.dispatch(UPDATE_STROKE({ x, y, id, scaleX, scaleY, pageId }))
             if (isConnected()) {
                 // send updated stroke
                 sendStroke(

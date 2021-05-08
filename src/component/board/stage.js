@@ -175,6 +175,7 @@ const StageContent = memo(() => {
                     />
                     <PageContent pageId={pageId} layerRef={layerRef} />
                     <Transformer
+                        rotateEnabled={false}
                         ref={trRef}
                         boundBoxFunc={(oldBox, newBox) => {
                             // limit resize

@@ -1,6 +1,5 @@
+import SAT from "sat"
 import { toolType } from "../constants"
-
-const SAT = require("sat")
 
 const V = SAT.Vector
 // const C = SAT.Circle

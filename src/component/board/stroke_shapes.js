@@ -14,7 +14,7 @@ import store from "../../redux/store"
  * @param {{stroke: {}}} props
  */
 export default memo(
-    ({ x, y, id, scaleX, scaleY, rotation, pageId, type, style, points }) => {
+    ({ x, y, id, scaleX, scaleY, pageId, type, style, points }) => {
         const isDraggable = useSelector(
             (state) => state.drawControl.isDraggable
         )
@@ -28,7 +28,6 @@ export default memo(
             id,
             scaleX,
             scaleY,
-            rotation,
             lineCap: "round",
             lineJoin: "round",
             stroke: style.color,
@@ -50,7 +49,6 @@ export default memo(
                         id,
                         scaleX: e.target.attrs.scaleX,
                         scaleY: e.target.attrs.scaleY,
-                        rotation: e.target.attrs.rotation,
                         pageId,
                     })
                 }
@@ -62,7 +60,6 @@ export default memo(
                     id,
                     scaleX: e.target.attrs.scaleX,
                     scaleY: e.target.attrs.scaleY,
-                    rotation: e.target.attrs.rotation,
                     pageId,
                 })
             },
