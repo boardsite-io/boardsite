@@ -73,6 +73,12 @@ export function getHitboxes(pageStrokes) {
                 }
                 break
             case toolType.LINE:
+                // compensate for the scale and offset
+                strokePoints[0] = strokePoints[0] * stroke.scaleX + stroke.x
+                strokePoints[1] = strokePoints[1] * stroke.scaleY + stroke.y
+                strokePoints[2] = strokePoints[2] * stroke.scaleX + stroke.x
+                strokePoints[3] = strokePoints[3] * stroke.scaleY + stroke.y
+
                 strokeIdHitboxes.push(
                     getHitbox(
                         strokePoints[0],
