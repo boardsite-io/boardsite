@@ -147,7 +147,7 @@ const drawControlSlice = createSlice({
                 state.liveStroke.points[pLen - 1] = simplifyRDP(
                     p,
                     RDP_EPSILON / scale,
-                    RDP_FORCE_SECTIONS
+                    RDP_FORCE_SECTIONS - 2
                 )
                 // create a new subarray
                 // with the last point from the previous subarray as entry
