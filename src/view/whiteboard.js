@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { useParams } from "react-router-dom"
-import { handleAddPageOver } from "../component/board/request_handlers"
+import { handleAddPageOver } from "../drawing/handlers"
 import boardKeyListener from "../component/board/keylistener"
 import Toolbar from "../component/menu/toolbar"
 import BoardStage from "../component/board/stage"
@@ -9,7 +9,7 @@ import SessionInfo from "../component/menu/menucomponents/sessioninfo"
 import ViewNav from "../component/menu/viewnavigation"
 import { SET_SDIAG } from "../redux/slice/webcontrol"
 import { isConnected, pingSession } from "../api/websocket"
-import FavTools from "../component/menu/fav_tools"
+import FavTools from "../component/menu/favtools"
 
 export default function Whiteboard() {
     const { sid } = useParams()

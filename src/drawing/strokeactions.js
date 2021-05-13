@@ -1,11 +1,11 @@
-import store from "../../redux/store"
+import store from "../redux/store"
 import {
     START_LIVESTROKE,
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
     SET_TYPE,
-} from "../../redux/slice/drawcontrol"
-import { simplifyRDP } from "../../util/simplify"
+} from "../redux/slice/drawcontrol"
+import { simplifyRDP } from "./simplify"
 
 import {
     toolType,
@@ -13,8 +13,8 @@ import {
     RDP_EPSILON,
     LIVESTROKE_PTS_OVERLAP,
     RDP_FORCE_SECTIONS,
-} from "../../constants"
-import { handleAddStroke } from "./request_handlers"
+} from "../constants"
+import { handleAddStroke } from "./handlers"
 
 let tid = 0
 

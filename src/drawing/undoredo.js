@@ -1,10 +1,10 @@
-import { eraseStroke, isConnected, sendStroke } from "../../api/websocket"
+import { eraseStroke, isConnected, sendStroke } from "../api/websocket"
 import {
     ADD_STROKE,
     ERASE_STROKE,
     UPDATE_STROKE,
-} from "../../redux/slice/boardcontrol"
-import store from "../../redux/store"
+} from "../redux/slice/boardcontrol"
+import store from "../redux/store"
 
 const undoStack = []
 const redoStack = []

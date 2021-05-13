@@ -13,7 +13,7 @@ import {
     handleClearPage,
     handleDeleteAllPages,
     handleDeletePage,
-} from "../../board/request_handlers"
+} from "../../../drawing/handlers"
 import "../../../css/menucomponents/pageoptions.css"
 import PageSettings from "./pagesettings"
 

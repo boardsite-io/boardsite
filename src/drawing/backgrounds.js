@@ -1,4 +1,4 @@
-import { pageType } from "../../constants"
+import { pageType } from "../constants"
 
 const blank = (context, shape) => {
     context.beginPath()

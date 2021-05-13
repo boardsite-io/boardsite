@@ -2,7 +2,7 @@ import React, { memo } from "react"
 import { useSelector } from "react-redux"
 import { toolType } from "../../constants"
 import store from "../../redux/store"
-import StrokeShape from "./stroke_shapes"
+import StrokeShape from "./strokeshapes"
 
 export default memo(() => {
     // console.log("LiveLayer Memo Redraw")

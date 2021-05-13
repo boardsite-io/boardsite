@@ -11,16 +11,12 @@ import {
     toolType,
     WIDTH_MAX,
     WIDTH_MIN,
-    MAX_LIVESTROKE_PTS,
     MIN_SAMPLE_COUNT,
-    LIVESTROKE_PTS_OVERLAP,
     pageType,
     DEFAULT_DIRECTDRAW,
     DEFAULT_FAV_TOOLS,
-    RDP_EPSILON,
-    RDP_FORCE_SECTIONS,
 } from "../../constants"
-import { simplifyRDP } from "../../util/simplify"
+import { updateLivestroke } from "../../drawing/livestroke"
 
 const drawControlSlice = createSlice({
     name: "drawControl",
@@ -129,36 +125,12 @@ const drawControlSlice = createSlice({
         // Update the current live stroke position
         UPDATE_LIVESTROKE: (state, action) => {
             const { point, scale } = action.payload
-            const pLen = state.liveStroke.points.length
-            const p = state.liveStroke.points[pLen - 1]
-
-            if (p.length < MAX_LIVESTROKE_PTS) {
-                if (
-                    state.strokeSample === 0 // &&
-                    // hasMinDist([point.x, point.y], p, scale)
-                ) {
-                    // append new point
-                    p.push(point.x, point.y)
-                } else {
-                    // update the latest point
-                    p.splice(p.length - 2, 2, point.x, point.y)
-                }
-            } else {
-                state.liveStroke.points[pLen - 1] = simplifyRDP(
-                    p,
-                    RDP_EPSILON / scale,
-                    RDP_FORCE_SECTIONS - 2
-                )
-                // create a new subarray
-                // with the last point from the previous subarray as entry
-                // in order to not get a gap in the stroke
-                state.liveStroke.points.push(
-                    p
-                        .slice(p.length - LIVESTROKE_PTS_OVERLAP * 2, p.length)
-                        .concat([point.x, point.y])
-                )
-            }
-
+            updateLivestroke(
+                state.liveStroke.points,
+                point,
+                scale,
+                state.strokeSample
+            )
             state.strokeSample += 1
             if (state.strokeSample >= state.samplesRequired) {
                 state.strokeSample = 0
@@ -179,34 +151,6 @@ const drawControlSlice = createSlice({
         },
     },
 })
-
-/**
- * calculates the mean x and y of all bufferpoints
- * @param {array} pts buffer points in form [[p1x, p2y], [p2x, p2y], ...]
- */
-// function calcSmoothPoint(pts) {
-//     const numBufferPoints = pts.length
-//     let x = 0
-//     let y = 0
-//     for (let i = 0; i < numBufferPoints; i += 1) {
-//         x += pts[i][0]
-//         y += pts[i][1]
-//     }
-//     const smoothX = x / numBufferPoints
-//     const smoothY = y / numBufferPoints
-
-//     return [smoothX, smoothY]
-// }
-
-// function hasMinDist(cur, points, scale) {
-//     if (points.length < 4) {
-//         return true
-//     }
-//     return (
-//         Math.abs(cur[0] - points[points.length - 4]) > 2 / scale ||
-//         Math.abs(cur[1] - points[points.length - 3]) > 2 / scale
-//     )
-// }
 
 export const {
     REPLACE_FAV_TOOL,
