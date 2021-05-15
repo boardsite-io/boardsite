@@ -44,9 +44,11 @@ export const DEFAULT_DIRECTDRAW = false
 // number of overlapping points for sub livestrokes
 export const LIVESTROKE_PTS_OVERLAP = 1
 // maximum number of points a livestroke can have until cached
-export const MAX_LIVESTROKE_PTS = 50
+export const MAX_LIVESTROKE_PTS = 20
 // epsilon for the Ramer–Douglas–Peucker algorithm
-export const RDP_EPSILON = 0.3
+export const RDP_EPSILON = 1
+// force the rdp algorithm to split the curve at least 2^3 times
+export const RDP_FORCE_SECTIONS = 3
 
 export const pageType = {
     BLANK: "blank",

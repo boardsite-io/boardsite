@@ -18,6 +18,7 @@
             {
                 "semi": false
             }
-        ]
+        ],
+        "one-var": 0
     }
 }

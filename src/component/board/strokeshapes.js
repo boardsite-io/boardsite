@@ -1,6 +1,6 @@
 import React, { memo, useState } from "react"
 import { Line, Ellipse, Circle } from "react-konva"
-import { getStartEndPoints } from "./stroke_actions"
+import { getStartEndPoints } from "../../drawing/strokeactions"
 import { DRAG_SHADOW_BLUR, toolType } from "../../constants"
 
 /**

@@ -7,7 +7,7 @@ import {
     JUMP_TO_NEXT_PAGE,
     JUMP_TO_PREV_PAGE,
 } from "../../redux/slice/viewcontrol"
-import { handleRedo, handleUndo } from "./request_handlers"
+import { handleRedo, handleUndo } from "../../drawing/handlers"
 
 export default function keyListener(e) {
     switch (e.key) {

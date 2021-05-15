@@ -7,14 +7,14 @@ import {
     moveLiveStroke,
     registerLiveStroke,
     getPageIndex,
-} from "./stroke_actions"
+} from "../../drawing/strokeactions"
 import {
     CANVAS_WIDTH,
     CANVAS_HEIGHT,
     CANVAS_FULL_HEIGHT,
 } from "../../constants"
 import { END_LIVESTROKE, SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
-import pageBackground from "./page_backgrounds"
+import pageBackground from "../../drawing/backgrounds"
 
 export default function PageListener({ pageId }) {
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)

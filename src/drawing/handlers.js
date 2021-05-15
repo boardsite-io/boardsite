@@ -3,17 +3,17 @@ import {
     updatePageSession,
     deletePageSession,
     isConnected,
-} from "../../api/websocket"
+} from "../api/websocket"
 import {
     ADD_PAGE,
     CLEAR_PAGE,
     DELETE_PAGE,
     DELETE_ALL_PAGES,
     SET_PAGEMETA,
-} from "../../redux/slice/boardcontrol"
-import { SET_DEFAULT_PAGEBG } from "../../redux/slice/drawcontrol"
+} from "../redux/slice/boardcontrol"
+import { SET_DEFAULT_PAGEBG } from "../redux/slice/drawcontrol"
 
-import store from "../../redux/store"
+import store from "../redux/store"
 import { addStroke, deleteStroke, redo, undo, updateStroke } from "./undoredo"
 
 export function handleAddPageOver() {

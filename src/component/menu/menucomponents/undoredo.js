@@ -1,6 +1,6 @@
 import React from "react"
 import { MdRedo, MdUndo } from "react-icons/md"
-import { handleUndo, handleRedo } from "../../board/request_handlers"
+import { handleUndo, handleRedo } from "../../../drawing/handlers"
 
 export default function UndoRedo() {
     return (

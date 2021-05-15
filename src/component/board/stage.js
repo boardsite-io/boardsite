@@ -13,10 +13,10 @@ import {
     MULTI_TOUCH_END,
 } from "../../redux/slice/viewcontrol"
 
-import PageContent from "./page_content"
-import PageListener from "./page_listener"
+import PageContent from "./pagecontent"
+import PageListener from "./pagelistener"
 
-import LiveStroke from "./live_stroke"
+import LiveStroke from "./livestroke"
 import {
     ZOOM_IN_WHEEL_SCALE,
     ZOOM_OUT_WHEEL_SCALE,

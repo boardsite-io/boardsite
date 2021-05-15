@@ -8,7 +8,7 @@ import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import { Grid } from "@material-ui/core"
 import { pageType } from "../../../constants"
-import { handlePageBackground } from "../../board/request_handlers"
+import { handlePageBackground } from "../../../drawing/handlers"
 
 export default function PageSettings({ setOpenOther }) {
     const [open, setOpen] = useState(false)

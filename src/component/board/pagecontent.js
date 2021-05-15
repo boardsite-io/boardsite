@@ -1,11 +1,11 @@
 import React from "react"
 import { Group } from "react-konva"
 import { useSelector } from "react-redux"
-import { handleDeleteStroke, handleUpdateStroke } from "./request_handlers"
+import { handleDeleteStroke, handleUpdateStroke } from "../../drawing/handlers"
 import { CANVAS_FULL_HEIGHT, toolType } from "../../constants"
 import store from "../../redux/store"
-import { getPageIndex } from "./stroke_actions"
-import StrokeShape from "./stroke_shapes"
+import { getPageIndex } from "../../drawing/strokeactions"
+import StrokeShape from "./strokeshapes"
 
 export default function PageContent({ pageId }) {
     const strokes = useSelector(
