@@ -1,4 +1,24 @@
+import { nanoid } from "@reduxjs/toolkit"
 import { pageType } from "../constants"
+import store from "../redux/store"
+
+export function newPage(index) {
+    return {
+        pageId: nanoid(8),
+        index,
+        meta: newPageMeta(),
+    }
+}
+
+export function newPageMeta(style = store.getState().drawControl.pageBG) {
+    return {
+        background: {
+            style,
+            file: "",
+            page: -1,
+        },
+    }
+}
 
 const blank = (context, shape) => {
     context.beginPath()
@@ -59,7 +79,7 @@ const ruled = (context, shape) => {
     context.stroke()
 }
 
-export default {
+export const pageBackground = {
     [pageType.BLANK]: blank,
     [pageType.CHECKERED]: checkered,
     [pageType.RULED]: ruled,

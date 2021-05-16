@@ -14,7 +14,7 @@ import {
     CANVAS_FULL_HEIGHT,
 } from "../../constants"
 import { END_LIVESTROKE, SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
-import pageBackground from "../../drawing/backgrounds"
+import { pageBackground } from "../../drawing/page"
 
 export default function PageListener({ pageId }) {
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
@@ -108,7 +108,8 @@ export default function PageListener({ pageId }) {
     const isListening = useSelector((state) => state.drawControl.isListening)
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
     const pageBg = useSelector(
-        (state) => state.boardControl.pageCollection[pageId]?.meta?.background
+        (state) =>
+            state.boardControl.pageCollection[pageId]?.meta?.background.style
     )
     return (
         <Rect

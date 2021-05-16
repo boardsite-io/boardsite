@@ -11,38 +11,27 @@ import {
     DELETE_ALL_PAGES,
     SET_PAGEMETA,
 } from "../redux/slice/boardcontrol"
-import { SET_DEFAULT_PAGEBG } from "../redux/slice/drawcontrol"
+import { SET_STATIC_PAGEBG } from "../redux/slice/drawcontrol"
 
 import store from "../redux/store"
+import { newPage, newPageMeta } from "./page"
 import { addStroke, deleteStroke, redo, undo, updateStroke } from "./undoredo"
 
 export function handleAddPageOver() {
-    const pageIndex = store.getState().viewControl.currentPageIndex
-    const meta = { background: store.getState().drawControl.pageBG }
+    const page = newPage(store.getState().viewControl.currentPageIndex)
     if (isConnected()) {
-        addPageSession(pageIndex, meta)
+        addPageSession(page)
     } else {
-        store.dispatch(
-            ADD_PAGE({
-                pageIndex,
-                meta,
-            })
-        )
+        store.dispatch(ADD_PAGE(page))
     }
 }
 
 export function handleAddPageUnder() {
-    const pageIndex = store.getState().viewControl.currentPageIndex
-    const meta = { background: store.getState().drawControl.pageBG }
+    const page = newPage(store.getState().viewControl.currentPageIndex + 1)
     if (isConnected()) {
-        addPageSession(pageIndex + 1, meta)
+        addPageSession(page)
     } else {
-        store.dispatch(
-            ADD_PAGE({
-                pageIndex: pageIndex + 1,
-                meta,
-            })
-        )
+        store.dispatch(ADD_PAGE(page))
     }
 }
 
@@ -92,15 +81,18 @@ export function handleRedo() {
     redo()
 }
 
+// selection of new (static) page background
 export function handlePageBackground(style) {
-    store.dispatch(SET_DEFAULT_PAGEBG(style))
+    store.dispatch(SET_STATIC_PAGEBG(style))
+    const meta = newPageMeta()
+    // update the current page
     if (isConnected()) {
-        updatePageSession(getCurrentPageId(), { background: style })
+        updatePageSession(getCurrentPageId(), meta)
     } else {
         store.dispatch(
             SET_PAGEMETA({
                 pageId: getCurrentPageId(),
-                meta: { background: style },
+                meta,
             })
         )
     }

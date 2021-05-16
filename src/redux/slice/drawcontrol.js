@@ -140,7 +140,7 @@ const drawControlSlice = createSlice({
             state.liveStroke.points = []
             state.strokeSample = 0
         },
-        SET_DEFAULT_PAGEBG: (state, action) => {
+        SET_STATIC_PAGEBG: (state, action) => {
             state.pageBG = action.payload
         },
         SET_SAMPLE_COUNT: (state, action) => {
@@ -168,7 +168,7 @@ export const {
     START_LIVESTROKE,
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
-    SET_DEFAULT_PAGEBG,
+    SET_STATIC_PAGEBG,
     SET_SAMPLE_COUNT,
     TOGGLE_DIRECTDRAW,
 } = drawControlSlice.actions

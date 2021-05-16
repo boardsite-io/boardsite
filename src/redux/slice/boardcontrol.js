@@ -1,4 +1,4 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit"
+import { createSlice } from "@reduxjs/toolkit"
 
 const boardControlSlice = createSlice({
     name: "boardControl",
@@ -44,12 +44,12 @@ const boardControlSlice = createSlice({
 
         // Add a new page
         ADD_PAGE: (state, action) => {
-            const { pageIndex, meta } = action.payload
-            const pageId = nanoid(8)
+            const { pageId, index, meta } = action.payload
             state.pageCollection[pageId] = newPageCollectionEntry()
-            state.pageCollection[pageId].meta = { ...meta } // if undefined
-            if (pageIndex >= 0) {
-                state.pageRank.splice(pageIndex, 0, pageId)
+            // update only fields that are different
+            state.pageCollection[pageId].meta = meta
+            if (index >= 0) {
+                state.pageRank.splice(index, 0, pageId)
             } else {
                 state.pageRank.push(pageId)
             }

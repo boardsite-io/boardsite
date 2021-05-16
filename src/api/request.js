@@ -64,12 +64,12 @@ export async function getStrokes(sessionId, pageId) {
     return sendRequest(`${sessionId}/pages/${pageId}`, "get")
 }
 
-export async function addPage(sessionId, pageId, index, meta) {
-    return sendRequest(`${sessionId}/pages`, "post", {
-        pageId,
-        index,
-        meta,
-    })
+/**
+ * @param {string} sessionId
+ * @param {{pageId: string, index: number, meta: any}} page
+ */
+export async function addPage(sessionId, page) {
+    return sendRequest(`${sessionId}/pages`, "post", page)
 }
 
 export async function updatePage(sessionId, pageId, content) {
