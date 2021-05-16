@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useRef } from "react"
 import { useSelector } from "react-redux"
 import { Rect } from "react-konva"
 import store from "../../redux/store"
@@ -7,14 +7,14 @@ import {
     moveLiveStroke,
     registerLiveStroke,
     getPageIndex,
+    abortLiveStroke,
 } from "../../drawing/strokeactions"
 import {
     CANVAS_WIDTH,
     CANVAS_HEIGHT,
     CANVAS_FULL_HEIGHT,
 } from "../../constants"
-import { END_LIVESTROKE, SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
-import { pageBackground } from "../../drawing/page"
+import { SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
 
 export default function PageListener({ pageId }) {
     const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
@@ -83,11 +83,6 @@ export default function PageListener({ pageId }) {
         onMouseUp(e)
     }
 
-    const abortLiveStroke = () => {
-        store.dispatch(SET_ISMOUSEDOWN(false))
-        store.dispatch(END_LIVESTROKE())
-    }
-
     const isValidTouch = (e) => {
         e.evt.preventDefault()
         const touch1 = e.evt.touches[0]
@@ -107,25 +102,19 @@ export default function PageListener({ pageId }) {
 
     const isListening = useSelector((state) => state.drawControl.isListening)
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
-    const pageBg = useSelector(
-        (state) =>
-            state.boardControl.pageCollection[pageId]?.meta?.background.style
-    )
+
+    // cache the rect for performance
+    const ref = useRef()
+    useEffect(() => ref.current.cache(), [])
     return (
         <Rect
+            ref={ref}
             draggable={false}
             listening={!isPanMode && !isListening}
             height={CANVAS_HEIGHT}
             width={CANVAS_WIDTH}
             x={0}
             y={CANVAS_FULL_HEIGHT * getPageIndex(pageId)}
-            stroke="#000"
-            strokeWidth={0.2}
-            fill="#ffffff"
-            shadowColor="#000000"
-            shadowBlur={10}
-            shadowOffset={{ x: 0, y: 0 }}
-            shadowOpacity={0.5}
             onMouseDown={onMouseDown}
             onMousemove={onMouseMove}
             onMouseUp={onMouseUp}
@@ -133,7 +122,6 @@ export default function PageListener({ pageId }) {
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
-            sceneFunc={pageBackground[pageBg]}
         />
     )
 }

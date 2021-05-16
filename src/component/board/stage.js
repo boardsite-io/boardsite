@@ -23,6 +23,7 @@ import {
     CANVAS_WIDTH,
 } from "../../constants"
 import store from "../../redux/store"
+import PageBackground from "./pagebackground"
 
 export default function BoardStage() {
     const isPanMode = useSelector((state) => state.drawControl.isPanMode)
@@ -165,6 +166,7 @@ const StageContent = memo(() => {
         <>
             {pageSlice.map((pageId) => (
                 <Layer key={pageId}>
+                    <PageBackground pageId={pageId} />
                     <PageListener pageId={pageId} />
                     <PageContent pageId={pageId} />
                 </Layer>

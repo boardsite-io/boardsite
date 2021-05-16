@@ -4,6 +4,7 @@ import {
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
     SET_TYPE,
+    SET_ISMOUSEDOWN,
 } from "../redux/slice/drawcontrol"
 import { simplifyRDP } from "./simplify"
 
@@ -78,6 +79,20 @@ export async function registerLiveStroke(pageId) {
         store.dispatch(SET_TYPE(toolType.PEN))
         clearTimeout(tid)
         tid = 0
+    }
+}
+
+export function abortLiveStroke() {
+    if (tid !== 0) {
+        clearTimeout(tid)
+        tid = 0
+    }
+    const liveStroke = getLiveStroke()
+    if (liveStroke.points.length > 0) {
+        store.dispatch(END_LIVESTROKE())
+    }
+    if (store.getState().drawControl.isMouseDown) {
+        store.dispatch(SET_ISMOUSEDOWN(false))
     }
 }
 
