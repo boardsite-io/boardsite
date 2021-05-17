@@ -2,7 +2,14 @@ import React, { memo, useRef, useState } from "react"
 import { Line, Ellipse, Circle, Rect } from "react-konva"
 import { useSelector } from "react-redux"
 import { getStartEndPoints } from "./stroke_actions"
-import { DRAG_SHADOW_BLUR, toolType } from "../../constants"
+import {
+    DRAG_SHADOW_BLUR,
+    SEL_FILL,
+    SEL_FILL_ENABLED,
+    SEL_STROKE,
+    SEL_STROKE_ENABLED,
+    toolType,
+} from "../../constants"
 import { handleUpdateStroke } from "./request_handlers"
 import store from "../../redux/store"
 
@@ -120,9 +127,10 @@ export default memo(
                         {...shapeProps}
                         width={width}
                         height={height}
-                        strokeEnabled={false}
-                        fill="#00a2ff38"
-                        fillEnabled
+                        stroke={SEL_STROKE}
+                        strokeEnabled={SEL_STROKE_ENABLED}
+                        fill={SEL_FILL}
+                        fillEnabled={SEL_FILL_ENABLED}
                     />
                 )
                 break

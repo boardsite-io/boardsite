@@ -27,6 +27,20 @@ export const DEFAULT_KEEP_CENTERED = false
 export const DEFAULT_HIDE_NAVBAR = false
 export const DRAG_SHADOW_BLUR = 4
 
+// select props
+export const SEL_STROKE_ENABLED = false
+export const SEL_STROKE = "#00ff00ff"
+export const SEL_FILL_ENABLED = true
+export const SEL_FILL = "#00a2ff38"
+
+// transform props
+export const TR_BORDER_STROKE = "#00a2ff38"
+export const TR_BORDER_STROKE_WIDTH = 1
+export const TR_ANCHOR_FILL = "#00a2ff38"
+export const TR_ANCHOR_SIZE = 8
+export const TR_ANCHOR_STROKE = "#00000088"
+export const TR_ANCHOR_CORNER_RADIUS = 2
+
 // drawing stuff
 export const toolType = {
     ERASER: 0,

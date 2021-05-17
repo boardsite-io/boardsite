@@ -22,6 +22,12 @@ import {
     ZOOM_OUT_WHEEL_SCALE,
     CANVAS_WIDTH,
     toolType,
+    TR_BORDER_STROKE,
+    TR_BORDER_STROKE_WIDTH,
+    TR_ANCHOR_FILL,
+    TR_ANCHOR_STROKE,
+    TR_ANCHOR_SIZE,
+    TR_ANCHOR_CORNER_RADIUS,
 } from "../../constants"
 import store from "../../redux/store"
 
@@ -165,7 +171,7 @@ const StageContent = memo(() => {
     const layerRef = useRef()
     const trRef = useRef()
 
-    // unselect when change tool
+    // unselect transformer selection when change tool
     const unSelector = createSelector(
         (state) => state.drawControl.liveStroke.type,
         (type) => {
@@ -187,6 +193,14 @@ const StageContent = memo(() => {
                     />
                     <PageContent pageId={pageId} layerRef={layerRef} />
                     <Transformer
+                        borderStroke={TR_BORDER_STROKE}
+                        borderStrokeWidth={TR_BORDER_STROKE_WIDTH}
+                        borderEnabled
+                        // borderDash={[5, 5]}
+                        anchorFill={TR_ANCHOR_FILL}
+                        anchorSize={TR_ANCHOR_SIZE}
+                        anchorStroke={TR_ANCHOR_STROKE}
+                        anchorCornerRadius={TR_ANCHOR_CORNER_RADIUS}
                         rotateEnabled={false}
                         ref={trRef}
                         boundBoxFunc={(oldBox, newBox) => {
