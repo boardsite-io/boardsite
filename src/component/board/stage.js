@@ -21,6 +21,7 @@ import {
     ZOOM_IN_WHEEL_SCALE,
     ZOOM_OUT_WHEEL_SCALE,
     CANVAS_WIDTH,
+    toolType,
 } from "../../constants"
 import store from "../../redux/store"
 
@@ -163,6 +164,17 @@ const StageContent = memo(() => {
     const pageSlice = useSelector(pageCreateSelector)
     const layerRef = useRef()
     const trRef = useRef()
+
+    // unselect when change tool
+    const unSelector = createSelector(
+        (state) => state.drawControl.liveStroke.type,
+        (type) => {
+            if (type !== toolType.SELECT) {
+                trRef.current?.nodes([])
+            }
+        }
+    )
+    useSelector(unSelector)
 
     return (
         <>
