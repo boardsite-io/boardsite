@@ -54,6 +54,7 @@ export const pageType = {
     BLANK: "blank",
     CHECKERED: "checkered",
     RULED: "ruled",
+    DOC: "doc",
 }
 
 const tool1 = {

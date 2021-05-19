@@ -5,6 +5,7 @@ const boardControlSlice = createSlice({
     initialState: {
         pageRank: [], // ["id1", "id2", ...]
         pageCollection: {}, // {id1: canvasRef1, id2: canvasRef2, ...}
+        docs: null,
     },
     reducers: {
         SYNC_ALL_PAGES: (state, action) => {
@@ -113,6 +114,10 @@ const boardControlSlice = createSlice({
                 stroke.y = y
             }
         },
+
+        SET_PDF: (state, action) => {
+            state.docs = action.payload
+        },
     },
 })
 
@@ -145,6 +150,7 @@ export const {
     ADD_MULTIPLE_STROKES,
     ERASE_STROKE,
     UPDATE_STROKE,
+    SET_PDF,
 } = boardControlSlice.actions
 
 export default boardControlSlice.reducer
