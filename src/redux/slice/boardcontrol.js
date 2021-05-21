@@ -5,7 +5,7 @@ const boardControlSlice = createSlice({
     initialState: {
         pageRank: [], // ["id1", "id2", ...]
         pageCollection: {}, // {id1: canvasRef1, id2: canvasRef2, ...}
-        docs: null,
+        docs: [],
     },
     reducers: {
         SYNC_ALL_PAGES: (state, action) => {

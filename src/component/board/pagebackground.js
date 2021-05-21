@@ -1,25 +1,28 @@
-import { Rect } from "react-konva"
+import { Image } from "react-konva"
 import React, { memo, useEffect, useRef, useState } from "react"
 import { useSelector } from "react-redux"
 import {
     CANVAS_FULL_HEIGHT,
     CANVAS_HEIGHT,
     CANVAS_WIDTH,
+    pageType,
 } from "../../constants"
-import { getPageIndex } from "../../drawing/strokeactions"
 import { pageBackground } from "../../drawing/page"
 
 export default memo(({ pageId }) => {
     const ref = useRef()
     const [update, setUpdate] = useState(0)
     const pageBg = useSelector(
-        (state) =>
-            state.boardControl.pageCollection[pageId]?.meta?.background.style
+        (state) => state.boardControl.pageCollection[pageId]?.meta?.background
     )
+    const docs = useSelector((state) => state.boardControl.docs)
+    const pageRank = useSelector((state) => state.boardControl.pageRank)
 
     // cache the shape on update
     useEffect(() => {
-        ref.current.cache({ pixelRatio: 2 })
+        if (update > 0) {
+            ref.current.cache({ pixelRatio: 4 })
+        }
     }, [update])
 
     // clear the cache and redraw when pagebackground changes
@@ -27,15 +30,20 @@ export default memo(({ pageId }) => {
         ref.current.clearCache()
         // schedule new caching
         setUpdate((prev) => prev + 1)
-    }, [pageBg])
+    }, [pageBg.style])
 
     return (
-        <Rect
+        <Image
             ref={ref}
+            image={
+                pageBg.style === pageType.DOC
+                    ? docs[pageBg.pageNum - 1]
+                    : undefined
+            }
             height={CANVAS_HEIGHT}
             width={CANVAS_WIDTH}
             x={0}
-            y={CANVAS_FULL_HEIGHT * getPageIndex(pageId)}
+            y={CANVAS_FULL_HEIGHT * pageRank.indexOf(pageId)} // relative
             stroke="#000"
             strokeWidth={0.2}
             fill="#ffffff"
@@ -43,7 +51,11 @@ export default memo(({ pageId }) => {
             shadowBlur={10}
             shadowOffset={{ x: 0, y: 0 }}
             shadowOpacity={0.5}
-            sceneFunc={pageBackground[pageBg]}
+            sceneFunc={
+                pageBg.style !== pageType.DOC
+                    ? pageBackground[pageBg.style]
+                    : null
+            }
         />
     )
 })

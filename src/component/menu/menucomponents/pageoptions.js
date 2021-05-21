@@ -14,7 +14,7 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    Input,
+    TextField,
 } from "@material-ui/core"
 import {
     handleAddPageOver,
@@ -30,6 +30,7 @@ import { loadNewPDF } from "../../../drawing/page"
 export default function PageOptions() {
     const [open, setOpen] = useState(false)
     const [openFileDiag, setOpenFileDiag] = useState(false)
+    const [fileErr, setFileErr] = useState(false)
 
     return (
         <div className="pageoptions-wrap">
@@ -101,11 +102,18 @@ export default function PageOptions() {
                 aria-describedby="alert-dialog-description">
                 <DialogTitle>Import File</DialogTitle>
                 <DialogContent>
-                    <Input
+                    <TextField
                         type="file"
+                        error={fileErr}
                         onInput={(e) => {
                             loadNewPDF(e.target.files[0])
-                            setOpenFileDiag(false)
+                                .then(() => {
+                                    setOpenFileDiag(false)
+                                    setFileErr(false)
+                                })
+                                .catch(() => {
+                                    setFileErr(true)
+                                })
                         }}
                     />
                 </DialogContent>

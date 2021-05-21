@@ -3,7 +3,11 @@ import * as pdfjs from "pdfjs-dist/es5/build/pdf"
 import pdfjsWorker from "pdfjs-dist/es5/build/pdf.worker.entry"
 
 import { pageType } from "../constants"
-import { SET_PDF } from "../redux/slice/boardcontrol"
+import {
+    ADD_PAGE,
+    DELETE_ALL_PAGES,
+    SET_PDF,
+} from "../redux/slice/boardcontrol"
 import store from "../redux/store"
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
@@ -43,7 +47,6 @@ export async function loadNewPDF(file) {
     // get number of pages for document
     // eslint-disable-next-line no-underscore-dangle
     const { numPages } = pdf._pdfInfo
-    console.log(`loaded pdf file with ${numPages} pages`)
     let pages = new Array(numPages).fill(null)
 
     // process all pages by drawing them in a canvas
@@ -53,38 +56,50 @@ export async function loadNewPDF(file) {
         const ctx = canvas.getContext("2d")
 
         const docPage = await pdf.getPage(i + 1)
-        const viewport = docPage.getViewport({ scale: 1 })
+        const viewport = docPage.getViewport({ scale: 4 })
 
         canvas.height = viewport.height
         canvas.width = viewport.width
-        await docPage.render({
+
+        ctx.fillStyle = "red"
+        ctx.fillRect(0, 0, 100, 100)
+
+        const render = docPage.render({
             canvasContext: ctx,
             viewport,
+            enableWebGL: true,
         })
 
-        const data = ctx.getImageData(0, 0, canvas.width, canvas.height)
+        const renderTask = new Promise((resolve, reject) => {
+            // eslint-disable-next-line no-underscore-dangle
+            render._internalRenderTask.callback = (error) => {
+                if (error !== undefined) {
+                    reject()
+                } else {
+                    resolve()
+                }
+            }
+        })
+
+        // wait until pdf render is finished
+        await renderTask
+        const img = document.createElement("img")
+        img.src = canvas.toDataURL("image/png")
         canvas.remove()
-        console.log(`Image data for page ${i + 1}`, data)
-        return data
+
+        return img
     })
 
     // save loaded pages in store
     const data = await Promise.all(pages)
     store.dispatch(SET_PDF(data))
-    console.log(`loaded ${pages.length} pages`, data)
-    console.log(store.getState().boardControl.docs)
 
-    // store.dispatch(DELETE_ALL_PAGES())
-    // pages.forEach((_, i) => {
-    //     const page = newPage(-1, pageType.BLANK, i + 1)
-    //     store.dispatch(ADD_PAGE(page))
-    //     store.dispatch(
-    //         SET_PAGEMETA({
-    //             pageId: page.pageId,
-    //             meta: newPageMeta(pageType.DOC, i + 1),
-    //         })
-    //     )
-    // })
+    store.dispatch(DELETE_ALL_PAGES())
+    pages.forEach((_, i) => {
+        // append subsequent pages at the end
+        const page = newPage(-1, pageType.DOC, i + 1)
+        store.dispatch(ADD_PAGE(page))
+    })
 }
 
 const blank = (context, shape) => {
@@ -120,10 +135,6 @@ const checkered = (context, shape) => {
     }
     context.setAttr("strokeStyle", "#00000088")
     context.stroke()
-
-    // (!) Konva specific method, it is very important
-    // it will apply are required styles
-    // context.fillStrokeShape(shape)
 }
 
 const ruled = (context, shape) => {
@@ -146,22 +157,8 @@ const ruled = (context, shape) => {
     context.stroke()
 }
 
-const doc = () => {
-    // context.beginPath()
-    // const { pageNum } = store.getState().boardControl.pageCollection[
-    //     pageId
-    // ].meta.background
-    // console.log(`render page ${pageId} with document page ${pageNum}`)
-    // const docPage = store.getState().boardControl.docs[pageNum - 1]
-    // docPage.render({
-    //     canvasContext: context,
-    //     viewport: docPage.getViewport(1),
-    // })
-}
-
 export const pageBackground = {
     [pageType.BLANK]: blank,
     [pageType.CHECKERED]: checkered,
     [pageType.RULED]: ruled,
-    [pageType.DOC]: doc,
 }

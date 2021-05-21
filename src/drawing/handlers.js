@@ -4,6 +4,7 @@ import {
     deletePageSession,
     isConnected,
 } from "../api/websocket"
+import { pageType } from "../constants"
 import {
     ADD_PAGE,
     CLEAR_PAGE,
@@ -84,6 +85,15 @@ export function handleRedo() {
 // selection of new (static) page background
 export function handlePageBackground(style) {
     store.dispatch(SET_STATIC_PAGEBG(style))
+
+    // cannot change background of document
+    if (
+        store.getState().boardControl.pageCollection[getCurrentPageId()].meta
+            .background.style === pageType.DOC
+    ) {
+        return
+    }
+
     const meta = newPageMeta()
     // update the current page
     if (isConnected()) {
