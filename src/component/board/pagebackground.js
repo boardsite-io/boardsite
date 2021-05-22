@@ -20,9 +20,11 @@ export default memo(({ pageId }) => {
 
     // cache the shape on update
     useEffect(() => {
-        if (update > 0) {
-            ref.current.cache({ pixelRatio: 4 })
+        // dont cache document image
+        if (pageBg.style !== pageType.DOC) {
+            ref.current.cache({ pixelRatio: 2 })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [update])
 
     // clear the cache and redraw when pagebackground changes
