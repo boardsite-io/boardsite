@@ -2,7 +2,7 @@ import { nanoid } from "@reduxjs/toolkit"
 import * as pdfjs from "pdfjs-dist/es5/build/pdf"
 import pdfjsWorker from "pdfjs-dist/es5/build/pdf.worker.entry"
 
-import { pageType } from "../constants"
+import { DOC_SCALE, pageType } from "../constants"
 import {
     ADD_PAGE,
     DELETE_ALL_PAGES,
@@ -32,7 +32,7 @@ export function newPageMeta(
     }
 }
 
-export async function loadNewPDF(file) {
+export async function getPDFfromForm(file) {
     const fileReader = new FileReader()
     const p = new Promise((resolve) => {
         // eslint-disable-next-line prettier/prettier
@@ -42,7 +42,11 @@ export async function loadNewPDF(file) {
         }
     })
     fileReader.readAsArrayBuffer(file)
-    const pdf = await pdfjs.getDocument(await p).promise
+    return p
+}
+
+export async function loadNewPDF(file) {
+    const pdf = await pdfjs.getDocument(file).promise
 
     // get number of pages for document
     // eslint-disable-next-line no-underscore-dangle
@@ -56,7 +60,7 @@ export async function loadNewPDF(file) {
         const ctx = canvas.getContext("2d")
 
         const docPage = await pdf.getPage(i + 1)
-        const viewport = docPage.getViewport({ scale: 4 })
+        const viewport = docPage.getViewport({ scale: DOC_SCALE })
 
         canvas.height = viewport.height
         canvas.width = viewport.width

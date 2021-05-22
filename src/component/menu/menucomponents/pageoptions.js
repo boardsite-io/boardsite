@@ -25,7 +25,7 @@ import {
 } from "../../../drawing/handlers"
 import "../../../css/menucomponents/pageoptions.css"
 import PageSettings from "./pagesettings"
-import { loadNewPDF } from "../../../drawing/page"
+import { getPDFfromForm, loadNewPDF } from "../../../drawing/page"
 
 export default function PageOptions() {
     const [open, setOpen] = useState(false)
@@ -106,14 +106,14 @@ export default function PageOptions() {
                         type="file"
                         error={fileErr}
                         onInput={(e) => {
-                            loadNewPDF(e.target.files[0])
-                                .then(() => {
-                                    setOpenFileDiag(false)
-                                    setFileErr(false)
-                                })
-                                .catch(() => {
-                                    setFileErr(true)
-                                })
+                            ;(async () => {
+                                const file = await getPDFfromForm(
+                                    e.target.files[0]
+                                )
+                                await loadNewPDF(file)
+                                setOpenFileDiag(false)
+                                setFileErr(false)
+                            })().catch(() => setFileErr(true))
                         }}
                     />
                 </DialogContent>

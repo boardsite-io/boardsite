@@ -50,6 +50,8 @@ export const RDP_EPSILON = 1
 // force the rdp algorithm to split the curve at least 2^3 times
 export const RDP_FORCE_SECTIONS = 3
 
+// scale factor for importet documents
+export const DOC_SCALE = 4
 export const pageType = {
     BLANK: "blank",
     CHECKERED: "checkered",
