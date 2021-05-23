@@ -67,7 +67,6 @@ export default function FavToolButton({ icon, tool, index }) {
                             tabIndex="0"
                             className="cover"
                             onClick={() => setOpen(false)}
-                            onKeyPress={() => {}}
                         />
                         <div className="favtooloptions">
                             <button

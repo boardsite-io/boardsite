@@ -37,7 +37,6 @@ export default function PageOptions() {
                             tabIndex="0"
                             className="cover"
                             onClick={() => setOpen(false)}
-                            onKeyPress={() => {}}
                         />
                         <div className="pageoptions">
                             <button

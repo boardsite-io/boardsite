@@ -2,9 +2,11 @@ import React from "react"
 import { CustomPicker } from "react-color"
 
 // const { Alpha } = require("react-color/lib/components/common")
-const { EditableInput } = require("react-color/lib/components/common")
-const { Hue } = require("react-color/lib/components/common")
-const { Saturation } = require("react-color/lib/components/common")
+import {
+    EditableInput,
+    Hue,
+    Saturation,
+} from "react-color/lib/components/common"
 // color, hex, hsl oldHue, onChange, rgb, source
 
 function ColorPicker({ color, hex, hsl, hsv, oldHue, onChange, rgb, source }) {

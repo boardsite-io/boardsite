@@ -31,9 +31,9 @@ import { MessageType, newMessage } from "./types"
 /**
  * Connect to Websocket.
  */
-export function createWebsocket(sessionId, user) {
+export function createWebsocket(sessionId: string, user: any) {
     return new Promise((resolve, reject) => {
-        const url = new URL(store.getState().webControl.apiURL)
+        const url = new URL(store.getState().webControl.apiURL.toString())
         url.protocol = url.protocol.replace("http", "ws")
         const ws = new WebSocket(
             `${url.toString()}b/${sessionId}/users/${user.id}/socket`
@@ -43,7 +43,7 @@ export function createWebsocket(sessionId, user) {
         }
         ws.onopen = () => {
             store.dispatch(CREATE_WS({ ws, sessionId, user }))
-            resolve()
+            resolve(undefined)
         }
         ws.onerror = (ev) => reject(ev)
     })
@@ -55,14 +55,15 @@ export function send(type = "", content = {}) {
         store.getState().webControl.user.id,
         content
     )
-    store.getState().webControl.webSocket.send(JSON.stringify(message))
+    const ws = store.getState().webControl.webSocket as WebSocket
+    ws.send(JSON.stringify(message))
 }
 
 /**
  * Receive a message via websocket connection.
  * @param {{type: string, sender: string, content: any}} message message
  */
-function receive(message) {
+function receive(message: any) {
     switch (message.type) {
         case MessageType.Stroke:
             receiveStrokes(message.content)
@@ -89,8 +90,8 @@ function receive(message) {
     }
 }
 
-function receiveStrokes(strokes) {
-    strokes.forEach((stroke) => {
+function receiveStrokes(strokes: any) {
+    strokes.forEach((stroke: any) => {
         if (stroke.type > 0) {
             // add stroke
             store.dispatch(ADD_STROKE(stroke))
@@ -101,14 +102,14 @@ function receiveStrokes(strokes) {
     })
 }
 
-function syncPages({ pageRank, meta }) {
+function syncPages({ pageRank, meta }: any) {
     store.dispatch(SET_PAGERANK(pageRank))
     Object.keys(meta).forEach((pageId) =>
         store.dispatch(SET_PAGEMETA({ pageId, meta: meta[pageId] }))
     )
 }
 
-function updatePageMeta({ pageId, meta, clear }) {
+function updatePageMeta({ pageId, meta, clear }: any) {
     if (clear) {
         store.dispatch(CLEAR_PAGE(pageId))
     }
@@ -148,42 +149,42 @@ export async function joinSession(
     syncPages({ pageRank, meta })
 
     // fetch data from each page
-    pageRank.forEach(async (pageId) => {
+    pageRank.forEach(async (pageId: string) => {
         const strokes = await getStrokes(sessionId, pageId)
         store.dispatch(ADD_MULTIPLE_STROKES(strokes))
     })
 }
 
-export function sendStroke(stroke) {
+export function sendStroke(stroke: any) {
     // append the user id to stroke
     send(MessageType.Stroke, [
         { ...stroke, userId: store.getState().webControl.user.id },
     ])
 }
 
-export function eraseStroke({ id, pageId }) {
+export function eraseStroke({ id, pageId }: any) {
     sendStroke({ id, pageId, type: toolType.ERASER })
 }
 
-export function addPageSession(pageIndex, meta) {
+export function addPageSession(pageIndex: number, meta: any) {
     addPage(store.getState().webControl.sessionId, nanoid(8), pageIndex, meta)
 }
 
-export function deletePageSession(pageId) {
+export function deletePageSession(pageId: string) {
     deletePage(store.getState().webControl.sessionId, pageId)
 }
 
 // returns the relative path to the session
 // based on either the sessionID or the URL
-export function getSessionPath(sessionURL) {
+export function getSessionPath(sessionURL: string) {
     const url = sessionURL.split("/")
     return `/b/${url[url.length - 1]}`
 }
 
-export function pingSession(sessionID) {
+export function pingSession(sessionID: string) {
     return getPages(sessionID)
 }
 
-export function updatePageSession(pageId, meta = {}, clear = false) {
+export function updatePageSession(pageId: string, meta = {}, clear = false) {
     updatePage(store.getState().webControl.sessionId, pageId, { meta, clear })
 }

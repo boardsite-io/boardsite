@@ -19,7 +19,7 @@ const webControlSlice = createSlice({
         },
         // strokesOutBuf: [],
         // strokesInBuf: [],
-        webSocket: null,
+        webSocket: new WebSocket(""),
         sessionId: "",
         user: {
             id: "", // Thats me!

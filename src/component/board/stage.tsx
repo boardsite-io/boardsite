@@ -38,7 +38,6 @@ export default function BoardStage() {
             store.dispatch(ON_WINDOW_RESIZE())
         ) // listen for resize to update stage dimensions
         store.dispatch(CENTER_VIEW())
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     /**

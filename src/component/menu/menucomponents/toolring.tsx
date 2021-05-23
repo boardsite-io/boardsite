@@ -47,7 +47,6 @@ export default function ToolRing() {
                                 tabIndex="0"
                                 className="cover"
                                 onClick={() => setOpen(false)}
-                                onKeyPress={() => {}}
                             />
                             <StylePicker />
                         </div>
