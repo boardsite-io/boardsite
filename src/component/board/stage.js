@@ -193,6 +193,7 @@ const StageContent = memo(() => {
                     />
                     <PageContent pageId={pageId} layerRef={layerRef} />
                     <Transformer
+                        shouldOverdrawWholeArea
                         borderStroke={TR_BORDER_STROKE}
                         borderStrokeWidth={TR_BORDER_STROKE_WIDTH}
                         borderEnabled
