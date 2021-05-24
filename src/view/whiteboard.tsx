@@ -12,7 +12,7 @@ import { isConnected, pingSession } from "../api/websocket"
 import FavTools from "../component/menu/favtools"
 
 export default function Whiteboard() {
-    const { sid } = useParams()
+    const { sid } = useParams<{ sid: string }>()
     const dispatch = useDispatch()
 
     useEffect(() => {

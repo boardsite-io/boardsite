@@ -1,3 +1,5 @@
+import { LiveStroke, Point } from "./types"
+
 export const CANVAS_WIDTH = 620
 export const CANVAS_HEIGHT = 877
 export const CANVAS_GAP = 20
@@ -19,7 +21,7 @@ export const DEFAULT_STAGE_WIDTH = window.innerWidth
 export const DEFAULT_STAGE_HEIGHT = window.innerHeight
 export const DEFAULT_STAGE_X = 0
 export const DEFAULT_STAGE_Y = 60
-export const DEFAULT_STAGE_SCALE = { x: 1, y: 1 }
+export const DEFAULT_STAGE_SCALE: Point = { x: 1, y: 1 }
 export const DEFAULT_ISDRAGGABLE = false
 export const DEFAULT_ISLISTENING = false
 export const DEFAULT_ISMOUSEDOWN = false
@@ -56,21 +58,21 @@ export const pageType = {
     RULED: "ruled",
 }
 
-const tool1 = {
+const tool1: LiveStroke = {
     type: toolType.PEN,
     style: {
         color: "#000000",
         width: 2,
     },
 }
-const tool2 = {
+const tool2: LiveStroke = {
     type: toolType.PEN,
     style: {
         color: "#0211a3",
         width: 2,
     },
 }
-const tool3 = {
+const tool3: LiveStroke = {
     type: toolType.PEN,
     style: {
         color: "#ff0000",

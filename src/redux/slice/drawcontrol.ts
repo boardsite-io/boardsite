@@ -17,34 +17,51 @@ import {
     DEFAULT_FAV_TOOLS,
 } from "../../constants"
 import { updateLivestroke } from "../../drawing/livestroke"
+import { LiveStroke, Tool } from "../../types"
+
+export interface DrawControlState {
+    isPanMode: boolean
+    isDraggable: boolean
+    isListening: boolean
+    isMouseDown: boolean
+    directDraw: boolean
+    samplesRequired: number
+    strokeSample: number
+    liveStroke: LiveStroke
+    pageBG: string
+    favTools: Tool[]
+}
+
+const initState: DrawControlState = {
+    isPanMode: DEFAULT_ISPANMODE,
+    isDraggable: DEFAULT_ISDRAGGABLE,
+    isListening: DEFAULT_ISLISTENING,
+    isMouseDown: DEFAULT_ISMOUSEDOWN,
+    directDraw: DEFAULT_DIRECTDRAW,
+    samplesRequired: MIN_SAMPLE_COUNT,
+    strokeSample: 0,
+    liveStroke: {
+        type: DEFAULT_TOOL,
+        style: {
+            color: DEFAULT_COLOR,
+            width: DEFAULT_WIDTH * CANVAS_PIXEL_RATIO,
+            opacity: 1,
+        },
+        points: [],
+        x: 0, // be consistent with stroke description
+        y: 0,
+    },
+    pageBG: pageType.BLANK,
+    favTools: DEFAULT_FAV_TOOLS,
+}
 
 const drawControlSlice = createSlice({
     name: "drawControl",
-    initialState: {
-        isPanMode: DEFAULT_ISPANMODE,
-        isDraggable: DEFAULT_ISDRAGGABLE,
-        isListening: DEFAULT_ISLISTENING,
-        isMouseDown: DEFAULT_ISMOUSEDOWN,
-        directDraw: DEFAULT_DIRECTDRAW,
-        samplesRequired: MIN_SAMPLE_COUNT,
-        strokeSample: 0,
-        liveStroke: {
-            type: DEFAULT_TOOL,
-            style: {
-                color: DEFAULT_COLOR,
-                width: DEFAULT_WIDTH * CANVAS_PIXEL_RATIO,
-            },
-            points: [],
-            x: 0, // be consistent with stroke description
-            y: 0,
-        },
-        pageBG: pageType.BLANK,
-        favTools: DEFAULT_FAV_TOOLS,
-    },
+    initialState: initState,
     reducers: {
         REPLACE_FAV_TOOL: (state, action) => {
-            const index = action.payload
-            const tool = {
+            const index = action.payload as number
+            const tool: Tool = {
                 type: state.liveStroke.type,
                 style: state.liveStroke.style,
             }
@@ -59,7 +76,7 @@ const drawControlSlice = createSlice({
             state.favTools.splice(index, 1)
         },
         ADD_FAV_TOOL: (state) => {
-            const tool = {
+            const tool: Tool = {
                 type: state.liveStroke.type,
                 style: state.liveStroke.style,
             }

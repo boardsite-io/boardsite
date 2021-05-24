@@ -16,22 +16,37 @@ import {
     DEFAULT_HIDE_NAVBAR,
 } from "../../constants"
 
+import { Point } from "../../types"
+
 // variables for multitouch zoom
-let lastCenter = null
+let lastCenter: Point | null = null
 let lastDist = 0
+
+interface ViewControlState {
+    keepCentered: boolean
+    hideNavBar: boolean
+    stageWidth: number
+    stageHeight: number
+    stageX: number
+    stageY: number
+    stageScale: Point
+    currentPageIndex: number
+}
+
+const initState: ViewControlState = {
+    keepCentered: DEFAULT_KEEP_CENTERED,
+    hideNavBar: DEFAULT_HIDE_NAVBAR,
+    stageWidth: DEFAULT_STAGE_WIDTH,
+    stageHeight: DEFAULT_STAGE_HEIGHT,
+    stageX: DEFAULT_STAGE_X,
+    stageY: DEFAULT_STAGE_Y,
+    stageScale: DEFAULT_STAGE_SCALE,
+    currentPageIndex: DEFAULT_CURRENT_PAGE_INDEX,
+}
 
 const viewControlSlice = createSlice({
     name: "viewControl",
-    initialState: {
-        keepCentered: DEFAULT_KEEP_CENTERED,
-        hideNavBar: DEFAULT_HIDE_NAVBAR,
-        stageWidth: DEFAULT_STAGE_WIDTH,
-        stageHeight: DEFAULT_STAGE_HEIGHT,
-        stageX: DEFAULT_STAGE_X,
-        stageY: DEFAULT_STAGE_Y,
-        stageScale: DEFAULT_STAGE_SCALE,
-        currentPageIndex: DEFAULT_CURRENT_PAGE_INDEX,
-    },
+    initialState: initState,
     reducers: {
         TOGGLE_SHOULD_CENTER: (state) => {
             state.keepCentered = !state.keepCentered
@@ -172,13 +187,13 @@ export const {
 } = viewControlSlice.actions
 export default viewControlSlice.reducer
 
-function goToPage(state, pageIndex) {
+function goToPage(state: ViewControlState, pageIndex: number) {
     state.currentPageIndex = pageIndex
     state.stageY = -pageIndex * CANVAS_FULL_HEIGHT * state.stageScale.x
     centerView(state)
 }
 
-function centerView(state) {
+function centerView(state: ViewControlState) {
     const x = (window.innerWidth - CANVAS_WIDTH * state.stageScale.x) / 2
     if (x >= 0) {
         state.stageX = x
@@ -187,7 +202,7 @@ function centerView(state) {
     }
 }
 
-function fitToPage(state) {
+function fitToPage(state: ViewControlState) {
     const oldScale = state.stageScale.y
     const newScale = window.innerWidth / CANVAS_WIDTH
     state.stageScale = { x: newScale, y: newScale }
@@ -197,7 +212,11 @@ function fitToPage(state) {
         ((state.stageHeight / 2 - state.stageY) / oldScale) * newScale
 }
 
-function zoomToPointWithScale(state, zoomPoint, zoomScale) {
+function zoomToPointWithScale(
+    state: ViewControlState,
+    zoomPoint: Point,
+    zoomScale: number
+) {
     const oldScale = state.stageScale.x
     const mousePointTo = {
         x: (zoomPoint.x - state.stageX) / oldScale,
@@ -228,7 +247,7 @@ function zoomToPointWithScale(state, zoomPoint, zoomScale) {
     updateCurrentPageIndex(state) // check if pageId changed by zooming
 }
 
-function updateCurrentPageIndex(state) {
+function updateCurrentPageIndex(state: ViewControlState) {
     const canvasY = (state.stageHeight / 2 - state.stageY) / state.stageScale.y
     state.currentPageIndex = Math.floor(canvasY / CANVAS_FULL_HEIGHT)
 }
@@ -238,7 +257,7 @@ function updateCurrentPageIndex(state) {
  * @param {*} p1
  * @param {*} p2
  */
-function getDistance(p1, p2) {
+function getDistance(p1: Point, p2: Point): number {
     return Math.sqrt((p2.x - p1.x) ** 2 + (p2.y - p1.y) ** 2)
 }
 
@@ -247,7 +266,7 @@ function getDistance(p1, p2) {
  * @param {*} p1
  * @param {*} p2
  */
-function getCenter(p1, p2) {
+function getCenter(p1: Point, p2: Point): Point {
     return {
         x: (p1.x + p2.x) / 2,
         y: (p1.y + p2.y) / 2,

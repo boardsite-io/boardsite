@@ -8,31 +8,53 @@ import {
 } from "unique-names-generator"
 import { API_URL } from "../../api/types"
 
+interface User {
+    id: string
+    alias: string
+    color: string
+}
+
+interface WebControlState {
+    sessionDialog: {
+        open: boolean
+        invalidSid: boolean
+        joinOnly: boolean
+        sidInput: string
+    }
+    webSocket: WebSocket
+    sessionId: string
+    user: User
+    connectedUsers: {
+        [uid: string]: User
+    }
+    apiURL: URL
+}
+
+const initState: WebControlState = {
+    sessionDialog: {
+        open: false,
+        invalidSid: false,
+        joinOnly: false,
+        sidInput: "",
+    },
+    webSocket: new WebSocket(""),
+    sessionId: "",
+    user: {
+        id: "",
+        alias: uniqueNamesGenerator({
+            dictionaries: [adjectives, colors, animals],
+            separator: "",
+            style: "capital",
+        }),
+        color: Konva.Util.getRandomColor(),
+    },
+    connectedUsers: {},
+    apiURL: new URL(API_URL),
+}
+
 const webControlSlice = createSlice({
     name: "webControl",
-    initialState: {
-        sessionDialog: {
-            open: false,
-            invalidSid: false,
-            joinOnly: false,
-            sidInput: "",
-        },
-        // strokesOutBuf: [],
-        // strokesInBuf: [],
-        webSocket: new WebSocket(""),
-        sessionId: "",
-        user: {
-            id: "", // Thats me!
-            alias: uniqueNamesGenerator({
-                dictionaries: [adjectives, colors, animals],
-                separator: "",
-                style: "capital",
-            }),
-            color: Konva.Util.getRandomColor(),
-        },
-        connectedUsers: {},
-        apiURL: new URL(API_URL),
-    },
+    initialState: initState,
     reducers: {
         CREATE_WS: (state, action) => {
             const { ws, sessionId, user } = action.payload
@@ -43,9 +65,9 @@ const webControlSlice = createSlice({
         },
         CLOSE_WS: (state) => {
             state.webSocket.close()
-            state.webSocket = null
+            // state.webSocket = null
             state.sessionId = ""
-            state.user = {}
+            state.user = {} as User
         },
         // RECEIVE_STROKES: (state, action) => {
         //     const { data } = action.payload
@@ -98,7 +120,6 @@ export const {
     USER_CONNECT,
     USER_DISCONNECT,
     SET_SESSION_USERS,
-    SET_SID,
     SET_SDIAG,
     CLOSE_SDIAG,
     SET_USER_ALIAS,

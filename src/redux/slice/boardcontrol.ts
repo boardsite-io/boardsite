@@ -1,11 +1,17 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit"
 
+import { Page, PageCollection, Stroke } from "../../types"
+
+interface BoardControlState {
+    pageRank: string[]
+    pageCollection: PageCollection
+}
+
+declare const initState: BoardControlState
+
 const boardControlSlice = createSlice({
     name: "boardControl",
-    initialState: {
-        pageRank: [], // ["id1", "id2", ...]
-        pageCollection: {}, // {id1: canvasRef1, id2: canvasRef2, ...}
-    },
+    initialState: initState,
     reducers: {
         SYNC_ALL_PAGES: (state, action) => {
             const { pageRank, pageCollection } = action.payload
@@ -15,8 +21,8 @@ const boardControlSlice = createSlice({
 
         SET_PAGERANK: (state, action) => {
             const newPageRank = action.payload
-            const newPageCollection = {}
-            newPageRank.forEach((pid) => {
+            const newPageCollection = {} as PageCollection
+            newPageRank.forEach((pid: string) => {
                 if (
                     Object.prototype.hasOwnProperty.call(
                         state.pageCollection,
@@ -88,8 +94,8 @@ const boardControlSlice = createSlice({
         // Add multiple strokes to collection
         ADD_MULTIPLE_STROKES: (state, action) => {
             const strokes = action.payload
-            strokes.sort((a, b) => a.id > b.id)
-            strokes.forEach((stroke) => {
+            strokes.sort((a: Stroke, b: Stroke) => a.id > b.id)
+            strokes.forEach((stroke: Stroke) => {
                 addStroke(state, stroke)
             })
         },
@@ -116,7 +122,7 @@ const boardControlSlice = createSlice({
     },
 })
 
-function addStroke(state, stroke) {
+function addStroke(state: BoardControlState, stroke: Stroke) {
     const { pageId, id } = stroke
     const page = state.pageCollection[pageId]
 
@@ -130,7 +136,7 @@ function newPageCollectionEntry() {
     return {
         strokes: {},
         meta: {},
-    }
+    } as Page
 }
 
 export const {
