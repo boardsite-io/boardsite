@@ -1,5 +1,6 @@
 import reducer from "./boardcontrol"
 import * as action from "./boardcontrol"
+import { Stroke } from "../../types"
 
 const testState = {
     pageRank: ["pid1", "pid2"],
@@ -31,7 +32,7 @@ const testState = {
 
 describe("boardcontrol reducer", () => {
     it("should return the initial state", () => {
-        expect(reducer(undefined, {})).toEqual({
+        expect(reducer(undefined, {} as any)).toEqual({
             pageRank: [],
             pageCollection: {},
         })
@@ -39,7 +40,7 @@ describe("boardcontrol reducer", () => {
 
     it("should update the pages correctly", () => {
         expect(
-            reducer(testState, action.SET_PAGERANK(["pid2", "pid3"]))
+            reducer(testState as any, action.SET_PAGERANK(["pid2", "pid3"]))
         ).toEqual({
             pageRank: ["pid2", "pid3"],
             pageCollection: {
@@ -75,7 +76,7 @@ describe("boardcontrol reducer", () => {
                                     pageId: "pid1",
                                     x: 0,
                                     y: 0,
-                                },
+                                } as Stroke,
                             },
                             meta: {
                                 background: "checkered",

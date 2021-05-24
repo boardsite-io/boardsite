@@ -2,7 +2,7 @@ import { createSlice, nanoid } from "@reduxjs/toolkit"
 
 import { Page, PageCollection, Stroke } from "../../types"
 
-interface BoardControlState {
+export interface BoardControlState {
     pageRank: string[]
     pageCollection: PageCollection
 }
