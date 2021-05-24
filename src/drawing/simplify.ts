@@ -1,4 +1,6 @@
-function findPerpendicularDistance(point, line) {
+import { Point } from "../types"
+
+function findPerpendicularDistance(point: Point, line: [Point, Point]) {
     const slope = (line[1].y - line[0].y) / (line[1].x - line[0].x)
     const intercept = line[0].y - slope * line[0].x
     const result =
@@ -17,7 +19,11 @@ function findPerpendicularDistance(point, line) {
  * @param {number} sections
  */
 // eslint-disable-next-line import/prefer-default-export
-export function simplifyRDP(points, epsilon, sections) {
+export function simplifyRDP(
+    points: number[],
+    epsilon: number,
+    sections: number
+): number[] {
     if (points.length <= 4) {
         return points
     }

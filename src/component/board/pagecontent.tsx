@@ -32,7 +32,7 @@ const PageContent: React.FC<PageContentProps> = ({ pageId }) => {
             return
         }
         if (store.getState().drawControl.liveStroke.type === toolType.ERASER) {
-            handleDeleteStroke({ pageId, id })
+            handleDeleteStroke({ pageId, id } as Stroke)
         }
     }
 
