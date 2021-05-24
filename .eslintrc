@@ -1,24 +1,50 @@
 {
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
     "extends": [
-        "react-app",
         "airbnb",
         "plugin:jsx-a11y/recommended",
-        "prettier"
+        "prettier",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
     ],
-    "plugins": ["jsx-a11y", "react", "prettier"],
+    "plugins": ["jsx-a11y", "react", "prettier", "@typescript-eslint"],
     "rules": {
         "semi": 0,
         "no-param-reassign": 0, // redux slices
         "no-use-before-define": 0, // hoisting
         "react/jsx-props-no-spreading": 0, // spreading props sometimes makes things easier and more fun :)
         "react/prop-types": 0,
-        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+        "jsx-a11y/click-events-have-key-events": 0,
+        "react/jsx-filename-extension": [
+            "warn",
+            { "extensions": [".ts", ".tsx"] }
+        ],
         "prettier/prettier": [
             "error",
             {
                 "semi": false
             }
         ],
-        "one-var": 0
+        "one-var": 0,
+        "import/extensions": [
+            "error",
+            "ignorePackages",
+            {
+                "ts": "never",
+                "tsx": "never"
+            }
+        ]
+    },
+    "settings": {
+        "import/resolver": {
+            "typescript": {}
+        }
     }
 }
