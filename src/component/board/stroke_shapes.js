@@ -1,7 +1,6 @@
 import React, { memo, useRef, useState } from "react"
 import { Line, Ellipse, Circle, Rect } from "react-konva"
 import { useSelector } from "react-redux"
-import { getStartEndPoints } from "./stroke_actions"
 import {
     DRAG_SHADOW_BLUR,
     SEL_FILL,
@@ -10,8 +9,9 @@ import {
     SEL_STROKE_ENABLED,
     toolType,
 } from "../../constants"
-import { handleUpdateStroke } from "./request_handlers"
 import store from "../../redux/store"
+import { handleUpdateStroke } from "../../drawing/handlers"
+import { getStartEndPoints } from "../../drawing/strokeactions"
 
 /**
  * Super component implementing all stroke types and their visualization in the canvas
