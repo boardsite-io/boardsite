@@ -7,12 +7,7 @@ import {
     uniqueNamesGenerator,
 } from "unique-names-generator"
 import { API_URL } from "../../api/types"
-
-interface User {
-    id: string
-    alias: string
-    color: string
-}
+import { User } from "../../types"
 
 interface WebControlState {
     sessionDialog: {

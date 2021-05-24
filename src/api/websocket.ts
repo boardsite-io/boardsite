@@ -26,12 +26,22 @@ import {
     CLEAR_PAGE,
     SET_PAGEMETA,
 } from "../redux/slice/boardcontrol"
-import { MessageType, newMessage } from "./types"
+import {
+    MessageType,
+    Message,
+    messages,
+    ResponsePageSync,
+    ResponsePageUpdate,
+} from "./types"
+import { PageMeta, Stroke, User } from "../types"
 
 /**
  * Connect to Websocket.
  */
-export function createWebsocket(sessionId: string, user: any) {
+function createWebsocket(
+    sessionId: string,
+    user: User
+): Promise<Event | undefined> {
     return new Promise((resolve, reject) => {
         const url = new URL(store.getState().webControl.apiURL.toString())
         url.protocol = url.protocol.replace("http", "ws")
@@ -49,39 +59,38 @@ export function createWebsocket(sessionId: string, user: any) {
     })
 }
 
-export function send(type = "", content = {}) {
-    const message = newMessage(
+function send(type: MessageType, content: unknown): void {
+    const message: Message<typeof content> = {
         type,
-        store.getState().webControl.user.id,
-        content
-    )
+        sender: store.getState().webControl.user.id,
+        content,
+    }
     const ws = store.getState().webControl.webSocket as WebSocket
     ws.send(JSON.stringify(message))
 }
 
 /**
  * Receive a message via websocket connection.
- * @param {{type: string, sender: string, content: any}} message message
  */
-function receive(message: any) {
+function receive(message: Message<unknown>) {
     switch (message.type) {
-        case MessageType.Stroke:
-            receiveStrokes(message.content)
+        case messages.Stroke:
+            receiveStrokes(message.content as Stroke[])
             break
 
-        case MessageType.PageSync:
-            syncPages(message.content)
+        case messages.PageSync:
+            syncPages(message.content as ResponsePageSync)
             break
 
-        case MessageType.PageUpdate:
-            updatePageMeta(message.content)
+        case messages.PageUpdate:
+            updatePageMeta(message.content as ResponsePageUpdate)
             break
 
-        case MessageType.UserConnected:
+        case messages.UserConnected:
             store.dispatch(USER_CONNECT(message.content))
             break
 
-        case MessageType.UserDisconnected:
+        case messages.UserDisconnected:
             store.dispatch(USER_DISCONNECT(message.content))
             break
 
@@ -90,8 +99,8 @@ function receive(message: any) {
     }
 }
 
-function receiveStrokes(strokes: any) {
-    strokes.forEach((stroke: any) => {
+function receiveStrokes(strokes: Stroke[]) {
+    strokes.forEach((stroke) => {
         if (stroke.type > 0) {
             // add stroke
             store.dispatch(ADD_STROKE(stroke))
@@ -102,21 +111,21 @@ function receiveStrokes(strokes: any) {
     })
 }
 
-function syncPages({ pageRank, meta }: any) {
+function syncPages({ pageRank, meta }: ResponsePageSync) {
     store.dispatch(SET_PAGERANK(pageRank))
     Object.keys(meta).forEach((pageId) =>
         store.dispatch(SET_PAGEMETA({ pageId, meta: meta[pageId] }))
     )
 }
 
-function updatePageMeta({ pageId, meta, clear }: any) {
+function updatePageMeta({ pageId, meta, clear }: ResponsePageUpdate) {
     if (clear) {
         store.dispatch(CLEAR_PAGE(pageId))
     }
     store.dispatch(SET_PAGEMETA({ pageId, meta }))
 }
 
-export function isConnected() {
+export function isConnected(): boolean {
     return (
         store.getState().webControl.sessionId !== "" &&
         store.getState().webControl.webSocket != null &&
@@ -124,7 +133,7 @@ export function isConnected() {
     )
 }
 
-export async function newSession() {
+export async function newSession(): Promise<string> {
     const sessionId = await createSession()
     store.dispatch(DELETE_ALL_PAGES())
     // create a pageid which will be added when joining
@@ -136,9 +145,9 @@ export async function joinSession(
     sessionId = store.getState().webControl.sessionDialog.sidInput,
     alias = store.getState().webControl.user.alias,
     color = store.getState().webControl.user.color
-) {
+): Promise<void> {
     // create a new user for us
-    const user = await createUser(sessionId, { alias, color })
+    const user = await createUser(sessionId, { alias, color } as User)
     await createWebsocket(sessionId, user)
 
     store.dispatch(SET_SESSION_USERS(await getUsers(sessionId)))
@@ -149,42 +158,49 @@ export async function joinSession(
     syncPages({ pageRank, meta })
 
     // fetch data from each page
-    pageRank.forEach(async (pageId: string) => {
+    pageRank.forEach(async (pageId) => {
         const strokes = await getStrokes(sessionId, pageId)
         store.dispatch(ADD_MULTIPLE_STROKES(strokes))
     })
 }
 
-export function sendStroke(stroke: any) {
+export function sendStroke(stroke: Stroke): void {
     // append the user id to stroke
-    send(MessageType.Stroke, [
+    send(messages.Stroke, [
         { ...stroke, userId: store.getState().webControl.user.id },
     ])
 }
 
-export function eraseStroke({ id, pageId }: any) {
-    sendStroke({ id, pageId, type: toolType.ERASER })
+export function eraseStroke({ id, pageId }: Stroke): void {
+    sendStroke({ id, pageId, type: toolType.ERASER } as Stroke)
 }
 
-export function addPageSession(pageIndex: number, meta: any) {
+export function addPageSession(pageIndex: number, meta: PageMeta): void {
     addPage(store.getState().webControl.sessionId, nanoid(8), pageIndex, meta)
 }
 
-export function deletePageSession(pageId: string) {
+export function deletePageSession(pageId: string): void {
     deletePage(store.getState().webControl.sessionId, pageId)
 }
 
 // returns the relative path to the session
 // based on either the sessionID or the URL
-export function getSessionPath(sessionURL: string) {
+export function getSessionPath(sessionURL: string): string {
     const url = sessionURL.split("/")
     return `/b/${url[url.length - 1]}`
 }
 
-export function pingSession(sessionID: string) {
+export function pingSession(sessionID: string): Promise<ResponsePageSync> {
     return getPages(sessionID)
 }
 
-export function updatePageSession(pageId: string, meta = {}, clear = false) {
-    updatePage(store.getState().webControl.sessionId, pageId, { meta, clear })
+export function updatePageSession(
+    pageId: string,
+    meta = {},
+    clear = false
+): void {
+    updatePage(store.getState().webControl.sessionId, pageId, {
+        meta: meta as PageMeta,
+        clear,
+    })
 }

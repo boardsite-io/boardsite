@@ -1,5 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios"
 import store from "../redux/store"
+import { PageMeta, Stroke, User } from "../types"
+import { ResponsePageSync } from "./types"
 
 const apiRequest = axios.create({
     transformRequest: [(data) => JSON.stringify({ content: data })], // for routes we dont need message type
@@ -23,7 +25,11 @@ const apiRequest = axios.create({
 /**
  * Send data request to API.
  */
-export async function sendRequest(url: string, method: string, data?: any) {
+export async function sendRequest<T>(
+    url: string,
+    method: string,
+    data?: unknown | undefined
+): Promise<T> {
     const baseURL = store.getState().webControl.apiURL.toString()
     const response = await apiRequest({
         url: `${baseURL}b/${url}`,
@@ -33,23 +39,26 @@ export async function sendRequest(url: string, method: string, data?: any) {
     return response.data
 }
 
-export async function createSession() {
+export function createSession(): Promise<string> {
     return sendRequest("create", "post")
 }
 
-export async function getUsers(sessionId: string): Promise<any> {
+export function getUsers(sessionId: string): Promise<{ [uid: string]: User }> {
     return sendRequest(`${sessionId}/users`, "get")
 }
 
-export async function createUser(sessionId: string, data: any) {
+export function createUser(sessionId: string, data: User): Promise<User> {
     return sendRequest(`${sessionId}/users`, "post", data)
 }
 
-export async function getPages(sessionId: string) {
+export function getPages(sessionId: string): Promise<ResponsePageSync> {
     return sendRequest(`${sessionId}/pages`, "get")
 }
 
-export async function getStrokes(sessionId: string, pageId: string) {
+export function getStrokes(
+    sessionId: string,
+    pageId: string
+): Promise<Stroke[]> {
     return sendRequest(`${sessionId}/pages/${pageId}`, "get")
 }
 
@@ -57,8 +66,8 @@ export async function addPage(
     sessionId: string,
     pageId: string,
     index: number,
-    meta?: any
-) {
+    meta?: PageMeta
+): Promise<void> {
     return sendRequest(`${sessionId}/pages`, "post", {
         pageId,
         index,
@@ -69,11 +78,11 @@ export async function addPage(
 export async function updatePage(
     sessionId: string,
     pageId: string,
-    content: any
-) {
+    content: { meta: PageMeta; clear: boolean }
+): Promise<void> {
     return sendRequest(`${sessionId}/pages/${pageId}`, "put", content)
 }
 
-export async function deletePage(sessionId: string, pageId: string) {
+export function deletePage(sessionId: string, pageId: string): Promise<void> {
     return sendRequest(`${sessionId}/pages/${pageId}`, "delete")
 }

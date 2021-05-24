@@ -71,7 +71,7 @@ export function deleteStroke(
 
         store.dispatch(ERASE_STROKE({ pageId, id }))
         if (isConnected()) {
-            eraseStroke({ pageId, id })
+            eraseStroke({ pageId, id } as Stroke)
         }
     }
 }

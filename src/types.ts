@@ -20,17 +20,25 @@ export interface Stroke extends Tool {
     points: number[]
 }
 
+export interface PageMeta {
+    background: PageBackground
+}
+
 export interface Page {
     strokes: {
         [id: string]: Stroke
     }
-    meta: {
-        background: PageBackground
-    }
+    meta: PageMeta
 }
 
 export interface PageCollection {
     [pid: string]: Page
+}
+
+export interface User {
+    id: string
+    alias: string
+    color: string
 }
 
 export type Point = {

@@ -17,7 +17,7 @@ import {
 import { handleAddStroke } from "./handlers"
 import { LiveStroke, Point, Stroke } from "../types"
 
-let tid = 0
+let tid: number | NodeJS.Timeout = 0
 
 /**
  * Start the current stroke when mouse is pressed down
@@ -29,7 +29,7 @@ export function startLiveStroke(point: Point): void {
     if (getLiveStroke().type === toolType.PEN) {
         tid = setTimeout(() => {
             store.dispatch(SET_TYPE(toolType.LINE))
-        }, 1000) as any
+        }, 1000)
     }
 }
 
@@ -53,7 +53,7 @@ export function moveLiveStroke(point: Point): void {
             Math.abs(points[0][1] - point.y) >
                 2 / store.getState().viewControl.stageScale.x
         ) {
-            clearTimeout(tid)
+            clearTimeout(tid as number)
             tid = 0
         }
     }
@@ -77,7 +77,7 @@ export async function registerLiveStroke(pageId: string): Promise<void> {
 
     if (tid !== 0) {
         store.dispatch(SET_TYPE(toolType.PEN))
-        clearTimeout(tid)
+        clearTimeout(tid as number)
         tid = 0
     }
 }

@@ -1,4 +1,4 @@
-import { Point, Tool } from "./types"
+import { PageBackground, Point, Tool } from "./types"
 
 export const CANVAS_WIDTH = 620
 export const CANVAS_HEIGHT = 877
@@ -53,9 +53,9 @@ export const RDP_EPSILON = 1
 export const RDP_FORCE_SECTIONS = 3
 
 export const pageType = {
-    BLANK: "blank",
-    CHECKERED: "checkered",
-    RULED: "ruled",
+    BLANK: "blank" as PageBackground,
+    CHECKERED: "checkered" as PageBackground,
+    RULED: "ruled" as PageBackground,
 }
 
 const tool1: Tool = {

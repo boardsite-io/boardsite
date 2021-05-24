@@ -17,7 +17,7 @@ import {
     DEFAULT_FAV_TOOLS,
 } from "../../constants"
 import { updateLivestroke } from "../../drawing/livestroke"
-import { LiveStroke, Tool } from "../../types"
+import { LiveStroke, PageBackground, Tool } from "../../types"
 
 export interface DrawControlState {
     isPanMode: boolean
@@ -28,7 +28,7 @@ export interface DrawControlState {
     samplesRequired: number
     strokeSample: number
     liveStroke: LiveStroke
-    pageBG: string
+    pageBG: PageBackground
     favTools: Tool[]
 }
 
