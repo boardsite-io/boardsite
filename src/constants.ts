@@ -1,4 +1,4 @@
-import { LiveStroke, Point } from "./types"
+import { Point, Tool } from "./types"
 
 export const CANVAS_WIDTH = 620
 export const CANVAS_HEIGHT = 877
@@ -58,21 +58,21 @@ export const pageType = {
     RULED: "ruled",
 }
 
-const tool1: LiveStroke = {
+const tool1: Tool = {
     type: toolType.PEN,
     style: {
         color: "#000000",
         width: 2,
     },
 }
-const tool2: LiveStroke = {
+const tool2: Tool = {
     type: toolType.PEN,
     style: {
         color: "#0211a3",
         width: 2,
     },
 }
-const tool3: LiveStroke = {
+const tool3: Tool = {
     type: toolType.PEN,
     style: {
         color: "#ff0000",

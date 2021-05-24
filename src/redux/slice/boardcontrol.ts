@@ -7,7 +7,10 @@ interface BoardControlState {
     pageCollection: PageCollection
 }
 
-declare const initState: BoardControlState
+const initState: BoardControlState = {
+    pageRank: [],
+    pageCollection: {},
+}
 
 const boardControlSlice = createSlice({
     name: "boardControl",

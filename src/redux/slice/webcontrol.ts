@@ -37,7 +37,7 @@ const initState: WebControlState = {
         joinOnly: false,
         sidInput: "",
     },
-    webSocket: new WebSocket(""),
+    webSocket: {} as WebSocket,
     sessionId: "",
     user: {
         id: "",
