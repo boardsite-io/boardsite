@@ -1,6 +1,8 @@
 import React from "react"
 import { Rect } from "react-konva"
 import { KonvaEventObject } from "konva/types/Node"
+import { Stage } from "konva/types/Stage"
+import { Vector2d } from "konva/types/types"
 import store from "../../redux/store"
 import {
     startLiveStroke,
@@ -27,13 +29,13 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
     )
 
     function getScaledPointerPosition(e: KonvaEventObject<MouseEvent>) {
-        const stage = e.target.getStage() as any
+        const stage = e.target.getStage() as Stage
         const position = stage.getPointerPosition()
         const transform = stage.getAbsoluteTransform().copy().invert()
-        return transform.point(position)
+        return transform.point(position as Vector2d)
     }
 
-    function onMouseDown(e: any) {
+    function onMouseDown(e: KonvaEventObject<MouseEvent>) {
         if (e.evt.buttons === 2) {
             return
         }
@@ -42,7 +44,7 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
         startLiveStroke(pos)
     }
 
-    function onMouseMove(e: any) {
+    function onMouseMove(e: KonvaEventObject<MouseEvent>) {
         if (
             !isMouseDown ||
             e.evt.buttons === 2 || // right mouse
@@ -57,7 +59,7 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
         moveLiveStroke(pos)
     }
 
-    function onMouseUp(e: any) {
+    function onMouseUp(e: KonvaEventObject<MouseEvent>) {
         if (!isMouseDown) {
             return
         } // Ignore reentering
@@ -74,20 +76,20 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
 
     const onTouchStart = (e: KonvaEventObject<TouchEvent>) => {
         if (isValidTouch(e)) {
-            onMouseDown(e)
+            onMouseDown((e as unknown) as KonvaEventObject<MouseEvent>)
         }
     }
 
     const onTouchMove = (e: KonvaEventObject<TouchEvent>) => {
         if (isValidTouch(e)) {
-            onMouseMove(e)
+            onMouseMove((e as unknown) as KonvaEventObject<MouseEvent>)
         } else {
             abortLiveStroke()
         }
     }
 
     const onTouchEnd = (e: KonvaEventObject<TouchEvent>) => {
-        onMouseUp(e)
+        onMouseUp((e as unknown) as KonvaEventObject<MouseEvent>)
     }
 
     const abortLiveStroke = () => {

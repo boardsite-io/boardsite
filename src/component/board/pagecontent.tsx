@@ -25,10 +25,13 @@ const PageContent: React.FC<PageContentProps> = ({ pageId }) => {
         }
     }
 
-    function handleStrokeMovement(e: any) {
+    function handleStrokeMovement(
+        e: KonvaEventObject<MouseEvent | TouchEvent>
+    ) {
         const { id } = e.target.attrs
+        const mouseEv = e as KonvaEventObject<MouseEvent>
         // prevent to act on live stroke and hovering without clicking
-        if (id === undefined || e.evt.buttons === 0) {
+        if (id === undefined || mouseEv.evt.buttons === 0) {
             return
         }
         if (store.getState().drawControl.liveStroke.type === toolType.ERASER) {

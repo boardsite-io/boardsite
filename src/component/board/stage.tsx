@@ -1,7 +1,8 @@
 import React, { useEffect, memo } from "react"
-import { ReactReduxContext } from "react-redux"
+import { ReactReduxContext, ReactReduxContextValue } from "react-redux"
 import { createSelector } from "reselect"
 import { Stage, Layer } from "react-konva"
+import { Vector2d } from "konva/types/types"
 import { KonvaEventObject } from "konva/types/Node"
 import {
     CENTER_VIEW,
@@ -23,10 +24,10 @@ import {
     ZOOM_OUT_WHEEL_SCALE,
     CANVAS_WIDTH,
 } from "../../constants"
-import store from "../../redux/store"
+import store, { RootState } from "../../redux/store"
 import { useCustomSelector } from "../../redux/hooks"
 
-export default function BoardStage() {
+const BoardStage: React.FC = () => {
     const isPanMode = useCustomSelector((state) => state.drawControl.isPanMode)
     const stageWidth = useCustomSelector(
         (state) => state.viewControl.stageWidth
@@ -54,7 +55,7 @@ export default function BoardStage() {
      * Wheel event handler function
      * @param {event} e
      */
-    function onWheel(e: any) {
+    function onWheel(e: KonvaEventObject<WheelEvent>) {
         e.evt.preventDefault()
         if (isPanMode || e.evt.ctrlKey) {
             let zoomScale
@@ -65,7 +66,7 @@ export default function BoardStage() {
             }
             store.dispatch(
                 ZOOM_TO({
-                    zoomPoint: e.target.getStage().getPointerPosition(),
+                    zoomPoint: e.target.getStage()?.getPointerPosition(),
                     zoomScale,
                 })
             )
@@ -89,7 +90,7 @@ export default function BoardStage() {
      *
      * @param {object} pos current position of drag event on stage, e.g. {x: 12, y: 34}
      */
-    function dragBound(pos: any) {
+    function dragBound(pos: Vector2d) {
         if (keepCentered) {
             const x = (stageWidth - CANVAS_WIDTH * stageScale.x) / 2
             if (x >= 0) {
@@ -155,11 +156,13 @@ export default function BoardStage() {
     )
 }
 
+export default BoardStage
+
 // all pages and content are in this component
-const StageContent = memo<{ value: any }>(() => {
+const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
     const pageCreateSelector = createSelector(
-        (state: any) => state.boardControl.pageRank,
-        (state: any) => state.viewControl.currentPageIndex,
+        (state: RootState) => state.boardControl.pageRank,
+        (state: RootState) => state.viewControl.currentPageIndex,
         (pageRank, currentPageIndex) => {
             const minPage = currentPageIndex - 1 // Get min page candidate
             const maxPage = currentPageIndex + 1 // Get max page candidate
