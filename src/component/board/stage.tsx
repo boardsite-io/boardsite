@@ -1,7 +1,8 @@
 import React, { useEffect, memo } from "react"
-import { ReactReduxContext, useSelector } from "react-redux"
+import { ReactReduxContext } from "react-redux"
 import { createSelector } from "reselect"
 import { Stage, Layer } from "react-konva"
+import { KonvaEventObject } from "konva/types/Node"
 import {
     CENTER_VIEW,
     ON_WINDOW_RESIZE,
@@ -23,15 +24,24 @@ import {
     CANVAS_WIDTH,
 } from "../../constants"
 import store from "../../redux/store"
+import { useCustomSelector } from "../../redux/hooks"
 
 export default function BoardStage() {
-    const isPanMode = useSelector((state) => state.drawControl.isPanMode)
-    const stageWidth = useSelector((state) => state.viewControl.stageWidth)
-    const stageHeight = useSelector((state) => state.viewControl.stageHeight)
-    const stageX = useSelector((state) => state.viewControl.stageX)
-    const stageY = useSelector((state) => state.viewControl.stageY)
-    const stageScale = useSelector((state) => state.viewControl.stageScale)
-    const keepCentered = useSelector((state) => state.viewControl.keepCentered)
+    const isPanMode = useCustomSelector((state) => state.drawControl.isPanMode)
+    const stageWidth = useCustomSelector(
+        (state) => state.viewControl.stageWidth
+    )
+    const stageHeight = useCustomSelector(
+        (state) => state.viewControl.stageHeight
+    )
+    const stageX = useCustomSelector((state) => state.viewControl.stageX)
+    const stageY = useCustomSelector((state) => state.viewControl.stageY)
+    const stageScale = useCustomSelector(
+        (state) => state.viewControl.stageScale
+    )
+    const keepCentered = useCustomSelector(
+        (state) => state.viewControl.keepCentered
+    )
 
     useEffect(() => {
         window.addEventListener("resize", () =>
@@ -44,7 +54,7 @@ export default function BoardStage() {
      * Wheel event handler function
      * @param {event} e
      */
-    function onWheel(e) {
+    function onWheel(e: any) {
         e.evt.preventDefault()
         if (isPanMode || e.evt.ctrlKey) {
             let zoomScale
@@ -68,7 +78,7 @@ export default function BoardStage() {
      * Handles updating the states after stage drag events
      * @param {event} e
      */
-    function onDragEnd(e) {
+    function onDragEnd(e: KonvaEventObject<DragEvent>) {
         if (e.target.attrs.className === "stage") {
             store.dispatch(SET_STAGE_X(e.target.attrs.x))
             store.dispatch(SET_STAGE_Y(e.target.attrs.y))
@@ -79,7 +89,7 @@ export default function BoardStage() {
      *
      * @param {object} pos current position of drag event on stage, e.g. {x: 12, y: 34}
      */
-    function dragBound(pos) {
+    function dragBound(pos: any) {
         if (keepCentered) {
             const x = (stageWidth - CANVAS_WIDTH * stageScale.x) / 2
             if (x >= 0) {
@@ -90,7 +100,7 @@ export default function BoardStage() {
         return pos
     }
 
-    const handleTouchMove = (e) => {
+    const handleTouchMove = (e: KonvaEventObject<TouchEvent>) => {
         e.evt.preventDefault()
         const touch1 = e.evt.touches[0]
         const touch2 = e.evt.touches[1]
@@ -132,8 +142,8 @@ export default function BoardStage() {
                         // onDragMove={onDragMove}
                         onDragEnd={onDragEnd}
                         onContextMenu={(e) => e.evt.preventDefault()}
-                        onTouchMove={isPanMode ? null : handleTouchMove}
-                        onTouchEnd={isPanMode ? null : handleTouchEnd}
+                        onTouchMove={isPanMode ? undefined : handleTouchMove}
+                        onTouchEnd={isPanMode ? undefined : handleTouchEnd}
                         onWheel={onWheel}>
                         <ReactReduxContext.Provider value={value}>
                             <StageContent value={value} />
@@ -146,10 +156,10 @@ export default function BoardStage() {
 }
 
 // all pages and content are in this component
-const StageContent = memo(() => {
+const StageContent = memo<{ value: any }>(() => {
     const pageCreateSelector = createSelector(
-        (state) => state.boardControl.pageRank,
-        (state) => state.viewControl.currentPageIndex,
+        (state: any) => state.boardControl.pageRank,
+        (state: any) => state.viewControl.currentPageIndex,
         (pageRank, currentPageIndex) => {
             const minPage = currentPageIndex - 1 // Get min page candidate
             const maxPage = currentPageIndex + 1 // Get max page candidate
@@ -159,10 +169,10 @@ const StageContent = memo(() => {
             return pageSlice
         }
     )
-    const pageSlice = useSelector(pageCreateSelector)
+    const pageSlice = useCustomSelector(pageCreateSelector)
     return (
         <>
-            {pageSlice.map((pageId) => (
+            {pageSlice.map((pageId: string) => (
                 <Layer key={pageId}>
                     <PageListener pageId={pageId} />
                     <PageContent pageId={pageId} />

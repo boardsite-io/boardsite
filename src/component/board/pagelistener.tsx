@@ -1,6 +1,6 @@
 import React from "react"
-import { useSelector } from "react-redux"
 import { Rect } from "react-konva"
+import { KonvaEventObject } from "konva/types/Node"
 import store from "../../redux/store"
 import {
     startLiveStroke,
@@ -15,18 +15,25 @@ import {
 } from "../../constants"
 import { END_LIVESTROKE, SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
 import pageBackground from "../../drawing/backgrounds"
+import { useCustomSelector } from "../../redux/hooks"
 
-export default function PageListener({ pageId }) {
-    const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
+interface PageListenerProps {
+    pageId: string
+}
 
-    function getScaledPointerPosition(e) {
-        const stage = e.target.getStage()
+const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
+    const isMouseDown = useCustomSelector(
+        (state) => state.drawControl.isMouseDown
+    )
+
+    function getScaledPointerPosition(e: KonvaEventObject<MouseEvent>) {
+        const stage = e.target.getStage() as any
         const position = stage.getPointerPosition()
         const transform = stage.getAbsoluteTransform().copy().invert()
         return transform.point(position)
     }
 
-    function onMouseDown(e) {
+    function onMouseDown(e: any) {
         if (e.evt.buttons === 2) {
             return
         }
@@ -35,7 +42,7 @@ export default function PageListener({ pageId }) {
         startLiveStroke(pos)
     }
 
-    function onMouseMove(e) {
+    function onMouseMove(e: any) {
         if (
             !isMouseDown ||
             e.evt.buttons === 2 || // right mouse
@@ -50,7 +57,7 @@ export default function PageListener({ pageId }) {
         moveLiveStroke(pos)
     }
 
-    function onMouseUp(e) {
+    function onMouseUp(e: any) {
         if (!isMouseDown) {
             return
         } // Ignore reentering
@@ -65,13 +72,13 @@ export default function PageListener({ pageId }) {
         registerLiveStroke(pageId)
     }
 
-    const onTouchStart = (e) => {
+    const onTouchStart = (e: KonvaEventObject<TouchEvent>) => {
         if (isValidTouch(e)) {
             onMouseDown(e)
         }
     }
 
-    const onTouchMove = (e) => {
+    const onTouchMove = (e: KonvaEventObject<TouchEvent>) => {
         if (isValidTouch(e)) {
             onMouseMove(e)
         } else {
@@ -79,7 +86,7 @@ export default function PageListener({ pageId }) {
         }
     }
 
-    const onTouchEnd = (e) => {
+    const onTouchEnd = (e: KonvaEventObject<TouchEvent>) => {
         onMouseUp(e)
     }
 
@@ -88,7 +95,7 @@ export default function PageListener({ pageId }) {
         store.dispatch(END_LIVESTROKE())
     }
 
-    const isValidTouch = (e) => {
+    const isValidTouch = (e: KonvaEventObject<TouchEvent>) => {
         e.evt.preventDefault()
         const touch1 = e.evt.touches[0]
         const touch2 = e.evt.touches[1]
@@ -105,9 +112,11 @@ export default function PageListener({ pageId }) {
         return !(touch1 && touch2) // double finger
     }
 
-    const isListening = useSelector((state) => state.drawControl.isListening)
-    const isPanMode = useSelector((state) => state.drawControl.isPanMode)
-    const pageBg = useSelector(
+    const isListening = useCustomSelector(
+        (state) => state.drawControl.isListening
+    )
+    const isPanMode = useCustomSelector((state) => state.drawControl.isPanMode)
+    const pageBg = useCustomSelector(
         (state) => state.boardControl.pageCollection[pageId]?.meta?.background
     )
     return (
@@ -136,3 +145,5 @@ export default function PageListener({ pageId }) {
         />
     )
 }
+
+export default PageListener

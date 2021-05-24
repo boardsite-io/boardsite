@@ -1,12 +1,14 @@
 import React, { memo } from "react"
-import { useSelector } from "react-redux"
 import { toolType } from "../../constants"
+import { useCustomSelector } from "../../redux/hooks"
 import store from "../../redux/store"
 import StrokeShape from "./strokeshapes"
 
 export default memo(() => {
     // console.log("LiveLayer Memo Redraw")
-    const pts = useSelector((state) => state.drawControl.liveStroke.points)
+    const pts = useCustomSelector(
+        (state) => state.drawControl.liveStroke.points
+    )
     const { liveStroke } = store.getState().drawControl
     let shape = null
 

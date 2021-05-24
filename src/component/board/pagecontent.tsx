@@ -1,25 +1,31 @@
 import React from "react"
 import { Group } from "react-konva"
-import { useSelector } from "react-redux"
+import { KonvaEventObject } from "konva/types/Node"
 import { handleDeleteStroke, handleUpdateStroke } from "../../drawing/handlers"
 import { CANVAS_FULL_HEIGHT, toolType } from "../../constants"
 import store from "../../redux/store"
 import { getPageIndex } from "../../drawing/strokeactions"
 import StrokeShape from "./strokeshapes"
+import { useCustomSelector } from "../../redux/hooks"
+import { Stroke } from "../../types"
 
-export default function PageContent({ pageId }) {
-    const strokes = useSelector(
+interface PageContentProps {
+    pageId: string
+}
+
+const PageContent: React.FC<PageContentProps> = ({ pageId }) => {
+    const strokes = useCustomSelector(
         (state) => state.boardControl.pageCollection[pageId]?.strokes
     )
 
-    const handleDragEnd = (e) => {
+    const handleDragEnd = (e: KonvaEventObject<DragEvent>) => {
         const { x, y, id } = e.target.attrs
         if (store.getState().drawControl.liveStroke.type !== toolType.ERASER) {
-            handleUpdateStroke({ x, y, id, pageId })
+            handleUpdateStroke({ x, y, id, pageId } as Stroke)
         }
     }
 
-    function handleStrokeMovement(e) {
+    function handleStrokeMovement(e: any) {
         const { id } = e.target.attrs
         // prevent to act on live stroke and hovering without clicking
         if (id === undefined || e.evt.buttons === 0) {
@@ -31,9 +37,13 @@ export default function PageContent({ pageId }) {
         }
     }
 
-    const isDraggable = useSelector((state) => state.drawControl.isDraggable)
-    const isListening = useSelector((state) => state.drawControl.isListening)
-    const isPanMode = useSelector((state) => state.drawControl.isPanMode)
+    const isDraggable = useCustomSelector(
+        (state) => state.drawControl.isDraggable
+    )
+    const isListening = useCustomSelector(
+        (state) => state.drawControl.isListening
+    )
+    const isPanMode = useCustomSelector((state) => state.drawControl.isPanMode)
 
     return (
         <Group
@@ -53,3 +63,5 @@ export default function PageContent({ pageId }) {
         </Group>
     )
 }
+
+export default PageContent

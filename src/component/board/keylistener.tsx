@@ -9,7 +9,7 @@ import {
 } from "../../redux/slice/viewcontrol"
 import { handleRedo, handleUndo } from "../../drawing/handlers"
 
-export default function keyListener(e) {
+export default function keyListener(e: KeyboardEvent): void {
     switch (e.key) {
         case "ArrowUp": // Previous Page
             store.dispatch(JUMP_TO_PREV_PAGE())
