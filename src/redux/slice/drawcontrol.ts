@@ -48,8 +48,6 @@ const initState: DrawControlState = {
             opacity: 1,
         },
         points: [],
-        x: 0, // be consistent with stroke description
-        y: 0,
     },
     pageBG: pageType.BLANK,
     favTools: DEFAULT_FAV_TOOLS,

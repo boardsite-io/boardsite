@@ -4,17 +4,19 @@ import {
     RDP_EPSILON,
     RDP_FORCE_SECTIONS,
 } from "../constants"
+import { Point } from "../types"
 import { simplifyRDP } from "./simplify"
 
 /**
  * Updates the livestroke points and splits the array accordingly
- * @param {[[number]]} points array of livestroke points
- * @param {{x: number, y: number}} point new point
- * @param {number} scale scale
- * @param {number} sample number of current samples
  */
 // eslint-disable-next-line import/prefer-default-export
-export function updateLivestroke(points, point, scale, sample) {
+export function updateLivestroke(
+    points: number[][],
+    point: Point,
+    scale: number,
+    sample: number
+): void {
     const p = points[points.length - 1]
     if (p.length < MAX_LIVESTROKE_PTS) {
         if (

@@ -1,6 +1,8 @@
+import { Context } from "konva/types/Context"
+import { Shape, ShapeConfig } from "konva/types/Shape"
 import { pageType } from "../constants"
 
-const blank = (context, shape) => {
+const blank = (context: Context, shape: Shape<ShapeConfig>): void => {
     context.beginPath()
     // don't need to set position of rect, Konva will handle it
     const width = shape.getAttr("width")
@@ -9,7 +11,7 @@ const blank = (context, shape) => {
     context.fillStrokeShape(shape)
 }
 
-const checkered = (context, shape) => {
+const checkered = (context: Context, shape: Shape<ShapeConfig>): void => {
     context.beginPath()
     // don't need to set position of rect, Konva will handle it
     const width = shape.getAttr("width")
@@ -39,7 +41,7 @@ const checkered = (context, shape) => {
     // context.fillStrokeShape(shape)
 }
 
-const ruled = (context, shape) => {
+const ruled = (context: Context, shape: Shape<ShapeConfig>): void => {
     context.beginPath()
     // don't need to set position of rect, Konva will handle it
     const width = shape.getAttr("width")

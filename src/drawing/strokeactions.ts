@@ -15,7 +15,7 @@ import {
     RDP_FORCE_SECTIONS,
 } from "../constants"
 import { handleAddStroke } from "./handlers"
-import { LiveStroke, Stroke } from "../types"
+import { LiveStroke, Point, Stroke } from "../types"
 
 let tid = 0
 
@@ -23,13 +23,13 @@ let tid = 0
  * Start the current stroke when mouse is pressed down
  * @param {*} point
  */
-export function startLiveStroke(point) {
+export function startLiveStroke(point: Point): void {
     store.dispatch(START_LIVESTROKE([point.x, point.y]))
     // set Line type when mouse hasnt moved for 1 sec
     if (getLiveStroke().type === toolType.PEN) {
         tid = setTimeout(() => {
             store.dispatch(SET_TYPE(toolType.LINE))
-        }, 1000)
+        }, 1000) as any
     }
 }
 
@@ -37,7 +37,7 @@ export function startLiveStroke(point) {
  * Update the live stroke when position is moved in the canvas
  * @param {*} point
  */
-export function moveLiveStroke(point) {
+export function moveLiveStroke(point: Point): void {
     store.dispatch(
         UPDATE_LIVESTROKE({
             point,
@@ -62,7 +62,7 @@ export function moveLiveStroke(point) {
 /**
  * Generate API serialized stroke object, draw & save it to redux store
  */
-export async function registerLiveStroke(pageId) {
+export async function registerLiveStroke(pageId: string): Promise<void> {
     const liveStroke = getLiveStroke()
     // empty livestrokes e.g. rightmouse eraser
     if (liveStroke.points === undefined) {
@@ -84,9 +84,8 @@ export async function registerLiveStroke(pageId) {
 
 /**
  * Helper function to get the end and start points of an array of points
- * @param {Array} points
  */
-export function getStartEndPoints(points) {
+export function getStartEndPoints(points: number[]): number[] {
     if (points.length < 5) {
         return points
     }
@@ -97,11 +96,14 @@ export function getStartEndPoints(points) {
 
 /**
  * Creates a new stroke with unique ID and processes the points
- * @param {*} liveStroke
  */
-function createStroke(liveStroke: Stroke, pageId: string, simplify: boolean) {
-    const stroke = { ...liveStroke }
-    stroke.points = flatLiveStroke(stroke.points)
+function createStroke(
+    liveStroke: LiveStroke,
+    pageId: string,
+    simplify: boolean
+): Stroke {
+    const stroke = { ...liveStroke, points: [], id: "", pageId: "" } as Stroke
+    stroke.points = flatLiveStroke(liveStroke.points)
 
     // add page ids
     stroke.pageId = pageId
@@ -145,7 +147,7 @@ function createStroke(liveStroke: Stroke, pageId: string, simplify: boolean) {
     return stroke
 }
 
-export function getPageIndex(pageId: string) {
+export function getPageIndex(pageId: string): number {
     return store.getState().boardControl.pageRank.indexOf(pageId)
 }
 

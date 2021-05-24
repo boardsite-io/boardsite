@@ -14,9 +14,10 @@ import {
 import { SET_DEFAULT_PAGEBG } from "../redux/slice/drawcontrol"
 
 import store from "../redux/store"
+import { PageBackground, Stroke } from "../types"
 import { addStroke, deleteStroke, redo, undo, updateStroke } from "./undoredo"
 
-export function handleAddPageOver() {
+export function handleAddPageOver(): void {
     const pageIndex = store.getState().viewControl.currentPageIndex
     const meta = { background: store.getState().drawControl.pageBG }
     if (isConnected()) {
@@ -31,7 +32,7 @@ export function handleAddPageOver() {
     }
 }
 
-export function handleAddPageUnder() {
+export function handleAddPageUnder(): void {
     const pageIndex = store.getState().viewControl.currentPageIndex
     const meta = { background: store.getState().drawControl.pageBG }
     if (isConnected()) {
@@ -46,7 +47,7 @@ export function handleAddPageUnder() {
     }
 }
 
-export function handleClearPage() {
+export function handleClearPage(): void {
     if (isConnected()) {
         updatePageSession(getCurrentPageId(), {}, true)
     } else {
@@ -54,7 +55,7 @@ export function handleClearPage() {
     }
 }
 
-export function handleDeletePage() {
+export function handleDeletePage(): void {
     if (isConnected()) {
         deletePageSession(getCurrentPageId())
     } else {
@@ -62,7 +63,7 @@ export function handleDeletePage() {
     }
 }
 
-export function handleDeleteAllPages() {
+export function handleDeleteAllPages(): void {
     if (isConnected()) {
         store
             .getState()
@@ -72,27 +73,27 @@ export function handleDeleteAllPages() {
     }
 }
 
-export function handleAddStroke(stroke) {
+export function handleAddStroke(stroke: Stroke): void {
     addStroke(stroke)
 }
 
-export function handleUpdateStroke(stroke) {
+export function handleUpdateStroke(stroke: Stroke): void {
     updateStroke(stroke)
 }
 
-export function handleDeleteStroke(stroke) {
+export function handleDeleteStroke(stroke: Stroke): void {
     deleteStroke(stroke)
 }
 
-export function handleUndo() {
+export function handleUndo(): void {
     undo()
 }
 
-export function handleRedo() {
+export function handleRedo(): void {
     redo()
 }
 
-export function handlePageBackground(style) {
+export function handlePageBackground(style: PageBackground): void {
     store.dispatch(SET_DEFAULT_PAGEBG(style))
     if (isConnected()) {
         updatePageSession(getCurrentPageId(), { background: style })

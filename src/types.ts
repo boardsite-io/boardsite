@@ -8,25 +8,16 @@ export interface Tool {
 }
 
 export interface LiveStroke extends Tool {
-    id?: string
-    x?: number
-    y?: number
     points: number[][]
 }
 
 export interface Stroke extends Tool {
-    id?: string | undefined
+    id: string
     type: number
-    pageId?: string
+    pageId: string
     x?: number
     y?: number
     points: number[]
-    isDraggable?: boolean
-    isListening?: boolean
-    fillEnabled?: boolean
-    perfectDrawEnabled?: boolean
-    shadowForStrokeEnabled?: boolean
-    currentPageIndex?: number
 }
 
 export interface Page {

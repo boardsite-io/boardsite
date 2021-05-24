@@ -5,25 +5,35 @@ import {
     UPDATE_STROKE,
 } from "../redux/slice/boardcontrol"
 import store from "../redux/store"
+import { Stroke } from "../types"
 
-const undoStack = []
-const redoStack = []
+interface DrawAction {
+    stroke: Stroke
+    handle: (stroke: Stroke, isRedoable: boolean, stack: DrawAction[]) => void
+}
 
-export function undo() {
+const undoStack: DrawAction[] = []
+const redoStack: DrawAction[] = []
+
+export function undo(): void {
     const undoStroke = undoStack.pop()
     if (undoStroke && undoStroke.stroke) {
         undoStroke.handle(undoStroke.stroke, true, redoStack)
     }
 }
 
-export function redo() {
+export function redo(): void {
     const redoStroke = redoStack.pop()
     if (redoStroke && redoStroke.stroke) {
         redoStroke.handle(redoStroke.stroke, true, undoStack)
     }
 }
 
-export function addStroke(stroke, isRedoable = true, stack = undoStack) {
+export function addStroke(
+    stroke: Stroke,
+    isRedoable = true,
+    stack = undoStack
+): void {
     const { pageId } = stroke
     const page = store.getState().boardControl.pageCollection[pageId]
     if (page) {
@@ -44,10 +54,10 @@ export function addStroke(stroke, isRedoable = true, stack = undoStack) {
 }
 
 export function deleteStroke(
-    { id, pageId },
+    { id, pageId }: Stroke,
     isRedoable = true,
     stack = undoStack
-) {
+): void {
     const page = store.getState().boardControl.pageCollection[pageId]
     if (page) {
         const stroke = page.strokes[id]
@@ -67,10 +77,10 @@ export function deleteStroke(
 }
 
 export function updateStroke(
-    { x, y, id, pageId },
+    { x, y, id, pageId }: Stroke,
     isRedoable = true,
     stack = undoStack
-) {
+): void {
     const page = store.getState().boardControl.pageCollection[pageId]
     if (page) {
         const stroke = page.strokes[id]
@@ -78,7 +88,7 @@ export function updateStroke(
             if (isRedoable) {
                 // Add to UndoStack
                 stack.push({
-                    stroke: { x: stroke.x, y: stroke.y, id, pageId }, // make copy to redo update
+                    stroke: { x: stroke.x, y: stroke.y, id, pageId } as Stroke, // make copy to redo update
                     handle: updateStroke,
                 })
             }
