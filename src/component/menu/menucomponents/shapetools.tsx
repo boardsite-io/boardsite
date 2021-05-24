@@ -16,8 +16,12 @@ export default function ShapeTools() {
         (state) => state.drawControl.liveStroke.style.color
     )
 
+    type StyleType = {
+        color: string
+    } | null
+
     let icon
-    let style = { color: colorSelector }
+    let style: StyleType = { color: colorSelector }
     switch (typeSelector) {
         case toolType.LINE:
             icon = <FiMinus id="icon" />
@@ -52,7 +56,7 @@ export default function ShapeTools() {
                     <div className="popup">
                         <div
                             role="button"
-                            tabIndex="0"
+                            tabIndex={0}
                             className="cover"
                             onClick={() => setOpen(false)}
                         />

@@ -17,7 +17,7 @@ import {
 import "../../../css/menucomponents/pageoptions.css"
 import PageSettings from "./pagesettings"
 
-export default function PageOptions() {
+export default function PageOptions(): JSX.Element {
     const [open, setOpen] = useState(false)
 
     return (
@@ -34,7 +34,7 @@ export default function PageOptions() {
                     <div className="popup">
                         <div
                             role="button"
-                            tabIndex="0"
+                            tabIndex={0}
                             className="cover"
                             onClick={() => setOpen(false)}
                         />

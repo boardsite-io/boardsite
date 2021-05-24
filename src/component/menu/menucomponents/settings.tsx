@@ -130,9 +130,10 @@ export default function SettingsButton() {
                             defaultValue={
                                 store.getState().drawControl.samplesRequired
                             }
-                            getAriaValueText={(val) =>
+                            getAriaValueText={(val) => {
                                 store.dispatch(SET_SAMPLE_COUNT(val))
-                            }
+                                return ""
+                            }}
                             aria-labelledby="discrete-slider"
                             valueLabelDisplay="auto"
                             step={1}

@@ -10,7 +10,11 @@ import { Grid } from "@material-ui/core"
 import { pageType } from "../../../constants"
 import { handlePageBackground } from "../../../drawing/handlers"
 
-export default function PageSettings({ setOpenOther }) {
+export default function PageSettings({
+    setOpenOther,
+}: {
+    setOpenOther: any
+}): JSX.Element {
     const [open, setOpen] = useState(false)
 
     const handleClickOpen = () => {
@@ -22,7 +26,7 @@ export default function PageSettings({ setOpenOther }) {
         setOpenOther(false)
     }
 
-    const handleClick = (pageStyle) => () => {
+    const handleClick = (pageStyle: any) => () => {
         handlePageBackground(pageStyle)
         handleClose()
     }

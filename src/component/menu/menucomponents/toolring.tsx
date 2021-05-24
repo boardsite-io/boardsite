@@ -44,7 +44,7 @@ export default function ToolRing() {
                         <div className="popup">
                             <div
                                 role="button"
-                                tabIndex="0"
+                                tabIndex={0}
                                 className="cover"
                                 onClick={() => setOpen(false)}
                             />
@@ -77,7 +77,7 @@ export default function ToolRing() {
                 style={
                     typeSelector === toolType.DRAG
                         ? { color: colorSelector }
-                        : null
+                        : undefined
                 }
                 type="button"
                 id={

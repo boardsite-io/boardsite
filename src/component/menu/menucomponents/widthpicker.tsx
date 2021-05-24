@@ -15,7 +15,7 @@ export default function WidthPicker() {
         (state) => state.drawControl.liveStroke.style.width
     )
 
-    const handleSliderChange = (newWidth) => {
+    const handleSliderChange = (newWidth: number) => {
         store.dispatch(SET_WIDTH(newWidth))
     }
 
@@ -42,7 +42,7 @@ export default function WidthPicker() {
     //     }
     // }
 
-    const Thumb = (props, state) => (
+    const Thumb = (props: any, state: any) => (
         // eslint-disable-next-line react/jsx-props-no-spreading
         <div {...props}>{state.valueNow}</div>
     )

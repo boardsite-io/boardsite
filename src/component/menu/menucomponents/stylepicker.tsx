@@ -13,16 +13,10 @@ export default function StylePicker() {
     function handleChange(e: any) {
         store.dispatch(SET_COLOR(e.hex))
     }
-    function handleChangeComplete(e: any) {
-        store.dispatch(SET_COLOR(e.hex))
-    }
+
     return (
         <div className="style-picker">
-            <ColorPicker
-                color={colorSelector}
-                onChange={handleChange}
-                onChangeComplete={handleChangeComplete}
-            />
+            <ColorPicker color={colorSelector} onChange={handleChange} />
             <WidthPicker />
         </div>
     )

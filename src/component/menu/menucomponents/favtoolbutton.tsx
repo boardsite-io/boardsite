@@ -7,12 +7,23 @@ import {
     SET_TOOL,
 } from "../../../redux/slice/drawcontrol"
 import store from "../../../redux/store"
+import { Tool } from "../../../types"
 
-export default function FavToolButton({ icon, tool, index }) {
+interface FavToolButtonProps {
+    icon: JSX.Element | undefined
+    tool: Tool
+    index: number
+}
+
+export default function FavToolButton({
+    icon,
+    tool,
+    index,
+}: FavToolButtonProps): JSX.Element {
     const [open, setOpen] = useState(false)
 
     // apply fav tool as setting
-    function setTool(toolToSet) {
+    function setTool(toolToSet: Tool) {
         store.dispatch(SET_TOOL(toolToSet))
     }
 
@@ -64,7 +75,7 @@ export default function FavToolButton({ icon, tool, index }) {
                     <div className="popup">
                         <div
                             role="button"
-                            tabIndex="0"
+                            tabIndex={0}
                             className="cover"
                             onClick={() => setOpen(false)}
                         />
