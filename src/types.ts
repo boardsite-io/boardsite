@@ -15,11 +15,18 @@ export interface LiveStroke extends Tool {
 }
 
 export interface Stroke extends Tool {
-    id: string
-    pageId: string
+    id?: string | undefined
+    type: number
+    pageId?: string
     x?: number
     y?: number
     points: number[]
+    isDraggable?: boolean
+    isListening?: boolean
+    fillEnabled?: boolean
+    perfectDrawEnabled?: boolean
+    shadowForStrokeEnabled?: boolean
+    currentPageIndex?: number
 }
 
 export interface Page {

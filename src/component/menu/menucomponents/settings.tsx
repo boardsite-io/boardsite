@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import { useSelector } from "react-redux"
 import { BsGear } from "react-icons/bs"
 import { BiStats } from "react-icons/bi"
 import { VscDebugDisconnect } from "react-icons/vsc"
@@ -28,6 +27,7 @@ import store from "../../../redux/store"
 import { SET_API_URL } from "../../../redux/slice/webcontrol"
 import { API_URL } from "../../../api/types"
 import { isConnected } from "../../../api/websocket"
+import { useCustomSelector } from "../../../redux/hooks"
 
 const useStyles = makeStyles({
     paper: {
@@ -41,12 +41,18 @@ export default function SettingsButton() {
     const [url, setURL] = useState(API_URL)
     const [isValidURL, setValidURL] = useState(true)
 
-    const keepCentered = useSelector((state) => state.viewControl.keepCentered)
-    const hideNavBar = useSelector((state) => state.viewControl.hideNavBar)
-    const directDraw = useSelector((state) => state.drawControl.directDraw)
-    // const apiURL = useSelector((state) => state.webControl.apiURL)
+    const keepCentered = useCustomSelector(
+        (state) => state.viewControl.keepCentered
+    )
+    const hideNavBar = useCustomSelector(
+        (state) => state.viewControl.hideNavBar
+    )
+    const directDraw = useCustomSelector(
+        (state) => state.drawControl.directDraw
+    )
+    // const apiURL = useAppSelector((state) => state.webControl.apiURL)
 
-    const toggleDrawer = (open) => (event) => {
+    const toggleDrawer = (open: any) => (event: any) => {
         if (
             event.type === "keydown" &&
             (event.key === "Tab" || event.key === "Shift")
@@ -56,7 +62,7 @@ export default function SettingsButton() {
         setOpen(open)
     }
 
-    const handleURLChange = (event) => {
+    const handleURLChange = (event: any) => {
         setURL(event.target.value)
         try {
             const u = new URL(event.target.value)

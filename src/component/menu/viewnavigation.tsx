@@ -1,5 +1,4 @@
 import React from "react"
-import { useSelector } from "react-redux"
 import {
     CgPushChevronUp,
     CgChevronUp,
@@ -14,14 +13,19 @@ import {
 } from "../../redux/slice/viewcontrol"
 import "../../css/menucomponents/viewnavigation.css"
 import store from "../../redux/store"
+import { useCustomSelector } from "../../redux/hooks"
 
 export default function ViewNavigation() {
-    const currPageIndex = useSelector(
+    const currPageIndex = useCustomSelector(
         (state) => state.viewControl.currentPageIndex
     )
 
-    const hideNavBar = useSelector((state) => state.viewControl.hideNavBar)
-    const numPages = useSelector((state) => state.boardControl.pageRank.length)
+    const hideNavBar = useCustomSelector(
+        (state) => state.viewControl.hideNavBar
+    )
+    const numPages = useCustomSelector(
+        (state) => state.boardControl.pageRank.length
+    )
 
     function goToLastPage() {
         store.dispatch(JUMP_PAGE_WITH_INDEX(numPages - 1))

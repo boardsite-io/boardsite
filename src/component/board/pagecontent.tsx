@@ -31,7 +31,6 @@ const PageContent: React.FC<PageContentProps> = ({ pageId }) => {
         if (id === undefined || e.evt.buttons === 0) {
             return
         }
-
         if (store.getState().drawControl.liveStroke.type === toolType.ERASER) {
             handleDeleteStroke({ pageId, id })
         }

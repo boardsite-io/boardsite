@@ -1,5 +1,4 @@
 import React from "react"
-import { useSelector } from "react-redux"
 import {
     BsArrowsMove,
     BsArrowsAngleContract,
@@ -8,9 +7,10 @@ import {
 import store from "../../../redux/store"
 import { TOGGLE_PANMODE } from "../../../redux/slice/drawcontrol"
 import { FIT_WIDTH_TO_PAGE, RESET_VIEW } from "../../../redux/slice/viewcontrol"
+import { useCustomSelector } from "../../../redux/hooks"
 
 export default function ViewOptions() {
-    const isPanMode = useSelector((state) => state.drawControl.isPanMode)
+    const isPanMode = useCustomSelector((state) => state.drawControl.isPanMode)
     return (
         <>
             {isPanMode ? (

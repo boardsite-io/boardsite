@@ -1,19 +1,19 @@
 import React from "react"
-import { useSelector } from "react-redux"
 import ColorPicker from "./colorpicker"
 import WidthPicker from "./widthpicker"
 import { SET_COLOR } from "../../../redux/slice/drawcontrol"
 import store from "../../../redux/store"
 import "../../../css/stylepicker.css"
+import { useCustomSelector } from "../../../redux/hooks"
 
 export default function StylePicker() {
-    const colorSelector = useSelector(
+    const colorSelector = useCustomSelector(
         (state) => state.drawControl.liveStroke.style.color
     )
-    function handleChange(e) {
+    function handleChange(e: any) {
         store.dispatch(SET_COLOR(e.hex))
     }
-    function handleChangeComplete(e) {
+    function handleChangeComplete(e: any) {
         store.dispatch(SET_COLOR(e.hex))
     }
     return (

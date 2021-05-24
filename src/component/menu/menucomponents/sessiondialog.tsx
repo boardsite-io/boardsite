@@ -8,7 +8,6 @@ import DialogTitle from "@material-ui/core/DialogTitle"
 import { Grid, TextField } from "@material-ui/core"
 import { BsPeople } from "react-icons/bs"
 import { useHistory } from "react-router-dom"
-import { useDispatch, useSelector } from "react-redux"
 
 import store from "../../../redux/store"
 import {
@@ -24,13 +23,16 @@ import {
     newSession,
 } from "../../../api/websocket"
 import "../../../css/sessiondialog.css"
+import { useCustomDispatch, useCustomSelector } from "../../../redux/hooks"
 
 export default function SessionDialog() {
-    const sDiagStatus = useSelector((state) => state.webControl.sessionDialog)
-    const alias = useSelector((state) => state.webControl.user.alias)
-    const color = useSelector((state) => state.webControl.user.color)
+    const sDiagStatus = useCustomSelector(
+        (state) => state.webControl.sessionDialog
+    )
+    const alias = useCustomSelector((state) => state.webControl.user.alias)
+    const color = useCustomSelector((state) => state.webControl.user.color)
 
-    const dispatch = useDispatch()
+    const dispatch = useCustomDispatch()
     const history = useHistory()
 
     const handleClickOpen = () => {
@@ -88,11 +90,11 @@ export default function SessionDialog() {
      * Handle textfield events in the session dialog
      * @param {event} e event object
      */
-    function handleTextFieldChange(e) {
+    function handleTextFieldChange(e: any) {
         dispatch(SET_SDIAG({ sidInput: e.target.value }))
     }
 
-    function handleAliasChange(e) {
+    function handleAliasChange(e: any) {
         dispatch(SET_USER_ALIAS(e.target.value))
     }
 
