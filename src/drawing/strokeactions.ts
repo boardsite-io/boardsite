@@ -15,6 +15,7 @@ import {
     RDP_FORCE_SECTIONS,
 } from "../constants"
 import { handleAddStroke } from "./handlers"
+import { LiveStroke, Stroke } from "../types"
 
 let tid = 0
 
@@ -98,7 +99,7 @@ export function getStartEndPoints(points) {
  * Creates a new stroke with unique ID and processes the points
  * @param {*} liveStroke
  */
-function createStroke(liveStroke, pageId, simplify) {
+function createStroke(liveStroke: Stroke, pageId: string, simplify: boolean) {
     const stroke = { ...liveStroke }
     stroke.points = flatLiveStroke(stroke.points)
 
@@ -144,7 +145,7 @@ function createStroke(liveStroke, pageId, simplify) {
     return stroke
 }
 
-export function getPageIndex(pageId) {
+export function getPageIndex(pageId: string) {
     return store.getState().boardControl.pageRank.indexOf(pageId)
 }
 
@@ -152,14 +153,14 @@ export function getPageIndex(pageId) {
  * Combine the substrokes and delete the overlapping points.
  * @param {[[number]]} points array of sub livestrokes
  */
-function flatLiveStroke(points) {
+function flatLiveStroke(points: number[][]) {
     if (points.length === 0) {
         return []
     }
     if (points.length === 1) {
         return points[0]
     }
-    let pts = []
+    let pts: number[] = []
     for (let i = 0; i < points.length - 1; i += 1) {
         pts = pts.concat(
             points[i].slice(0, points[i].length - 2 * LIVESTROKE_PTS_OVERLAP)

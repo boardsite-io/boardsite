@@ -1,6 +1,6 @@
-import React, { memo } from "react"
+import { memo } from "react"
 import { toolType } from "../../constants"
-import { RootState, store } from "../../redux/store"
+import { store } from "../../redux/store"
 import { useAppSelector } from "../../types"
 import { StrokeShape } from "./strokeshapes"
 

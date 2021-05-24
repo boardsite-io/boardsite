@@ -22,7 +22,7 @@ import {
     ZOOM_OUT_WHEEL_SCALE,
     CANVAS_WIDTH,
 } from "../../constants"
-import { store } from "../../redux/store"
+import { RootState, store } from "../../redux/store"
 import { useAppSelector } from "../../types"
 
 export default function BoardStage() {
@@ -151,8 +151,8 @@ export default function BoardStage() {
 // all pages and content are in this component
 const StageContent = memo(() => {
     const pageCreateSelector = createSelector(
-        (state) => state.boardControl.pageRank,
-        (state) => state.viewControl.currentPageIndex,
+        (state: RootState) => state.boardControl.pageRank,
+        (state: RootState) => state.viewControl.currentPageIndex,
         (pageRank, currentPageIndex) => {
             const minPage = currentPageIndex - 1 // Get min page candidate
             const maxPage = currentPageIndex + 1 // Get max page candidate

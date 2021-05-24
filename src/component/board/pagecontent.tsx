@@ -4,28 +4,38 @@ import { handleDeleteStroke, handleUpdateStroke } from "../../drawing/handlers"
 import { CANVAS_FULL_HEIGHT, toolType } from "../../constants"
 import { store } from "../../redux/store"
 import { getPageIndex } from "../../drawing/strokeactions"
-import StrokeShape from "./strokeshapes"
+import { StrokeShape } from "./strokeshapes"
 import { useAppSelector } from "../../types"
+import { KonvaEventObject } from "konva/types/Node"
 
 export default function PageContent({ pageId }) {
     const strokes = useAppSelector(
         (state) => state.boardControl.pageCollection[pageId]?.strokes
     )
 
-    const handleDragEnd = (e) => {
+    const handleDragEnd = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
         const { x, y, id } = e.target.attrs
         if (store.getState().drawControl.liveStroke.type !== toolType.ERASER) {
             handleUpdateStroke({ x, y, id, pageId })
         }
     }
 
-    function handleStrokeMovement(e) {
+    function handleMouseEvent(e: KonvaEventObject<MouseEvent>) {
         const { id } = e.target.attrs
         // prevent to act on live stroke and hovering without clicking
         if (id === undefined || e.evt.buttons === 0) {
             return
         }
+        if (store.getState().drawControl.liveStroke.type === toolType.ERASER) {
+            handleDeleteStroke({ pageId, id })
+        }
+    }
 
+    function handleTouchEvent(e: KonvaEventObject<TouchEvent>) {
+        const { id } = e.target.attrs
+        if (id === undefined) {
+            return
+        }
         if (store.getState().drawControl.liveStroke.type === toolType.ERASER) {
             handleDeleteStroke({ pageId, id })
         }
@@ -40,11 +50,11 @@ export default function PageContent({ pageId }) {
             globalCompositeOperation="source-atop"
             draggable={isDraggable}
             onDragEnd={handleDragEnd}
-            onMouseDown={handleStrokeMovement}
-            onMouseMove={handleStrokeMovement}
-            onMouseEnter={handleStrokeMovement}
-            onTouchStart={handleStrokeMovement}
-            onTouchMove={handleStrokeMovement}
+            onMouseDown={handleMouseEvent}
+            onMouseMove={handleMouseEvent}
+            onMouseEnter={handleMouseEvent}
+            onTouchStart={handleTouchEvent}
+            onTouchMove={handleTouchEvent}
             listening={!isPanMode && isListening}
             y={getPageIndex(pageId) * CANVAS_FULL_HEIGHT}>
             {Object.keys(strokes).map((id) => (
