@@ -9,11 +9,12 @@ import DialogTitle from "@material-ui/core/DialogTitle"
 import { Grid } from "@material-ui/core"
 import { pageType } from "../../../constants"
 import { handlePageBackground } from "../../../drawing/handlers"
+import { PageBackground } from "../../../types"
 
 export default function PageSettings({
     setOpenOther,
 }: {
-    setOpenOther: any
+    setOpenOther: React.Dispatch<React.SetStateAction<boolean>>
 }): JSX.Element {
     const [open, setOpen] = useState(false)
 
@@ -26,7 +27,7 @@ export default function PageSettings({
         setOpenOther(false)
     }
 
-    const handleClick = (pageStyle: any) => () => {
+    const handleClick = (pageStyle: PageBackground) => () => {
         handlePageBackground(pageStyle)
         handleClose()
     }
