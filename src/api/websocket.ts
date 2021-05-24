@@ -1,5 +1,5 @@
 import { nanoid } from "@reduxjs/toolkit"
-import store from "../redux/store"
+import { store } from "../redux/store"
 import {
     addPage,
     updatePage,

@@ -1,18 +1,18 @@
 import React, { memo } from "react"
-import { useSelector } from "react-redux"
 import { toolType } from "../../constants"
-import store from "../../redux/store"
-import StrokeShape from "./strokeshapes"
+import { RootState, store } from "../../redux/store"
+import { useAppSelector } from "../../types"
+import { StrokeShape } from "./strokeshapes"
 
 export default memo(() => {
     // console.log("LiveLayer Memo Redraw")
-    const pts = useSelector((state) => state.drawControl.liveStroke.points)
+    const pts = useAppSelector((state) => state.drawControl.liveStroke.points)
     const { liveStroke } = store.getState().drawControl
     let shape = null
 
     // for continuous shapes we draw all sub arrays
     if (liveStroke.type === toolType.PEN) {
-        shape = pts.map((subPts, i) => (
+        shape = pts.map((subPts: number[], i: number) => (
             <StrokeShape
                 // we can use the array index as key here
                 // since the array's order is not changed

@@ -1,5 +1,4 @@
 import React, { useEffect } from "react"
-import { useDispatch } from "react-redux"
 import { useParams } from "react-router-dom"
 import { handleAddPageOver } from "../drawing/handlers"
 import boardKeyListener from "../component/board/keylistener"
@@ -10,10 +9,11 @@ import ViewNav from "../component/menu/viewnavigation"
 import { SET_SDIAG } from "../redux/slice/webcontrol"
 import { isConnected, pingSession } from "../api/websocket"
 import FavTools from "../component/menu/favtools"
+import { useAppDispatch } from "../types"
 
 export default function Whiteboard() {
     const { sid } = useParams<{ sid: string }>()
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
         if (!isConnected()) {

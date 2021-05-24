@@ -2,17 +2,17 @@ import React, { useState } from "react"
 import { IoShapesOutline } from "react-icons/io5"
 import { FiMinus, FiCircle, FiSquare, FiTriangle } from "react-icons/fi"
 
-import { useSelector } from "react-redux"
 import { toolType } from "../../../constants"
-import store from "../../../redux/store"
+import { store } from "../../../redux/store"
 import { SET_TYPE } from "../../../redux/slice/drawcontrol"
+import { useAppSelector } from "../../../types"
 
 export default function ShapeTools() {
     const [open, setOpen] = useState(false)
-    const typeSelector = useSelector(
+    const typeSelector = useAppSelector(
         (state) => state.drawControl.liveStroke.type
     )
-    const colorSelector = useSelector(
+    const colorSelector = useAppSelector(
         (state) => state.drawControl.liveStroke.style.color
     )
 

@@ -13,7 +13,7 @@ import {
 } from "../redux/slice/boardcontrol"
 import { SET_DEFAULT_PAGEBG } from "../redux/slice/drawcontrol"
 
-import store from "../redux/store"
+import { store } from "../redux/store"
 import { addStroke, deleteStroke, redo, undo, updateStroke } from "./undoredo"
 
 export function handleAddPageOver() {

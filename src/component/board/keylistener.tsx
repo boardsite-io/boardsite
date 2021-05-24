@@ -1,7 +1,7 @@
 // import { ActionCreators as UndoActionCreators } from "redux-undo"
 import { toolType } from "../../constants"
 import { SET_TYPE, TOGGLE_PANMODE } from "../../redux/slice/drawcontrol"
-import store from "../../redux/store"
+import { store } from "../../redux/store"
 
 import {
     JUMP_TO_NEXT_PAGE,
@@ -9,7 +9,7 @@ import {
 } from "../../redux/slice/viewcontrol"
 import { handleRedo, handleUndo } from "../../drawing/handlers"
 
-export default function keyListener(e) {
+export default function keyListener(e: any) {
     switch (e.key) {
         case "ArrowUp": // Previous Page
             store.dispatch(JUMP_TO_PREV_PAGE())

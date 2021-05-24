@@ -1,4 +1,4 @@
-import store from "../redux/store"
+import { store } from "../redux/store"
 import {
     START_LIVESTROKE,
     UPDATE_LIVESTROKE,

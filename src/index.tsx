@@ -10,7 +10,7 @@ import "./css/menucomponents/popup.css"
 
 import routes from "./component/route"
 
-import store from "./redux/store"
+import { store } from "./redux/store"
 
 function Boardsite() {
     return <Router>{routes}</Router>

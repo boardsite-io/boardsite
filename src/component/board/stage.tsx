@@ -1,5 +1,5 @@
 import React, { useEffect, memo } from "react"
-import { ReactReduxContext, useSelector } from "react-redux"
+import { ReactReduxContext } from "react-redux"
 import { createSelector } from "reselect"
 import { Stage, Layer } from "react-konva"
 import {
@@ -22,16 +22,19 @@ import {
     ZOOM_OUT_WHEEL_SCALE,
     CANVAS_WIDTH,
 } from "../../constants"
-import store from "../../redux/store"
+import { store } from "../../redux/store"
+import { useAppSelector } from "../../types"
 
 export default function BoardStage() {
-    const isPanMode = useSelector((state) => state.drawControl.isPanMode)
-    const stageWidth = useSelector((state) => state.viewControl.stageWidth)
-    const stageHeight = useSelector((state) => state.viewControl.stageHeight)
-    const stageX = useSelector((state) => state.viewControl.stageX)
-    const stageY = useSelector((state) => state.viewControl.stageY)
-    const stageScale = useSelector((state) => state.viewControl.stageScale)
-    const keepCentered = useSelector((state) => state.viewControl.keepCentered)
+    const isPanMode = useAppSelector((state) => state.drawControl.isPanMode)
+    const stageWidth = useAppSelector((state) => state.viewControl.stageWidth)
+    const stageHeight = useAppSelector((state) => state.viewControl.stageHeight)
+    const stageX = useAppSelector((state) => state.viewControl.stageX)
+    const stageY = useAppSelector((state) => state.viewControl.stageY)
+    const stageScale = useAppSelector((state) => state.viewControl.stageScale)
+    const keepCentered = useAppSelector(
+        (state) => state.viewControl.keepCentered
+    )
 
     useEffect(() => {
         window.addEventListener("resize", () =>
@@ -159,7 +162,7 @@ const StageContent = memo(() => {
             return pageSlice
         }
     )
-    const pageSlice = useSelector(pageCreateSelector)
+    const pageSlice = useAppSelector(pageCreateSelector)
     return (
         <>
             {pageSlice.map((pageId) => (

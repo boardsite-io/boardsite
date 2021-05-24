@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios"
-import store from "../redux/store"
+import { store } from "../redux/store"
 
 const apiRequest = axios.create({
     transformRequest: [(data) => JSON.stringify({ content: data })], // for routes we dont need message type

@@ -1,16 +1,16 @@
 import React from "react"
-import { useSelector } from "react-redux"
 import {
     BsArrowsMove,
     BsArrowsAngleContract,
     BsArrowsAngleExpand,
 } from "react-icons/bs"
-import store from "../../../redux/store"
+import { store } from "../../../redux/store"
 import { TOGGLE_PANMODE } from "../../../redux/slice/drawcontrol"
 import { FIT_WIDTH_TO_PAGE, RESET_VIEW } from "../../../redux/slice/viewcontrol"
+import { useAppSelector } from "../../../types"
 
 export default function ViewOptions() {
-    const isPanMode = useSelector((state) => state.drawControl.isPanMode)
+    const isPanMode = useAppSelector((state) => state.drawControl.isPanMode)
     return (
         <>
             {isPanMode ? (

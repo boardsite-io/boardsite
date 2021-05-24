@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import { useSelector } from "react-redux"
 import { BsGear } from "react-icons/bs"
 import { BiStats } from "react-icons/bi"
 import { VscDebugDisconnect } from "react-icons/vsc"
@@ -24,10 +23,11 @@ import {
     SET_SAMPLE_COUNT,
     TOGGLE_DIRECTDRAW,
 } from "../../../redux/slice/drawcontrol"
-import store from "../../../redux/store"
+import { store } from "../../../redux/store"
 import { SET_API_URL } from "../../../redux/slice/webcontrol"
 import { API_URL } from "../../../api/types"
 import { isConnected } from "../../../api/websocket"
+import { useAppSelector } from "../../../types"
 
 const useStyles = makeStyles({
     paper: {
@@ -41,10 +41,12 @@ export default function SettingsButton() {
     const [url, setURL] = useState(API_URL)
     const [isValidURL, setValidURL] = useState(true)
 
-    const keepCentered = useSelector((state) => state.viewControl.keepCentered)
-    const hideNavBar = useSelector((state) => state.viewControl.hideNavBar)
-    const directDraw = useSelector((state) => state.drawControl.directDraw)
-    // const apiURL = useSelector((state) => state.webControl.apiURL)
+    const keepCentered = useAppSelector(
+        (state) => state.viewControl.keepCentered
+    )
+    const hideNavBar = useAppSelector((state) => state.viewControl.hideNavBar)
+    const directDraw = useAppSelector((state) => state.drawControl.directDraw)
+    // const apiURL = useAppSelector((state) => state.webControl.apiURL)
 
     const toggleDrawer = (open) => (event) => {
         if (

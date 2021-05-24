@@ -1,3 +1,10 @@
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
+import { AppDispatch, RootState } from "./redux/store"
+
+// Use throughout your app instead of plain `useDispatch` and `useSelector`
+export const useAppDispatch = () => useDispatch<AppDispatch>()
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
+
 export interface Tool {
     type: number
     style: {
@@ -15,11 +22,18 @@ export interface LiveStroke extends Tool {
 }
 
 export interface Stroke extends Tool {
-    id: string
-    pageId: string
+    id?: string | undefined
+    type: number
+    pageId?: string
     x?: number
     y?: number
     points: number[]
+    isDraggable?: boolean
+    isListening?: boolean
+    fillEnabled?: boolean
+    perfectDrawEnabled?: boolean
+    shadowForStrokeEnabled?: boolean
+    currentPageIndex?: number
 }
 
 export interface Page {

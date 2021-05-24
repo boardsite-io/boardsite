@@ -4,7 +4,7 @@ import {
     ERASE_STROKE,
     UPDATE_STROKE,
 } from "../redux/slice/boardcontrol"
-import store from "../redux/store"
+import { store } from "../redux/store"
 
 const undoStack = []
 const redoStack = []

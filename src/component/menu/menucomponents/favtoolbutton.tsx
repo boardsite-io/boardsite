@@ -6,7 +6,7 @@ import {
     REMOVE_FAV_TOOL,
     SET_TOOL,
 } from "../../../redux/slice/drawcontrol"
-import store from "../../../redux/store"
+import { store } from "../../../redux/store"
 
 export default function FavToolButton({ icon, tool, index }) {
     const [open, setOpen] = useState(false)

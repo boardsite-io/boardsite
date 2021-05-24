@@ -4,7 +4,7 @@ import {
     ZOOM_IN_CENTER,
     ZOOM_OUT_CENTER,
 } from "../../../redux/slice/viewcontrol"
-import store from "../../../redux/store"
+import { store } from "../../../redux/store"
 
 export default function ViewZoom() {
     return (

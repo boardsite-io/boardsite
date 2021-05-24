@@ -3,14 +3,14 @@ import React from "react"
 import { BsPencil } from "react-icons/bs"
 import { CgController, CgErase } from "react-icons/cg"
 import { FiCircle, FiMinus, FiPlus, FiSquare, FiTriangle } from "react-icons/fi"
-import { useSelector } from "react-redux"
 import { toolType } from "../../constants"
 import { ADD_FAV_TOOL } from "../../redux/slice/drawcontrol"
-import store from "../../redux/store"
+import { store } from "../../redux/store"
+import { useAppSelector } from "../../types"
 import FavToolButton from "./menucomponents/favtoolbutton"
 
 function FavTools() {
-    const favTools = useSelector((state) => state.drawControl.favTools)
+    const favTools = useAppSelector((state) => state.drawControl.favTools)
 
     // add current draw settings as new fav tool
     function addFavTool() {

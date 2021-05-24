@@ -8,9 +8,8 @@ import DialogTitle from "@material-ui/core/DialogTitle"
 import { Grid, TextField } from "@material-ui/core"
 import { BsPeople } from "react-icons/bs"
 import { useHistory } from "react-router-dom"
-import { useDispatch, useSelector } from "react-redux"
 
-import store from "../../../redux/store"
+import { store } from "../../../redux/store"
 import {
     SET_SDIAG,
     CLOSE_SDIAG,
@@ -24,13 +23,16 @@ import {
     newSession,
 } from "../../../api/websocket"
 import "../../../css/sessiondialog.css"
+import { useAppDispatch, useAppSelector } from "../../../types"
 
 export default function SessionDialog() {
-    const sDiagStatus = useSelector((state) => state.webControl.sessionDialog)
-    const alias = useSelector((state) => state.webControl.user.alias)
-    const color = useSelector((state) => state.webControl.user.color)
+    const sDiagStatus = useAppSelector(
+        (state) => state.webControl.sessionDialog
+    )
+    const alias = useAppSelector((state) => state.webControl.user.alias)
+    const color = useAppSelector((state) => state.webControl.user.color)
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const history = useHistory()
 
     const handleClickOpen = () => {

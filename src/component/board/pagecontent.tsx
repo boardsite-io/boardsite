@@ -1,14 +1,14 @@
 import React from "react"
 import { Group } from "react-konva"
-import { useSelector } from "react-redux"
 import { handleDeleteStroke, handleUpdateStroke } from "../../drawing/handlers"
 import { CANVAS_FULL_HEIGHT, toolType } from "../../constants"
-import store from "../../redux/store"
+import { store } from "../../redux/store"
 import { getPageIndex } from "../../drawing/strokeactions"
 import StrokeShape from "./strokeshapes"
+import { useAppSelector } from "../../types"
 
 export default function PageContent({ pageId }) {
-    const strokes = useSelector(
+    const strokes = useAppSelector(
         (state) => state.boardControl.pageCollection[pageId]?.strokes
     )
 
@@ -31,9 +31,9 @@ export default function PageContent({ pageId }) {
         }
     }
 
-    const isDraggable = useSelector((state) => state.drawControl.isDraggable)
-    const isListening = useSelector((state) => state.drawControl.isListening)
-    const isPanMode = useSelector((state) => state.drawControl.isPanMode)
+    const isDraggable = useAppSelector((state) => state.drawControl.isDraggable)
+    const isListening = useAppSelector((state) => state.drawControl.isListening)
+    const isPanMode = useAppSelector((state) => state.drawControl.isPanMode)
 
     return (
         <Group

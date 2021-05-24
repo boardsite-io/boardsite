@@ -1,13 +1,13 @@
 import React from "react"
-import { useSelector } from "react-redux"
 import ColorPicker from "./colorpicker"
 import WidthPicker from "./widthpicker"
 import { SET_COLOR } from "../../../redux/slice/drawcontrol"
-import store from "../../../redux/store"
+import { store } from "../../../redux/store"
 import "../../../css/stylepicker.css"
+import { useAppSelector } from "../../../types"
 
 export default function StylePicker() {
-    const colorSelector = useSelector(
+    const colorSelector = useAppSelector(
         (state) => state.drawControl.liveStroke.style.color
     )
     function handleChange(e) {

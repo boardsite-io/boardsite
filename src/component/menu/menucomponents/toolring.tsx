@@ -1,19 +1,19 @@
 import React, { useState } from "react"
-import { useSelector } from "react-redux"
 import { CgErase, CgController } from "react-icons/cg"
 import { BsPencil } from "react-icons/bs"
-import store from "../../../redux/store"
+import { store } from "../../../redux/store"
 import { SET_TYPE } from "../../../redux/slice/drawcontrol"
 import { toolType } from "../../../constants"
 import StylePicker from "./stylepicker"
 import ShapeTools from "./shapetools"
+import { useAppSelector } from "../../../types"
 
 export default function ToolRing() {
     const [open, setOpen] = useState(false)
-    const typeSelector = useSelector(
+    const typeSelector = useAppSelector(
         (state) => state.drawControl.liveStroke.type
     )
-    const colorSelector = useSelector(
+    const colorSelector = useAppSelector(
         (state) => state.drawControl.liveStroke.style.color
     )
 

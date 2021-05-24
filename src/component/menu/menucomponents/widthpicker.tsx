@@ -1,6 +1,5 @@
 import React from "react"
 import ReactSlider from "react-slider"
-import { useSelector } from "react-redux"
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md"
 import {
     SET_WIDTH,
@@ -8,10 +7,11 @@ import {
     INCREMENT_WIDTH,
 } from "../../../redux/slice/drawcontrol"
 import { WIDTH_MIN, WIDTH_MAX } from "../../../constants"
-import store from "../../../redux/store"
+import { store } from "../../../redux/store"
+import { useAppSelector } from "../../../types"
 
 export default function WidthPicker() {
-    const widthSelector = useSelector(
+    const widthSelector = useAppSelector(
         (state) => state.drawControl.liveStroke.style.width
     )
 

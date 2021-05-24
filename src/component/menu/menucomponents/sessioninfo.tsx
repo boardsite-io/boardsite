@@ -1,9 +1,9 @@
 import React from "react"
-import { useSelector } from "react-redux"
 import "../../../css/sessioninfo.css"
+import { useAppSelector } from "../../../types"
 
 export default function SessionInfo() {
-    const userInfo = useSelector((state) => state.webControl.connectedUsers)
+    const userInfo = useAppSelector((state) => state.webControl.connectedUsers)
     return (
         <div className="session-info">
             {Object.keys(userInfo).map((userId) => {

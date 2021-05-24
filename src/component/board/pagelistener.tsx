@@ -1,7 +1,6 @@
 import React from "react"
-import { useSelector } from "react-redux"
 import { Rect } from "react-konva"
-import store from "../../redux/store"
+import { store } from "../../redux/store"
 import {
     startLiveStroke,
     moveLiveStroke,
@@ -15,9 +14,10 @@ import {
 } from "../../constants"
 import { END_LIVESTROKE, SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
 import pageBackground from "../../drawing/backgrounds"
+import { useAppSelector } from "../../types"
 
 export default function PageListener({ pageId }) {
-    const isMouseDown = useSelector((state) => state.drawControl.isMouseDown)
+    const isMouseDown = useAppSelector((state) => state.drawControl.isMouseDown)
 
     function getScaledPointerPosition(e) {
         const stage = e.target.getStage()
@@ -105,9 +105,9 @@ export default function PageListener({ pageId }) {
         return !(touch1 && touch2) // double finger
     }
 
-    const isListening = useSelector((state) => state.drawControl.isListening)
-    const isPanMode = useSelector((state) => state.drawControl.isPanMode)
-    const pageBg = useSelector(
+    const isListening = useAppSelector((state) => state.drawControl.isListening)
+    const isPanMode = useAppSelector((state) => state.drawControl.isPanMode)
+    const pageBg = useAppSelector(
         (state) => state.boardControl.pageCollection[pageId]?.meta?.background
     )
     return (
