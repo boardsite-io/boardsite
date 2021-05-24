@@ -52,7 +52,7 @@ export default function SettingsButton() {
     )
     // const apiURL = useAppSelector((state) => state.webControl.apiURL)
 
-    const toggleDrawer = (open: any) => (event: any) => {
+    const toggleDrawer = (open: boolean) => (event: any) => {
         if (
             event.type === "keydown" &&
             (event.key === "Tab" || event.key === "Shift")
