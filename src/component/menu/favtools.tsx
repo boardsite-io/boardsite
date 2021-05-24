@@ -9,7 +9,7 @@ import store from "../../redux/store"
 import { useCustomSelector } from "../../redux/hooks"
 import FavToolButton from "./menucomponents/favtoolbutton"
 
-function FavTools() {
+const FavTools: React.FC = () => {
     const favTools = useCustomSelector((state) => state.drawControl.favTools)
 
     // add current draw settings as new fav tool

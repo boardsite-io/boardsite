@@ -25,7 +25,7 @@ import {
 import "../../../css/sessiondialog.css"
 import { useCustomDispatch, useCustomSelector } from "../../../redux/hooks"
 
-export default function SessionDialog() {
+const SessionDialog: React.FC = () => {
     const sDiagStatus = useCustomSelector(
         (state) => state.webControl.sessionDialog
     )
@@ -90,11 +90,11 @@ export default function SessionDialog() {
      * Handle textfield events in the session dialog
      * @param {event} e event object
      */
-    function handleTextFieldChange(e: any) {
+    function handleTextFieldChange(e: React.ChangeEvent<HTMLInputElement>) {
         dispatch(SET_SDIAG({ sidInput: e.target.value }))
     }
 
-    function handleAliasChange(e: any) {
+    function handleAliasChange(e: React.ChangeEvent<HTMLInputElement>) {
         dispatch(SET_USER_ALIAS(e.target.value))
     }
 
@@ -214,3 +214,5 @@ export default function SessionDialog() {
         </>
     )
 }
+
+export default SessionDialog

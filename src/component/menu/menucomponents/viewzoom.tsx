@@ -6,21 +6,21 @@ import {
 } from "../../../redux/slice/viewcontrol"
 import store from "../../../redux/store"
 
-export default function ViewZoom() {
-    return (
-        <>
-            <button
-                type="button"
-                id="icon-button"
-                onClick={() => store.dispatch(ZOOM_IN_CENTER())}>
-                <MdZoomIn id="icon" />
-            </button>
-            <button
-                type="button"
-                id="icon-button"
-                onClick={() => store.dispatch(ZOOM_OUT_CENTER())}>
-                <MdZoomOut id="icon" />
-            </button>
-        </>
-    )
-}
+const ViewZoom: React.FC = () => (
+    <>
+        <button
+            type="button"
+            id="icon-button"
+            onClick={() => store.dispatch(ZOOM_IN_CENTER())}>
+            <MdZoomIn id="icon" />
+        </button>
+        <button
+            type="button"
+            id="icon-button"
+            onClick={() => store.dispatch(ZOOM_OUT_CENTER())}>
+            <MdZoomOut id="icon" />
+        </button>
+    </>
+)
+
+export default ViewZoom

@@ -15,11 +15,7 @@ interface FavToolButtonProps {
     index: number
 }
 
-export default function FavToolButton({
-    icon,
-    tool,
-    index,
-}: FavToolButtonProps): JSX.Element {
+const FavToolButton: React.FC<FavToolButtonProps> = ({ icon, tool, index }) => {
     const [open, setOpen] = useState(false)
 
     // apply fav tool as setting
@@ -100,3 +96,5 @@ export default function FavToolButton({
         </div>
     )
 }
+
+export default FavToolButton

@@ -7,27 +7,25 @@ import ViewZoom from "./menucomponents/viewzoom"
 import ViewOptions from "./menucomponents/viewoptions"
 import PageOptions from "./menucomponents/pageoptions"
 
-function Toolbar() {
-    return (
-        <div className="toolbar">
-            <div className="toolbar-group">
-                <Settings />
-                <SessionDialog />
-                <PageOptions />
-            </div>
-            <div className="toolbar-group">
-                <UndoRedo />
-            </div>
-            <div className="toolbar-group">
-                <ToolRing />
-            </div>
-            <div className="toolbar-group">
-                <ViewZoom />
-            </div>
-            <div className="toolbar-group">
-                <ViewOptions />
-            </div>
+const Toolbar: React.FC = () => (
+    <div className="toolbar">
+        <div className="toolbar-group">
+            <Settings />
+            <SessionDialog />
+            <PageOptions />
         </div>
-    )
-}
+        <div className="toolbar-group">
+            <UndoRedo />
+        </div>
+        <div className="toolbar-group">
+            <ToolRing />
+        </div>
+        <div className="toolbar-group">
+            <ViewZoom />
+        </div>
+        <div className="toolbar-group">
+            <ViewOptions />
+        </div>
+    </div>
+)
 export default Toolbar

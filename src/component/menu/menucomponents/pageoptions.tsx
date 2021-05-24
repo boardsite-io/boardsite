@@ -17,7 +17,7 @@ import {
 import "../../../css/menucomponents/pageoptions.css"
 import PageSettings from "./pagesettings"
 
-export default function PageOptions(): JSX.Element {
+const PageOptions: React.FC = () => {
     const [open, setOpen] = useState(false)
 
     return (
@@ -77,3 +77,5 @@ export default function PageOptions(): JSX.Element {
         </div>
     )
 }
+
+export default PageOptions

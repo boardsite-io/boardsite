@@ -7,7 +7,7 @@ import store from "../../../redux/store"
 import { SET_TYPE } from "../../../redux/slice/drawcontrol"
 import { useCustomSelector } from "../../../redux/hooks"
 
-export default function ShapeTools() {
+const ShapeTools: React.FC = () => {
     const [open, setOpen] = useState(false)
     const typeSelector = useCustomSelector(
         (state) => state.drawControl.liveStroke.type
@@ -100,3 +100,5 @@ export default function ShapeTools() {
         </div>
     )
 }
+
+export default ShapeTools

@@ -3,11 +3,11 @@ import ColorPicker from "./colorpicker"
 import WidthPicker from "./widthpicker"
 import "../../../css/stylepicker.css"
 
-export default function StylePicker() {
-    return (
-        <div className="style-picker">
-            <ColorPicker />
-            <WidthPicker />
-        </div>
-    )
-}
+const StylePicker: React.FC = () => (
+    <div className="style-picker">
+        <ColorPicker />
+        <WidthPicker />
+    </div>
+)
+
+export default StylePicker

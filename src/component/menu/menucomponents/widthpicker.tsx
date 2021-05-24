@@ -10,7 +10,7 @@ import { WIDTH_MIN, WIDTH_MAX, DEFAULT_WIDTH } from "../../../constants"
 import store from "../../../redux/store"
 import { useCustomSelector } from "../../../redux/hooks"
 
-export default function WidthPicker() {
+const WidthPicker: React.FC = () => {
     const widthSelector = useCustomSelector(
         (state) => state.drawControl.liveStroke.style.width
     )
@@ -48,3 +48,5 @@ export default function WidthPicker() {
         </div>
     )
 }
+
+export default WidthPicker

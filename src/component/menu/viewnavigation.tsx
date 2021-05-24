@@ -15,7 +15,7 @@ import "../../css/menucomponents/viewnavigation.css"
 import store from "../../redux/store"
 import { useCustomSelector } from "../../redux/hooks"
 
-export default function ViewNavigation() {
+const ViewNavigation: React.FC = () => {
     const currPageIndex = useCustomSelector(
         (state) => state.viewControl.currentPageIndex
     )
@@ -65,3 +65,5 @@ export default function ViewNavigation() {
         </div>
     )
 }
+
+export default ViewNavigation

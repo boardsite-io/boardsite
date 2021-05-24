@@ -35,7 +35,7 @@ const useStyles = makeStyles({
     },
 })
 
-export default function SettingsButton() {
+const SettingsButton: React.FC = () => {
     const classes = useStyles()
     const [isOpen, setOpen] = useState(false)
     const [url, setURL] = useState(API_URL)
@@ -52,17 +52,7 @@ export default function SettingsButton() {
     )
     // const apiURL = useAppSelector((state) => state.webControl.apiURL)
 
-    const toggleDrawer = (open: boolean) => (event: any) => {
-        if (
-            event.type === "keydown" &&
-            (event.key === "Tab" || event.key === "Shift")
-        ) {
-            return
-        }
-        setOpen(open)
-    }
-
-    const handleURLChange = (event: any) => {
+    const handleURLChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setURL(event.target.value)
         try {
             const u = new URL(event.target.value)
@@ -75,14 +65,17 @@ export default function SettingsButton() {
 
     return (
         <>
-            <button type="button" id="icon-button" onClick={toggleDrawer(true)}>
+            <button
+                type="button"
+                id="icon-button"
+                onClick={() => setOpen(true)}>
                 <BsGear id="icon" />
             </button>
 
             <Drawer
                 anchor="left"
                 open={isOpen}
-                onClose={toggleDrawer(false)}
+                onClose={() => setOpen(false)}
                 classes={{ paper: classes.paper }}>
                 <List>
                     <ListItem>
@@ -174,3 +167,5 @@ export default function SettingsButton() {
         </>
     )
 }
+
+export default SettingsButton

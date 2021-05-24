@@ -9,7 +9,7 @@ import { TOGGLE_PANMODE } from "../../../redux/slice/drawcontrol"
 import { FIT_WIDTH_TO_PAGE, RESET_VIEW } from "../../../redux/slice/viewcontrol"
 import { useCustomSelector } from "../../../redux/hooks"
 
-export default function ViewOptions() {
+const ViewOptions: React.FC = () => {
     const isPanMode = useCustomSelector((state) => state.drawControl.isPanMode)
     return (
         <>
@@ -43,3 +43,5 @@ export default function ViewOptions() {
         </>
     )
 }
+
+export default ViewOptions

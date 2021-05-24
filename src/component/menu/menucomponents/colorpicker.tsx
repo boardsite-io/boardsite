@@ -4,7 +4,7 @@ import { useCustomSelector } from "../../../redux/hooks"
 import { SET_COLOR } from "../../../redux/slice/drawcontrol"
 import store from "../../../redux/store"
 
-export default (): JSX.Element => {
+const ColorPicker: React.FC = () => {
     const color = useCustomSelector(
         (state) => state.drawControl.liveStroke.style.color
     )
@@ -19,3 +19,5 @@ export default (): JSX.Element => {
         </div>
     )
 }
+
+export default ColorPicker

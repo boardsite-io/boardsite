@@ -11,11 +11,9 @@ import { pageType } from "../../../constants"
 import { handlePageBackground } from "../../../drawing/handlers"
 import { PageBackground } from "../../../types"
 
-export default function PageSettings({
-    setOpenOther,
-}: {
+const ShapeTools: React.FC<{
     setOpenOther: React.Dispatch<React.SetStateAction<boolean>>
-}): JSX.Element {
+}> = ({ setOpenOther }) => {
     const [open, setOpen] = useState(false)
 
     const handleClickOpen = () => {
@@ -87,3 +85,5 @@ export default function PageSettings({
         </>
     )
 }
+
+export default ShapeTools

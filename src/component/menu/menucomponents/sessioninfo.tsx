@@ -2,7 +2,7 @@ import React from "react"
 import "../../../css/sessioninfo.css"
 import { useCustomSelector } from "../../../redux/hooks"
 
-export default function SessionInfo() {
+const SessionInfo: React.FC = () => {
     const userInfo = useCustomSelector(
         (state) => state.webControl.connectedUsers
     )
@@ -23,3 +23,5 @@ export default function SessionInfo() {
         </div>
     )
 }
+
+export default SessionInfo

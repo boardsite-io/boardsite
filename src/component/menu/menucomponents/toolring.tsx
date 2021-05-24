@@ -8,7 +8,7 @@ import StylePicker from "./stylepicker"
 import ShapeTools from "./shapetools"
 import { useCustomSelector } from "../../../redux/hooks"
 
-export default function ToolRing() {
+const ToolRing: React.FC = () => {
     const [open, setOpen] = useState(false)
     const typeSelector = useCustomSelector(
         (state) => state.drawControl.liveStroke.type
@@ -94,3 +94,5 @@ export default function ToolRing() {
         </>
     )
 }
+
+export default ToolRing
