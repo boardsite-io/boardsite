@@ -31,6 +31,10 @@ export interface Stroke extends Tool {
     y: number
 }
 
+export interface StrokeMap {
+    [id: string]: Stroke
+}
+
 export type StrokeShape = Stroke & ShapeConfig
 
 export interface PageMeta {
@@ -38,9 +42,7 @@ export interface PageMeta {
 }
 
 export interface Page {
-    strokes: {
-        [id: string]: Stroke
-    }
+    strokes: StrokeMap
     meta: PageMeta
 }
 
@@ -57,6 +59,17 @@ export interface User {
 export type Point = {
     x: number
     y: number
+}
+
+export type Hitbox = {
+    v1: Point
+    v2: Point
+    v3: Point
+    v4: Point
+}
+
+export interface StrokeHitbox {
+    [id: string]: Hitbox[]
 }
 
 export type PageBackground = "blank" | "checkered" | "ruled"

@@ -1,6 +1,6 @@
 import SAT from "sat"
 import { toolType } from "../constants"
-import { Stroke } from "../types"
+import { Hitbox, Stroke, StrokeHitbox, StrokeMap } from "../types"
 
 const V = SAT.Vector
 const P = SAT.Polygon
@@ -13,7 +13,7 @@ function getHitbox(
     strokeWidth: number,
     scaleX: number,
     scaleY: number
-) {
+): Hitbox {
     const dx = x2 - x1
     const dy = y2 - y1
     let dxw
@@ -44,15 +44,15 @@ function getHitbox(
 }
 
 // calc the hitboxes of each segment of a stroke with the appropriate width
-function getHitboxes(pageStrokes: any) {
-    const strokeHitboxes: any = {}
+function getHitboxes(pageStrokes: StrokeMap): StrokeHitbox {
+    const strokeHitboxes: StrokeHitbox = {}
 
     Object.keys(pageStrokes).forEach((strokeId) => {
         const stroke = pageStrokes[strokeId]
         const strokePoints = [...stroke.points]
 
         // get hitbox(es) of current stroke
-        const strokeIdHitboxes: any = []
+        const strokeIdHitboxes: Hitbox[] = []
         switch (stroke.type) {
             case toolType.PEN:
                 getPenHitbox(stroke, strokePoints, strokeIdHitboxes)
@@ -78,7 +78,7 @@ function getHitboxes(pageStrokes: any) {
 function getPenHitbox(
     stroke: Stroke,
     strokePoints: number[],
-    strokeIdHitboxes: any
+    strokeIdHitboxes: Hitbox[]
 ) {
     // compensate for the scale and offset
     for (let i = 0; i < strokePoints.length; i += 2) {
@@ -104,7 +104,7 @@ function getPenHitbox(
 function getLineHitbox(
     stroke: Stroke,
     strokePoints: number[],
-    strokeIdHitboxes: any
+    strokeIdHitboxes: Hitbox[]
 ) {
     // compensate for the scale and offset
     strokePoints[0] = strokePoints[0] * stroke.scaleX + stroke.x
@@ -128,7 +128,7 @@ function getLineHitbox(
 function getRectangleHitbox(
     stroke: Stroke,
     strokePoints: number[],
-    strokeIdHitboxes: any
+    strokeIdHitboxes: Hitbox[]
 ) {
     const x1 = stroke.x
     const y1 = stroke.y
@@ -150,9 +150,9 @@ function getRectangleHitbox(
 }
 
 function getCircleHitbox(
-    stroke: any,
+    stroke: Stroke,
     strokePoints: number[],
-    strokeIdHitboxes: any
+    strokeIdHitboxes: Hitbox[]
 ) {
     const rad = {
         x: (strokePoints[2] - strokePoints[0]) / 2,
@@ -177,7 +177,7 @@ function getCircleHitbox(
     )
 }
 
-function getSelectionHitbox([x1, y1, x2, y2]: number[]) {
+function getSelectionHitbox([x1, y1, x2, y2]: number[]): Hitbox {
     const minX = Math.min(x1, x2)
     const maxX = Math.max(x1, x2)
     const minY = Math.min(y1, y2)
@@ -191,7 +191,7 @@ function getSelectionHitbox([x1, y1, x2, y2]: number[]) {
 }
 
 export default function getSelectedIds(
-    strokes: any,
+    strokes: StrokeMap,
     x1: number,
     y1: number,
     x2: number,

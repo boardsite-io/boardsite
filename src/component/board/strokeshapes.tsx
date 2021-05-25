@@ -1,6 +1,7 @@
-import React, { memo, useRef, useState } from "react"
+import React, { memo, useState } from "react"
 import { Line, Ellipse, Circle, Rect } from "react-konva"
 import { LineJoin, LineCap } from "konva/types/Shape"
+import { KonvaEventObject } from "konva/types/Node"
 import { getStartEndPoints } from "../../drawing/strokeactions"
 import {
     DRAG_SHADOW_BLUR,
@@ -46,7 +47,7 @@ export default memo<StrokeShape>(
             listening: true,
             perfectDrawEnabled: false,
             onDragStart: () => setDragging(true),
-            onDragEnd: (e: any) => {
+            onDragEnd: (e: KonvaEventObject<DragEvent>) => {
                 setDragging(false)
                 if (
                     store.getState().drawControl.liveStroke.type !==
@@ -65,7 +66,7 @@ export default memo<StrokeShape>(
                     })
                 }
             },
-            onTransformEnd: (e: any) => {
+            onTransformEnd: (e: KonvaEventObject<Event>) => {
                 handleUpdateStroke({
                     x: e.target.attrs.x,
                     y: e.target.attrs.y,

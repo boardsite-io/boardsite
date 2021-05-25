@@ -1,4 +1,5 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit"
+import { Shape, ShapeConfig } from "konva/types/Shape"
 import getSelectedIds from "../../drawing/hitboxDetection"
 
 import { Page, PageCollection, Stroke } from "../../types"
@@ -26,15 +27,17 @@ const boardControlSlice = createSlice({
                 x2,
                 y2
             )
-            const selectedShapes: any[] = []
-            layerRef.current.find(".shape").forEach((elementNode: any) => {
-                for (let i = 0; i < selectedIds.length; i += 1) {
-                    if (elementNode.attrs.id === selectedIds[i]) {
-                        selectedShapes.push(elementNode)
-                        break
+            const selectedShapes: Shape<ShapeConfig>[] = []
+            layerRef.current
+                .find(".shape")
+                .forEach((elementNode: Shape<ShapeConfig>) => {
+                    for (let i = 0; i < selectedIds.length; i += 1) {
+                        if (elementNode.attrs.id === selectedIds[i]) {
+                            selectedShapes.push(elementNode)
+                            break
+                        }
                     }
-                }
-            })
+                })
 
             trRef.current.nodes(selectedShapes)
         },
