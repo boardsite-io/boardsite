@@ -16,11 +16,11 @@ const WidthPicker: React.FC = () => {
     )
 
     function handleUpClick() {
-        store.dispatch(DECREMENT_WIDTH())
+        store.dispatch(INCREMENT_WIDTH())
     }
 
     function handleDownClick() {
-        store.dispatch(INCREMENT_WIDTH())
+        store.dispatch(DECREMENT_WIDTH())
     }
 
     const WidthSlider = createMuiTheme({

@@ -2,6 +2,7 @@ import React, { useEffect, memo, useRef } from "react"
 import { ReactReduxContext, ReactReduxContextValue } from "react-redux"
 import { createSelector } from "reselect"
 import { Stage, Layer, Transformer } from "react-konva"
+import { Box } from "konva/types/shapes/Transformer"
 import { Vector2d } from "konva/types/types"
 import { KonvaEventObject } from "konva/types/Node"
 import {
@@ -195,6 +196,14 @@ const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
     )
     useCustomSelector(unSelector)
 
+    const boundBoxFunc = (oldBox: Box, newBox: Box) => {
+        // limit resize
+        if (newBox.width < 5 || newBox.height < 5) {
+            return oldBox
+        }
+        return newBox
+    }
+
     return (
         <>
             {pageSlice.map((pageId: string) => (
@@ -217,13 +226,7 @@ const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
                         anchorCornerRadius={TR_ANCHOR_CORNER_RADIUS}
                         rotateEnabled={false}
                         ref={trRef}
-                        boundBoxFunc={(oldBox, newBox) => {
-                            // limit resize
-                            if (newBox.width < 5 || newBox.height < 5) {
-                                return oldBox
-                            }
-                            return newBox
-                        }}
+                        boundBoxFunc={boundBoxFunc}
                     />
                 </Layer>
             ))}

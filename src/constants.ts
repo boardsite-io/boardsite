@@ -43,6 +43,14 @@ export const TR_ANCHOR_SIZE = 8
 export const TR_ANCHOR_STROKE = "#00000088"
 export const TR_ANCHOR_CORNER_RADIUS = 2
 
+// livestrokeprops
+export const LIVE_ISDRAGGABLE = false
+export const LIVE_ISLISTENING = false
+export const LIVE_FILLENABLED = false
+export const LIVE_PERFECTDRAW = false
+export const LIVE_STROKESHADOW = false
+export const LIVE_CURRENTPAGEIDX = 0
+
 // drawing stuff
 export const toolType = {
     ERASER: 0,
@@ -55,7 +63,7 @@ export const toolType = {
     SELECT: 7,
 }
 export const DEFAULT_TOOL = toolType.PEN
-export const MIN_SAMPLE_COUNT = 3
+export const MIN_SAMPLE_COUNT = 1
 // allow drawing with finger
 export const DEFAULT_DIRECTDRAW = false
 // number of overlapping points for sub livestrokes

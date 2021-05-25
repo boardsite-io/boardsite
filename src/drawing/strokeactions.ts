@@ -27,8 +27,7 @@ let tid: number | NodeJS.Timeout = 0
 export function startLiveStroke(point: Point): void {
     store.dispatch(START_LIVESTROKE([point.x, point.y]))
     // set Line type when mouse hasnt moved for 1 sec
-    const liveStroke = getLiveStroke()
-    if (liveStroke.type === toolType.PEN) {
+    if (getLiveStroke().type === toolType.PEN) {
         tid = setTimeout(() => {
             store.dispatch(SET_TYPE(toolType.LINE))
         }, 1000)
@@ -82,11 +81,17 @@ export async function registerLiveStroke(
 
     if (liveStroke.type === toolType.SELECT) {
         const plen = stroke.points.length
-        const x1 = stroke.points[0]
-        const y1 = stroke.points[1]
-        const x2 = stroke.points[plen - 2]
-        const y2 = stroke.points[plen - 1]
-        store.dispatch(SELECT({ pageId, x1, y1, x2, y2, trRef, layerRef }))
+        store.dispatch(
+            SELECT({
+                pageId,
+                x1: stroke.points[0],
+                y1: stroke.points[1],
+                x2: stroke.points[plen - 2],
+                y2: stroke.points[plen - 1],
+                trRef,
+                layerRef,
+            })
+        )
         store.dispatch(END_LIVESTROKE())
         return
     }

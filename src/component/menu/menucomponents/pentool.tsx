@@ -35,24 +35,20 @@ export const PenTool: React.FC = () => {
             break
     }
 
+    const isDrawingTool = () =>
+        typeSelector === toolType.PEN ||
+        typeSelector === toolType.LINE ||
+        typeSelector === toolType.RECTANGLE ||
+        typeSelector === toolType.CIRCLE
+
     return (
         <div className="session-dialog-div">
             <button
                 type="button"
-                style={
-                    typeSelector === toolType.PEN ||
-                    typeSelector === toolType.LINE ||
-                    typeSelector === toolType.RECTANGLE ||
-                    typeSelector === toolType.CIRCLE
-                        ? { color: colorSelector }
-                        : {}
-                }
+                style={isDrawingTool() ? { color: colorSelector } : {}}
                 id="icon-button"
                 onClick={
-                    typeSelector === toolType.PEN ||
-                    typeSelector === toolType.LINE ||
-                    typeSelector === toolType.RECTANGLE ||
-                    typeSelector === toolType.CIRCLE
+                    isDrawingTool()
                         ? () => setOpen(true)
                         : () => store.dispatch(SET_TYPE(toolType.PEN))
                 }>

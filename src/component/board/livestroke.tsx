@@ -1,8 +1,25 @@
 import React, { memo } from "react"
-import { toolType } from "../../constants"
+import {
+    LIVE_CURRENTPAGEIDX,
+    LIVE_FILLENABLED,
+    LIVE_ISDRAGGABLE,
+    LIVE_ISLISTENING,
+    LIVE_PERFECTDRAW,
+    LIVE_STROKESHADOW,
+    toolType,
+} from "../../constants"
 import { useCustomSelector } from "../../redux/hooks"
 import store from "../../redux/store"
 import StrokeShape from "./strokeshapes"
+
+const liveProps = {
+    isDraggable: LIVE_ISDRAGGABLE,
+    isListening: LIVE_ISLISTENING,
+    fillEnabled: LIVE_FILLENABLED,
+    perfectDrawEnabled: LIVE_PERFECTDRAW,
+    shadowForStrokeEnabled: LIVE_STROKESHADOW,
+    currentPageIndex: LIVE_CURRENTPAGEIDX,
+}
 
 export default memo(() => {
     // console.log("LiveLayer Memo Redraw")
@@ -23,12 +40,7 @@ export default memo(() => {
                 pageId="none"
                 {...liveStroke}
                 points={subPts}
-                isDraggable={false}
-                isListening={false}
-                fillEnabled={false}
-                perfectDrawEnabled={false}
-                shadowForStrokeEnabled={false}
-                currentPageIndex={0}
+                {...liveProps}
             />
         ))
     } // for other types (e.g. circle) we only need the endpoints
@@ -51,12 +63,7 @@ export default memo(() => {
                     )}
                     x={points[0] + rad.x}
                     y={points[1] + rad.y}
-                    isDraggable={false}
-                    isListening={false}
-                    fillEnabled={false}
-                    perfectDrawEnabled={false}
-                    shadowForStrokeEnabled={false}
-                    currentPageIndex={0}
+                    {...liveProps}
                 />
             )
         } else {
@@ -67,12 +74,7 @@ export default memo(() => {
                     points={liveStroke.points[0].concat(
                         liveStroke.points[liveStroke.points.length - 1]
                     )}
-                    isDraggable={false}
-                    isListening={false}
-                    fillEnabled={false}
-                    perfectDrawEnabled={false}
-                    shadowForStrokeEnabled={false}
-                    currentPageIndex={0}
+                    {...liveProps}
                 />
             )
         }
