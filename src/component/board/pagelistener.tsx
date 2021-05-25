@@ -2,7 +2,6 @@ import React from "react"
 import { Rect } from "react-konva"
 import { KonvaEventObject } from "konva/types/Node"
 import { Stage } from "konva/types/Stage"
-import { Layer } from "konva/types/Layer"
 import { Vector2d } from "konva/types/types"
 import store from "../../redux/store"
 import {
@@ -19,11 +18,12 @@ import {
 import { END_LIVESTROKE, SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
 import pageBackground from "../../drawing/backgrounds"
 import { useCustomSelector } from "../../redux/hooks"
+import { LayerRefType, TrRefType } from "../../types"
 
 interface PageListenerProps {
     pageId: string
-    trRef: React.LegacyRef<Transformer<any, any>>
-    layerRef: React.LegacyRef<Layer> | undefined
+    trRef: TrRefType
+    layerRef: LayerRefType
 }
 
 const PageListener: React.FC<PageListenerProps> = ({

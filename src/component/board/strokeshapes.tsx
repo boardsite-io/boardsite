@@ -1,9 +1,19 @@
-import React, { memo, useState } from "react"
-import { Line, Ellipse, Circle } from "react-konva"
-import { ShapeConfig, LineJoin, LineCap } from "konva/types/Shape"
+import React, { memo, useRef, useState } from "react"
+import { Line, Ellipse, Circle, Rect } from "react-konva"
+import { LineJoin, LineCap } from "konva/types/Shape"
 import { getStartEndPoints } from "../../drawing/strokeactions"
-import { DRAG_SHADOW_BLUR, toolType } from "../../constants"
-import { Point, Stroke } from "../../types"
+import {
+    DRAG_SHADOW_BLUR,
+    SEL_FILL,
+    SEL_FILL_ENABLED,
+    SEL_STROKE,
+    SEL_STROKE_ENABLED,
+    toolType,
+} from "../../constants"
+import { Point, StrokeShape } from "../../types"
+import { useCustomSelector } from "../../redux/hooks"
+import store from "../../redux/store"
+import { handleUpdateStroke } from "../../drawing/handlers"
 
 /**
  * Super component implementing all stroke types and their visualization in the canvas
@@ -12,23 +22,56 @@ import { Point, Stroke } from "../../types"
  * the object references.
  * @param {{stroke: {}}} props
  */
-export default memo<Stroke | ShapeConfig>(
-    ({ id, type, style, points, x, y }) => {
+export default memo<StrokeShape>(
+    ({ x, y, id, scaleX, scaleY, pageId, type, style, points }) => {
         const [isDragging, setDragging] = useState(false)
+        const isDraggable = useCustomSelector(
+            (state) => state.drawControl.isDraggable
+        )
+        const shapeRef = useRef()
         const shapeProps = {
-            id,
+            name: "shape",
+            ref: shapeRef,
             x,
             y,
+            id,
+            scaleX,
+            scaleY,
             lineCap: "round" as LineCap,
             lineJoin: "round" as LineJoin,
             stroke: style.color,
             // fill: style.color,
             strokeWidth: style.width,
-            draggable: true,
+            draggable: isDraggable,
             listening: true,
             perfectDrawEnabled: false,
             onDragStart: () => setDragging(true),
-            onDragEnd: () => setDragging(false),
+            onDragEnd: (e: any) => {
+                setDragging(false)
+                if (
+                    store.getState().drawControl.liveStroke.type !==
+                    toolType.ERASER
+                ) {
+                    handleUpdateStroke({
+                        x: e.target.attrs.x,
+                        y: e.target.attrs.y,
+                        id,
+                        scaleX: e.target.attrs.scaleX,
+                        scaleY: e.target.attrs.scaleY,
+                        pageId,
+                    })
+                }
+            },
+            onTransformEnd: (e: any) => {
+                handleUpdateStroke({
+                    x: e.target.attrs.x,
+                    y: e.target.attrs.y,
+                    id,
+                    scaleX: e.target.attrs.scaleX,
+                    scaleY: e.target.attrs.scaleY,
+                    pageId,
+                })
+            },
             shadowForStrokeEnabled: isDragging,
             shadowEnabled: isDragging,
             shadowBlur: isDragging ? DRAG_SHADOW_BLUR : 0,
@@ -49,20 +92,6 @@ export default memo<Stroke | ShapeConfig>(
                     />
                 )
                 break
-            // case type.TRIANGLE:
-            //     shape = (
-            //         <Line
-            //             points={props.stroke.points}
-            //             stroke={props.stroke.style.color}
-            //             strokeWidth={props.stroke.style.width}
-            //             tension={1}
-            //             lineCap="round"
-            //             draggable={props.isDraggable}
-            //             draggable
-            //             listening
-            //         />
-            //     )
-            //     break
             case toolType.CIRCLE: {
                 const rad = {
                     x: (points[points.length - 2] - points[0]) / 2,
@@ -71,11 +100,39 @@ export default memo<Stroke | ShapeConfig>(
                 shape = (
                     <Ellipse
                         {...shapeProps}
-                        x={points[0] + rad.x}
-                        y={points[1] + rad.y}
-                        radiusX={Math.abs(rad.x)}
-                        radiusY={Math.abs(rad.y)}
+                        radius={{ x: Math.abs(rad.x), y: Math.abs(rad.y) }}
                         fillEnabled={false} // Remove inner hitbox from empty circles
+                    />
+                )
+                break
+            }
+            case toolType.RECTANGLE: {
+                const plen = points.length
+                const width = points[plen - 2] - points[0]
+                const height = points[plen - 1] - points[1]
+                shape = (
+                    <Rect
+                        {...shapeProps}
+                        width={width}
+                        height={height}
+                        fillEnabled
+                    />
+                )
+                break
+            }
+            case toolType.SELECT: {
+                const plen = points.length
+                const width = points[plen - 2] - points[0]
+                const height = points[plen - 1] - points[1]
+                shape = (
+                    <Rect
+                        {...shapeProps}
+                        width={width}
+                        height={height}
+                        stroke={SEL_STROKE}
+                        strokeEnabled={SEL_STROKE_ENABLED}
+                        fill={SEL_FILL}
+                        fillEnabled={SEL_FILL_ENABLED}
                     />
                 )
                 break

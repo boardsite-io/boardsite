@@ -5,11 +5,15 @@ import {
     UPDATE_STROKE,
 } from "../redux/slice/boardcontrol"
 import store from "../redux/store"
-import { Stroke } from "../types"
+import { UpdateStroke } from "../types"
 
 interface DrawAction {
-    stroke: Stroke
-    handle: (stroke: Stroke, isRedoable: boolean, stack: DrawAction[]) => void
+    stroke: UpdateStroke
+    handle: (
+        stroke: UpdateStroke,
+        isRedoable: boolean,
+        stack: DrawAction[]
+    ) => void
 }
 
 const undoStack: DrawAction[] = []
@@ -30,7 +34,7 @@ export function redo(): void {
 }
 
 export function addStroke(
-    stroke: Stroke,
+    stroke: UpdateStroke,
     isRedoable = true,
     stack = undoStack
 ): void {
@@ -54,13 +58,13 @@ export function addStroke(
 }
 
 export function deleteStroke(
-    { id, pageId }: Stroke,
+    { id, pageId }: UpdateStroke,
     isRedoable = true,
     stack = undoStack
 ): void {
     const page = store.getState().boardControl.pageCollection[pageId]
     if (page) {
-        const stroke = page.strokes[id]
+        const stroke = page.strokes[id] as UpdateStroke
         if (isRedoable) {
             // Add to UndoStack
             stack.push({
@@ -71,13 +75,13 @@ export function deleteStroke(
 
         store.dispatch(ERASE_STROKE({ pageId, id }))
         if (isConnected()) {
-            eraseStroke({ pageId, id } as Stroke)
+            eraseStroke({ pageId, id } as UpdateStroke)
         }
     }
 }
 
 export function updateStroke(
-    { x, y, id, scaleX, scaleY, pageId }: Stroke,
+    { x, y, id, scaleX, scaleY, pageId }: UpdateStroke,
     isRedoable = true,
     stack = undoStack
 ): void {
@@ -95,7 +99,7 @@ export function updateStroke(
                         scaleX: stroke.scaleX,
                         scaleY: stroke.scaleY,
                         pageId,
-                    } as Stroke, // make copy to redo update
+                    } as UpdateStroke, // make copy to redo update
                     handle: updateStroke,
                 })
             }

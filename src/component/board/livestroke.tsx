@@ -20,6 +20,7 @@ export default memo(() => {
                 // since the array's order is not changed
                 // eslint-disable-next-line react/no-array-index-key
                 key={i}
+                pageId="none"
                 {...liveStroke}
                 points={subPts}
                 isDraggable={false}
@@ -44,6 +45,7 @@ export default memo(() => {
             shape = (
                 <StrokeShape
                     {...liveStroke}
+                    pageId="none"
                     points={liveStroke.points[0].concat(
                         liveStroke.points[liveStroke.points.length - 1]
                     )}
@@ -61,6 +63,7 @@ export default memo(() => {
             shape = (
                 <StrokeShape
                     {...liveStroke}
+                    pageId="none"
                     points={liveStroke.points[0].concat(
                         liveStroke.points[liveStroke.points.length - 1]
                     )}

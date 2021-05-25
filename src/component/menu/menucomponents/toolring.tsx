@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import { CgErase, CgController } from "react-icons/cg"
 import { BiSelection } from "react-icons/bi"
 import store from "../../../redux/store"
@@ -9,12 +9,8 @@ import ShapeTools from "./shapetools"
 import { useCustomSelector } from "../../../redux/hooks"
 
 const ToolRing: React.FC = () => {
-    const [open, setOpen] = useState(false)
     const typeSelector = useCustomSelector(
         (state) => state.drawControl.liveStroke.type
-    )
-    const colorSelector = useCustomSelector(
-        (state) => state.drawControl.liveStroke.style.color
     )
 
     return (

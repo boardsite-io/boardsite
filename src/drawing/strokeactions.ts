@@ -15,7 +15,14 @@ import {
     RDP_FORCE_SECTIONS,
 } from "../constants"
 import { handleAddStroke } from "./handlers"
-import { LiveStroke, Point, Stroke } from "../types"
+import {
+    LayerRefType,
+    LiveStroke,
+    Point,
+    Stroke,
+    TrRefType,
+    UpdateStroke,
+} from "../types"
 import { SELECT } from "../redux/slice/boardcontrol"
 
 let tid: number | NodeJS.Timeout = 0
@@ -66,8 +73,8 @@ export function moveLiveStroke(point: Point): void {
  */
 export async function registerLiveStroke(
     pageId: string,
-    trRef: any,
-    layerRef: any
+    trRef: TrRefType,
+    layerRef: LayerRefType
 ): Promise<void> {
     const liveStroke = getLiveStroke()
     // empty livestrokes e.g. rightmouse eraser
@@ -91,7 +98,7 @@ export async function registerLiveStroke(
         return
     }
 
-    handleAddStroke(createStroke(liveStroke, pageId, true))
+    handleAddStroke(createStroke(liveStroke, pageId, true) as UpdateStroke)
     // clear livestroke
     store.dispatch(END_LIVESTROKE())
 
@@ -202,6 +209,6 @@ function flatLiveStroke(points: number[][]) {
 }
 
 // helper function to get current livestroke
-function getLiveStroke() {
+function getLiveStroke(): LiveStroke {
     return store.getState().drawControl.liveStroke
 }

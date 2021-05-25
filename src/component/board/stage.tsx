@@ -1,4 +1,4 @@
-import React, { useEffect, memo, useRef, LegacyRef, RefObject } from "react"
+import React, { useEffect, memo, useRef } from "react"
 import { ReactReduxContext, ReactReduxContextValue } from "react-redux"
 import { createSelector } from "reselect"
 import { Stage, Layer, Transformer } from "react-konva"
@@ -33,6 +33,7 @@ import {
 } from "../../constants"
 import store, { RootState } from "../../redux/store"
 import { useCustomSelector } from "../../redux/hooks"
+import { LayerRefType, TrRefType } from "../../types"
 
 const BoardStage: React.FC = () => {
     const isPanMode = useCustomSelector((state) => state.drawControl.isPanMode)
@@ -180,8 +181,8 @@ const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
         }
     )
     const pageSlice = useCustomSelector(pageCreateSelector)
-    const layerRef = useRef(null)
-    const trRef: React.LegacyRef<Transformer> | undefined = useRef(null)
+    const layerRef: LayerRefType = useRef(null)
+    const trRef: TrRefType = useRef(null)
 
     // unselect transformer selection when change tool
     const unSelector = createSelector(
