@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { BsPencil } from "react-icons/bs"
+import { FiMinus, FiCircle, FiSquare } from "react-icons/fi"
 import { toolType } from "../../../constants"
 import { useCustomSelector } from "../../../redux/hooks"
 import { SET_TYPE } from "../../../redux/slice/drawcontrol"
@@ -15,26 +16,48 @@ export default function ToolRing(): JSX.Element {
         (state) => state.drawControl.liveStroke.style.color
     )
 
+    let icon
+    switch (typeSelector) {
+        case toolType.PEN:
+            icon = <BsPencil id="icon" />
+            break
+        case toolType.LINE:
+            icon = <FiMinus id="icon" />
+            break
+        case toolType.RECTANGLE:
+            icon = <FiSquare id="icon" />
+            break
+        case toolType.CIRCLE:
+            icon = <FiCircle id="icon" />
+            break
+        default:
+            icon = <BsPencil id="icon" />
+            break
+    }
+
     return (
         <div className="session-dialog-div">
-            {typeSelector === toolType.PEN ? (
-                <button
-                    type="button"
-                    style={{ color: colorSelector }}
-                    id="icon-button-active"
-                    onClick={() => setOpen(true)}>
-                    <BsPencil id="icon" />
-                </button>
-            ) : (
-                <button
-                    type="button"
-                    id="icon-button"
-                    onClick={() => {
-                        store.dispatch(SET_TYPE(toolType.PEN))
-                    }}>
-                    <BsPencil id="icon" />
-                </button>
-            )}
+            <button
+                type="button"
+                style={
+                    typeSelector === toolType.PEN ||
+                    typeSelector === toolType.LINE ||
+                    typeSelector === toolType.RECTANGLE ||
+                    typeSelector === toolType.CIRCLE
+                        ? { color: colorSelector }
+                        : {}
+                }
+                id="icon-button"
+                onClick={
+                    typeSelector === toolType.PEN ||
+                    typeSelector === toolType.LINE ||
+                    typeSelector === toolType.RECTANGLE ||
+                    typeSelector === toolType.CIRCLE
+                        ? () => setOpen(true)
+                        : () => store.dispatch(SET_TYPE(toolType.PEN))
+                }>
+                {icon}
+            </button>
             {
                 // Palette Popup
                 open ? (

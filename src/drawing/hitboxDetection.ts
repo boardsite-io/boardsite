@@ -1,5 +1,6 @@
 import SAT from "sat"
 import { toolType } from "../constants"
+import { Stroke } from "../types"
 
 const V = SAT.Vector
 const P = SAT.Polygon
@@ -75,7 +76,7 @@ function getHitboxes(pageStrokes: any) {
 }
 
 function getPenHitbox(
-    stroke: any,
+    stroke: Stroke,
     strokePoints: number[],
     strokeIdHitboxes: any
 ) {
@@ -101,7 +102,7 @@ function getPenHitbox(
 }
 
 function getLineHitbox(
-    stroke: any,
+    stroke: Stroke,
     strokePoints: number[],
     strokeIdHitboxes: any
 ) {
@@ -125,7 +126,7 @@ function getLineHitbox(
 }
 
 function getRectangleHitbox(
-    stroke: any,
+    stroke: Stroke,
     strokePoints: number[],
     strokeIdHitboxes: any
 ) {

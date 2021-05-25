@@ -5,7 +5,6 @@ import store from "../../../redux/store"
 import { SET_TYPE } from "../../../redux/slice/drawcontrol"
 import { toolType } from "../../../constants"
 import PenTool from "./pentool"
-import ShapeTools from "./shapetools"
 import { useCustomSelector } from "../../../redux/hooks"
 
 const ToolRing: React.FC = () => {
@@ -28,7 +27,6 @@ const ToolRing: React.FC = () => {
                 }}>
                 <CgErase id="icon" />
             </button>
-            <ShapeTools />
             <button
                 type="button"
                 id={

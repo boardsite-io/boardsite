@@ -16,19 +16,19 @@ export interface LiveStroke extends Tool {
     points: number[][]
     scaleX: number
     scaleY: number
-    x?: number
-    y?: number
+    x: number
+    y: number
 }
 
 // Partial => Optional inputs from Tool
 export interface Stroke extends Tool {
     id: string
     pageId: string
-    scaleX?: number
-    scaleY?: number
+    scaleX: number
+    scaleY: number
     points: number[]
-    x?: number
-    y?: number
+    x: number
+    y: number
 }
 
 export type StrokeShape = Stroke & ShapeConfig
