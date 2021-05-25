@@ -200,8 +200,6 @@ export default function getSelectedIds(
     const selectionHitbox = getSelectionHitbox(x1, y1, x2, y2)
     const strokeHitboxes = getHitboxes(strokes)
 
-    console.log(selectionHitbox, strokeHitboxes)
-
     const selectionHitboxPolygon = new P(new V(0, 0), [
         new V(selectionHitbox.v1.x, selectionHitbox.v1.y),
         new V(selectionHitbox.v2.x, selectionHitbox.v2.y),

@@ -4,7 +4,7 @@ import { BiSelection } from "react-icons/bi"
 import store from "../../../redux/store"
 import { SET_TYPE } from "../../../redux/slice/drawcontrol"
 import { toolType } from "../../../constants"
-import PenTool from "./pentool"
+import { PenTool } from "./pentool"
 import { useCustomSelector } from "../../../redux/hooks"
 
 const ToolRing: React.FC = () => {

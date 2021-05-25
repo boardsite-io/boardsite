@@ -54,7 +54,7 @@ const initState: DrawControlState = {
         x: 0,
         y: 0,
     },
-    pageBG: pageType.BLANK,
+    pageBG: pageType.BLANK as PageBackground,
     favTools: DEFAULT_FAV_TOOLS,
 }
 

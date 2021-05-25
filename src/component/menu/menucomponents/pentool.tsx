@@ -7,7 +7,7 @@ import { SET_TYPE } from "../../../redux/slice/drawcontrol"
 import store from "../../../redux/store"
 import StylePicker from "./stylepicker"
 
-export default function ToolRing(): JSX.Element {
+export const PenTool: React.FC = () => {
     const [open, setOpen] = useState(false)
     const typeSelector = useCustomSelector(
         (state) => state.drawControl.liveStroke.type
