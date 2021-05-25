@@ -18,13 +18,6 @@ const PageContent: React.FC<PageContentProps> = ({ pageId }) => {
         (state) => state.boardControl.pageCollection[pageId]?.strokes
     )
 
-    // const handleDragEnd = (e: KonvaEventObject<DragEvent>) => {
-    //     const { x, y, id } = e.target.attrs
-    //     if (store.getState().drawControl.liveStroke.type !== toolType.ERASER) {
-    //         handleUpdateStroke({ x, y, id, pageId } as Stroke)
-    //     }
-    // }
-
     function handleStrokeMovement(
         e: KonvaEventObject<MouseEvent | TouchEvent>
     ) {
