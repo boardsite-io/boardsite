@@ -1,7 +1,7 @@
 import React from "react"
 import { Group } from "react-konva"
 import { KonvaEventObject } from "konva/types/Node"
-import { handleDeleteStroke, handleUpdateStroke } from "../../drawing/handlers"
+import { handleDeleteStroke } from "../../drawing/handlers"
 import { CANVAS_FULL_HEIGHT, toolType } from "../../constants"
 import store from "../../redux/store"
 import { getPageIndex } from "../../drawing/strokeactions"
@@ -17,13 +17,6 @@ const PageContent: React.FC<PageContentProps> = ({ pageId }) => {
     const strokes = useCustomSelector(
         (state) => state.boardControl.pageCollection[pageId]?.strokes
     )
-
-    const handleDragEnd = (e: KonvaEventObject<DragEvent>) => {
-        const { x, y, id } = e.target.attrs
-        if (store.getState().drawControl.liveStroke.type !== toolType.ERASER) {
-            handleUpdateStroke({ x, y, id, pageId } as Stroke)
-        }
-    }
 
     function handleStrokeMovement(
         e: KonvaEventObject<MouseEvent | TouchEvent>

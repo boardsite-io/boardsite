@@ -1,4 +1,4 @@
-import React, { memo, useRef, useState } from "react"
+import React, { memo, useState } from "react"
 import { Line, Ellipse, Circle, Rect } from "react-konva"
 import { LineJoin, LineCap } from "konva/types/Shape"
 import { getStartEndPoints } from "../../drawing/strokeactions"

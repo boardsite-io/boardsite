@@ -1,4 +1,7 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit"
+import { Ellipse } from "konva/types/shapes/Ellipse"
+import { Line } from "konva/types/shapes/Line"
+import { Rect } from "konva/types/shapes/Rect"
 import getSelectedIds from "../../drawing/hitboxDetection"
 
 import { Page, PageCollection, Stroke } from "../../types"
@@ -27,14 +30,16 @@ const boardControlSlice = createSlice({
                 y2
             )
             const selectedShapes: any[] = []
-            layerRef.current.find(".shape").forEach((elementNode: any) => {
-                for (let i = 0; i < selectedIds.length; i += 1) {
-                    if (elementNode.attrs.id === selectedIds[i]) {
-                        selectedShapes.push(elementNode)
-                        break
+            layerRef.current
+                .find(".shape")
+                .forEach((elementNode: Line | Rect | Ellipse) => {
+                    for (let i = 0; i < selectedIds.length; i += 1) {
+                        if (elementNode.attrs.id === selectedIds[i]) {
+                            selectedShapes.push(elementNode)
+                            break
+                        }
                     }
-                }
-            })
+                })
 
             trRef.current.nodes(selectedShapes)
         },
