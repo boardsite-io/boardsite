@@ -35,6 +35,8 @@ const boardControlSlice = createSlice({
                     }
                 }
             })
+            console.log(pageId, x1, y1, x2, y2, selectedIds, selectedShapes)
+
             trRef.current.nodes(selectedShapes)
         },
         SYNC_ALL_PAGES: (state, action) => {

@@ -15,14 +15,7 @@ import {
     RDP_FORCE_SECTIONS,
 } from "../constants"
 import { handleAddStroke } from "./handlers"
-import {
-    LayerRefType,
-    LiveStroke,
-    Point,
-    Stroke,
-    TrRefType,
-    UpdateStroke,
-} from "../types"
+import { LayerRefType, LiveStroke, Point, Stroke, TrRefType } from "../types"
 import { SELECT } from "../redux/slice/boardcontrol"
 
 let tid: number | NodeJS.Timeout = 0
@@ -98,7 +91,7 @@ export async function registerLiveStroke(
         return
     }
 
-    handleAddStroke(createStroke(liveStroke, pageId, true) as UpdateStroke)
+    handleAddStroke(createStroke(liveStroke, pageId, true) as Stroke)
     // clear livestroke
     store.dispatch(END_LIVESTROKE())
 

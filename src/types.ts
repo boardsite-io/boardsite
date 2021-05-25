@@ -14,10 +14,13 @@ export interface Tool {
 export interface LiveStroke extends Tool {
     id: string
     points: number[][]
+    scaleX: number
+    scaleY: number
     x?: number
     y?: number
 }
 
+// Partial => Optional inputs from Tool
 export interface Stroke extends Tool {
     id: string
     pageId: string
@@ -28,16 +31,7 @@ export interface Stroke extends Tool {
     y?: number
 }
 
-export interface UpdateStroke {
-    x: number
-    y: number
-    id: string
-    scaleX: number
-    scaleY: number
-    pageId: string
-}
-
-export type StrokeShape = Stroke & Omit<ShapeConfig, "id">
+export type StrokeShape = Stroke & ShapeConfig
 
 export interface PageMeta {
     background: PageBackground

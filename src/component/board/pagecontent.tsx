@@ -7,7 +7,7 @@ import store from "../../redux/store"
 import { getPageIndex } from "../../drawing/strokeactions"
 import StrokeShape from "./strokeshapes"
 import { useCustomSelector } from "../../redux/hooks"
-import { UpdateStroke } from "../../types"
+import { Stroke } from "../../types"
 
 interface PageContentProps {
     pageId: string
@@ -21,7 +21,7 @@ const PageContent: React.FC<PageContentProps> = ({ pageId }) => {
     const handleDragEnd = (e: KonvaEventObject<DragEvent>) => {
         const { x, y, id } = e.target.attrs
         if (store.getState().drawControl.liveStroke.type !== toolType.ERASER) {
-            handleUpdateStroke({ x, y, id, pageId } as UpdateStroke)
+            handleUpdateStroke({ x, y, id, pageId } as Stroke)
         }
     }
 
@@ -35,7 +35,7 @@ const PageContent: React.FC<PageContentProps> = ({ pageId }) => {
             return
         }
         if (store.getState().drawControl.liveStroke.type === toolType.ERASER) {
-            handleDeleteStroke({ pageId, id } as UpdateStroke)
+            handleDeleteStroke({ pageId, id } as Stroke)
         }
     }
 

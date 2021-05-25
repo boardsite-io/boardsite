@@ -28,10 +28,10 @@ export default memo<StrokeShape>(
         const isDraggable = useCustomSelector(
             (state) => state.drawControl.isDraggable
         )
-        const shapeRef = useRef()
+        // const shapeRef = useRef()
         const shapeProps = {
             name: "shape",
-            ref: shapeRef,
+            // ref: shapeRef,
             x,
             y,
             id,
@@ -59,6 +59,9 @@ export default memo<StrokeShape>(
                         scaleX: e.target.attrs.scaleX,
                         scaleY: e.target.attrs.scaleY,
                         pageId,
+                        points: [],
+                        type,
+                        style,
                     })
                 }
             },
@@ -70,6 +73,9 @@ export default memo<StrokeShape>(
                     scaleX: e.target.attrs.scaleX,
                     scaleY: e.target.attrs.scaleY,
                     pageId,
+                    points: [],
+                    type,
+                    style,
                 })
             },
             shadowForStrokeEnabled: isDragging,
@@ -94,13 +100,15 @@ export default memo<StrokeShape>(
                 break
             case toolType.CIRCLE: {
                 const rad = {
-                    x: (points[points.length - 2] - points[0]) / 2,
-                    y: (points[points.length - 1] - points[1]) / 2,
+                    x: Math.abs((points[points.length - 2] - points[0]) / 2),
+                    y: Math.abs((points[points.length - 1] - points[1]) / 2),
                 }
                 shape = (
                     <Ellipse
                         {...shapeProps}
-                        radius={{ x: Math.abs(rad.x), y: Math.abs(rad.y) }}
+                        // radius={rad}
+                        radiusX={rad.x}
+                        radiusY={rad.y}
                         fillEnabled={false} // Remove inner hitbox from empty circles
                     />
                 )

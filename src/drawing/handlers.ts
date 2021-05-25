@@ -14,7 +14,7 @@ import {
 import { SET_DEFAULT_PAGEBG } from "../redux/slice/drawcontrol"
 
 import store from "../redux/store"
-import { PageBackground, Stroke, UpdateStroke } from "../types"
+import { PageBackground, Stroke } from "../types"
 import { addStroke, deleteStroke, redo, undo, updateStroke } from "./undoredo"
 
 export function handleAddPageOver(): void {
@@ -73,15 +73,15 @@ export function handleDeleteAllPages(): void {
     }
 }
 
-export function handleAddStroke(stroke: UpdateStroke): void {
+export function handleAddStroke(stroke: Stroke): void {
     addStroke(stroke)
 }
 
-export function handleUpdateStroke(stroke: UpdateStroke): void {
+export function handleUpdateStroke(stroke: Stroke): void {
     updateStroke(stroke)
 }
 
-export function handleDeleteStroke(stroke: UpdateStroke): void {
+export function handleDeleteStroke(stroke: Stroke): void {
     deleteStroke(stroke)
 }
 

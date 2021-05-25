@@ -41,6 +41,7 @@ const initState: DrawControlState = {
     samplesRequired: MIN_SAMPLE_COUNT,
     strokeSample: 0,
     liveStroke: {
+        id: "LIVE",
         type: DEFAULT_TOOL,
         style: {
             color: DEFAULT_COLOR,
@@ -48,6 +49,8 @@ const initState: DrawControlState = {
             opacity: 1,
         },
         points: [],
+        scaleX: 1,
+        scaleY: 1,
         x: 0,
         y: 0,
     },

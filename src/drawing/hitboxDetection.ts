@@ -45,12 +45,13 @@ function getHitbox(
 // calc the hitboxes of each segment of a stroke with the appropriate width
 function getHitboxes(pageStrokes: any) {
     const strokeHitboxes: any = {}
+
     Object.keys(pageStrokes).forEach((strokeId) => {
         const stroke = pageStrokes[strokeId]
         const strokePoints = [...stroke.points]
 
         // get hitbox(es) of current stroke
-        const strokeIdHitboxes: any[] = []
+        const strokeIdHitboxes: any = []
         switch (stroke.type) {
             case toolType.PEN:
                 getPenHitbox(stroke, strokePoints, strokeIdHitboxes)
@@ -197,6 +198,8 @@ export default function getSelectedIds(
 ): string[] {
     const selectionHitbox = getSelectionHitbox(x1, y1, x2, y2)
     const strokeHitboxes = getHitboxes(strokes)
+
+    console.log(selectionHitbox, strokeHitboxes)
 
     const selectionHitboxPolygon = new P(new V(0, 0), [
         new V(selectionHitbox.v1.x, selectionHitbox.v1.y),
