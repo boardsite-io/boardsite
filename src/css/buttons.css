@@ -8,6 +8,7 @@
     outline: none;
     border-width: 0;
     background: none;
+    justify-self: center;
 }
 
 #icon-button {

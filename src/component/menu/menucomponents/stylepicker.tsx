@@ -6,9 +6,9 @@ import ShapeTools from "./shapetools"
 
 const StylePicker: React.FC = () => (
     <div className="style-picker">
+        <ShapeTools />
         <ColorPicker />
         <WidthPicker />
-        <ShapeTools />
     </div>
 )
 
