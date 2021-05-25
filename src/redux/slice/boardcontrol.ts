@@ -1,7 +1,4 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit"
-import { Shape, ShapeConfig } from "konva/types/Shape"
-import getSelectedIds from "../../drawing/hitboxDetection"
-
 import { Page, PageCollection, Stroke } from "../../types"
 
 export interface BoardControlState {
@@ -18,29 +15,6 @@ const boardControlSlice = createSlice({
     name: "boardControl",
     initialState: initState,
     reducers: {
-        SELECT: (state, action) => {
-            const { pageId, x1, y1, x2, y2, trRef, layerRef } = action.payload
-            const selectedIds = getSelectedIds(
-                state.pageCollection[pageId].strokes,
-                x1,
-                y1,
-                x2,
-                y2
-            )
-            const selectedShapes: Shape<ShapeConfig>[] = []
-            layerRef.current
-                .find(".shape")
-                .forEach((elementNode: Shape<ShapeConfig>) => {
-                    for (let i = 0; i < selectedIds.length; i += 1) {
-                        if (elementNode.attrs.id === selectedIds[i]) {
-                            selectedShapes.push(elementNode)
-                            break
-                        }
-                    }
-                })
-
-            trRef.current.nodes(selectedShapes)
-        },
         SYNC_ALL_PAGES: (state, action) => {
             const { pageRank, pageCollection } = action.payload
             state.pageRank = pageRank
@@ -170,7 +144,6 @@ function newPageCollectionEntry() {
 }
 
 export const {
-    SELECT,
     SYNC_ALL_PAGES,
     SET_PAGERANK,
     ADD_PAGE,

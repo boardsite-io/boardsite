@@ -74,5 +74,5 @@ export interface StrokeHitbox {
 
 export type PageBackground = "blank" | "checkered" | "ruled"
 
-export type LayerRefType = React.LegacyRef<Layer> | undefined
-export type TrRefType = React.LegacyRef<Transformer> | undefined
+export type LayerRefType = React.RefObject<Layer>
+export type TrRefType = React.RefObject<Transformer>

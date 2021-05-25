@@ -1,6 +1,15 @@
+import { Node, NodeConfig } from "konva/types/Node"
 import SAT from "sat"
 import { toolType } from "../constants"
-import { Hitbox, Stroke, StrokeHitbox, StrokeMap } from "../types"
+import store from "../redux/store"
+import {
+    Hitbox,
+    Stroke,
+    StrokeHitbox,
+    StrokeMap,
+    LayerRefType,
+    TrRefType,
+} from "../types"
 
 const V = SAT.Vector
 const P = SAT.Polygon
@@ -190,14 +199,9 @@ function getSelectionHitbox([x1, y1, x2, y2]: number[]): Hitbox {
     return selectionHitbox
 }
 
-export default function getSelectedIds(
-    strokes: StrokeMap,
-    x1: number,
-    y1: number,
-    x2: number,
-    y2: number
-): string[] {
-    const selectionHitbox = getSelectionHitbox([x1, y1, x2, y2])
+function getSelectedIds({ pageId, points }: Stroke): { [id: string]: boolean } {
+    const { strokes } = store.getState().boardControl.pageCollection[pageId]
+    const selectionHitbox = getSelectionHitbox(points)
     const strokeHitboxes = getHitboxes(strokes)
 
     const selectionHitboxPolygon = new P(new V(0, 0), [
@@ -206,7 +210,7 @@ export default function getSelectedIds(
         new V(selectionHitbox.v3.x, selectionHitbox.v3.y),
         new V(selectionHitbox.v4.x, selectionHitbox.v4.y),
     ])
-    const selectedStrokeIds: string[] = []
+    const selectedStrokeIds: { [id: string]: boolean } = {}
     Object.keys(strokeHitboxes).forEach((strokeId) => {
         const hitboxes = strokeHitboxes[strokeId]
         for (let i = 0; i < hitboxes.length; i += 1) {
@@ -222,10 +226,29 @@ export default function getSelectedIds(
                 selectionHitboxPolygon
             )
             if (idHasCollided) {
-                selectedStrokeIds.push(strokeId) // add id to selected ids array
+                selectedStrokeIds[strokeId] = true // add id to selected ids array
                 break // current id has a collision => no need to check rest of stroke for collisions
             }
         }
     })
     return selectedStrokeIds
+}
+
+export function setSelectedShapes(
+    stroke: Stroke,
+    trRef: TrRefType,
+    layerRef: LayerRefType
+): void {
+    // const [x1, y1, x2, y2] = points
+    const selectedIds = getSelectedIds(stroke)
+    const selectedShapes: Node<NodeConfig>[] = []
+    layerRef?.current
+        ?.find(".shape")
+        .toArray()
+        .forEach((element: Node<NodeConfig>) => {
+            if (selectedIds[element.attrs.id]) {
+                selectedShapes.push(element)
+            }
+        })
+    trRef?.current?.nodes(selectedShapes)
 }

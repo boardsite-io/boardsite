@@ -16,7 +16,7 @@ import {
 } from "../constants"
 import { handleAddStroke } from "./handlers"
 import { LayerRefType, LiveStroke, Point, Stroke, TrRefType } from "../types"
-import { SELECT } from "../redux/slice/boardcontrol"
+import { setSelectedShapes } from "./hitboxdetection"
 
 let tid: number | NodeJS.Timeout = 0
 
@@ -80,18 +80,7 @@ export async function registerLiveStroke(
     const stroke = createStroke(liveStroke, pageId, true)
 
     if (liveStroke.type === toolType.SELECT) {
-        const plen = stroke.points.length
-        store.dispatch(
-            SELECT({
-                pageId,
-                x1: stroke.points[0],
-                y1: stroke.points[1],
-                x2: stroke.points[plen - 2],
-                y2: stroke.points[plen - 1],
-                trRef,
-                layerRef,
-            })
-        )
+        setSelectedShapes(stroke, trRef, layerRef)
         store.dispatch(END_LIVESTROKE())
         return
     }
@@ -161,6 +150,9 @@ function createStroke(
                 stroke.points[0] + (stroke.points[2] - stroke.points[0]) / 2
             stroke.y =
                 stroke.points[1] + (stroke.points[3] - stroke.points[1]) / 2
+            break
+        case toolType.SELECT:
+            stroke.points = getStartEndPoints(stroke.points)
             break
         default:
             break
