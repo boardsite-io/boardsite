@@ -41,16 +41,6 @@
     position: relative;
     height: var(--button-height);
 }
-.favtool {
-    box-shadow: var(--menubar-box-shadow);
-    color: var(--primary);
-    text-align: center;
-    border-radius: var(--button-border-radius);
-    height: var(--button-height);
-    width: var(--button-width);
-    outline: none;
-    border-width: 0px;
-}
 
 .favtool-width {
     background: rgba(0, 0, 0, 0.733);
