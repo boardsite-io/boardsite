@@ -1,90 +1,61 @@
 .style-picker {
-    height: var(--button-height);
+    background: #00000066;
+    border-radius: var(--menubar-border-radius);
+    height: fit-content;
+    width: fit-content;
     position: absolute;
     top: 10px;
     left: 0px;
     display: grid;
     grid-auto-flow: column;
     gap: 5px;
+    box-shadow: var(--box-shadow);
+    padding: 5px;
 }
 
 .color-picker {
-    padding: 10px;
+    /* height: 100%; */
+}
+
+.color-picker .react-colorful__saturation-pointer,
+.color-picker .react-colorful__hue-pointer,
+.color-picker .react-colorful__alpha-pointer {
+    width: 15px;
+    height: 15px;
+    border-radius: 50px;
+}
+
+.shapetools {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
     border-radius: var(--menubar-border-radius);
     background-color: var(--menubar-background);
-    display: grid;
-    grid-auto-flow: row;
-    width: fit-content;
-    height: 200px;
-}
-
-.saturation {
-    position: relative;
-    height: 160px;
-    width: 200px;
-}
-/* .alpha {
-    background-color: #f0f;  
-    position: relative;
+    width: var(--button-width);
     height: 100%;
-    width: 100%;
-} */
-
-.hue {
-    position: relative;
-    height: 20px;
-    width: 200px;
-}
-
-/* .hue-pointer {
-    background-color: black;
-    height: 20px;
-    width: 4px;
-    border-radius: 100px;
-} */
-
-.editableinput {
-    position: relative;
-    width: 200px;
-    height: 20px;
-}
-
-.width-picker-div {
-    height: var(--button-height);
 }
 
 .width-picker {
+    padding-top: 4px;
+    width: var(--button-width);
+    height: auto;
     background: var(--menubar-background);
-    padding: 5px;
     display: grid;
     grid-template-rows: auto var(--button-height) var(--button-height);
     gap: 10px;
-    top: 0px;
-    bottom: 0px;
     border-radius: var(--menubar-border-radius);
-    box-shadow: var(--box-shadow);
 }
 
 .width-slider {
-    width: var(--button-width);
-    border-radius: 5px;
-    background: #00000069;
-    box-shadow: var(--box-shadow);
+    /* width: 0px !important; */
+    /* border-radius: var(--menubar-border-radius); */
+    /* background: #ff039669; */
+    /* box-shadow: var(--box-shadow); */
 }
 
-.width-slider-thumb {
-    color: var(--primary);
-    background: var(--menubar-background);
-    height: 20px;
-    line-height: 20px;
-    width: var(--button-width);
+.width-slider-wrap {
     text-align: center;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-    font-size: 18px;
-    border-radius: 5px;
-    box-shadow: var(--box-shadow);
-    outline: none;
+    margin-top: 0px;
 }
 
 /* .width-input {

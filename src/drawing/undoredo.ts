@@ -60,7 +60,7 @@ export function deleteStroke(
 ): void {
     const page = store.getState().boardControl.pageCollection[pageId]
     if (page) {
-        const stroke = page.strokes[id]
+        const stroke = page.strokes[id] as Stroke
         if (isRedoable) {
             // Add to UndoStack
             stack.push({
@@ -77,7 +77,7 @@ export function deleteStroke(
 }
 
 export function updateStroke(
-    { x, y, id, pageId }: Stroke,
+    { x, y, id, scaleX, scaleY, pageId }: Stroke,
     isRedoable = true,
     stack = undoStack
 ): void {
@@ -88,12 +88,19 @@ export function updateStroke(
             if (isRedoable) {
                 // Add to UndoStack
                 stack.push({
-                    stroke: { x: stroke.x, y: stroke.y, id, pageId } as Stroke, // make copy to redo update
+                    stroke: {
+                        x: stroke.x,
+                        y: stroke.y,
+                        id,
+                        scaleX: stroke.scaleX,
+                        scaleY: stroke.scaleY,
+                        pageId,
+                    } as Stroke, // make copy to redo update
                     handle: updateStroke,
                 })
             }
 
-            store.dispatch(UPDATE_STROKE({ x, y, id, pageId }))
+            store.dispatch(UPDATE_STROKE({ x, y, id, scaleX, scaleY, pageId }))
             if (isConnected()) {
                 // send updated stroke
                 sendStroke(

@@ -1,7 +1,8 @@
-import React, { useEffect, memo } from "react"
+import React, { useEffect, memo, useRef } from "react"
 import { ReactReduxContext, ReactReduxContextValue } from "react-redux"
 import { createSelector } from "reselect"
-import { Stage, Layer } from "react-konva"
+import { Stage, Layer, Transformer } from "react-konva"
+import { Box } from "konva/types/shapes/Transformer"
 import { Vector2d } from "konva/types/types"
 import { KonvaEventObject } from "konva/types/Node"
 import {
@@ -23,9 +24,17 @@ import {
     ZOOM_IN_WHEEL_SCALE,
     ZOOM_OUT_WHEEL_SCALE,
     CANVAS_WIDTH,
+    toolType,
+    TR_BORDER_STROKE,
+    TR_BORDER_STROKE_WIDTH,
+    TR_ANCHOR_FILL,
+    TR_ANCHOR_STROKE,
+    TR_ANCHOR_SIZE,
+    TR_ANCHOR_CORNER_RADIUS,
 } from "../../constants"
 import store, { RootState } from "../../redux/store"
 import { useCustomSelector } from "../../redux/hooks"
+import { LayerRefType, TrRefType } from "../../types"
 
 const BoardStage: React.FC = () => {
     const isPanMode = useCustomSelector((state) => state.drawControl.isPanMode)
@@ -173,12 +182,52 @@ const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
         }
     )
     const pageSlice = useCustomSelector(pageCreateSelector)
+    const layerRef: LayerRefType = useRef(null)
+    const trRef: TrRefType = useRef(null)
+
+    // unselect transformer selection when change tool
+    const unSelector = createSelector(
+        (state: RootState) => state.drawControl.liveStroke.type,
+        (type: number) => {
+            if (type !== toolType.SELECT) {
+                trRef.current?.nodes([])
+            }
+        }
+    )
+    useCustomSelector(unSelector)
+
+    const boundBoxFunc = (oldBox: Box, newBox: Box) => {
+        // limit resize
+        if (newBox.width < 5 || newBox.height < 5) {
+            return oldBox
+        }
+        return newBox
+    }
+
     return (
         <>
             {pageSlice.map((pageId: string) => (
-                <Layer key={pageId}>
-                    <PageListener pageId={pageId} />
+                <Layer key={pageId} ref={layerRef}>
+                    <PageListener
+                        pageId={pageId}
+                        trRef={trRef}
+                        layerRef={layerRef}
+                    />
                     <PageContent pageId={pageId} />
+                    <Transformer
+                        shouldOverdrawWholeArea
+                        borderStroke={TR_BORDER_STROKE}
+                        borderStrokeWidth={TR_BORDER_STROKE_WIDTH}
+                        borderEnabled
+                        // borderDash={[5, 5]}
+                        anchorFill={TR_ANCHOR_FILL}
+                        anchorSize={TR_ANCHOR_SIZE}
+                        anchorStroke={TR_ANCHOR_STROKE}
+                        anchorCornerRadius={TR_ANCHOR_CORNER_RADIUS}
+                        rotateEnabled={false}
+                        ref={trRef}
+                        boundBoxFunc={boundBoxFunc}
+                    />
                 </Layer>
             ))}
             <Layer draggable={false} listening={false}>

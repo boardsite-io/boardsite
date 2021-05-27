@@ -41,6 +41,7 @@ const initState: DrawControlState = {
     samplesRequired: MIN_SAMPLE_COUNT,
     strokeSample: 0,
     liveStroke: {
+        id: "LIVE",
         type: DEFAULT_TOOL,
         style: {
             color: DEFAULT_COLOR,
@@ -48,8 +49,12 @@ const initState: DrawControlState = {
             opacity: 1,
         },
         points: [],
+        scaleX: 1,
+        scaleY: 1,
+        x: 0,
+        y: 0,
     },
-    pageBG: pageType.BLANK,
+    pageBG: pageType.BLANK as PageBackground,
     favTools: DEFAULT_FAV_TOOLS,
 }
 
@@ -110,7 +115,8 @@ const drawControlSlice = createSlice({
         SET_TYPE: (state, action) => {
             const type = action.payload
             state.liveStroke.type = type
-            state.isDraggable = type === toolType.DRAG
+            state.isDraggable =
+                type === toolType.DRAG || type === toolType.SELECT
             state.isListening =
                 type === toolType.DRAG || type === toolType.ERASER
         },
@@ -134,8 +140,18 @@ const drawControlSlice = createSlice({
             state.isMouseDown = isMouseDown
         },
         START_LIVESTROKE: (state, action) => {
-            const point = action.payload
-            state.liveStroke.points = [point]
+            const [x, y] = action.payload
+            state.liveStroke.points = [[x, y]]
+            if (
+                state.liveStroke.type !== toolType.PEN &&
+                state.liveStroke.type !== toolType.LINE
+            ) {
+                state.liveStroke.x = x
+                state.liveStroke.y = y
+            } else {
+                state.liveStroke.x = 0
+                state.liveStroke.y = 0
+            }
         },
         // Update the current live stroke position
         UPDATE_LIVESTROKE: (state, action) => {

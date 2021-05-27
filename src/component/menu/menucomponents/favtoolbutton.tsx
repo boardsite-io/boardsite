@@ -57,7 +57,7 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({ icon, tool, index }) => {
         <div className="favtoolbox">
             <button
                 type="button"
-                className="favtool"
+                id="icon-button"
                 style={{ background: tool.style.color }}
                 onMouseDown={startClick}
                 onMouseUp={endClick}

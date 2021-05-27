@@ -15,7 +15,8 @@ import {
     RDP_FORCE_SECTIONS,
 } from "../constants"
 import { handleAddStroke } from "./handlers"
-import { LiveStroke, Point, Stroke } from "../types"
+import { LayerRefType, LiveStroke, Point, Stroke, TrRefType } from "../types"
+import { setSelectedShapes } from "./hitboxdetection"
 
 let tid: number | NodeJS.Timeout = 0
 
@@ -62,7 +63,11 @@ export function moveLiveStroke(point: Point): void {
 /**
  * Generate API serialized stroke object, draw & save it to redux store
  */
-export async function registerLiveStroke(pageId: string): Promise<void> {
+export async function registerLiveStroke(
+    pageId: string,
+    trRef: TrRefType,
+    layerRef: LayerRefType
+): Promise<void> {
     const liveStroke = getLiveStroke()
     // empty livestrokes e.g. rightmouse eraser
     if (liveStroke.points === undefined) {
@@ -72,7 +77,16 @@ export async function registerLiveStroke(pageId: string): Promise<void> {
         return
     }
 
-    handleAddStroke(createStroke(liveStroke, pageId, true))
+    const stroke = createStroke(liveStroke, pageId, true)
+
+    if (liveStroke.type === toolType.SELECT) {
+        setSelectedShapes(stroke, trRef, layerRef)
+        store.dispatch(END_LIVESTROKE())
+        return
+    }
+
+    handleAddStroke(createStroke(liveStroke, pageId, true) as Stroke)
+    // clear livestroke
     store.dispatch(END_LIVESTROKE())
 
     if (tid !== 0) {
@@ -127,10 +141,21 @@ function createStroke(
         case toolType.LINE:
             stroke.points = getStartEndPoints(stroke.points)
             break
+        case toolType.RECTANGLE:
+            stroke.points = getStartEndPoints(stroke.points)
+            break
         case toolType.CIRCLE:
+            stroke.points = getStartEndPoints(stroke.points)
+            stroke.x =
+                stroke.points[0] + (stroke.points[2] - stroke.points[0]) / 2
+            stroke.y =
+                stroke.points[1] + (stroke.points[3] - stroke.points[1]) / 2
+            break
+        case toolType.SELECT:
             stroke.points = getStartEndPoints(stroke.points)
             break
         default:
+            break
     }
 
     const currentPageIndex = getPageIndex(pageId)
@@ -174,6 +199,6 @@ function flatLiveStroke(points: number[][]) {
 }
 
 // helper function to get current livestroke
-function getLiveStroke() {
+function getLiveStroke(): LiveStroke {
     return store.getState().drawControl.liveStroke
 }
