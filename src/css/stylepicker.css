@@ -3,14 +3,18 @@
     flex-direction: row;
     background: #00000088;
     border-radius: var(--menubar-border-radius);
-    height: fit-content;
-    width: fit-content;
-    position: absolute;
+    height: 200px;
+    width: 280px;
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    /* position: absolute;
     top: 10px;
-    left: -5px;
+    left: -5px; */
     padding: 5px;
-    gap: 5px;
     box-shadow: var(--box-shadow);
+    justify-content: space-between;
 }
 
 .color-picker .react-colorful__saturation-pointer,
@@ -21,7 +25,8 @@
     border-radius: 50px;
 }
 
-.shapetools, .width-tools {
+.shapetools,
+.width-tools {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
