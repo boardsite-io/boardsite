@@ -2,12 +2,12 @@ import React from "react"
 import { Group } from "react-konva"
 import { KonvaEventObject } from "konva/types/Node"
 import { handleDeleteStroke } from "../../drawing/handlers"
-import { CANVAS_FULL_HEIGHT, toolType } from "../../constants"
+import { CANVAS_FULL_HEIGHT } from "../../constants"
 import store from "../../redux/store"
 import { getPageIndex } from "../../drawing/strokeactions"
 import { StrokeShape } from "./stroke/shape"
 import { useCustomSelector } from "../../redux/hooks"
-import { Stroke } from "../../types"
+import { Stroke, ToolType } from "../../types"
 
 interface PageContentProps {
     pageId: string
@@ -27,7 +27,7 @@ const PageContent: React.FC<PageContentProps> = ({ pageId }) => {
         if (id === undefined || mouseEv.evt.buttons === 0) {
             return
         }
-        if (store.getState().drawControl.liveStroke.type === toolType.ERASER) {
+        if (store.getState().drawControl.liveStroke.type === ToolType.Eraser) {
             handleDeleteStroke({ pageId, id } as Stroke)
         }
     }

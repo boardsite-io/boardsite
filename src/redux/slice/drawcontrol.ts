@@ -4,7 +4,6 @@ import {
     DEFAULT_ISDRAGGABLE,
     DEFAULT_ISLISTENING,
     DEFAULT_ISMOUSEDOWN,
-    toolType,
     WIDTH_MAX,
     WIDTH_MIN,
     MIN_SAMPLE_COUNT,
@@ -13,7 +12,7 @@ import {
     DEFAULT_FAV_TOOLS,
 } from "../../constants"
 import { BoardLiveStroke } from "../../component/board/stroke/livestroke"
-import { PageBackground, Tool } from "../../types"
+import { PageBackground, Tool, ToolType } from "../../types"
 
 export interface DrawControlState {
     isPanMode: boolean
@@ -55,7 +54,7 @@ const drawControlSlice = createSlice({
             }
 
             // validate tool candidate
-            if (tool.type !== toolType.ERASER && tool.type !== toolType.DRAG) {
+            if (tool.type !== ToolType.Eraser && tool.type !== ToolType.Drag) {
                 state.favTools[index] = tool
             }
         },
@@ -70,7 +69,7 @@ const drawControlSlice = createSlice({
             }
 
             // validate tool candidate
-            if (tool.type !== toolType.ERASER && tool.type !== toolType.DRAG) {
+            if (tool.type !== ToolType.Eraser && tool.type !== ToolType.Drag) {
                 state.favTools.push(tool)
             }
         },
@@ -101,9 +100,9 @@ const drawControlSlice = createSlice({
             const type = action.payload
             state.liveStroke.type = type
             state.isDraggable =
-                type === toolType.DRAG || type === toolType.SELECT
+                type === ToolType.Drag || type === ToolType.Select
             state.isListening =
-                type === toolType.DRAG || type === toolType.ERASER
+                type === ToolType.Drag || type === ToolType.Eraser
         },
         SET_ISPANMODE: (state, action) => {
             state.isPanMode = action.payload
@@ -115,9 +114,9 @@ const drawControlSlice = createSlice({
                 state.isDraggable = false
                 state.isListening = false
             } else {
-                state.isDraggable = type === toolType.DRAG
+                state.isDraggable = type === ToolType.Drag
                 state.isListening =
-                    type === toolType.DRAG || type === toolType.ERASER
+                    type === ToolType.Drag || type === ToolType.Eraser
             }
         },
         SET_ISMOUSEDOWN: (state, action) => {

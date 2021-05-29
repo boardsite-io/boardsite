@@ -117,10 +117,7 @@ const boardControlSlice = createSlice({
             const page = state.pageCollection[pageId]
             if (page) {
                 const stroke = page.strokes[id]
-                stroke.scaleX = scaleX
-                stroke.scaleY = scaleY
-                stroke.x = x
-                stroke.y = y
+                stroke.update?.({ x, y, id, scaleX, scaleY } as Stroke)
             }
         },
     },

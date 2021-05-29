@@ -1,6 +1,7 @@
 import { Layer } from "konva/types/Layer"
 import { ShapeConfig } from "konva/types/Shape"
 import { Transformer } from "konva/types/shapes/Transformer"
+import { Polygon } from "sat"
 
 export interface Tool {
     type: number
@@ -25,8 +26,11 @@ export enum ToolType {
 
 export interface LiveStroke extends Tool {
     pointsSegments: number[][]
+    x?: number
+    y?: number
 
     updatePoints?: (point: Point, scale: number, sample: number) => void
+    flatPoints?: () => number[]
     getShape?: (shapeProps: ShapeConfig) => JSX.Element
 }
 
@@ -40,9 +44,13 @@ export interface Stroke extends Tool {
     x?: number
     y?: number
 
+    hitboxes?: Polygon[]
+
+    serialize?: () => Stroke
     processPoints?: () => void
+    update?: ({ x, y, scaleX, scaleY }: Stroke) => void
     getShape?: (shapeProps: ShapeConfig) => JSX.Element
-    getHitbox?: () => Hitbox[] | void
+    calculateHitbox?: () => void
 }
 
 export interface StrokeMap {

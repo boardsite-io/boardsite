@@ -2,12 +2,12 @@ import { nanoid } from "@reduxjs/toolkit"
 import React from "react"
 import { BsPencil } from "react-icons/bs"
 import { CgController, CgErase } from "react-icons/cg"
-import { FiCircle, FiMinus, FiPlus, FiSquare, FiTriangle } from "react-icons/fi"
-import { toolType } from "../../constants"
+import { FiCircle, FiMinus, FiPlus, FiSquare } from "react-icons/fi"
 import { ADD_FAV_TOOL } from "../../redux/slice/drawcontrol"
 import store from "../../redux/store"
 import { useCustomSelector } from "../../redux/hooks"
 import FavToolButton from "./menucomponents/favtoolbutton"
+import { ToolType } from "../../types"
 
 const FavTools: React.FC = () => {
     const favTools = useCustomSelector((state) => state.drawControl.favTools)
@@ -23,25 +23,25 @@ const FavTools: React.FC = () => {
                 let icon
                 // let style = { color: colorSelector }
                 switch (tool.type) {
-                    case toolType.PEN:
+                    case ToolType.Pen:
                         icon = <BsPencil id="icon" />
                         break
-                    case toolType.ERASER:
+                    case ToolType.Eraser:
                         icon = <CgErase id="icon" />
                         break
-                    case toolType.DRAG:
+                    case ToolType.Drag:
                         icon = <CgController id="icon" />
                         break
-                    case toolType.LINE:
+                    case ToolType.Line:
                         icon = <FiMinus id="icon" />
                         break
-                    case toolType.RECTANGLE:
+                    case ToolType.Rectangle:
                         icon = <FiSquare id="icon" />
                         break
-                    case toolType.TRIANGLE:
-                        icon = <FiTriangle id="icon" />
-                        break
-                    case toolType.CIRCLE:
+                    // case ToolType.TRIANGLE:
+                    //     icon = <FiTriangle id="icon" />
+                    //     break
+                    case ToolType.Circle:
                         icon = <FiCircle id="icon" />
                         break
                     default:

@@ -1,11 +1,10 @@
 import React from "react"
 import { FiMinus, FiCircle, FiSquare } from "react-icons/fi"
 import { BsPencil } from "react-icons/bs"
-
-import { toolType } from "../../../constants"
 import store from "../../../redux/store"
 import { SET_TYPE } from "../../../redux/slice/drawcontrol"
 import { useCustomSelector } from "../../../redux/hooks"
+import { ToolType } from "../../../types"
 
 const ShapeTools: React.FC = () => {
     const typeSelector = useCustomSelector(
@@ -19,68 +18,68 @@ const ShapeTools: React.FC = () => {
             <button
                 type="button"
                 style={
-                    typeSelector === toolType.PEN
+                    typeSelector === ToolType.Pen
                         ? { color: colorSelector }
                         : {}
                 }
                 id={
-                    typeSelector === toolType.PEN
+                    typeSelector === ToolType.Pen
                         ? "icon-button-active"
                         : "icon-button"
                 }
                 onClick={() => {
-                    store.dispatch(SET_TYPE(toolType.PEN))
+                    store.dispatch(SET_TYPE(ToolType.Pen))
                 }}>
                 <BsPencil id="icon" />
             </button>
             <button
                 type="button"
                 style={
-                    typeSelector === toolType.LINE
+                    typeSelector === ToolType.Line
                         ? { color: colorSelector }
                         : {}
                 }
                 id={
-                    typeSelector === toolType.LINE
+                    typeSelector === ToolType.Line
                         ? "icon-button-active"
                         : "icon-button"
                 }
                 onClick={() => {
-                    store.dispatch(SET_TYPE(toolType.LINE))
+                    store.dispatch(SET_TYPE(ToolType.Line))
                 }}>
                 <FiMinus id="icon" />
             </button>
             <button
                 type="button"
                 style={
-                    typeSelector === toolType.RECTANGLE
+                    typeSelector === ToolType.Rectangle
                         ? { color: colorSelector }
                         : {}
                 }
                 id={
-                    typeSelector === toolType.RECTANGLE
+                    typeSelector === ToolType.Rectangle
                         ? "icon-button-active"
                         : "icon-button"
                 }
                 onClick={() => {
-                    store.dispatch(SET_TYPE(toolType.RECTANGLE))
+                    store.dispatch(SET_TYPE(ToolType.Rectangle))
                 }}>
                 <FiSquare id="icon" />
             </button>
             <button
                 type="button"
                 style={
-                    typeSelector === toolType.CIRCLE
+                    typeSelector === ToolType.Circle
                         ? { color: colorSelector }
                         : {}
                 }
                 id={
-                    typeSelector === toolType.CIRCLE
+                    typeSelector === ToolType.Circle
                         ? "icon-button-active"
                         : "icon-button"
                 }
                 onClick={() => {
-                    store.dispatch(SET_TYPE(toolType.CIRCLE))
+                    store.dispatch(SET_TYPE(ToolType.Circle))
                 }}>
                 <FiCircle id="icon" />
             </button>

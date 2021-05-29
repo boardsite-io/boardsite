@@ -24,7 +24,6 @@ import {
     ZOOM_IN_WHEEL_SCALE,
     ZOOM_OUT_WHEEL_SCALE,
     CANVAS_WIDTH,
-    toolType,
     TR_BORDER_STROKE,
     TR_BORDER_STROKE_WIDTH,
     TR_ANCHOR_FILL,
@@ -34,7 +33,7 @@ import {
 } from "../../constants"
 import store, { RootState } from "../../redux/store"
 import { useCustomSelector } from "../../redux/hooks"
-import { LayerRefType, TrRefType } from "../../types"
+import { LayerRefType, ToolType, TrRefType } from "../../types"
 
 const BoardStage: React.FC = () => {
     const isPanMode = useCustomSelector((state) => state.drawControl.isPanMode)
@@ -189,7 +188,7 @@ const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
     const unSelector = createSelector(
         (state: RootState) => state.drawControl.liveStroke.type,
         (type: number) => {
-            if (type !== toolType.SELECT) {
+            if (type !== ToolType.Select) {
                 trRef.current?.nodes([])
             }
         }

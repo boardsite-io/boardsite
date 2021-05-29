@@ -1,4 +1,4 @@
-import { PageBackground, Point, Tool } from "./types"
+import { PageBackground, Point, Tool, ToolType } from "./types"
 
 export const CANVAS_WIDTH = 620
 export const CANVAS_HEIGHT = 877
@@ -35,6 +35,9 @@ export const SEL_STROKE = "#00ff00ff"
 export const SEL_FILL_ENABLED = true
 export const SEL_FILL = "#00a2ff38"
 
+// opacity of strokes when moved
+export const MOVE_OPACITY = 0.6
+
 // transform props
 export const TR_BORDER_STROKE = "#00a2ff38"
 export const TR_BORDER_STROKE_WIDTH = 1
@@ -43,26 +46,7 @@ export const TR_ANCHOR_SIZE = 8
 export const TR_ANCHOR_STROKE = "#00000088"
 export const TR_ANCHOR_CORNER_RADIUS = 2
 
-// livestrokeprops
-export const LIVE_ISDRAGGABLE = false
-export const LIVE_ISLISTENING = false
-export const LIVE_FILLENABLED = false
-export const LIVE_PERFECTDRAW = false
-export const LIVE_STROKESHADOW = false
-export const LIVE_CURRENTPAGEIDX = 0
-
-// drawing stuff
-export const toolType = {
-    ERASER: 0,
-    PEN: 1,
-    LINE: 2,
-    TRIANGLE: 3,
-    CIRCLE: 4,
-    DRAG: 5,
-    RECTANGLE: 6,
-    SELECT: 7,
-}
-export const DEFAULT_TOOL = toolType.PEN
+export const DEFAULT_TOOL = ToolType.Pen
 export const MIN_SAMPLE_COUNT = 1
 // allow drawing with finger
 export const DEFAULT_DIRECTDRAW = false
@@ -82,21 +66,21 @@ export const pageType = {
 }
 
 const tool1: Tool = {
-    type: toolType.PEN,
+    type: ToolType.Pen,
     style: {
         color: "#000000",
         width: 2,
     },
 }
 const tool2: Tool = {
-    type: toolType.PEN,
+    type: ToolType.Pen,
     style: {
         color: "#0211a3",
         width: 2,
     },
 }
 const tool3: Tool = {
-    type: toolType.PEN,
+    type: ToolType.Pen,
     style: {
         color: "#ff0000",
         width: 2,

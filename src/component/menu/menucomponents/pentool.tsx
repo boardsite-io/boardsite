@@ -1,10 +1,10 @@
 import React, { useState } from "react"
 import { BsPencil } from "react-icons/bs"
 import { FiMinus, FiCircle, FiSquare } from "react-icons/fi"
-import { toolType } from "../../../constants"
 import { useCustomSelector } from "../../../redux/hooks"
 import { SET_TYPE } from "../../../redux/slice/drawcontrol"
 import store from "../../../redux/store"
+import { ToolType } from "../../../types"
 import StylePicker from "./stylepicker"
 
 export const PenTool: React.FC = () => {
@@ -18,16 +18,16 @@ export const PenTool: React.FC = () => {
 
     let icon
     switch (typeSelector) {
-        case toolType.PEN:
+        case ToolType.Pen:
             icon = <BsPencil id="icon" />
             break
-        case toolType.LINE:
+        case ToolType.Line:
             icon = <FiMinus id="icon" />
             break
-        case toolType.RECTANGLE:
+        case ToolType.Rectangle:
             icon = <FiSquare id="icon" />
             break
-        case toolType.CIRCLE:
+        case ToolType.Circle:
             icon = <FiCircle id="icon" />
             break
         default:
@@ -36,10 +36,10 @@ export const PenTool: React.FC = () => {
     }
 
     const isDrawingTool = () =>
-        typeSelector === toolType.PEN ||
-        typeSelector === toolType.LINE ||
-        typeSelector === toolType.RECTANGLE ||
-        typeSelector === toolType.CIRCLE
+        typeSelector === ToolType.Pen ||
+        typeSelector === ToolType.Line ||
+        typeSelector === ToolType.Rectangle ||
+        typeSelector === ToolType.Circle
 
     return (
         <div className="session-dialog-div">
@@ -50,7 +50,7 @@ export const PenTool: React.FC = () => {
                 onClick={
                     isDrawingTool()
                         ? () => setOpen(true)
-                        : () => store.dispatch(SET_TYPE(toolType.PEN))
+                        : () => store.dispatch(SET_TYPE(ToolType.Pen))
                 }>
                 {icon}
             </button>

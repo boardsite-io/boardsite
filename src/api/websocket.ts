@@ -10,7 +10,6 @@ import {
     getStrokes,
     getUsers,
 } from "./request"
-import { toolType } from "../constants"
 import {
     CREATE_WS,
     SET_SESSION_USERS,
@@ -33,7 +32,8 @@ import {
     ResponsePageSync,
     ResponsePageUpdate,
 } from "./types"
-import { PageMeta, Stroke, User } from "../types"
+import { PageMeta, Stroke, ToolType, User } from "../types"
+import { BoardStroke } from "../component/board/stroke/stroke"
 
 /**
  * Connect to Websocket.
@@ -102,8 +102,8 @@ function receive(message: Message<unknown>) {
 function receiveStrokes(strokes: Stroke[]) {
     strokes.forEach((stroke) => {
         if (stroke.type > 0) {
-            // add stroke
-            store.dispatch(ADD_STROKE(stroke))
+            // add stroke, IMPORTANT: create BoardStroke instance
+            store.dispatch(ADD_STROKE(new BoardStroke(stroke)))
         } else if (stroke.type === 0) {
             // delete stroke
             store.dispatch(ERASE_STROKE(stroke))
@@ -159,7 +159,9 @@ export async function joinSession(
 
     // fetch data from each page
     pageRank.forEach(async (pageId) => {
-        const strokes = await getStrokes(sessionId, pageId)
+        let strokes = await getStrokes(sessionId, pageId)
+        // IMPORTANT: create BoardStroke instance
+        strokes = strokes.map((stroke) => new BoardStroke(stroke))
         store.dispatch(ADD_MULTIPLE_STROKES(strokes))
     })
 }
@@ -167,12 +169,22 @@ export async function joinSession(
 export function sendStroke(stroke: Stroke): void {
     // append the user id to stroke
     send(messages.Stroke, [
-        { ...stroke, userId: store.getState().webControl.user.id },
+        {
+            ...stroke.serialize?.(),
+            userId: store.getState().webControl.user.id,
+        },
     ])
 }
 
 export function eraseStroke({ id, pageId }: Stroke): void {
-    sendStroke({ id, pageId, type: toolType.ERASER } as Stroke)
+    send(messages.Stroke, [
+        {
+            id,
+            pageId,
+            type: ToolType.Eraser,
+            userId: store.getState().webControl.user.id,
+        },
+    ])
 }
 
 export function addPageSession(pageIndex: number, meta: PageMeta): void {

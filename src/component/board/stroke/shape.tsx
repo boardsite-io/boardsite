@@ -2,11 +2,11 @@ import React, { memo, useState } from "react"
 import { Circle } from "react-konva"
 import { LineJoin, LineCap } from "konva/types/Shape"
 import { KonvaEventObject } from "konva/types/Node"
-import { Point, Stroke } from "../../../types"
+import { Point, Stroke, ToolType } from "../../../types"
 import { useCustomSelector } from "../../../redux/hooks"
 import store from "../../../redux/store"
 import { handleUpdateStroke } from "../../../drawing/handlers"
-import { toolType } from "../../../constants"
+import { MOVE_OPACITY } from "../../../constants"
 
 interface StrokeShapeProps {
     stroke: Stroke
@@ -21,12 +21,24 @@ interface StrokeShapeProps {
  */
 export const StrokeShape = memo<StrokeShapeProps>(({ stroke, points }) => {
     const [isDragging, setDragging] = useState(false)
-    const isDraggable = useCustomSelector(
-        (state) => state.drawControl.isDraggable
-    )
+    // Tmp Fix: selector for x,y,scale in order to trigger
+    // a rerender when stroke is updated/moved
+    const strokeSel = useCustomSelector((state) => {
+        const { isDraggable } = state.drawControl
+        const s =
+            state.boardControl.pageCollection[stroke.pageId]?.strokes[stroke.id]
+        return {
+            isDraggable,
+            x: s?.x,
+            y: s?.y,
+            scaleX: s?.scaleX,
+            scaleY: s?.scaleY,
+        }
+    })
+
     const onDragEnd = (e: KonvaEventObject<DragEvent>) => {
         setDragging(false)
-        if (store.getState().drawControl.liveStroke.type !== toolType.ERASER) {
+        if (store.getState().drawControl.liveStroke.type !== ToolType.Eraser) {
             handleUpdateStroke({
                 x: e.target.attrs.x,
                 y: e.target.attrs.y,
@@ -56,18 +68,19 @@ export const StrokeShape = memo<StrokeShapeProps>(({ stroke, points }) => {
     }
 
     const shapeProps = {
-        id: stroke.id || "",
-        x: stroke.x || 0,
-        y: stroke.y || 0,
-        scaleX: stroke.scaleX || 1,
-        scaleY: stroke.scaleY || 1,
+        name: "shape", // required to find via selector
+        id: stroke.id ?? "",
+        x: strokeSel.x ?? stroke.x,
+        y: strokeSel.y ?? stroke.y,
+        scaleX: strokeSel.scaleX || 1,
+        scaleY: strokeSel.scaleY || 1,
         lineCap: "round" as LineCap,
         lineJoin: "round" as LineJoin,
         stroke: stroke.style.color,
         // fill: style.color,
         strokeWidth: stroke.style.width,
-        opacity: isDragging ? 0.6 : stroke.style.opacity || 1,
-        draggable: isDraggable,
+        opacity: isDragging ? MOVE_OPACITY : stroke.style.opacity || 1,
+        draggable: strokeSel.isDraggable ?? false,
         listening: true,
         onDragStart: () => setDragging(true),
         onDragEnd,
