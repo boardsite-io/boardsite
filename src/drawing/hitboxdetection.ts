@@ -1,15 +1,8 @@
-import { Node, NodeConfig } from "konva/types/Node"
+import { KonvaEventObject, Node, NodeConfig } from "konva/types/Node"
 import SAT from "sat"
 import { toolType } from "../constants"
 import store from "../redux/store"
-import {
-    Hitbox,
-    Stroke,
-    StrokeHitbox,
-    StrokeMap,
-    LayerRefType,
-    TrRefType,
-} from "../types"
+import { Hitbox, Stroke, StrokeHitbox, StrokeMap, TrRefType } from "../types"
 
 const V = SAT.Vector
 const P = SAT.Polygon
@@ -237,13 +230,14 @@ function getSelectedIds({ pageId, points }: Stroke): { [id: string]: boolean } {
 export function setSelectedShapes(
     stroke: Stroke,
     trRef: TrRefType,
-    layerRef: LayerRefType
+    e: KonvaEventObject<MouseEvent>
 ): void {
     // const [x1, y1, x2, y2] = points
     const selectedIds = getSelectedIds(stroke)
     const selectedShapes: Node<NodeConfig>[] = []
-    layerRef?.current
-        ?.find(".shape")
+    e.target
+        .getParent()
+        .find(".shape")
         .toArray()
         .forEach((element: Node<NodeConfig>) => {
             if (selectedIds[element.attrs.id]) {

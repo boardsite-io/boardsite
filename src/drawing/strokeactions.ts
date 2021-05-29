@@ -1,3 +1,4 @@
+import { KonvaEventObject } from "konva/types/Node"
 import store from "../redux/store"
 import {
     START_LIVESTROKE,
@@ -15,7 +16,7 @@ import {
     RDP_FORCE_SECTIONS,
 } from "../constants"
 import { handleAddStroke } from "./handlers"
-import { LayerRefType, LiveStroke, Point, Stroke, TrRefType } from "../types"
+import { LiveStroke, Point, Stroke, TrRefType } from "../types"
 import { setSelectedShapes } from "./hitboxdetection"
 
 let tid: number | NodeJS.Timeout = 0
@@ -66,7 +67,7 @@ export function moveLiveStroke(point: Point): void {
 export async function registerLiveStroke(
     pageId: string,
     trRef: TrRefType,
-    layerRef: LayerRefType
+    e: KonvaEventObject<MouseEvent>
 ): Promise<void> {
     const liveStroke = getLiveStroke()
     // empty livestrokes e.g. rightmouse eraser
@@ -80,7 +81,7 @@ export async function registerLiveStroke(
     const stroke = createStroke(liveStroke, pageId, true)
 
     if (liveStroke.type === toolType.SELECT) {
-        setSelectedShapes(stroke, trRef, layerRef)
+        setSelectedShapes(stroke, trRef, e)
         store.dispatch(END_LIVESTROKE())
         return
     }
