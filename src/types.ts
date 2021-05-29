@@ -11,24 +11,38 @@ export interface Tool {
     }
 }
 
+// eslint-disable-next-line no-shadow
+export enum ToolType {
+    Eraser,
+    Pen,
+    Line,
+    Triangle,
+    Circle,
+    Drag,
+    Rectangle,
+    Select,
+}
+
 export interface LiveStroke extends Tool {
-    id: string
-    points: number[][]
-    scaleX: number
-    scaleY: number
-    x: number
-    y: number
+    pointsSegments: number[][]
+
+    updatePoints?: (point: Point, scale: number, sample: number) => void
+    getShape?: (shapeProps: ShapeConfig) => JSX.Element
 }
 
 // Partial => Optional inputs from Tool
 export interface Stroke extends Tool {
     id: string
     pageId: string
-    scaleX: number
-    scaleY: number
+    scaleX?: number
+    scaleY?: number
     points: number[]
-    x: number
-    y: number
+    x?: number
+    y?: number
+
+    processPoints?: () => void
+    getShape?: (shapeProps: ShapeConfig) => JSX.Element
+    getHitbox?: () => Hitbox[] | void
 }
 
 export interface StrokeMap {

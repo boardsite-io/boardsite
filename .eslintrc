@@ -34,6 +34,7 @@
         ],
         "one-var": 0,
         "import/prefer-default-export": "off",
+        "lines-between-class-members": 0,
         "import/extensions": [
             "error",
             "ignorePackages",

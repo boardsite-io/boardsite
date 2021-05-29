@@ -5,7 +5,7 @@ import { handleDeleteStroke } from "../../drawing/handlers"
 import { CANVAS_FULL_HEIGHT, toolType } from "../../constants"
 import store from "../../redux/store"
 import { getPageIndex } from "../../drawing/strokeactions"
-import StrokeShape from "./strokeshapes"
+import { StrokeShape } from "./stroke/shape"
 import { useCustomSelector } from "../../redux/hooks"
 import { Stroke } from "../../types"
 
@@ -49,7 +49,7 @@ const PageContent: React.FC<PageContentProps> = ({ pageId }) => {
                 listening={!isPanMode && isListening}
                 y={getPageIndex(pageId) * CANVAS_FULL_HEIGHT}>
                 {Object.keys(strokes).map((id) => (
-                    <StrokeShape key={id} {...strokes[id]} pageId={pageId} />
+                    <StrokeShape key={id} stroke={strokes[id]} />
                 ))}
             </Group>
         </>

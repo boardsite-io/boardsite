@@ -1,13 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit"
 import {
     DEFAULT_ISPANMODE,
-    DEFAULT_TOOL,
-    DEFAULT_COLOR,
-    DEFAULT_WIDTH,
     DEFAULT_ISDRAGGABLE,
     DEFAULT_ISLISTENING,
     DEFAULT_ISMOUSEDOWN,
-    CANVAS_PIXEL_RATIO,
     toolType,
     WIDTH_MAX,
     WIDTH_MIN,
@@ -16,8 +12,8 @@ import {
     DEFAULT_DIRECTDRAW,
     DEFAULT_FAV_TOOLS,
 } from "../../constants"
-import { updateLivestroke } from "../../drawing/livestroke"
-import { LiveStroke, PageBackground, Tool } from "../../types"
+import { BoardLiveStroke } from "../../component/board/stroke/livestroke"
+import { PageBackground, Tool } from "../../types"
 
 export interface DrawControlState {
     isPanMode: boolean
@@ -27,7 +23,8 @@ export interface DrawControlState {
     directDraw: boolean
     samplesRequired: number
     strokeSample: number
-    liveStroke: LiveStroke
+    liveStroke: BoardLiveStroke
+    liveStrokeUpdate: number
     pageBG: PageBackground
     favTools: Tool[]
 }
@@ -40,20 +37,8 @@ const initState: DrawControlState = {
     directDraw: DEFAULT_DIRECTDRAW,
     samplesRequired: MIN_SAMPLE_COUNT,
     strokeSample: 0,
-    liveStroke: {
-        id: "LIVE",
-        type: DEFAULT_TOOL,
-        style: {
-            color: DEFAULT_COLOR,
-            width: DEFAULT_WIDTH * CANVAS_PIXEL_RATIO,
-            opacity: 1,
-        },
-        points: [],
-        scaleX: 1,
-        scaleY: 1,
-        x: 0,
-        y: 0,
-    },
+    liveStroke: new BoardLiveStroke(),
+    liveStrokeUpdate: 0,
     pageBG: pageType.BLANK as PageBackground,
     favTools: DEFAULT_FAV_TOOLS,
 }
@@ -141,23 +126,12 @@ const drawControlSlice = createSlice({
         },
         START_LIVESTROKE: (state, action) => {
             const [x, y] = action.payload
-            state.liveStroke.points = [[x, y]]
-            if (
-                state.liveStroke.type !== toolType.PEN &&
-                state.liveStroke.type !== toolType.LINE
-            ) {
-                state.liveStroke.x = x
-                state.liveStroke.y = y
-            } else {
-                state.liveStroke.x = 0
-                state.liveStroke.y = 0
-            }
+            state.liveStroke.pointsSegments = [[x, y]]
         },
         // Update the current live stroke position
         UPDATE_LIVESTROKE: (state, action) => {
             const { point, scale } = action.payload
-            updateLivestroke(
-                state.liveStroke.points,
+            state.liveStroke.pointsSegments = state.liveStroke.updatePoints(
                 point,
                 scale,
                 state.strokeSample
@@ -166,10 +140,12 @@ const drawControlSlice = createSlice({
             if (state.strokeSample >= state.samplesRequired) {
                 state.strokeSample = 0
             }
+            state.liveStrokeUpdate += 1
         },
         END_LIVESTROKE: (state) => {
-            state.liveStroke.points = []
+            state.liveStroke.reset()
             state.strokeSample = 0
+            state.liveStrokeUpdate = 0
         },
         SET_DEFAULT_PAGEBG: (state, action) => {
             state.pageBG = action.payload

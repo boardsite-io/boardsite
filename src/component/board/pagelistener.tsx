@@ -100,8 +100,15 @@ const PageListener: React.FC<PageListenerProps> = ({
     }
 
     const abortLiveStroke = () => {
-        store.dispatch(SET_ISMOUSEDOWN(false))
-        store.dispatch(END_LIVESTROKE())
+        if (
+            (store.getState().drawControl.liveStroke.pointsSegments ?? [])
+                .length > 0
+        ) {
+            store.dispatch(END_LIVESTROKE())
+        }
+        if (store.getState().drawControl.isMouseDown) {
+            store.dispatch(SET_ISMOUSEDOWN(false))
+        }
     }
 
     const isValidTouch = (e: KonvaEventObject<TouchEvent>) => {

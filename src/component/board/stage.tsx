@@ -19,7 +19,7 @@ import {
 import PageContent from "./pagecontent"
 import PageListener from "./pagelistener"
 
-import LiveStroke from "./livestroke"
+import { LiveStrokeShape } from "./stroke/shape"
 import {
     ZOOM_IN_WHEEL_SCALE,
     ZOOM_OUT_WHEEL_SCALE,
@@ -231,7 +231,7 @@ const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
                 </Layer>
             ))}
             <Layer draggable={false} listening={false}>
-                <LiveStroke />
+                <LiveStrokeShape />
             </Layer>
         </>
     )
