@@ -24,6 +24,8 @@ export class BoardStroke extends BoardLiveStroke implements Stroke {
         this.pointsSegments = undefined
         this.x = stroke.x ?? 0
         this.y = stroke.y ?? 0
+        this.scaleX = stroke.scaleX || 1
+        this.scaleY = stroke.scaleY || 1
 
         // assign a unique id
         this.id =

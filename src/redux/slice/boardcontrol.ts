@@ -87,51 +87,45 @@ const boardControlSlice = createSlice({
             state.pageCollection = {}
         },
 
-        // Add stroke to collection
-        ADD_STROKE: (state, action) => {
-            const stroke = action.payload
-            addStroke(state, stroke)
-        },
-
-        // Add multiple strokes to collection
-        ADD_MULTIPLE_STROKES: (state, action) => {
+        // Add strokes to collection
+        ADD_STROKES: (state, action) => {
             const strokes = action.payload
             strokes.sort((a: Stroke, b: Stroke) => a.id > b.id)
-            strokes.forEach((stroke: Stroke) => {
-                addStroke(state, stroke)
+            strokes.forEach((s: Stroke) => {
+                const page = state.pageCollection[s.pageId]
+                if (page) {
+                    page.strokes[s.id] = s
+                }
             })
         },
 
-        // Erase stroke from collection
-        ERASE_STROKE(state, action) {
-            const { pageId, id } = action.payload
-            const page = state.pageCollection[pageId]
-            if (page) {
-                delete page.strokes[id]
-            }
+        // Erase strokes from collection
+        ERASE_STROKES(state, action) {
+            const strokes: Stroke[] = action.payload
+            strokes.forEach(({ id, pageId }) => {
+                const page = state.pageCollection[pageId]
+                if (page) {
+                    delete page.strokes[id]
+                }
+            })
         },
 
         // Update stroke position after dragging
-        UPDATE_STROKE(state, action) {
-            const { x, y, id, scaleX, scaleY, pageId } = action.payload
-            const page = state.pageCollection[pageId]
-            if (page) {
-                const stroke = page.strokes[id]
-                stroke.update?.({ x, y, id, scaleX, scaleY } as Stroke)
-            }
+        UPDATE_STROKES(state, action) {
+            const strokes: Stroke[] = action.payload
+            strokes.forEach(({ id, pageId, x, y, scaleX, scaleY }) => {
+                const page = state.pageCollection[pageId]
+                if (page) {
+                    // stroke to update
+                    const stroke = page.strokes[id]
+                    if (stroke) {
+                        stroke.update?.({ x, y, scaleX, scaleY } as Stroke)
+                    }
+                }
+            })
         },
     },
 })
-
-function addStroke(state: BoardControlState, stroke: Stroke) {
-    const { pageId, id } = stroke
-    const page = state.pageCollection[pageId]
-
-    if (page) {
-        // Add to pageCollection
-        page.strokes[id] = stroke
-    }
-}
 
 function newPageCollectionEntry() {
     return {
@@ -148,10 +142,9 @@ export const {
     CLEAR_PAGE,
     DELETE_PAGE,
     DELETE_ALL_PAGES,
-    ADD_STROKE,
-    ADD_MULTIPLE_STROKES,
-    ERASE_STROKE,
-    UPDATE_STROKE,
+    ADD_STROKES,
+    ERASE_STROKES,
+    UPDATE_STROKES,
 } = boardControlSlice.actions
 
 export default boardControlSlice.reducer

@@ -18,10 +18,9 @@ import {
 } from "../redux/slice/webcontrol"
 import {
     DELETE_ALL_PAGES,
-    ADD_STROKE,
-    ADD_MULTIPLE_STROKES,
+    ADD_STROKES,
     SET_PAGERANK,
-    ERASE_STROKE,
+    ERASE_STROKES,
     CLEAR_PAGE,
     SET_PAGEMETA,
 } from "../redux/slice/boardcontrol"
@@ -103,10 +102,10 @@ function receiveStrokes(strokes: Stroke[]) {
     strokes.forEach((stroke) => {
         if (stroke.type > 0) {
             // add stroke, IMPORTANT: create BoardStroke instance
-            store.dispatch(ADD_STROKE(new BoardStroke(stroke)))
+            store.dispatch(ADD_STROKES([new BoardStroke(stroke)]))
         } else if (stroke.type === 0) {
             // delete stroke
-            store.dispatch(ERASE_STROKE(stroke))
+            store.dispatch(ERASE_STROKES([stroke]))
         }
     })
 }
@@ -162,29 +161,31 @@ export async function joinSession(
         let strokes = await getStrokes(sessionId, pageId)
         // IMPORTANT: create BoardStroke instance
         strokes = strokes.map((stroke) => new BoardStroke(stroke))
-        store.dispatch(ADD_MULTIPLE_STROKES(strokes))
+        store.dispatch(ADD_STROKES(strokes))
     })
 }
 
-export function sendStroke(stroke: Stroke): void {
-    // append the user id to stroke
-    send(messages.Stroke, [
-        {
-            ...stroke.serialize?.(),
+export function sendStrokes(strokes: Stroke[]): void {
+    // append the user id to strokes
+    send(
+        messages.Stroke,
+        strokes.map((s) => ({
+            ...s.serialize?.(),
             userId: store.getState().webControl.user.id,
-        },
-    ])
+        }))
+    )
 }
 
-export function eraseStroke({ id, pageId }: Stroke): void {
-    send(messages.Stroke, [
-        {
-            id,
-            pageId,
+export function eraseStrokes(strokes: { id: string; pageId: string }[]): void {
+    send(
+        messages.Stroke,
+        strokes.map((s) => ({
+            id: s.id,
+            pageId: s.pageId,
             type: ToolType.Eraser,
             userId: store.getState().webControl.user.id,
-        },
-    ])
+        }))
+    )
 }
 
 export function addPageSession(pageIndex: number, meta: PageMeta): void {

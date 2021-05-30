@@ -1,15 +1,15 @@
-import { eraseStroke, isConnected, sendStroke } from "../api/websocket"
+import { eraseStrokes, isConnected, sendStrokes } from "../api/websocket"
 import {
-    ADD_STROKE,
-    ERASE_STROKE,
-    UPDATE_STROKE,
+    ADD_STROKES,
+    ERASE_STROKES,
+    UPDATE_STROKES,
 } from "../redux/slice/boardcontrol"
 import store from "../redux/store"
 import { Stroke } from "../types"
 
 interface DrawAction {
-    stroke: Stroke
-    handle: (stroke: Stroke, isRedoable: boolean, stack: DrawAction[]) => void
+    strokes: Stroke[]
+    handle: (stroke: Stroke[], isRedoable: boolean, stack: DrawAction[]) => void
 }
 
 const undoStack: DrawAction[] = []
@@ -17,97 +17,96 @@ const redoStack: DrawAction[] = []
 
 export function undo(): void {
     const undoStroke = undoStack.pop()
-    if (undoStroke && undoStroke.stroke) {
-        undoStroke.handle(undoStroke.stroke, true, redoStack)
+    if (undoStroke) {
+        undoStroke.handle(undoStroke.strokes, true, redoStack)
     }
 }
 
 export function redo(): void {
     const redoStroke = redoStack.pop()
-    if (redoStroke && redoStroke.stroke) {
-        redoStroke.handle(redoStroke.stroke, true, undoStack)
+    if (redoStroke) {
+        redoStroke.handle(redoStroke.strokes, true, undoStack)
     }
 }
 
-export function addStroke(
-    stroke: Stroke,
+export function addStrokes(
+    strokes: Stroke[],
     isRedoable = true,
     stack = undoStack
 ): void {
-    const { pageId } = stroke
-    const page = store.getState().boardControl.pageCollection[pageId]
-    if (page) {
-        if (isRedoable) {
-            // Add to UndoStack
-            stack.push({
-                stroke,
-                handle: deleteStroke,
-            })
-        }
+    if (isRedoable) {
+        // Add to UndoStack
+        stack.push({
+            strokes,
+            handle: deleteStrokes,
+        })
+    }
 
-        store.dispatch(ADD_STROKE(stroke))
-        if (isConnected()) {
-            // relay stroke in session
-            sendStroke(stroke)
-        }
+    store.dispatch(ADD_STROKES(strokes))
+    if (isConnected()) {
+        // relay stroke in session
+        sendStrokes(strokes)
     }
 }
 
-export function deleteStroke(
-    { id, pageId }: Stroke,
+export function deleteStrokes(
+    strokes: Stroke[],
     isRedoable = true,
     stack = undoStack
 ): void {
-    const page = store.getState().boardControl.pageCollection[pageId]
-    if (page) {
-        const stroke = page.strokes[id] as Stroke
-        if (isRedoable) {
-            // Add to UndoStack
-            stack.push({
-                stroke,
-                handle: addStroke,
-            })
-        }
+    if (isRedoable) {
+        // Add to UndoStack
+        stack.push({
+            strokes,
+            handle: addStrokes,
+        })
+    }
 
-        store.dispatch(ERASE_STROKE({ pageId, id }))
-        if (isConnected()) {
-            eraseStroke({ pageId, id } as Stroke)
-        }
+    store.dispatch(ERASE_STROKES(strokes))
+    if (isConnected()) {
+        eraseStrokes(strokes)
     }
 }
 
-export function updateStroke(
-    { x, y, id, scaleX, scaleY, pageId }: Stroke,
+export function updateStrokes(
+    strokes: Stroke[],
     isRedoable = true,
     stack = undoStack
 ): void {
-    const page = store.getState().boardControl.pageCollection[pageId]
-    if (page) {
-        const stroke = page.strokes[id]
-        if (stroke) {
-            if (isRedoable) {
-                // Add to UndoStack
-                stack.push({
-                    stroke: {
-                        x: stroke.x,
-                        y: stroke.y,
-                        id,
-                        scaleX: stroke.scaleX,
-                        scaleY: stroke.scaleY,
-                        pageId,
-                    } as Stroke, // make copy to redo update
-                    handle: updateStroke,
+    if (isRedoable) {
+        // Add to UndoStack
+        stack.push({
+            strokes: strokes
+                .map((s) => {
+                    // save values of the current stroke
+                    const cur = store.getState().boardControl.pageCollection[
+                        s.pageId
+                    ]?.strokes[s.id]
+                    return cur
+                        ? ({
+                              id: s.id,
+                              pageId: s.pageId,
+                              x: cur.x,
+                              y: cur.y,
+                              scaleX: cur.scaleX,
+                              scaleY: cur.scaleY,
+                          } as Stroke) // make copy to redo update
+                        : undefined
                 })
-            }
+                .filter((s) => s !== undefined) as Stroke[], // filter out invalid strokes
+            handle: updateStrokes,
+        })
+    }
 
-            store.dispatch(UPDATE_STROKE({ x, y, id, scaleX, scaleY, pageId }))
-            if (isConnected()) {
-                // send updated stroke
-                sendStroke(
-                    store.getState().boardControl.pageCollection[pageId]
-                        .strokes[id]
-                )
-            }
-        }
+    store.dispatch(UPDATE_STROKES(strokes))
+    if (isConnected()) {
+        // send updated stroke
+        sendStrokes(
+            strokes.map(
+                (s) =>
+                    store.getState().boardControl.pageCollection[s.pageId]
+                        ?.strokes[s.id]
+            )
+        )
     }
 }
