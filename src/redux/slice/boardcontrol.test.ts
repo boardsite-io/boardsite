@@ -1,6 +1,7 @@
 import reducer from "./boardcontrol"
 import * as action from "./boardcontrol"
 import { Stroke } from "../../types"
+import { BoardStroke } from "../../component/board/stroke/stroke"
 
 const testState = {
     pageRank: ["pid1", "pid2"],
@@ -71,12 +72,12 @@ describe("boardcontrol reducer", () => {
                     pageCollection: {
                         pid1: {
                             strokes: {
-                                strkid1: {
+                                strkid1: new BoardStroke({
                                     id: "strkid1",
                                     pageId: "pid1",
                                     x: 0,
                                     y: 0,
-                                } as Stroke,
+                                } as Stroke),
                             },
                             meta: {
                                 background: "checkered",
@@ -84,18 +85,27 @@ describe("boardcontrol reducer", () => {
                         },
                     },
                 },
-                action.UPDATE_STROKE({
-                    x: 1234,
-                    y: 5678,
-                    id: "strkid1",
-                    pageId: "pid1",
-                })
+                action.UPDATE_STROKES([
+                    {
+                        x: 1234,
+                        y: 5678,
+                        id: "strkid1",
+                        pageId: "pid1",
+                    },
+                ])
             )
         ).toHaveProperty("pageCollection.pid1.strokes.strkid1", {
+            hitboxes: [],
             x: 1234,
             y: 5678,
             id: "strkid1",
             pageId: "pid1",
+            points: undefined,
+            pointsSegments: undefined,
+            scaleX: 1,
+            scaleY: 1,
+            style: {},
+            type: undefined,
         })
     })
 })
