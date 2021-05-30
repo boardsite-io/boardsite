@@ -57,7 +57,12 @@ export function deleteStrokes(
     if (isRedoable) {
         // Add to UndoStack
         stack.push({
-            strokes,
+            // reference the delete stroke for redo
+            strokes: strokes.map(
+                (s) =>
+                    store.getState().boardControl.pageCollection[s.pageId]
+                        .strokes[s.id]
+            ),
             handle: addStrokes,
         })
     }
