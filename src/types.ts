@@ -1,4 +1,3 @@
-import { Layer } from "konva/types/Layer"
 import { ShapeConfig } from "konva/types/Shape"
 import { Transformer } from "konva/types/shapes/Transformer"
 import { Polygon } from "sat"
@@ -96,5 +95,4 @@ export interface StrokeHitbox {
 
 export type PageBackground = "blank" | "checkered" | "ruled"
 
-export type LayerRefType = React.RefObject<Layer>
 export type TrRefType = React.RefObject<Transformer>

@@ -27,37 +27,36 @@ const WidthPicker: React.FC = () => {
         overrides: {
             MuiSlider: {
                 root: {
-                    color: "#888",
+                    marginLeft: -2,
+                    color: "#fff",
                 },
                 thumb: {
-                    // height: 24,
-                    // width: 24,
+                    height: 14,
+                    width: 14,
                     backgroundColor: "#000",
                     border: "2px solid #fff",
-                    marginTop: -8,
-                    marginLeft: -12,
-                    "&:focus, &:hover, &$active": {
-                        boxShadow: "inherit",
-                    },
                 },
                 active: {},
                 valueLabel: {
-                    left: "calc(-50% - 8px)",
+                    left: "calc(-50% - 6px)",
+                    color: "#222",
                 },
                 track: {
-                    height: 8,
+                    width: "8px !important",
                     borderRadius: 4,
+                    marginLeft: -2,
                 },
                 rail: {
-                    height: 8,
+                    width: "8px !important",
                     borderRadius: 4,
+                    marginLeft: -2,
                 },
             },
         },
     })
 
     return (
-        <div className="width-picker">
+        <div className="width-tools">
             <div className="width-slider-wrap">
                 <ThemeProvider theme={WidthSlider}>
                     <Slider
@@ -67,12 +66,12 @@ const WidthPicker: React.FC = () => {
                                 : 1
                         }
                         orientation="vertical"
-                        className="width-slider"
+                        // className="width-slider"
                         onChange={(e, value) => {
                             store.dispatch(SET_WIDTH(value))
                         }}
                         defaultValue={DEFAULT_WIDTH}
-                        valueLabelDisplay="auto"
+                        valueLabelDisplay="on"
                         step={1}
                         // marks={[{ value: WIDTH_MIN }, { value: WIDTH_MAX }]}
                         min={WIDTH_MIN}

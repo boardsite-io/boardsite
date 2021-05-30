@@ -1,17 +1,12 @@
 import { Polygon } from "sat"
+import { KonvaEventObject } from "konva/types/Node"
 import {
     CANVAS_FULL_HEIGHT,
     RDP_EPSILON,
     RDP_FORCE_SECTIONS,
 } from "../../../constants"
 import store from "../../../redux/store"
-import {
-    LayerRefType,
-    LiveStroke,
-    Stroke,
-    ToolType,
-    TrRefType,
-} from "../../../types"
+import { LiveStroke, Stroke, ToolType, TrRefType } from "../../../types"
 import { simplifyRDP } from "../../../drawing/simplify"
 import { BoardLiveStroke, isContinuous } from "./livestroke"
 import { getHitboxPolygon, setSelectedShapes } from "./hitbox"
@@ -101,12 +96,12 @@ export class BoardStroke extends BoardLiveStroke implements Stroke {
      * Handle action before stroke is added to store.
      * Returns true if stroke should be added, else false
      */
-    onRegister(trRef: TrRefType, layerRef: LayerRefType): boolean {
+    onRegister(trRef: TrRefType, e: KonvaEventObject<MouseEvent>): boolean {
         switch (this.type) {
             case ToolType.Eraser:
                 return false
             case ToolType.Select: {
-                setSelectedShapes(this, trRef, layerRef)
+                setSelectedShapes(this, trRef, e)
                 return false
             }
             default:

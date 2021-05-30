@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { BsGear } from "react-icons/bs"
+import { BsGear, BsInfoCircle } from "react-icons/bs"
 import { BiStats } from "react-icons/bi"
 import { VscDebugDisconnect } from "react-icons/vsc"
 
@@ -28,6 +28,7 @@ import { SET_API_URL } from "../../../redux/slice/webcontrol"
 import { API_URL } from "../../../api/types"
 import { isConnected } from "../../../api/websocket"
 import { useCustomSelector } from "../../../redux/hooks"
+import About from "./about"
 
 const useStyles = makeStyles({
     paper: {
@@ -40,6 +41,8 @@ const SettingsButton: React.FC = () => {
     const [isOpen, setOpen] = useState(false)
     const [url, setURL] = useState(API_URL)
     const [isValidURL, setValidURL] = useState(true)
+    // about dialog
+    const [isOpenAbout, setOpenAbout] = useState(false)
 
     const keepCentered = useCustomSelector(
         (state) => state.viewControl.keepCentered
@@ -138,9 +141,6 @@ const SettingsButton: React.FC = () => {
                             max={5}
                         />
                     </ListItem>
-                </List>
-                <Divider />
-                <List>
                     <ListItem>
                         <ListItemIcon>
                             <VscDebugDisconnect />
@@ -163,7 +163,23 @@ const SettingsButton: React.FC = () => {
                         />
                     </ListItem>
                 </List>
+                <Divider />
+                <List>
+                    <ListItem
+                        button
+                        onClick={() => {
+                            setOpen(false)
+                            setOpenAbout(true)
+                        }}>
+                        <ListItemIcon>
+                            <BsInfoCircle />
+                        </ListItemIcon>
+                        <ListItemText primary="About boardsite.io" />
+                    </ListItem>
+                </List>
             </Drawer>
+
+            <About isOpen={isOpenAbout} setOpen={setOpenAbout} />
         </>
     )
 }

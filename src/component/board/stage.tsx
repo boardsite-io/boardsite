@@ -33,7 +33,7 @@ import {
 } from "../../constants"
 import store, { RootState } from "../../redux/store"
 import { useCustomSelector } from "../../redux/hooks"
-import { LayerRefType, ToolType, TrRefType } from "../../types"
+import { ToolType, TrRefType } from "../../types"
 
 const BoardStage: React.FC = () => {
     const isPanMode = useCustomSelector((state) => state.drawControl.isPanMode)
@@ -181,7 +181,6 @@ const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
         }
     )
     const pageSlice = useCustomSelector(pageCreateSelector)
-    const layerRef: LayerRefType = useRef(null)
     const trRef: TrRefType = useRef(null)
 
     // unselect transformer selection when change tool
@@ -206,31 +205,29 @@ const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
     return (
         <>
             {pageSlice.map((pageId: string) => (
-                <Layer key={pageId} ref={layerRef}>
-                    <PageListener
-                        pageId={pageId}
-                        trRef={trRef}
-                        layerRef={layerRef}
-                    />
+                <Layer key={pageId}>
+                    <PageListener pageId={pageId} trRef={trRef} />
                     <PageContent pageId={pageId} />
-                    <Transformer
-                        shouldOverdrawWholeArea
-                        borderStroke={TR_BORDER_STROKE}
-                        borderStrokeWidth={TR_BORDER_STROKE_WIDTH}
-                        borderEnabled
-                        // borderDash={[5, 5]}
-                        anchorFill={TR_ANCHOR_FILL}
-                        anchorSize={TR_ANCHOR_SIZE}
-                        anchorStroke={TR_ANCHOR_STROKE}
-                        anchorCornerRadius={TR_ANCHOR_CORNER_RADIUS}
-                        rotateEnabled={false}
-                        ref={trRef}
-                        boundBoxFunc={boundBoxFunc}
-                    />
                 </Layer>
             ))}
             <Layer draggable={false} listening={false}>
                 <LiveStrokeShape />
+            </Layer>
+            <Layer>
+                <Transformer
+                    shouldOverdrawWholeArea
+                    borderStroke={TR_BORDER_STROKE}
+                    borderStrokeWidth={TR_BORDER_STROKE_WIDTH}
+                    borderEnabled
+                    // borderDash={[5, 5]}
+                    anchorFill={TR_ANCHOR_FILL}
+                    anchorSize={TR_ANCHOR_SIZE}
+                    anchorStroke={TR_ANCHOR_STROKE}
+                    anchorCornerRadius={TR_ANCHOR_CORNER_RADIUS}
+                    rotateEnabled={false}
+                    ref={trRef}
+                    boundBoxFunc={boundBoxFunc}
+                />
             </Layer>
         </>
     )

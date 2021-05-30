@@ -1,84 +1,43 @@
 .style-picker {
-    background: #00000066;
+    display: flex;
+    flex-direction: row;
+    background: #00000088;
     border-radius: var(--menubar-border-radius);
-    height: fit-content;
-    width: fit-content;
-    position: absolute;
+    height: 200px;
+    width: 280px;
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    /* position: absolute;
     top: 10px;
-    left: 0px;
-    display: grid;
-    grid-auto-flow: column;
-    gap: 5px;
-    box-shadow: var(--box-shadow);
+    left: -5px; */
     padding: 5px;
-}
-
-.color-picker {
-    /* height: 100%; */
+    box-shadow: var(--box-shadow);
+    justify-content: space-between;
 }
 
 .color-picker .react-colorful__saturation-pointer,
 .color-picker .react-colorful__hue-pointer,
 .color-picker .react-colorful__alpha-pointer {
-    width: 15px;
-    height: 15px;
+    width: 14px;
+    height: 14px;
     border-radius: 50px;
 }
 
-.shapetools {
+.shapetools,
+.width-tools {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    align-items: center;
     border-radius: var(--menubar-border-radius);
-    background-color: var(--menubar-background);
-    width: var(--button-width);
-    height: 100%;
-}
-
-.width-picker {
-    padding-top: 4px;
-    width: var(--button-width);
-    height: auto;
     background: var(--menubar-background);
-    display: grid;
-    grid-template-rows: auto var(--button-height) var(--button-height);
-    gap: 10px;
-    border-radius: var(--menubar-border-radius);
-}
-
-.width-slider {
-    /* width: 0px !important; */
-    /* border-radius: var(--menubar-border-radius); */
-    /* background: #ff039669; */
-    /* box-shadow: var(--box-shadow); */
+    width: var(--button-width);
 }
 
 .width-slider-wrap {
-    text-align: center;
-    margin-top: 0px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    height: 100%;
 }
-
-/* .width-input {
-    background: var(--primary);
-    height: 30px;
-    width: 100%;
-    border-radius: 4px;
-    outline: none;
-    border-top-style: hidden;
-    border-right-style: hidden;
-    border-left-style: hidden;
-    border-bottom-style: hidden;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-} */
-
-/* Chrome, Safari, Edge, Opera */
-/* .width-input::-webkit-outer-spin-button,
-.width-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-} */
-
-/* Firefox */
-/* .width-input[type=number] {
-  -moz-appearance: textfield;
-} */
