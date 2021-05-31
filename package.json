@@ -7,7 +7,6 @@
         "email": "50421879+heat1q@users.noreply.github.com"
     },
     "license": "GPL-3.0",
-    "homepage": "./",
     "main": "public/electron.js",
     "private": true,
     "dependencies": {
