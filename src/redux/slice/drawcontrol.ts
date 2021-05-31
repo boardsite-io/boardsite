@@ -59,7 +59,10 @@ const drawControlSlice = createSlice({
             }
 
             // validate tool candidate
-            if (tool.type !== ToolType.Eraser && tool.type !== ToolType.Drag) {
+            if (
+                tool.type !== ToolType.Eraser &&
+                tool.type !== ToolType.Select
+            ) {
                 state.favTools[index] = tool
             }
         },
@@ -74,7 +77,10 @@ const drawControlSlice = createSlice({
             }
 
             // validate tool candidate
-            if (tool.type !== ToolType.Eraser && tool.type !== ToolType.Drag) {
+            if (
+                tool.type !== ToolType.Eraser &&
+                tool.type !== ToolType.Select
+            ) {
                 state.favTools.push(tool)
             }
         },
@@ -104,10 +110,8 @@ const drawControlSlice = createSlice({
         SET_TYPE: (state, action) => {
             const type = action.payload
             state.liveStroke.type = type
-            state.isDraggable =
-                type === ToolType.Drag || type === ToolType.Select
-            state.isListening =
-                type === ToolType.Drag || type === ToolType.Eraser
+            state.isDraggable = type === ToolType.Select
+            state.isListening = type === ToolType.Eraser
             state.trNodes = []
         },
         SET_ISPANMODE: (state, action) => {
@@ -120,9 +124,8 @@ const drawControlSlice = createSlice({
                 state.isDraggable = false
                 state.isListening = false
             } else {
-                state.isDraggable = type === ToolType.Drag
-                state.isListening =
-                    type === ToolType.Drag || type === ToolType.Eraser
+                state.isDraggable = type === ToolType.Select
+                state.isListening = type === ToolType.Eraser
             }
         },
         SET_ISMOUSEDOWN: (state, action) => {

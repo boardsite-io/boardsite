@@ -19,7 +19,6 @@ export enum ToolType {
     Line,
     Triangle,
     Circle,
-    Drag,
     Rectangle,
     Select,
 }

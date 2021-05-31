@@ -33,11 +33,11 @@ export default function keyListener(e: KeyboardEvent): void {
         case "2": // Eraser
             store.dispatch(SET_TYPE(ToolType.Eraser))
             break
-        case "d": // Drag
-            store.dispatch(SET_TYPE(ToolType.Drag))
+        case "s": // Selection
+            store.dispatch(SET_TYPE(ToolType.Select))
             break
-        case "3": // Drag
-            store.dispatch(SET_TYPE(ToolType.Drag))
+        case "3": // Selection
+            store.dispatch(SET_TYPE(ToolType.Select))
             break
         case "l": // Line
             store.dispatch(SET_TYPE(ToolType.Line))
@@ -45,16 +45,10 @@ export default function keyListener(e: KeyboardEvent): void {
         case "4": // Line
             store.dispatch(SET_TYPE(ToolType.Line))
             break
-        // case "t": // Triangle
-        //     store.dispatch(SET_TYPE(ToolType.TRIANGLE))
-        //     break
-        // case "5": // Triangle
-        //     store.dispatch(SET_TYPE(ToolType.TRIANGLE))
-        //     break
         case "c": // Circle
             store.dispatch(SET_TYPE(ToolType.Circle))
             break
-        case "6": // Circle
+        case "5": // Circle
             store.dispatch(SET_TYPE(ToolType.Circle))
             break
         case "z": // Undo (Ctrl + Z)
@@ -67,7 +61,7 @@ export default function keyListener(e: KeyboardEvent): void {
                 handleRedo()
             }
             break
-        case " ": // Undo (Ctrl + Z)
+        case " ": // Panmode
             store.dispatch(TOGGLE_PANMODE())
             break
         default:
