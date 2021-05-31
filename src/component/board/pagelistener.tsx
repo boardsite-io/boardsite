@@ -78,20 +78,20 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId, trRef }) => {
 
     const onTouchStart = (e: KonvaEventObject<TouchEvent>) => {
         if (isValidTouch(e)) {
-            onMouseDown((e as unknown) as KonvaEventObject<MouseEvent>)
+            onMouseDown(e as unknown as KonvaEventObject<MouseEvent>)
         }
     }
 
     const onTouchMove = (e: KonvaEventObject<TouchEvent>) => {
         if (isValidTouch(e)) {
-            onMouseMove((e as unknown) as KonvaEventObject<MouseEvent>)
+            onMouseMove(e as unknown as KonvaEventObject<MouseEvent>)
         } else {
             abortLiveStroke()
         }
     }
 
     const onTouchEnd = (e: KonvaEventObject<TouchEvent>) => {
-        onMouseUp((e as unknown) as KonvaEventObject<MouseEvent>)
+        onMouseUp(e as unknown as KonvaEventObject<MouseEvent>)
     }
 
     const abortLiveStroke = () => {
