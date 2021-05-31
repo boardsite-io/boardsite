@@ -4,6 +4,7 @@ import {
     ERASE_STROKES,
     UPDATE_STROKES,
 } from "../redux/slice/boardcontrol"
+import { SET_TR_NODES } from "../redux/slice/drawcontrol"
 import store from "../redux/store"
 import { Stroke } from "../types"
 
@@ -67,6 +68,7 @@ export function deleteStrokes(
         })
     }
 
+    store.dispatch(SET_TR_NODES([])) // remove selection to prevent undefined refs in transformer
     store.dispatch(ERASE_STROKES(strokes))
     if (isConnected()) {
         eraseStrokes(strokes)
