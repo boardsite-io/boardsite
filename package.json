@@ -34,7 +34,7 @@
         "unique-names-generator": "^4.4.0"
     },
     "scripts": {
-        "start": "react-scripts start",
+        "start": "REACT_APP_B_API_URL='http://localhost:8000' react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
