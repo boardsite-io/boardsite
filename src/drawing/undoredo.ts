@@ -86,9 +86,9 @@ export function updateStrokes(
             strokes: strokes
                 .map((s) => {
                     // save values of the current stroke
-                    const cur = store.getState().boardControl.pageCollection[
-                        s.pageId
-                    ]?.strokes[s.id]
+                    const cur =
+                        store.getState().boardControl.pageCollection[s.pageId]
+                            ?.strokes[s.id]
                     return cur
                         ? ({
                               id: s.id,

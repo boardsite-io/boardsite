@@ -1,5 +1,12 @@
 import { PageBackground, Point, Tool, ToolType } from "./types"
 
+/**
+ * Returns true if in development mode
+ */
+export default function isDev(): boolean {
+    return !process.env.NODE_ENV || process.env.NODE_ENV === "development"
+}
+
 export const CANVAS_WIDTH = 620
 export const CANVAS_HEIGHT = 877
 export const CANVAS_GAP = 20

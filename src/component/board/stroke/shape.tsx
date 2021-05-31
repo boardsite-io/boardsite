@@ -70,7 +70,7 @@ export const LiveStrokeShape = memo(() => {
                 // since the array's order is not changed
                 // eslint-disable-next-line react/no-array-index-key
                 key={i}
-                stroke={(liveStroke as unknown) as Stroke}
+                stroke={liveStroke as unknown as Stroke}
                 points={subPts.slice()} // copy to trigger update
             />
         )

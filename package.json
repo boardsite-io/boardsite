@@ -13,10 +13,6 @@
     "dependencies": {
         "@material-ui/core": "^4.11.3",
         "@reduxjs/toolkit": "^1.5.0",
-        "@testing-library/jest-dom": "^5.11.9",
-        "@testing-library/react": "^11.2.5",
-        "@testing-library/user-event": "^12.7.2",
-        "@types/sat": "^0.0.31",
         "axios": "^0.21.1",
         "electron-is-dev": "^2.0.0",
         "is-electron": "^2.2.0",
@@ -38,7 +34,7 @@
         "unique-names-generator": "^4.4.0"
     },
     "scripts": {
-        "start": "react-scripts start",
+        "start": "REACT_APP_B_API_URL='http://localhost:8000' react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
@@ -62,6 +58,9 @@
         ]
     },
     "devDependencies": {
+        "@testing-library/jest-dom": "^5.11.9",
+        "@testing-library/react": "^11.2.5",
+        "@testing-library/user-event": "^12.7.2",
         "@types/jest": "^26.0.23",
         "@types/node": "^15.6.0",
         "@types/react": "^17.0.6",
@@ -69,6 +68,7 @@
         "@types/react-redux": "^7.1.16",
         "@types/react-router-dom": "^5.1.7",
         "@types/react-slider": "^1.1.2",
+        "@types/sat": "^0.0.31",
         "@typescript-eslint/eslint-plugin": "^4.24.0",
         "@typescript-eslint/parser": "^4.24.0",
         "electron": "^12.0.1",

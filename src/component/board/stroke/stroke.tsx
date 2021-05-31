@@ -36,7 +36,7 @@ export class BoardStroke extends BoardLiveStroke implements Stroke {
 
         if (pageId !== undefined) {
             // copy from livestroke
-            const liveStroke = (stroke as unknown) as LiveStroke
+            const liveStroke = stroke as unknown as LiveStroke
             this.points = liveStroke.flatPoints?.() as number[]
             // process points according to stroke type
             this.processPoints()
