@@ -1,9 +1,9 @@
 import React, { useRef } from "react"
 import { Transformer } from "react-konva"
 import { Box } from "konva/types/shapes/Transformer"
+import { Node, NodeConfig } from "konva/types/Node"
 import { createSelector } from "reselect"
-import { RootState } from "../../redux/store"
-import { TrNodesType, TrRefType } from "../../types"
+import { Stroke, ToolType, TrNodesType, TrRefType } from "../../types"
 import {
     TR_BORDER_STROKE,
     TR_BORDER_STROKE_WIDTH,
@@ -13,6 +13,8 @@ import {
     TR_ANCHOR_CORNER_RADIUS,
 } from "../../constants"
 import { useCustomSelector } from "../../redux/hooks"
+import { handleUpdateStrokes } from "../../drawing/handlers"
+import store, { RootState } from "../../redux/store"
 
 const StrokeTransformer = (): JSX.Element => {
     const trRef: TrRefType = useRef(null)
@@ -36,6 +38,33 @@ const StrokeTransformer = (): JSX.Element => {
         return newBox
     }
 
+    const updateSelectedStrokes = () => {
+        const strokerefs = store.getState().drawControl.trNodes
+        const strokes = strokerefs.map(
+            (stroke: Node<NodeConfig>) =>
+                ({
+                    id: stroke.attrs.id,
+                    pageId: stroke.attrs.name, // we use name as pageid
+                    scaleX: stroke.attrs.scaleX,
+                    scaleY: stroke.attrs.scaleY,
+                    x: stroke.attrs.x,
+                    y: stroke.attrs.y,
+                } as Stroke)
+        )
+
+        handleUpdateStrokes(strokes)
+    }
+
+    const onDragEnd = () => {
+        if (store.getState().drawControl.liveStroke.type !== ToolType.Eraser) {
+            updateSelectedStrokes()
+        }
+    }
+
+    const onTransformEnd = () => {
+        updateSelectedStrokes()
+    }
+
     return (
         <Transformer
             shouldOverdrawWholeArea
@@ -50,6 +79,8 @@ const StrokeTransformer = (): JSX.Element => {
             rotateEnabled={false}
             ref={trRef}
             boundBoxFunc={boundBoxFunc}
+            onDragEnd={onDragEnd}
+            onTransformEnd={onTransformEnd}
         />
     )
 }

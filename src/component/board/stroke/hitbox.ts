@@ -82,7 +82,7 @@ export function setSelectedShapes(
     const selectedShapes: Node<NodeConfig>[] = []
     e.target
         .getParent()
-        ?.find(".shape")
+        ?.find(`.${stroke.pageId}`)
         .toArray()
         .forEach((element: Node<NodeConfig>) => {
             if (selectedIds[element.attrs.id]) {
