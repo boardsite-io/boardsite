@@ -21,20 +21,6 @@
     gap: var(--button-gap);
 }
 
-.shapetools {
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-left: 5px;
-    padding-right: 5px;
-    position: absolute;
-    top: 10px;
-    right: -35px;
-    display: grid;
-    grid-auto-flow: column;
-    border-radius: var(--menubar-border-radius);
-    background-color: var(--menubar-background);
-}
-
 .favtools {
     background: var(--menubar-background);
     display: grid;
@@ -54,16 +40,6 @@
 .favtoolbox {
     position: relative;
     height: var(--button-height);
-}
-.favtool {
-    box-shadow: var(--menubar-box-shadow);
-    color: var(--primary);
-    text-align: center;
-    border-radius: var(--button-border-radius);
-    height: var(--button-height);
-    width: var(--button-width);
-    outline: none;
-    border-width: 0px;
 }
 
 .favtool-width {
