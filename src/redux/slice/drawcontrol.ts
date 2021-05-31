@@ -12,7 +12,7 @@ import {
     DEFAULT_FAV_TOOLS,
 } from "../../constants"
 import { BoardLiveStroke } from "../../component/board/stroke/livestroke"
-import { PageBackground, Tool, ToolType } from "../../types"
+import { PageBackground, Tool, ToolType, TrNodesType } from "../../types"
 
 export interface DrawControlState {
     isPanMode: boolean
@@ -26,6 +26,7 @@ export interface DrawControlState {
     liveStrokeUpdate: number
     pageBG: PageBackground
     favTools: Tool[]
+    trNodes: TrNodesType
 }
 
 const initState: DrawControlState = {
@@ -38,14 +39,18 @@ const initState: DrawControlState = {
     strokeSample: 0,
     liveStroke: new BoardLiveStroke(),
     liveStrokeUpdate: 0,
-    pageBG: pageType.BLANK as PageBackground,
+    pageBG: pageType.BLANK,
     favTools: DEFAULT_FAV_TOOLS,
+    trNodes: [],
 }
 
 const drawControlSlice = createSlice({
     name: "drawControl",
     initialState: initState,
     reducers: {
+        SET_TR_NODES: (state, action) => {
+            state.trNodes = action.payload
+        },
         REPLACE_FAV_TOOL: (state, action) => {
             const index = action.payload as number
             const tool: Tool = {
@@ -103,6 +108,7 @@ const drawControlSlice = createSlice({
                 type === ToolType.Drag || type === ToolType.Select
             state.isListening =
                 type === ToolType.Drag || type === ToolType.Eraser
+            state.trNodes = []
         },
         SET_ISPANMODE: (state, action) => {
             state.isPanMode = action.payload
@@ -177,5 +183,6 @@ export const {
     SET_DEFAULT_PAGEBG,
     SET_SAMPLE_COUNT,
     TOGGLE_DIRECTDRAW,
+    SET_TR_NODES,
 } = drawControlSlice.actions
 export default drawControlSlice.reducer

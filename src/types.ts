@@ -1,5 +1,6 @@
 import { ShapeConfig } from "konva/types/Shape"
 import { Transformer } from "konva/types/shapes/Transformer"
+import { Node, NodeConfig } from "konva/types/Node"
 import { Polygon } from "sat"
 
 export interface Tool {
@@ -96,3 +97,4 @@ export interface StrokeHitbox {
 export type PageBackground = "blank" | "checkered" | "ruled"
 
 export type TrRefType = React.RefObject<Transformer>
+export type TrNodesType = Node<NodeConfig>[]
