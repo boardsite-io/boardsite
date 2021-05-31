@@ -1,5 +1,5 @@
 import React from "react"
-import { CgErase, CgController } from "react-icons/cg"
+import { CgErase } from "react-icons/cg"
 import { BiSelection } from "react-icons/bi"
 import store from "../../../redux/store"
 import { SET_TYPE } from "../../../redux/slice/drawcontrol"
@@ -26,18 +26,6 @@ const ToolRing: React.FC = () => {
                     store.dispatch(SET_TYPE(ToolType.Eraser))
                 }}>
                 <CgErase id="icon" />
-            </button>
-            <button
-                type="button"
-                id={
-                    typeSelector === ToolType.Drag
-                        ? "icon-button-active"
-                        : "icon-button"
-                }
-                onClick={() => {
-                    store.dispatch(SET_TYPE(ToolType.Drag))
-                }}>
-                <CgController id="icon" />
             </button>
             <button
                 type="button"

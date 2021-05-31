@@ -18,14 +18,12 @@ import {
 import { END_LIVESTROKE, SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
 import pageBackground from "../../drawing/backgrounds"
 import { useCustomSelector } from "../../redux/hooks"
-import { TrRefType } from "../../types"
 
 interface PageListenerProps {
     pageId: string
-    trRef: TrRefType
 }
 
-const PageListener: React.FC<PageListenerProps> = ({ pageId, trRef }) => {
+const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
     const isMouseDown = useCustomSelector(
         (state) => state.drawControl.isMouseDown
     )
@@ -73,7 +71,7 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId, trRef }) => {
         moveLiveStroke(pos)
 
         // register finished stroke
-        registerLiveStroke(pageId, trRef, e)
+        registerLiveStroke(pageId, e)
     }
 
     const onTouchStart = (e: KonvaEventObject<TouchEvent>) => {
