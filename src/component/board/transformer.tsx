@@ -3,7 +3,7 @@ import { Transformer } from "react-konva"
 import { Box } from "konva/types/shapes/Transformer"
 import { Node, NodeConfig } from "konva/types/Node"
 import { createSelector } from "reselect"
-import { Stroke, ToolType, TrNodesType, TrRefType } from "../../types"
+import { Stroke, TrNodesType, TrRefType } from "../../types"
 import {
     TR_BORDER_STROKE,
     TR_BORDER_STROKE_WIDTH,
@@ -51,14 +51,12 @@ const StrokeTransformer = (): JSX.Element => {
                     y: stroke.attrs.y,
                 } as Stroke)
         )
-
         handleUpdateStrokes(strokes)
     }
 
     const onDragEnd = () => {
-        if (store.getState().drawControl.liveStroke.type !== ToolType.Eraser) {
-            updateSelectedStrokes()
-        }
+        updateSelectedStrokes()
+        trRef.current?.forceUpdate()
     }
 
     const onTransformEnd = () => {
@@ -71,7 +69,7 @@ const StrokeTransformer = (): JSX.Element => {
             borderStroke={TR_BORDER_STROKE}
             borderStrokeWidth={TR_BORDER_STROKE_WIDTH}
             borderEnabled
-            // borderDash={[5, 5]}
+            borderDash={[5, 5]}
             anchorFill={TR_ANCHOR_FILL}
             anchorSize={TR_ANCHOR_SIZE}
             anchorStroke={TR_ANCHOR_STROKE}
