@@ -63,7 +63,7 @@ export class BoardLiveStroke implements Tool {
                 pointsSegments[pointsSegments.length - 1] = simplifyRDP(
                     p,
                     RDP_EPSILON / scale,
-                    RDP_FORCE_SECTIONS - 2
+                    RDP_FORCE_SECTIONS - 1
                 )
                 // create a new subarray
                 // with the last point from the previous subarray as entry
