@@ -8,8 +8,6 @@ import {
     DEFAULT_WIDTH,
     LIVESTROKE_PTS_OVERLAP,
     MAX_LIVESTROKE_PTS,
-    RDP_EPSILON,
-    RDP_FORCE_SECTIONS,
     SEL_FILL,
     SEL_FILL_ENABLED,
     SEL_STROKE,
@@ -49,12 +47,8 @@ export class BoardLiveStroke implements Tool {
         if (isContinuous(this.type)) {
             // for continuous strokes
             if (p.length < MAX_LIVESTROKE_PTS) {
-                if (
-                    sample === 0 // &&
-                    // hasMinDist([point.x, point.y], p, scale)
-                ) {
-                    // append new point
-                    p.push(point.x, point.y)
+                if (sample === 0) {
+                    appendLinePoint(p, point)
                 } else {
                     // update the latest point
                     p.splice(p.length - 2, 2, point.x, point.y)
@@ -62,8 +56,8 @@ export class BoardLiveStroke implements Tool {
             } else {
                 pointsSegments[pointsSegments.length - 1] = simplifyRDP(
                     p,
-                    RDP_EPSILON / scale,
-                    RDP_FORCE_SECTIONS - 1
+                    0.2 / scale,
+                    1
                 )
                 // create a new subarray
                 // with the last point from the previous subarray as entry
@@ -121,10 +115,10 @@ export class BoardLiveStroke implements Tool {
         switch (this.type) {
             case ToolType.Pen: {
                 // console.log("shapeLine", shapeProps)
-                return <Line points={points} tension={0.3} {...shapeProps} />
+                return <Line points={points} tension={0.35} {...shapeProps} />
             }
             case ToolType.Line:
-                return <Line points={points} tension={0.3} {...shapeProps} />
+                return <Line points={points} tension={0.35} {...shapeProps} />
             case ToolType.Circle:
                 return (
                     <Ellipse
@@ -169,4 +163,26 @@ export class BoardLiveStroke implements Tool {
 
 export function isContinuous(type: ToolType): boolean {
     return type === ToolType.Pen
+}
+
+function appendLinePoint(pts: number[], newPoint: Point): void {
+    if (pts.length < 4) {
+        pts.push(newPoint.x, newPoint.y)
+        return
+    }
+
+    // fix the interim point to remove jitter
+    const [x1, y1] = pts.slice(pts.length - 4, pts.length - 2)
+    const interimPoint: Point = {
+        x: x1 + (newPoint.x - x1) / 2,
+        y: y1 + (newPoint.y - y1) / 2,
+    }
+    pts.splice(
+        pts.length - 2,
+        2,
+        interimPoint.x,
+        interimPoint.y,
+        newPoint.x,
+        newPoint.y
+    )
 }

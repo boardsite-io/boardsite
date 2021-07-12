@@ -1,6 +1,10 @@
 import { Polygon } from "sat"
 import { KonvaEventObject } from "konva/types/Node"
-import { CANVAS_FULL_HEIGHT, RDP_FORCE_SECTIONS } from "../../../constants"
+import {
+    CANVAS_FULL_HEIGHT,
+    RDP_EPSILON,
+    RDP_FORCE_SECTIONS,
+} from "../../../constants"
 import store from "../../../redux/store"
 import { LiveStroke, Stroke, ToolType } from "../../../types"
 import { simplifyRDP } from "../../../drawing/simplify"
@@ -62,7 +66,7 @@ export class BoardStroke extends BoardLiveStroke implements Stroke {
         if (isContinuous(this.type)) {
             this.points = simplifyRDP(
                 this.points,
-                0.1 / store.getState().viewControl.stageScale.x,
+                RDP_EPSILON / store.getState().viewControl.stageScale.x,
                 RDP_FORCE_SECTIONS + 1
             )
         }

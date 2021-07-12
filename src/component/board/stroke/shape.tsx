@@ -65,14 +65,16 @@ export const LiveStrokeShape = memo(() => {
     const u = useCustomSelector((state) => state.drawControl.liveStrokeUpdate)
     const shape = liveStroke.pointsSegments?.map(
         (subPts: number[], i: number) => (
-            <StrokeShape
-                // we can use the array index as key here
-                // since the array's order is not changed
-                // eslint-disable-next-line react/no-array-index-key
-                key={i}
-                stroke={liveStroke as unknown as Stroke}
-                points={subPts.slice()} // copy to trigger update
-            />
+            <>
+                <StrokeShape
+                    // we can use the array index as key here
+                    // since the array's order is not changed
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={i}
+                    stroke={liveStroke as unknown as Stroke}
+                    points={subPts.slice()} // copy to trigger update
+                />
+            </>
         )
     )
     return <>{shape}</>
@@ -98,7 +100,7 @@ export function debugStrokePoints(
                     x={pt.x}
                     y={pt.y}
                     radius={width / 2}
-                    fill="#ff0000"
+                    fill="#00ff00"
                     strokeWidth={0}
                 />
             ))}
