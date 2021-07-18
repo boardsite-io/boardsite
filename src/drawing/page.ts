@@ -35,6 +35,11 @@ export class BoardPage implements Page {
     strokes: StrokeMap = {}
     meta: PageMeta
 
+    setID(pageId: string): BoardPage {
+        this.pageId = pageId
+        return this
+    }
+
     add(index?: number): void {
         store.dispatch(ADD_PAGE({ page: this, index }))
     }

@@ -47,7 +47,9 @@ export default memo<PageBackgroundProps>(({ pageId }) => {
     return (
         <Image
             ref={ref}
-            image={style === pageType.DOC ? docs[pageNum - 1] : undefined}
+            image={
+                style === pageType.DOC ? docs[(pageNum ?? 1) - 1] : undefined
+            }
             height={CANVAS_HEIGHT}
             width={CANVAS_WIDTH}
             x={0}

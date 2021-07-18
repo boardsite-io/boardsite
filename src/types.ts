@@ -61,7 +61,7 @@ export type StrokeShape = Stroke & ShapeConfig
 export interface PageMeta {
     background: {
         style: PageBackground
-        pageNum: number
+        pageNum?: number
     }
 }
 
@@ -70,6 +70,7 @@ export interface Page {
     strokes: StrokeMap
     meta: PageMeta
 
+    setID: (pageId: string) => Page
     add: (index?: number) => void
     clear: () => void
     updateMeta: (meta: PageMeta) => void

@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios"
+import { BoardPage } from "../drawing/page"
 import store from "../redux/store"
 import { PageMeta, Stroke, User } from "../types"
 import { ResponsePageSync } from "./types"
@@ -64,23 +65,26 @@ export function getStrokes(
 
 export async function addPage(
     sessionId: string,
-    pageId: string,
-    index: number,
-    meta?: PageMeta
+    page: BoardPage,
+    pageIndex: number
 ): Promise<void> {
     return sendRequest(`${sessionId}/pages`, "post", {
-        pageId,
-        index,
-        meta,
+        pageId: page.pageId,
+        index: pageIndex,
+        meta: page.meta,
     })
 }
 
 export async function updatePage(
     sessionId: string,
     pageId: string,
-    content: { meta: PageMeta; clear: boolean }
+    meta: PageMeta | undefined,
+    clear: boolean
 ): Promise<void> {
-    return sendRequest(`${sessionId}/pages/${pageId}`, "put", content)
+    return sendRequest(`${sessionId}/pages/${pageId}`, "put", {
+        meta,
+        clear,
+    })
 }
 
 export function deletePage(sessionId: string, pageId: string): Promise<void> {

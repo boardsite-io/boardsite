@@ -12,7 +12,7 @@ import {
 } from "../redux/slice/boardcontrol"
 
 import store from "../redux/store"
-import { PageBackground, Stroke } from "../types"
+import { PageBackground, PageMeta, Stroke } from "../types"
 import { BoardPage } from "./page"
 import {
     addStrokes,
@@ -24,25 +24,27 @@ import {
 
 export function handleAddPageOver(): void {
     const page = new BoardPage()
+    const index = store.getState().viewControl.currentPageIndex
     if (isConnected()) {
-        // addPageSession(page)
+        addPageSession(page, index)
     } else {
-        page.add(store.getState().viewControl.currentPageIndex)
+        page.add(index)
     }
 }
 
 export function handleAddPageUnder(): void {
     const page = new BoardPage()
+    const index = store.getState().viewControl.currentPageIndex + 1
     if (isConnected()) {
-        // addPageSession(page)
+        addPageSession(page, index)
     } else {
-        page.add(store.getState().viewControl.currentPageIndex + 1)
+        page.add(index)
     }
 }
 
 export function handleClearPage(): void {
     if (isConnected()) {
-        updatePageSession(getCurrentPageId(), {}, true)
+        updatePageSession(getCurrentPageId(), undefined, true)
     } else {
         store.dispatch(CLEAR_PAGE(getCurrentPageId()))
     }
@@ -87,9 +89,11 @@ export function handleRedo(): void {
 }
 
 export function handlePageBackground(style: PageBackground): void {
-    store.dispatch(SET_PAGEBG({ pageId: getCurrentPageId(), style }))
     if (isConnected()) {
-        // updatePageSession(getCurrentPageId(), meta)
+        const meta: PageMeta = { background: { style } }
+        updatePageSession(getCurrentPageId(), meta)
+    } else {
+        store.dispatch(SET_PAGEBG({ pageId: getCurrentPageId(), style }))
     }
 }
 

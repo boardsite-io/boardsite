@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { pageType } from "../../constants"
+import { BoardPage } from "../../drawing/page"
 import {
     DocumentImage,
     Page,
@@ -34,7 +35,7 @@ const boardControlSlice = createSlice({
 
         SET_PAGERANK: (state, action) => {
             const newPageRank = action.payload
-            const newPageCollection = {} as PageCollection
+            const newPageCollection: PageCollection = {}
             newPageRank.forEach((pid: string) => {
                 if (
                     Object.prototype.hasOwnProperty.call(
@@ -44,7 +45,9 @@ const boardControlSlice = createSlice({
                 ) {
                     newPageCollection[pid] = state.pageCollection[pid]
                 } else {
-                    newPageCollection[pid] = newPageCollectionEntry()
+                    newPageCollection[pid] = new BoardPage(state.pageBG).setID(
+                        pid
+                    )
                 }
             })
 
@@ -139,13 +142,6 @@ const boardControlSlice = createSlice({
         },
     },
 })
-
-function newPageCollectionEntry() {
-    return {
-        strokes: {},
-        meta: {},
-    } as Page
-}
 
 export const {
     SYNC_ALL_PAGES,

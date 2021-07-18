@@ -1,4 +1,3 @@
-import { nanoid } from "@reduxjs/toolkit"
 import store from "../redux/store"
 import {
     addPage,
@@ -33,6 +32,7 @@ import {
 } from "./types"
 import { PageMeta, Stroke, ToolType, User } from "../types"
 import { BoardStroke } from "../component/board/stroke/stroke"
+import { BoardPage } from "../drawing/page"
 
 /**
  * Connect to Websocket.
@@ -136,7 +136,7 @@ export async function newSession(): Promise<string> {
     const sessionId = await createSession()
     store.dispatch(DELETE_ALL_PAGES())
     // create a pageid which will be added when joining
-    await addPage(sessionId, nanoid(8), 0)
+    await addPage(sessionId, new BoardPage(), 0)
     return sessionId
 }
 
@@ -188,8 +188,8 @@ export function eraseStrokes(strokes: { id: string; pageId: string }[]): void {
     )
 }
 
-export function addPageSession(pageIndex: number, meta: PageMeta): void {
-    // addPage(store.getState().webControl.sessionId, nanoid(8), pageIndex, meta)
+export function addPageSession(page: BoardPage, pageIndex: number): void {
+    addPage(store.getState().webControl.sessionId, page, pageIndex)
 }
 
 export function deletePageSession(pageId: string): void {
@@ -209,11 +209,8 @@ export function pingSession(sessionID: string): Promise<ResponsePageSync> {
 
 export function updatePageSession(
     pageId: string,
-    meta = {},
+    meta: PageMeta | undefined,
     clear = false
 ): void {
-    updatePage(store.getState().webControl.sessionId, pageId, {
-        meta: meta as PageMeta,
-        clear,
-    })
+    updatePage(store.getState().webControl.sessionId, pageId, meta, clear)
 }
