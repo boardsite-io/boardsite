@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import { BsGear, BsInfoCircle } from "react-icons/bs"
+import isElectron from "is-electron"
 import { BiStats } from "react-icons/bi"
 import { VscDebugDisconnect } from "react-icons/vsc"
-
 import {
     Divider,
     Drawer,
@@ -29,6 +29,7 @@ import { API_URL } from "../../../api/types"
 import { isConnected } from "../../../api/websocket"
 import { useCustomSelector } from "../../../redux/hooks"
 import About from "./about"
+import isDev from "../../../constants"
 
 const useStyles = makeStyles({
     paper: {
@@ -150,16 +151,17 @@ const SettingsButton: React.FC = () => {
                     <ListItem>
                         <TextField
                             id="standard-basic"
-                            label="Custom API Server URL"
+                            label="API URL"
                             inputMode="url"
                             InputLabelProps={{
                                 shrink: true,
                             }}
-                            helperText="e.g. https://api.boardsite.io"
                             value={url.toString()}
                             onChange={handleURLChange}
                             error={!isValidURL}
-                            disabled={isConnected()}
+                            disabled={
+                                isConnected() || (!isDev() && !isElectron())
+                            }
                         />
                     </ListItem>
                 </List>

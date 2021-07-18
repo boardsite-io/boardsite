@@ -8,7 +8,7 @@ import {
     SET_ISMOUSEDOWN,
 } from "../redux/slice/drawcontrol"
 import { handleAddStroke } from "./handlers"
-import { Point, Stroke, ToolType, TrRefType } from "../types"
+import { Point, Stroke, ToolType } from "../types"
 import { BoardStroke } from "../component/board/stroke/stroke"
 
 let tid: number | NodeJS.Timeout = 0
@@ -58,15 +58,14 @@ export function moveLiveStroke(point: Point): void {
  */
 export async function registerLiveStroke(
     pageId: string,
-    trRef: TrRefType,
     e: KonvaEventObject<MouseEvent>
 ): Promise<void> {
     const liveStroke = getLiveStroke()
-    const stroke = new BoardStroke((liveStroke as unknown) as Stroke, pageId)
+    const stroke = new BoardStroke(liveStroke as unknown as Stroke, pageId)
     // clear livestroke
     store.dispatch(END_LIVESTROKE())
 
-    if (stroke.onRegister(trRef, e)) {
+    if (stroke.onRegister(e)) {
         handleAddStroke(stroke)
     }
 

@@ -11,7 +11,7 @@ import {
     DEFAULT_FAV_TOOLS,
 } from "../../constants"
 import { BoardLiveStroke } from "../../component/board/stroke/livestroke"
-import { Tool, ToolType } from "../../types"
+import { Tool, ToolType, TrNodesType } from "../../types"
 
 export interface DrawControlState {
     isPanMode: boolean
@@ -24,6 +24,7 @@ export interface DrawControlState {
     liveStroke: BoardLiveStroke
     liveStrokeUpdate: number
     favTools: Tool[]
+    trNodes: TrNodesType
 }
 
 const initState: DrawControlState = {
@@ -37,12 +38,16 @@ const initState: DrawControlState = {
     liveStroke: new BoardLiveStroke(),
     liveStrokeUpdate: 0,
     favTools: DEFAULT_FAV_TOOLS,
+    trNodes: [],
 }
 
 const drawControlSlice = createSlice({
     name: "drawControl",
     initialState: initState,
     reducers: {
+        SET_TR_NODES: (state, action) => {
+            state.trNodes = action.payload
+        },
         REPLACE_FAV_TOOL: (state, action) => {
             const index = action.payload as number
             const tool: Tool = {
@@ -51,7 +56,10 @@ const drawControlSlice = createSlice({
             }
 
             // validate tool candidate
-            if (tool.type !== ToolType.Eraser && tool.type !== ToolType.Drag) {
+            if (
+                tool.type !== ToolType.Eraser &&
+                tool.type !== ToolType.Select
+            ) {
                 state.favTools[index] = tool
             }
         },
@@ -66,7 +74,10 @@ const drawControlSlice = createSlice({
             }
 
             // validate tool candidate
-            if (tool.type !== ToolType.Eraser && tool.type !== ToolType.Drag) {
+            if (
+                tool.type !== ToolType.Eraser &&
+                tool.type !== ToolType.Select
+            ) {
                 state.favTools.push(tool)
             }
         },
@@ -96,10 +107,9 @@ const drawControlSlice = createSlice({
         SET_TYPE: (state, action) => {
             const type = action.payload
             state.liveStroke.type = type
-            state.isDraggable =
-                type === ToolType.Drag || type === ToolType.Select
-            state.isListening =
-                type === ToolType.Drag || type === ToolType.Eraser
+            state.isDraggable = type === ToolType.Select
+            state.isListening = type === ToolType.Eraser
+            state.trNodes = []
         },
         SET_ISPANMODE: (state, action) => {
             state.isPanMode = action.payload
@@ -111,9 +121,8 @@ const drawControlSlice = createSlice({
                 state.isDraggable = false
                 state.isListening = false
             } else {
-                state.isDraggable = type === ToolType.Drag
-                state.isListening =
-                    type === ToolType.Drag || type === ToolType.Eraser
+                state.isDraggable = type === ToolType.Select
+                state.isListening = type === ToolType.Eraser
             }
         },
         SET_ISMOUSEDOWN: (state, action) => {
@@ -170,5 +179,6 @@ export const {
     END_LIVESTROKE,
     SET_SAMPLE_COUNT,
     TOGGLE_DIRECTDRAW,
+    SET_TR_NODES,
 } = drawControlSlice.actions
 export default drawControlSlice.reducer

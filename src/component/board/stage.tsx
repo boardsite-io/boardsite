@@ -1,8 +1,7 @@
-import React, { useEffect, memo, useRef } from "react"
+import React, { useEffect, memo } from "react"
 import { ReactReduxContext, ReactReduxContextValue } from "react-redux"
 import { createSelector } from "reselect"
-import { Stage, Layer, Transformer } from "react-konva"
-import { Box } from "konva/types/shapes/Transformer"
+import { Stage, Layer } from "react-konva"
 import { Vector2d } from "konva/types/types"
 import { KonvaEventObject } from "konva/types/Node"
 import {
@@ -24,17 +23,11 @@ import {
     ZOOM_IN_WHEEL_SCALE,
     ZOOM_OUT_WHEEL_SCALE,
     CANVAS_WIDTH,
-    TR_BORDER_STROKE,
-    TR_BORDER_STROKE_WIDTH,
-    TR_ANCHOR_FILL,
-    TR_ANCHOR_STROKE,
-    TR_ANCHOR_SIZE,
-    TR_ANCHOR_CORNER_RADIUS,
 } from "../../constants"
 import PageBackground from "./pagebackground"
 import store, { RootState } from "../../redux/store"
 import { useCustomSelector } from "../../redux/hooks"
-import { ToolType, TrRefType } from "../../types"
+import StrokeTransformer from "./transformer"
 
 const BoardStage: React.FC = () => {
     const isPanMode = useCustomSelector((state) => state.drawControl.isPanMode)
@@ -182,33 +175,13 @@ const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
         }
     )
     const pageSlice = useCustomSelector(pageCreateSelector)
-    const trRef: TrRefType = useRef(null)
-
-    // unselect transformer selection when change tool
-    const unSelector = createSelector(
-        (state: RootState) => state.drawControl.liveStroke.type,
-        (type: number) => {
-            if (type !== ToolType.Select) {
-                trRef.current?.nodes([])
-            }
-        }
-    )
-    useCustomSelector(unSelector)
-
-    const boundBoxFunc = (oldBox: Box, newBox: Box) => {
-        // limit resize
-        if (newBox.width < 5 || newBox.height < 5) {
-            return oldBox
-        }
-        return newBox
-    }
 
     return (
         <>
             {pageSlice.map((pageId: string) => (
                 <Layer key={pageId}>
                     <PageBackground pageId={pageId} />
-                    <PageListener pageId={pageId} trRef={trRef} />
+                    <PageListener pageId={pageId} />
                     <PageContent pageId={pageId} />
                 </Layer>
             ))}
@@ -216,20 +189,7 @@ const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
                 <LiveStrokeShape />
             </Layer>
             <Layer>
-                <Transformer
-                    shouldOverdrawWholeArea
-                    borderStroke={TR_BORDER_STROKE}
-                    borderStrokeWidth={TR_BORDER_STROKE_WIDTH}
-                    borderEnabled
-                    // borderDash={[5, 5]}
-                    anchorFill={TR_ANCHOR_FILL}
-                    anchorSize={TR_ANCHOR_SIZE}
-                    anchorStroke={TR_ANCHOR_STROKE}
-                    anchorCornerRadius={TR_ANCHOR_CORNER_RADIUS}
-                    rotateEnabled={false}
-                    ref={trRef}
-                    boundBoxFunc={boundBoxFunc}
-                />
+                <StrokeTransformer />
             </Layer>
         </>
     )

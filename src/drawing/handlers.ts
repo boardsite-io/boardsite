@@ -70,8 +70,8 @@ export function handleAddStroke(stroke: Stroke): void {
     addStrokes([stroke])
 }
 
-export function handleUpdateStroke(stroke: Stroke): void {
-    updateStrokes([stroke])
+export function handleUpdateStrokes(strokes: Stroke[]): void {
+    updateStrokes(strokes)
 }
 
 export function handleDeleteStroke(stroke: Stroke): void {

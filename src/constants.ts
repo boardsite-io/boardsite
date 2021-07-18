@@ -1,5 +1,12 @@
 import { PageBackground, Point, Tool, ToolType } from "./types"
 
+/**
+ * Returns true if in development mode
+ */
+export default function isDev(): boolean {
+    return !process.env.NODE_ENV || process.env.NODE_ENV === "development"
+}
+
 export const CANVAS_WIDTH = 620
 export const CANVAS_HEIGHT = 877
 export const CANVAS_GAP = 20
@@ -55,7 +62,7 @@ export const LIVESTROKE_PTS_OVERLAP = 1
 // maximum number of points a livestroke can have until cached
 export const MAX_LIVESTROKE_PTS = 20
 // epsilon for the Ramer–Douglas–Peucker algorithm
-export const RDP_EPSILON = 1
+export const RDP_EPSILON = 0.4
 // force the rdp algorithm to split the curve at least 2^3 times
 export const RDP_FORCE_SECTIONS = 3
 

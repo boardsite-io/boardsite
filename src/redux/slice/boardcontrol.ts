@@ -1,18 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { pageType } from "../../constants"
-import { Page, PageBackground, PageCollection, Stroke } from "../../types"
+import {
+    DocumentImage,
+    Page,
+    PageBackground,
+    PageCollection,
+    Stroke,
+} from "../../types"
 
 export interface BoardControlState {
     pageRank: string[]
     pageCollection: PageCollection
-    docs: any
+    docs: DocumentImage[]
     pageBG: PageBackground
 }
 
 const initState: BoardControlState = {
     pageRank: [],
     pageCollection: {},
-    docs: [],
+    docs: [] as DocumentImage[],
     pageBG: pageType.BLANK as PageBackground, // default
 }
 

@@ -6,7 +6,7 @@ import {
     RDP_FORCE_SECTIONS,
 } from "../../../constants"
 import store from "../../../redux/store"
-import { LiveStroke, Stroke, ToolType, TrRefType } from "../../../types"
+import { LiveStroke, Stroke, ToolType } from "../../../types"
 import { simplifyRDP } from "../../../drawing/simplify"
 import { BoardLiveStroke, isContinuous } from "./livestroke"
 import { getHitboxPolygon, setSelectedShapes } from "./hitbox"
@@ -36,7 +36,7 @@ export class BoardStroke extends BoardLiveStroke implements Stroke {
 
         if (pageId !== undefined) {
             // copy from livestroke
-            const liveStroke = (stroke as unknown) as LiveStroke
+            const liveStroke = stroke as unknown as LiveStroke
             this.points = liveStroke.flatPoints?.() as number[]
             // process points according to stroke type
             this.processPoints()
@@ -66,8 +66,8 @@ export class BoardStroke extends BoardLiveStroke implements Stroke {
         if (isContinuous(this.type)) {
             this.points = simplifyRDP(
                 this.points,
-                RDP_EPSILON / 2 / store.getState().viewControl.stageScale.x,
-                RDP_FORCE_SECTIONS
+                RDP_EPSILON / store.getState().viewControl.stageScale.x,
+                RDP_FORCE_SECTIONS + 1
             )
         }
 
@@ -98,12 +98,12 @@ export class BoardStroke extends BoardLiveStroke implements Stroke {
      * Handle action before stroke is added to store.
      * Returns true if stroke should be added, else false
      */
-    onRegister(trRef: TrRefType, e: KonvaEventObject<MouseEvent>): boolean {
+    onRegister(e: KonvaEventObject<MouseEvent>): boolean {
         switch (this.type) {
             case ToolType.Eraser:
                 return false
             case ToolType.Select: {
-                setSelectedShapes(this, trRef, e)
+                setSelectedShapes(this, e)
                 return false
             }
             default:

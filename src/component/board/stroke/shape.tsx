@@ -1,11 +1,9 @@
 import React, { memo, useState } from "react"
 import { Circle } from "react-konva"
 import { LineJoin, LineCap } from "konva/types/Shape"
-import { KonvaEventObject } from "konva/types/Node"
-import { Point, Stroke, ToolType } from "../../../types"
+import { Point, Stroke } from "../../../types"
 import { useCustomSelector } from "../../../redux/hooks"
 import store from "../../../redux/store"
-import { handleUpdateStroke } from "../../../drawing/handlers"
 import { MOVE_OPACITY } from "../../../constants"
 
 interface StrokeShapeProps {
@@ -36,39 +34,8 @@ export const StrokeShape = memo<StrokeShapeProps>(({ stroke, points }) => {
         }
     })
 
-    const onDragEnd = (e: KonvaEventObject<DragEvent>) => {
-        setDragging(false)
-        if (store.getState().drawControl.liveStroke.type !== ToolType.Eraser) {
-            handleUpdateStroke({
-                x: e.target.attrs.x,
-                y: e.target.attrs.y,
-                id: stroke.id,
-                scaleX: e.target.attrs.scaleX,
-                scaleY: e.target.attrs.scaleY,
-                pageId: stroke.pageId,
-                points: [],
-                type: stroke.type,
-                style: stroke.style,
-            })
-        }
-    }
-
-    const onTransformEnd = (e: KonvaEventObject<Event>) => {
-        handleUpdateStroke({
-            x: e.target.attrs.x,
-            y: e.target.attrs.y,
-            id: stroke.id,
-            scaleX: e.target.attrs.scaleX,
-            scaleY: e.target.attrs.scaleY,
-            pageId: stroke.pageId,
-            points: [],
-            type: stroke.type,
-            style: stroke.style,
-        })
-    }
-
     const shapeProps = {
-        name: "shape", // required to find via selector
+        name: stroke.pageId, // required to find via selector
         id: stroke.id ?? "",
         x: strokeSel.x ?? stroke.x,
         y: strokeSel.y ?? stroke.y,
@@ -81,10 +48,9 @@ export const StrokeShape = memo<StrokeShapeProps>(({ stroke, points }) => {
         strokeWidth: stroke.style.width,
         opacity: isDragging ? MOVE_OPACITY : stroke.style.opacity || 1,
         draggable: strokeSel.isDraggable ?? false,
-        listening: true,
         onDragStart: () => setDragging(true),
-        onDragEnd,
-        onTransformEnd,
+        onDragEnd: () => setDragging(false),
+        listening: true,
         shadowForStrokeEnabled: false, // for performance, see Konva docs
         points: points || stroke.points, // external supplied points may overwrite stroke.points for e.g. livestroke
     }
@@ -99,14 +65,16 @@ export const LiveStrokeShape = memo(() => {
     const u = useCustomSelector((state) => state.drawControl.liveStrokeUpdate)
     const shape = liveStroke.pointsSegments?.map(
         (subPts: number[], i: number) => (
-            <StrokeShape
-                // we can use the array index as key here
-                // since the array's order is not changed
-                // eslint-disable-next-line react/no-array-index-key
-                key={i}
-                stroke={(liveStroke as unknown) as Stroke}
-                points={subPts.slice()} // copy to trigger update
-            />
+            <>
+                <StrokeShape
+                    // we can use the array index as key here
+                    // since the array's order is not changed
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={i}
+                    stroke={liveStroke as unknown as Stroke}
+                    points={subPts.slice()} // copy to trigger update
+                />
+            </>
         )
     )
     return <>{shape}</>
@@ -132,7 +100,7 @@ export function debugStrokePoints(
                     x={pt.x}
                     y={pt.y}
                     radius={width / 2}
-                    fill="#ff0000"
+                    fill="#00ff00"
                     strokeWidth={0}
                 />
             ))}

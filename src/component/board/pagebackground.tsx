@@ -1,5 +1,6 @@
 import { Image } from "react-konva"
 import React, { memo, useEffect, useRef, useState } from "react"
+import * as types from "konva/types/shapes/Image"
 import {
     CANVAS_FULL_HEIGHT,
     CANVAS_HEIGHT,
@@ -15,7 +16,7 @@ interface PageBackgroundProps {
 }
 
 export default memo<PageBackgroundProps>(({ pageId }) => {
-    const ref = useRef<any>()
+    const ref = useRef<types.Image>(null)
     const [update, setUpdate] = useState(0)
     // select style, selecting background doesnt trigger, bc it compares on the same reference
     const style = useCustomSelector(
@@ -25,21 +26,20 @@ export default memo<PageBackgroundProps>(({ pageId }) => {
     const docs = useCustomSelector((state) => state.boardControl.docs)
     const pageRank = useCustomSelector((state) => state.boardControl.pageRank)
 
-    const { pageNum } = store.getState().boardControl.pageCollection[
-        pageId
-    ]?.meta?.background
+    const { pageNum } =
+        store.getState().boardControl.pageCollection[pageId]?.meta?.background
 
     // cache the shape on update
     useEffect(() => {
         // dont cache document image
         if (style !== pageType.DOC) {
-            ref.current.cache({ pixelRatio: 2 })
+            ref.current?.cache({ pixelRatio: 2 })
         }
     }, [update])
 
     // clear the cache and redraw when pagebackground changes
     useEffect(() => {
-        ref.current.clearCache()
+        ref.current?.clearCache()
         // schedule new caching
         setUpdate((prev) => prev + 1)
     }, [style])

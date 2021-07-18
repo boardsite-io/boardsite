@@ -1,7 +1,8 @@
 import { KonvaEventObject, Node, NodeConfig } from "konva/types/Node"
 import { Vector, Polygon, Box, testPolygonPolygon } from "sat"
+import { SET_TR_NODES } from "../../../redux/slice/drawcontrol"
 import store from "../../../redux/store"
-import { Stroke, TrRefType } from "../../../types"
+import { Stroke } from "../../../types"
 
 export function getHitboxPolygon(
     [x1, y1, x2, y2]: number[],
@@ -72,7 +73,6 @@ export function matchStrokeCollision(
 
 export function setSelectedShapes(
     stroke: Stroke, // selection rectangle
-    trRef: TrRefType,
     e: KonvaEventObject<MouseEvent>
 ): void {
     const selectedIds = matchStrokeCollision(
@@ -82,12 +82,12 @@ export function setSelectedShapes(
     const selectedShapes: Node<NodeConfig>[] = []
     e.target
         .getParent()
-        ?.find(".shape")
+        ?.find(`.${stroke.pageId}`)
         .toArray()
         .forEach((element: Node<NodeConfig>) => {
             if (selectedIds[element.attrs.id]) {
                 selectedShapes.push(element)
             }
         })
-    trRef?.current?.nodes(selectedShapes)
+    store.dispatch(SET_TR_NODES(selectedShapes))
 }

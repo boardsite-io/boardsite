@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react"
 import { Rect } from "react-konva"
+import * as types from "konva/types/shapes/Rect"
 import { KonvaEventObject } from "konva/types/Node"
 import { Stage } from "konva/types/Stage"
 import { Vector2d } from "konva/types/types"
@@ -18,14 +19,12 @@ import {
 } from "../../constants"
 import { SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
 import { useCustomSelector } from "../../redux/hooks"
-import { TrRefType } from "../../types"
 
 interface PageListenerProps {
     pageId: string
-    trRef: TrRefType
 }
 
-const PageListener: React.FC<PageListenerProps> = ({ pageId, trRef }) => {
+const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
     const isMouseDown = useCustomSelector(
         (state) => state.drawControl.isMouseDown
     )
@@ -73,25 +72,25 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId, trRef }) => {
         moveLiveStroke(pos)
 
         // register finished stroke
-        registerLiveStroke(pageId, trRef, e)
+        registerLiveStroke(pageId, e)
     }
 
     const onTouchStart = (e: KonvaEventObject<TouchEvent>) => {
         if (isValidTouch(e)) {
-            onMouseDown((e as unknown) as KonvaEventObject<MouseEvent>)
+            onMouseDown(e as unknown as KonvaEventObject<MouseEvent>)
         }
     }
 
     const onTouchMove = (e: KonvaEventObject<TouchEvent>) => {
         if (isValidTouch(e)) {
-            onMouseMove((e as unknown) as KonvaEventObject<MouseEvent>)
+            onMouseMove(e as unknown as KonvaEventObject<MouseEvent>)
         } else {
             abortLiveStroke()
         }
     }
 
     const onTouchEnd = (e: KonvaEventObject<TouchEvent>) => {
-        onMouseUp((e as unknown) as KonvaEventObject<MouseEvent>)
+        onMouseUp(e as unknown as KonvaEventObject<MouseEvent>)
     }
 
     const isValidTouch = (e: KonvaEventObject<TouchEvent>) => {
@@ -112,8 +111,10 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId, trRef }) => {
     }
 
     // cache the rect for performance
-    const ref = useRef<any>()
-    useEffect(() => ref.current?.cache(), [])
+    const ref = useRef<types.Rect>(null)
+    useEffect(() => {
+        ref.current?.cache()
+    }, [])
     const isListening = useCustomSelector(
         (state) => state.drawControl.isListening
     )

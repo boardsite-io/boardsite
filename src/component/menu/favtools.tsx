@@ -1,7 +1,7 @@
 import { nanoid } from "@reduxjs/toolkit"
 import React from "react"
 import { BsPencil } from "react-icons/bs"
-import { CgController, CgErase } from "react-icons/cg"
+import { CgErase } from "react-icons/cg"
 import { FiCircle, FiMinus, FiPlus, FiSquare } from "react-icons/fi"
 import { ADD_FAV_TOOL } from "../../redux/slice/drawcontrol"
 import store from "../../redux/store"
@@ -28,9 +28,6 @@ const FavTools: React.FC = () => {
                         break
                     case ToolType.Eraser:
                         icon = <CgErase id="icon" />
-                        break
-                    case ToolType.Drag:
-                        icon = <CgController id="icon" />
                         break
                     case ToolType.Line:
                         icon = <FiMinus id="icon" />

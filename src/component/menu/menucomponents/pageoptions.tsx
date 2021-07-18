@@ -104,14 +104,17 @@ const PageOptions: React.FC = () => {
                     <TextField
                         type="file"
                         error={fileErr}
-                        onInput={(e: any) =>
+                        onInput={(e: React.SyntheticEvent) =>
                             (async () => {
-                                const file = await getPDFfromForm(
-                                    e.target.files[0]
-                                )
-                                await loadNewPDF(file)
-                                setOpenFileDiag(false)
-                                setFileErr(false)
+                                const ev = e.target as HTMLInputElement
+                                if (ev.files && ev.files[0]) {
+                                    const fileData = await getPDFfromForm(
+                                        ev.files[0]
+                                    )
+                                    await loadNewPDF(fileData)
+                                    setOpenFileDiag(false)
+                                    setFileErr(false)
+                                }
                             })().catch(() => setFileErr(true))
                         }
                     />

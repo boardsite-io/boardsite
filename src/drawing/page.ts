@@ -1,7 +1,8 @@
 import { nanoid } from "@reduxjs/toolkit"
 import { Shape, ShapeConfig } from "konva/types/Shape"
 import { Context } from "konva/types/Context"
-import * as pdfjs from "pdfjs-dist/es5/build/pdf"
+// eslint-disable-next-line import/no-unresolved
+import * as pdfjs from "pdfjs-dist/legacy/build/pdf"
 // import pdfjsWorker from "pdfjs-dist/es5/build/pdf.worker.entry"
 import { RenderParameters } from "pdfjs-dist/types/display/api"
 
@@ -12,10 +13,10 @@ import {
     SET_PDF,
 } from "../redux/slice/boardcontrol"
 import store from "../redux/store"
-import { Page, PageBackground, PageMeta, Stroke, StrokeMap } from "../types"
+import { Page, PageBackground, PageMeta, StrokeMap } from "../types"
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const pdfjsWorker: any = require("pdfjs-dist/es5/build/pdf.worker.entry")
+const pdfjsWorker: any = require("pdfjs-dist/legacy/build/pdf.worker.entry")
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
@@ -55,21 +56,21 @@ export class BoardPage implements Page {
     }
 }
 
-export async function getPDFfromForm(file: any) {
+export async function getPDFfromForm(file: File): Promise<Uint8Array> {
     const fileReader = new FileReader()
-    const p = new Promise((resolve) => {
+    const p = new Promise<Uint8Array>((resolve) => {
         // eslint-disable-next-line prettier/prettier
         // eslint-disable-next-line func-names
         fileReader.onload = function () {
-            resolve(new Uint8Array(this.result as any))
+            resolve(new Uint8Array(this.result as ArrayBuffer))
         }
     })
     fileReader.readAsArrayBuffer(file)
     return p
 }
 
-export async function loadNewPDF(file: any): Promise<void> {
-    const pdf = await pdfjs.getDocument(file).promise
+export async function loadNewPDF(fileData: Uint8Array): Promise<void> {
+    const pdf = await pdfjs.getDocument(fileData).promise
 
     // get number of pages for document
     // eslint-disable-next-line no-underscore-dangle
