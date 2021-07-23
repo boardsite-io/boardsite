@@ -1,3 +1,4 @@
+import React from "react"
 import {
     addPageSession,
     updatePageSession,
@@ -13,7 +14,7 @@ import {
 
 import store from "../redux/store"
 import { PageBackground, PageMeta, Stroke } from "../types"
-import { BoardPage } from "./page"
+import { BoardPage, getPDFfromForm, loadNewPDF } from "./page"
 import {
     addStrokes,
     deleteStrokes,
@@ -94,6 +95,14 @@ export function handlePageBackground(style: PageBackground): void {
         updatePageSession(getCurrentPageId(), meta)
     } else {
         store.dispatch(SET_PAGEBG({ pageId: getCurrentPageId(), style }))
+    }
+}
+
+export async function handleDocument(e: React.SyntheticEvent): Promise<void> {
+    const ev = e.target as HTMLInputElement
+    if (ev.files && ev.files[0]) {
+        const fileData = await getPDFfromForm(ev.files[0])
+        await loadNewPDF(fileData)
     }
 }
 

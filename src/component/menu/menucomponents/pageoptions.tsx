@@ -22,10 +22,10 @@ import {
     handleClearPage,
     handleDeleteAllPages,
     handleDeletePage,
+    handleDocument,
 } from "../../../drawing/handlers"
 import "../../../css/menucomponents/pageoptions.css"
 import PageSettings from "./pagesettings"
-import { getPDFfromForm, loadNewPDF } from "../../../drawing/page"
 
 const PageOptions: React.FC = () => {
     const [open, setOpen] = useState(false)
@@ -105,17 +105,12 @@ const PageOptions: React.FC = () => {
                         type="file"
                         error={fileErr}
                         onInput={(e: React.SyntheticEvent) =>
-                            (async () => {
-                                const ev = e.target as HTMLInputElement
-                                if (ev.files && ev.files[0]) {
-                                    const fileData = await getPDFfromForm(
-                                        ev.files[0]
-                                    )
-                                    await loadNewPDF(fileData)
+                            handleDocument(e)
+                                .then(() => {
                                     setOpenFileDiag(false)
                                     setFileErr(false)
-                                }
-                            })().catch(() => setFileErr(true))
+                                })
+                                .catch(() => setFileErr(true))
                         }
                     />
                 </DialogContent>
