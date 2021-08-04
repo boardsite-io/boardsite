@@ -6,6 +6,7 @@ import SessionDialog from "./menucomponents/sessiondialog"
 import ViewZoom from "./menucomponents/viewzoom"
 import ViewOptions from "./menucomponents/viewoptions"
 import PageOptions from "./menucomponents/pageoptions"
+import FileDropButton from "./menucomponents/FileDropButton/FileDropButton"
 
 const Toolbar: React.FC = () => (
     <div className="toolbar">
@@ -13,6 +14,7 @@ const Toolbar: React.FC = () => (
             <Settings />
             <SessionDialog />
             <PageOptions />
+            <FileDropButton />
         </div>
         <div className="toolbar-group">
             <UndoRedo />
