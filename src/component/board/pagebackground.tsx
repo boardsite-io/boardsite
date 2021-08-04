@@ -7,7 +7,7 @@ import {
     CANVAS_WIDTH,
     pageType,
 } from "../../constants"
-import { pageBackground } from "../../drawing/page"
+import { loadNewPDF, pageBackground } from "../../drawing/page"
 import { useCustomSelector } from "../../redux/hooks"
 import store from "../../redux/store"
 
@@ -26,8 +26,23 @@ export default memo<PageBackgroundProps>(({ pageId }) => {
     const docs = useCustomSelector((state) => state.boardControl.docs)
     const pageRank = useCustomSelector((state) => state.boardControl.pageRank)
 
-    const { pageNum } =
-        store.getState().boardControl.pageCollection[pageId]?.meta?.background
+    const { background } =
+        store.getState().boardControl.pageCollection[pageId]?.meta
+
+    // get correct image data for document type background
+    const getImage = () => {
+        if (style !== pageType.DOC) {
+            return undefined
+        }
+        const img = docs[(background.pageNum ?? 1) - 1]
+        // if image data not available, load document
+        if (!img) {
+            loadNewPDF(new URL(background.url ?? "")).then(() =>
+                setUpdate((prev) => prev + 1)
+            )
+        }
+        return img
+    }
 
     // cache the shape on update
     useEffect(() => {
@@ -47,9 +62,7 @@ export default memo<PageBackgroundProps>(({ pageId }) => {
     return (
         <Image
             ref={ref}
-            image={
-                style === pageType.DOC ? docs[(pageNum ?? 1) - 1] : undefined
-            }
+            image={getImage()}
             height={CANVAS_HEIGHT}
             width={CANVAS_WIDTH}
             x={0}

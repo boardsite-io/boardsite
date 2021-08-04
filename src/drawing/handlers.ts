@@ -7,11 +7,13 @@ import {
     addAttachementSession,
     getAttachmentURL,
 } from "../api/websocket"
+import { pageType } from "../constants"
 import {
     CLEAR_PAGE,
     DELETE_PAGE,
     DELETE_ALL_PAGES,
     SET_PAGEBG,
+    SET_PAGEMETA,
 } from "../redux/slice/boardcontrol"
 
 import store from "../redux/store"
@@ -92,11 +94,22 @@ export function handleRedo(): void {
 }
 
 export function handlePageBackground(style: PageBackground): void {
+    // update the default page type
+    store.dispatch(SET_PAGEBG(style))
+
+    // cannot update background of doc type
+    if (getCurrentPage().meta.background.style === pageType.DOC) {
+        return
+    }
+
+    const meta: PageMeta = {
+        background: { ...getCurrentPage().meta.background, style },
+    }
+
     if (isConnected()) {
-        const meta: PageMeta = { background: { style } }
-        updatePageSession(getCurrentPageId(), meta)
+        updatePageSession(getCurrentPage().pageId, meta)
     } else {
-        store.dispatch(SET_PAGEBG({ pageId: getCurrentPageId(), style }))
+        store.dispatch(SET_PAGEMETA({ pageId: getCurrentPage().pageId, meta }))
     }
 }
 
@@ -104,18 +117,46 @@ export async function handleDocument(e: React.SyntheticEvent): Promise<void> {
     const ev = e.target as HTMLInputElement
     if (ev.files && ev.files[0]) {
         let fileOrigin: Uint8Array | URL
+        let attachId = ""
         if (isConnected()) {
-            const attachId = await addAttachementSession(ev.files[0])
+            attachId = await addAttachementSession(ev.files[0])
             fileOrigin = getAttachmentURL(attachId)
+            await loadNewPDF(fileOrigin)
+            handleAddDocumentPages(fileOrigin)
         } else {
             fileOrigin = await getPDFfromForm(ev.files[0])
+            await loadNewPDF(fileOrigin)
+            handleAddDocumentPages()
         }
-        await loadNewPDF(fileOrigin)
     }
+}
+
+export function handleAddDocumentPages(attachURL?: URL): void {
+    const pages = store.getState().boardControl.docs
+    const url = attachURL ? attachURL.toString() : ""
+
+    handleDeleteAllPages()
+
+    pages.forEach((_, i) => {
+        const page = new BoardPage(pageType.DOC, i + 1, url)
+        if (isConnected()) {
+            addPageSession(page, -1)
+        } else {
+            page.add(-1) // append subsequent pages at the end
+        }
+    })
 }
 
 function getCurrentPageId() {
     return store.getState().boardControl.pageRank[
         store.getState().viewControl.currentPageIndex
+    ]
+}
+
+function getCurrentPage() {
+    return store.getState().boardControl.pageCollection[
+        store.getState().boardControl.pageRank[
+            store.getState().viewControl.currentPageIndex
+        ]
     ]
 }

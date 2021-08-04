@@ -61,8 +61,7 @@ const boardControlSlice = createSlice({
         },
 
         SET_PAGEBG: (state, action) => {
-            const { pageId, style } = action.payload
-            state.pageCollection[pageId]?.updateBackground(style)
+            const style = action.payload
             state.pageBG = style
         },
 

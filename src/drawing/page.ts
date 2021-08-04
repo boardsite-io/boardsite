@@ -8,11 +8,7 @@ import * as pdfjs from "pdfjs-dist/legacy/build/pdf"
 import { RenderParameters } from "pdfjs-dist/types/display/api"
 
 import { DOC_SCALE, pageType } from "../constants"
-import {
-    ADD_PAGE,
-    DELETE_ALL_PAGES,
-    SET_PDF,
-} from "../redux/slice/boardcontrol"
+import { ADD_PAGE, SET_PDF } from "../redux/slice/boardcontrol"
 import store from "../redux/store"
 import { Page, PageBackground, PageMeta, StrokeMap } from "../types"
 
@@ -22,12 +18,13 @@ const pdfjsWorker: any = require("pdfjs-dist/legacy/build/pdf.worker.entry")
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
 export class BoardPage implements Page {
-    constructor(style?: PageBackground, pageNum?: number) {
+    constructor(style?: PageBackground, pageNum?: number, attachURL?: string) {
         this.pageId = nanoid(8)
         this.meta = {
             background: {
                 style: style ?? store.getState().boardControl.pageBG, // fallback type
                 pageNum: pageNum ?? -1,
+                url: attachURL ?? "",
             },
         }
     }
@@ -53,13 +50,6 @@ export class BoardPage implements Page {
         // update only fields that are different
         this.meta = { ...this.meta, ...meta }
     }
-
-    updateBackground(style: PageBackground): void {
-        // cannot change background of document
-        if (this.meta.background.style !== pageType.DOC) {
-            this.meta.background.style = style
-        }
-    }
 }
 
 export async function getPDFfromForm(file: File): Promise<Uint8Array> {
@@ -75,6 +65,9 @@ export async function getPDFfromForm(file: File): Promise<Uint8Array> {
     return p
 }
 
+/**
+ * convert pdf document from data/url to image data and cache it to redux
+ */
 export async function loadNewPDF(fileData: Uint8Array | URL): Promise<void> {
     const pdf = await pdfjs.getDocument(fileData).promise
 
@@ -124,12 +117,6 @@ export async function loadNewPDF(fileData: Uint8Array | URL): Promise<void> {
     // save loaded pages in store
     const data = await Promise.all(pages)
     store.dispatch(SET_PDF(data))
-
-    store.dispatch(DELETE_ALL_PAGES())
-    pages.forEach((_, i) => {
-        const page = new BoardPage(pageType.DOC, i + 1)
-        page.add(-1) // append subsequent pages at the end
-    })
 }
 
 const blank = (context: Context, shape: Shape<ShapeConfig>): void => {
