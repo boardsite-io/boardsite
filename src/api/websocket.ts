@@ -1,13 +1,14 @@
 import store from "../redux/store"
 import {
-    addPage,
-    updatePage,
-    createSession,
-    createUser,
+    postPage,
+    putPage,
+    postSession,
+    postUser,
     deletePage,
     getPages,
     getStrokes,
     getUsers,
+    postAttachement,
 } from "./request"
 import {
     CREATE_WS,
@@ -133,10 +134,10 @@ export function isConnected(): boolean {
 }
 
 export async function newSession(): Promise<string> {
-    const sessionId = await createSession()
+    const sessionId = await postSession()
     store.dispatch(DELETE_ALL_PAGES())
     // create a pageid which will be added when joining
-    await addPage(sessionId, new BoardPage(), 0)
+    await postPage(sessionId, new BoardPage(), 0)
     return sessionId
 }
 
@@ -146,7 +147,7 @@ export async function joinSession(
     color = store.getState().webControl.user.color
 ): Promise<void> {
     // create a new user for us
-    const user = await createUser(sessionId, { alias, color } as User)
+    const user = await postUser(sessionId, { alias, color } as User)
     await createWebsocket(sessionId, user)
 
     store.dispatch(SET_SESSION_USERS(await getUsers(sessionId)))
@@ -189,7 +190,7 @@ export function eraseStrokes(strokes: { id: string; pageId: string }[]): void {
 }
 
 export function addPageSession(page: BoardPage, pageIndex: number): void {
-    addPage(store.getState().webControl.sessionId, page, pageIndex)
+    postPage(store.getState().webControl.sessionId, page, pageIndex)
 }
 
 export function deletePageSession(pageId: string): void {
@@ -212,5 +213,14 @@ export function updatePageSession(
     meta: PageMeta | undefined,
     clear = false
 ): void {
-    updatePage(store.getState().webControl.sessionId, pageId, meta, clear)
+    putPage(store.getState().webControl.sessionId, pageId, meta, clear)
+}
+
+export function addAttachementSession(file: File): Promise<string> {
+    return postAttachement(store.getState().webControl.sessionId, file)
+}
+
+export function getAttachmentURL(attachId: string): URL {
+    const { apiURL, sessionId } = store.getState().webControl
+    return new URL(attachId, `${apiURL.toString()}b/${sessionId}/attachments/`)
 }

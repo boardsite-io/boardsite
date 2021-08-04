@@ -4,6 +4,8 @@ import {
     updatePageSession,
     deletePageSession,
     isConnected,
+    addAttachementSession,
+    getAttachmentURL,
 } from "../api/websocket"
 import {
     CLEAR_PAGE,
@@ -101,8 +103,14 @@ export function handlePageBackground(style: PageBackground): void {
 export async function handleDocument(e: React.SyntheticEvent): Promise<void> {
     const ev = e.target as HTMLInputElement
     if (ev.files && ev.files[0]) {
-        const fileData = await getPDFfromForm(ev.files[0])
-        await loadNewPDF(fileData)
+        let fileOrigin: Uint8Array | URL
+        if (isConnected()) {
+            const attachId = await addAttachementSession(ev.files[0])
+            fileOrigin = getAttachmentURL(attachId)
+        } else {
+            fileOrigin = await getPDFfromForm(ev.files[0])
+        }
+        await loadNewPDF(fileOrigin)
     }
 }
 

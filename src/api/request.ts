@@ -23,24 +23,44 @@ const apiRequest = axios.create({
     timeout: 3000,
 })
 
+const fileRequest = axios.create({
+    transformResponse: [
+        (data) => {
+            try {
+                return JSON.parse(data).content // only need content
+            } catch {
+                return {}
+            }
+        },
+    ],
+    headers: {
+        // prettier-ignore
+        "Accept": "application/json",
+        "Content-Type": "multipart/form-data",
+    },
+    timeout: 3000,
+})
+
 /**
  * Send data request to API.
  */
 export async function sendRequest<T>(
     url: string,
     method: string,
-    data?: unknown | undefined
+    data?: unknown,
+    config?: AxiosRequestConfig
 ): Promise<T> {
     const baseURL = store.getState().webControl.apiURL.toString()
     const response = await apiRequest({
         url: `${baseURL}b/${url}`,
         method,
         data,
+        ...config,
     } as AxiosRequestConfig)
     return response.data
 }
 
-export function createSession(): Promise<string> {
+export function postSession(): Promise<string> {
     return sendRequest("create", "post")
 }
 
@@ -48,7 +68,7 @@ export function getUsers(sessionId: string): Promise<{ [uid: string]: User }> {
     return sendRequest(`${sessionId}/users`, "get")
 }
 
-export function createUser(sessionId: string, data: User): Promise<User> {
+export function postUser(sessionId: string, data: User): Promise<User> {
     return sendRequest(`${sessionId}/users`, "post", data)
 }
 
@@ -63,7 +83,7 @@ export function getStrokes(
     return sendRequest(`${sessionId}/pages/${pageId}`, "get")
 }
 
-export async function addPage(
+export function postPage(
     sessionId: string,
     page: BoardPage,
     pageIndex: number
@@ -75,7 +95,7 @@ export async function addPage(
     })
 }
 
-export async function updatePage(
+export function putPage(
     sessionId: string,
     pageId: string,
     meta: PageMeta | undefined,
@@ -89,4 +109,21 @@ export async function updatePage(
 
 export function deletePage(sessionId: string, pageId: string): Promise<void> {
     return sendRequest(`${sessionId}/pages/${pageId}`, "delete")
+}
+
+export async function postAttachement(
+    sessionId: string,
+    file: File
+): Promise<string> {
+    const formData = new FormData()
+    formData.append("file", file)
+
+    const baseURL = store.getState().webControl.apiURL.toString()
+    const response = await fileRequest({
+        url: `${baseURL}b/${sessionId}/attachments`,
+        method: "POST",
+        data: formData,
+    } as AxiosRequestConfig)
+
+    return response.data
 }

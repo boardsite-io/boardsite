@@ -74,7 +74,7 @@ export async function getPDFfromForm(file: File): Promise<Uint8Array> {
     return p
 }
 
-export async function loadNewPDF(fileData: Uint8Array): Promise<void> {
+export async function loadNewPDF(fileData: Uint8Array | URL): Promise<void> {
     const pdf = await pdfjs.getDocument(fileData).promise
 
     // get number of pages for document
