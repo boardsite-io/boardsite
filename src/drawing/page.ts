@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { nanoid } from "@reduxjs/toolkit"
 import { Shape, ShapeConfig } from "konva/types/Shape"
 import { Context } from "konva/types/Context"
@@ -15,7 +16,7 @@ import {
 import store from "../redux/store"
 import { Page, PageBackground, PageMeta, StrokeMap } from "../types"
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const pdfjsWorker: any = require("pdfjs-dist/legacy/build/pdf.worker.entry")
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker

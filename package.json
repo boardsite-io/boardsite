@@ -30,9 +30,9 @@
         "redux-undo": "^1.0.1",
         "reselect": "^4.0.0",
         "sat": "^0.9.0",
+        "styled-components": "^5.3.0",
         "unique-names-generator": "^4.4.0",
-        "worker-loader": "^3.0.8",
-        "styled-components": "^5.3.0"
+        "worker-loader": "^3.0.8"
     },
     "scripts": {
         "start": "REACT_APP_B_API_URL='http://localhost:8000' react-scripts start",
@@ -64,7 +64,7 @@
         "@testing-library/user-event": "^12.7.2",
         "@types/jest": "^26.0.23",
         "@types/node": "^15.6.0",
-        "@types/pdfjs-dist": "^2.7.2",
+        "@types/pdfjs-dist": "^2.7.4",
         "@types/react": "^17.0.6",
         "@types/react-dom": "^17.0.5",
         "@types/react-redux": "^7.1.16",
