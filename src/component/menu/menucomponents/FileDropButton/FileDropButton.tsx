@@ -4,7 +4,7 @@ import Dialog from "@material-ui/core/Dialog"
 import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 import { BsCloudUpload } from "react-icons/bs"
-import FileDropZone from "./FileDropZone"
+import FileDropZone from "./filedropzone"
 
 const FileDropButton: React.FC = () => {
     const [dialogOpen, setDialogOpen] = useState(false)
@@ -28,7 +28,7 @@ const FileDropButton: React.FC = () => {
                 open={dialogOpen}
                 onClose={handleClose}>
                 <DialogContent>
-                    <FileDropZone />
+                    <FileDropZone closeDialog={handleClose} />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">

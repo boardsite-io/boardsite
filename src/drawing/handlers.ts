@@ -1,4 +1,3 @@
-import React from "react"
 import {
     addPageSession,
     updatePageSession,
@@ -113,21 +112,18 @@ export function handlePageBackground(style: PageBackground): void {
     }
 }
 
-export async function handleDocument(e: React.SyntheticEvent): Promise<void> {
-    const ev = e.target as HTMLInputElement
-    if (ev.files && ev.files[0]) {
-        let fileOrigin: Uint8Array | URL
-        let attachId = ""
-        if (isConnected()) {
-            attachId = await addAttachementSession(ev.files[0])
-            fileOrigin = getAttachmentURL(attachId)
-            await loadNewPDF(fileOrigin)
-            handleAddDocumentPages(fileOrigin)
-        } else {
-            fileOrigin = await getPDFfromForm(ev.files[0])
-            await loadNewPDF(fileOrigin)
-            handleAddDocumentPages()
-        }
+export async function handleDocument(file: File): Promise<void> {
+    let fileOrigin: Uint8Array | URL
+    let attachId = ""
+    if (isConnected()) {
+        attachId = await addAttachementSession(file)
+        fileOrigin = getAttachmentURL(attachId)
+        await loadNewPDF(fileOrigin)
+        handleAddDocumentPages(fileOrigin)
+    } else {
+        fileOrigin = await getPDFfromForm(file)
+        await loadNewPDF(fileOrigin)
+        handleAddDocumentPages()
     }
 }
 

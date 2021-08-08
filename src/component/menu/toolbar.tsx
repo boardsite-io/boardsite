@@ -6,7 +6,7 @@ import SessionDialog from "./menucomponents/sessiondialog"
 import ViewZoom from "./menucomponents/viewzoom"
 import ViewOptions from "./menucomponents/viewoptions"
 import PageOptions from "./menucomponents/pageoptions"
-import FileDropButton from "./menucomponents/FileDropButton/FileDropButton"
+import FileDropButton from "./menucomponents/filedropbutton/filedropbutton"
 
 const Toolbar: React.FC = () => (
     <div className="toolbar">

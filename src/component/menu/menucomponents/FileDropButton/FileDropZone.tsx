@@ -1,21 +1,30 @@
-import React, { useRef, useState } from "react"
+import React, { useState } from "react"
+import { TextField } from "@material-ui/core"
 import {
     StyledDivNoTouch,
     StyledFileDropZone,
     StyledIcon,
     StyledSubtitle,
     StyledTitle,
-} from "./FileDropZone.styled"
+} from "./filedropbutton.styled"
+import { handleDocument } from "../../../../drawing/handlers"
 
-const FileDropZone: React.FC = () => {
+interface FileDropZoneProps {
+    closeDialog: () => void
+}
+
+const FileDropZone: React.FC<FileDropZoneProps> = ({ closeDialog }) => {
     const [hovering, setHovering] = useState<boolean>(false)
-    const fileRef = useRef<HTMLInputElement>(null)
 
     const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
         setHovering(false)
         // Prevent default behavior (Prevent file from being opened)
         e.preventDefault()
 
+        const file = e.dataTransfer.items[0].getAsFile()
+        if (file) {
+            handleDocument(file).then(() => closeDialog())
+        }
         // if (e.dataTransfer.items) {
         //     // Use DataTransferItemList interface to access the file(s)
         //     for (var i = 0; i < e.dataTransfer.items.length; i++) {
@@ -44,8 +53,11 @@ const FileDropZone: React.FC = () => {
     const onDragLeave = () => {
         setHovering(false)
     }
-    const onSubmit = () => {
-        console.log(fileRef?.current?.files)
+    const onInput = (e: React.SyntheticEvent) => {
+        const target = e.target as HTMLInputElement
+        if (target.files && target.files[0]) {
+            handleDocument(target.files[0]).then(() => closeDialog())
+        }
     }
 
     return (
@@ -62,11 +74,11 @@ const FileDropZone: React.FC = () => {
                     <StyledSubtitle>Drag and drop files here</StyledSubtitle>
                 </StyledDivNoTouch>
             </StyledFileDropZone>
-            <input
+            <TextField
                 type="file"
                 id="selectedFile"
                 style={{ display: "none" }}
-                onChange={onSubmit}
+                onInput={onInput}
             />
         </>
     )

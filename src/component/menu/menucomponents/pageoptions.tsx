@@ -22,7 +22,6 @@ import {
     handleClearPage,
     handleDeleteAllPages,
     handleDeletePage,
-    handleDocument,
 } from "../../../drawing/handlers"
 import "../../../css/menucomponents/pageoptions.css"
 import PageSettings from "./pagesettings"
@@ -104,14 +103,7 @@ const PageOptions: React.FC = () => {
                     <TextField
                         type="file"
                         error={fileErr}
-                        onInput={(e: React.SyntheticEvent) =>
-                            handleDocument(e)
-                                .then(() => {
-                                    setOpenFileDiag(false)
-                                    setFileErr(false)
-                                })
-                                .catch(() => setFileErr(true))
-                        }
+                        onInput={undefined}
                     />
                 </DialogContent>
                 <DialogActions>
