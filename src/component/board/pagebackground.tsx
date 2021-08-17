@@ -5,6 +5,7 @@ import {
     CANVAS_FULL_HEIGHT,
     CANVAS_HEIGHT,
     CANVAS_WIDTH,
+    DOC_SCALE,
     pageType,
 } from "../../constants"
 import { loadNewPDF, pageBackground } from "../../drawing/page"
@@ -46,10 +47,7 @@ export default memo<PageBackgroundProps>(({ pageId }) => {
 
     // cache the shape on update
     useEffect(() => {
-        // dont cache document image
-        if (style !== pageType.DOC) {
-            ref.current?.cache({ pixelRatio: 2 })
-        }
+        ref.current?.cache({ pixelRatio: DOC_SCALE })
     }, [update])
 
     // clear the cache and redraw when pagebackground changes
