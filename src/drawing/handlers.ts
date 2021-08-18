@@ -128,13 +128,13 @@ export async function handleDocument(file: File): Promise<void> {
 }
 
 export function handleAddDocumentPages(attachURL?: URL): void {
-    const pages = store.getState().boardControl.docs
+    const documentPages = store.getState().boardControl.document
     const url = attachURL ? attachURL.toString() : ""
 
     handleDeleteAllPages()
 
-    pages.forEach((_, i) => {
-        const page = new BoardPage(pageType.DOC, i + 1, url)
+    documentPages.forEach((_, i) => {
+        const page = new BoardPage(pageType.DOC, i, url)
         if (isConnected()) {
             addPageSession(page, -1)
         } else {

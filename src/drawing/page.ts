@@ -23,8 +23,8 @@ export class BoardPage implements Page {
         this.meta = {
             background: {
                 style: style ?? store.getState().boardControl.pageBG, // fallback type
-                pageNum: pageNum ?? -1,
                 url: attachURL ?? "",
+                documentPageNum: pageNum ?? 0,
             },
         }
     }
@@ -116,7 +116,12 @@ export async function loadNewPDF(fileData: Uint8Array | URL): Promise<void> {
 
     // save loaded pages in store
     const data = await Promise.all(pages)
-    store.dispatch(SET_PDF(data))
+    store.dispatch(
+        SET_PDF({
+            pageImages: data,
+            documentSrc: fileData,
+        })
+    )
 }
 
 const blank = (context: Context, shape: Shape<ShapeConfig>): void => {

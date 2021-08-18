@@ -22,9 +22,9 @@ export default memo<PageBackgroundProps>(({ pageId }) => {
     // select style, selecting background doesnt trigger, bc it compares on the same reference
     const style = useCustomSelector(
         (state) =>
-            state.boardControl.pageCollection[pageId]?.meta?.background.style
+            state.boardControl.pageCollection[pageId]?.meta?.background?.style
     )
-    const docs = useCustomSelector((state) => state.boardControl.docs)
+    const document = useCustomSelector((state) => state.boardControl.document)
     const pageRank = useCustomSelector((state) => state.boardControl.pageRank)
 
     const { background } =
@@ -35,10 +35,10 @@ export default memo<PageBackgroundProps>(({ pageId }) => {
         if (style !== pageType.DOC) {
             return undefined
         }
-        const img = docs[(background.pageNum ?? 1) - 1]
+        const img = document[background.documentPageNum]
         // if image data not available, load document
         if (!img) {
-            loadNewPDF(new URL(background.url ?? "")).then(() =>
+            loadNewPDF(new URL(background.url)).then(() =>
                 setUpdate((prev) => prev + 1)
             )
         }

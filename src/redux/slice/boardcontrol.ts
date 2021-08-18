@@ -12,14 +12,16 @@ import {
 export interface BoardControlState {
     pageRank: string[]
     pageCollection: PageCollection
-    docs: DocumentImage[]
+    document: DocumentImage[]
+    documentSrc: string | Uint8Array
     pageBG: PageBackground
 }
 
 const initState: BoardControlState = {
     pageRank: [],
     pageCollection: {},
-    docs: [] as DocumentImage[],
+    document: [] as DocumentImage[],
+    documentSrc: "",
     pageBG: pageType.BLANK as PageBackground, // default
 }
 
@@ -137,7 +139,9 @@ const boardControlSlice = createSlice({
         },
 
         SET_PDF: (state, action) => {
-            state.docs = action.payload
+            const { pageImages, documentSrc } = action.payload
+            state.document = pageImages
+            state.documentSrc = documentSrc
         },
     },
 })
