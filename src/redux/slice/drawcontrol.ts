@@ -52,7 +52,7 @@ const drawControlSlice = createSlice({
             const index = action.payload as number
             const tool: Tool = {
                 type: state.liveStroke.type,
-                style: state.liveStroke.style,
+                style: { ...state.liveStroke.style },
             }
 
             // validate tool candidate
@@ -70,7 +70,7 @@ const drawControlSlice = createSlice({
         ADD_FAV_TOOL: (state) => {
             const tool: Tool = {
                 type: state.liveStroke.type,
-                style: state.liveStroke.style,
+                style: { ...state.liveStroke.style },
             }
 
             // validate tool candidate
@@ -83,8 +83,11 @@ const drawControlSlice = createSlice({
         },
         SET_TOOL: (state, action) => {
             const { type, style } = action.payload
+            state.liveStroke.style = { ...style }
             state.liveStroke.type = type
-            state.liveStroke.style = style
+            state.isDraggable = type === ToolType.Select
+            state.isListening = type === ToolType.Eraser
+            state.trNodes = []
         },
         SET_COLOR: (state, action) => {
             const color = action.payload

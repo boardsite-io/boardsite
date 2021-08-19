@@ -1,0 +1,7 @@
+.color-picker .react-colorful__saturation-pointer,
+.color-picker .react-colorful__hue-pointer,
+.color-picker .react-colorful__alpha-pointer {
+    width: 14px;
+    height: 14px;
+    border-radius: 50px;
+}

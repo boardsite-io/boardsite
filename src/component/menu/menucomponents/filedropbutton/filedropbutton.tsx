@@ -5,6 +5,7 @@ import DialogActions from "@material-ui/core/DialogActions"
 import DialogContent from "@material-ui/core/DialogContent"
 import { BsCloudUpload } from "react-icons/bs"
 import FileDropZone from "./filedropzone"
+import IconButton from "../iconbutton/iconbutton"
 
 const FileDropButton: React.FC = () => {
     const [dialogOpen, setDialogOpen] = useState(false)
@@ -19,9 +20,9 @@ const FileDropButton: React.FC = () => {
 
     return (
         <>
-            <button type="button" id="icon-button" onClick={handleOpen}>
+            <IconButton onClick={handleOpen}>
                 <BsCloudUpload id="icon" />
-            </button>
+            </IconButton>
             <Dialog
                 maxWidth="xs"
                 fullWidth
