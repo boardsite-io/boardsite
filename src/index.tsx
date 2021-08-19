@@ -6,7 +6,6 @@ import "./css/theme.css"
 import "./css/whiteboard.css"
 import "./css/menubars.css"
 import "./css/buttons.css"
-import "./css/menucomponents/popup.css"
 
 import routes from "./component/route"
 

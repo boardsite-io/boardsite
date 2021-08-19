@@ -1,27 +1,3 @@
-#icon-button,
-#icon-button-active {
-    padding: 3px;
-    text-align: center;
-    border-radius: var(--button-border-radius);
-    height: var(--button-height);
-    width: var(--button-width);
-    outline: none;
-    border-width: 0;
-    background: none;
-    justify-self: center;
-}
-
-#icon-button {
-    color: var(--primary);
-}
-#icon-button:hover {
-    color: var(--secondary);
-}
-
-#icon-button-active {
-    color: var(--active-tool-color);
-}
-
 #icon {
     height: 100%;
     width: 100%;
