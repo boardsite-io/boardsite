@@ -9,6 +9,7 @@ import { useCustomSelector } from "../../../redux/hooks"
 import FavToolButton from "../menucomponents/favtoolbutton/favtoolbutton"
 import { ToolType } from "../../../types"
 import IconButton from "../menucomponents/iconbutton/iconbutton"
+import { FavToolsStyled } from "./favtools.styled"
 
 const FavTools: React.FC = () => {
     const favTools = useCustomSelector((state) => state.drawControl.favTools)
@@ -19,7 +20,7 @@ const FavTools: React.FC = () => {
     }
 
     return (
-        <div className="favtools">
+        <FavToolsStyled>
             {favTools.map((tool, i) => {
                 let icon
                 // let style = { color: colorSelector }
@@ -58,7 +59,7 @@ const FavTools: React.FC = () => {
             <IconButton onClick={addFavTool}>
                 <FiPlus id="icon" />
             </IconButton>
-        </div>
+        </FavToolsStyled>
     )
 }
 
