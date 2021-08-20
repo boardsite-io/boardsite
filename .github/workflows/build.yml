@@ -39,40 +39,23 @@ jobs:
         path: build.tar.gz
 
   deploy:
-    name: Deploy to boardsite.io
+    name: Deploy to AWS S3
     runs-on: ubuntu-latest
     needs: build
 
     steps:
-      - name: Configure SSH
-        run: |
-          mkdir -p ~/.ssh/
-          echo "$SSH_KEY" > ~/.ssh/deploy.key
-          chmod 600 ~/.ssh/deploy.key
-          cat >>~/.ssh/config <<END
-          Host deploy
-            HostName $SSH_HOST
-            Port $SSH_PORT
-            User $SSH_USER
-            IdentityFile ~/.ssh/deploy.key
-            StrictHostKeyChecking no
-            LogLevel ERROR
-          END
-        env:
-          SSH_USER: ${{ secrets.BOARDSITE_SSH_USER }}
-          SSH_KEY: ${{ secrets.BOARDSITE_SSH_KEY }}
-          SSH_HOST: ${{ secrets.BOARDSITE_SSH_HOST }}
-          SSH_PORT: ${{ secrets.BOARDSITE_SSH_PORT }}
-      - uses: actions/download-artifact@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Download build artifact
+        uses: actions/download-artifact@v2
         with:
           name: build-artifact
-      - name: Copy artifact
-        run: scp ./build.tar.gz deploy:~/boardsite-io-deploy/build.tar.gz
-      - name: Prepare artifact and deploy
+      - name: Extract artifact
+        run: tar -xf build.tar.gz
+      - name: Upload files to the bucket
         run: |
-          ssh deploy << EOF
-          cd ~/boardsite-io-deploy
-          rm -r build && tar -xf build.tar.gz
-          make
-          make deploy
-          EOF
+          aws s3 sync ./build s3://${{ secrets.AWS_S3_BUCKET_NAME }}
