@@ -3,8 +3,6 @@ import ReactDOM from "react-dom"
 import { BrowserRouter as Router } from "react-router-dom"
 import { Provider } from "react-redux"
 import "./css/theme.css"
-import "./css/whiteboard.css"
-import "./css/menubars.css"
 import "./css/buttons.css"
 
 import routes from "./component/route"

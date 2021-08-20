@@ -10,6 +10,7 @@ import { SET_SDIAG } from "../redux/slice/webcontrol"
 import { isConnected, pingSession } from "../api/websocket"
 import FavTools from "../component/menu/favtools/favtools"
 import { useCustomDispatch } from "../redux/hooks"
+import { WhiteboardStyled } from "./whiteboard.styled"
 
 const Whiteboard: React.FC = () => {
     const { sid } = useParams<{ sid: string }>()
@@ -53,13 +54,13 @@ const Whiteboard: React.FC = () => {
     }, [])
 
     return (
-        <div className="whiteboard">
+        <WhiteboardStyled>
             <BoardStage />
             <SessionInfo />
             <Toolbar />
             <FavTools />
             <ViewNav />
-        </div>
+        </WhiteboardStyled>
     )
 }
 

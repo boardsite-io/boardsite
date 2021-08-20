@@ -1,4 +1,6 @@
-.whiteboard {
+import styled from "styled-components"
+
+export const WhiteboardStyled = styled.div`
     position: fixed;
     top: 0px;
     left: 0px;
@@ -11,4 +13,4 @@
     -webkit-user-select: none; /* prevent copy paste, to allow, change 'none' to 'text' */
     user-select: none;
     touch-action: none;
-}
+`

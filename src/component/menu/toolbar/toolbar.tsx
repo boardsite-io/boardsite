@@ -6,26 +6,27 @@ import SessionDialog from "../menucomponents/sessiondialog/sessiondialog"
 import ViewZoom from "../menucomponents/viewzoom/viewzoom"
 import ViewOptions from "../menucomponents/viewoptions/viewoptions"
 import PageOptions from "../menucomponents/pageoptions/pageoptions"
+import { ToolbarGroup, ToolbarStyled } from "./toolbar.styled"
 
 const Toolbar: React.FC = () => (
-    <div className="toolbar">
-        <div className="toolbar-group">
+    <ToolbarStyled>
+        <ToolbarGroup>
             <Settings />
             <SessionDialog />
             <PageOptions />
-        </div>
-        <div className="toolbar-group">
+        </ToolbarGroup>
+        <ToolbarGroup>
             <UndoRedo />
-        </div>
-        <div className="toolbar-group">
+        </ToolbarGroup>
+        <ToolbarGroup>
             <ToolRing />
-        </div>
-        <div className="toolbar-group">
+        </ToolbarGroup>
+        <ToolbarGroup>
             <ViewZoom />
-        </div>
-        <div className="toolbar-group">
+        </ToolbarGroup>
+        <ToolbarGroup>
             <ViewOptions />
-        </div>
-    </div>
+        </ToolbarGroup>
+    </ToolbarStyled>
 )
 export default Toolbar
