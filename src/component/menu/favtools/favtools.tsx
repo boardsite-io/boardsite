@@ -15,7 +15,7 @@ const FavTools: React.FC = () => {
     const favTools = useCustomSelector((state) => state.drawControl.favTools)
 
     // add current draw settings as new fav tool
-    function addFavTool() {
+    const addFavTool = () => {
         store.dispatch(ADD_FAV_TOOL())
     }
 
@@ -23,7 +23,6 @@ const FavTools: React.FC = () => {
         <FavToolsStyled>
             {favTools.map((tool, i) => {
                 let icon
-                // let style = { color: colorSelector }
                 switch (tool.type) {
                     case ToolType.Pen:
                         icon = <BsPencil id="icon" />
@@ -37,14 +36,11 @@ const FavTools: React.FC = () => {
                     case ToolType.Rectangle:
                         icon = <FiSquare id="icon" />
                         break
-                    // case ToolType.TRIANGLE:
-                    //     icon = <FiTriangle id="icon" />
-                    //     break
                     case ToolType.Circle:
                         icon = <FiCircle id="icon" />
                         break
                     default:
-                        break
+                        return null
                 }
 
                 return (
