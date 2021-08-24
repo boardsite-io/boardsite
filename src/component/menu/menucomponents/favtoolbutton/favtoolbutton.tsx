@@ -16,7 +16,7 @@ import {
 } from "./favtoolbutton.styled"
 
 interface FavToolButtonProps {
-    icon: JSX.Element | undefined
+    icon: JSX.Element
     tool: Tool
     index: number
 }
@@ -62,7 +62,7 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({ icon, tool, index }) => {
     return (
         <FavToolWrapper>
             <IconButton
-                style={{ background: tool.style.color }}
+                background={tool.style.color}
                 onMouseDown={startClick}
                 onMouseUp={endClick}
                 onTouchStart={startClick}
