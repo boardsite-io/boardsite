@@ -32,7 +32,7 @@ import {
     ResponsePageUpdate,
 } from "./types"
 import { PageMeta, Stroke, ToolType, User } from "../types"
-import { BoardStroke } from "../component/board/stroke/stroke"
+import { BoardStroke } from "../board/stroke/stroke"
 
 /**
  * Connect to Websocket.
