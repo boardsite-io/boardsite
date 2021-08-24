@@ -15,7 +15,6 @@ import {
     Switch,
     TextField,
 } from "@material-ui/core"
-import { API_URL } from "api/types"
 import store from "redux/store"
 import { IconButton } from "@components"
 import { SET_API_URL } from "redux/slice/webcontrol"
@@ -26,6 +25,7 @@ import {
 import { SET_SAMPLE_COUNT, TOGGLE_DIRECTDRAW } from "redux/slice/drawcontrol"
 import { isConnected } from "api/websocket"
 import { useCustomSelector } from "redux/hooks"
+import { API_URL } from "../../../api/types"
 import isDev from "../../../constants"
 import About from "../about/about"
 
