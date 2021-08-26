@@ -62,7 +62,16 @@ const webControlSlice = createSlice({
             state.webSocket.close()
             // state.webSocket = null
             state.sessionId = ""
-            state.user = {} as User
+            state.user = {
+                id: "",
+                alias: uniqueNamesGenerator({
+                    dictionaries: [adjectives, colors, animals],
+                    separator: "",
+                    style: "capital",
+                }),
+                color: Konva.Util.getRandomColor(),
+            } as User
+            state.connectedUsers = {}
         },
         // RECEIVE_STROKES: (state, action) => {
         //     const { data } = action.payload

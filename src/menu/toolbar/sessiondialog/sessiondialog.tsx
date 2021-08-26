@@ -7,6 +7,7 @@ import DialogTitle from "@material-ui/core/DialogTitle"
 import { Grid, TextField } from "@material-ui/core"
 import { BsPeople } from "react-icons/bs"
 import { useHistory } from "react-router-dom"
+import { UserAlias, UserColor, UserInfo } from "./sessiondialog.styled"
 import IconButton from "../../../components/iconbutton/iconbutton"
 import store from "../../../redux/store"
 import {
@@ -14,6 +15,7 @@ import {
     CLOSE_SDIAG,
     SET_USER_ALIAS,
     SET_USER_COLOR,
+    CLOSE_WS,
 } from "../../../redux/slice/webcontrol"
 import {
     getSessionPath,
@@ -28,8 +30,15 @@ const SessionDialog: React.FC = () => {
     const sDiagStatus = useCustomSelector(
         (state) => state.webControl.sessionDialog
     )
-    const alias = useCustomSelector((state) => state.webControl.user.alias)
-    const color = useCustomSelector((state) => state.webControl.user.color)
+    const sessionOpen = useCustomSelector(
+        (state) => state.webControl.sessionId !== ""
+    )
+    const connectedUsers = useCustomSelector(
+        (state) => state.webControl.connectedUsers
+    )
+
+    const userAlias = useCustomSelector((state) => state.webControl.user.alias)
+    const userColor = useCustomSelector((state) => state.webControl.user.color)
 
     const dispatch = useCustomDispatch()
     const history = useHistory()
@@ -50,10 +59,15 @@ const SessionDialog: React.FC = () => {
             history.push("/")
         }
     }
+    const handleLeave = () => {
+        dispatch(CLOSE_WS())
+        dispatch(CLOSE_SDIAG())
+        history.push("/")
+    }
     /**
      * Handle the create session button click in the session dialog
      */
-    function handleCreate() {
+    const handleCreate = () => {
         newSession().then((sessionId) => {
             dispatch(SET_SDIAG({ sidInput: sessionId }))
             handleJoin()
@@ -64,7 +78,7 @@ const SessionDialog: React.FC = () => {
     /**
      * Handle the join session button click in the session dialog
      */
-    function handleJoin() {
+    const handleJoin = () => {
         joinSession()
             .then(() => {
                 history.push(
@@ -89,15 +103,15 @@ const SessionDialog: React.FC = () => {
      * Handle textfield events in the session dialog
      * @param {event} e event object
      */
-    function handleTextFieldChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const handleTextFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(SET_SDIAG({ sidInput: e.target.value }))
     }
 
-    function handleAliasChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const handleAliasChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(SET_USER_ALIAS(e.target.value))
     }
 
-    function newRandomColor() {
+    const newRandomColor = () => {
         dispatch(SET_USER_COLOR())
     }
 
@@ -126,82 +140,111 @@ const SessionDialog: React.FC = () => {
                         direction="column"
                         justifyContent="center"
                         alignItems="stretch">
-                        <Grid item>
-                            {/* <DialogContentText id="alert-dialog-description">
+                        {sessionOpen ? (
+                            <>
+                                <Grid item>
+                                    {Object.keys(connectedUsers).map(
+                                        (userId) => {
+                                            const { alias, color, id } =
+                                                connectedUsers[userId]
+                                            return (
+                                                <UserInfo key={id}>
+                                                    <UserColor $color={color} />
+                                                    <UserAlias>
+                                                        {alias}
+                                                    </UserAlias>
+                                                </UserInfo>
+                                            )
+                                        }
+                                    )}
+                                </Grid>
+                                <Grid item>
+                                    <Button
+                                        fullWidth
+                                        variant="contained"
+                                        onClick={handleLeave}
+                                        color="primary">
+                                        Leave current session
+                                    </Button>
+                                </Grid>
+                            </>
+                        ) : (
+                            <>
+                                <Grid item>
+                                    {/* <DialogContentText id="alert-dialog-description">
                                 Choose alias and color. Click on color to
                                 randomly generate a new color.
                             </DialogContentText> */}
-                            <Grid
-                                item
-                                container
-                                spacing={2}
-                                direction="row"
-                                justifyContent="flex-start"
-                                alignItems="center">
-                                <Grid item>
-                                    <button
-                                        className="userColor"
-                                        type="button"
-                                        style={{ background: color }}
-                                        onClick={newRandomColor}
-                                    />
+                                    <Grid
+                                        item
+                                        container
+                                        spacing={2}
+                                        direction="row"
+                                        justifyContent="flex-start"
+                                        alignItems="center">
+                                        <Grid item>
+                                            <button
+                                                className="userColor"
+                                                type="button"
+                                                style={{
+                                                    background: userColor,
+                                                }}
+                                                onClick={newRandomColor}
+                                            />
+                                        </Grid>
+                                        <Grid item>
+                                            <TextField
+                                                fullWidth
+                                                value={userAlias}
+                                                label="Choose alias"
+                                                onChange={handleAliasChange}
+                                                inputProps={{ maxLength: 20 }}
+                                            />
+                                        </Grid>
+                                    </Grid>
                                 </Grid>
                                 <Grid item>
-                                    <TextField
-                                        // style={{ width: "100%" }}
+                                    {!sDiagStatus.joinOnly ? (
+                                        <Button
+                                            fullWidth
+                                            variant="contained"
+                                            onClick={handleCreate}
+                                            color="primary">
+                                            Create Session
+                                        </Button>
+                                    ) : (
+                                        <></>
+                                    )}
+                                </Grid>
+                                <Grid item>
+                                    <Button
                                         fullWidth
-                                        value={alias}
-                                        label="Choose alias"
-                                        // variant="outlined"
-                                        // defaultValue="hi"
-                                        onChange={handleAliasChange}
-                                        inputProps={{ maxLength: 20 }}
-                                    />
+                                        variant="contained"
+                                        onClick={handleJoin}
+                                        color="primary">
+                                        Join Session
+                                    </Button>
                                 </Grid>
-                            </Grid>
-                        </Grid>
-                        <Grid item>
-                            {!sDiagStatus.joinOnly ? (
-                                <Button
-                                    fullWidth
-                                    variant="contained"
-                                    onClick={handleCreate}
-                                    color="primary">
-                                    Create Session
-                                </Button>
-                            ) : (
-                                <></>
-                            )}
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                fullWidth
-                                variant="contained"
-                                onClick={handleJoin}
-                                color="primary">
-                                Join Session
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            {!sDiagStatus.joinOnly ? (
-                                <TextField
-                                    fullWidth
-                                    label="Insert ID"
-                                    // variant="outlined"
-                                    // defaultValue="hi"
-                                    value={sDiagStatus.sidInput}
-                                    onChange={handleTextFieldChange}
-                                    error={sDiagStatus.invalidSid}
-                                    helperText={
-                                        sDiagStatus.invalidSid
-                                            ? "Looks like the session you're trying to join does not exist 🤖"
-                                            : ""
-                                    }
-                                />
-                            ) : (
-                                <></>
-                            )}
-                        </Grid>
+                                <Grid item>
+                                    {!sDiagStatus.joinOnly ? (
+                                        <TextField
+                                            fullWidth
+                                            label="Insert ID"
+                                            value={sDiagStatus.sidInput}
+                                            onChange={handleTextFieldChange}
+                                            error={sDiagStatus.invalidSid}
+                                            helperText={
+                                                sDiagStatus.invalidSid
+                                                    ? "Looks like the session you're trying to join does not exist 🤖"
+                                                    : ""
+                                            }
+                                        />
+                                    ) : (
+                                        <></>
+                                    )}
+                                </Grid>
+                            </>
+                        )}
                     </Grid>
                 </DialogContent>
                 <DialogActions>
