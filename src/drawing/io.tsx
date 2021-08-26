@@ -3,9 +3,9 @@ import ReactDOM from "react-dom"
 import { Provider } from "react-redux"
 import { Layer, Stage, Rect } from "react-konva"
 import * as types from "konva/types/Layer"
+import { StrokeShape } from "board/stroke/shape"
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "../constants"
 import store from "../redux/store"
-import { StrokeShape } from "../component/board/stroke/shape"
 import { pageBackground } from "./page"
 
 export async function pagesToDataURL(

@@ -1,15 +1,16 @@
 import React, { useEffect } from "react"
 import { useParams } from "react-router-dom"
+import SessionInfo from "menu/toolbar/sessioninfo/sessioninfo"
 import { handleAddPageOver } from "../drawing/handlers"
-import boardKeyListener from "../component/board/keylistener"
-import Toolbar from "../component/menu/toolbar/toolbar"
-import BoardStage from "../component/board/stage"
-import SessionInfo from "../component/menu/menucomponents/sessioninfo/sessioninfo"
-import ViewNav from "../component/menu/viewnavigation/viewnavigation"
+import boardKeyListener from "../board/keylistener"
+import Toolbar from "../menu/toolbar/toolbar"
+import BoardStage from "../board/stage"
+import ViewNav from "../menu/viewnavigation/viewnavigation"
 import { SET_SDIAG } from "../redux/slice/webcontrol"
 import { isConnected, pingSession } from "../api/websocket"
-import FavTools from "../component/menu/favtools/favtools"
+import FavTools from "../menu/favtools/favtools"
 import { useCustomDispatch } from "../redux/hooks"
+import { WhiteboardStyled } from "./whiteboard.styled"
 
 const Whiteboard: React.FC = () => {
     const { sid } = useParams<{ sid: string }>()
@@ -53,13 +54,13 @@ const Whiteboard: React.FC = () => {
     }, [])
 
     return (
-        <div className="whiteboard">
+        <WhiteboardStyled>
             <BoardStage />
             <SessionInfo />
             <Toolbar />
             <FavTools />
             <ViewNav />
-        </div>
+        </WhiteboardStyled>
     )
 }
 

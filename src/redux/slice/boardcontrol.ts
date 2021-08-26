@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { pageType } from "../../constants"
+// eslint-disable-next-line import/no-cycle
 import { BoardPage } from "../../drawing/page"
 import {
     DocumentImage,

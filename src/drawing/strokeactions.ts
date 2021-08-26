@@ -9,7 +9,7 @@ import {
 } from "../redux/slice/drawcontrol"
 import { handleAddStroke } from "./handlers"
 import { Point, Stroke, ToolType } from "../types"
-import { BoardStroke } from "../component/board/stroke/stroke"
+import { BoardStroke } from "../board/stroke/stroke"
 
 let tid: number | NodeJS.Timeout = 0
 

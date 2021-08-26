@@ -7,14 +7,13 @@ export default function isDev(): boolean {
     return !process.env.NODE_ENV || process.env.NODE_ENV === "development"
 }
 
+export const STROKE_WIDTH_PRESETS = [0.5, 1, 2, 3, 4, 5, 7, 10, 14, 20]
 export const CANVAS_WIDTH = 620
 export const CANVAS_HEIGHT = 877
 export const CANVAS_GAP = 20
 export const CANVAS_FULL_HEIGHT = CANVAS_HEIGHT + CANVAS_GAP
 export const CANVAS_PIXEL_RATIO = 1 // css forces canvas to be in a smaller frame but with high res for better clarity
-export const WIDTH_MIN = 1
-export const WIDTH_MAX = 40
-export const DEFAULT_WIDTH = 2
+export const DEFAULT_WIDTH = STROKE_WIDTH_PRESETS[3]
 export const DEFAULT_COLOR = "#000000"
 export const DEFAULT_ISPANMODE = false
 export const ZOOM_IN_WHEEL_SCALE = 1.1
@@ -79,21 +78,21 @@ const tool1: Tool = {
     type: ToolType.Pen,
     style: {
         color: "#000000",
-        width: 2,
+        width: STROKE_WIDTH_PRESETS[2],
     },
 }
 const tool2: Tool = {
     type: ToolType.Pen,
     style: {
         color: "#0211a3",
-        width: 2,
+        width: STROKE_WIDTH_PRESETS[3],
     },
 }
 const tool3: Tool = {
     type: ToolType.Pen,
     style: {
         color: "#ff0000",
-        width: 2,
+        width: STROKE_WIDTH_PRESETS[4],
     },
 }
 

@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit"
+// eslint-disable-next-line import/no-cycle
 import rootReducer from "./reducer"
 
 const store = configureStore({

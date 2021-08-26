@@ -4,13 +4,11 @@ import {
     DEFAULT_ISDRAGGABLE,
     DEFAULT_ISLISTENING,
     DEFAULT_ISMOUSEDOWN,
-    WIDTH_MAX,
-    WIDTH_MIN,
     MIN_SAMPLE_COUNT,
     DEFAULT_DIRECTDRAW,
     DEFAULT_FAV_TOOLS,
 } from "../../constants"
-import { BoardLiveStroke } from "../../component/board/stroke/livestroke"
+import { BoardLiveStroke } from "../../board/stroke/livestroke"
 import { Tool, ToolType, TrNodesType } from "../../types"
 
 export interface DrawControlState {
@@ -97,16 +95,6 @@ const drawControlSlice = createSlice({
             const width = action.payload
             state.liveStroke.style.width = width
         },
-        INCREMENT_WIDTH: (state) => {
-            if (state.liveStroke.style.width !== WIDTH_MAX) {
-                state.liveStroke.style.width += 1
-            }
-        },
-        DECREMENT_WIDTH: (state) => {
-            if (state.liveStroke.style.width !== WIDTH_MIN) {
-                state.liveStroke.style.width -= 1
-            }
-        },
         SET_TYPE: (state, action) => {
             const type = action.payload
             state.liveStroke.type = type
@@ -171,8 +159,6 @@ export const {
     SET_TOOL,
     SET_COLOR,
     SET_WIDTH,
-    INCREMENT_WIDTH,
-    DECREMENT_WIDTH,
     SET_TYPE,
     SET_ISPANMODE,
     TOGGLE_PANMODE,
