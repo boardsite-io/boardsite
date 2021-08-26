@@ -57,7 +57,7 @@ const ShapeTools: React.FC<{
                         container
                         spacing={2}
                         direction="row"
-                        justify="center"
+                        justifyContent="center"
                         alignItems="center">
                         <Grid item>
                             <PagePreviewBlank

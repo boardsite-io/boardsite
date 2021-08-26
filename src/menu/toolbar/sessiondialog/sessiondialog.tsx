@@ -124,7 +124,7 @@ const SessionDialog: React.FC = () => {
                         container
                         spacing={2}
                         direction="column"
-                        justify="center"
+                        justifyContent="center"
                         alignItems="stretch">
                         <Grid item>
                             {/* <DialogContentText id="alert-dialog-description">
@@ -136,7 +136,7 @@ const SessionDialog: React.FC = () => {
                                 container
                                 spacing={2}
                                 direction="row"
-                                justify="flex-start"
+                                justifyContent="flex-start"
                                 alignItems="center">
                                 <Grid item>
                                     <button
