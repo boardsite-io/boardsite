@@ -7,6 +7,7 @@ import Settings from "./settings/settings"
 import UndoRedo from "./undoredo/undoredo"
 import ToolRing from "./toolring/toolring"
 import ViewZoom from "./viewzoom/viewzoom"
+import FileDropButton from "./filedropbutton/filedropbutton"
 
 const Toolbar: React.FC = () => (
     <ToolbarStyled>
@@ -14,6 +15,7 @@ const Toolbar: React.FC = () => (
             <Settings />
             <SessionDialog />
             <PageOptions />
+            <FileDropButton />
         </ToolbarGroup>
         <ToolbarGroup>
             <UndoRedo />
