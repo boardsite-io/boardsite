@@ -7,7 +7,7 @@ import {
     StyledIcon,
     StyledSubtitle,
     StyledTitle,
-} from "./filedropbutton.styled"
+} from "./filedrop.styled"
 
 interface FileDropZoneProps {
     closeDialog: () => void
@@ -70,8 +70,10 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ closeDialog }) => {
                 $hovering={hovering}>
                 <StyledDivNoTouch>
                     <StyledIcon />
-                    <StyledTitle>Browse Files</StyledTitle>
-                    <StyledSubtitle>Drag and drop files here</StyledSubtitle>
+                    <StyledTitle>{hovering ? "" : "Browse Files"}</StyledTitle>
+                    <StyledSubtitle>
+                        {hovering ? "" : "Drag and drop files here"}
+                    </StyledSubtitle>
                 </StyledDivNoTouch>
             </StyledFileDropZone>
             <TextField
