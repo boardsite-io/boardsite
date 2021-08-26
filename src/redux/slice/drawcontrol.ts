@@ -9,7 +9,7 @@ import {
     DEFAULT_DIRECTDRAW,
     DEFAULT_FAV_TOOLS,
 } from "../../constants"
-import { BoardLiveStroke } from "../../component/board/stroke/livestroke"
+import { BoardLiveStroke } from "../../board/stroke/livestroke"
 import { PageBackground, Tool, ToolType, TrNodesType } from "../../types"
 
 export interface DrawControlState {

@@ -5,7 +5,7 @@ import { Provider } from "react-redux"
 import "./css/theme.css"
 import "./css/buttons.css"
 
-import routes from "./component/route"
+import routes from "./board/route"
 
 import store from "./redux/store"
 

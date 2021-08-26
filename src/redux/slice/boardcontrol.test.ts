@@ -1,7 +1,7 @@
 import reducer from "./boardcontrol"
 import * as action from "./boardcontrol"
 import { Stroke } from "../../types"
-import { BoardStroke } from "../../component/board/stroke/stroke"
+import { BoardStroke } from "../../board/stroke/stroke"
 
 const testState = {
     pageRank: ["pid1", "pid2"],
