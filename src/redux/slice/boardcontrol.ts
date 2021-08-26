@@ -1,7 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { pageType } from "../../constants"
-// eslint-disable-next-line import/no-cycle
-import { BoardPage } from "../../drawing/page"
 import {
     DocumentImage,
     Page,
@@ -37,25 +35,9 @@ const boardControlSlice = createSlice({
         },
 
         SET_PAGERANK: (state, action) => {
-            const newPageRank = action.payload
-            const newPageCollection: PageCollection = {}
-            newPageRank.forEach((pid: string) => {
-                if (
-                    Object.prototype.hasOwnProperty.call(
-                        state.pageCollection,
-                        pid
-                    )
-                ) {
-                    newPageCollection[pid] = state.pageCollection[pid]
-                } else {
-                    newPageCollection[pid] = new BoardPage(state.pageBG).setID(
-                        pid
-                    )
-                }
-            })
-
-            state.pageCollection = newPageCollection
-            state.pageRank = newPageRank
+            const { pageRank, pageCollection } = action.payload
+            state.pageRank = pageRank
+            state.pageCollection = pageCollection
         },
 
         SET_PAGEMETA: (state, action) => {

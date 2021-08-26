@@ -31,7 +31,7 @@ import {
     ResponsePageSync,
     ResponsePageUpdate,
 } from "./types"
-import { PageMeta, Stroke, ToolType, User } from "../types"
+import { PageCollection, PageMeta, Stroke, ToolType, User } from "../types"
 import { BoardStroke } from "../board/stroke/stroke"
 import { BoardPage } from "../drawing/page"
 
@@ -112,7 +112,21 @@ function receiveStrokes(strokes: Stroke[]) {
 }
 
 function syncPages({ pageRank, meta }: ResponsePageSync) {
-    store.dispatch(SET_PAGERANK(pageRank))
+    const { pageCollection } = store.getState().boardControl
+    const newPageCollection: PageCollection = {}
+    pageRank.forEach((pid: string) => {
+        if (Object.prototype.hasOwnProperty.call(pageCollection, pid)) {
+            newPageCollection[pid] = pageCollection[pid]
+        } else {
+            newPageCollection[pid] = new BoardPage(
+                store.getState().boardControl.pageBG
+            ).setID(pid)
+        }
+    })
+
+    store.dispatch(
+        SET_PAGERANK({ pageRank, pageCollection: newPageCollection })
+    )
     Object.keys(meta).forEach((pageId) =>
         store.dispatch(SET_PAGEMETA({ pageId, meta: meta[pageId] }))
     )

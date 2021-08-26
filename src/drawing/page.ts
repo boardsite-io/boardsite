@@ -1,4 +1,3 @@
-/* eslint-disable import/no-cycle */
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { nanoid } from "@reduxjs/toolkit"
 import { Shape, ShapeConfig } from "konva/types/Shape"
