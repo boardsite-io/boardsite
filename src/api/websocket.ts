@@ -1,7 +1,7 @@
 import store from "../redux/store"
 import {
-    postPage,
-    putPage,
+    postPages,
+    putPages,
     postSession,
     postUser,
     deletePage,
@@ -31,7 +31,7 @@ import {
     ResponsePageSync,
     ResponsePageUpdate,
 } from "./types"
-import { PageCollection, PageMeta, Stroke, ToolType, User } from "../types"
+import { PageCollection, Stroke, ToolType, User } from "../types"
 import { BoardStroke } from "../board/stroke/stroke"
 import { BoardPage } from "../drawing/page"
 
@@ -134,9 +134,11 @@ function syncPages({ pageRank, meta }: ResponsePageSync) {
 
 function updatePageMeta({ pageId, meta, clear }: ResponsePageUpdate) {
     if (clear) {
-        store.dispatch(CLEAR_PAGE(pageId))
+        pageId.forEach((pid) => store.dispatch(CLEAR_PAGE(pid)))
     }
-    store.dispatch(SET_PAGEMETA({ pageId, meta }))
+    pageId.forEach((pid) =>
+        store.dispatch(SET_PAGEMETA({ pageId: pid, meta: meta[pid] }))
+    )
 }
 
 export function isConnected(): boolean {
@@ -151,7 +153,7 @@ export async function newSession(): Promise<string> {
     const sessionId = await postSession()
     store.dispatch(DELETE_ALL_PAGES())
     // create a pageid which will be added when joining
-    await postPage(sessionId, new BoardPage(), 0)
+    await postPages(sessionId, [new BoardPage()], [0])
     return sessionId
 }
 
@@ -203,8 +205,8 @@ export function eraseStrokes(strokes: { id: string; pageId: string }[]): void {
     )
 }
 
-export function addPageSession(page: BoardPage, pageIndex: number): void {
-    postPage(store.getState().webControl.sessionId, page, pageIndex)
+export function addPagesSession(pages: BoardPage[], pageIndex: number[]): void {
+    postPages(store.getState().webControl.sessionId, pages, pageIndex)
 }
 
 export function deletePageSession(pageId: string): void {
@@ -222,12 +224,8 @@ export function pingSession(sessionID: string): Promise<ResponsePageSync> {
     return getPages(sessionID)
 }
 
-export function updatePageSession(
-    pageId: string,
-    meta: PageMeta | undefined,
-    clear = false
-): void {
-    putPage(store.getState().webControl.sessionId, pageId, meta, clear)
+export function updatePagesSession(pages: BoardPage[], clear = false): void {
+    putPages(store.getState().webControl.sessionId, pages, clear)
 }
 
 export function addAttachementSession(file: File): Promise<string> {

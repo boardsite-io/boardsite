@@ -46,9 +46,10 @@ export class BoardPage implements Page {
         this.strokes = {}
     }
 
-    updateMeta(meta: PageMeta): void {
+    updateMeta(meta: PageMeta): BoardPage {
         // update only fields that are different
         this.meta = { ...this.meta, ...meta }
+        return this
     }
 }
 

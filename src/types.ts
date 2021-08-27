@@ -74,7 +74,7 @@ export interface Page {
     setID: (pageId: string) => Page
     add: (index?: number) => void
     clear: () => void
-    updateMeta: (meta: PageMeta) => void
+    updateMeta: (meta: PageMeta) => Page
 }
 
 export type DocumentImage = HTMLImageElement

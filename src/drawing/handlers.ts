@@ -1,6 +1,6 @@
 import {
-    addPageSession,
-    updatePageSession,
+    addPagesSession,
+    updatePagesSession,
     deletePageSession,
     isConnected,
     addAttachementSession,
@@ -30,7 +30,7 @@ export function handleAddPageOver(): void {
     const page = new BoardPage()
     const index = store.getState().viewControl.currentPageIndex
     if (isConnected()) {
-        addPageSession(page, index)
+        addPagesSession([page], [index])
     } else {
         page.add(index)
     }
@@ -40,7 +40,7 @@ export function handleAddPageUnder(): void {
     const page = new BoardPage()
     const index = store.getState().viewControl.currentPageIndex + 1
     if (isConnected()) {
-        addPageSession(page, index)
+        addPagesSession([page], [index])
     } else {
         page.add(index)
     }
@@ -48,7 +48,7 @@ export function handleAddPageUnder(): void {
 
 export function handleClearPage(): void {
     if (isConnected()) {
-        updatePageSession(getCurrentPageId(), undefined, true)
+        updatePagesSession([getCurrentPage()], true)
     } else {
         store.dispatch(CLEAR_PAGE(getCurrentPageId()))
     }
@@ -106,7 +106,7 @@ export function handlePageBackground(style: PageBackground): void {
     }
 
     if (isConnected()) {
-        updatePageSession(getCurrentPage().pageId, meta)
+        updatePagesSession([getCurrentPage().updateMeta(meta)])
     } else {
         store.dispatch(SET_PAGEMETA({ pageId: getCurrentPage().pageId, meta }))
     }
@@ -133,14 +133,17 @@ export function handleAddDocumentPages(attachURL?: URL): void {
 
     handleDeleteAllPages()
 
-    documentPages.forEach((_, i) => {
-        const page = new BoardPage(pageType.DOC, i, url)
-        if (isConnected()) {
-            addPageSession(page, -1)
-        } else {
-            page.add(-1) // append subsequent pages at the end
-        }
-    })
+    const pages = documentPages.map(
+        (_, i) => new BoardPage(pageType.DOC, i, url)
+    )
+    if (isConnected()) {
+        addPagesSession(
+            pages,
+            pages.map(() => -1)
+        )
+    } else {
+        pages.forEach((page) => page.add(-1)) // append subsequent pages at the end
+    }
 }
 
 function getCurrentPageId() {
