@@ -1,7 +1,5 @@
 import React from "react"
 import Button from "@material-ui/core/Button"
-import DialogContent from "@material-ui/core/DialogContent"
-import { Grid } from "@material-ui/core"
 import { useHistory } from "react-router-dom"
 import { useCustomDispatch, useCustomSelector } from "redux/hooks"
 import { CLOSE_SDIAG, CLOSE_WS } from "redux/slice/webcontrol"

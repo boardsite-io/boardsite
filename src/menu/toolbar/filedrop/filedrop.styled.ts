@@ -27,14 +27,15 @@ const fileHoverAnimation = css`
     animation: ${fileHoverKeyFrame} 50000s infinite linear forwards;
 `
 export const StyledFileDropZone = styled.div<Props>`
+    margin: 1rem;
     display: flex;
     background-repeat: repeat;
     ${({ $hovering }) => ($hovering ? backgroundHovering : null)};
     ${({ $hovering }) => ($hovering ? fileHoverAnimation : null)};
     background-size: 56px 56px; /* This is unique for this background, need to find a pattern and develop a formula */
     background-position-x: 0%;
-    height: 200px;
-    width: 100%;
+    height: 12rem;
+    width: auto;
     border-radius: 5px;
     border-style: ${({ $hovering }) => ($hovering ? "solid" : "dashed")};
     border-width: 1px;
