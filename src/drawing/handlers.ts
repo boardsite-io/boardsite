@@ -1,7 +1,7 @@
 import {
     addPagesSession,
     updatePagesSession,
-    deletePageSession,
+    deletePagesSession,
     isConnected,
     addAttachementSession,
     getAttachmentURL,
@@ -56,7 +56,7 @@ export function handleClearPage(): void {
 
 export function handleDeletePage(): void {
     if (isConnected()) {
-        deletePageSession(getCurrentPageId())
+        deletePagesSession([getCurrentPageId()])
     } else {
         store.dispatch(DELETE_PAGE(getCurrentPageId()))
     }
@@ -64,9 +64,7 @@ export function handleDeletePage(): void {
 
 export function handleDeleteAllPages(): void {
     if (isConnected()) {
-        store
-            .getState()
-            .boardControl.pageRank.forEach((pid) => deletePageSession(pid))
+        deletePagesSession(store.getState().boardControl.pageRank)
     } else {
         store.dispatch(DELETE_ALL_PAGES())
     }

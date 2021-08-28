@@ -113,8 +113,13 @@ export function putPages(
     })
 }
 
-export function deletePage(sessionId: string, pageId: string): Promise<void> {
-    return sendRequest(`${sessionId}/pages/${pageId}`, "delete")
+export function deletePages(
+    sessionId: string,
+    pageIds: string[]
+): Promise<void> {
+    return sendRequest(`${sessionId}/pages`, "delete", {
+        pageId: pageIds,
+    })
 }
 
 export async function postAttachement(

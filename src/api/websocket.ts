@@ -4,7 +4,7 @@ import {
     putPages,
     postSession,
     postUser,
-    deletePage,
+    deletePages,
     getPages,
     getStrokes,
     getUsers,
@@ -112,6 +112,10 @@ function receiveStrokes(strokes: Stroke[]) {
 }
 
 function syncPages({ pageRank, meta }: ResponsePageSync) {
+    if (pageRank.length === 0) {
+        store.dispatch(DELETE_ALL_PAGES())
+        return
+    }
     const { pageCollection } = store.getState().boardControl
     const newPageCollection: PageCollection = {}
     pageRank.forEach((pid: string) => {
@@ -209,8 +213,8 @@ export function addPagesSession(pages: BoardPage[], pageIndex: number[]): void {
     postPages(store.getState().webControl.sessionId, pages, pageIndex)
 }
 
-export function deletePageSession(pageId: string): void {
-    deletePage(store.getState().webControl.sessionId, pageId)
+export function deletePagesSession(pageIds: string[]): void {
+    deletePages(store.getState().webControl.sessionId, pageIds)
 }
 
 // returns the relative path to the session

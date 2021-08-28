@@ -14,6 +14,10 @@ interface PageContentProps {
 }
 
 const PageContent: React.FC<PageContentProps> = ({ pageId }) => {
+    // pageId might not be valid anymore, exit then
+    if (!store.getState().boardControl.pageCollection[pageId]) {
+        return null
+    }
     // select key of stroke map as trigger
     // stroke map comparison will only compare references
     const strokeIds = useCustomSelector((state) =>

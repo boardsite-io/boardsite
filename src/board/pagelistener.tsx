@@ -21,6 +21,10 @@ interface PageListenerProps {
 }
 
 const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
+    // pageId might not be valid anymore, exit then
+    if (!store.getState().boardControl.pageCollection[pageId]) {
+        return null
+    }
     const isMouseDown = useCustomSelector(
         (state) => state.drawControl.isMouseDown
     )

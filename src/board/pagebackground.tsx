@@ -1,6 +1,7 @@
 import { Image } from "react-konva"
 import React, { memo, useEffect, useRef, useState } from "react"
 import * as types from "konva/types/shapes/Image"
+import store from "redux/store"
 import {
     CANVAS_FULL_HEIGHT,
     CANVAS_HEIGHT,
@@ -10,13 +11,16 @@ import {
 } from "../constants"
 import { loadNewPDF, pageBackground } from "../drawing/page"
 import { useCustomSelector } from "../redux/hooks"
-import store from "../redux/store"
 
 interface PageBackgroundProps {
     pageId: string
 }
 
 export default memo<PageBackgroundProps>(({ pageId }) => {
+    // pageId might not be valid anymore, exit then
+    if (!store.getState().boardControl.pageCollection[pageId]) {
+        return null
+    }
     const ref = useRef<types.Image>(null)
     const [update, setUpdate] = useState(0)
     // select style, selecting background doesnt trigger, bc it compares on the same reference
@@ -26,9 +30,9 @@ export default memo<PageBackgroundProps>(({ pageId }) => {
     )
     const document = useCustomSelector((state) => state.boardControl.document)
     const pageRank = useCustomSelector((state) => state.boardControl.pageRank)
-
-    const { background } =
-        store.getState().boardControl.pageCollection[pageId]?.meta
+    const background = useCustomSelector(
+        (state) => state.boardControl.pageCollection[pageId]?.meta.background
+    )
 
     // get correct image data for document type background
     const getImage = () => {
