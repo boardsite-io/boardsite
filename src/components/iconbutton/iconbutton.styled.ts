@@ -21,4 +21,8 @@ export const StyledIconButton = styled.button`
     &:hover {
         color: var(--secondary);
     }
+    #icon {
+        height: 100%;
+        width: 100%;
+    }
 `
