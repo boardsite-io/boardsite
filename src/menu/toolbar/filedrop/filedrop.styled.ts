@@ -57,15 +57,11 @@ export const StyledIcon = styled(BsCloudUpload)`
 `
 
 export const StyledTitle = styled.h4`
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
     margin-bottom: 10px;
     margin-top: 5px;
 `
 
 export const StyledSubtitle = styled.p`
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
     margin-bottom: 5px;
     margin-top: 5px;
 `

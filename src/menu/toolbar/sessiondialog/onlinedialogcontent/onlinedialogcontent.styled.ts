@@ -32,7 +32,6 @@ export const UserAlias = styled.p`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-family: "Courier New", Courier, monospace;
 `
 
 export const OnlineDialogWrapper = styled.div`

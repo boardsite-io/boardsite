@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import Button from "@material-ui/core/Button"
 import DialogActions from "@material-ui/core/DialogActions"
-import DialogContent from "@material-ui/core/DialogContent"
 import { BsCloudUpload } from "react-icons/bs"
 import { Dialog, IconButton } from "@components"
 import FileDropZone from "./filedropzone"
