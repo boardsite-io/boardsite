@@ -5,12 +5,14 @@ interface UserColorProps {
 }
 export const UserColorButton = styled.button`
     background: ${(props: UserColorProps) => props.$color};
-    height: 20px;
-    width: 20px;
+    height: 1.5rem;
+    width: 1.5rem;
     border-radius: 100%;
     border: none;
     outline: none;
-    margin-top: 18px;
+    &:hover {
+        cursor: pointer;
+    }
 `
 
 export const UserSelection = styled.div`

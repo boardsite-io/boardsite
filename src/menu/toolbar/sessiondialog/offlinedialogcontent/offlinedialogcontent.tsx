@@ -1,5 +1,4 @@
 import React from "react"
-import { TextField } from "@material-ui/core"
 import { useHistory } from "react-router-dom"
 import { useCustomDispatch, useCustomSelector } from "redux/hooks"
 import store from "redux/store"
@@ -10,7 +9,7 @@ import {
     SET_USER_COLOR,
 } from "redux/slice/webcontrol"
 import { getSessionPath, joinSession, newSession } from "api/websocket"
-import { Button } from "@components"
+import { Button, TextField } from "@components"
 import {
     OfflineDialogWrapper,
     UserColorButton,
@@ -85,11 +84,11 @@ const OfflineDialogContent: React.FC = () => {
                     onClick={newRandomColor}
                 />
                 <TextField
-                    fullWidth
                     value={userAlias}
                     label="Choose alias"
                     onChange={handleAliasChange}
-                    inputProps={{ maxLength: 20 }}
+                    maxLength={20}
+                    align="left"
                 />
             </UserSelection>
             {!sDiagStatus.joinOnly && (
@@ -98,11 +97,9 @@ const OfflineDialogContent: React.FC = () => {
             <Button onClick={handleJoin}>Join Session</Button>
             {!sDiagStatus.joinOnly && (
                 <TextField
-                    fullWidth
                     label="Insert ID"
                     value={sDiagStatus.sidInput}
                     onChange={handleTextFieldChange}
-                    error={sDiagStatus.invalidSid}
                     helperText={
                         sDiagStatus.invalidSid
                             ? "Looks like the session you're trying to join does not exist 🤖"
