@@ -1,5 +1,4 @@
 import React from "react"
-import Button from "@material-ui/core/Button"
 import { TextField } from "@material-ui/core"
 import { useHistory } from "react-router-dom"
 import { useCustomDispatch, useCustomSelector } from "redux/hooks"
@@ -11,6 +10,7 @@ import {
     SET_USER_COLOR,
 } from "redux/slice/webcontrol"
 import { getSessionPath, joinSession, newSession } from "api/websocket"
+import { Button } from "@components"
 import {
     OfflineDialogWrapper,
     UserColorButton,
@@ -93,21 +93,9 @@ const OfflineDialogContent: React.FC = () => {
                 />
             </UserSelection>
             {!sDiagStatus.joinOnly && (
-                <Button
-                    fullWidth
-                    variant="contained"
-                    onClick={handleCreate}
-                    color="primary">
-                    Create Session
-                </Button>
+                <Button onClick={handleCreate}>Create Session</Button>
             )}
-            <Button
-                fullWidth
-                variant="contained"
-                onClick={handleJoin}
-                color="primary">
-                Join Session
-            </Button>
+            <Button onClick={handleJoin}>Join Session</Button>
             {!sDiagStatus.joinOnly && (
                 <TextField
                     fullWidth

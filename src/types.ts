@@ -3,6 +3,12 @@ import { Transformer } from "konva/types/shapes/Transformer"
 import { Node, NodeConfig } from "konva/types/Node"
 import { Polygon } from "sat"
 
+// eslint-disable-next-line no-shadow
+export enum Variants {
+    Primary = "PRIMARY",
+    Secondary = "SECONDARY",
+}
+
 export interface Tool {
     type: number
     style: {
