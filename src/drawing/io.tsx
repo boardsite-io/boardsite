@@ -1,10 +1,12 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import { PDFDocument, PDFPage } from "pdf-lib"
+import download from "downloadjs"
 import { Provider } from "react-redux"
 import { Layer, Stage, Rect } from "react-konva"
 import * as types from "konva/types/Layer"
 import { StrokeShape } from "board/stroke/shape"
-import { CANVAS_HEIGHT, CANVAS_WIDTH } from "../constants"
+import { CANVAS_HEIGHT, CANVAS_WIDTH, pageType } from "../constants"
 import store from "../redux/store"
 import { pageBackground } from "./page"
 
@@ -72,12 +74,43 @@ export async function pagesToDataURL(
     return Promise.all(imgs)
 }
 
-export function download(data: string, name: string): void {
-    const link = document.createElement("a")
-    link.download = name
-    // eslint-disable-next-line prefer-destructuring
-    link.href = data
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+export async function toPDF(
+    filename: string,
+    baseDocument?: string | Uint8Array
+): Promise<void> {
+    const pdf = await PDFDocument.create()
+    let pdfPages: PDFPage[]
+    if (baseDocument) {
+        const pdfSrcDoc = await PDFDocument.load(baseDocument)
+        // copy all pages from source document and later select
+        // only those that are used
+        pdfPages = await pdf.copyPages(pdfSrcDoc, [
+            ...Array(pdfSrcDoc.getPages().length).keys(),
+        ])
+    }
+
+    // embedd images in document
+    const pagesData = await pagesToDataURL(4, true)
+    const pageImages = await Promise.all(
+        pagesData.map((data) => pdf.embedPng(data))
+    )
+    const { pageRank, pageCollection } = store.getState().boardControl
+
+    pageImages.forEach((pageData, i) => {
+        const { style, documentPageNum } =
+            pageCollection[pageRank[i]].meta.background
+        const page =
+            style === pageType.DOC
+                ? pdf.addPage(pdfPages[documentPageNum])
+                : pdf.addPage()
+        page.drawImage(pageData, {
+            x: 0,
+            y: 0,
+            width: page.getSize().width,
+            height: page.getSize().height,
+        })
+    })
+
+    const pdfBytes = await pdf.save()
+    download(pdfBytes, filename, "application/pdf")
 }

@@ -17,6 +17,7 @@ import {
 
 import store from "../redux/store"
 import { PageBackground, PageMeta, Stroke } from "../types"
+import { toPDF } from "./io"
 import { BoardPage, getPDFfromForm, loadNewPDF } from "./page"
 import {
     addStrokes,
@@ -142,6 +143,10 @@ export function handleAddDocumentPages(attachURL?: URL): void {
     } else {
         pages.forEach((page) => page.add(-1)) // append subsequent pages at the end
     }
+}
+
+export async function handleExportDocument(): Promise<void> {
+    toPDF("board.pdf", store.getState().boardControl.documentSrc)
 }
 
 function getCurrentPageId() {

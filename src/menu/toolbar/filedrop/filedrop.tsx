@@ -1,8 +1,10 @@
 import React, { useState } from "react"
 import Button from "@material-ui/core/Button"
 import DialogActions from "@material-ui/core/DialogActions"
-import { BsCloudUpload } from "react-icons/bs"
-import { Dialog, IconButton } from "@components"
+import { IconButton } from "@components"
+import { BsCloudDownload, BsCloudUpload } from "react-icons/bs"
+import { handleExportDocument } from "drawing/handlers"
+import { Dialog } from "@material-ui/core"
 import FileDropZone from "./filedropzone"
 
 const FileDropButton: React.FC = () => {
@@ -20,6 +22,9 @@ const FileDropButton: React.FC = () => {
         <>
             <IconButton onClick={handleOpen}>
                 <BsCloudUpload id="icon" />
+            </IconButton>
+            <IconButton onClick={() => handleExportDocument()}>
+                <BsCloudDownload id="icon" />
             </IconButton>
             <Dialog open={dialogOpen} onClose={handleClose}>
                 <FileDropZone closeDialog={handleClose} />
