@@ -13,7 +13,7 @@ export const Theme = styled.div`
     --button-gap: 0px;
     --button-border-radius: 4px;
     --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    font-size: 1rem;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    /* font-size: 1rem; */
+    font-family: "Lato", sans-serif;
+    /* font-weight: 400; */
 `
