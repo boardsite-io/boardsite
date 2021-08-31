@@ -6,16 +6,15 @@ interface Props {
 }
 
 export const StyledButton = styled.button`
-    padding: 0.2rem;
-    height: 2rem;
-    box-shadow: var(--box-shadow);
+    display: inline-block;
     text-align: center;
+    padding: 0.5rem 1.5rem;
+    box-shadow: var(--box-shadow);
     text-transform: uppercase;
-    justify-self: center;
     outline: none;
     border-width: 0;
     border-radius: var(--button-border-radius);
-    transition: all 250ms ease-in-out;
+    transition: all 100ms ease-in-out;
     &:hover {
         cursor: pointer;
     }

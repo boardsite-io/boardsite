@@ -33,10 +33,3 @@ export const UserAlias = styled.p`
     text-overflow: ellipsis;
     white-space: nowrap;
 `
-
-export const OnlineDialogWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 2rem;
-`

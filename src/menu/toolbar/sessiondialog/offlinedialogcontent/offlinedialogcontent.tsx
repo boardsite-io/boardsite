@@ -9,12 +9,8 @@ import {
     SET_USER_COLOR,
 } from "redux/slice/webcontrol"
 import { getSessionPath, joinSession, newSession } from "api/websocket"
-import { Button, TextField } from "@components"
-import {
-    OfflineDialogWrapper,
-    UserColorButton,
-    UserSelection,
-} from "./offlinedialogcontent.styled"
+import { Button, DialogContent, TextField } from "@components"
+import { UserColorButton, UserSelection } from "./offlinedialogcontent.styled"
 
 const OfflineDialogContent: React.FC = () => {
     const sDiagStatus = useCustomSelector(
@@ -76,7 +72,7 @@ const OfflineDialogContent: React.FC = () => {
     }
 
     return (
-        <OfflineDialogWrapper>
+        <DialogContent>
             <UserSelection>
                 <UserColorButton
                     type="button"
@@ -107,7 +103,7 @@ const OfflineDialogContent: React.FC = () => {
                     }
                 />
             )}
-        </OfflineDialogWrapper>
+        </DialogContent>
     )
 }
 

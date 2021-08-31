@@ -1,10 +1,9 @@
+import { Button, DialogContent } from "@components"
 import React from "react"
-import Button from "@material-ui/core/Button"
 import { useHistory } from "react-router-dom"
 import { useCustomDispatch, useCustomSelector } from "redux/hooks"
 import { CLOSE_SDIAG, CLOSE_WS } from "redux/slice/webcontrol"
 import {
-    OnlineDialogWrapper,
     UserAlias,
     UserColor,
     UserInfo,
@@ -25,7 +24,7 @@ const OnlineDialogContent: React.FC = () => {
     }
 
     return (
-        <OnlineDialogWrapper>
+        <DialogContent>
             <UserList>
                 {Object.keys(connectedUsers).map((userId) => {
                     const { alias, color, id } = connectedUsers[userId]
@@ -37,14 +36,8 @@ const OnlineDialogContent: React.FC = () => {
                     )
                 })}
             </UserList>
-            <Button
-                fullWidth
-                variant="contained"
-                onClick={handleLeave}
-                color="primary">
-                Leave current session
-            </Button>
-        </OnlineDialogWrapper>
+            <Button onClick={handleLeave}>Leave current session</Button>
+        </DialogContent>
     )
 }
 

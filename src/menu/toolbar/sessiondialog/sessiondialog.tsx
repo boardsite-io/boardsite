@@ -1,12 +1,14 @@
 import React from "react"
-import Button from "@material-ui/core/Button"
-import DialogActions from "@material-ui/core/DialogActions"
-import DialogTitle from "@material-ui/core/DialogTitle"
 import { BsPeople } from "react-icons/bs"
 import { useHistory } from "react-router-dom"
 import { useCustomDispatch, useCustomSelector } from "redux/hooks"
-import { Dialog } from "@components"
-import IconButton from "../../../components/iconbutton/iconbutton"
+import {
+    Button,
+    Dialog,
+    DialogOptions,
+    DialogTitle,
+    IconButton,
+} from "@components"
 import { SET_SDIAG, CLOSE_SDIAG } from "../../../redux/slice/webcontrol"
 import { isConnected } from "../../../api/websocket"
 import OfflineDialogContent from "./offlinedialogcontent/offlinedialogcontent"
@@ -42,7 +44,7 @@ const SessionDialog: React.FC = () => {
                 <BsPeople id="icon" />
             </IconButton>
             <Dialog open={sDiagStatus.open} onClose={handleClose}>
-                <DialogTitle id="alert-dialog-title">
+                <DialogTitle>
                     Collaborative Session{" "}
                     <span role="img" aria-label="Panda">
                         👀
@@ -53,11 +55,9 @@ const SessionDialog: React.FC = () => {
                 ) : (
                     <OfflineDialogContent />
                 )}
-                <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                        Close
-                    </Button>
-                </DialogActions>
+                <DialogOptions>
+                    <Button onClick={handleClose}>Close</Button>
+                </DialogOptions>
             </Dialog>
         </>
     )
