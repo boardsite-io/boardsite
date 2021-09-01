@@ -3,8 +3,8 @@ import {
     updatePagesSession,
     deletePagesSession,
     isConnected,
-    addAttachementSession,
-    getAttachmentURL,
+    addAttachmentSession,
+    getAttachmentSession,
 } from "../api/websocket"
 import { pageType } from "../constants"
 import {
@@ -112,28 +112,24 @@ export function handlePageBackground(style: PageBackground): void {
 }
 
 export async function handleDocument(file: File): Promise<void> {
-    let fileOrigin: Uint8Array | URL
-    let attachId = ""
     if (isConnected()) {
-        attachId = await addAttachementSession(file)
-        fileOrigin = getAttachmentURL(attachId)
-        await loadNewPDF(fileOrigin)
-        handleAddDocumentPages(fileOrigin)
+        const attachId = await addAttachmentSession(file)
+        await loadNewPDF(attachId)
+        handleAddDocumentPages(attachId)
     } else {
-        fileOrigin = await getPDFfromForm(file)
-        await loadNewPDF(fileOrigin)
+        const fileSrc = await getPDFfromForm(file)
+        await loadNewPDF(fileSrc)
         handleAddDocumentPages()
     }
 }
 
-export function handleAddDocumentPages(attachURL?: URL): void {
+export function handleAddDocumentPages(attachId?: string): void {
     const documentPages = store.getState().boardControl.document
-    const url = attachURL ? attachURL.toString() : ""
 
     handleDeleteAllPages()
 
     const pages = documentPages.map(
-        (_, i) => new BoardPage(pageType.DOC, i, url)
+        (_, i) => new BoardPage(pageType.DOC, i, attachId)
     )
     if (isConnected()) {
         addPagesSession(
@@ -146,7 +142,17 @@ export function handleAddDocumentPages(attachURL?: URL): void {
 }
 
 export async function handleExportDocument(): Promise<void> {
-    toPDF("board.pdf", store.getState().boardControl.documentSrc)
+    // TODO filename
+    const filename = "board.pdf"
+    const { documentSrc } = store.getState().boardControl
+    if (isConnected()) {
+        const src = documentSrc
+            ? ((await getAttachmentSession(documentSrc as string)) as string)
+            : ""
+        toPDF(filename, src)
+    } else {
+        toPDF(filename, documentSrc)
+    }
 }
 
 function getCurrentPageId() {

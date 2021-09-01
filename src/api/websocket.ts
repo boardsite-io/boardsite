@@ -8,7 +8,8 @@ import {
     getPages,
     getStrokes,
     getUsers,
-    postAttachement,
+    postAttachment,
+    getAttachment,
 } from "./request"
 import {
     CREATE_WS,
@@ -232,11 +233,10 @@ export function updatePagesSession(pages: BoardPage[], clear = false): void {
     putPages(store.getState().webControl.sessionId, pages, clear)
 }
 
-export function addAttachementSession(file: File): Promise<string> {
-    return postAttachement(store.getState().webControl.sessionId, file)
+export function addAttachmentSession(file: File): Promise<string> {
+    return postAttachment(store.getState().webControl.sessionId, file)
 }
 
-export function getAttachmentURL(attachId: string): URL {
-    const { apiURL, sessionId } = store.getState().webControl
-    return new URL(attachId, `${apiURL.toString()}b/${sessionId}/attachments/`)
+export function getAttachmentSession(attachId: string): Promise<unknown> {
+    return getAttachment(store.getState().webControl.sessionId, attachId)
 }

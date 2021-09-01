@@ -18,12 +18,12 @@ const pdfjsWorker: any = require("pdfjs-dist/legacy/build/pdf.worker.entry")
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
 export class BoardPage implements Page {
-    constructor(style?: PageBackground, pageNum?: number, attachURL?: string) {
+    constructor(style?: PageBackground, pageNum?: number, attachId?: string) {
         this.pageId = nanoid(8)
         this.meta = {
             background: {
                 style: style ?? store.getState().boardControl.pageBG, // fallback type
-                url: attachURL ?? "",
+                attachId: attachId ?? "",
                 documentPageNum: pageNum ?? 0,
             },
         }
@@ -67,10 +67,24 @@ export async function getPDFfromForm(file: File): Promise<Uint8Array> {
 }
 
 /**
- * convert pdf document from data/url to image data and cache it to redux
+ * Loads a pdf document from data/url and converts it to image data and cache it to redux
+ *
+ * | Type          | Contents                      |
+ * | ------------- | ----------------------------- |
+ * | `string`      | Attachment Id of the document |
+ * | `Uint8Array`  | The raw bytes of a PDF        |
+ *
+ * @param fileData
  */
-export async function loadNewPDF(fileData: Uint8Array | URL): Promise<void> {
-    const pdf = await pdfjs.getDocument(fileData).promise
+export async function loadNewPDF(fileData: Uint8Array | string): Promise<void> {
+    let fileSrc: Uint8Array | URL
+    if (typeof fileData === typeof "") {
+        fileSrc = getAttachmentURL(fileData as string)
+    } else {
+        fileSrc = fileData as Uint8Array
+    }
+
+    const pdf = await pdfjs.getDocument(fileSrc).promise
 
     // get number of pages for document
     // eslint-disable-next-line no-underscore-dangle
@@ -123,6 +137,11 @@ export async function loadNewPDF(fileData: Uint8Array | URL): Promise<void> {
             documentSrc: fileData,
         })
     )
+}
+
+function getAttachmentURL(attachId: string): URL {
+    const { apiURL, sessionId } = store.getState().webControl
+    return new URL(attachId, `${apiURL.toString()}b/${sessionId}/attachments/`)
 }
 
 const blank = (context: Context, shape: Shape<ShapeConfig>): void => {

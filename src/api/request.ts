@@ -1,7 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios"
-import { BoardPage } from "../drawing/page"
 import store from "../redux/store"
-import { Stroke, User } from "../types"
+import { Page, Stroke, User } from "../types"
 import { ResponsePageSync } from "./types"
 
 const apiRequest = axios.create({
@@ -11,7 +10,7 @@ const apiRequest = axios.create({
             try {
                 return JSON.parse(data).content // only need content
             } catch {
-                return {}
+                return data
             }
         },
     ],
@@ -37,6 +36,14 @@ const fileRequest = axios.create({
         // prettier-ignore
         "Accept": "application/json",
         "Content-Type": "multipart/form-data",
+    },
+    timeout: 3000,
+})
+
+const pdfRequest = axios.create({
+    headers: {
+        // prettier-ignore
+        "Accept": "application/pdf",
     },
     timeout: 3000,
 })
@@ -85,7 +92,7 @@ export function getStrokes(
 
 export function postPages(
     sessionId: string,
-    pages: BoardPage[],
+    pages: Page[],
     pageIndex: number[]
 ): Promise<void> {
     return sendRequest(`${sessionId}/pages`, "post", {
@@ -100,7 +107,7 @@ export function postPages(
 
 export function putPages(
     sessionId: string,
-    pages: BoardPage[],
+    pages: Page[],
     clear: boolean
 ): Promise<void> {
     return sendRequest(`${sessionId}/pages`, "put", {
@@ -122,7 +129,7 @@ export function deletePages(
     })
 }
 
-export async function postAttachement(
+export async function postAttachment(
     sessionId: string,
     file: File
 ): Promise<string> {
@@ -137,4 +144,25 @@ export async function postAttachement(
     } as AxiosRequestConfig)
 
     return response.data
+}
+
+export async function getAttachment(
+    sessionId: string,
+    attachId: string
+): Promise<unknown> {
+    const baseURL = store.getState().webControl.apiURL.toString()
+    const response = await pdfRequest({
+        url: `${baseURL}b/${sessionId}/attachments/${attachId}`,
+        method: "GET",
+    } as AxiosRequestConfig)
+
+    return new Promise((resolve) => {
+        const reader = new FileReader()
+        reader.onload = (e: ProgressEvent<FileReader>) => {
+            resolve(e.target?.result)
+        }
+        reader.readAsDataURL(
+            new Blob([response.data], { type: "application/pdf" })
+        )
+    })
 }

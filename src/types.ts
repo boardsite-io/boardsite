@@ -67,7 +67,7 @@ export type StrokeShape = Stroke & ShapeConfig
 export interface PageMeta {
     background: {
         style: PageBackground
-        url: string
+        attachId: string
         documentPageNum: number
     }
 }

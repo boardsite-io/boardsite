@@ -42,7 +42,7 @@ export default memo<PageBackgroundProps>(({ pageId }) => {
         const img = document[background.documentPageNum]
         // if image data not available, load document
         if (!img) {
-            loadNewPDF(new URL(background.url)).then(() =>
+            loadNewPDF(background.attachId).then(() =>
                 setUpdate((prev) => prev + 1)
             )
         }
