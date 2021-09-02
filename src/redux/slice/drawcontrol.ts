@@ -5,12 +5,11 @@ import {
     DEFAULT_ISLISTENING,
     DEFAULT_ISMOUSEDOWN,
     MIN_SAMPLE_COUNT,
-    pageType,
     DEFAULT_DIRECTDRAW,
     DEFAULT_FAV_TOOLS,
 } from "../../constants"
 import { BoardLiveStroke } from "../../board/stroke/livestroke"
-import { PageBackground, Tool, ToolType, TrNodesType } from "../../types"
+import { Tool, ToolType, TrNodesType } from "../../types"
 
 export interface DrawControlState {
     isPanMode: boolean
@@ -22,7 +21,6 @@ export interface DrawControlState {
     strokeSample: number
     liveStroke: BoardLiveStroke
     liveStrokeUpdate: number
-    pageBG: PageBackground
     favTools: Tool[]
     trNodes: TrNodesType
 }
@@ -37,7 +35,6 @@ const initState: DrawControlState = {
     strokeSample: 0,
     liveStroke: new BoardLiveStroke(),
     liveStrokeUpdate: 0,
-    pageBG: pageType.BLANK,
     favTools: DEFAULT_FAV_TOOLS,
     trNodes: [],
 }
@@ -146,9 +143,6 @@ const drawControlSlice = createSlice({
             state.strokeSample = 0
             state.liveStrokeUpdate = 0
         },
-        SET_DEFAULT_PAGEBG: (state, action) => {
-            state.pageBG = action.payload
-        },
         SET_SAMPLE_COUNT: (state, action) => {
             state.samplesRequired = action.payload
         },
@@ -172,7 +166,6 @@ export const {
     START_LIVESTROKE,
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
-    SET_DEFAULT_PAGEBG,
     SET_SAMPLE_COUNT,
     TOGGLE_DIRECTDRAW,
     SET_TR_NODES,

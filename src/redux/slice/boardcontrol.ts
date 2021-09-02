@@ -1,14 +1,27 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit"
-import { Page, PageCollection, Stroke } from "../../types"
+import { createSlice } from "@reduxjs/toolkit"
+import { pageType } from "../../constants"
+import {
+    DocumentImage,
+    Page,
+    PageBackground,
+    PageCollection,
+    Stroke,
+} from "../../types"
 
 export interface BoardControlState {
     pageRank: string[]
     pageCollection: PageCollection
+    document: DocumentImage[]
+    documentSrc: string | Uint8Array
+    pageBG: PageBackground
 }
 
 const initState: BoardControlState = {
     pageRank: [],
     pageCollection: {},
+    document: [] as DocumentImage[],
+    documentSrc: "",
+    pageBG: pageType.BLANK as PageBackground, // default
 }
 
 const boardControlSlice = createSlice({
@@ -22,63 +35,46 @@ const boardControlSlice = createSlice({
         },
 
         SET_PAGERANK: (state, action) => {
-            const newPageRank = action.payload
-            const newPageCollection = {} as PageCollection
-            newPageRank.forEach((pid: string) => {
-                if (
-                    Object.prototype.hasOwnProperty.call(
-                        state.pageCollection,
-                        pid
-                    )
-                ) {
-                    newPageCollection[pid] = state.pageCollection[pid]
-                } else {
-                    newPageCollection[pid] = newPageCollectionEntry()
-                }
-            })
-
-            state.pageCollection = newPageCollection
-            state.pageRank = newPageRank
+            const { pageRank, pageCollection } = action.payload
+            state.pageRank = pageRank
+            state.pageCollection = pageCollection
         },
 
         SET_PAGEMETA: (state, action) => {
             const { pageId, meta } = action.payload
-            // update only fields that are different
-            state.pageCollection[pageId].meta = {
-                ...state.pageCollection[pageId].meta,
-                ...meta,
-            }
+            state.pageCollection[pageId]?.updateMeta(meta)
+        },
+
+        SET_PAGEBG: (state, action) => {
+            const style = action.payload
+            state.pageBG = style
         },
 
         // Add a new page
         ADD_PAGE: (state, action) => {
-            const { pageIndex, meta } = action.payload
-            const pageId = nanoid(8)
-            state.pageCollection[pageId] = newPageCollectionEntry()
-            state.pageCollection[pageId].meta = { ...meta } // if undefined
-            if (pageIndex >= 0) {
-                state.pageRank.splice(pageIndex, 0, pageId)
+            const { page, index } = action.payload as {
+                page: Page
+                index: number
+            }
+            state.pageCollection[page.pageId] = page
+            if (index >= 0) {
+                state.pageRank.splice(index, 0, page.pageId)
             } else {
-                state.pageRank.push(pageId)
+                state.pageRank.push(page.pageId)
             }
         },
 
         // Clear page
         CLEAR_PAGE: (state, action) => {
             const pageId = action.payload
-            // if pageindex is OOB -> pageid is undefined
-            if (pageId !== undefined) {
-                state.pageCollection[pageId].strokes = {}
-            }
+            state.pageCollection[pageId]?.clear()
         },
 
         // Delete page
         DELETE_PAGE: (state, action) => {
             const pageId = action.payload
-            if (pageId !== undefined) {
-                delete state.pageCollection[pageId]
-                state.pageRank.splice(state.pageRank.indexOf(pageId), 1)
-            }
+            delete state.pageCollection[pageId]
+            state.pageRank.splice(state.pageRank.indexOf(pageId), 1)
         },
 
         // Delete all pages
@@ -124,15 +120,14 @@ const boardControlSlice = createSlice({
                 }
             })
         },
+
+        SET_PDF: (state, action) => {
+            const { pageImages, documentSrc } = action.payload
+            state.document = pageImages
+            state.documentSrc = documentSrc
+        },
     },
 })
-
-function newPageCollectionEntry() {
-    return {
-        strokes: {},
-        meta: {},
-    } as Page
-}
 
 export const {
     SYNC_ALL_PAGES,
@@ -145,6 +140,8 @@ export const {
     ADD_STROKES,
     ERASE_STROKES,
     UPDATE_STROKES,
+    SET_PDF,
+    SET_PAGEBG,
 } = boardControlSlice.actions
 
 export default boardControlSlice.reducer

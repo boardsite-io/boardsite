@@ -3,6 +3,12 @@ import { Transformer } from "konva/types/shapes/Transformer"
 import { Node, NodeConfig } from "konva/types/Node"
 import { Polygon } from "sat"
 
+// eslint-disable-next-line no-shadow
+export enum Variants {
+    Primary = "PRIMARY",
+    Secondary = "SECONDARY",
+}
+
 export interface Tool {
     type: number
     style: {
@@ -59,13 +65,25 @@ export interface StrokeMap {
 export type StrokeShape = Stroke & ShapeConfig
 
 export interface PageMeta {
-    background: PageBackground
+    background: {
+        style: PageBackground
+        attachId: string
+        documentPageNum: number
+    }
 }
 
 export interface Page {
+    pageId: string
     strokes: StrokeMap
     meta: PageMeta
+
+    setID: (pageId: string) => Page
+    add: (index?: number) => void
+    clear: () => void
+    updateMeta: (meta: PageMeta) => Page
 }
+
+export type DocumentImage = HTMLImageElement
 
 export interface PageCollection {
     [pid: string]: Page
@@ -93,7 +111,7 @@ export interface StrokeHitbox {
     [id: string]: Hitbox[]
 }
 
-export type PageBackground = "blank" | "checkered" | "ruled"
+export type PageBackground = "blank" | "checkered" | "ruled" | "doc"
 
 export type TrRefType = React.RefObject<Transformer>
 export type TrNodesType = Node<NodeConfig>[]

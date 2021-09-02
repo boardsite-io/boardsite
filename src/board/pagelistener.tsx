@@ -1,5 +1,6 @@
-import React from "react"
+import React, { useEffect, useRef } from "react"
 import { Rect } from "react-konva"
+import * as types from "konva/types/shapes/Rect"
 import { KonvaEventObject } from "konva/types/Node"
 import { Stage } from "konva/types/Stage"
 import { Vector2d } from "konva/types/types"
@@ -9,10 +10,10 @@ import {
     moveLiveStroke,
     registerLiveStroke,
     getPageIndex,
+    abortLiveStroke,
 } from "../drawing/strokeactions"
 import { CANVAS_WIDTH, CANVAS_HEIGHT, CANVAS_FULL_HEIGHT } from "../constants"
-import { END_LIVESTROKE, SET_ISMOUSEDOWN } from "../redux/slice/drawcontrol"
-import pageBackground from "../drawing/backgrounds"
+import { SET_ISMOUSEDOWN } from "../redux/slice/drawcontrol"
 import { useCustomSelector } from "../redux/hooks"
 
 interface PageListenerProps {
@@ -20,6 +21,10 @@ interface PageListenerProps {
 }
 
 const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
+    // pageId might not be valid anymore, exit then
+    if (!store.getState().boardControl.pageCollection[pageId]) {
+        return null
+    }
     const isMouseDown = useCustomSelector(
         (state) => state.drawControl.isMouseDown
     )
@@ -88,18 +93,6 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
         onMouseUp(e as unknown as KonvaEventObject<MouseEvent>)
     }
 
-    const abortLiveStroke = () => {
-        if (
-            (store.getState().drawControl.liveStroke.pointsSegments ?? [])
-                .length > 0
-        ) {
-            store.dispatch(END_LIVESTROKE())
-        }
-        if (store.getState().drawControl.isMouseDown) {
-            store.dispatch(SET_ISMOUSEDOWN(false))
-        }
-    }
-
     const isValidTouch = (e: KonvaEventObject<TouchEvent>) => {
         e.evt.preventDefault()
         const touch1 = e.evt.touches[0]
@@ -117,29 +110,25 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
         return !(touch1 && touch2) // double finger
     }
 
+    // cache the rect for performance
+    const ref = useRef<types.Rect>(null)
+    useEffect(() => {
+        ref.current?.cache()
+    }, [])
     const isListening = useCustomSelector(
         (state) => state.drawControl.isListening
     )
     const isPanMode = useCustomSelector((state) => state.drawControl.isPanMode)
-    const pageBg = useCustomSelector(
-        (state) => state.boardControl.pageCollection[pageId]?.meta?.background
-    )
 
     return (
         <Rect
+            ref={ref}
             draggable={false}
             listening={!isPanMode && !isListening}
             height={CANVAS_HEIGHT}
             width={CANVAS_WIDTH}
             x={0}
             y={CANVAS_FULL_HEIGHT * getPageIndex(pageId)}
-            stroke="#000"
-            strokeWidth={0.2}
-            fill="#ffffff"
-            shadowColor="#000000"
-            shadowBlur={10}
-            shadowOffset={{ x: 0, y: 0 }}
-            shadowOpacity={0.5}
             onMouseDown={onMouseDown}
             onMousemove={onMouseMove}
             onMouseUp={onMouseUp}
@@ -147,7 +136,6 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
-            sceneFunc={pageBackground[pageBg]}
         />
     )
 }

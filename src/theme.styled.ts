@@ -1,4 +1,6 @@
-:root {
+import styled from "styled-components"
+
+export const Theme = styled.div`
     --primary: #ffffff;
     --secondary: #1a1a1a;
     --active-tool-color: #00ff00;
@@ -11,4 +13,7 @@
     --button-gap: 0px;
     --button-border-radius: 4px;
     --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-}
+    /* font-size: 1rem; */
+    font-family: "Lato", sans-serif;
+    /* font-weight: 400; */
+`

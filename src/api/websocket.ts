@@ -1,14 +1,15 @@
-import { nanoid } from "@reduxjs/toolkit"
 import store from "../redux/store"
 import {
-    addPage,
-    updatePage,
-    createSession,
-    createUser,
-    deletePage,
+    postPages,
+    putPages,
+    postSession,
+    postUser,
+    deletePages,
     getPages,
     getStrokes,
     getUsers,
+    postAttachment,
+    getAttachment,
 } from "./request"
 import {
     CREATE_WS,
@@ -31,8 +32,9 @@ import {
     ResponsePageSync,
     ResponsePageUpdate,
 } from "./types"
-import { PageMeta, Stroke, ToolType, User } from "../types"
+import { PageCollection, Stroke, ToolType, User } from "../types"
 import { BoardStroke } from "../board/stroke/stroke"
+import { BoardPage } from "../drawing/page"
 
 /**
  * Connect to Websocket.
@@ -111,7 +113,25 @@ function receiveStrokes(strokes: Stroke[]) {
 }
 
 function syncPages({ pageRank, meta }: ResponsePageSync) {
-    store.dispatch(SET_PAGERANK(pageRank))
+    if (pageRank.length === 0) {
+        store.dispatch(DELETE_ALL_PAGES())
+        return
+    }
+    const { pageCollection } = store.getState().boardControl
+    const newPageCollection: PageCollection = {}
+    pageRank.forEach((pid: string) => {
+        if (Object.prototype.hasOwnProperty.call(pageCollection, pid)) {
+            newPageCollection[pid] = pageCollection[pid]
+        } else {
+            newPageCollection[pid] = new BoardPage(
+                store.getState().boardControl.pageBG
+            ).setID(pid)
+        }
+    })
+
+    store.dispatch(
+        SET_PAGERANK({ pageRank, pageCollection: newPageCollection })
+    )
     Object.keys(meta).forEach((pageId) =>
         store.dispatch(SET_PAGEMETA({ pageId, meta: meta[pageId] }))
     )
@@ -119,9 +139,11 @@ function syncPages({ pageRank, meta }: ResponsePageSync) {
 
 function updatePageMeta({ pageId, meta, clear }: ResponsePageUpdate) {
     if (clear) {
-        store.dispatch(CLEAR_PAGE(pageId))
+        pageId.forEach((pid) => store.dispatch(CLEAR_PAGE(pid)))
     }
-    store.dispatch(SET_PAGEMETA({ pageId, meta }))
+    pageId.forEach((pid) =>
+        store.dispatch(SET_PAGEMETA({ pageId: pid, meta: meta[pid] }))
+    )
 }
 
 export function isConnected(): boolean {
@@ -133,10 +155,10 @@ export function isConnected(): boolean {
 }
 
 export async function newSession(): Promise<string> {
-    const sessionId = await createSession()
+    const sessionId = await postSession()
     store.dispatch(DELETE_ALL_PAGES())
     // create a pageid which will be added when joining
-    await addPage(sessionId, nanoid(8), 0)
+    await postPages(sessionId, [new BoardPage()], [0])
     return sessionId
 }
 
@@ -146,7 +168,7 @@ export async function joinSession(
     color = store.getState().webControl.user.color
 ): Promise<void> {
     // create a new user for us
-    const user = await createUser(sessionId, { alias, color } as User)
+    const user = await postUser(sessionId, { alias, color } as User)
     await createWebsocket(sessionId, user)
 
     store.dispatch(SET_SESSION_USERS(await getUsers(sessionId)))
@@ -188,12 +210,12 @@ export function eraseStrokes(strokes: { id: string; pageId: string }[]): void {
     )
 }
 
-export function addPageSession(pageIndex: number, meta: PageMeta): void {
-    addPage(store.getState().webControl.sessionId, nanoid(8), pageIndex, meta)
+export function addPagesSession(pages: BoardPage[], pageIndex: number[]): void {
+    postPages(store.getState().webControl.sessionId, pages, pageIndex)
 }
 
-export function deletePageSession(pageId: string): void {
-    deletePage(store.getState().webControl.sessionId, pageId)
+export function deletePagesSession(pageIds: string[]): void {
+    deletePages(store.getState().webControl.sessionId, pageIds)
 }
 
 // returns the relative path to the session
@@ -207,13 +229,14 @@ export function pingSession(sessionID: string): Promise<ResponsePageSync> {
     return getPages(sessionID)
 }
 
-export function updatePageSession(
-    pageId: string,
-    meta = {},
-    clear = false
-): void {
-    updatePage(store.getState().webControl.sessionId, pageId, {
-        meta: meta as PageMeta,
-        clear,
-    })
+export function updatePagesSession(pages: BoardPage[], clear = false): void {
+    putPages(store.getState().webControl.sessionId, pages, clear)
+}
+
+export function addAttachmentSession(file: File): Promise<string> {
+    return postAttachment(store.getState().webControl.sessionId, file)
+}
+
+export function getAttachmentSession(attachId: string): Promise<unknown> {
+    return getAttachment(store.getState().webControl.sessionId, attachId)
 }

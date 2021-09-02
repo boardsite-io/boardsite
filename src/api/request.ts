@@ -1,10 +1,28 @@
 import axios, { AxiosRequestConfig } from "axios"
 import store from "../redux/store"
-import { PageMeta, Stroke, User } from "../types"
+import { Page, Stroke, User } from "../types"
 import { ResponsePageSync } from "./types"
 
 const apiRequest = axios.create({
     transformRequest: [(data) => JSON.stringify({ content: data })], // for routes we dont need message type
+    transformResponse: [
+        (data) => {
+            try {
+                return JSON.parse(data).content // only need content
+            } catch {
+                return data
+            }
+        },
+    ],
+    headers: {
+        // prettier-ignore
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+    },
+    timeout: 3000,
+})
+
+const fileRequest = axios.create({
     transformResponse: [
         (data) => {
             try {
@@ -17,7 +35,15 @@ const apiRequest = axios.create({
     headers: {
         // prettier-ignore
         "Accept": "application/json",
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
+    },
+    timeout: 3000,
+})
+
+const pdfRequest = axios.create({
+    headers: {
+        // prettier-ignore
+        "Accept": "application/pdf",
     },
     timeout: 3000,
 })
@@ -28,18 +54,20 @@ const apiRequest = axios.create({
 export async function sendRequest<T>(
     url: string,
     method: string,
-    data?: unknown | undefined
+    data?: unknown,
+    config?: AxiosRequestConfig
 ): Promise<T> {
     const baseURL = store.getState().webControl.apiURL.toString()
     const response = await apiRequest({
         url: `${baseURL}b/${url}`,
         method,
         data,
+        ...config,
     } as AxiosRequestConfig)
     return response.data
 }
 
-export function createSession(): Promise<string> {
+export function postSession(): Promise<string> {
     return sendRequest("create", "post")
 }
 
@@ -47,7 +75,7 @@ export function getUsers(sessionId: string): Promise<{ [uid: string]: User }> {
     return sendRequest(`${sessionId}/users`, "get")
 }
 
-export function createUser(sessionId: string, data: User): Promise<User> {
+export function postUser(sessionId: string, data: User): Promise<User> {
     return sendRequest(`${sessionId}/users`, "post", data)
 }
 
@@ -62,27 +90,72 @@ export function getStrokes(
     return sendRequest(`${sessionId}/pages/${pageId}`, "get")
 }
 
-export async function addPage(
+export function postPages(
     sessionId: string,
-    pageId: string,
-    index: number,
-    meta?: PageMeta
+    pages: Page[],
+    pageIndex: number[]
 ): Promise<void> {
     return sendRequest(`${sessionId}/pages`, "post", {
-        pageId,
-        index,
-        meta,
+        pageId: pages.map((page) => page.pageId),
+        index: pageIndex,
+        meta: pages.reduce(
+            (obj, page) => ({ ...obj, [page.pageId]: page.meta }),
+            {}
+        ),
     })
 }
 
-export async function updatePage(
+export function putPages(
     sessionId: string,
-    pageId: string,
-    content: { meta: PageMeta; clear: boolean }
+    pages: Page[],
+    clear: boolean
 ): Promise<void> {
-    return sendRequest(`${sessionId}/pages/${pageId}`, "put", content)
+    return sendRequest(`${sessionId}/pages`, "put", {
+        pageId: pages.map((page) => page.pageId),
+        meta: pages.reduce(
+            (obj, page) => ({ ...obj, [page.pageId]: page.meta }),
+            {}
+        ),
+        clear,
+    })
 }
 
-export function deletePage(sessionId: string, pageId: string): Promise<void> {
-    return sendRequest(`${sessionId}/pages/${pageId}`, "delete")
+export function deletePages(
+    sessionId: string,
+    pageIds: string[]
+): Promise<void> {
+    return sendRequest(`${sessionId}/pages`, "delete", {
+        pageId: pageIds,
+    })
+}
+
+export async function postAttachment(
+    sessionId: string,
+    file: File
+): Promise<string> {
+    const formData = new FormData()
+    formData.append("file", file)
+
+    const baseURL = store.getState().webControl.apiURL.toString()
+    const response = await fileRequest({
+        url: `${baseURL}b/${sessionId}/attachments`,
+        method: "POST",
+        data: formData,
+    } as AxiosRequestConfig)
+
+    return response.data
+}
+
+export async function getAttachment(
+    sessionId: string,
+    attachId: string
+): Promise<unknown> {
+    const baseURL = store.getState().webControl.apiURL.toString()
+    const response = await pdfRequest({
+        url: `${baseURL}b/${sessionId}/attachments/${attachId}`,
+        method: "GET",
+        responseType: "arraybuffer",
+    } as AxiosRequestConfig)
+
+    return Buffer.from(response.data, "binary").toString("base64")
 }

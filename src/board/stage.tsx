@@ -24,6 +24,7 @@ import {
     ZOOM_OUT_WHEEL_SCALE,
     CANVAS_WIDTH,
 } from "../constants"
+import PageBackground from "./pagebackground"
 import store, { RootState } from "../redux/store"
 import { useCustomSelector } from "../redux/hooks"
 import StrokeTransformer from "./transformer"
@@ -179,6 +180,7 @@ const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
         <>
             {pageSlice.map((pageId: string) => (
                 <Layer key={pageId}>
+                    <PageBackground pageId={pageId} />
                     <PageListener pageId={pageId} />
                     <PageContent pageId={pageId} />
                 </Layer>

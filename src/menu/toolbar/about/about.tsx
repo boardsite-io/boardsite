@@ -1,11 +1,10 @@
 import {
     Button,
     Dialog,
-    DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle,
-} from "@material-ui/core"
+    DialogOptions,
+} from "@components"
 import React from "react"
 
 interface AboutProps {
@@ -14,29 +13,19 @@ interface AboutProps {
 }
 
 const About: React.FC<AboutProps> = ({ isOpen, setOpen }) => (
-    <Dialog
-        maxWidth="xs"
-        fullWidth
-        open={isOpen}
-        onClose={() => setOpen(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description">
+    <Dialog open={isOpen} onClose={() => setOpen(false)}>
         <DialogTitle>About boardsite.io</DialogTitle>
         <DialogContent>
-            <DialogContentText>
-                boardsite.io is a free and open source productivity app for web,
-                desktop and mobile
-                <br />
-                <br />
-                {"Contribute to boardsite.io on "}
+            <span>
+                <strong>Boardsite.io</strong> is a free and open source
+                productivity app for web, desktop and mobile. Contribute to
+                boardsite.io on{" "}
                 <a href="https://github.com/boardsite-io">Github</a>
-            </DialogContentText>
+            </span>
         </DialogContent>
-        <DialogActions>
-            <Button onClick={() => setOpen(false)} color="primary">
-                Close
-            </Button>
-        </DialogActions>
+        <DialogOptions>
+            <Button onClick={() => setOpen(false)}>Close</Button>
+        </DialogOptions>
     </Dialog>
 )
 

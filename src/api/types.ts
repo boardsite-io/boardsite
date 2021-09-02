@@ -32,7 +32,9 @@ export interface ResponsePageSync {
 }
 
 export interface ResponsePageUpdate {
-    pageId: string
-    meta: PageMeta
+    pageId: string[]
+    meta: {
+        [pid: string]: PageMeta
+    }
     clear: boolean
 }

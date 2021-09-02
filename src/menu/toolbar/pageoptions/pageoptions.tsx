@@ -8,6 +8,12 @@ import {
     BsFileArrowUp,
     BsFileDiff,
 } from "react-icons/bs"
+import PageSettings from "../pagesettings/pagesettings"
+import IconButton from "../../../components/iconbutton/iconbutton"
+import {
+    PageOptionsWrapper,
+    PageOptionsWrapperInner,
+} from "./pageoptions.styled"
 import {
     handleAddPageOver,
     handleAddPageUnder,
@@ -15,12 +21,6 @@ import {
     handleDeleteAllPages,
     handleDeletePage,
 } from "../../../drawing/handlers"
-import PageSettings from "../pagesettings/pagesettings"
-import IconButton from "../../../components/iconbutton/iconbutton"
-import {
-    PageOptionsWrapper,
-    PageOptionsWrapperInner,
-} from "./pageoptions.styled"
 
 const PageOptions: React.FC = () => {
     const [open, setOpen] = useState(false)

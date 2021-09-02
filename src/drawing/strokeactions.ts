@@ -5,6 +5,7 @@ import {
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
     SET_TYPE,
+    SET_ISMOUSEDOWN,
 } from "../redux/slice/drawcontrol"
 import { handleAddStroke } from "./handlers"
 import { Point, Stroke, ToolType } from "../types"
@@ -72,6 +73,20 @@ export async function registerLiveStroke(
         store.dispatch(SET_TYPE(ToolType.Pen))
         clearTimeout(tid as number)
         tid = 0
+    }
+}
+
+export function abortLiveStroke(): void {
+    if (tid !== 0) {
+        clearTimeout(tid as number)
+        tid = 0
+    }
+    const liveStroke = getLiveStroke()
+    if (liveStroke.pointsSegments?.length) {
+        store.dispatch(END_LIVESTROKE())
+    }
+    if (store.getState().drawControl.isMouseDown) {
+        store.dispatch(SET_ISMOUSEDOWN(false))
     }
 }
 

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { useParams } from "react-router-dom"
 import SessionInfo from "menu/toolbar/sessioninfo/sessioninfo"
-import { handleAddPageOver } from "../drawing/handlers"
+import { handleAddPageOver, handleDeleteAllPages } from "../drawing/handlers"
 import boardKeyListener from "../board/keylistener"
 import Toolbar from "../menu/toolbar/toolbar"
 import BoardStage from "../board/stage"
@@ -44,6 +44,7 @@ const Whiteboard: React.FC = () => {
                     })
             } else {
                 // url is "/", add default page
+                handleDeleteAllPages()
                 handleAddPageOver()
             }
         }

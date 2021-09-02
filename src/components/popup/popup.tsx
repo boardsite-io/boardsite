@@ -7,7 +7,7 @@ interface PopupProps {
     children: ReactNode
 }
 
-const Popup: React.FC<PopupProps> = ({ open, onClose, children }: PopupProps) =>
+const Popup: React.FC<PopupProps> = ({ open, onClose, children }) =>
     open ? (
         <PopupWrap>
             <PopupCover role="button" tabIndex={0} onClick={onClose} />

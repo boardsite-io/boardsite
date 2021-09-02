@@ -4,19 +4,16 @@ import isElectron from "is-electron"
 import { BiStats } from "react-icons/bi"
 import { VscDebugDisconnect } from "react-icons/vsc"
 import {
-    Divider,
-    Drawer,
     List,
     ListItem,
     ListItemIcon,
     ListItemText,
-    makeStyles,
     Slider,
     Switch,
     TextField,
 } from "@material-ui/core"
 import store from "redux/store"
-import { IconButton } from "@components"
+import { Divider, Drawer, IconButton } from "@components"
 import { SET_API_URL } from "redux/slice/webcontrol"
 import {
     TOGGLE_HIDE_NAVBAR,
@@ -29,14 +26,7 @@ import { API_URL } from "../../../api/types"
 import isDev from "../../../constants"
 import About from "../about/about"
 
-const useStyles = makeStyles({
-    paper: {
-        width: "250px",
-    },
-})
-
 const Settings: React.FC = () => {
-    const classes = useStyles()
     const [isOpen, setOpen] = useState(false)
     const [url, setURL] = useState(API_URL)
     const [isValidURL, setValidURL] = useState(true)
@@ -70,11 +60,7 @@ const Settings: React.FC = () => {
             <IconButton onClick={() => setOpen(true)}>
                 <BsGear id="icon" />
             </IconButton>
-            <Drawer
-                anchor="left"
-                open={isOpen}
-                onClose={() => setOpen(false)}
-                classes={{ paper: classes.paper }}>
+            <Drawer open={isOpen} onClose={() => setOpen(false)}>
                 <List>
                     <ListItem>
                         <ListItemIcon>

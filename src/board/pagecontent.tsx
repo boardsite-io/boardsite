@@ -14,8 +14,14 @@ interface PageContentProps {
 }
 
 const PageContent: React.FC<PageContentProps> = ({ pageId }) => {
-    const strokes = useCustomSelector(
-        (state) => state.boardControl.pageCollection[pageId]?.strokes
+    // pageId might not be valid anymore, exit then
+    if (!store.getState().boardControl.pageCollection[pageId]) {
+        return null
+    }
+    // select key of stroke map as trigger
+    // stroke map comparison will only compare references
+    const strokeIds = useCustomSelector((state) =>
+        Object.keys(state.boardControl.pageCollection[pageId]?.strokes)
     )
 
     function handleStrokeMovement(
@@ -48,8 +54,14 @@ const PageContent: React.FC<PageContentProps> = ({ pageId }) => {
                 onTouchMove={handleStrokeMovement}
                 listening={!isPanMode && isListening}
                 y={getPageIndex(pageId) * CANVAS_FULL_HEIGHT}>
-                {Object.keys(strokes).map((id) => (
-                    <StrokeShape key={id} stroke={strokes[id]} />
+                {strokeIds.map((id) => (
+                    <StrokeShape
+                        key={id}
+                        stroke={
+                            store.getState().boardControl.pageCollection[pageId]
+                                ?.strokes[id]
+                        }
+                    />
                 ))}
             </Group>
         </>
