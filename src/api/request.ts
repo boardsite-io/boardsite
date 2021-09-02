@@ -154,15 +154,8 @@ export async function getAttachment(
     const response = await pdfRequest({
         url: `${baseURL}b/${sessionId}/attachments/${attachId}`,
         method: "GET",
+        responseType: "arraybuffer",
     } as AxiosRequestConfig)
 
-    return new Promise((resolve) => {
-        const reader = new FileReader()
-        reader.onload = (e: ProgressEvent<FileReader>) => {
-            resolve(e.target?.result)
-        }
-        reader.readAsDataURL(
-            new Blob([response.data], { type: "application/pdf" })
-        )
-    })
+    return Buffer.from(response.data, "binary").toString("base64")
 }
