@@ -30,17 +30,12 @@ export async function pagesToDataURL(
         const LayerTest = () => {
             ref = React.useRef<types.Layer>(null)
             return (
-                <Stage>
+                <Stage height={CANVAS_HEIGHT} width={CANVAS_WIDTH}>
                     <Provider store={store}>
-                        <Layer
-                            ref={ref}
-                            height={CANVAS_HEIGHT}
-                            width={CANVAS_WIDTH}>
+                        <Layer ref={ref}>
                             <Rect
                                 height={CANVAS_HEIGHT}
                                 width={CANVAS_WIDTH}
-                                stroke="#000000"
-                                strokeWidth={0.1}
                                 sceneFunc={
                                     drawBackground
                                         ? pageBackground[style]
@@ -90,6 +85,7 @@ export async function toPDF(
     }
 
     // embedd images in document
+    // TODO set draw background
     const pagesData = await pagesToDataURL(4, true)
     const pageImages = await Promise.all(
         pagesData.map((data) => pdf.embedPng(data))
