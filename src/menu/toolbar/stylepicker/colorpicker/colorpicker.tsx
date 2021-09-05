@@ -10,7 +10,7 @@ const ColorPicker: React.FC = () => {
         (state) => state.drawControl.liveStroke.style.color
     )
 
-    function handleChange(newColor: string | undefined) {
+    const handleChange = (newColor: string | undefined) => {
         store.dispatch(SET_COLOR(newColor))
     }
 
