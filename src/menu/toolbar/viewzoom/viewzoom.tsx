@@ -1,4 +1,4 @@
-import { IconButton } from "@components"
+import { IconButton } from "components"
 import React from "react"
 import { MdZoomIn, MdZoomOut } from "react-icons/md"
 import { ZOOM_IN_CENTER, ZOOM_OUT_CENTER } from "redux/slice/viewcontrol"

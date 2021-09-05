@@ -1,4 +1,4 @@
-import { Button, DialogContent } from "@components"
+import { Button, DialogContent } from "components"
 import React from "react"
 import { useHistory } from "react-router-dom"
 import { useCustomDispatch, useCustomSelector } from "redux/hooks"

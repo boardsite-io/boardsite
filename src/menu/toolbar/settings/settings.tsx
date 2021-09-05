@@ -13,7 +13,7 @@ import {
     TextField,
 } from "@material-ui/core"
 import store from "redux/store"
-import { Divider, Drawer, IconButton } from "@components"
+import { Divider, Drawer, IconButton } from "components"
 import { SET_API_URL } from "redux/slice/webcontrol"
 import {
     TOGGLE_HIDE_NAVBAR,

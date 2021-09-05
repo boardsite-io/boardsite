@@ -1,4 +1,4 @@
-import { IconButton } from "@components"
+import { IconButton } from "components"
 import { handleRedo, handleUndo } from "drawing/handlers"
 import React from "react"
 import { MdRedo, MdUndo } from "react-icons/md"

@@ -9,7 +9,7 @@ import { PageBackground } from "types"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import { handlePageBackground } from "drawing/handlers"
 import { Grid } from "@material-ui/core"
-import { IconButton } from "@components"
+import { IconButton } from "components"
 import {
     PagePreviewBlank,
     PagePreviewCheckered,

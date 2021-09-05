@@ -1,6 +1,6 @@
+import { Popup } from "components"
 import React, { useState } from "react"
 import { FiMinus, FiPlus } from "react-icons/fi"
-import { Popup } from "@components"
 import IconButton from "../../../components/iconbutton/iconbutton"
 import {
     REPLACE_FAV_TOOL,

@@ -4,7 +4,7 @@ import {
     DialogContent,
     DialogTitle,
     DialogOptions,
-} from "@components"
+} from "components"
 import React from "react"
 
 interface AboutProps {
