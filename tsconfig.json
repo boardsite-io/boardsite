@@ -21,12 +21,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "baseUrl": "./src",
-    "paths": {
-      "@components": [
-        "components"
-      ]
-    }
+    "baseUrl": "./src"
   },
   "include": [
     "src"

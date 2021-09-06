@@ -57,7 +57,7 @@ const BoardStage: React.FC = () => {
      * Wheel event handler function
      * @param {event} e
      */
-    function onWheel(e: KonvaEventObject<WheelEvent>) {
+    const onWheel = (e: KonvaEventObject<WheelEvent>) => {
         e.evt.preventDefault()
         if (isPanMode || e.evt.ctrlKey) {
             let zoomScale
@@ -81,7 +81,7 @@ const BoardStage: React.FC = () => {
      * Handles updating the states after stage drag events
      * @param {event} e
      */
-    function onDragEnd(e: KonvaEventObject<DragEvent>) {
+    const onDragEnd = (e: KonvaEventObject<DragEvent>) => {
         if (e.target.attrs.className === "stage") {
             store.dispatch(SET_STAGE_X(e.target.attrs.x))
             store.dispatch(SET_STAGE_Y(e.target.attrs.y))
@@ -92,7 +92,7 @@ const BoardStage: React.FC = () => {
      *
      * @param {object} pos current position of drag event on stage, e.g. {x: 12, y: 34}
      */
-    function dragBound(pos: Vector2d) {
+    const dragBound = (pos: Vector2d) => {
         if (keepCentered) {
             const x = (stageWidth - CANVAS_WIDTH * stageScale.x) / 2
             if (x >= 0) {

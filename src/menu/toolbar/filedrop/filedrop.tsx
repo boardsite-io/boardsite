@@ -5,7 +5,7 @@ import {
     IconButton,
     DialogOptions,
     Button,
-} from "@components"
+} from "components"
 import { BsCloudDownload, BsCloudUpload } from "react-icons/bs"
 import { handleExportDocument } from "drawing/handlers"
 import FileDropZone from "./filedropzone"

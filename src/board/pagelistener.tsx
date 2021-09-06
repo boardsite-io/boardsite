@@ -29,14 +29,14 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
         (state) => state.drawControl.isMouseDown
     )
 
-    function getScaledPointerPosition(e: KonvaEventObject<MouseEvent>) {
+    const getScaledPointerPosition = (e: KonvaEventObject<MouseEvent>) => {
         const stage = e.target.getStage() as Stage
         const position = stage.getPointerPosition()
         const transform = stage.getAbsoluteTransform().copy().invert()
         return transform.point(position as Vector2d)
     }
 
-    function onMouseDown(e: KonvaEventObject<MouseEvent>) {
+    const onMouseDown = (e: KonvaEventObject<MouseEvent>) => {
         if (e.evt.buttons === 2) {
             return
         }
@@ -45,7 +45,7 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
         startLiveStroke(pos)
     }
 
-    function onMouseMove(e: KonvaEventObject<MouseEvent>) {
+    const onMouseMove = (e: KonvaEventObject<MouseEvent>) => {
         if (
             !isMouseDown ||
             e.evt.buttons === 2 || // right mouse
@@ -60,7 +60,7 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
         moveLiveStroke(pos)
     }
 
-    function onMouseUp(e: KonvaEventObject<MouseEvent>) {
+    const onMouseUp = (e: KonvaEventObject<MouseEvent>) => {
         if (!isMouseDown) {
             return
         } // Ignore reentering

@@ -1,6 +1,6 @@
+import { Popup } from "components"
 import React, { useState } from "react"
 import { FiMinus, FiPlus } from "react-icons/fi"
-import { Popup } from "@components"
 import IconButton from "../../../components/iconbutton/iconbutton"
 import {
     REPLACE_FAV_TOOL,
@@ -25,22 +25,22 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({ icon, tool, index }) => {
     const [open, setOpen] = useState(false)
 
     // apply fav tool as setting
-    function setTool(toolToSet: Tool) {
+    const setTool = (toolToSet: Tool) => {
         store.dispatch(SET_TOOL(toolToSet))
     }
 
-    function replaceTool() {
+    const replaceTool = () => {
         store.dispatch(REPLACE_FAV_TOOL(index))
     }
 
-    function removeTool() {
+    const removeTool = () => {
         store.dispatch(REMOVE_FAV_TOOL(index))
     }
 
     let clickActive = false
     let timeoutActive = false
 
-    function startClick() {
+    const startClick = () => {
         clickActive = true
         timeoutActive = true
         setTimeout(() => {
@@ -51,7 +51,7 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({ icon, tool, index }) => {
         }, 300)
     }
 
-    function endClick() {
+    const endClick = () => {
         if (timeoutActive) {
             setTool(tool)
             timeoutActive = false

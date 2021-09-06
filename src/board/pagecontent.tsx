@@ -24,9 +24,9 @@ const PageContent: React.FC<PageContentProps> = ({ pageId }) => {
         Object.keys(state.boardControl.pageCollection[pageId]?.strokes)
     )
 
-    function handleStrokeMovement(
+    const handleStrokeMovement = (
         e: KonvaEventObject<MouseEvent | TouchEvent>
-    ) {
+    ) => {
         const { id } = e.target.attrs
         const mouseEv = e as KonvaEventObject<MouseEvent>
         // prevent to act on live stroke and hovering without clicking

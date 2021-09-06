@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Popup } from "@components"
+import { Popup } from "components"
 import {
     BsFileMinus,
     BsFileRuled,

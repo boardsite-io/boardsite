@@ -8,7 +8,7 @@ import {
     DialogOptions,
     DialogTitle,
     IconButton,
-} from "@components"
+} from "components"
 import { SET_SDIAG, CLOSE_SDIAG } from "../../../redux/slice/webcontrol"
 import { isConnected } from "../../../api/websocket"
 import OfflineDialogContent from "./offlinedialogcontent/offlinedialogcontent"

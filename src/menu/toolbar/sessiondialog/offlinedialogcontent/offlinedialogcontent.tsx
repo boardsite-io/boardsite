@@ -9,7 +9,7 @@ import {
     SET_USER_COLOR,
 } from "redux/slice/webcontrol"
 import { getSessionPath, joinSession, newSession } from "api/websocket"
-import { Button, DialogContent, TextField } from "@components"
+import { Button, DialogContent, TextField } from "components"
 import { UserColorButton, UserSelection } from "./offlinedialogcontent.styled"
 
 const OfflineDialogContent: React.FC = () => {

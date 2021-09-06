@@ -1,4 +1,4 @@
-import { IconButton, Popup } from "@components"
+import { IconButton, Popup } from "components"
 import React, { useState } from "react"
 import { BsPencil } from "react-icons/bs"
 import { FiMinus, FiCircle, FiSquare } from "react-icons/fi"
