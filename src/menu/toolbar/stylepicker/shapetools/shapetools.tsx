@@ -1,8 +1,12 @@
 import React from "react"
-import { FiMinus, FiCircle, FiSquare } from "react-icons/fi"
-import { BsPencil } from "react-icons/bs"
 import { useCustomSelector } from "redux/hooks"
-import { IconButton } from "components"
+import {
+    CircleIcon,
+    IconButton,
+    LineIcon,
+    PenIcon,
+    SquareIcon,
+} from "components"
 import { SET_TYPE } from "redux/slice/drawcontrol"
 import store from "redux/store"
 import { ToolType } from "types"
@@ -18,48 +22,52 @@ const ShapeTools: React.FC = () => {
     return (
         <StyledShapeTools>
             <IconButton
-                style={
-                    typeSelector === ToolType.Pen
-                        ? { color: colorSelector }
-                        : {}
-                }
                 onClick={() => {
                     store.dispatch(SET_TYPE(ToolType.Pen))
                 }}>
-                <BsPencil id="icon" />
+                <PenIcon
+                    stroke={
+                        typeSelector === ToolType.Pen
+                            ? colorSelector
+                            : undefined
+                    }
+                />
             </IconButton>
             <IconButton
-                style={
-                    typeSelector === ToolType.Line
-                        ? { color: colorSelector }
-                        : {}
-                }
                 onClick={() => {
                     store.dispatch(SET_TYPE(ToolType.Line))
                 }}>
-                <FiMinus id="icon" />
+                <LineIcon
+                    stroke={
+                        typeSelector === ToolType.Line
+                            ? colorSelector
+                            : undefined
+                    }
+                />
             </IconButton>
             <IconButton
-                style={
-                    typeSelector === ToolType.Rectangle
-                        ? { color: colorSelector }
-                        : {}
-                }
                 onClick={() => {
                     store.dispatch(SET_TYPE(ToolType.Rectangle))
                 }}>
-                <FiSquare id="icon" />
+                <SquareIcon
+                    stroke={
+                        typeSelector === ToolType.Rectangle
+                            ? colorSelector
+                            : undefined
+                    }
+                />
             </IconButton>
             <IconButton
-                style={
-                    typeSelector === ToolType.Circle
-                        ? { color: colorSelector }
-                        : {}
-                }
                 onClick={() => {
                     store.dispatch(SET_TYPE(ToolType.Circle))
                 }}>
-                <FiCircle id="icon" />
+                <CircleIcon
+                    stroke={
+                        typeSelector === ToolType.Circle
+                            ? colorSelector
+                            : undefined
+                    }
+                />
             </IconButton>
         </StyledShapeTools>
     )
