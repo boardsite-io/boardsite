@@ -1,0 +1,21 @@
+<svg
+    stroke="white"
+    stroke-width="8"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    width="100"
+    height="100"
+    viewBox="0 0 100 100">
+    <g>
+        <path d="M28,16 L72,16" />
+        <path d="M28,84 L72,84" />
+        <path d="M16,28 L16,72" />
+        <path d="M84,28 L84,72" />
+    </g>
+    <g>
+        <rect x="4" y="4" rx="5" ry="5" width="24" height="24" />
+        <rect x="4" y="72" rx="5" ry="5" width="24" height="24" />
+        <rect x="72" y="4" rx="5" ry="5" width="24" height="24" />
+        <rect x="72" y="72" rx="5" ry="5" width="24" height="24" />
+    </g>
+</svg>
