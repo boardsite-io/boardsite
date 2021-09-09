@@ -4,7 +4,6 @@ import {
     DEFAULT_ISDRAGGABLE,
     DEFAULT_ISLISTENING,
     DEFAULT_ISMOUSEDOWN,
-    MIN_SAMPLE_COUNT,
     DEFAULT_DIRECTDRAW,
     DEFAULT_FAV_TOOLS,
 } from "../../constants"
@@ -17,8 +16,6 @@ export interface DrawControlState {
     isListening: boolean
     isMouseDown: boolean
     directDraw: boolean
-    samplesRequired: number
-    strokeSample: number
     liveStroke: BoardLiveStroke
     liveStrokeUpdate: number
     favTools: Tool[]
@@ -31,8 +28,6 @@ const initState: DrawControlState = {
     isListening: DEFAULT_ISLISTENING,
     isMouseDown: DEFAULT_ISMOUSEDOWN,
     directDraw: DEFAULT_DIRECTDRAW,
-    samplesRequired: MIN_SAMPLE_COUNT,
-    strokeSample: 0,
     liveStroke: new BoardLiveStroke(),
     liveStrokeUpdate: 0,
     favTools: DEFAULT_FAV_TOOLS,
@@ -129,22 +124,13 @@ const drawControlSlice = createSlice({
             const { point, scale } = action.payload
             state.liveStroke.pointsSegments = state.liveStroke.updatePoints(
                 point,
-                scale,
-                state.strokeSample
+                scale
             )
-            state.strokeSample += 1
-            if (state.strokeSample >= state.samplesRequired) {
-                state.strokeSample = 0
-            }
             state.liveStrokeUpdate += 1
         },
         END_LIVESTROKE: (state) => {
             state.liveStroke.reset()
-            state.strokeSample = 0
             state.liveStrokeUpdate = 0
-        },
-        SET_SAMPLE_COUNT: (state, action) => {
-            state.samplesRequired = action.payload
         },
         TOGGLE_DIRECTDRAW: (state) => {
             state.directDraw = !state.directDraw
@@ -166,7 +152,6 @@ export const {
     START_LIVESTROKE,
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
-    SET_SAMPLE_COUNT,
     TOGGLE_DIRECTDRAW,
     SET_TR_NODES,
 } = drawControlSlice.actions
