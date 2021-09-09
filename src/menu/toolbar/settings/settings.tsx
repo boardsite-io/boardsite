@@ -8,7 +8,6 @@ import {
     ListItem,
     ListItemIcon,
     ListItemText,
-    Slider,
     Switch,
     TextField,
 } from "@material-ui/core"
@@ -19,7 +18,7 @@ import {
     TOGGLE_HIDE_NAVBAR,
     TOGGLE_SHOULD_CENTER,
 } from "redux/slice/viewcontrol"
-import { SET_SAMPLE_COUNT, TOGGLE_DIRECTDRAW } from "redux/slice/drawcontrol"
+import { TOGGLE_DIRECTDRAW } from "redux/slice/drawcontrol"
 import { isConnected } from "api/websocket"
 import { useCustomSelector } from "redux/hooks"
 import { API_URL } from "../../../api/types"
@@ -101,26 +100,6 @@ const Settings: React.FC = () => {
                             <BiStats />
                         </ListItemIcon>
                         <ListItemText primary="Sampling Period" />
-                    </ListItem>
-                    <ListItem>
-                        <Slider
-                            defaultValue={
-                                store.getState().drawControl.samplesRequired
-                            }
-                            getAriaValueText={(val) => {
-                                store.dispatch(SET_SAMPLE_COUNT(val))
-                                return ""
-                            }}
-                            aria-labelledby="discrete-slider"
-                            valueLabelDisplay="auto"
-                            step={1}
-                            marks={[
-                                { value: 1, label: "Min" },
-                                { value: 5, label: "Max" },
-                            ]}
-                            min={1}
-                            max={5}
-                        />
                     </ListItem>
                     <ListItem>
                         <ListItemIcon>

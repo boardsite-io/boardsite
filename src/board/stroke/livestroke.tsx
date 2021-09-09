@@ -41,18 +41,13 @@ export class BoardLiveStroke implements Tool {
         opacity?: number
     }
 
-    updatePoints(point: Point, scale: number, sample: number): number[][] {
+    updatePoints(point: Point, scale: number): number[][] {
         const pointsSegments = this.pointsSegments ?? []
         const p = pointsSegments[pointsSegments.length - 1]
         if (isContinuous(this.type)) {
             // for continuous strokes
             if (p.length < MAX_LIVESTROKE_PTS) {
-                if (sample === 0) {
-                    appendLinePoint(p, point)
-                } else {
-                    // update the latest point
-                    p.splice(p.length - 2, 2, point.x, point.y)
-                }
+                appendLinePoint(p, point)
             } else {
                 pointsSegments[pointsSegments.length - 1] = simplifyRDP(
                     p,

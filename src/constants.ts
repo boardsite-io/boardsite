@@ -53,7 +53,6 @@ export const TR_ANCHOR_STROKE = "#00000088"
 export const TR_ANCHOR_CORNER_RADIUS = 2
 
 export const DEFAULT_TOOL = ToolType.Pen
-export const MIN_SAMPLE_COUNT = 1
 // allow drawing with finger
 export const DEFAULT_DIRECTDRAW = true
 // number of overlapping points for sub livestrokes
