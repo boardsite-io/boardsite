@@ -16,12 +16,16 @@ import {
 } from "./favtoolbutton.styled"
 
 interface FavToolButtonProps {
-    icon: JSX.Element
+    children: JSX.Element
     tool: Tool
     index: number
 }
 
-const FavToolButton: React.FC<FavToolButtonProps> = ({ icon, tool, index }) => {
+const FavToolButton: React.FC<FavToolButtonProps> = ({
+    children,
+    tool,
+    index,
+}) => {
     const [open, setOpen] = useState(false)
 
     // apply fav tool as setting
@@ -67,7 +71,7 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({ icon, tool, index }) => {
                 onMouseUp={endClick}
                 onTouchStart={startClick}
                 onTouchEnd={endClick}>
-                {icon}
+                {children}
             </IconButton>
             <Popup open={open} onClose={() => setOpen(false)}>
                 <FavToolOptions>

@@ -1,9 +1,13 @@
 import { nanoid } from "@reduxjs/toolkit"
 import React from "react"
-import { BsPencil } from "react-icons/bs"
-import { CgErase } from "react-icons/cg"
-import { FiCircle, FiMinus, FiPlus, FiSquare } from "react-icons/fi"
-import { IconButton } from "components"
+import { FiPlus } from "react-icons/fi"
+import {
+    CircleIcon,
+    IconButton,
+    LineIcon,
+    PenIcon,
+    SquareIcon,
+} from "components"
 import { ToolType } from "../../types"
 import { FavToolsStyled } from "./favtools.styled"
 import store from "../../redux/store"
@@ -25,31 +29,26 @@ const FavTools: React.FC = () => {
                 let icon
                 switch (tool.type) {
                     case ToolType.Pen:
-                        icon = <BsPencil id="icon" />
-                        break
-                    case ToolType.Eraser:
-                        icon = <CgErase id="icon" />
+                        icon = <PenIcon />
                         break
                     case ToolType.Line:
-                        icon = <FiMinus id="icon" />
+                        icon = <LineIcon />
                         break
                     case ToolType.Rectangle:
-                        icon = <FiSquare id="icon" />
+                        icon = <SquareIcon />
                         break
                     case ToolType.Circle:
-                        icon = <FiCircle id="icon" />
+                        icon = <CircleIcon />
                         break
                     default:
-                        return null
+                        icon = <PenIcon />
+                        break
                 }
 
                 return (
-                    <FavToolButton
-                        icon={icon}
-                        tool={tool}
-                        index={i}
-                        key={nanoid()}
-                    />
+                    <FavToolButton tool={tool} index={i} key={nanoid()}>
+                        {icon}
+                    </FavToolButton>
                 )
             })}
             <IconButton onClick={addFavTool}>
