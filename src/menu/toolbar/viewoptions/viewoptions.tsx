@@ -1,9 +1,5 @@
 import React from "react"
-import {
-    BsArrowsMove,
-    BsArrowsAngleContract,
-    BsArrowsAngleExpand,
-} from "react-icons/bs"
+import { ExpandIcon, PanIcon, ShrinkIcon } from "components"
 import IconButton from "../../../components/iconbutton/iconbutton"
 import store from "../../../redux/store"
 import { TOGGLE_PANMODE } from "../../../redux/slice/drawcontrol"
@@ -17,13 +13,13 @@ const ViewOptions: React.FC = () => {
             <IconButton
                 active={isPanMode}
                 onClick={() => store.dispatch(TOGGLE_PANMODE())}>
-                <BsArrowsMove id="icon" />
+                <PanIcon />
             </IconButton>
             <IconButton onClick={() => store.dispatch(RESET_VIEW())}>
-                <BsArrowsAngleContract id="icon" />
+                <ShrinkIcon />
             </IconButton>
             <IconButton onClick={() => store.dispatch(FIT_WIDTH_TO_PAGE())}>
-                <BsArrowsAngleExpand id="icon" />
+                <ExpandIcon />
             </IconButton>
         </>
     )

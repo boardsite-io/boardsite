@@ -1,11 +1,11 @@
 import { nanoid } from "@reduxjs/toolkit"
 import React from "react"
-import { FiPlus } from "react-icons/fi"
 import {
     CircleIcon,
     IconButton,
     LineIcon,
     PenIcon,
+    PlusIcon,
     SquareIcon,
 } from "components"
 import { ToolType } from "../../types"
@@ -52,7 +52,7 @@ const FavTools: React.FC = () => {
                 )
             })}
             <IconButton onClick={addFavTool}>
-                <FiPlus id="icon" />
+                <PlusIcon />
             </IconButton>
         </FavToolsStyled>
     )
