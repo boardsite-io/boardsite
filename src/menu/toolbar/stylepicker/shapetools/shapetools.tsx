@@ -9,7 +9,7 @@ import {
 } from "components"
 import { SET_TYPE } from "redux/slice/drawcontrol"
 import store from "redux/store"
-import { ToolType } from "types"
+import { ToolType } from "board/stroke/types"
 import { StyledShapeTools } from "./shapetools.styled"
 
 const ShapeTools: React.FC = () => {

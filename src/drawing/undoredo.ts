@@ -1,3 +1,4 @@
+import { Stroke } from "board/stroke/types"
 import { eraseStrokes, isConnected, sendStrokes } from "../api/websocket"
 import {
     ADD_STROKES,
@@ -6,7 +7,6 @@ import {
 } from "../redux/slice/boardcontrol"
 import { SET_TR_NODES } from "../redux/slice/drawcontrol"
 import store from "../redux/store"
-import { Stroke } from "../types"
 
 interface DrawAction {
     strokes: Stroke[]

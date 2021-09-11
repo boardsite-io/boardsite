@@ -1,3 +1,5 @@
+import { Point, Stroke, ToolType } from "board/stroke/types"
+import { BoardStroke } from "board/stroke/stroke"
 import { KonvaEventObject } from "konva/types/Node"
 import store from "../redux/store"
 import {
@@ -8,8 +10,6 @@ import {
     SET_ISMOUSEDOWN,
 } from "../redux/slice/drawcontrol"
 import { handleAddStroke } from "./handlers"
-import { Point, Stroke, ToolType } from "../types"
-import { BoardStroke } from "../board/stroke/stroke"
 
 let tid: number | NodeJS.Timeout = 0
 

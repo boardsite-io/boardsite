@@ -1,3 +1,4 @@
+import { ToolType } from "board/stroke/types"
 import {
     CircleIcon,
     IconButton,
@@ -11,7 +12,6 @@ import React, { useState } from "react"
 import { useCustomSelector } from "redux/hooks"
 import { SET_TYPE } from "redux/slice/drawcontrol"
 import store from "redux/store"
-import { ToolType } from "types"
 import StylePicker from "../stylepicker/stylepicker"
 
 const PenTool: React.FC = () => {

@@ -1,3 +1,4 @@
+import { Stroke } from "board/stroke/types"
 import {
     addPagesSession,
     updatePagesSession,
@@ -16,7 +17,7 @@ import {
 } from "../redux/slice/boardcontrol"
 
 import store from "../redux/store"
-import { PageBackground, PageMeta, Stroke } from "../types"
+import { PageBackground, PageMeta } from "../types"
 import { toPDF } from "./io"
 import { BoardPage, getPDFfromForm, loadNewPDF } from "./page"
 import {

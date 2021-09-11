@@ -5,9 +5,9 @@ import { handleDeleteStroke } from "../drawing/handlers"
 import { CANVAS_FULL_HEIGHT } from "../constants"
 import store from "../redux/store"
 import { getPageIndex } from "../drawing/strokeactions"
-import { StrokeShape } from "./stroke/shape"
+import { StrokeShape } from "./shape/shape"
 import { useCustomSelector } from "../redux/hooks"
-import { Stroke, ToolType } from "../types"
+import { Stroke, ToolType } from "./stroke/types"
 
 interface PageContentProps {
     pageId: string

@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
+import { Point } from "board/stroke/types"
 import {
     DEFAULT_STAGE_WIDTH,
     DEFAULT_STAGE_HEIGHT,
@@ -15,8 +16,6 @@ import {
     DEFAULT_KEEP_CENTERED,
     DEFAULT_HIDE_NAVBAR,
 } from "../../constants"
-
-import { Point } from "../../types"
 
 // variables for multitouch zoom
 let lastCenter: Point | null = null
