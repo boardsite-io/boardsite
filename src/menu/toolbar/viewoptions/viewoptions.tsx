@@ -13,7 +13,7 @@ const ViewOptions: React.FC = () => {
             <IconButton
                 active={isPanMode}
                 onClick={() => store.dispatch(TOGGLE_PANMODE())}>
-                <PanIcon />
+                <PanIcon active={isPanMode} />
             </IconButton>
             <IconButton onClick={() => store.dispatch(RESET_VIEW())}>
                 <ShrinkIcon />
