@@ -1,6 +1,5 @@
-import { Popup } from "components"
+import { MinusIcon, PlusIcon, Popup } from "components"
 import React, { useState } from "react"
-import { FiMinus, FiPlus } from "react-icons/fi"
 import IconButton from "../../../components/iconbutton/iconbutton"
 import {
     REPLACE_FAV_TOOL,
@@ -76,10 +75,10 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({
             <Popup open={open} onClose={() => setOpen(false)}>
                 <FavToolOptions>
                     <IconButton onClick={replaceTool}>
-                        <FiPlus id="icon" />
+                        <PlusIcon />
                     </IconButton>
                     <IconButton onClick={removeTool}>
-                        <FiMinus id="icon" />
+                        <MinusIcon />
                     </IconButton>
                 </FavToolOptions>
             </Popup>
