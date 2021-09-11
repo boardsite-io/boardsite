@@ -1,4 +1,7 @@
+import { Tool, ToolType } from "board/stroke/types"
 import { createSlice } from "@reduxjs/toolkit"
+import { BoardLiveStroke } from "../../board/stroke/livestroke"
+import { TrNodesType } from "../../types"
 import {
     DEFAULT_ISPANMODE,
     DEFAULT_ISDRAGGABLE,
@@ -7,8 +10,6 @@ import {
     DEFAULT_DIRECTDRAW,
     DEFAULT_FAV_TOOLS,
 } from "../../constants"
-import { BoardLiveStroke } from "../../board/stroke/livestroke"
-import { Tool, ToolType, TrNodesType } from "../../types"
 
 export interface DrawControlState {
     isPanMode: boolean

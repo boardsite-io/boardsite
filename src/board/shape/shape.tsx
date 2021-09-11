@@ -1,10 +1,10 @@
 import React, { memo, useState } from "react"
 import { Circle } from "react-konva"
 import { LineJoin, LineCap } from "konva/types/Shape"
-import { Point, Stroke } from "../../types"
 import { useCustomSelector } from "../../redux/hooks"
 import store from "../../redux/store"
 import { MOVE_OPACITY } from "../../constants"
+import { Point, Stroke } from "../stroke/types"
 
 interface StrokeShapeProps {
     stroke: Stroke

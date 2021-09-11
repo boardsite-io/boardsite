@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit"
+import { Stroke } from "board/stroke/types"
 import { pageType } from "../../constants"
 import {
     DocumentImage,
     Page,
     PageBackground,
     PageCollection,
-    Stroke,
 } from "../../types"
 
 export interface BoardControlState {

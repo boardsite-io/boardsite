@@ -13,8 +13,8 @@ import {
     SEL_STROKE,
     SEL_STROKE_ENABLED,
 } from "../../constants"
-import { Point, ToolType, Tool } from "../../types"
 import { simplifyRDP } from "../../drawing/simplify"
+import { Point, Tool, ToolType } from "./types"
 
 export class BoardLiveStroke implements Tool {
     constructor() {

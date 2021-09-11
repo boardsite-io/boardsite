@@ -1,4 +1,5 @@
-import store from "../redux/store"
+import { BoardStroke } from "board/stroke/stroke"
+import { Stroke, ToolType } from "board/stroke/types"
 import {
     postPages,
     putPages,
@@ -32,9 +33,9 @@ import {
     ResponsePageSync,
     ResponsePageUpdate,
 } from "./types"
-import { PageCollection, Stroke, ToolType, User } from "../types"
-import { BoardStroke } from "../board/stroke/stroke"
+import { PageCollection, User } from "../types"
 import { BoardPage } from "../drawing/page"
+import store from "../redux/store"
 
 /**
  * Connect to Websocket.

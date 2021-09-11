@@ -5,7 +5,7 @@ import {
     JUMP_TO_PREV_PAGE,
 } from "../redux/slice/viewcontrol"
 import { handleRedo, handleUndo } from "../drawing/handlers"
-import { ToolType } from "../types"
+import { ToolType } from "./stroke/types"
 
 export default function keyListener(e: KeyboardEvent): void {
     switch (e.key) {

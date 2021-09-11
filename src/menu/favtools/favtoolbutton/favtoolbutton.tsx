@@ -1,3 +1,4 @@
+import { Tool } from "board/stroke/types"
 import { MinusIcon, PlusIcon, Popup } from "components"
 import React, { useState } from "react"
 import IconButton from "../../../components/iconbutton/iconbutton"
@@ -7,7 +8,6 @@ import {
     SET_TOOL,
 } from "../../../redux/slice/drawcontrol"
 import store from "../../../redux/store"
-import { Tool } from "../../../types"
 import {
     FavToolOptions,
     FavToolWidth,

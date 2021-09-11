@@ -18,7 +18,7 @@ import {
 import PageContent from "./pagecontent"
 import PageListener from "./pagelistener"
 
-import { LiveStrokeShape } from "./stroke/shape"
+import { LiveStrokeShape } from "./shape/shape"
 import {
     ZOOM_IN_WHEEL_SCALE,
     ZOOM_OUT_WHEEL_SCALE,

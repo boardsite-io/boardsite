@@ -1,8 +1,8 @@
+import { Stroke } from "board/stroke/types"
 import { KonvaEventObject, Node, NodeConfig } from "konva/types/Node"
 import { Vector, Polygon, Box, testPolygonPolygon } from "sat"
 import { SET_TR_NODES } from "../../redux/slice/drawcontrol"
 import store from "../../redux/store"
-import { Stroke } from "../../types"
 
 export function getHitboxPolygon(
     [x1, y1, x2, y2]: number[],

@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios"
+import { Stroke } from "board/stroke/types"
 import store from "../redux/store"
-import { Page, Stroke, User } from "../types"
+import { Page, User } from "../types"
 import { ResponsePageSync } from "./types"
 
 const apiRequest = axios.create({

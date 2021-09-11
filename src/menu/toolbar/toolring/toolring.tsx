@@ -2,10 +2,9 @@ import React from "react"
 import { useCustomSelector } from "redux/hooks"
 import { EraserIcon, IconButton, SelectIcon } from "components"
 import store from "redux/store"
+import { ToolType } from "board/stroke/types"
 import { SET_TYPE } from "redux/slice/drawcontrol"
-
 import PenTool from "../pentool/pentool"
-import { ToolType } from "../../../types"
 
 const ToolRing: React.FC = () => {
     const typeSelector = useCustomSelector(

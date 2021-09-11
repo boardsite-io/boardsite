@@ -3,7 +3,7 @@ import { Transformer } from "react-konva"
 import { Box } from "konva/types/shapes/Transformer"
 import { Node, NodeConfig } from "konva/types/Node"
 import { createSelector } from "reselect"
-import { Stroke, TrNodesType, TrRefType } from "../types"
+import { TrNodesType, TrRefType } from "../types"
 import {
     TR_BORDER_STROKE,
     TR_BORDER_STROKE_WIDTH,
@@ -15,6 +15,7 @@ import {
 import { useCustomSelector } from "../redux/hooks"
 import { handleUpdateStrokes } from "../drawing/handlers"
 import store, { RootState } from "../redux/store"
+import { Stroke } from "./stroke/types"
 
 const StrokeTransformer = (): JSX.Element => {
     const trRef: TrRefType = useRef(null)

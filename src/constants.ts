@@ -1,4 +1,5 @@
-import { PageBackground, Point, Tool, ToolType } from "./types"
+import { Point, Tool, ToolType } from "board/stroke/types"
+import { PageBackground } from "./types"
 
 /**
  * Returns true if in development mode

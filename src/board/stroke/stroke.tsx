@@ -1,15 +1,15 @@
 import { Polygon } from "sat"
 import { KonvaEventObject } from "konva/types/Node"
+import { simplifyRDP } from "drawing/simplify"
+import store from "redux/store"
+import { getHitboxPolygon, setSelectedShapes } from "board/hitbox/hitbox"
+import { LiveStroke, Stroke, ToolType } from "./types"
+import { BoardLiveStroke, isContinuous } from "./livestroke"
 import {
     CANVAS_FULL_HEIGHT,
-    RDP_EPSILON,
     RDP_FORCE_SECTIONS,
+    RDP_EPSILON,
 } from "../../constants"
-import store from "../../redux/store"
-import { LiveStroke, Stroke, ToolType } from "../../types"
-import { simplifyRDP } from "../../drawing/simplify"
-import { BoardLiveStroke, isContinuous } from "./livestroke"
-import { getHitboxPolygon, setSelectedShapes } from "./hitbox"
 
 export class BoardStroke extends BoardLiveStroke implements Stroke {
     /**
@@ -76,7 +76,7 @@ export class BoardStroke extends BoardLiveStroke implements Stroke {
             let pt = Math.round(p * 100) / 100
             if (i % 2) {
                 // make y coordinates relative to page
-                pt -= getPageIndex(this.pageId) * CANVAS_FULL_HEIGHT // relative y position
+                pt -= getPageIndex(this.pageId) * CANVAS_FULL_HEIGHT // relative y position: ;
             }
             return pt
         })
