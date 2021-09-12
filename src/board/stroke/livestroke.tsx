@@ -1,48 +1,43 @@
-import React from "react"
-import { Ellipse, Line, Rect } from "react-konva"
-import { ShapeConfig } from "konva/types/Shape"
+/* eslint-disable prefer-destructuring */
 import {
-    CANVAS_PIXEL_RATIO,
+    CANVAS_FULL_HEIGHT,
     DEFAULT_COLOR,
     DEFAULT_TOOL,
     DEFAULT_WIDTH,
-    LIVESTROKE_PTS_OVERLAP,
     MAX_LIVESTROKE_PTS,
-    SEL_FILL,
-    SEL_FILL_ENABLED,
-    SEL_STROKE,
-    SEL_STROKE_ENABLED,
+    RDP_EPSILON,
+    RDP_FORCE_SECTIONS,
 } from "../../constants"
 import { simplifyRDP } from "../../drawing/simplify"
-import { Point, Tool, ToolType } from "./types"
+import { LiveStroke, Point, ToolType } from "./types"
 
-export class BoardLiveStroke implements Tool {
-    constructor() {
-        this.type = DEFAULT_TOOL
-        this.style = {
-            color: DEFAULT_COLOR,
-            width: DEFAULT_WIDTH * CANVAS_PIXEL_RATIO,
-            opacity: 1,
-        }
-        this.points = []
-        this.pointsSegments = []
-        this.x = 0
-        this.y = 0
+export class BoardLiveStroke implements LiveStroke {
+    id = "" as string
+    pageId = "" as string
+    x = 0 as number
+    y = 0 as number
+    scaleX = 1 as number
+    scaleY = 1 as number
+    type = DEFAULT_TOOL as ToolType
+    style = {
+        color: DEFAULT_COLOR as string,
+        width: DEFAULT_WIDTH as number,
+        opacity: 1 as number,
     }
-    type: ToolType
-    points: number[]
-    pointsSegments?: number[][]
-    x: number
-    y: number
+    points = [] as number[]
+    pointsSegments = [] as number[][]
 
-    style: {
-        color: string
-        width: number
-        opacity?: number
+    start({ x, y }: Point, pageId: string): void {
+        this.reset()
+        this.id =
+            Date.now().toString(36).substr(2) +
+            Math.random().toString(36).substr(2, 10)
+        this.pageId = pageId
+        this.pointsSegments = [[x, y]]
     }
 
-    updatePoints(point: Point, scale: number): number[][] {
-        const pointsSegments = this.pointsSegments ?? []
+    addPoint(point: Point, scale: number): void {
+        const { pointsSegments } = this
         const p = pointsSegments[pointsSegments.length - 1]
         if (isContinuous(this.type)) {
             // for continuous strokes
@@ -58,9 +53,7 @@ export class BoardLiveStroke implements Tool {
                 // with the last point from the previous subarray as entry
                 // in order to not get a gap in the stroke
                 pointsSegments.push(
-                    p
-                        .slice(p.length - LIVESTROKE_PTS_OVERLAP * 2, p.length)
-                        .concat([point.x, point.y])
+                    p.slice(p.length - 2, p.length).concat([point.x, point.y])
                 )
             }
         } else {
@@ -75,92 +68,79 @@ export class BoardLiveStroke implements Tool {
                 this.type === ToolType.Rectangle ||
                 this.type === ToolType.Select
             ) {
-                // eslint-disable-next-line prefer-destructuring
                 this.x = p[0]
-                // eslint-disable-next-line prefer-destructuring
                 this.y = p[1]
             }
         }
-        return pointsSegments
+        this.pointsSegments = pointsSegments
     }
 
-    flatPoints(): number[] {
-        const pointsSegments = this.pointsSegments ?? []
-        if (pointsSegments.length === 0) {
-            return []
+    /**
+     * Convert livestroke into the normal stroke format
+     * @param stageScale scale for adjusting the RDP algorithm
+     * @param pageIndex page index of the pageId
+     */
+    finalize(stageScale: number, pageIndex: number): void {
+        this.flatPoints()
+        this.processPoints(stageScale, pageIndex)
+    }
+
+    flatPoints(): void {
+        const segments = this.pointsSegments
+        if (segments.length === 0) {
+            this.points = []
+        } else if (segments.length === 1) {
+            this.points = segments[0]
+        } else {
+            let pts: number[] = []
+            for (let i = 0; i < segments.length - 1; i += 1) {
+                pts = pts.concat(segments[i].slice(0, segments[i].length - 2))
+            }
+            this.points = pts.concat(segments[segments.length - 1])
         }
-        if (pointsSegments.length === 1) {
-            return pointsSegments[0]
-        }
-        let pts: number[] = []
-        for (let i = 0; i < pointsSegments.length - 1; i += 1) {
-            pts = pts.concat(
-                pointsSegments[i].slice(
-                    0,
-                    pointsSegments[i].length - 2 * LIVESTROKE_PTS_OVERLAP
-                )
+    }
+
+    processPoints(stageScale: number, pageIndex: number): void {
+        // for continuous types we simplify the points further
+        if (isContinuous(this.type)) {
+            this.points = simplifyRDP(
+                this.points,
+                RDP_EPSILON / stageScale,
+                RDP_FORCE_SECTIONS + 1
             )
         }
-        pts = pts.concat(pointsSegments[pointsSegments.length - 1])
-        return pts
-    }
 
-    getShape(shapeProps: ShapeConfig): JSX.Element {
-        const { points } = shapeProps
-        switch (this.type) {
-            case ToolType.Pen: {
-                // console.log("shapeLine", shapeProps)
-                return <Line points={points} tension={0.35} {...shapeProps} />
+        this.points = this.points.map((p, i) => {
+            // allow a reasonable precision
+            let pt = Math.round(p * 100) / 100
+            if (i % 2) {
+                // make y coordinates relative to page
+                pt -= pageIndex * CANVAS_FULL_HEIGHT
             }
-            case ToolType.Line:
-                return <Line points={points} tension={0.35} {...shapeProps} />
-            case ToolType.Circle:
-                return (
-                    <Ellipse
-                        radiusX={Math.abs((points[2] - points[0]) / 2)}
-                        radiusY={Math.abs((points[3] - points[1]) / 2)}
-                        fillEnabled={false} // Remove inner hitbox from empty circles
-                        {...shapeProps}
-                    />
-                )
-            case ToolType.Rectangle:
-                return (
-                    <Rect
-                        width={points[2] - points[0]}
-                        height={points[3] - points[1]}
-                        fillEnabled
-                        {...shapeProps}
-                    />
-                )
-            case ToolType.Select:
-                return (
-                    <Rect
-                        width={points[2] - points[0]}
-                        height={points[3] - points[1]}
-                        stroke={SEL_STROKE}
-                        strokeEnabled={SEL_STROKE_ENABLED}
-                        fill={SEL_FILL}
-                        fillEnabled={SEL_FILL_ENABLED}
-                        {...shapeProps}
-                    />
-                )
-            default:
-                return <></>
-        }
+            return pt
+        })
     }
 
+    /**
+     * Reset after completion
+     * x, y, scaleX, scaleY : constants so no need to reset
+     * Tool should persist so don't reset either
+     */
     reset(): void {
-        this.pointsSegments = []
+        this.id = ""
+        this.pageId = ""
         this.x = 0
         this.y = 0
+        this.scaleX = 1
+        this.scaleY = 1
+        this.points = []
+        this.pointsSegments = []
     }
 }
 
-export function isContinuous(type: ToolType): boolean {
-    return type === ToolType.Pen
-}
+const isContinuous = (type: ToolType): boolean => type === ToolType.Pen
 
-function appendLinePoint(pts: number[], newPoint: Point): void {
+const appendLinePoint = (pts: number[], newPoint: Point): void => {
     if (pts.length < 4) {
         pts.push(newPoint.x, newPoint.y)
         return

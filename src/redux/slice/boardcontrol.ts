@@ -110,14 +110,13 @@ const boardControlSlice = createSlice({
         UPDATE_STROKES(state, action) {
             const strokes: Stroke[] = action.payload
             strokes.forEach(({ id, pageId, x, y, scaleX, scaleY }) => {
-                const page = state.pageCollection[pageId]
-                if (page) {
-                    // stroke to update
-                    const stroke = page.strokes[id]
-                    if (stroke) {
-                        stroke.update?.({ x, y, scaleX, scaleY } as Stroke)
-                    }
-                }
+                const stroke = state.pageCollection[pageId]?.strokes[id]
+                stroke?.update?.({
+                    x,
+                    y,
+                    scaleX,
+                    scaleY,
+                } as Stroke)
             })
         },
 

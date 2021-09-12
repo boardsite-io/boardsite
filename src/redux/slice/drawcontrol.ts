@@ -116,21 +116,11 @@ const drawControlSlice = createSlice({
             const isMouseDown = action.payload
             state.isMouseDown = isMouseDown
         },
-        START_LIVESTROKE: (state, action) => {
-            const [x, y] = action.payload
-            state.liveStroke.pointsSegments = [[x, y]]
-        },
         // Update the current live stroke position
-        UPDATE_LIVESTROKE: (state, action) => {
-            const { point, scale } = action.payload
-            state.liveStroke.pointsSegments = state.liveStroke.updatePoints(
-                point,
-                scale
-            )
+        UPDATE_LIVESTROKE: (state) => {
             state.liveStrokeUpdate += 1
         },
         END_LIVESTROKE: (state) => {
-            state.liveStroke.reset()
             state.liveStrokeUpdate = 0
         },
         TOGGLE_DIRECTDRAW: (state) => {
@@ -150,7 +140,6 @@ export const {
     SET_ISPANMODE,
     TOGGLE_PANMODE,
     SET_ISMOUSEDOWN,
-    START_LIVESTROKE,
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
     TOGGLE_DIRECTDRAW,
