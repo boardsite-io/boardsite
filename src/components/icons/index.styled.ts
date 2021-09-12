@@ -13,13 +13,25 @@ import { ReactComponent as Pan } from "./pan.svg"
 import { ReactComponent as ZoomIn } from "./zoomin.svg"
 import { ReactComponent as ZoomOut } from "./zoomout.svg"
 
-const iconStyles = css`
+interface Props {
+    $active?: boolean
+    $stroke?: string
+}
+const iconStyles = css<Props>`
     height: 100%;
     width: 100%;
     &:hover {
         stroke: black;
     }
-    /* margin: auto; */
+    stroke: ${({ $active, $stroke }) => {
+        if ($active) {
+            return "var(--active-tool-color)"
+        }
+        if ($stroke) {
+            return $stroke
+        }
+        return "white"
+    }};
 `
 
 export const StyledEraser = styled(Eraser)`
