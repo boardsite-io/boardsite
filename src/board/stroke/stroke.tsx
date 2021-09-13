@@ -7,9 +7,7 @@ export class BoardStroke implements BoardStrokeType {
      * Create a new stroke from another Stroke instance
      */
     constructor(stroke: Stroke) {
-        this.id =
-            Date.now().toString(36).substr(2) +
-            Math.random().toString(36).substr(2, 10)
+        this.id = stroke.id
         this.pageId = stroke.pageId
         this.x = stroke.x
         this.y = stroke.y

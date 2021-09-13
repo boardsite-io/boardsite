@@ -81,11 +81,11 @@ export const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
         points: stroke.points, // external supplied points may overwrite stroke.points for e.g. livestroke
     }
 
-    return createShape(stroke, shapeProps)
+    return getShape(stroke, shapeProps)
 })
 
 // Use LineConfig since it requires points prop
-const createShape = (stroke: Stroke, shapeProps: LineConfig): JSX.Element => {
+const getShape = (stroke: Stroke, shapeProps: LineConfig): JSX.Element => {
     switch (stroke.type) {
         case ToolType.Pen: {
             return <Line tension={0.35} {...shapeProps} />

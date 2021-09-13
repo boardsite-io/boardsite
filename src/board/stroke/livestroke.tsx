@@ -78,8 +78,15 @@ export class BoardLiveStroke implements BoardLiveStrokeType {
      * @param pageIndex page index of the pageId
      */
     finalize(stageScale: number, pageIndex: number): void {
+        this.createUniqueId()
         this.flatPoints()
         this.processPoints(stageScale, pageIndex)
+    }
+
+    createUniqueId(): void {
+        this.id =
+            Date.now().toString(36).substr(2) +
+            Math.random().toString(36).substr(2, 10)
     }
 
     flatPoints(): void {
