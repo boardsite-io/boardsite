@@ -1,8 +1,8 @@
 import { Polygon } from "sat"
 import { getHitboxPolygon } from "board/hitbox/hitbox"
-import { Stroke, ToolType } from "./types"
+import { BoardStrokeType, Stroke, ToolType } from "./types"
 
-export class BoardStroke implements Stroke {
+export class BoardStroke implements BoardStrokeType {
     /**
      * Create a new stroke from another Stroke instance
      */
@@ -36,7 +36,7 @@ export class BoardStroke implements Stroke {
     /**
      * Generate a serializable stroke for e.g. WS transmission
      */
-    serialize(): Stroke {
+    serialize(): BoardStrokeType {
         return { ...this, hitboxes: undefined }
     }
 

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { Stroke } from "board/stroke/types"
+import { BoardStrokeType, Stroke } from "board/stroke/types"
 import { pageType } from "../../constants"
 import {
     DocumentImage,
@@ -110,7 +110,9 @@ const boardControlSlice = createSlice({
         UPDATE_STROKES(state, action) {
             const strokes: Stroke[] = action.payload
             strokes.forEach(({ id, pageId, x, y, scaleX, scaleY }) => {
-                const stroke = state.pageCollection[pageId]?.strokes[id]
+                const stroke = state.pageCollection[pageId]?.strokes[
+                    id
+                ] as BoardStrokeType
                 stroke?.update?.({
                     x,
                     y,

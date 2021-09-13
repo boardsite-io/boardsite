@@ -9,9 +9,9 @@ import {
     RDP_FORCE_SECTIONS,
 } from "../../constants"
 import { simplifyRDP } from "../../drawing/simplify"
-import { LiveStroke, Point, ToolType } from "./types"
+import { BoardLiveStrokeType, Point, ToolType } from "./types"
 
-export class BoardLiveStroke implements LiveStroke {
+export class BoardLiveStroke implements BoardLiveStrokeType {
     id = "" as string
     pageId = "" as string
     x = 0 as number

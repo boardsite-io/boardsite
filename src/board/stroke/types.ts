@@ -35,13 +35,15 @@ export interface Stroke extends Tool {
     scaleY: number
     points: number[]
     hitboxes?: Polygon[]
+}
 
+export interface BoardStrokeType extends Stroke {
     serialize?: () => Stroke
     update?: ({ x, y, scaleX, scaleY }: Stroke) => void
     calculateHitbox?: () => void
 }
 
-export interface LiveStroke extends Stroke {
+export interface BoardLiveStrokeType extends Stroke {
     pointsSegments: number[][]
 
     start({ x, y }: Point, pageId: string): void
