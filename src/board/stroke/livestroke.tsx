@@ -29,9 +29,6 @@ export class BoardLiveStroke implements BoardLiveStrokeType {
 
     start({ x, y }: Point, pageId: string): void {
         this.reset()
-        this.id =
-            Date.now().toString(36).substr(2) +
-            Math.random().toString(36).substr(2, 10)
         this.pageId = pageId
         this.pointsSegments = [[x, y]]
     }
