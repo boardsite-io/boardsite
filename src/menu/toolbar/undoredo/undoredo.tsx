@@ -1,15 +1,14 @@
-import { IconButton } from "components"
+import { IconButton, RedoIcon, UndoIcon } from "components"
 import { handleRedo, handleUndo } from "drawing/handlers"
 import React from "react"
-import { MdRedo, MdUndo } from "react-icons/md"
 
 const UndoRedo: React.FC = () => (
     <>
         <IconButton onClick={handleUndo}>
-            <MdUndo id="icon" />
+            <UndoIcon />
         </IconButton>
         <IconButton onClick={handleRedo}>
-            <MdRedo id="icon" />
+            <RedoIcon />
         </IconButton>
     </>
 )
