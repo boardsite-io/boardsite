@@ -13,7 +13,6 @@ export const CANVAS_WIDTH = 620
 export const CANVAS_HEIGHT = 877
 export const CANVAS_GAP = 20
 export const CANVAS_FULL_HEIGHT = CANVAS_HEIGHT + CANVAS_GAP
-export const CANVAS_PIXEL_RATIO = 1 // css forces canvas to be in a smaller frame but with high res for better clarity
 export const DEFAULT_WIDTH = STROKE_WIDTH_PRESETS[3]
 export const DEFAULT_COLOR = "#000000"
 export const DEFAULT_ISPANMODE = false
@@ -56,8 +55,6 @@ export const TR_ANCHOR_CORNER_RADIUS = 2
 export const DEFAULT_TOOL = ToolType.Pen
 // allow drawing with finger
 export const DEFAULT_DIRECTDRAW = true
-// number of overlapping points for sub livestrokes
-export const LIVESTROKE_PTS_OVERLAP = 1
 // maximum number of points a livestroke can have until cached
 export const MAX_LIVESTROKE_PTS = 20
 // epsilon for the Ramer–Douglas–Peucker algorithm
@@ -79,6 +76,7 @@ const tool1: Tool = {
     style: {
         color: "#000000",
         width: STROKE_WIDTH_PRESETS[2],
+        opacity: 1,
     },
 }
 const tool2: Tool = {
@@ -86,6 +84,7 @@ const tool2: Tool = {
     style: {
         color: "#0211a3",
         width: STROKE_WIDTH_PRESETS[3],
+        opacity: 1,
     },
 }
 const tool3: Tool = {
@@ -93,6 +92,7 @@ const tool3: Tool = {
     style: {
         color: "#ff0000",
         width: STROKE_WIDTH_PRESETS[4],
+        opacity: 1,
     },
 }
 

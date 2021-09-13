@@ -6,7 +6,7 @@ import {
     PenIcon,
     Popup,
     SquareIcon,
-    ToolIconProps,
+    IconProps,
 } from "components"
 import React, { useState } from "react"
 import { useCustomSelector } from "redux/hooks"
@@ -28,7 +28,7 @@ const PenTool: React.FC = () => {
         typeSelector === ToolType.Rectangle ||
         typeSelector === ToolType.Circle
 
-    const IconX: React.FC<ToolIconProps> = (props) => {
+    const IconX: React.FC<IconProps> = (props) => {
         switch (typeSelector) {
             case ToolType.Pen:
                 return <PenIcon {...props} />

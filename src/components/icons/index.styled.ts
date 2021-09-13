@@ -12,6 +12,8 @@ import { ReactComponent as Shrink } from "./shrink.svg"
 import { ReactComponent as Pan } from "./pan.svg"
 import { ReactComponent as ZoomIn } from "./zoomin.svg"
 import { ReactComponent as ZoomOut } from "./zoomout.svg"
+import { ReactComponent as Undo } from "./undo.svg"
+import { ReactComponent as Redo } from "./redo.svg"
 
 interface Props {
     $active?: boolean
@@ -71,5 +73,11 @@ export const StyledZoomIn = styled(ZoomIn)`
     ${iconStyles}
 `
 export const StyledZoomOut = styled(ZoomOut)`
+    ${iconStyles}
+`
+export const StyledUndo = styled(Undo)`
+    ${iconStyles}
+`
+export const StyledRedo = styled(Redo)`
     ${iconStyles}
 `

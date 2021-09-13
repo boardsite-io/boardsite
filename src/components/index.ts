@@ -1,5 +1,5 @@
-export { default as IconButton } from "./iconbutton/iconbutton"
 export * from "./icons/index"
+export { default as IconButton } from "./iconbutton/iconbutton"
 export { default as Button } from "./button/button"
 export { default as Popup } from "./popup/popup"
 export { default as TextField } from "./textfield/textfield"

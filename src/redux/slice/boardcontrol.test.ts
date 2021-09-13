@@ -1,16 +1,30 @@
 import { BoardPage } from "drawing/page"
 import { BoardStroke } from "board/stroke/stroke"
-import { Stroke } from "board/stroke/types"
+import { Stroke, ToolType } from "board/stroke/types"
 import { DocumentImage } from "types"
 import reducer from "./boardcontrol"
 import * as action from "./boardcontrol"
-import { pageType } from "../../constants"
+import { pageType, STROKE_WIDTH_PRESETS } from "../../constants"
 
 const page1 = new BoardPage(pageType.CHECKERED).setID("pid1")
-page1.strokes.strkid1 = new BoardStroke({
+const mockStroke1 = {
     id: "strkid1",
     pageId: "pid1",
-} as Stroke)
+    x: 0,
+    y: 0,
+    scaleX: 1,
+    scaleY: 1,
+    points: [],
+    type: ToolType.Pen,
+    style: {
+        color: "#00ff00",
+        width: STROKE_WIDTH_PRESETS[3],
+        opacity: 1,
+    },
+} as Stroke
+const mockBoardStroke1 = new BoardStroke(mockStroke1)
+
+page1.strokes.strkid1 = mockBoardStroke1
 
 describe("boardcontrol reducer", () => {
     it("should return the initial state", () => {
@@ -37,25 +51,19 @@ describe("boardcontrol reducer", () => {
                 },
                 action.UPDATE_STROKES([
                     {
+                        pageId: "pid1",
+                        id: "strkid1",
                         x: 1234,
                         y: 5678,
-                        id: "strkid1",
-                        pageId: "pid1",
                     },
                 ])
             )
         ).toHaveProperty("pageCollection.pid1.strokes.strkid1", {
-            hitboxes: [],
+            ...mockBoardStroke1,
             x: 1234,
             y: 5678,
-            id: "strkid1",
-            pageId: "pid1",
-            points: undefined,
-            pointsSegments: undefined,
             scaleX: 1,
             scaleY: 1,
-            style: {},
-            type: undefined,
         })
     })
 })

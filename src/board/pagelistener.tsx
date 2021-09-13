@@ -42,7 +42,7 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
         }
         store.dispatch(SET_ISMOUSEDOWN(true))
         const pos = getScaledPointerPosition(e)
-        startLiveStroke(pos)
+        startLiveStroke(pos, pageId)
     }
 
     const onMouseMove = (e: KonvaEventObject<MouseEvent>) => {
@@ -72,7 +72,7 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
         moveLiveStroke(pos)
 
         // register finished stroke
-        registerLiveStroke(pageId, e)
+        registerLiveStroke(e)
     }
 
     const onTouchStart = (e: KonvaEventObject<TouchEvent>) => {
