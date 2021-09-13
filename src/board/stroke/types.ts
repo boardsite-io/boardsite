@@ -6,8 +6,19 @@ export type Point = {
     y: number
 }
 
+// eslint-disable-next-line no-shadow
+export enum ToolType {
+    Eraser,
+    Pen,
+    Line,
+    Triangle,
+    Circle,
+    Rectangle,
+    Select,
+}
+
 export interface Tool {
-    type: number
+    type: ToolType
     style: {
         color: string
         width: number
@@ -38,17 +49,6 @@ export interface LiveStroke extends Stroke {
     flatPoints(): void
     processPoints(stageScale: number, pageIndex: number): void
     reset(): void
-}
-
-// eslint-disable-next-line no-shadow
-export enum ToolType {
-    Eraser,
-    Pen,
-    Line,
-    Triangle,
-    Circle,
-    Rectangle,
-    Select,
 }
 
 export type StrokeShape = Stroke & ShapeConfig
