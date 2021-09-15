@@ -5,8 +5,9 @@ import {
     IconButton,
     DialogOptions,
     Button,
+    UploadIcon,
+    DownloadIcon,
 } from "components"
-import { BsCloudDownload, BsCloudUpload } from "react-icons/bs"
 import { handleExportDocument } from "drawing/handlers"
 import FileDropZone from "./filedropzone"
 
@@ -24,10 +25,10 @@ const FileDropButton: React.FC = () => {
     return (
         <>
             <IconButton onClick={handleOpen}>
-                <BsCloudUpload id="icon" />
+                <UploadIcon />
             </IconButton>
             <IconButton onClick={() => handleExportDocument()}>
-                <BsCloudDownload id="icon" />
+                <DownloadIcon />
             </IconButton>
             <Dialog open={dialogOpen} onClose={handleClose}>
                 <DialogContent>

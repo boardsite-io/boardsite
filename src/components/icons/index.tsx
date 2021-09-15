@@ -1,6 +1,7 @@
 import React from "react"
 import {
     StyledCircle,
+    StyledDownload,
     StyledEraser,
     StyledExpand,
     StyledLine,
@@ -13,6 +14,7 @@ import {
     StyledShrink,
     StyledSquare,
     StyledUndo,
+    StyledUpload,
     StyledZoomIn,
     StyledZoomOut,
 } from "./index.styled"
@@ -65,4 +67,10 @@ export const UndoIcon: React.FC<IconProps> = ({ stroke, active }) => (
 )
 export const RedoIcon: React.FC<IconProps> = ({ stroke, active }) => (
     <StyledRedo $stroke={stroke} $active={active} />
+)
+export const DownloadIcon: React.FC<IconProps> = ({ stroke, active }) => (
+    <StyledDownload $stroke={stroke} $active={active} />
+)
+export const UploadIcon: React.FC<IconProps> = ({ stroke, active }) => (
+    <StyledUpload $stroke={stroke} $active={active} />
 )
