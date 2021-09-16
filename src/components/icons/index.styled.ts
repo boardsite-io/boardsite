@@ -14,6 +14,8 @@ import { ReactComponent as ZoomIn } from "./zoomin.svg"
 import { ReactComponent as ZoomOut } from "./zoomout.svg"
 import { ReactComponent as Undo } from "./undo.svg"
 import { ReactComponent as Redo } from "./redo.svg"
+import { ReactComponent as Download } from "./download.svg"
+import { ReactComponent as Upload } from "./upload.svg"
 
 interface Props {
     $active?: boolean
@@ -79,5 +81,11 @@ export const StyledUndo = styled(Undo)`
     ${iconStyles}
 `
 export const StyledRedo = styled(Redo)`
+    ${iconStyles}
+`
+export const StyledDownload = styled(Download)`
+    ${iconStyles}
+`
+export const StyledUpload = styled(Upload)`
     ${iconStyles}
 `

@@ -1,0 +1,22 @@
+<svg
+    stroke="white"
+    stroke-width="8"
+    stroke-linejoin="round"
+    stroke-linecap="round"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    width="100"
+    height="100"
+    viewBox="0 0 100 100">
+    <g>
+        <path d="M40,65 
+                 L15,65 
+                 A10,10,0,1,1,15,45 
+                 A30,30,0,0,1,80,35 
+                 A15,15,0,0,1,80,65 
+                 L60,65" />
+        <line x1="50" y1="35" x2="50" y2="95" />
+        <line x1="40" y1="85" x2="50" y2="95" />
+        <line x1="60" y1="85" x2="50" y2="95" />
+    </g>
+</svg>
