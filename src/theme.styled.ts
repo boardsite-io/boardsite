@@ -1,8 +1,9 @@
 import styled from "styled-components"
 
 export const Theme = styled.div`
-    --primary: #ffffff;
-    --secondary: #1a1a1a;
+    --color1: #ffffff;
+    --color2: #1a1a1a;
+    --color3: lightblue;
     --active-tool-color: #00ff00;
     --menubar-background: #00000088;
     --menubar-box-shadow: 0px 0px 2px 0px #00000088;

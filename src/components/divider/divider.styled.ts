@@ -5,7 +5,7 @@ interface StyledDividerProps {
 }
 export const StyledDivider = styled.hr<StyledDividerProps>`
     background: ${({ $color }) =>
-        $color === "primary" ? "var(--secondary)" : "var(--primary)"};
+        $color === "primary" ? "var(--color2)" : "var(--color1)"};
     width: 100%;
     height: 1px;
 `

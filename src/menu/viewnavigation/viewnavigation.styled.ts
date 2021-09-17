@@ -19,13 +19,13 @@ export const ViewNavIconButton = styled.button`
     height: 15px;
     width: 20px;
     border-width: 0;
-    color: var(--primary);
+    color: var(--color1);
     outline: none;
     background: none;
     margin: auto;
     &:hover {
-        color: var(--secondary);
-        background: var(--primary);
+        color: var(--color2);
+        background: var(--color1);
     }
 `
 export const ViewNavPageNum = styled.p`
@@ -42,12 +42,12 @@ export const ViewNavPageIndexButton = styled.button`
     width: fit-content;
     min-width: 20px;
     border-width: 0;
-    color: var(--primary);
+    color: var(--color1);
     outline: none;
     background: none;
     gap: 0px;
     &:hover {
-        color: var(--secondary);
-        background: var(--primary);
+        color: var(--color2);
+        background: var(--color1);
     }
 `
