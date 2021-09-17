@@ -5,11 +5,10 @@ interface Props {
     $variant: Variants
 }
 
-export const StyledButton = styled.button`
+export const StyledButton = styled.button<Props>`
     display: inline-block;
     text-align: center;
     padding: 0.5rem 1.5rem;
-    box-shadow: var(--box-shadow);
     text-transform: uppercase;
     outline: none;
     border-width: 0;
@@ -18,24 +17,26 @@ export const StyledButton = styled.button`
     &:hover {
         cursor: pointer;
     }
-    ${(props: Props) =>
-        props.$variant === Variants.Primary ? primaryStyle : secondary};
+    ${({ $variant }) =>
+        $variant === Variants.Primary ? primaryStyle : secondaryStyle};
 `
 
 const primaryStyle = css`
-    color: var(--primary);
-    background: var(--secondary);
+    color: var(--color1);
+    background: var(--color2);
+    box-shadow: var(--box-shadow);
     &:hover {
-        color: var(--secondary);
-        background: var(--primary);
+        color: var(--color2);
+        background: var(--color1);
     }
 `
 
-const secondary = css`
-    color: var(--secondary);
-    background: var(--primary);
+const secondaryStyle = css`
+    color: var(--color2);
+    background: var(--color1);
+    box-shadow: var(--box-shadow);
     &:hover {
-        color: var(--primary);
-        background: var(--secondary);
+        color: var(--color1);
+        background: var(--color2);
     }
 `
