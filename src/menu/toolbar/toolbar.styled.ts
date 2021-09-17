@@ -1,19 +1,16 @@
 import styled from "styled-components"
 
 export const ToolbarStyled = styled.div`
-    background: var(--menubar-background);
-    display: grid;
-    grid-auto-flow: column;
+    z-index: 100;
     position: fixed;
-    gap: var(--button-gap);
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-left: 5px;
-    padding-right: 5px;
-    justify-content: space-between;
     top: 0px;
     left: 0px;
     right: 0px;
+    display: flex;
+    gap: var(--button-gap);
+    justify-content: space-between;
+    padding: 0.2rem 0.4rem;
+    background: var(--menubar-background);
     box-shadow: var(--menubar-box-shadow);
 `
 export const ToolbarGroup = styled.div`

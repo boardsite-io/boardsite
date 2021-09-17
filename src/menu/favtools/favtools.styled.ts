@@ -1,6 +1,7 @@
 import styled from "styled-components"
 
 export const FavToolsStyled = styled.div`
+    z-index: 10;
     background: var(--menubar-background);
     display: grid;
     grid-auto-flow: row;

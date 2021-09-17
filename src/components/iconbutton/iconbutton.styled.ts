@@ -7,8 +7,8 @@ interface Props {
 
 export const StyledIconButton = styled.button`
     padding: 0.2rem;
-    height: 2rem;
-    width: 2rem;
+    height: 2.5rem;
+    width: 2.5rem;
     text-align: center;
     justify-self: center;
     outline: none;
