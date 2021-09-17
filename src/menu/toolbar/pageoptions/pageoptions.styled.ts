@@ -1,22 +1,17 @@
 import styled from "styled-components"
 
 export const PageOptionsWrapper = styled.div`
-    display: grid;
+    display: flex;
     height: var(--button-height);
-    grid-auto-flow: column;
     gap: var(--button-gap);
 `
 
 export const PageOptionsWrapperInner = styled.div`
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-left: 5px;
-    padding-right: 5px;
     position: absolute;
-    top: 40px;
-    left: -5px;
-    display: grid;
-    grid-auto-flow: column;
+    top: 3rem;
+    left: 0;
+    display: flex;
+    padding: 0.2rem 0rem;
     border-radius: var(--menubar-border-radius);
-    background-color: var(--menubar-background);
+    background: var(--menubar-background);
 `
