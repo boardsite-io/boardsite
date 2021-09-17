@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import { BsGear, BsInfoCircle } from "react-icons/bs"
 import isElectron from "is-electron"
-import { BiStats } from "react-icons/bi"
 import { VscDebugDisconnect } from "react-icons/vsc"
 import {
     List,
@@ -94,12 +93,6 @@ const Settings: React.FC = () => {
                             onChange={() => store.dispatch(TOGGLE_DIRECTDRAW())}
                             name="jason"
                         />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemIcon>
-                            <BiStats />
-                        </ListItemIcon>
-                        <ListItemText primary="Sampling Period" />
                     </ListItem>
                     <ListItem>
                         <ListItemIcon>

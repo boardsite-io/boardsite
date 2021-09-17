@@ -29,7 +29,7 @@ export const DialogContent = styled.div`
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    overflow-y: scroll;
+    overflow-y: auto;
     gap: 1rem;
     margin: 1.5rem;
     text-align: justify;

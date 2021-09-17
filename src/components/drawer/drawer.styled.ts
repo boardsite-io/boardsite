@@ -31,7 +31,8 @@ export const DrawerBox = styled.div<DrawerBoxProps>`
     padding: 0.5rem;
     box-shadow: var(--box-shadow);
     animation: ${fadeInBox} ${transitionTime} ease-out;
-    overflow-y: scroll;
+    overflow-y: auto;
+    overflow-x: hidden;
     ${({ position }) => (position === "left" ? positionLeft : positionRight)}
 `
 
@@ -44,13 +45,13 @@ const fadeInBackground = keyframes`
     }
 `
 export const DrawerBackground = styled.div`
+    z-index: 900;
     position: fixed;
     background: #000000aa;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 900;
     animation: ${fadeInBackground} ${transitionTime} ease-in-out;
 `
 
