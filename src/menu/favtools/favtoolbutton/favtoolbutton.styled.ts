@@ -2,13 +2,12 @@ import styled from "styled-components"
 
 export const FavToolWrapper = styled.div`
     position: relative;
-    height: var(--button-height);
 `
 
 export const FavToolWidth = styled.div`
     position: absolute;
-    bottom: -0.5rem;
-    right: -0.2rem;
+    bottom: -0rem;
+    right: -0rem;
     padding: 0 0.1rem;
     height: min-content;
     width: min-content;
