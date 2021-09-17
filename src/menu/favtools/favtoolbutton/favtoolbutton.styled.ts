@@ -6,8 +6,8 @@ export const FavToolWrapper = styled.div`
 
 export const FavToolWidth = styled.div`
     position: absolute;
-    bottom: -0rem;
-    right: -0rem;
+    bottom: 0;
+    right: 0;
     padding: 0 0.1rem;
     height: min-content;
     width: min-content;
