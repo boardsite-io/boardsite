@@ -3,13 +3,12 @@ import { Variants } from "types"
 
 interface Props {
     $variant: Variants
+    $withIcon: boolean
+    $fullWidth: boolean
 }
 
 export const StyledButton = styled.button<Props>`
-    display: inline-block;
-    text-align: center;
     padding: 0.5rem 1.5rem;
-    text-transform: uppercase;
     outline: none;
     border-width: 0;
     border-radius: var(--button-border-radius);
@@ -17,8 +16,10 @@ export const StyledButton = styled.button<Props>`
     &:hover {
         cursor: pointer;
     }
+    width: ${({ $fullWidth }) => ($fullWidth ? "100%" : "auto")};
     ${({ $variant }) =>
         $variant === Variants.Primary ? primaryStyle : secondaryStyle};
+    ${({ $withIcon }) => ($withIcon ? iconStyle : noIconStyle)};
 `
 
 const primaryStyle = css`
@@ -39,4 +40,17 @@ const secondaryStyle = css`
         color: var(--color1);
         background: var(--color2);
     }
+`
+
+const iconStyle = css`
+    display: flex;
+    /* justify-content: center; */
+    gap: 1rem;
+    text-transform: uppercase;
+`
+
+const noIconStyle = css`
+    display: inline-block;
+    text-align: center;
+    text-transform: uppercase;
 `
