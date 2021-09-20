@@ -5,19 +5,18 @@ interface Props {
     $background?: string
 }
 
-export const StyledIconButton = styled.button`
+export const StyledIconButton = styled.button<Props>`
     padding: 0.2rem;
-    height: 2.5rem;
-    width: 2.5rem;
+    height: var(--icon-button-width);
+    width: var(--icon-button-width);
     text-align: center;
     justify-self: center;
     outline: none;
-    border-width: 0;
+    border: none;
     border-radius: var(--button-border-radius);
-    color: ${(props: Props) =>
-        props.$active ? "var(--active-tool-color)" : "var(--color1)"};
-    background: ${(props: Props) =>
-        props.$background ? props.$background : "none"};
+    color: ${({ $active }) =>
+        $active ? "var(--active-tool-color)" : "var(--color1)"};
+    background: ${({ $background }) => $background ?? "none"};
     &:hover {
         color: var(--color2);
     }
