@@ -1,13 +1,12 @@
 import React, { useState } from "react"
+import { UploadIcon } from "components"
 import { handleDocument } from "drawing/handlers"
 import {
-    StyledDivNoTouch,
+    InvisibleInput,
     StyledFileDropZone,
-    StyledIcon,
     StyledSubtitle,
     StyledTitle,
-} from "./filedrop.styled"
-import { InvisibleInput } from "./filedropzone.styled"
+} from "./filedropzone.styled"
 
 interface FileDropZoneProps {
     closeDialog: () => void
@@ -49,13 +48,11 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ closeDialog }) => {
                 onDragOver={onDragOver}
                 onDragLeave={onDragLeave}
                 $hovering={hovering}>
-                <StyledDivNoTouch>
-                    <StyledIcon />
-                    <StyledTitle>{hovering ? "" : "Browse Files"}</StyledTitle>
-                    <StyledSubtitle>
-                        {hovering ? "" : "Drag and drop files here"}
-                    </StyledSubtitle>
-                </StyledDivNoTouch>
+                <UploadIcon id="big-cloud-icon" />
+                <StyledTitle>{hovering ? "" : "Browse Files"}</StyledTitle>
+                <StyledSubtitle>
+                    {hovering ? "" : "Drag and drop files here"}
+                </StyledSubtitle>
             </StyledFileDropZone>
             <InvisibleInput type="file" id="selectedFile" onInput={onInput} />
         </>
