@@ -14,6 +14,7 @@ interface ButtonProps extends React.InputHTMLAttributes<HTMLInputElement> {
     label?: string
     value: string
     align?: TextAlign
+    error?: boolean
 }
 
 const TextField: React.FC<ButtonProps> = ({
@@ -21,6 +22,7 @@ const TextField: React.FC<ButtonProps> = ({
     label = "",
     value = "",
     align = "center" as TextAlign,
+    error = false,
     ...props
 }) => {
     const [hasFocus, setFocus] = useState(false)
@@ -41,7 +43,7 @@ const TextField: React.FC<ButtonProps> = ({
                 value={value}
                 {...props}
             />
-            <InputBar $hasFocus={hasFocus} />
+            <InputBar $hasFocus={hasFocus} $error={error} />
             <InputLabel $hasFocus={hasFocus || value !== ""}>
                 {label}
             </InputLabel>
