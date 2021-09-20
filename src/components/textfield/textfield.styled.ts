@@ -22,10 +22,8 @@ export const InputLabel = styled.label`
     transition: all 250ms;
     top: ${({ $hasFocus }: InputLabelProps) => ($hasFocus ? "0" : "1.5rem")};
     font-size: ${({ $hasFocus }: InputLabelProps) =>
-        $hasFocus ? "0.7rem" : "1rem"};
+        $hasFocus ? "0.9rem" : "1rem"};
     height: 1rem;
-    padding: 0;
-    margin: 0;
     color: #00000088;
     /* background: black; */
 `
@@ -34,14 +32,14 @@ export const InputHelperText = styled.label`
     pointer-events: none;
     position: absolute;
     bottom: 0;
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     height: 1rem;
     color: #00000088;
-    /* background: black; */
 `
 
 interface InputBarProps {
     $hasFocus: boolean
+    $error: boolean
 }
 export const InputBar = styled.div`
     position: absolute;
@@ -49,9 +47,15 @@ export const InputBar = styled.div`
     transition: all 250ms;
     height: 1px;
     width: 100%;
-    background: ${({ $hasFocus }: InputBarProps) =>
-        $hasFocus ? "#00ff0088" : "#00000088"};
-    /* background: black; */
+    background: ${({ $error, $hasFocus }: InputBarProps) => {
+        if ($error) {
+            return "red"
+        }
+        if ($hasFocus) {
+            return "#00ff0088"
+        }
+        return "#00000088"
+    }};
 `
 
 export type TextAlign = "left" | "center" | "right"
@@ -59,12 +63,13 @@ interface InputProps {
     $textAlign: TextAlign
 }
 export const StyledInput = styled.input`
-    padding: 0;
     position: absolute;
+    padding: 0;
     bottom: 1rem;
     height: 2rem;
     width: 100%;
     text-align: ${({ $textAlign }: InputProps) => $textAlign};
+    font-size: 1rem;
     outline: none;
     border: none;
     &:hover {

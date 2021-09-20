@@ -2,9 +2,9 @@ import React, { useState } from "react"
 import { BsGear, BsInfoCircle } from "react-icons/bs"
 import isElectron from "is-electron"
 import { VscDebugDisconnect } from "react-icons/vsc"
-import { Switch, TextField } from "@material-ui/core"
+import { Switch } from "@material-ui/core"
 import store from "redux/store"
-import { Button, Drawer, IconButton } from "components"
+import { Button, Drawer, IconButton, TextField } from "components"
 import { SET_API_URL } from "redux/slice/webcontrol"
 import {
     TOGGLE_HIDE_NAVBAR,
@@ -93,18 +93,15 @@ const Settings: React.FC = () => {
                 <SettingsGroup>
                     <Setting>
                         <TextField
-                            id="standard-basic"
                             label="API URL"
                             inputMode="url"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
                             value={url.toString()}
                             onChange={handleURLChange}
                             error={!isValidURL}
                             disabled={
                                 isConnected() || (!isDev() && !isElectron())
                             }
+                            align="left"
                         />
                     </Setting>
                 </SettingsGroup>
