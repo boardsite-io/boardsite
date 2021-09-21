@@ -27,7 +27,7 @@ export const DrawerBox = styled.div<DrawerBoxProps>`
     width: min(20rem, 80%);
     display: flex;
     flex-direction: column;
-    background: white;
+    background: var(--color5);
     padding: 0.5rem;
     box-shadow: var(--box-shadow);
     animation: ${fadeInBox} ${transitionTime} ease-out;
@@ -47,24 +47,10 @@ const fadeInBackground = keyframes`
 export const DrawerBackground = styled.div`
     z-index: 900;
     position: fixed;
-    background: #000000aa;
+    background: var(--color6);
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
     animation: ${fadeInBackground} ${transitionTime} ease-in-out;
 `
-
-// export const DrawerContent = styled.div`
-//     display: flex;
-//     flex-direction: column;
-//     flex-grow: 1;
-//     overflow-y: scroll;
-//     gap: 1rem;
-//     margin: 1.5rem;
-//     text-align: justify;
-// `
-
-// export const DrawerTitle = styled.h2`
-//     margin: 1.3rem 1rem;
-// `

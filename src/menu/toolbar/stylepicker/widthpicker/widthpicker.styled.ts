@@ -7,7 +7,7 @@ export const WidthPresets = styled.div`
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
     /* grid-gap: 2px; */
     border-radius: var(--menubar-border-radius);
-    background: var(--menubar-background);
+    background: var(--color2);
     align-items: center;
     justify-items: center;
 `
@@ -20,8 +20,7 @@ export const Preset = styled.div<PresetProps>`
     justify-content: space-around;
     align-items: center;
     border-radius: 100%;
-    border: ${({ $active }) =>
-        $active ? "2px solid var(--active-tool-color)" : "none"};
+    border: ${({ $active }) => ($active ? "2px solid var(--color7)" : "none")};
     background: ${({ $active }) => ($active ? "#00ff0088" : "#ffffff")};
     height: 1.5rem;
     width: 1.5rem;
@@ -30,7 +29,7 @@ export const Preset = styled.div<PresetProps>`
     &:hover {
         transform: scale(1.2, 1.2);
         cursor: pointer;
-        box-shadow: 0 0 1rem 0 var(--active-tool-color);
+        box-shadow: 0 0 1rem 0 var(--color7);
     }
 `
 

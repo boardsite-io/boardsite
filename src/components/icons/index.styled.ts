@@ -25,16 +25,16 @@ const iconStyles = css<Props>`
     height: 100%;
     width: 100%;
     &:hover {
-        stroke: black;
+        stroke: var(--color8);
     }
     stroke: ${({ $active, $stroke }) => {
         if ($active) {
-            return "var(--active-tool-color)"
+            return "var(--color7)"
         }
         if ($stroke) {
             return $stroke
         }
-        return "white"
+        return "var(--color1)"
     }};
 `
 

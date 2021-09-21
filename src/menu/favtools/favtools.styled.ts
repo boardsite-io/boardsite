@@ -2,7 +2,7 @@ import styled from "styled-components"
 
 export const FavToolsStyled = styled.div`
     z-index: 10;
-    background: var(--menubar-background);
+    background: var(--color2);
     display: grid;
     grid-auto-flow: row;
     position: fixed;

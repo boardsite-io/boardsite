@@ -4,7 +4,7 @@ export const DialogBox = styled.div`
     display: flex;
     flex-direction: column;
     position: fixed;
-    background: white;
+    background: var(--color5);
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -17,7 +17,7 @@ export const DialogBox = styled.div`
 
 export const DialogBackground = styled.div`
     position: fixed;
-    background: #000000aa;
+    background: var(--color6);
     top: 0;
     bottom: 0;
     left: 0;

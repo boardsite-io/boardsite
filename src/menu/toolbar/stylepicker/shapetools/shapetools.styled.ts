@@ -7,5 +7,5 @@ export const StyledShapeTools = styled.div`
     padding: 0.1rem 0;
     align-items: center;
     border-radius: var(--menubar-border-radius);
-    background: var(--menubar-background);
+    background: var(--color2);
 `

@@ -26,6 +26,6 @@ export const FavToolOptions = styled.div`
     display: grid;
     grid-auto-flow: column;
     border-radius: var(--menubar-border-radius);
-    background-color: var(--menubar-background);
+    background-color: var(--color2);
     box-shadow: var(--menubar-box-shadow);
 `

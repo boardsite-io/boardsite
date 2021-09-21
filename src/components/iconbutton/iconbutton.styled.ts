@@ -14,8 +14,7 @@ export const StyledIconButton = styled.button<Props>`
     outline: none;
     border: none;
     border-radius: var(--button-border-radius);
-    color: ${({ $active }) =>
-        $active ? "var(--active-tool-color)" : "var(--color1)"};
+    color: ${({ $active }) => ($active ? "var(--color7)" : "var(--color1)")};
     background: ${({ $background }) => $background ?? "none"};
     &:hover {
         color: var(--color2);

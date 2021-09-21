@@ -39,7 +39,7 @@ export const StyledFileDropZone = styled.div<Props>`
         cursor: pointer;
     }
     #big-cloud-icon {
-        stroke: var(--color2);
+        stroke: var(--color3);
         height: 4rem;
         width: 4rem;
         pointer-events: none;
@@ -48,13 +48,11 @@ export const StyledFileDropZone = styled.div<Props>`
 `
 
 export const StyledTitle = styled.h4`
-    margin-bottom: 10px;
-    margin-top: 5px;
+    margin: 0.2rem 0;
 `
 
 export const StyledSubtitle = styled.p`
-    margin-bottom: 5px;
-    margin-top: 5px;
+    margin: 0.2rem 0;
 `
 
 export const InvisibleInput = styled.input`
