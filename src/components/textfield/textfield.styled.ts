@@ -25,7 +25,6 @@ export const InputLabel = styled.label`
         $hasFocus ? "0.9rem" : "1rem"};
     height: 1rem;
     color: #00000088;
-    /* background: black; */
 `
 
 export const InputHelperText = styled.label`
@@ -52,9 +51,9 @@ export const InputBar = styled.div`
             return "red"
         }
         if ($hasFocus) {
-            return "#00ff0088"
+            return "var(--color3)"
         }
-        return "#00000088"
+        return "var(--color4)"
     }};
 `
 
