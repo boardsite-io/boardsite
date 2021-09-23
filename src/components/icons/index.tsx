@@ -20,6 +20,7 @@ import {
 } from "./index.styled"
 
 export interface IconProps {
+    id?: string
     stroke?: string
     active?: boolean
 }
@@ -71,6 +72,6 @@ export const RedoIcon: React.FC<IconProps> = ({ stroke, active }) => (
 export const DownloadIcon: React.FC<IconProps> = ({ stroke, active }) => (
     <StyledDownload $stroke={stroke} $active={active} />
 )
-export const UploadIcon: React.FC<IconProps> = ({ stroke, active }) => (
-    <StyledUpload $stroke={stroke} $active={active} />
+export const UploadIcon: React.FC<IconProps> = ({ stroke, active, id }) => (
+    <StyledUpload $stroke={stroke} $active={active} id={id} />
 )

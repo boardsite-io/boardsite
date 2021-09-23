@@ -2,9 +2,8 @@ import React, { useState } from "react"
 import { BsGear, BsInfoCircle } from "react-icons/bs"
 import isElectron from "is-electron"
 import { VscDebugDisconnect } from "react-icons/vsc"
-import { Switch } from "@material-ui/core"
 import store from "redux/store"
-import { Button, Drawer, IconButton, TextField } from "components"
+import { Button, Drawer, IconButton, Switch, TextField } from "components"
 import { SET_API_URL } from "redux/slice/webcontrol"
 import {
     TOGGLE_HIDE_NAVBAR,
@@ -60,29 +59,24 @@ const Settings: React.FC = () => {
                     <Setting>
                         Keep view centered
                         <Switch
-                            checked={keepCentered}
-                            onChange={() =>
+                            enabled={keepCentered}
+                            onClick={() =>
                                 store.dispatch(TOGGLE_SHOULD_CENTER())
                             }
-                            name="jason"
                         />
                     </Setting>
                     <Setting>
                         Hide navigation bar
                         <Switch
-                            checked={hideNavBar}
-                            onChange={() =>
-                                store.dispatch(TOGGLE_HIDE_NAVBAR())
-                            }
-                            name="jason"
+                            enabled={hideNavBar}
+                            onClick={() => store.dispatch(TOGGLE_HIDE_NAVBAR())}
                         />
                     </Setting>
                     <Setting>
                         Enable Direct Drawing
                         <Switch
-                            checked={directDraw}
-                            onChange={() => store.dispatch(TOGGLE_DIRECTDRAW())}
-                            name="jason"
+                            enabled={directDraw}
+                            onClick={() => store.dispatch(TOGGLE_DIRECTDRAW())}
                         />
                     </Setting>
                 </SettingsGroup>

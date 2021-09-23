@@ -4,7 +4,7 @@ export const ViewNavWrapper = styled.div`
     position: fixed;
     display: grid;
     grid-auto-flow: row;
-    background: var(--menubar-background);
+    background: var(--color2);
     top: 50%;
     right: 5px;
     transform: translateY(-50%);

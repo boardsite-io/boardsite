@@ -8,8 +8,8 @@ export const Setting = styled.div`
 export const SettingsGroup = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    padding: 0 1rem;
+    gap: 1rem;
+    padding: 1rem;
 `
 export const SettingsTitle = styled.h3`
     display: flex;

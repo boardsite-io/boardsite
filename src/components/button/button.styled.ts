@@ -24,11 +24,10 @@ export const StyledButton = styled.button<Props>`
 
 const primaryStyle = css`
     color: var(--color1);
-    background: var(--color2);
+    background: var(--color3);
     box-shadow: var(--box-shadow);
     &:hover {
-        color: var(--color2);
-        background: var(--color1);
+        background: var(--color4);
     }
 `
 

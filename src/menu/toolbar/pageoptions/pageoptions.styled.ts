@@ -13,5 +13,5 @@ export const PageOptionsWrapperInner = styled.div`
     display: flex;
     padding: 0.2rem 0rem;
     border-radius: var(--menubar-border-radius);
-    background: var(--menubar-background);
+    background: var(--color2);
 `
