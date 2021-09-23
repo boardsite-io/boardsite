@@ -10,7 +10,6 @@
     "main": "public/electron.js",
     "private": true,
     "dependencies": {
-        "@material-ui/core": "^4.11.3",
         "@reduxjs/toolkit": "^1.5.0",
         "@types/downloadjs": "^1.4.2",
         "axios": "^0.21.1",
