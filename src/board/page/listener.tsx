@@ -4,17 +4,13 @@ import * as types from "konva/types/shapes/Rect"
 import { KonvaEventObject } from "konva/types/Node"
 import { Stage } from "konva/types/Stage"
 import { Vector2d } from "konva/types/types"
-import store from "../redux/store"
-import * as actions from "../drawing/stroke/actions"
-import { CANVAS_WIDTH, CANVAS_HEIGHT, CANVAS_FULL_HEIGHT } from "../constants"
-import { SET_ISMOUSEDOWN } from "../redux/slice/drawcontrol"
-import { useCustomSelector } from "../redux/hooks"
+import store from "../../redux/store"
+import * as actions from "../../drawing/stroke/actions"
+import { SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
+import { useCustomSelector } from "../../redux/hooks"
+import { PageProps } from "./types"
 
-interface PageListenerProps {
-    pageId: string
-}
-
-const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
+const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
     // pageId might not be valid anymore, exit then
     if (!store.getState().boardControl.pageCollection[pageId]) {
         return null
@@ -116,13 +112,10 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
 
     return (
         <Rect
+            {...pageSize}
             ref={ref}
             draggable={false}
             listening={!isPanMode && !isListening}
-            height={CANVAS_HEIGHT}
-            width={CANVAS_WIDTH}
-            x={0}
-            y={CANVAS_FULL_HEIGHT * actions.getPageIndex(pageId)}
             onMouseDown={onMouseDown}
             onMousemove={onMouseMove}
             onMouseUp={onMouseUp}

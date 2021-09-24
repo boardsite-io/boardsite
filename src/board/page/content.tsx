@@ -1,19 +1,14 @@
 import React from "react"
 import { Group } from "react-konva"
 import { KonvaEventObject } from "konva/types/Node"
-import { handleDeleteStroke } from "../drawing/handlers"
-import { CANVAS_FULL_HEIGHT } from "../constants"
-import store from "../redux/store"
-import { getPageIndex } from "../drawing/stroke/actions"
-import { StrokeShape } from "./stroke/shape"
-import { useCustomSelector } from "../redux/hooks"
-import { Stroke, ToolType } from "../drawing/stroke/types"
+import { handleDeleteStroke } from "../../drawing/handlers"
+import store from "../../redux/store"
+import { StrokeShape } from "../stroke/shape"
+import { useCustomSelector } from "../../redux/hooks"
+import { Stroke, ToolType } from "../../drawing/stroke/types"
+import { PageProps } from "./types"
 
-interface PageContentProps {
-    pageId: string
-}
-
-const PageContent: React.FC<PageContentProps> = ({ pageId }) => {
+const PageContent: React.FC<PageProps> = ({ pageId, pageSize }) => {
     // pageId might not be valid anymore, exit then
     if (!store.getState().boardControl.pageCollection[pageId]) {
         return null
@@ -46,14 +41,14 @@ const PageContent: React.FC<PageContentProps> = ({ pageId }) => {
     return (
         <>
             <Group
+                {...pageSize}
                 globalCompositeOperation="source-atop"
                 onMouseDown={handleStrokeMovement}
                 onMouseMove={handleStrokeMovement}
                 onMouseEnter={handleStrokeMovement}
                 onTouchStart={handleStrokeMovement}
                 onTouchMove={handleStrokeMovement}
-                listening={!isPanMode && isListening}
-                y={getPageIndex(pageId) * CANVAS_FULL_HEIGHT}>
+                listening={!isPanMode && isListening}>
                 {strokeIds.map((id) => (
                     <StrokeShape
                         key={id}

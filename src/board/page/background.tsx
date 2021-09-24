@@ -2,21 +2,12 @@ import { Image } from "react-konva"
 import React, { memo, useEffect, useRef, useState } from "react"
 import * as types from "konva/types/shapes/Image"
 import store from "redux/store"
-import {
-    CANVAS_FULL_HEIGHT,
-    CANVAS_HEIGHT,
-    CANVAS_WIDTH,
-    DOC_SCALE,
-    pageType,
-} from "../constants"
-import { loadNewPDF, pageBackground } from "../drawing/page"
-import { useCustomSelector } from "../redux/hooks"
+import { DOC_SCALE, pageType } from "../../constants"
+import { loadNewPDF, pageBackground } from "../../drawing/page"
+import { useCustomSelector } from "../../redux/hooks"
+import { PageProps } from "./types"
 
-interface PageBackgroundProps {
-    pageId: string
-}
-
-export default memo<PageBackgroundProps>(({ pageId }) => {
+export default memo<PageProps>(({ pageId, pageSize }) => {
     // pageId might not be valid anymore, exit then
     if (!store.getState().boardControl.pageCollection[pageId]) {
         return null
@@ -29,7 +20,6 @@ export default memo<PageBackgroundProps>(({ pageId }) => {
             state.boardControl.pageCollection[pageId]?.meta?.background?.style
     )
     const document = useCustomSelector((state) => state.boardControl.document)
-    const pageRank = useCustomSelector((state) => state.boardControl.pageRank)
     const background = useCustomSelector(
         (state) => state.boardControl.pageCollection[pageId]?.meta.background
     )
@@ -63,12 +53,9 @@ export default memo<PageBackgroundProps>(({ pageId }) => {
 
     return (
         <Image
+            {...pageSize}
             ref={ref}
             image={getImage()}
-            height={CANVAS_HEIGHT}
-            width={CANVAS_WIDTH}
-            x={0}
-            y={CANVAS_FULL_HEIGHT * pageRank.indexOf(pageId)} // relative
             stroke="#000"
             strokeWidth={0.2}
             fill="#ffffff"
