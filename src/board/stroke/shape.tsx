@@ -5,6 +5,7 @@ import { LineConfig } from "konva/types/shapes/Line"
 import { useCustomSelector } from "../../redux/hooks"
 import store from "../../redux/store"
 import {
+    ERASER_WIDTH,
     MOVE_OPACITY,
     SEL_FILL,
     SEL_FILL_ENABLED,
@@ -95,6 +96,11 @@ const getShape = (
     shapeProps: LineConfig
 ): JSX.Element => {
     switch (stroke.type) {
+        case ToolType.Eraser: {
+            shapeProps.strokeWidth = ERASER_WIDTH
+            shapeProps.stroke = "#fff"
+            return <Line tension={0.35} {...shapeProps} />
+        }
         case ToolType.Pen: {
             return <Line tension={0.35} {...shapeProps} />
         }

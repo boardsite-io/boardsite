@@ -136,7 +136,8 @@ export class BoardLiveStroke implements LiveStroke {
     }
 }
 
-const isContinuous = (type: ToolType): boolean => type === ToolType.Pen
+const isContinuous = (type: ToolType): boolean =>
+    type === ToolType.Pen || type === ToolType.Eraser
 
 const appendLinePoint = (pts: number[], newPoint: Point): void => {
     if (pts.length < 4) {

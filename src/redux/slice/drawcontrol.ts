@@ -5,7 +5,6 @@ import { TrNodesType } from "../../types"
 import {
     DEFAULT_ISPANMODE,
     DEFAULT_ISDRAGGABLE,
-    DEFAULT_ISLISTENING,
     DEFAULT_ISMOUSEDOWN,
     DEFAULT_DIRECTDRAW,
     DEFAULT_FAV_TOOLS,
@@ -14,7 +13,6 @@ import {
 export interface DrawControlState {
     isPanMode: boolean
     isDraggable: boolean
-    isListening: boolean
     isMouseDown: boolean
     directDraw: boolean
     liveStroke: BoardLiveStroke
@@ -26,7 +24,6 @@ export interface DrawControlState {
 const initState: DrawControlState = {
     isPanMode: DEFAULT_ISPANMODE,
     isDraggable: DEFAULT_ISDRAGGABLE,
-    isListening: DEFAULT_ISLISTENING,
     isMouseDown: DEFAULT_ISMOUSEDOWN,
     directDraw: DEFAULT_DIRECTDRAW,
     liveStroke: new BoardLiveStroke(),
@@ -80,7 +77,6 @@ const drawControlSlice = createSlice({
             state.liveStroke.style = { ...style }
             state.liveStroke.type = type
             state.isDraggable = type === ToolType.Select
-            state.isListening = type === ToolType.Eraser
             state.trNodes = []
         },
         SET_COLOR: (state, action) => {
@@ -95,7 +91,6 @@ const drawControlSlice = createSlice({
             const type = action.payload
             state.liveStroke.type = type
             state.isDraggable = type === ToolType.Select
-            state.isListening = type === ToolType.Eraser
             state.trNodes = []
         },
         SET_ISPANMODE: (state, action) => {
@@ -106,10 +101,8 @@ const drawControlSlice = createSlice({
             state.isPanMode = !state.isPanMode
             if (state.isPanMode) {
                 state.isDraggable = false
-                state.isListening = false
             } else {
                 state.isDraggable = type === ToolType.Select
-                state.isListening = type === ToolType.Eraser
             }
         },
         SET_ISMOUSEDOWN: (state, action) => {

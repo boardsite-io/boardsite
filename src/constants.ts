@@ -29,7 +29,6 @@ export const DEFAULT_STAGE_X = 0
 export const DEFAULT_STAGE_Y = 60
 export const DEFAULT_STAGE_SCALE: Point = { x: 1, y: 1 }
 export const DEFAULT_ISDRAGGABLE = false
-export const DEFAULT_ISLISTENING = false
 export const DEFAULT_ISMOUSEDOWN = false
 export const DEFAULT_KEEP_CENTERED = false
 export const DEFAULT_HIDE_NAVBAR = false
@@ -52,6 +51,7 @@ export const TR_ANCHOR_SIZE = 8
 export const TR_ANCHOR_STROKE = "#00000088"
 export const TR_ANCHOR_CORNER_RADIUS = 2
 
+export const ERASER_WIDTH = 3
 export const DEFAULT_TOOL = ToolType.Pen
 // allow drawing with finger
 export const DEFAULT_DIRECTDRAW = true

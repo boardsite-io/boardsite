@@ -109,16 +109,14 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
     useEffect(() => {
         ref.current?.cache()
     }, [])
-    const isListening = useCustomSelector(
-        (state) => state.drawControl.isListening
-    )
+
     const isPanMode = useCustomSelector((state) => state.drawControl.isPanMode)
 
     return (
         <Rect
             ref={ref}
             draggable={false}
-            listening={!isPanMode && !isListening}
+            listening={!isPanMode}
             height={CANVAS_HEIGHT}
             width={CANVAS_WIDTH}
             x={0}

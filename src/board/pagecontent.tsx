@@ -1,13 +1,10 @@
 import React from "react"
 import { Group } from "react-konva"
-import { KonvaEventObject } from "konva/types/Node"
-import { handleDeleteStroke } from "../drawing/handlers"
 import { CANVAS_FULL_HEIGHT } from "../constants"
 import store from "../redux/store"
 import { getPageIndex } from "../drawing/stroke/actions"
 import { StrokeShape } from "./stroke/shape"
 import { useCustomSelector } from "../redux/hooks"
-import { Stroke, ToolType } from "../drawing/stroke/types"
 
 interface PageContentProps {
     pageId: string
@@ -24,35 +21,11 @@ const PageContent: React.FC<PageContentProps> = ({ pageId }) => {
         Object.keys(state.boardControl.pageCollection[pageId]?.strokes)
     )
 
-    const handleStrokeMovement = (
-        e: KonvaEventObject<MouseEvent | TouchEvent>
-    ) => {
-        const { id } = e.target.attrs
-        const mouseEv = e as KonvaEventObject<MouseEvent>
-        // prevent to act on live stroke and hovering without clicking
-        if (id === undefined || mouseEv.evt.buttons === 0) {
-            return
-        }
-        if (store.getState().drawControl.liveStroke.type === ToolType.Eraser) {
-            handleDeleteStroke({ pageId, id } as Stroke)
-        }
-    }
-
-    const isListening = useCustomSelector(
-        (state) => state.drawControl.isListening
-    )
-    const isPanMode = useCustomSelector((state) => state.drawControl.isPanMode)
-
     return (
         <>
             <Group
                 globalCompositeOperation="source-atop"
-                onMouseDown={handleStrokeMovement}
-                onMouseMove={handleStrokeMovement}
-                onMouseEnter={handleStrokeMovement}
-                onTouchStart={handleStrokeMovement}
-                onTouchMove={handleStrokeMovement}
-                listening={!isPanMode && isListening}
+                listening={false}
                 y={getPageIndex(pageId) * CANVAS_FULL_HEIGHT}>
                 {strokeIds.map((id) => (
                     <StrokeShape
