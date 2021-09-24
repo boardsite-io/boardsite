@@ -1,5 +1,4 @@
 /* eslint-disable prefer-destructuring */
-import { KonvaEventObject } from "konva/types/Node"
 import {
     DEFAULT_COLOR,
     DEFAULT_TOOL,
@@ -75,9 +74,9 @@ export class BoardLiveStroke implements LiveStroke {
      * @param stageScale scale for adjusting the RDP algorithm
      * @param pageIndex page index of the pageId
      */
-    finalize(stageScale: number, e: KonvaEventObject<MouseEvent>): Stroke {
+    finalize(stageScale: number, pagePosition: Point): Stroke {
         this.flatPoints()
-        this.processPoints(stageScale, e)
+        this.processPoints(stageScale, pagePosition)
         const stroke = new BoardStroke(this)
         this.reset()
         return stroke
@@ -98,8 +97,8 @@ export class BoardLiveStroke implements LiveStroke {
         }
     }
 
-    processPoints(stageScale: number, e: KonvaEventObject<MouseEvent>): void {
-        const { x: pageX, y: pageY } = e.target.getPosition()
+    processPoints(stageScale: number, pagePosition: Point): void {
+        const { x: pageX, y: pageY } = pagePosition
 
         switch (this.type) {
             case ToolType.Pen:
