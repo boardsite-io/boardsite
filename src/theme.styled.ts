@@ -24,10 +24,10 @@ export const Theme = styled.div`
 
     --menubar-box-shadow: 0px 0px 2px 0px #00000088;
     --menubar-border-radius: 0.5rem;
-    --button-gap: 0px;
+    --button-gap: 0.1rem;
     --button-border-radius: 0.35rem;
     --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    --icon-button-width: 2rem;
+    --icon-button-size: 2rem;
 
     font-family: "Lato", sans-serif;
     font-size: 1rem;
