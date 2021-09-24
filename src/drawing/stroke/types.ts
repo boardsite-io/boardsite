@@ -1,3 +1,4 @@
+import { KonvaEventObject } from "konva/types/Node"
 import { ShapeConfig } from "konva/types/Shape"
 import { Polygon } from "sat"
 
@@ -70,7 +71,7 @@ export interface LiveStroke extends BaseStroke {
     start({ x, y }: Point, pageId: string): void
     addPoint(point: Point, scale: number): void
     flatPoints(): void
-    processPoints(stageScale: number, pageIndex: number): void
+    processPoints(stageScale: number, e: KonvaEventObject<MouseEvent>): void
     reset(): void
 }
 

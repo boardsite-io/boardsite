@@ -193,9 +193,8 @@ function goToPage(state: ViewControlState, pageIndex: number) {
 }
 
 function centerView(state: ViewControlState) {
-    const x = (window.innerWidth - CANVAS_WIDTH * state.stageScale.x) / 2
-    if (x >= 0) {
-        state.stageX = x
+    if (state.stageWidth >= CANVAS_WIDTH * state.stageScale.x) {
+        state.stageX = state.stageWidth / 2
     } else {
         fitToPage(state)
     }
@@ -205,7 +204,7 @@ function fitToPage(state: ViewControlState) {
     const oldScale = state.stageScale.y
     const newScale = window.innerWidth / CANVAS_WIDTH
     state.stageScale = { x: newScale, y: newScale }
-    state.stageX = 0
+    state.stageX = state.stageWidth / 2
     state.stageY =
         state.stageHeight / 2 -
         ((state.stageHeight / 2 - state.stageY) / oldScale) * newScale

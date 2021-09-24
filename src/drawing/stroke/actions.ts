@@ -61,10 +61,9 @@ export async function registerLiveStroke(
 ): Promise<void> {
     const liveStroke = getLiveStroke()
     const stageScale = store.getState().viewControl.stageScale.x
-    const pageIndex = getPageIndex(liveStroke.pageId)
 
     // Finalize & Create stroke from LiveStroke
-    const stroke = liveStroke.finalize(stageScale, pageIndex)
+    const stroke = liveStroke.finalize(stageScale, e)
 
     switch (stroke.type) {
         case ToolType.Eraser:

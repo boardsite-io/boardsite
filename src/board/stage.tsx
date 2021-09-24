@@ -89,7 +89,7 @@ const BoardStage: React.FC = () => {
      */
     const dragBound = (pos: Vector2d) => {
         if (keepCentered) {
-            const x = (stageWidth - CANVAS_WIDTH * stageScale.x) / 2
+            const x = stageWidth / 2
             if (x >= 0) {
                 return { x, y: pos.y }
             }
@@ -179,7 +179,7 @@ const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
                     pageSize: {
                         height: CANVAS_HEIGHT,
                         width: CANVAS_WIDTH,
-                        x: 0,
+                        x: -CANVAS_WIDTH / 2,
                         y: CANVAS_FULL_HEIGHT * getPageIndex(pageId),
                     },
                 }
