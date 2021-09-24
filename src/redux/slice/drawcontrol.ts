@@ -1,4 +1,4 @@
-import { Tool, ToolType } from "drawing/stroke/types"
+import { StrokeMap, Tool, ToolType } from "drawing/stroke/types"
 import { createSlice } from "@reduxjs/toolkit"
 import { BoardLiveStroke } from "../../drawing/stroke/livestroke"
 import { TrNodesType } from "../../types"
@@ -19,6 +19,7 @@ export interface DrawControlState {
     liveStrokeUpdate: number
     favTools: Tool[]
     trNodes: TrNodesType
+    erasedStrokes: StrokeMap
 }
 
 const initState: DrawControlState = {
@@ -30,6 +31,7 @@ const initState: DrawControlState = {
     liveStrokeUpdate: 0,
     favTools: DEFAULT_FAV_TOOLS,
     trNodes: [],
+    erasedStrokes: {},
 }
 
 const drawControlSlice = createSlice({
@@ -115,9 +117,16 @@ const drawControlSlice = createSlice({
         },
         END_LIVESTROKE: (state) => {
             state.liveStrokeUpdate = 0
+            state.erasedStrokes = {}
         },
         TOGGLE_DIRECTDRAW: (state) => {
             state.directDraw = !state.directDraw
+        },
+        SET_ERASED_STROKES: (state, action) => {
+            const strokes: StrokeMap = action.payload
+            Object.keys(strokes).forEach((id) => {
+                state.erasedStrokes[id] = strokes[id]
+            })
         },
     },
 })
@@ -137,5 +146,6 @@ export const {
     END_LIVESTROKE,
     TOGGLE_DIRECTDRAW,
     SET_TR_NODES,
+    SET_ERASED_STROKES,
 } = drawControlSlice.actions
 export default drawControlSlice.reducer

@@ -42,6 +42,7 @@ export const SEL_FILL = "#00a2ff38"
 
 // opacity of strokes when moved
 export const MOVE_OPACITY = 0.6
+export const ERASED_OPACITY = 0.4
 
 // transform props
 export const TR_BORDER_STROKE = "#00a2ff38"

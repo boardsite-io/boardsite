@@ -1,6 +1,6 @@
 import { KonvaEventObject } from "konva/types/Node"
 import { getSelectedShapes } from "drawing/stroke/hitbox"
-import { Point, ToolType } from "./types"
+import { LiveStroke, Point, ToolType } from "./types"
 import store from "../../redux/store"
 import {
     UPDATE_LIVESTROKE,
@@ -8,8 +8,9 @@ import {
     SET_TYPE,
     SET_ISMOUSEDOWN,
     SET_TR_NODES,
+    SET_ERASED_STROKES,
 } from "../../redux/slice/drawcontrol"
-import { handleAddStroke } from "../handlers"
+import { handleAddStroke, handleDeleteStrokes } from "../handlers"
 
 let tid: number | NodeJS.Timeout = 0
 
@@ -37,6 +38,13 @@ export function moveLiveStroke(point: Point): void {
     const liveStroke = getLiveStroke()
     const stageScale = store.getState().viewControl.stageScale.x
     liveStroke.addPoint(point, stageScale)
+
+    // the eraser livestroke calculates the collision of the line
+    // between the 2 latest points and all strokes in the page
+    if (liveStroke.type === ToolType.Eraser) {
+        moveEraser(liveStroke)
+    }
+
     store.dispatch(UPDATE_LIVESTROKE())
 
     // check if mouse is stationary, else disable switchToLine
@@ -68,8 +76,14 @@ export async function registerLiveStroke(
     const stroke = liveStroke.finalize(stageScale, pageIndex)
 
     switch (stroke.type) {
-        case ToolType.Eraser:
+        case ToolType.Eraser: {
+            const { erasedStrokes } = store.getState().drawControl
+            const s = Object.keys(erasedStrokes).map((id) => erasedStrokes[id])
+            if (s.length > 0) {
+                handleDeleteStrokes(s)
+            }
             break
+        }
         case ToolType.Select: {
             const { strokes } =
                 store.getState().boardControl.pageCollection[stroke.pageId]
@@ -112,4 +126,13 @@ export function getPageIndex(pageId: string): number {
 // helper function to get current livestroke
 function getLiveStroke() {
     return store.getState().drawControl.liveStroke
+}
+
+function moveEraser(liveStroke: LiveStroke): void {
+    const { strokes } =
+        store.getState().boardControl.pageCollection[liveStroke.pageId]
+    const selectedStrokes = liveStroke.selectLineCollision(strokes)
+    if (Object.keys(selectedStrokes).length > 0) {
+        store.dispatch(SET_ERASED_STROKES(selectedStrokes))
+    }
 }

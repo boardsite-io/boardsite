@@ -1,6 +1,6 @@
 import { Transformer } from "konva/types/shapes/Transformer"
 import { Node, NodeConfig } from "konva/types/Node"
-import { Stroke } from "drawing/stroke/types"
+import { StrokeMap } from "drawing/stroke/types"
 
 // eslint-disable-next-line no-shadow
 export enum Variants {
@@ -17,10 +17,6 @@ export interface Page {
     add: (index?: number) => void
     clear: () => void
     updateMeta: (meta: PageMeta) => Page
-}
-
-export interface StrokeMap {
-    [id: string]: Stroke
 }
 
 export type DocumentImage = HTMLImageElement

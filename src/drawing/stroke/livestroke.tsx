@@ -4,13 +4,15 @@ import {
     DEFAULT_COLOR,
     DEFAULT_TOOL,
     DEFAULT_WIDTH,
+    ERASER_WIDTH,
     MAX_LIVESTROKE_PTS,
     RDP_EPSILON,
     RDP_FORCE_SECTIONS,
 } from "../../constants"
 import { simplifyRDP } from "../simplify"
+import { getHitboxPolygon, matchStrokeCollision } from "./hitbox"
 import { BoardStroke } from "./stroke"
-import { LiveStroke, Point, Stroke, ToolType } from "./types"
+import { LiveStroke, Point, Stroke, StrokeMap, ToolType } from "./types"
 
 export class BoardLiveStroke implements LiveStroke {
     type = DEFAULT_TOOL as ToolType
@@ -133,6 +135,26 @@ export class BoardLiveStroke implements LiveStroke {
         this.y = 0
         this.points = []
         this.pointsSegments = []
+    }
+
+    private numUpdates = 0
+    selectLineCollision(strokes: StrokeMap): StrokeMap {
+        const target = 5
+        const res: StrokeMap = {}
+        this.numUpdates += 1
+        if (this.numUpdates === target) {
+            const p = this.pointsSegments[this.pointsSegments.length - 1]
+            // create a line between the latest point and 5th last point
+            const minIndex = Math.max(p.length - 2 - 2 * target, 0)
+            const line = p
+                .slice(minIndex, minIndex + 2)
+                .concat(p.slice(p.length - 2))
+
+            this.numUpdates = 0
+            const sel = getHitboxPolygon(line, ERASER_WIDTH)
+            return matchStrokeCollision(strokes, sel)
+        }
+        return res
     }
 }
 

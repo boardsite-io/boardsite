@@ -1,12 +1,11 @@
 import { KonvaEventObject, Node, NodeConfig } from "konva/types/Node"
 import { Vector, Polygon, Box, testPolygonPolygon } from "sat"
-import { StrokeMap } from "types"
-import { Stroke, Scale } from "./types"
+import { Stroke, Scale, StrokeMap } from "./types"
 
 export function getHitboxPolygon(
     [x1, y1, x2, y2]: number[],
     width: number,
-    scale: Scale
+    scale?: Scale
 ): Polygon {
     const dx = x2 - x1
     const dy = y2 - y1
@@ -25,8 +24,8 @@ export function getHitboxPolygon(
     }
 
     // compensate the effect of the scale on the width
-    dxw *= scale.x || 1
-    dyw *= scale.y || 1
+    dxw *= scale?.x || 1
+    dyw *= scale?.y || 1
 
     // calc vertices
     return new Polygon(new Vector(), [
@@ -57,15 +56,15 @@ export function getSelectionPolygon([x1, y1, x2, y2]: number[]): Polygon {
 export function matchStrokeCollision(
     strokes: StrokeMap,
     selection: Polygon
-): { [id: string]: boolean } {
-    const result: { [id: string]: boolean } = {}
+): StrokeMap {
+    const result: StrokeMap = {}
     Object.keys(strokes).forEach((id) => {
         // test each hitbox segment
         for (let i = 0; i < (strokes[id].hitboxes ?? []).length; i += 1) {
             if (
                 testPolygonPolygon((strokes[id].hitboxes ?? [])[i], selection)
             ) {
-                result[id] = true
+                result[id] = strokes[id]
                 break
             }
         }

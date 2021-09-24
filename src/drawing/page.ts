@@ -10,7 +10,8 @@ import { RenderParameters } from "pdfjs-dist/types/display/api"
 import { DOC_SCALE, pageType } from "../constants"
 import { ADD_PAGE, SET_PDF } from "../redux/slice/boardcontrol"
 import store from "../redux/store"
-import { Page, PageBackground, PageMeta, StrokeMap } from "../types"
+import { Page, PageBackground, PageMeta } from "../types"
+import { StrokeMap } from "./stroke/types"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const pdfjsWorker: any = require("pdfjs-dist/legacy/build/pdf.worker.entry")

@@ -71,6 +71,11 @@ export interface LiveStroke extends BaseStroke {
     flatPoints(): void
     processPoints(stageScale: number, pageIndex: number): void
     reset(): void
+    selectLineCollision(strokes: StrokeMap): StrokeMap
+}
+
+export interface StrokeMap {
+    [id: string]: Stroke
 }
 
 export type StrokeShape = Stroke & ShapeConfig
