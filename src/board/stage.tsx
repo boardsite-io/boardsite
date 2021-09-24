@@ -31,21 +31,15 @@ import PageContent from "./page/content"
 import PageBackground from "./page/background"
 
 const BoardStage: React.FC = () => {
-    const isPanMode = useCustomSelector((state) => state.drawControl.isPanMode)
-    const stageWidth = useCustomSelector(
-        (state) => state.viewControl.stageWidth
-    )
-    const stageHeight = useCustomSelector(
-        (state) => state.viewControl.stageHeight
-    )
-    const stageX = useCustomSelector((state) => state.viewControl.stageX)
-    const stageY = useCustomSelector((state) => state.viewControl.stageY)
-    const stageScale = useCustomSelector(
-        (state) => state.viewControl.stageScale
-    )
-    const keepCentered = useCustomSelector(
-        (state) => state.viewControl.keepCentered
-    )
+    const { isPanMode } = useCustomSelector((state) => state.drawControl)
+    const {
+        stageWidth,
+        stageHeight,
+        stageX,
+        stageY,
+        stageScale,
+        keepCentered,
+    } = useCustomSelector((state) => state.viewControl)
 
     useEffect(() => {
         window.addEventListener("resize", () =>
