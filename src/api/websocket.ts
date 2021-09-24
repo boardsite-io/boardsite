@@ -1,5 +1,5 @@
-import { BoardStroke } from "board/stroke/stroke"
-import { BoardStrokeType, Stroke, ToolType } from "board/stroke/types"
+import { BoardStroke } from "drawing/stroke/stroke"
+import { Stroke, ToolType } from "drawing/stroke/types"
 import {
     postPages,
     putPages,
@@ -188,7 +188,7 @@ export async function joinSession(
     })
 }
 
-export function sendStrokes(strokes: BoardStrokeType[]): void {
+export function sendStrokes(strokes: Stroke[]): void {
     // append the user id to strokes
     send(
         messages.Stroke,

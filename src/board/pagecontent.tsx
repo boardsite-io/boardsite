@@ -4,10 +4,10 @@ import { KonvaEventObject } from "konva/types/Node"
 import { handleDeleteStroke } from "../drawing/handlers"
 import { CANVAS_FULL_HEIGHT } from "../constants"
 import store from "../redux/store"
-import { getPageIndex } from "../drawing/strokeactions"
-import { StrokeShape } from "./shape/shape"
+import { getPageIndex } from "../drawing/stroke/actions"
+import { StrokeShape } from "./stroke/shape"
 import { useCustomSelector } from "../redux/hooks"
-import { Stroke, ToolType } from "./stroke/types"
+import { Stroke, ToolType } from "../drawing/stroke/types"
 
 interface PageContentProps {
     pageId: string

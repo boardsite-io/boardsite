@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { Point } from "board/stroke/types"
+import { Point } from "drawing/stroke/types"
 import {
     DEFAULT_STAGE_WIDTH,
     DEFAULT_STAGE_HEIGHT,

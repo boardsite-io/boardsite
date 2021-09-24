@@ -8,22 +8,23 @@ import {
     RDP_EPSILON,
     RDP_FORCE_SECTIONS,
 } from "../../constants"
-import { simplifyRDP } from "../../drawing/simplify"
-import { BoardLiveStrokeType, Point, ToolType } from "./types"
+import { simplifyRDP } from "../simplify"
+import { BoardStroke } from "./stroke"
+import { LiveStroke, Point, Stroke, ToolType } from "./types"
 
-export class BoardLiveStroke implements BoardLiveStrokeType {
-    id = "" as string
-    pageId = "" as string
-    x = 0 as number
-    y = 0 as number
-    scaleX = 1 as number
-    scaleY = 1 as number
+export class BoardLiveStroke implements LiveStroke {
     type = DEFAULT_TOOL as ToolType
     style = {
         color: DEFAULT_COLOR as string,
         width: DEFAULT_WIDTH as number,
         opacity: 1 as number,
     }
+
+    pageId = ""
+
+    x = 0
+    y = 0
+
     points = [] as number[]
     pointsSegments = [] as number[][]
 
@@ -77,16 +78,12 @@ export class BoardLiveStroke implements BoardLiveStrokeType {
      * @param stageScale scale for adjusting the RDP algorithm
      * @param pageIndex page index of the pageId
      */
-    finalize(stageScale: number, pageIndex: number): void {
-        this.createUniqueId()
+    finalize(stageScale: number, pageIndex: number): Stroke {
         this.flatPoints()
         this.processPoints(stageScale, pageIndex)
-    }
-
-    createUniqueId(): void {
-        this.id =
-            Date.now().toString(36).substr(2) +
-            Math.random().toString(36).substr(2, 10)
+        const stroke = new BoardStroke(this)
+        this.reset()
+        return stroke
     }
 
     flatPoints(): void {
@@ -131,12 +128,9 @@ export class BoardLiveStroke implements BoardLiveStrokeType {
      * Tool should persist so don't reset either
      */
     reset(): void {
-        this.id = ""
         this.pageId = ""
         this.x = 0
         this.y = 0
-        this.scaleX = 1
-        this.scaleY = 1
         this.points = []
         this.pointsSegments = []
     }

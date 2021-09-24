@@ -11,7 +11,7 @@ import {
     SEL_STROKE,
     SEL_STROKE_ENABLED,
 } from "../../constants"
-import { Point, Stroke, ToolType } from "../stroke/types"
+import { LiveStroke, Point, Stroke, ToolType } from "../../drawing/stroke/types"
 
 export const LiveStrokeShape = memo(() => {
     const { liveStroke } = store.getState().drawControl
@@ -21,7 +21,10 @@ export const LiveStrokeShape = memo(() => {
     return (
         <>
             {liveStroke.pointsSegments?.map((subPts: number[], i: number) => {
-                const strokeSegment = { ...liveStroke, points: subPts.slice() }
+                const strokeSegment = {
+                    ...liveStroke,
+                    points: subPts.slice(),
+                } as LiveStroke
                 return (
                     // we can use the array index as key here
                     // since the array's order is not changed
@@ -34,7 +37,7 @@ export const LiveStrokeShape = memo(() => {
 })
 
 interface StrokeShapeProps {
-    stroke: Stroke
+    stroke: Stroke | LiveStroke
 }
 
 /**
@@ -50,7 +53,9 @@ export const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
     const strokeSel = useCustomSelector((state) => {
         const { isDraggable } = state.drawControl
         const s =
-            state.boardControl.pageCollection[stroke.pageId]?.strokes[stroke.id]
+            state.boardControl.pageCollection[stroke.pageId]?.strokes[
+                stroke.id ?? ""
+            ]
         return {
             isDraggable,
             x: s?.x,
@@ -85,7 +90,10 @@ export const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
 })
 
 // Use LineConfig since it requires points prop
-const getShape = (stroke: Stroke, shapeProps: LineConfig): JSX.Element => {
+const getShape = (
+    stroke: Stroke | LiveStroke,
+    shapeProps: LineConfig
+): JSX.Element => {
     switch (stroke.type) {
         case ToolType.Pen: {
             return <Line tension={0.35} {...shapeProps} />

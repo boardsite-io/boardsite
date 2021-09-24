@@ -1,4 +1,4 @@
-import { Stroke } from "board/stroke/types"
+import { Stroke } from "drawing/stroke/types"
 import {
     addPagesSession,
     updatePagesSession,

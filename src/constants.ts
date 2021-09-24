@@ -1,4 +1,4 @@
-import { Point, Tool, ToolType } from "board/stroke/types"
+import { Point, Tool, ToolType } from "drawing/stroke/types"
 import { PageBackground } from "./types"
 
 /**

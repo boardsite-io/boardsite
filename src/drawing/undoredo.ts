@@ -1,4 +1,4 @@
-import { Stroke } from "board/stroke/types"
+import { Stroke } from "drawing/stroke/types"
 import { eraseStrokes, isConnected, sendStrokes } from "../api/websocket"
 import {
     ADD_STROKES,

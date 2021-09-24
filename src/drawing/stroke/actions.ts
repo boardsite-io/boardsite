@@ -1,15 +1,14 @@
-import { Point, ToolType } from "board/stroke/types"
-import { BoardStroke } from "board/stroke/stroke"
 import { KonvaEventObject } from "konva/types/Node"
-import { setSelectedShapes } from "board/hitbox/hitbox"
-import store from "../redux/store"
+import { setSelectedShapes } from "drawing/stroke/hitbox"
+import { Point, ToolType } from "./types"
+import store from "../../redux/store"
 import {
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
     SET_TYPE,
     SET_ISMOUSEDOWN,
-} from "../redux/slice/drawcontrol"
-import { handleAddStroke } from "./handlers"
+} from "../../redux/slice/drawcontrol"
+import { handleAddStroke } from "../handlers"
 
 let tid: number | NodeJS.Timeout = 0
 
@@ -22,7 +21,7 @@ export function startLiveStroke(point: Point, pageId: string): void {
     liveStroke.start(point, pageId)
 
     // set Line type when mouse hasnt moved for 1 sec
-    if (getLiveStroke().type === ToolType.Pen) {
+    if (liveStroke.type === ToolType.Pen) {
         tid = setTimeout(() => {
             store.dispatch(SET_TYPE(ToolType.Line))
         }, 1000)
@@ -64,11 +63,8 @@ export async function registerLiveStroke(
     const stageScale = store.getState().viewControl.stageScale.x
     const pageIndex = getPageIndex(liveStroke.pageId)
 
-    // Finalize LiveStroke points
-    liveStroke.finalize(stageScale, pageIndex)
-
-    // Create final stroke from LiveStroke
-    const stroke = new BoardStroke(liveStroke)
+    // Finalize & Create stroke from LiveStroke
+    const stroke = liveStroke.finalize(stageScale, pageIndex)
 
     switch (stroke.type) {
         case ToolType.Eraser:
@@ -81,8 +77,7 @@ export async function registerLiveStroke(
             handleAddStroke(stroke)
     }
 
-    // Reset LiveStroke
-    liveStroke.reset()
+    // notify the livestroke renderer
     store.dispatch(END_LIVESTROKE())
 
     if (tid !== 0) {

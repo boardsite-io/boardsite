@@ -1,6 +1,6 @@
 import { BoardPage } from "drawing/page"
-import { BoardStroke } from "board/stroke/stroke"
-import { Stroke, ToolType } from "board/stroke/types"
+import { BoardStroke } from "drawing/stroke/stroke"
+import { Stroke, ToolType } from "drawing/stroke/types"
 import { DocumentImage } from "types"
 import reducer from "./boardcontrol"
 import * as action from "./boardcontrol"
