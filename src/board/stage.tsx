@@ -31,21 +31,15 @@ import PageContent from "./page/content"
 import PageBackground from "./page/background"
 
 const BoardStage: React.FC = () => {
-    const isPanMode = useCustomSelector((state) => state.drawControl.isPanMode)
-    const stageWidth = useCustomSelector(
-        (state) => state.viewControl.stageWidth
-    )
-    const stageHeight = useCustomSelector(
-        (state) => state.viewControl.stageHeight
-    )
-    const stageX = useCustomSelector((state) => state.viewControl.stageX)
-    const stageY = useCustomSelector((state) => state.viewControl.stageY)
-    const stageScale = useCustomSelector(
-        (state) => state.viewControl.stageScale
-    )
-    const keepCentered = useCustomSelector(
-        (state) => state.viewControl.keepCentered
-    )
+    const { isPanMode } = useCustomSelector((state) => state.drawControl)
+    const {
+        stageWidth,
+        stageHeight,
+        stageX,
+        stageY,
+        stageScale,
+        keepCentered,
+    } = useCustomSelector((state) => state.viewControl)
 
     useEffect(() => {
         window.addEventListener("resize", () =>
@@ -95,7 +89,7 @@ const BoardStage: React.FC = () => {
      */
     const dragBound = (pos: Vector2d) => {
         if (keepCentered) {
-            const x = (stageWidth - CANVAS_WIDTH * stageScale.x) / 2
+            const x = stageWidth / 2
             if (x >= 0) {
                 return { x, y: pos.y }
             }
@@ -185,7 +179,7 @@ const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
                     pageSize: {
                         height: CANVAS_HEIGHT,
                         width: CANVAS_WIDTH,
-                        x: 0,
+                        x: -CANVAS_WIDTH / 2,
                         y: CANVAS_FULL_HEIGHT * getPageIndex(pageId),
                     },
                 }

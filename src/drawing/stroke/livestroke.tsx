@@ -1,6 +1,5 @@
 /* eslint-disable prefer-destructuring */
 import {
-    CANVAS_FULL_HEIGHT,
     DEFAULT_COLOR,
     DEFAULT_TOOL,
     DEFAULT_WIDTH,
@@ -19,12 +18,9 @@ export class BoardLiveStroke implements LiveStroke {
         width: DEFAULT_WIDTH as number,
         opacity: 1 as number,
     }
-
     pageId = ""
-
     x = 0
     y = 0
-
     points = [] as number[]
     pointsSegments = [] as number[][]
 
@@ -37,7 +33,7 @@ export class BoardLiveStroke implements LiveStroke {
     addPoint(point: Point, scale: number): void {
         const { pointsSegments } = this
         const p = pointsSegments[pointsSegments.length - 1]
-        if (isContinuous(this.type)) {
+        if (this.type === ToolType.Pen) {
             // for continuous strokes
             if (p.length < MAX_LIVESTROKE_PTS) {
                 appendLinePoint(p, point)
@@ -78,9 +74,9 @@ export class BoardLiveStroke implements LiveStroke {
      * @param stageScale scale for adjusting the RDP algorithm
      * @param pageIndex page index of the pageId
      */
-    finalize(stageScale: number, pageIndex: number): Stroke {
+    finalize(stageScale: number, pagePosition: Point): Stroke {
         this.flatPoints()
-        this.processPoints(stageScale, pageIndex)
+        this.processPoints(stageScale, pagePosition)
         const stroke = new BoardStroke(this)
         this.reset()
         return stroke
@@ -101,22 +97,35 @@ export class BoardLiveStroke implements LiveStroke {
         }
     }
 
-    processPoints(stageScale: number, pageIndex: number): void {
-        // for continuous types we simplify the points further
-        if (isContinuous(this.type)) {
-            this.points = simplifyRDP(
-                this.points,
-                RDP_EPSILON / stageScale,
-                RDP_FORCE_SECTIONS + 1
-            )
+    processPoints(stageScale: number, pagePosition: Point): void {
+        const { x: pageX, y: pageY } = pagePosition
+
+        switch (this.type) {
+            case ToolType.Pen:
+                // simplify the points
+                this.points = simplifyRDP(
+                    this.points,
+                    RDP_EPSILON / stageScale,
+                    RDP_FORCE_SECTIONS + 1
+                )
+                break
+            case ToolType.Rectangle:
+            case ToolType.Circle:
+                this.x -= pageX
+                this.y -= pageY
+                break
+            default:
+                break
         }
 
+        // compensate page offset in stage and
+        // round to a reasonable precision
         this.points = this.points.map((p, i) => {
-            // allow a reasonable precision
             let pt = Math.round(p * 100) / 100
             if (i % 2) {
-                // make y coordinates relative to page
-                pt -= pageIndex * CANVAS_FULL_HEIGHT
+                pt -= pageY
+            } else {
+                pt -= pageX
             }
             return pt
         })
@@ -135,8 +144,6 @@ export class BoardLiveStroke implements LiveStroke {
         this.pointsSegments = []
     }
 }
-
-const isContinuous = (type: ToolType): boolean => type === ToolType.Pen
 
 const appendLinePoint = (pts: number[], newPoint: Point): void => {
     if (pts.length < 4) {

@@ -1,5 +1,5 @@
-import { KonvaEventObject } from "konva/types/Node"
 import { setSelectedShapes } from "drawing/stroke/hitbox"
+import { KonvaEventObject } from "konva/types/Node"
 import { Point, ToolType } from "./types"
 import store from "../../redux/store"
 import {
@@ -61,10 +61,10 @@ export async function registerLiveStroke(
 ): Promise<void> {
     const liveStroke = getLiveStroke()
     const stageScale = store.getState().viewControl.stageScale.x
-    const pageIndex = getPageIndex(liveStroke.pageId)
 
     // Finalize & Create stroke from LiveStroke
-    const stroke = liveStroke.finalize(stageScale, pageIndex)
+    const pagePosition = e.target.getPosition()
+    const stroke = liveStroke.finalize(stageScale, pagePosition)
 
     switch (stroke.type) {
         case ToolType.Eraser:

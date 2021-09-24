@@ -33,10 +33,9 @@ const PageContent: React.FC<PageProps> = ({ pageId, pageSize }) => {
         }
     }
 
-    const isListening = useCustomSelector(
-        (state) => state.drawControl.isListening
+    const { isListening, isPanMode } = useCustomSelector(
+        (state) => state.drawControl
     )
-    const isPanMode = useCustomSelector((state) => state.drawControl.isPanMode)
 
     return (
         <>

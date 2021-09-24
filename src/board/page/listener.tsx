@@ -19,7 +19,7 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
         (state) => state.drawControl.isMouseDown
     )
 
-    const getScaledPointerPosition = (e: KonvaEventObject<MouseEvent>) => {
+    const getPointerPositionInStage = (e: KonvaEventObject<MouseEvent>) => {
         const stage = e.target.getStage() as Stage
         const position = stage.getPointerPosition()
         const transform = stage.getAbsoluteTransform().copy().invert()
@@ -31,7 +31,7 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
             return
         }
         store.dispatch(SET_ISMOUSEDOWN(true))
-        const pos = getScaledPointerPosition(e)
+        const pos = getPointerPositionInStage(e)
         actions.startLiveStroke(pos, pageId)
     }
 
@@ -46,7 +46,7 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
             return
         }
 
-        const pos = getScaledPointerPosition(e)
+        const pos = getPointerPositionInStage(e)
         actions.moveLiveStroke(pos)
     }
 
@@ -58,7 +58,7 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
         store.dispatch(SET_ISMOUSEDOWN(false))
 
         // update last position
-        const pos = getScaledPointerPosition(e)
+        const pos = getPointerPositionInStage(e)
         actions.moveLiveStroke(pos)
 
         // register finished stroke

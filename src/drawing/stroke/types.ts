@@ -70,7 +70,7 @@ export interface LiveStroke extends BaseStroke {
     start({ x, y }: Point, pageId: string): void
     addPoint(point: Point, scale: number): void
     flatPoints(): void
-    processPoints(stageScale: number, pageIndex: number): void
+    processPoints(stageScale: number, pagePosition: Point): void
     reset(): void
 }
 
