@@ -1,9 +1,45 @@
 import { KonvaEventObject, Node, NodeConfig } from "konva/types/Node"
 import { Vector, Polygon, Box, testPolygonPolygon } from "sat"
-import { Stroke } from "./types"
-import { SET_TR_NODES } from "../../redux/slice/drawcontrol"
-import store from "../../redux/store"
+import { StrokeMap } from "types"
+import { Stroke, Scale } from "./types"
 
+export function getHitboxPolygon(
+    [x1, y1, x2, y2]: number[],
+    width: number,
+    scale: Scale
+): Polygon {
+    const dx = x2 - x1
+    const dy = y2 - y1
+    let dxw
+    let dyw
+    if (!dy) {
+        dxw = 0
+        dyw = width / 2
+    } else if (!dx) {
+        dxw = width / 2
+        dyw = 0
+    } else {
+        const ratio = dx / dy
+        dxw = Math.sqrt((width / 2) ** 2 / (1 + ratio ** 2))
+        dyw = dxw * ratio
+    }
+
+    // compensate the effect of the scale on the width
+    dxw *= scale.x || 1
+    dyw *= scale.y || 1
+
+    // calc vertices
+    return new Polygon(new Vector(), [
+        new Vector(x1 - dxw, y1 + dyw),
+        new Vector(x2 - dxw, y2 + dyw),
+        new Vector(x2 + dxw, y2 - dyw),
+        new Vector(x1 + dxw, y1 - dyw),
+    ])
+}
+
+/**
+ * Creates a simple reactangular polygon
+ */
 export function getSelectionPolygon([x1, y1, x2, y2]: number[]): Polygon {
     const box = new Box(
         // set the left upper point as reference
@@ -19,10 +55,9 @@ export function getSelectionPolygon([x1, y1, x2, y2]: number[]): Polygon {
  * segments and return a set of all collided stroke IDs.
  */
 export function matchStrokeCollision(
-    pageId: string,
+    strokes: StrokeMap,
     selection: Polygon
 ): { [id: string]: boolean } {
-    const { strokes } = store.getState().boardControl.pageCollection[pageId]
     const result: { [id: string]: boolean } = {}
     Object.keys(strokes).forEach((id) => {
         // test each hitbox segment
@@ -38,23 +73,24 @@ export function matchStrokeCollision(
     return result
 }
 
-export function setSelectedShapes(
-    stroke: Stroke, // selection rectangle
+export function getSelectedShapes(
+    selection: Stroke, // selection rectangle
+    strokes: StrokeMap,
     e: KonvaEventObject<MouseEvent>
-): void {
+): Node<NodeConfig>[] {
     const selectedIds = matchStrokeCollision(
-        stroke.pageId,
-        getSelectionPolygon(stroke.points)
+        strokes,
+        getSelectionPolygon(selection.points)
     )
     const selectedShapes: Node<NodeConfig>[] = []
     e.target
         .getParent()
-        ?.find(`.${stroke.pageId}`)
+        ?.find(`.${selection.pageId}`)
         .toArray()
         .forEach((element: Node<NodeConfig>) => {
             if (selectedIds[element.attrs.id]) {
                 selectedShapes.push(element)
             }
         })
-    store.dispatch(SET_TR_NODES(selectedShapes))
+    return selectedShapes
 }

@@ -1,5 +1,5 @@
 import { KonvaEventObject } from "konva/types/Node"
-import { setSelectedShapes } from "drawing/stroke/hitbox"
+import { getSelectedShapes } from "drawing/stroke/hitbox"
 import { Point, ToolType } from "./types"
 import store from "../../redux/store"
 import {
@@ -7,6 +7,7 @@ import {
     END_LIVESTROKE,
     SET_TYPE,
     SET_ISMOUSEDOWN,
+    SET_TR_NODES,
 } from "../../redux/slice/drawcontrol"
 import { handleAddStroke } from "../handlers"
 
@@ -70,7 +71,10 @@ export async function registerLiveStroke(
         case ToolType.Eraser:
             break
         case ToolType.Select: {
-            setSelectedShapes(stroke, e)
+            const { strokes } =
+                store.getState().boardControl.pageCollection[stroke.pageId]
+            const shapes = getSelectedShapes(stroke, strokes, e)
+            store.dispatch(SET_TR_NODES(shapes))
             break
         }
         default:

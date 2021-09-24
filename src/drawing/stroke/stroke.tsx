@@ -1,4 +1,5 @@
-import { Vector, Polygon } from "sat"
+import { Polygon } from "sat"
+import { getHitboxPolygon } from "./hitbox"
 import { LiveStroke, Scale, Point, Stroke, ToolType } from "./types"
 
 export class BoardStroke implements Stroke {
@@ -68,7 +69,12 @@ export class BoardStroke implements Stroke {
                         section[j] = section[j] * scaleX + x
                         section[j + 1] = section[j + 1] * scaleY + y
                     }
-                    this.hitboxes.push(this.getHitboxPolygon(section))
+                    this.hitboxes.push(
+                        getHitboxPolygon(section, this.style.width, {
+                            x: this.scaleX,
+                            y: this.scaleY,
+                        })
+                    )
                 }
                 break
             }
@@ -80,10 +86,22 @@ export class BoardStroke implements Stroke {
                 const x2 = x + (points[2] - points[0]) * scaleX
                 const y2 = y + (points[3] - points[1]) * scaleY
                 this.hitboxes.push(
-                    this.getHitboxPolygon([x1, y1, x1, y2]),
-                    this.getHitboxPolygon([x1, y2, x2, y2]),
-                    this.getHitboxPolygon([x2, y2, x2, y1]),
-                    this.getHitboxPolygon([x2, y1, x1, y1])
+                    getHitboxPolygon([x1, y1, x1, y2], this.style.width, {
+                        x: this.scaleX,
+                        y: this.scaleY,
+                    }),
+                    getHitboxPolygon([x1, y2, x2, y2], this.style.width, {
+                        x: this.scaleX,
+                        y: this.scaleY,
+                    }),
+                    getHitboxPolygon([x2, y2, x2, y1], this.style.width, {
+                        x: this.scaleX,
+                        y: this.scaleY,
+                    }),
+                    getHitboxPolygon([x2, y1, x1, y1], this.style.width, {
+                        x: this.scaleX,
+                        y: this.scaleY,
+                    })
                 )
                 break
             }
@@ -97,10 +115,22 @@ export class BoardStroke implements Stroke {
                 const x2 = x + radX * scaleX
                 const y2 = y + radY * scaleY
                 this.hitboxes.push(
-                    this.getHitboxPolygon([x1, y1, x1, y2]),
-                    this.getHitboxPolygon([x1, y2, x2, y2]),
-                    this.getHitboxPolygon([x2, y2, x2, y1]),
-                    this.getHitboxPolygon([x2, y1, x1, y1])
+                    getHitboxPolygon([x1, y1, x1, y2], this.style.width, {
+                        x: this.scaleX,
+                        y: this.scaleY,
+                    }),
+                    getHitboxPolygon([x1, y2, x2, y2], this.style.width, {
+                        x: this.scaleX,
+                        y: this.scaleY,
+                    }),
+                    getHitboxPolygon([x2, y2, x2, y1], this.style.width, {
+                        x: this.scaleX,
+                        y: this.scaleY,
+                    }),
+                    getHitboxPolygon([x2, y1, x1, y1], this.style.width, {
+                        x: this.scaleX,
+                        y: this.scaleY,
+                    })
                 )
                 break
             }
@@ -108,36 +138,6 @@ export class BoardStroke implements Stroke {
             default:
                 break
         }
-    }
-
-    getHitboxPolygon([x1, y1, x2, y2]: number[]): Polygon {
-        const dx = x2 - x1
-        const dy = y2 - y1
-        let dxw
-        let dyw
-        if (!dy) {
-            dxw = 0
-            dyw = this.style.width / 2
-        } else if (!dx) {
-            dxw = this.style.width / 2
-            dyw = 0
-        } else {
-            const ratio = dx / dy
-            dxw = Math.sqrt((this.style.width / 2) ** 2 / (1 + ratio ** 2))
-            dyw = dxw * ratio
-        }
-
-        // compensate the effect of the scale on the width
-        dxw *= this.scaleX || 1
-        dyw *= this.scaleY || 1
-
-        // calc vertices
-        return new Polygon(new Vector(), [
-            new Vector(x1 - dxw, y1 + dyw),
-            new Vector(x2 - dxw, y2 + dyw),
-            new Vector(x2 + dxw, y2 - dyw),
-            new Vector(x1 + dxw, y1 - dyw),
-        ])
     }
 }
 
