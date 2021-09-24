@@ -2,15 +2,15 @@ import styled from "styled-components"
 
 export const Theme = styled.div`
     /* Color Overview
-    0: Global Background 
-    1: Icon Stroke Color
-    2: NavBar, FavTools, ViewNav
-    3: Buttons, SliderThumb, SliderRailActive
-    4: Details, SliderRailInactive, Borders
-    5: Background of Dialog, Drawer, ...
-    6: Transparent background behind Dialog, Drawer, ...
-    7: Active Tools 
-    8: Icon Hover
+        0: Global Background 
+        1: Icon Stroke Color
+        2: NavBar, FavTools, ViewNav
+        3: Buttons, SliderThumb, SliderRailActive
+        4: Details, SliderRailInactive, Borders
+        5: Background of Dialog, Drawer, ...
+        6: Transparent background behind Dialog, Drawer, ...
+        7: Active Tools 
+        8: Icon Hover
     */
     --color0: linear-gradient(#888888, #696969);
     --color1: white;
@@ -24,11 +24,21 @@ export const Theme = styled.div`
 
     --menubar-box-shadow: 0px 0px 2px 0px #00000088;
     --menubar-border-radius: 0.5rem;
-    --button-gap: 0px;
+    --button-gap: 0.1rem;
     --button-border-radius: 0.35rem;
     --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    --icon-button-width: 2rem;
-    font-size: 1rem;
+    --icon-button-size: 2rem;
+
     font-family: "Lato", sans-serif;
-    font-weight: 400;
+    font-size: 1rem;
+    font-weight: 900;
+
+    body,
+    input,
+    select,
+    textarea {
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+    }
 `

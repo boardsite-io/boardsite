@@ -24,9 +24,6 @@ interface Props {
 const iconStyles = css<Props>`
     height: 100%;
     width: 100%;
-    &:hover {
-        stroke: var(--color8);
-    }
     stroke: ${({ $active, $stroke }) => {
         if ($active) {
             return "var(--color7)"

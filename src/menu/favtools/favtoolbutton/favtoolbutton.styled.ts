@@ -5,19 +5,16 @@ export const FavToolWrapper = styled.div`
 `
 
 export const FavToolWidth = styled.div`
+    touch-action: none;
+    pointer-events: none;
     position: absolute;
-    bottom: 0;
-    right: 0;
-    padding: 0 0.1rem;
-    height: min-content;
-    width: min-content;
-    color: white;
-    background: rgba(0, 0, 0, 0.75);
+    bottom: -0.2rem;
+    right: -0.2rem;
+    padding: 0 0.15rem;
+    color: var(--color1);
+    background: var(--color2);
     border-radius: var(--button-border-radius);
     text-align: center;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-    font-size: 0.8rem;
 `
 export const FavToolOptions = styled.div`
     position: absolute;

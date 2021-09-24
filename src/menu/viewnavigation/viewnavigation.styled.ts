@@ -1,53 +1,36 @@
+import { IconButton } from "components"
 import styled from "styled-components"
 
 export const ViewNavWrapper = styled.div`
     position: fixed;
-    display: grid;
-    grid-auto-flow: row;
-    background: var(--color2);
     top: 50%;
-    right: 5px;
     transform: translateY(-50%);
-    border-radius: var(--menubar-border-radius);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    right: 0;
+    background: var(--color2);
+    border-top-left-radius: var(--menubar-border-radius);
+    border-bottom-left-radius: var(--menubar-border-radius);
+    box-shadow: var(--box-shadow);
     overflow: hidden;
-    width: fit-content;
-    gap: 0px;
 `
-export const ViewNavIconButton = styled.button`
-    padding: 0px;
-    text-align: center;
-    height: 15px;
-    width: 20px;
-    border-width: 0;
-    color: var(--color1);
-    outline: none;
-    background: none;
-    margin: auto;
-    &:hover {
-        color: var(--color2);
-        background: var(--color1);
-    }
+export const PageIndex = styled.span`
+    font-size: 1.2rem;
 `
-export const ViewNavPageNum = styled.p`
-    margin: auto;
-    width: fit-content;
+
+export const PageIndexHr = styled.hr`
+    width: 80%;
+    height: 0.1rem;
+    background: var(--color1);
+    border: none;
 `
-export const ViewNavPageIndexButton = styled.button`
-    margin: auto;
-    padding-left: 2px;
-    padding-right: 2px;
-    text-align: center;
-    font-size: 100%;
+
+export const IconButtonPageIndex = styled(IconButton)`
     height: fit-content;
-    width: fit-content;
-    min-width: 20px;
-    border-width: 0;
-    color: var(--color1);
-    outline: none;
-    background: none;
-    gap: 0px;
-    &:hover {
-        color: var(--color2);
-        background: var(--color1);
-    }
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    align-items: center;
 `

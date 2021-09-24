@@ -5,6 +5,7 @@ import {
     CgChevronDown,
     CgPushChevronDown,
 } from "react-icons/cg"
+import { IconButton } from "components"
 import {
     JUMP_TO_NEXT_PAGE,
     JUMP_TO_PREV_PAGE,
@@ -14,10 +15,10 @@ import {
 import store from "../../redux/store"
 import { useCustomSelector } from "../../redux/hooks"
 import {
-    ViewNavIconButton,
-    ViewNavPageIndexButton,
-    ViewNavPageNum,
     ViewNavWrapper,
+    PageIndex,
+    PageIndexHr,
+    IconButtonPageIndex,
 } from "./viewnavigation.styled"
 
 const ViewNavigation: React.FC = () => {
@@ -36,27 +37,24 @@ const ViewNavigation: React.FC = () => {
 
     return hideNavBar ? null : (
         <ViewNavWrapper>
-            <ViewNavIconButton
-                onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
+            <IconButton onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
                 <CgPushChevronUp id="icon" />
-            </ViewNavIconButton>
-            <ViewNavIconButton
-                onClick={() => store.dispatch(JUMP_TO_PREV_PAGE())}>
+            </IconButton>
+            <IconButton onClick={() => store.dispatch(JUMP_TO_PREV_PAGE())}>
                 <CgChevronUp id="icon" />
-            </ViewNavIconButton>
-            <ViewNavPageIndexButton
+            </IconButton>
+            <IconButtonPageIndex
                 onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
-                <ViewNavPageNum>{currPageIndex + 1}</ViewNavPageNum>
-                <hr />
-                <ViewNavPageNum>{numPages}</ViewNavPageNum>
-            </ViewNavPageIndexButton>
-            <ViewNavIconButton
-                onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE())}>
+                <PageIndex>{currPageIndex + 1}</PageIndex>
+                <PageIndexHr />
+                <PageIndex>{numPages}</PageIndex>
+            </IconButtonPageIndex>
+            <IconButton onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE())}>
                 <CgChevronDown id="icon" />
-            </ViewNavIconButton>
-            <ViewNavIconButton onClick={goToLastPage}>
+            </IconButton>
+            <IconButton onClick={goToLastPage}>
                 <CgPushChevronDown id="icon" />
-            </ViewNavIconButton>
+            </IconButton>
         </ViewNavWrapper>
     )
 }
