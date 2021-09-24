@@ -1,4 +1,4 @@
-import { Point } from "board/stroke/types"
+import { Point } from "drawing/stroke/types"
 
 function findPerpendicularDistance(point: Point, line: [Point, Point]) {
     const slope = (line[1].y - line[0].y) / (line[1].x - line[0].x)

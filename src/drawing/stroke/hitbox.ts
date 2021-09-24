@@ -1,41 +1,8 @@
-import { Stroke } from "board/stroke/types"
 import { KonvaEventObject, Node, NodeConfig } from "konva/types/Node"
 import { Vector, Polygon, Box, testPolygonPolygon } from "sat"
+import { Stroke } from "./types"
 import { SET_TR_NODES } from "../../redux/slice/drawcontrol"
 import store from "../../redux/store"
-
-export function getHitboxPolygon(
-    [x1, y1, x2, y2]: number[],
-    { style, scaleX, scaleY }: Stroke
-): Polygon {
-    const dx = x2 - x1
-    const dy = y2 - y1
-    let dxw
-    let dyw
-    if (!dy) {
-        dxw = 0
-        dyw = style.width / 2
-    } else if (!dx) {
-        dxw = style.width / 2
-        dyw = 0
-    } else {
-        const ratio = dx / dy
-        dxw = Math.sqrt((style.width / 2) ** 2 / (1 + ratio ** 2))
-        dyw = dxw * ratio
-    }
-
-    // compensate the effect of the scale on the width
-    dxw *= scaleX || 1
-    dyw *= scaleY || 1
-
-    // calc vertices
-    return new Polygon(new Vector(), [
-        new Vector(x1 - dxw, y1 + dyw),
-        new Vector(x2 - dxw, y2 + dyw),
-        new Vector(x2 + dxw, y2 - dyw),
-        new Vector(x1 + dxw, y1 - dyw),
-    ])
-}
 
 export function getSelectionPolygon([x1, y1, x2, y2]: number[]): Polygon {
     const box = new Box(

@@ -5,13 +5,7 @@ import { KonvaEventObject } from "konva/types/Node"
 import { Stage } from "konva/types/Stage"
 import { Vector2d } from "konva/types/types"
 import store from "../redux/store"
-import {
-    startLiveStroke,
-    moveLiveStroke,
-    registerLiveStroke,
-    getPageIndex,
-    abortLiveStroke,
-} from "../drawing/strokeactions"
+import * as actions from "../drawing/stroke/actions"
 import { CANVAS_WIDTH, CANVAS_HEIGHT, CANVAS_FULL_HEIGHT } from "../constants"
 import { SET_ISMOUSEDOWN } from "../redux/slice/drawcontrol"
 import { useCustomSelector } from "../redux/hooks"
@@ -42,7 +36,7 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
         }
         store.dispatch(SET_ISMOUSEDOWN(true))
         const pos = getScaledPointerPosition(e)
-        startLiveStroke(pos, pageId)
+        actions.startLiveStroke(pos, pageId)
     }
 
     const onMouseMove = (e: KonvaEventObject<MouseEvent>) => {
@@ -52,12 +46,12 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
             e.evt.buttons === 3 // left+right mouse
         ) {
             // cancel stroke when right / left+right mouse is clicked
-            abortLiveStroke()
+            actions.abortLiveStroke()
             return
         }
 
         const pos = getScaledPointerPosition(e)
-        moveLiveStroke(pos)
+        actions.moveLiveStroke(pos)
     }
 
     const onMouseUp = (e: KonvaEventObject<MouseEvent>) => {
@@ -69,10 +63,10 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
 
         // update last position
         const pos = getScaledPointerPosition(e)
-        moveLiveStroke(pos)
+        actions.moveLiveStroke(pos)
 
         // register finished stroke
-        registerLiveStroke(e)
+        actions.registerLiveStroke(e)
     }
 
     const onTouchStart = (e: KonvaEventObject<TouchEvent>) => {
@@ -85,7 +79,7 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
         if (isValidTouch(e)) {
             onMouseMove(e as unknown as KonvaEventObject<MouseEvent>)
         } else {
-            abortLiveStroke()
+            actions.abortLiveStroke()
         }
     }
 
@@ -128,7 +122,7 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
             height={CANVAS_HEIGHT}
             width={CANVAS_WIDTH}
             x={0}
-            y={CANVAS_FULL_HEIGHT * getPageIndex(pageId)}
+            y={CANVAS_FULL_HEIGHT * actions.getPageIndex(pageId)}
             onMouseDown={onMouseDown}
             onMousemove={onMouseMove}
             onMouseUp={onMouseUp}

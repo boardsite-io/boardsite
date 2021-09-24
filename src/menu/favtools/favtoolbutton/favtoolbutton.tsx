@@ -1,4 +1,4 @@
-import { Tool } from "board/stroke/types"
+import { Tool } from "drawing/stroke/types"
 import { MinusIcon, PlusIcon, Popup } from "components"
 import React, { useState } from "react"
 import IconButton from "../../../components/iconbutton/iconbutton"

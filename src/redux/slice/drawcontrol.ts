@@ -1,6 +1,6 @@
-import { Tool, ToolType } from "board/stroke/types"
+import { Tool, ToolType } from "drawing/stroke/types"
 import { createSlice } from "@reduxjs/toolkit"
-import { BoardLiveStroke } from "../../board/stroke/livestroke"
+import { BoardLiveStroke } from "../../drawing/stroke/livestroke"
 import { TrNodesType } from "../../types"
 import {
     DEFAULT_ISPANMODE,
