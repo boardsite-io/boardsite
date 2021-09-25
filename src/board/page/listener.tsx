@@ -47,7 +47,7 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
         }
 
         const pos = getPointerPositionInStage(e)
-        actions.moveLiveStroke(pos)
+        actions.moveLiveStroke(pos, e.target.getPosition())
     }
 
     const onMouseUp = (e: KonvaEventObject<MouseEvent>) => {
@@ -59,7 +59,7 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
 
         // update last position
         const pos = getPointerPositionInStage(e)
-        actions.moveLiveStroke(pos)
+        actions.moveLiveStroke(pos, e.target.getPosition())
 
         // register finished stroke
         actions.registerLiveStroke(e)
@@ -105,9 +105,7 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
     useEffect(() => {
         ref.current?.cache()
     }, [])
-    const isListening = useCustomSelector(
-        (state) => state.drawControl.isListening
-    )
+
     const isPanMode = useCustomSelector((state) => state.drawControl.isPanMode)
 
     return (
@@ -115,7 +113,7 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
             {...pageSize}
             ref={ref}
             draggable={false}
-            listening={!isPanMode && !isListening}
+            listening={!isPanMode}
             onMouseDown={onMouseDown}
             onMousemove={onMouseMove}
             onMouseUp={onMouseUp}

@@ -1,11 +1,10 @@
-import { Tool, ToolType } from "drawing/stroke/types"
+import { StrokeMap, Tool, ToolType } from "drawing/stroke/types"
 import { createSlice } from "@reduxjs/toolkit"
 import { BoardLiveStroke } from "../../drawing/stroke/livestroke"
 import { TrNodesType } from "../../types"
 import {
     DEFAULT_ISPANMODE,
     DEFAULT_ISDRAGGABLE,
-    DEFAULT_ISLISTENING,
     DEFAULT_ISMOUSEDOWN,
     DEFAULT_DIRECTDRAW,
     DEFAULT_FAV_TOOLS,
@@ -14,25 +13,25 @@ import {
 export interface DrawControlState {
     isPanMode: boolean
     isDraggable: boolean
-    isListening: boolean
     isMouseDown: boolean
     directDraw: boolean
     liveStroke: BoardLiveStroke
     liveStrokeUpdate: number
     favTools: Tool[]
     trNodes: TrNodesType
+    erasedStrokes: StrokeMap
 }
 
 const initState: DrawControlState = {
     isPanMode: DEFAULT_ISPANMODE,
     isDraggable: DEFAULT_ISDRAGGABLE,
-    isListening: DEFAULT_ISLISTENING,
     isMouseDown: DEFAULT_ISMOUSEDOWN,
     directDraw: DEFAULT_DIRECTDRAW,
     liveStroke: new BoardLiveStroke(),
     liveStrokeUpdate: 0,
     favTools: DEFAULT_FAV_TOOLS,
     trNodes: [],
+    erasedStrokes: {},
 }
 
 const drawControlSlice = createSlice({
@@ -80,7 +79,6 @@ const drawControlSlice = createSlice({
             state.liveStroke.style = { ...style }
             state.liveStroke.type = type
             state.isDraggable = type === ToolType.Select
-            state.isListening = type === ToolType.Eraser
             state.trNodes = []
         },
         SET_COLOR: (state, action) => {
@@ -95,7 +93,6 @@ const drawControlSlice = createSlice({
             const type = action.payload
             state.liveStroke.type = type
             state.isDraggable = type === ToolType.Select
-            state.isListening = type === ToolType.Eraser
             state.trNodes = []
         },
         SET_ISPANMODE: (state, action) => {
@@ -106,10 +103,8 @@ const drawControlSlice = createSlice({
             state.isPanMode = !state.isPanMode
             if (state.isPanMode) {
                 state.isDraggable = false
-                state.isListening = false
             } else {
                 state.isDraggable = type === ToolType.Select
-                state.isListening = type === ToolType.Eraser
             }
         },
         SET_ISMOUSEDOWN: (state, action) => {
@@ -122,9 +117,16 @@ const drawControlSlice = createSlice({
         },
         END_LIVESTROKE: (state) => {
             state.liveStrokeUpdate = 0
+            state.erasedStrokes = {}
         },
         TOGGLE_DIRECTDRAW: (state) => {
             state.directDraw = !state.directDraw
+        },
+        SET_ERASED_STROKES: (state, action) => {
+            const strokes: StrokeMap = action.payload
+            Object.keys(strokes).forEach((id) => {
+                state.erasedStrokes[id] = strokes[id]
+            })
         },
     },
 })
@@ -144,5 +146,6 @@ export const {
     END_LIVESTROKE,
     TOGGLE_DIRECTDRAW,
     SET_TR_NODES,
+    SET_ERASED_STROKES,
 } = drawControlSlice.actions
 export default drawControlSlice.reducer

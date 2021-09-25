@@ -5,6 +5,8 @@ import { LineConfig } from "konva/types/shapes/Line"
 import { useCustomSelector } from "../../redux/hooks"
 import store from "../../redux/store"
 import {
+    ERASED_OPACITY,
+    ERASER_WIDTH,
     MOVE_OPACITY,
     SEL_FILL,
     SEL_FILL_ENABLED,
@@ -65,6 +67,20 @@ export const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
         }
     })
 
+    const erasedStrokes = useCustomSelector(
+        (state) => state.drawControl.erasedStrokes
+    )
+
+    const getOpacity = (): number => {
+        if (isDragging) {
+            return MOVE_OPACITY
+        }
+        if (erasedStrokes[stroke.id ?? ""]) {
+            return ERASED_OPACITY
+        }
+        return stroke.style.opacity
+    }
+
     const shapeProps = {
         name: stroke.pageId, // required to find via selector
         id: stroke.id,
@@ -77,7 +93,7 @@ export const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
         stroke: stroke.style.color,
         fill: undefined,
         strokeWidth: stroke.style.width,
-        opacity: isDragging ? MOVE_OPACITY : stroke.style.opacity,
+        opacity: getOpacity(),
         draggable: strokeSel.isDraggable ?? false,
         onDragStart: () => setDragging(true),
         onDragEnd: () => setDragging(false),
@@ -95,6 +111,11 @@ const getShape = (
     shapeProps: LineConfig
 ): JSX.Element => {
     switch (stroke.type) {
+        case ToolType.Eraser: {
+            shapeProps.strokeWidth = ERASER_WIDTH
+            shapeProps.stroke = "#fff"
+            return <Line tension={0.35} {...shapeProps} />
+        }
         case ToolType.Pen: {
             return <Line tension={0.35} {...shapeProps} />
         }

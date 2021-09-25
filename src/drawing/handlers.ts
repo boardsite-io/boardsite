@@ -80,8 +80,8 @@ export function handleUpdateStrokes(strokes: Stroke[]): void {
     updateStrokes(strokes)
 }
 
-export function handleDeleteStroke(stroke: Stroke): void {
-    deleteStrokes([stroke])
+export function handleDeleteStrokes(strokes: Stroke[]): void {
+    deleteStrokes(strokes)
 }
 
 export function handleUndo(): void {

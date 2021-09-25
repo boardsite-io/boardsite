@@ -61,7 +61,6 @@ export interface Stroke extends BaseStroke {
     serialize: () => Stroke
     update: (position: Point, scale: Scale) => void
     calculateHitbox: () => void
-    getHitboxPolygon: ([x1, y1, x2, y2]: number[]) => Polygon
 }
 
 export interface LiveStroke extends BaseStroke {
@@ -72,6 +71,11 @@ export interface LiveStroke extends BaseStroke {
     flatPoints(): void
     processPoints(stageScale: number, pagePosition: Point): void
     reset(): void
+    selectLineCollision(strokes: StrokeMap, pagePosition: Point): StrokeMap
+}
+
+export interface StrokeMap {
+    [id: string]: Stroke
 }
 
 export type StrokeShape = Stroke & ShapeConfig
