@@ -4,17 +4,13 @@ import * as types from "konva/types/shapes/Rect"
 import { KonvaEventObject } from "konva/types/Node"
 import { Stage } from "konva/types/Stage"
 import { Vector2d } from "konva/types/types"
-import store from "../redux/store"
-import * as actions from "../drawing/stroke/actions"
-import { CANVAS_WIDTH, CANVAS_HEIGHT, CANVAS_FULL_HEIGHT } from "../constants"
-import { SET_ISMOUSEDOWN } from "../redux/slice/drawcontrol"
-import { useCustomSelector } from "../redux/hooks"
+import store from "../../redux/store"
+import * as actions from "../../drawing/stroke/actions"
+import { SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
+import { useCustomSelector } from "../../redux/hooks"
+import { PageProps } from "./types"
 
-interface PageListenerProps {
-    pageId: string
-}
-
-const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
+const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
     // pageId might not be valid anymore, exit then
     if (!store.getState().boardControl.pageCollection[pageId]) {
         return null
@@ -23,7 +19,7 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
         (state) => state.drawControl.isMouseDown
     )
 
-    const getScaledPointerPosition = (e: KonvaEventObject<MouseEvent>) => {
+    const getPointerPositionInStage = (e: KonvaEventObject<MouseEvent>) => {
         const stage = e.target.getStage() as Stage
         const position = stage.getPointerPosition()
         const transform = stage.getAbsoluteTransform().copy().invert()
@@ -35,7 +31,7 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
             return
         }
         store.dispatch(SET_ISMOUSEDOWN(true))
-        const pos = getScaledPointerPosition(e)
+        const pos = getPointerPositionInStage(e)
         actions.startLiveStroke(pos, pageId)
     }
 
@@ -50,8 +46,8 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
             return
         }
 
-        const pos = getScaledPointerPosition(e)
-        actions.moveLiveStroke(pos)
+        const pos = getPointerPositionInStage(e)
+        actions.moveLiveStroke(pos, e.target.getPosition())
     }
 
     const onMouseUp = (e: KonvaEventObject<MouseEvent>) => {
@@ -62,8 +58,8 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
         store.dispatch(SET_ISMOUSEDOWN(false))
 
         // update last position
-        const pos = getScaledPointerPosition(e)
-        actions.moveLiveStroke(pos)
+        const pos = getPointerPositionInStage(e)
+        actions.moveLiveStroke(pos, e.target.getPosition())
 
         // register finished stroke
         actions.registerLiveStroke(e)
@@ -114,13 +110,10 @@ const PageListener: React.FC<PageListenerProps> = ({ pageId }) => {
 
     return (
         <Rect
+            {...pageSize}
             ref={ref}
             draggable={false}
             listening={!isPanMode}
-            height={CANVAS_HEIGHT}
-            width={CANVAS_WIDTH}
-            x={0}
-            y={CANVAS_FULL_HEIGHT * actions.getPageIndex(pageId)}
             onMouseDown={onMouseDown}
             onMousemove={onMouseMove}
             onMouseUp={onMouseUp}

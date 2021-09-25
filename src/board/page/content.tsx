@@ -1,16 +1,11 @@
 import React from "react"
 import { Group } from "react-konva"
-import { CANVAS_FULL_HEIGHT } from "../constants"
-import store from "../redux/store"
-import { getPageIndex } from "../drawing/stroke/actions"
-import { StrokeShape } from "./stroke/shape"
-import { useCustomSelector } from "../redux/hooks"
+import store from "../../redux/store"
+import { StrokeShape } from "../stroke/shape"
+import { useCustomSelector } from "../../redux/hooks"
+import { PageProps } from "./types"
 
-interface PageContentProps {
-    pageId: string
-}
-
-const PageContent: React.FC<PageContentProps> = ({ pageId }) => {
+const PageContent: React.FC<PageProps> = ({ pageId, pageSize }) => {
     // pageId might not be valid anymore, exit then
     if (!store.getState().boardControl.pageCollection[pageId]) {
         return null
@@ -24,9 +19,9 @@ const PageContent: React.FC<PageContentProps> = ({ pageId }) => {
     return (
         <>
             <Group
+                {...pageSize}
                 globalCompositeOperation="source-atop"
-                listening={false}
-                y={getPageIndex(pageId) * CANVAS_FULL_HEIGHT}>
+                listening={false}>
                 {strokeIds.map((id) => (
                     <StrokeShape
                         key={id}

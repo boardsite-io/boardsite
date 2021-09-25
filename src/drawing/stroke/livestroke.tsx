@@ -1,6 +1,5 @@
 /* eslint-disable prefer-destructuring */
 import {
-    CANVAS_FULL_HEIGHT,
     DEFAULT_COLOR,
     DEFAULT_TOOL,
     DEFAULT_WIDTH,
@@ -21,12 +20,9 @@ export class BoardLiveStroke implements LiveStroke {
         width: DEFAULT_WIDTH as number,
         opacity: 1 as number,
     }
-
     pageId = ""
-
     x = 0
     y = 0
-
     points = [] as number[]
     pointsSegments = [] as number[][]
 
@@ -80,9 +76,9 @@ export class BoardLiveStroke implements LiveStroke {
      * @param stageScale scale for adjusting the RDP algorithm
      * @param pageIndex page index of the pageId
      */
-    finalize(stageScale: number, pageIndex: number): Stroke {
+    finalize(stageScale: number, pagePosition: Point): Stroke {
         this.flatPoints()
-        this.processPoints(stageScale, pageIndex)
+        this.processPoints(stageScale, pagePosition)
         const stroke = new BoardStroke(this)
         this.reset()
         return stroke
@@ -103,25 +99,29 @@ export class BoardLiveStroke implements LiveStroke {
         }
     }
 
-    processPoints(stageScale: number, pageIndex: number): void {
-        // for continuous types we simplify the points further
-        if (isContinuous(this.type)) {
-            this.points = simplifyRDP(
-                this.points,
-                RDP_EPSILON / stageScale,
-                RDP_FORCE_SECTIONS + 1
-            )
+    processPoints(stageScale: number, pagePosition: Point): void {
+        const { x: pageX, y: pageY } = pagePosition
+
+        switch (this.type) {
+            case ToolType.Pen:
+                // simplify the points
+                this.points = simplifyRDP(
+                    this.points,
+                    RDP_EPSILON / stageScale,
+                    RDP_FORCE_SECTIONS + 1
+                )
+                break
+            case ToolType.Rectangle:
+            case ToolType.Circle:
+                this.x -= pageX
+                this.y -= pageY
+                break
+            default:
+                break
         }
 
-        this.points = this.points.map((p, i) => {
-            // allow a reasonable precision
-            let pt = Math.round(p * 100) / 100
-            if (i % 2) {
-                // make y coordinates relative to page
-                pt -= pageIndex * CANVAS_FULL_HEIGHT
-            }
-            return pt
-        })
+        // compensate page offset in stage
+        this.points = subPageOffset(this.points, pagePosition)
     }
 
     /**
@@ -138,7 +138,7 @@ export class BoardLiveStroke implements LiveStroke {
     }
 
     private numUpdates = 0
-    selectLineCollision(strokes: StrokeMap): StrokeMap {
+    selectLineCollision(strokes: StrokeMap, pagePosition: Point): StrokeMap {
         const target = 5
         const res: StrokeMap = {}
         this.numUpdates += 1
@@ -151,7 +151,11 @@ export class BoardLiveStroke implements LiveStroke {
                 .concat(p.slice(p.length - 2))
 
             this.numUpdates = 0
-            const sel = getHitboxPolygon(line, ERASER_WIDTH)
+            const sel = getHitboxPolygon(
+                subPageOffset(line, pagePosition), // compensate page offset in stage
+                ERASER_WIDTH
+            )
+
             return matchStrokeCollision(strokes, sel)
         }
         return res
@@ -182,3 +186,14 @@ const appendLinePoint = (pts: number[], newPoint: Point): void => {
         newPoint.y
     )
 }
+
+const subPageOffset = (points: number[], pagePosition: Point): number[] =>
+    points.map((p, i) => {
+        let pt = Math.round(p * 100) / 100 // round to a reasonable precision
+        if (i % 2) {
+            pt -= pagePosition.y
+        } else {
+            pt -= pagePosition.x
+        }
+        return pt
+    })

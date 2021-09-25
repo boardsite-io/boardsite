@@ -4,6 +4,7 @@ import { createSelector } from "reselect"
 import { Stage, Layer } from "react-konva"
 import { Vector2d } from "konva/types/types"
 import { KonvaEventObject } from "konva/types/Node"
+import { getPageIndex } from "drawing/stroke/actions"
 import {
     CENTER_VIEW,
     ON_WINDOW_RESIZE,
@@ -14,37 +15,31 @@ import {
     MULTI_TOUCH_MOVE,
     MULTI_TOUCH_END,
 } from "../redux/slice/viewcontrol"
-
-import PageContent from "./pagecontent"
-import PageListener from "./pagelistener"
-
 import { LiveStrokeShape } from "./stroke/shape"
 import {
     ZOOM_IN_WHEEL_SCALE,
     ZOOM_OUT_WHEEL_SCALE,
     CANVAS_WIDTH,
+    CANVAS_FULL_HEIGHT,
+    CANVAS_HEIGHT,
 } from "../constants"
-import PageBackground from "./pagebackground"
 import store, { RootState } from "../redux/store"
 import { useCustomSelector } from "../redux/hooks"
 import StrokeTransformer from "./transformer"
+import PageListener from "./page/listener"
+import PageContent from "./page/content"
+import PageBackground from "./page/background"
 
 const BoardStage: React.FC = () => {
-    const isPanMode = useCustomSelector((state) => state.drawControl.isPanMode)
-    const stageWidth = useCustomSelector(
-        (state) => state.viewControl.stageWidth
-    )
-    const stageHeight = useCustomSelector(
-        (state) => state.viewControl.stageHeight
-    )
-    const stageX = useCustomSelector((state) => state.viewControl.stageX)
-    const stageY = useCustomSelector((state) => state.viewControl.stageY)
-    const stageScale = useCustomSelector(
-        (state) => state.viewControl.stageScale
-    )
-    const keepCentered = useCustomSelector(
-        (state) => state.viewControl.keepCentered
-    )
+    const { isPanMode } = useCustomSelector((state) => state.drawControl)
+    const {
+        stageWidth,
+        stageHeight,
+        stageX,
+        stageY,
+        stageScale,
+        keepCentered,
+    } = useCustomSelector((state) => state.viewControl)
 
     useEffect(() => {
         window.addEventListener("resize", () =>
@@ -94,7 +89,7 @@ const BoardStage: React.FC = () => {
      */
     const dragBound = (pos: Vector2d) => {
         if (keepCentered) {
-            const x = (stageWidth - CANVAS_WIDTH * stageScale.x) / 2
+            const x = stageWidth / 2
             if (x >= 0) {
                 return { x, y: pos.y }
             }
@@ -178,13 +173,24 @@ const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
 
     return (
         <>
-            {pageSlice.map((pageId: string) => (
-                <Layer key={pageId}>
-                    <PageBackground pageId={pageId} />
-                    <PageListener pageId={pageId} />
-                    <PageContent pageId={pageId} />
-                </Layer>
-            ))}
+            {pageSlice.map((pageId: string) => {
+                const props = {
+                    pageId,
+                    pageSize: {
+                        height: CANVAS_HEIGHT,
+                        width: CANVAS_WIDTH,
+                        x: -CANVAS_WIDTH / 2,
+                        y: CANVAS_FULL_HEIGHT * getPageIndex(pageId),
+                    },
+                }
+                return (
+                    <Layer key={pageId}>
+                        <PageBackground {...props} />
+                        <PageListener {...props} />
+                        <PageContent {...props} />
+                    </Layer>
+                )
+            })}
             <Layer draggable={false} listening={false}>
                 <LiveStrokeShape />
             </Layer>
