@@ -22,6 +22,7 @@ export const Theme = styled.div`
     --color7: #00ff00;
     --color8: black;
 
+    --menu-padding: 0.2rem;
     --menubar-box-shadow: 0px 0px 2px 0px #00000088;
     --menubar-border-radius: 0.5rem;
     --button-gap: 0.1rem;

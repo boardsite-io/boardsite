@@ -7,7 +7,7 @@ export const FavToolsStyled = styled.div`
     grid-auto-flow: row;
     position: fixed;
     gap: 10px; /* var(--button-gap); */
-    padding: 4px;
+    padding: var(--menu-padding);
     border-top-right-radius: var(--menubar-border-radius);
     border-bottom-right-radius: var(--menubar-border-radius);
     justify-content: space-between;

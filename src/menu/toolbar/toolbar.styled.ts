@@ -9,7 +9,7 @@ export const ToolbarStyled = styled.div`
     display: flex;
     gap: var(--button-gap);
     justify-content: space-between;
-    padding: 0.2rem 0.4rem;
+    padding: var(--menu-padding);
     background: var(--color2);
     box-shadow: var(--menubar-box-shadow);
 `
