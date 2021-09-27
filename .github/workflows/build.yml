@@ -61,4 +61,4 @@ jobs:
           aws s3 sync ./build s3://${{ secrets.AWS_S3_BUCKET_NAME }}
       - name: Clear Cloudfront cache
         run: |
-          aws cloudfront create-invalidation --distribution-id {{ secrets.AWS_CLOUDFRONT_ID }} --paths "/*"
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CLOUDFRONT_ID }} --paths "/*"
