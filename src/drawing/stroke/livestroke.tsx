@@ -34,14 +34,14 @@ export class BoardLiveStroke implements LiveStroke {
 
     addPoint(point: Point, scale: number): void {
         const { pointsSegments } = this
-        const p = pointsSegments[pointsSegments.length - 1]
+        const lastSegment = pointsSegments[pointsSegments.length - 1]
         if (isContinuous(this.type)) {
             // for continuous strokes
-            if (p.length < MAX_LIVESTROKE_PTS) {
-                appendLinePoint(p, point)
+            if (lastSegment.length < MAX_LIVESTROKE_PTS) {
+                appendLinePoint(lastSegment, point)
             } else {
                 pointsSegments[pointsSegments.length - 1] = simplifyRDP(
-                    p,
+                    lastSegment,
                     0.2 / scale,
                     1
                 )
@@ -49,26 +49,29 @@ export class BoardLiveStroke implements LiveStroke {
                 // with the last point from the previous subarray as entry
                 // in order to not get a gap in the stroke
                 pointsSegments.push(
-                    p.slice(p.length - 2, p.length).concat([point.x, point.y])
+                    lastSegment
+                        .slice(lastSegment.length - 2, lastSegment.length)
+                        .concat([point.x, point.y])
                 )
             }
+            this.pointsSegments = pointsSegments
         } else {
-            // only start & end points required
-            pointsSegments[0] = [p[0], p[1], point.x, point.y]
-
-            // for circle, update the initial position
             if (this.type === ToolType.Circle) {
-                this.x = p[0] + (p[2] - p[0]) / 2
-                this.y = p[1] + (p[3] - p[1]) / 2
+                this.x = lastSegment[0] + (point.x - lastSegment[0]) / 2
+                this.y = lastSegment[1] + (point.y - lastSegment[1]) / 2
             } else if (
                 this.type === ToolType.Rectangle ||
                 this.type === ToolType.Select
             ) {
-                this.x = p[0]
-                this.y = p[1]
+                this.x = lastSegment[0]
+                this.y = lastSegment[1]
             }
+
+            // only start & end point required
+            this.pointsSegments = [
+                [lastSegment[0], lastSegment[1], point.x, point.y],
+            ]
         }
-        this.pointsSegments = pointsSegments
     }
 
     /**
