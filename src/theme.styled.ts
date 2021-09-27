@@ -22,6 +22,7 @@ export const Theme = styled.div`
     --color7: #00ff00;
     --color8: black;
 
+    --menu-padding: 0.2rem;
     --menubar-box-shadow: 0px 0px 2px 0px #00000088;
     --menubar-border-radius: 0.5rem;
     --button-gap: 0.1rem;
@@ -40,5 +41,23 @@ export const Theme = styled.div`
         font-family: inherit;
         font-size: inherit;
         font-weight: inherit;
+    }
+
+    /* Scrollbar Styling .. TODO: check if div:: is a good approach */
+    --padding-hack: 0.2rem;
+    --scrollbar-width: 0.6rem;
+    div::-webkit-scrollbar {
+        width: calc(var(--scrollbar-width) + var(--padding-hack));
+    }
+    div::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 10rem 10rem #00000010;
+    }
+    div::-webkit-scrollbar-thumb {
+        box-shadow: inset 0 0 10rem 10rem #bbbbbe;
+    }
+    div::-webkit-scrollbar-track,
+    div::-webkit-scrollbar-thumb {
+        border: solid var(--padding-hack) transparent;
+        border-radius: 10rem;
     }
 `

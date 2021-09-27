@@ -1,5 +1,9 @@
 import styled from "styled-components"
 
+export const OuterWrap = styled.div`
+    width: 100%;
+`
+
 export type AlignItems = "center" | "flex-start" | "flex-end"
 interface InputWrapperProps {
     $alignItems: AlignItems

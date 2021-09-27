@@ -6,11 +6,13 @@ interface Props {
 }
 
 export const StyledIconButton = styled.button<Props>`
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     height: var(--icon-button-size);
     width: var(--icon-button-size);
+    margin: 0.1rem;
     padding: 0;
     outline: none;
     border: none;
@@ -18,19 +20,17 @@ export const StyledIconButton = styled.button<Props>`
     color: ${({ $active }) => ($active ? "var(--color7)" : "var(--color1)")};
     ${({ $background }) =>
         $background ? withBackgroundStyle($background) : noBackgroundStyle};
-    &:hover {
-        color: var(--color2);
-        background: var(--color1);
-        svg {
-            /* For custom icons */
-            stroke: var(--color8);
-            /* For non custom icons */
-            color: var(--color8);
-        }
-    }
+
     svg {
+        transition: all 100ms ease-in-out;
         height: 80%;
         width: 80%;
+    }
+    &:hover {
+        svg {
+            height: 100%;
+            width: 100%;
+        }
     }
 `
 
