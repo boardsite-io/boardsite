@@ -5,6 +5,7 @@ import {
     InputHelperText,
     InputLabel,
     InputWrapper,
+    OuterWrap,
     StyledInput,
     TextAlign,
 } from "./textfield.styled"
@@ -34,21 +35,23 @@ const TextField: React.FC<ButtonProps> = ({
     const alignItems = alignTextToItems[align]
 
     return (
-        <InputWrapper $alignItems={alignItems as AlignItems}>
-            <StyledInput
-                $textAlign={align}
-                type="text"
-                onFocus={() => setFocus(true)}
-                onBlur={() => setFocus(false)}
-                value={value}
-                {...props}
-            />
-            <InputBar $hasFocus={hasFocus} $error={error} />
-            <InputLabel $hasFocus={hasFocus || value !== ""}>
-                {label}
-            </InputLabel>
-            <InputHelperText>{helperText}</InputHelperText>
-        </InputWrapper>
+        <OuterWrap>
+            <InputWrapper $alignItems={alignItems as AlignItems}>
+                <StyledInput
+                    $textAlign={align}
+                    type="text"
+                    onFocus={() => setFocus(true)}
+                    onBlur={() => setFocus(false)}
+                    value={value}
+                    {...props}
+                />
+                <InputBar $hasFocus={hasFocus} $error={error} />
+                <InputLabel $hasFocus={hasFocus || value !== ""}>
+                    {label}
+                </InputLabel>
+                <InputHelperText>{helperText}</InputHelperText>
+            </InputWrapper>
+        </OuterWrap>
     )
 }
 
