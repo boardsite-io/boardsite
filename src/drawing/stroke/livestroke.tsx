@@ -34,41 +34,36 @@ export class BoardLiveStroke implements LiveStroke {
 
     addPoint(point: Point, scale: number): void {
         const { pointsSegments } = this
-        const p = pointsSegments[pointsSegments.length - 1]
-        if (isContinuous(this.type)) {
-            // for continuous strokes
-            if (p.length < MAX_LIVESTROKE_PTS) {
-                appendLinePoint(p, point)
-            } else {
-                pointsSegments[pointsSegments.length - 1] = simplifyRDP(
-                    p,
-                    0.2 / scale,
-                    1
-                )
-                // create a new subarray
-                // with the last point from the previous subarray as entry
-                // in order to not get a gap in the stroke
-                pointsSegments.push(
-                    p.slice(p.length - 2, p.length).concat([point.x, point.y])
-                )
-            }
-        } else {
-            // only start & end points required
-            pointsSegments[0] = [p[0], p[1], point.x, point.y]
+        const lastSegment = pointsSegments[pointsSegments.length - 1]
 
-            // for circle, update the initial position
-            if (this.type === ToolType.Circle) {
-                this.x = p[0] + (p[2] - p[0]) / 2
-                this.y = p[1] + (p[3] - p[1]) / 2
-            } else if (
-                this.type === ToolType.Rectangle ||
-                this.type === ToolType.Select
-            ) {
-                this.x = p[0]
-                this.y = p[1]
-            }
+        switch (this.type) {
+            case ToolType.Pen:
+            case ToolType.Eraser:
+                // for continuous strokes
+                if (lastSegment.length < MAX_LIVESTROKE_PTS) {
+                    appendLinePoint(lastSegment, point)
+                } else {
+                    newStrokeSegment(pointsSegments, lastSegment, scale, point)
+                }
+                this.pointsSegments = pointsSegments
+                return
+            case ToolType.Circle:
+                this.x = lastSegment[0] + (point.x - lastSegment[0]) / 2
+                this.y = lastSegment[1] + (point.y - lastSegment[1]) / 2
+                break
+            case ToolType.Rectangle:
+            case ToolType.Select:
+                this.x = lastSegment[0]
+                this.y = lastSegment[1]
+                break
+            default:
+                break
         }
-        this.pointsSegments = pointsSegments
+
+        // only start & end point required for non continuous
+        this.pointsSegments = [
+            [lastSegment[0], lastSegment[1], point.x, point.y],
+        ]
     }
 
     /**
@@ -162,9 +157,6 @@ export class BoardLiveStroke implements LiveStroke {
     }
 }
 
-const isContinuous = (type: ToolType): boolean =>
-    type === ToolType.Pen || type === ToolType.Eraser
-
 const appendLinePoint = (pts: number[], newPoint: Point): void => {
     if (pts.length < 4) {
         pts.push(newPoint.x, newPoint.y)
@@ -184,6 +176,27 @@ const appendLinePoint = (pts: number[], newPoint: Point): void => {
         interimPoint.y,
         newPoint.x,
         newPoint.y
+    )
+}
+
+const newStrokeSegment = (
+    pointsSegments: number[][],
+    lastSegment: number[],
+    scale: number,
+    point: Point
+) => {
+    pointsSegments[pointsSegments.length - 1] = simplifyRDP(
+        lastSegment,
+        0.2 / scale,
+        1
+    )
+    // create a new subarray
+    // with the last point from the previous subarray as entry
+    // in order to not get a gap in the stroke
+    pointsSegments.push(
+        lastSegment
+            .slice(lastSegment.length - 2, lastSegment.length)
+            .concat([point.x, point.y])
     )
 }
 
