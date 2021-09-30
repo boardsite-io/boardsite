@@ -46,8 +46,11 @@ const PenTool: React.FC = () => {
     return (
         <>
             {isDrawingTool() ? (
-                <IconButton onClick={() => setOpen(true)}>
-                    <IconX stroke={colorSelector} />
+                <IconButton
+                    active
+                    onClick={() => setOpen(true)}
+                    style={{ background: colorSelector }}>
+                    <IconX />
                 </IconButton>
             ) : (
                 <IconButton

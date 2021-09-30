@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components"
+import styled from "styled-components"
 import { ReactComponent as Eraser } from "./svgs/eraser.svg"
 import { ReactComponent as Pen } from "./svgs/pen.svg"
 import { ReactComponent as Select } from "./svgs/select.svg"
@@ -17,72 +17,20 @@ import { ReactComponent as Redo } from "./svgs/redo.svg"
 import { ReactComponent as Download } from "./svgs/download.svg"
 import { ReactComponent as Upload } from "./svgs/upload.svg"
 
-interface Props {
-    $active?: boolean
-    $stroke?: string
-}
-const iconStyles = css<Props>`
-    height: 100%;
-    width: 100%;
-    stroke: ${({ $active, $stroke }) => {
-        if ($active) {
-            return "var(--color7)"
-        }
-        if ($stroke) {
-            return $stroke
-        }
-        return "var(--color1)"
-    }};
-`
-
-export const StyledEraser = styled(Eraser)`
-    ${iconStyles}
-`
-export const StyledPen = styled(Pen)`
-    ${iconStyles}
-`
-export const StyledSelect = styled(Select)`
-    ${iconStyles}
-`
-export const StyledLine = styled(Line)`
-    ${iconStyles}
-`
-export const StyledCircle = styled(Circle)`
-    ${iconStyles}
-`
-export const StyledSquare = styled(Square)`
-    ${iconStyles}
-`
-export const StyledPlus = styled(Plus)`
-    ${iconStyles}
-`
-export const StyledMinus = styled(Minus)`
-    ${iconStyles}
-`
-export const StyledExpand = styled(Expand)`
-    ${iconStyles}
-`
-export const StyledShrink = styled(Shrink)`
-    ${iconStyles}
-`
-export const StyledPan = styled(Pan)`
-    ${iconStyles}
-`
-export const StyledZoomIn = styled(ZoomIn)`
-    ${iconStyles}
-`
-export const StyledZoomOut = styled(ZoomOut)`
-    ${iconStyles}
-`
-export const StyledUndo = styled(Undo)`
-    ${iconStyles}
-`
-export const StyledRedo = styled(Redo)`
-    ${iconStyles}
-`
-export const StyledDownload = styled(Download)`
-    ${iconStyles}
-`
-export const StyledUpload = styled(Upload)`
-    ${iconStyles}
-`
+export const StyledEraser = styled(Eraser)``
+export const StyledPen = styled(Pen)``
+export const StyledSelect = styled(Select)``
+export const StyledLine = styled(Line)``
+export const StyledCircle = styled(Circle)``
+export const StyledSquare = styled(Square)``
+export const StyledPlus = styled(Plus)``
+export const StyledMinus = styled(Minus)``
+export const StyledExpand = styled(Expand)``
+export const StyledShrink = styled(Shrink)``
+export const StyledPan = styled(Pan)``
+export const StyledZoomIn = styled(ZoomIn)``
+export const StyledZoomOut = styled(ZoomOut)``
+export const StyledUndo = styled(Undo)``
+export const StyledRedo = styled(Redo)``
+export const StyledDownload = styled(Download)``
+export const StyledUpload = styled(Upload)``

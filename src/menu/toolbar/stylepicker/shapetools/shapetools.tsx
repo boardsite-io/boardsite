@@ -22,52 +22,52 @@ const ShapeTools: React.FC = () => {
     return (
         <StyledShapeTools>
             <IconButton
+                active={typeSelector === ToolType.Pen}
                 onClick={() => {
                     store.dispatch(SET_TYPE(ToolType.Pen))
-                }}>
-                <PenIcon
-                    stroke={
-                        typeSelector === ToolType.Pen
-                            ? colorSelector
-                            : undefined
-                    }
-                />
+                }}
+                style={
+                    typeSelector === ToolType.Pen
+                        ? { background: colorSelector }
+                        : undefined
+                }>
+                <PenIcon />
             </IconButton>
             <IconButton
+                active={typeSelector === ToolType.Line}
                 onClick={() => {
                     store.dispatch(SET_TYPE(ToolType.Line))
-                }}>
-                <LineIcon
-                    stroke={
-                        typeSelector === ToolType.Line
-                            ? colorSelector
-                            : undefined
-                    }
-                />
+                }}
+                style={
+                    typeSelector === ToolType.Line
+                        ? { background: colorSelector }
+                        : undefined
+                }>
+                <LineIcon />
             </IconButton>
             <IconButton
+                active={typeSelector === ToolType.Rectangle}
                 onClick={() => {
                     store.dispatch(SET_TYPE(ToolType.Rectangle))
-                }}>
-                <SquareIcon
-                    stroke={
-                        typeSelector === ToolType.Rectangle
-                            ? colorSelector
-                            : undefined
-                    }
-                />
+                }}
+                style={
+                    typeSelector === ToolType.Rectangle
+                        ? { background: colorSelector }
+                        : undefined
+                }>
+                <SquareIcon />
             </IconButton>
             <IconButton
+                active={typeSelector === ToolType.Circle}
                 onClick={() => {
                     store.dispatch(SET_TYPE(ToolType.Circle))
-                }}>
-                <CircleIcon
-                    stroke={
-                        typeSelector === ToolType.Circle
-                            ? colorSelector
-                            : undefined
-                    }
-                />
+                }}
+                style={
+                    typeSelector === ToolType.Circle
+                        ? { background: colorSelector }
+                        : undefined
+                }>
+                <CircleIcon />
             </IconButton>
         </StyledShapeTools>
     )

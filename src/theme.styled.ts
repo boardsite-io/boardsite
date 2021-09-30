@@ -10,7 +10,7 @@ export const Theme = styled.div`
         5: Background of Dialog, Drawer, ...
         6: Transparent background behind Dialog, Drawer, ...
         7: Active Tools 
-        8: Icon Hover
+        8: Active Tools Background 
     */
     --color0: linear-gradient(#888888, #696969);
     --color1: white;
@@ -20,7 +20,7 @@ export const Theme = styled.div`
     --color5: white;
     --color6: #000000aa;
     --color7: #00ff00;
-    --color8: black;
+    --color8: #263238; /* Blue Grey 900 */
 
     --menu-padding: 0.2rem;
     --menubar-box-shadow: 0px 0px 2px 0px #00000088;

@@ -15,22 +15,25 @@ const ToolRing: React.FC = () => {
         <>
             <PenTool />
             <IconButton
+                active={typeSelector === ToolType.Eraser}
                 onClick={() => {
                     store.dispatch(SET_TYPE(ToolType.Eraser))
                 }}>
-                <EraserIcon active={typeSelector === ToolType.Eraser} />
+                <EraserIcon />
             </IconButton>
             <IconButton
+                active={typeSelector === ToolType.Select}
                 onClick={() => {
                     store.dispatch(SET_TYPE(ToolType.Select))
                 }}>
-                <SelectIcon active={typeSelector === ToolType.Select} />
+                <SelectIcon />
             </IconButton>
             <IconButton
+                active={typeSelector === ToolType.Pan}
                 onClick={() => {
                     store.dispatch(SET_TYPE(ToolType.Pan))
                 }}>
-                <PanIcon active={typeSelector === ToolType.Pan} />
+                <PanIcon />
             </IconButton>
         </>
     )

@@ -4,7 +4,7 @@ export const StyledShapeTools = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 0.1rem 0;
+    padding: var(--menu-padding);
     align-items: center;
     border-radius: var(--menubar-border-radius);
     background: var(--color2);
