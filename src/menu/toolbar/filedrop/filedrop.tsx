@@ -11,7 +11,13 @@ import {
 import { handleExportDocument } from "drawing/handlers"
 import FileDropZone from "./filedropzone"
 
-const FileDropButton: React.FC = () => {
+interface FileDropButtonProps {
+    closePageOptions: () => void
+}
+
+const FileDropButton: React.FC<FileDropButtonProps> = ({
+    closePageOptions,
+}) => {
     const [dialogOpen, setDialogOpen] = useState(false)
 
     const handleOpen = () => {
@@ -20,6 +26,7 @@ const FileDropButton: React.FC = () => {
 
     const handleClose = () => {
         setDialogOpen(false)
+        closePageOptions()
     }
 
     return (

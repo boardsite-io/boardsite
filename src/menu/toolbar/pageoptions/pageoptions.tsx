@@ -21,16 +21,17 @@ import {
     handleDeleteAllPages,
     handleDeletePage,
 } from "../../../drawing/handlers"
+import FileDropButton from "../filedrop/filedrop"
 
 const PageOptions: React.FC = () => {
     const [open, setOpen] = useState(false)
-
+    const close = () => setOpen(false)
     return (
         <PageOptionsWrapper>
             <IconButton onClick={() => setOpen(true)}>
                 <BsFileDiff id="icon" />
             </IconButton>
-            <Popup open={open} onClose={() => setOpen(false)}>
+            <Popup open={open} onClose={close}>
                 <PageOptionsWrapperInner>
                     <IconButton onClick={handleAddPageOver}>
                         <BsFileArrowUp id="icon" />
@@ -44,10 +45,11 @@ const PageOptions: React.FC = () => {
                     <IconButton onClick={() => handleClearPage()}>
                         <BsFileRuled id="icon" />
                     </IconButton>
+                    <FileDropButton closePageOptions={close} />
+                    <PageSettings setOpenOther={setOpen} />
                     <IconButton onClick={handleDeleteAllPages}>
                         <BsTrash id="icon" />
                     </IconButton>
-                    <PageSettings setOpenOther={setOpen} />
                 </PageOptionsWrapperInner>
             </Popup>
         </PageOptionsWrapper>
