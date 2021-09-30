@@ -1,4 +1,4 @@
-import { SET_TYPE, TOGGLE_PANMODE } from "../redux/slice/drawcontrol"
+import { SET_TYPE } from "../redux/slice/drawcontrol"
 import store from "../redux/store"
 import {
     JUMP_TO_NEXT_PAGE,
@@ -61,9 +61,8 @@ export default function keyListener(e: KeyboardEvent): void {
                 handleRedo()
             }
             break
-        case " ": // Panmode
-            store.dispatch(TOGGLE_PANMODE())
-            break
+        // case " ": // Spacebar - UNSET
+        //     break
         default:
             break
     }

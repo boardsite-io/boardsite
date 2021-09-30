@@ -15,7 +15,6 @@ export const CANVAS_GAP = 20
 export const CANVAS_FULL_HEIGHT = CANVAS_HEIGHT + CANVAS_GAP
 export const DEFAULT_WIDTH = STROKE_WIDTH_PRESETS[3]
 export const DEFAULT_COLOR = "#000000"
-export const DEFAULT_ISPANMODE = false
 export const ZOOM_IN_WHEEL_SCALE = 1.1
 export const ZOOM_OUT_WHEEL_SCALE = 0.9
 export const ZOOM_IN_BUTTON_SCALE = 1.1

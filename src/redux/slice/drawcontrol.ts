@@ -3,7 +3,6 @@ import { createSlice } from "@reduxjs/toolkit"
 import { BoardLiveStroke } from "../../drawing/stroke/livestroke"
 import { TrNodesType } from "../../types"
 import {
-    DEFAULT_ISPANMODE,
     DEFAULT_ISDRAGGABLE,
     DEFAULT_ISMOUSEDOWN,
     DEFAULT_DIRECTDRAW,
@@ -11,7 +10,6 @@ import {
 } from "../../constants"
 
 export interface DrawControlState {
-    isPanMode: boolean
     isDraggable: boolean
     isMouseDown: boolean
     directDraw: boolean
@@ -23,7 +21,6 @@ export interface DrawControlState {
 }
 
 const initState: DrawControlState = {
-    isPanMode: DEFAULT_ISPANMODE,
     isDraggable: DEFAULT_ISDRAGGABLE,
     isMouseDown: DEFAULT_ISMOUSEDOWN,
     directDraw: DEFAULT_DIRECTDRAW,
@@ -95,18 +92,6 @@ const drawControlSlice = createSlice({
             state.isDraggable = type === ToolType.Select
             state.trNodes = []
         },
-        SET_ISPANMODE: (state, action) => {
-            state.isPanMode = action.payload
-        },
-        TOGGLE_PANMODE: (state) => {
-            const { type } = state.liveStroke
-            state.isPanMode = !state.isPanMode
-            if (state.isPanMode) {
-                state.isDraggable = false
-            } else {
-                state.isDraggable = type === ToolType.Select
-            }
-        },
         SET_ISMOUSEDOWN: (state, action) => {
             const isMouseDown = action.payload
             state.isMouseDown = isMouseDown
@@ -139,8 +124,6 @@ export const {
     SET_COLOR,
     SET_WIDTH,
     SET_TYPE,
-    SET_ISPANMODE,
-    TOGGLE_PANMODE,
     SET_ISMOUSEDOWN,
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
