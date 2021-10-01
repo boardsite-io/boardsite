@@ -4,6 +4,7 @@ import { createSelector } from "reselect"
 import { Stage, Layer } from "react-konva"
 import { Vector2d } from "konva/types/types"
 import { KonvaEventObject } from "konva/types/Node"
+import { ToolType } from "drawing/stroke/types"
 import { getPageIndex } from "drawing/stroke/actions"
 import {
     CENTER_VIEW,
@@ -31,7 +32,9 @@ import PageContent from "./page/content"
 import PageBackground from "./page/background"
 
 const BoardStage: React.FC = () => {
-    const { isPanMode } = useCustomSelector((state) => state.drawControl)
+    const isPanMode = useCustomSelector(
+        (state) => state.drawControl.liveStroke.type === ToolType.Pan
+    )
     const {
         stageWidth,
         stageHeight,

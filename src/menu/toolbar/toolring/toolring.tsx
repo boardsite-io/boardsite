@@ -1,6 +1,6 @@
 import React from "react"
 import { useCustomSelector } from "redux/hooks"
-import { EraserIcon, IconButton, SelectIcon } from "components"
+import { EraserIcon, IconButton, PanIcon, SelectIcon } from "components"
 import store from "redux/store"
 import { ToolType } from "drawing/stroke/types"
 import { SET_TYPE } from "redux/slice/drawcontrol"
@@ -15,24 +15,25 @@ const ToolRing: React.FC = () => {
         <>
             <PenTool />
             <IconButton
+                active={typeSelector === ToolType.Eraser}
                 onClick={() => {
                     store.dispatch(SET_TYPE(ToolType.Eraser))
                 }}>
-                <EraserIcon
-                    stroke={
-                        typeSelector === ToolType.Eraser ? "black" : undefined
-                    }
-                />
+                <EraserIcon />
             </IconButton>
             <IconButton
+                active={typeSelector === ToolType.Select}
                 onClick={() => {
                     store.dispatch(SET_TYPE(ToolType.Select))
                 }}>
-                <SelectIcon
-                    stroke={
-                        typeSelector === ToolType.Select ? "black" : undefined
-                    }
-                />
+                <SelectIcon />
+            </IconButton>
+            <IconButton
+                active={typeSelector === ToolType.Pan}
+                onClick={() => {
+                    store.dispatch(SET_TYPE(ToolType.Pan))
+                }}>
+                <PanIcon />
             </IconButton>
         </>
     )

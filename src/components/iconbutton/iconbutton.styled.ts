@@ -4,7 +4,6 @@ interface Props {
     $active?: boolean
     $background?: string
 }
-
 export const StyledIconButton = styled.button<Props>`
     cursor: pointer;
     display: flex;
@@ -17,28 +16,41 @@ export const StyledIconButton = styled.button<Props>`
     outline: none;
     border: none;
     border-radius: var(--button-border-radius);
-    color: ${({ $active }) => ($active ? "var(--color7)" : "var(--color1)")};
     ${({ $background }) =>
-        $background ? withBackgroundStyle($background) : noBackgroundStyle};
+        $background ? withBackground($background) : noBackground};
 
+    /* color for non custom svgs */
+    color: var(--color1);
     svg {
         transition: all 100ms ease-in-out;
         height: 80%;
         width: 80%;
     }
-    &:hover {
-        svg {
-            height: 100%;
-            width: 100%;
-        }
-    }
+
+    ${({ $active }) => ($active ? active : inactive)};
 `
 
-const noBackgroundStyle = css`
+const noBackground = css`
     background: none;
+    box-shadow: none;
 `
-
-const withBackgroundStyle = ($background: string) => css`
+const withBackground = ($background: string) => css`
     background: ${$background};
     box-shadow: var(--box-shadow);
+`
+
+const active = css`
+    background: var(--color8);
+    box-shadow: inset 0 0 0.1rem 0 var(--color7), 0 0 0.5rem 0 var(--color7);
+    svg {
+        stroke: var(--color7);
+    }
+`
+const inactive = css`
+    &:hover {
+        svg {
+            height: 95%;
+            width: 95%;
+        }
+    }
 `

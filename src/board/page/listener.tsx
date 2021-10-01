@@ -4,6 +4,7 @@ import * as types from "konva/types/shapes/Rect"
 import { KonvaEventObject } from "konva/types/Node"
 import { Stage } from "konva/types/Stage"
 import { Vector2d } from "konva/types/types"
+import { ToolType } from "drawing/stroke/types"
 import store from "../../redux/store"
 import * as actions from "../../drawing/stroke/actions"
 import { SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
@@ -106,7 +107,9 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
         ref.current?.cache()
     }, [])
 
-    const isPanMode = useCustomSelector((state) => state.drawControl.isPanMode)
+    const isPanMode = useCustomSelector(
+        (state) => state.drawControl.liveStroke.type === ToolType.Pan
+    )
 
     return (
         <Rect

@@ -31,6 +31,7 @@ export enum ToolType {
     Circle,
     Rectangle,
     Select,
+    Pan,
 }
 
 export interface Tool {

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { FC } from "react"
 import {
     StyledCircle,
     StyledDownload,
@@ -20,58 +20,43 @@ import {
 } from "./index.styled"
 
 export interface IconProps {
-    id?: string
     stroke?: string
-    active?: boolean
+    id?: string
 }
-export const EraserIcon: React.FC<IconProps> = ({ stroke, active }) => (
-    <StyledEraser $stroke={stroke} $active={active} />
-)
-export const PenIcon: React.FC<IconProps> = ({ stroke, active }) => (
-    <StyledPen $stroke={stroke} $active={active} />
-)
-export const SelectIcon: React.FC<IconProps> = ({ stroke, active }) => (
-    <StyledSelect $stroke={stroke} $active={active} />
-)
-export const LineIcon: React.FC<IconProps> = ({ stroke, active }) => (
-    <StyledLine $stroke={stroke} $active={active} />
-)
-export const CircleIcon: React.FC<IconProps> = ({ stroke, active }) => (
-    <StyledCircle $stroke={stroke} $active={active} />
-)
-export const SquareIcon: React.FC<IconProps> = ({ stroke, active }) => (
-    <StyledSquare $stroke={stroke} $active={active} />
-)
-export const PlusIcon: React.FC<IconProps> = ({ stroke, active }) => (
-    <StyledPlus $stroke={stroke} $active={active} />
-)
-export const MinusIcon: React.FC<IconProps> = ({ stroke, active }) => (
-    <StyledMinus $stroke={stroke} $active={active} />
-)
-export const ExpandIcon: React.FC<IconProps> = ({ stroke, active }) => (
-    <StyledExpand $stroke={stroke} $active={active} />
-)
-export const ShrinkIcon: React.FC<IconProps> = ({ stroke, active }) => (
-    <StyledShrink $stroke={stroke} $active={active} />
-)
-export const PanIcon: React.FC<IconProps> = ({ stroke, active }) => (
-    <StyledPan $stroke={stroke} $active={active} />
-)
-export const ZoomInIcon: React.FC<IconProps> = ({ stroke, active }) => (
-    <StyledZoomIn $stroke={stroke} $active={active} />
-)
-export const ZoomOutIcon: React.FC<IconProps> = ({ stroke, active }) => (
-    <StyledZoomOut $stroke={stroke} $active={active} />
-)
-export const UndoIcon: React.FC<IconProps> = ({ stroke, active }) => (
-    <StyledUndo $stroke={stroke} $active={active} />
-)
-export const RedoIcon: React.FC<IconProps> = ({ stroke, active }) => (
-    <StyledRedo $stroke={stroke} $active={active} />
-)
-export const DownloadIcon: React.FC<IconProps> = ({ stroke, active }) => (
-    <StyledDownload $stroke={stroke} $active={active} />
-)
-export const UploadIcon: React.FC<IconProps> = ({ stroke, active, id }) => (
-    <StyledUpload $stroke={stroke} $active={active} id={id} />
-)
+const EraserIcon: FC<IconProps> = (props) => <StyledEraser {...props} />
+const PenIcon: FC<IconProps> = (props) => <StyledPen {...props} />
+const SelectIcon: FC<IconProps> = (props) => <StyledSelect {...props} />
+const LineIcon: FC<IconProps> = (props) => <StyledLine {...props} />
+const CircleIcon: FC<IconProps> = (props) => <StyledCircle {...props} />
+const SquareIcon: FC<IconProps> = (props) => <StyledSquare {...props} />
+const PlusIcon: FC<IconProps> = (props) => <StyledPlus {...props} />
+const MinusIcon: FC<IconProps> = (props) => <StyledMinus {...props} />
+const ExpandIcon: FC<IconProps> = (props) => <StyledExpand {...props} />
+const ShrinkIcon: FC<IconProps> = (props) => <StyledShrink {...props} />
+const PanIcon: FC<IconProps> = (props) => <StyledPan {...props} />
+const ZoomInIcon: FC<IconProps> = (props) => <StyledZoomIn {...props} />
+const ZoomOutIcon: FC<IconProps> = (props) => <StyledZoomOut {...props} />
+const UndoIcon: FC<IconProps> = (props) => <StyledUndo {...props} />
+const RedoIcon: FC<IconProps> = (props) => <StyledRedo {...props} />
+const DownloadIcon: FC<IconProps> = (props) => <StyledDownload {...props} />
+const UploadIcon: FC<IconProps> = (props) => <StyledUpload {...props} />
+
+export {
+    EraserIcon,
+    PenIcon,
+    SelectIcon,
+    LineIcon,
+    CircleIcon,
+    SquareIcon,
+    PlusIcon,
+    MinusIcon,
+    ExpandIcon,
+    ShrinkIcon,
+    PanIcon,
+    ZoomInIcon,
+    ZoomOutIcon,
+    UndoIcon,
+    RedoIcon,
+    DownloadIcon,
+    UploadIcon,
+}
