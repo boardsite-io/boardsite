@@ -1,17 +1,18 @@
 import styled from "styled-components"
 
 export const PageOptionsWrapper = styled.div`
-    display: flex;
+    position: relative;
     height: var(--button-height);
     gap: var(--button-gap);
 `
 
 export const PageOptionsWrapperInner = styled.div`
     position: absolute;
-    top: 3rem;
-    left: 0;
+    top: 1rem;
+    /* compensate menu padding to align left icon with icon above */
+    left: calc(-1 * var(--menu-padding));
     display: flex;
-    padding: 0.2rem 0rem;
+    padding: var(--menu-padding);
     border-radius: var(--menubar-border-radius);
     background: var(--color2);
 `
