@@ -46,13 +46,21 @@ const PageOptions: React.FC = () => {
 
     const handleWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const widthValue = parseInt(e.target.value, 10)
-        if (widthValue <= MAX_PAGE_WIDTH && widthValue >= MIN_PAGE_WIDTH) {
+        if (widthValue > MAX_PAGE_WIDTH) {
+            e.target.value = MAX_PAGE_WIDTH.toString()
+        } else if (widthValue < MIN_PAGE_WIDTH) {
+            // do something
+        } else {
             dispatch(SET_PAGE_WIDTH(parseInt(e.target.value, 10)))
         }
     }
     const handleHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const heightValue = parseInt(e.target.value, 10)
-        if (heightValue <= MAX_PAGE_HEIGHT && heightValue >= MIN_PAGE_HEIGHT) {
+        if (heightValue > MAX_PAGE_HEIGHT) {
+            e.target.value = MAX_PAGE_HEIGHT.toString()
+        } else if (heightValue < MIN_PAGE_HEIGHT) {
+            // do something
+        } else {
             dispatch(SET_PAGE_HEIGHT(parseInt(e.target.value, 10)))
         }
     }
@@ -65,13 +73,13 @@ const PageOptions: React.FC = () => {
             <Drawer position="right" open={open} onClose={close}>
                 <DrawerTitle>
                     <BsGear />
-                    Page Background
+                    Page Settings
                 </DrawerTitle>
                 <DrawerContent>
                     <Background setOpenOther={setOpen} />
                     <NumberInput
                         label="Width"
-                        value={pageWidth}
+                        placeholder={pageWidth.toString()}
                         onChange={handleWidthChange}
                         step={1}
                         min={MIN_PAGE_WIDTH}
@@ -79,7 +87,7 @@ const PageOptions: React.FC = () => {
                     />
                     <NumberInput
                         label="Height"
-                        value={pageHeight}
+                        placeholder={pageHeight.toString()}
                         onChange={handleHeightChange}
                         step={1}
                         min={MIN_PAGE_HEIGHT}
@@ -88,7 +96,7 @@ const PageOptions: React.FC = () => {
                 </DrawerContent>
                 <DrawerTitle>
                     <BsFileDiff />
-                    Page Options
+                    Page Actions
                 </DrawerTitle>
                 <DrawerContent>
                     <Button

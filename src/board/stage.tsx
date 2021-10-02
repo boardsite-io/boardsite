@@ -181,8 +181,8 @@ const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
         <>
             <Layer key={pageId}>
                 <PageBackground {...props} />
-                <PageListener {...props} />
                 <PageContent {...props} />
+                <PageListener {...props} />
             </Layer>
             <Layer draggable={false} listening={false}>
                 <LiveStrokeShape />
