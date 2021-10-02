@@ -1,6 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { Stroke } from "drawing/stroke/types"
-import { pageType } from "../../constants"
+import {
+    DEFAULT_PAGE_HEIGHT,
+    DEFAULT_PAGE_WIDTH,
+    pageType,
+} from "../../constants"
 import {
     DocumentImage,
     Page,
@@ -13,15 +17,23 @@ export interface BoardControlState {
     pageCollection: PageCollection
     document: DocumentImage[]
     documentSrc: string | Uint8Array
-    pageBG: PageBackground
+    pageSettings: {
+        background: PageBackground // default,
+        width: number
+        height: number
+    }
 }
 
 const initState: BoardControlState = {
     pageRank: [],
     pageCollection: {},
-    document: [] as DocumentImage[],
+    document: [],
     documentSrc: "",
-    pageBG: pageType.BLANK as PageBackground, // default
+    pageSettings: {
+        background: pageType.BLANK, // default,
+        width: DEFAULT_PAGE_WIDTH,
+        height: DEFAULT_PAGE_HEIGHT,
+    },
 }
 
 const boardControlSlice = createSlice({
@@ -45,12 +57,21 @@ const boardControlSlice = createSlice({
             state.pageCollection[pageId]?.updateMeta(meta)
         },
 
-        SET_PAGEBG: (state, action) => {
+        SET_PAGE_BACKGROUND: (state, action) => {
             const style = action.payload
-            state.pageBG = style
+            state.pageSettings.background = style
         },
 
-        // Add a new page
+        SET_PAGE_WIDTH: (state, action) => {
+            const width = action.payload
+            state.pageSettings.width = width
+        },
+
+        SET_PAGE_HEIGHT: (state, action) => {
+            const height = action.payload
+            state.pageSettings.height = height
+        },
+
         ADD_PAGE: (state, action) => {
             const { page, index } = action.payload as {
                 page: Page
@@ -64,20 +85,17 @@ const boardControlSlice = createSlice({
             }
         },
 
-        // Clear page
         CLEAR_PAGE: (state, action) => {
             const pageId = action.payload
             state.pageCollection[pageId]?.clear()
         },
 
-        // Delete page
         DELETE_PAGE: (state, action) => {
             const pageId = action.payload
             delete state.pageCollection[pageId]
             state.pageRank.splice(state.pageRank.indexOf(pageId), 1)
         },
 
-        // Delete all pages
         DELETE_ALL_PAGES: (state) => {
             state.pageRank = []
             state.pageCollection = {}
@@ -137,7 +155,9 @@ export const {
     ERASE_STROKES,
     UPDATE_STROKES,
     SET_PDF,
-    SET_PAGEBG,
+    SET_PAGE_BACKGROUND,
+    SET_PAGE_HEIGHT,
+    SET_PAGE_WIDTH,
 } = boardControlSlice.actions
 
 export default boardControlSlice.reducer

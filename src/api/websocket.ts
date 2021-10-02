@@ -125,7 +125,7 @@ function syncPages({ pageRank, meta }: ResponsePageSync) {
             newPageCollection[pid] = pageCollection[pid]
         } else {
             newPageCollection[pid] = new BoardPage(
-                store.getState().boardControl.pageBG
+                store.getState().boardControl.pageSettings.background
             ).setID(pid)
         }
     })

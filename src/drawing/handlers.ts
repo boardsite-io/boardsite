@@ -12,8 +12,8 @@ import {
     CLEAR_PAGE,
     DELETE_PAGE,
     DELETE_ALL_PAGES,
-    SET_PAGEBG,
     SET_PAGEMETA,
+    SET_PAGE_BACKGROUND,
 } from "../redux/slice/boardcontrol"
 
 import store from "../redux/store"
@@ -94,7 +94,7 @@ export function handleRedo(): void {
 
 export function handlePageBackground(style: PageBackground): void {
     // update the default page type
-    store.dispatch(SET_PAGEBG(style))
+    store.dispatch(SET_PAGE_BACKGROUND(style))
 
     // cannot update background of doc type
     if (getCurrentPage().meta.background.style === pageType.DOC) {

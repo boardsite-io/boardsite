@@ -23,7 +23,9 @@ export class BoardPage implements Page {
         this.pageId = nanoid(8)
         this.meta = {
             background: {
-                style: style ?? store.getState().boardControl.pageBG, // fallback type
+                style:
+                    style ??
+                    store.getState().boardControl.pageSettings.background, // fallback type
                 attachId: attachId ?? "",
                 documentPageNum: pageNum ?? 0,
             },

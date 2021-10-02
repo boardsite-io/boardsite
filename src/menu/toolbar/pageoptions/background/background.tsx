@@ -1,34 +1,37 @@
 import React from "react"
 import { handlePageBackground } from "drawing/handlers"
-import {
-    PageOptions,
-    PagePreviewBlank,
-    PagePreviewCheckered,
-    PagePreviewRuled,
-} from "./background.styled"
+import { useCustomSelector } from "redux/hooks"
+import { Backgrounds, Blank, Checkered, Ruled } from "./background.styled"
 import { pageType } from "../../../../constants"
 
 interface PageBackgroundProps {
     setOpenOther: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const PageBackgrounds: React.FC<PageBackgroundProps> = () => (
-    <>
-        <PageOptions>
-            <PagePreviewBlank
+const PageBackgrounds: React.FC<PageBackgroundProps> = () => {
+    const { background } = useCustomSelector(
+        (state) => state.boardControl.pageSettings
+    )
+
+    return (
+        <Backgrounds>
+            <Blank
+                $active={background === pageType.BLANK}
                 type="button"
                 onClick={() => handlePageBackground(pageType.BLANK)}
             />
-            <PagePreviewCheckered
+            <Checkered
+                $active={background === pageType.CHECKERED}
                 type="button"
                 onClick={() => handlePageBackground(pageType.CHECKERED)}
             />
-            <PagePreviewRuled
+            <Ruled
+                $active={background === pageType.RULED}
                 type="button"
                 onClick={() => handlePageBackground(pageType.RULED)}
             />
-        </PageOptions>
-    </>
-)
+        </Backgrounds>
+    )
+}
 
 export default PageBackgrounds
