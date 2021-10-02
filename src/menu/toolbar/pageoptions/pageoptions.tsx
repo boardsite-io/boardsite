@@ -5,6 +5,7 @@ import {
     Drawer,
     DrawerContent,
     DrawerTitle,
+    NumberInput,
 } from "components"
 import {
     BsFileMinus,
@@ -15,6 +16,8 @@ import {
     BsFileDiff,
     BsGear,
 } from "react-icons/bs"
+import { useCustomDispatch, useCustomSelector } from "redux/hooks"
+import { SET_PAGE_HEIGHT, SET_PAGE_WIDTH } from "redux/slice/boardcontrol"
 import Background from "./background/background"
 import IconButton from "../../../components/iconbutton/iconbutton"
 import {
@@ -28,8 +31,31 @@ import {
 import UploadPDFButton from "../uploadpdf/uploadPDF"
 
 const PageOptions: React.FC = () => {
+    const dispatch = useCustomDispatch()
     const [open, setOpen] = useState(false)
     const close = () => setOpen(false)
+    const { width: pageWidth, height: pageHeight } = useCustomSelector(
+        (state) => state.boardControl.pageSettings
+    )
+
+    const minWidth = 1
+    const maxWidth = 1000
+    const minHeight = 1
+    const maxHeight = 2000
+
+    const handleWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const widthValue = parseInt(e.target.value, 10)
+        if (widthValue <= maxWidth && widthValue >= minWidth) {
+            dispatch(SET_PAGE_WIDTH(e.target.value))
+        }
+    }
+    const handleHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const heightValue = parseInt(e.target.value, 10)
+        if (heightValue <= maxHeight && heightValue >= minHeight) {
+            dispatch(SET_PAGE_HEIGHT(e.target.value))
+        }
+    }
+
     return (
         <>
             <IconButton onClick={() => setOpen(true)}>
@@ -42,6 +68,20 @@ const PageOptions: React.FC = () => {
                 </DrawerTitle>
                 <DrawerContent>
                     <Background setOpenOther={setOpen} />
+                    <NumberInput
+                        value={pageWidth}
+                        onChange={handleWidthChange}
+                        step={1}
+                        min={minWidth}
+                        max={maxWidth}
+                    />
+                    <NumberInput
+                        value={pageHeight}
+                        onChange={handleHeightChange}
+                        step={1}
+                        min={minHeight}
+                        max={maxHeight}
+                    />
                 </DrawerContent>
                 <DrawerTitle>
                     <BsFileDiff />
