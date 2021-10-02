@@ -142,16 +142,26 @@ const boardControlSlice = createSlice({
             state.documentSrc = documentSrc
         },
         JUMP_TO_NEXT_PAGE: (state) => {
-            state.currentPageIndex += 1
+            if (state.currentPageIndex < state.pageRank.length - 1) {
+                state.currentPageIndex += 1
+            }
         },
         JUMP_TO_PREV_PAGE: (state) => {
-            state.currentPageIndex -= 1
+            if (state.currentPageIndex > 0) {
+                state.currentPageIndex -= 1
+            }
         },
         JUMP_TO_FIRST_PAGE: (state) => {
             state.currentPageIndex = 0
         },
+        JUMP_TO_LAST_PAGE: (state) => {
+            state.currentPageIndex = state.pageRank.length - 1
+        },
         JUMP_PAGE_WITH_INDEX: (state, action) => {
-            state.currentPageIndex = action.payload
+            const targetIndex = action.payload
+            if (targetIndex <= state.pageRank.length - 1 && targetIndex >= 0) {
+                state.currentPageIndex = targetIndex
+            }
         },
     },
 })
@@ -174,6 +184,7 @@ export const {
     JUMP_TO_NEXT_PAGE,
     JUMP_TO_PREV_PAGE,
     JUMP_TO_FIRST_PAGE,
+    JUMP_TO_LAST_PAGE,
     JUMP_PAGE_WITH_INDEX,
 } = boardControlSlice.actions
 

@@ -7,8 +7,8 @@ import {
 } from "react-icons/cg"
 import { IconButton } from "components"
 import {
-    JUMP_PAGE_WITH_INDEX,
     JUMP_TO_FIRST_PAGE,
+    JUMP_TO_LAST_PAGE,
     JUMP_TO_NEXT_PAGE,
     JUMP_TO_PREV_PAGE,
 } from "redux/slice/boardcontrol"
@@ -22,16 +22,10 @@ import {
 } from "./viewnavigation.styled"
 
 const ViewNavigation: React.FC = () => {
-    const { currentPageIndex } = useCustomSelector(
+    const { currentPageIndex, pageRank } = useCustomSelector(
         (state) => state.boardControl
     )
     const { hideNavBar } = useCustomSelector((state) => state.viewControl)
-    const numPages = useCustomSelector(
-        (state) => state.boardControl.pageRank.length
-    )
-    const goToLastPage = () => {
-        store.dispatch(JUMP_PAGE_WITH_INDEX(numPages - 1))
-    }
 
     return hideNavBar ? null : (
         <ViewNavWrapper>
@@ -45,12 +39,12 @@ const ViewNavigation: React.FC = () => {
                 onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
                 <PageIndex>{currentPageIndex + 1}</PageIndex>
                 <PageIndexHr />
-                <PageIndex>{numPages}</PageIndex>
+                <PageIndex>{pageRank.length}</PageIndex>
             </IconButtonPageIndex>
             <IconButton onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE())}>
                 <CgChevronDown id="icon" />
             </IconButton>
-            <IconButton onClick={goToLastPage}>
+            <IconButton onClick={() => store.dispatch(JUMP_TO_LAST_PAGE())}>
                 <CgPushChevronDown id="icon" />
             </IconButton>
         </ViewNavWrapper>
