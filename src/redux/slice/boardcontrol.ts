@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { Stroke } from "drawing/stroke/types"
 import {
+    DEFAULT_CURRENT_PAGE_INDEX,
     DEFAULT_PAGE_HEIGHT,
     DEFAULT_PAGE_WIDTH,
     pageType,
@@ -13,6 +14,7 @@ import {
 } from "../../types"
 
 export interface BoardControlState {
+    currentPageIndex: number
     pageRank: string[]
     pageCollection: PageCollection
     document: DocumentImage[]
@@ -25,6 +27,7 @@ export interface BoardControlState {
 }
 
 const initState: BoardControlState = {
+    currentPageIndex: DEFAULT_CURRENT_PAGE_INDEX,
     pageRank: [],
     pageCollection: {},
     document: [],
@@ -62,14 +65,12 @@ const boardControlSlice = createSlice({
             state.pageSettings.background = style
         },
 
-        SET_PAGE_WIDTH: (state, action) => {
-            const width = action.payload
-            state.pageSettings.width = width
+        SET_PAGE_WIDTH: (state, action: { payload: number }) => {
+            state.pageSettings.width = action.payload
         },
 
-        SET_PAGE_HEIGHT: (state, action) => {
-            const height = action.payload
-            state.pageSettings.height = height
+        SET_PAGE_HEIGHT: (state, action: { payload: number }) => {
+            state.pageSettings.height = action.payload
         },
 
         ADD_PAGE: (state, action) => {
@@ -140,6 +141,18 @@ const boardControlSlice = createSlice({
             state.document = pageImages
             state.documentSrc = documentSrc
         },
+        JUMP_TO_NEXT_PAGE: (state) => {
+            state.currentPageIndex += 1
+        },
+        JUMP_TO_PREV_PAGE: (state) => {
+            state.currentPageIndex -= 1
+        },
+        JUMP_TO_FIRST_PAGE: (state) => {
+            state.currentPageIndex = 0
+        },
+        JUMP_PAGE_WITH_INDEX: (state, action) => {
+            state.currentPageIndex = action.payload
+        },
     },
 })
 
@@ -158,6 +171,10 @@ export const {
     SET_PAGE_BACKGROUND,
     SET_PAGE_HEIGHT,
     SET_PAGE_WIDTH,
+    JUMP_TO_NEXT_PAGE,
+    JUMP_TO_PREV_PAGE,
+    JUMP_TO_FIRST_PAGE,
+    JUMP_PAGE_WITH_INDEX,
 } = boardControlSlice.actions
 
 export default boardControlSlice.reducer

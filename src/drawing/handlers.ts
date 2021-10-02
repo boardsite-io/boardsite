@@ -14,6 +14,7 @@ import {
     DELETE_ALL_PAGES,
     SET_PAGEMETA,
     SET_PAGE_BACKGROUND,
+    JUMP_TO_NEXT_PAGE,
 } from "../redux/slice/boardcontrol"
 
 import store from "../redux/store"
@@ -30,7 +31,7 @@ import {
 
 export function handleAddPageOver(): void {
     const page = new BoardPage()
-    const index = store.getState().viewControl.currentPageIndex
+    const index = store.getState().boardControl.currentPageIndex
     if (isConnected()) {
         addPagesSession([page], [index])
     } else {
@@ -40,12 +41,13 @@ export function handleAddPageOver(): void {
 
 export function handleAddPageUnder(): void {
     const page = new BoardPage()
-    const index = store.getState().viewControl.currentPageIndex + 1
+    const index = store.getState().boardControl.currentPageIndex + 1
     if (isConnected()) {
         addPagesSession([page], [index])
     } else {
         page.add(index)
     }
+    store.dispatch(JUMP_TO_NEXT_PAGE())
 }
 
 export function handleClearPage(): void {
@@ -157,14 +159,14 @@ export async function handleExportDocument(): Promise<void> {
 
 function getCurrentPageId() {
     return store.getState().boardControl.pageRank[
-        store.getState().viewControl.currentPageIndex
+        store.getState().boardControl.currentPageIndex
     ]
 }
 
 function getCurrentPage() {
     return store.getState().boardControl.pageCollection[
         store.getState().boardControl.pageRank[
-            store.getState().viewControl.currentPageIndex
+            store.getState().boardControl.currentPageIndex
         ]
     ]
 }

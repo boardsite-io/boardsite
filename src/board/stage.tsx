@@ -1,11 +1,11 @@
 import React, { useEffect, memo } from "react"
 import { ReactReduxContext, ReactReduxContextValue } from "react-redux"
-import { createSelector } from "reselect"
 import { Stage, Layer } from "react-konva"
 import { Vector2d } from "konva/types/types"
 import { KonvaEventObject } from "konva/types/Node"
 import { ToolType } from "drawing/stroke/types"
-import { getPageIndex } from "drawing/stroke/actions"
+import { getPageMeta } from "drawing/stroke/actions"
+import { createSelector } from "reselect"
 import {
     CENTER_VIEW,
     ON_WINDOW_RESIZE,
@@ -17,13 +17,7 @@ import {
     MULTI_TOUCH_END,
 } from "../redux/slice/viewcontrol"
 import { LiveStrokeShape } from "./stroke/shape"
-import {
-    ZOOM_IN_WHEEL_SCALE,
-    ZOOM_OUT_WHEEL_SCALE,
-    CANVAS_WIDTH,
-    CANVAS_FULL_HEIGHT,
-    CANVAS_HEIGHT,
-} from "../constants"
+import { ZOOM_IN_WHEEL_SCALE, ZOOM_OUT_WHEEL_SCALE } from "../constants"
 import store, { RootState } from "../redux/store"
 import { useCustomSelector } from "../redux/hooks"
 import StrokeTransformer from "./transformer"
@@ -160,40 +154,36 @@ export default BoardStage
 
 // all pages and content are in this component
 const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
+    // Only rerender on page change
     const pageCreateSelector = createSelector(
+        (state: RootState) => state.boardControl.currentPageIndex,
         (state: RootState) => state.boardControl.pageRank,
-        (state: RootState) => state.viewControl.currentPageIndex,
-        (pageRank, currentPageIndex) => {
-            const minPage = currentPageIndex - 1 // Get min page candidate
-            const maxPage = currentPageIndex + 1 // Get max page candidate
-            const startPage = Math.max(minPage, 0) // Set start page index to candidate or to 0 if negative index
-            const endPage = Math.min(maxPage + 1, pageRank.length) // Set end page index; +1 because of slice indexing
-            const pageSlice = pageRank.slice(startPage, endPage)
-            return pageSlice
-        }
+        (currentPageIndex, pageRank) => pageRank[currentPageIndex]
     )
-    const pageSlice = useCustomSelector(pageCreateSelector)
+    const pageId = useCustomSelector(pageCreateSelector)
+
+    if (pageId === undefined) {
+        return null
+    }
+
+    const meta = getPageMeta(pageId)
+    const props = {
+        pageId,
+        pageSize: {
+            height: meta.height,
+            width: meta.width,
+            x: -meta.width / 2,
+            y: 0,
+        },
+    }
 
     return (
         <>
-            {pageSlice.map((pageId: string) => {
-                const props = {
-                    pageId,
-                    pageSize: {
-                        height: CANVAS_HEIGHT,
-                        width: CANVAS_WIDTH,
-                        x: -CANVAS_WIDTH / 2,
-                        y: CANVAS_FULL_HEIGHT * getPageIndex(pageId),
-                    },
-                }
-                return (
-                    <Layer key={pageId}>
-                        <PageBackground {...props} />
-                        <PageListener {...props} />
-                        <PageContent {...props} />
-                    </Layer>
-                )
-            })}
+            <Layer key={pageId}>
+                <PageBackground {...props} />
+                <PageListener {...props} />
+                <PageContent {...props} />
+            </Layer>
             <Layer draggable={false} listening={false}>
                 <LiveStrokeShape />
             </Layer>

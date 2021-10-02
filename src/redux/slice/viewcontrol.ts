@@ -4,9 +4,7 @@ import {
     DEFAULT_STAGE_X,
     DEFAULT_STAGE_Y,
     DEFAULT_STAGE_SCALE,
-    DEFAULT_CURRENT_PAGE_INDEX,
     CANVAS_WIDTH,
-    CANVAS_FULL_HEIGHT,
     ZOOM_SCALE_MAX,
     ZOOM_SCALE_MIN,
     ZOOM_IN_BUTTON_SCALE,
@@ -27,7 +25,6 @@ interface ViewControlState {
     stageX: number
     stageY: number
     stageScale: Point
-    currentPageIndex: number
 }
 
 const initState: ViewControlState = {
@@ -38,7 +35,6 @@ const initState: ViewControlState = {
     stageX: DEFAULT_STAGE_X,
     stageY: DEFAULT_STAGE_Y,
     stageScale: DEFAULT_STAGE_SCALE,
-    currentPageIndex: DEFAULT_CURRENT_PAGE_INDEX,
 }
 
 const viewControlSlice = createSlice({
@@ -88,10 +84,9 @@ const viewControlSlice = createSlice({
             lastDist = dist
             lastCenter = newCenter
         },
-        MULTI_TOUCH_END: (state) => {
+        MULTI_TOUCH_END: () => {
             lastDist = 0
             lastCenter = null
-            updateCurrentPageIndex(state)
         },
         RESET_VIEW: (state) => {
             const oldScale = state.stageScale.y
@@ -111,11 +106,9 @@ const viewControlSlice = createSlice({
         },
         SET_STAGE_Y: (state, action) => {
             state.stageY = action.payload
-            updateCurrentPageIndex(state)
         },
         SCROLL_STAGE_Y: (state, action) => {
             state.stageY -= action.payload
-            updateCurrentPageIndex(state)
         },
         SET_STAGE_SCALE: (state, action) => {
             state.stageScale = action.payload
@@ -146,18 +139,6 @@ const viewControlSlice = createSlice({
             }
             zoomToPointWithScale(state, centerOfScreen, ZOOM_OUT_BUTTON_SCALE)
         },
-        JUMP_TO_NEXT_PAGE: (state) => {
-            goToPage(state, state.currentPageIndex + 1)
-        },
-        JUMP_TO_PREV_PAGE: (state) => {
-            goToPage(state, state.currentPageIndex - 1)
-        },
-        JUMP_TO_FIRST_PAGE: (state) => {
-            goToPage(state, 0)
-        },
-        JUMP_PAGE_WITH_INDEX: (state, action) => {
-            goToPage(state, action.payload)
-        },
     },
 })
 
@@ -177,18 +158,8 @@ export const {
     ZOOM_TO,
     ZOOM_IN_CENTER,
     ZOOM_OUT_CENTER,
-    JUMP_TO_NEXT_PAGE,
-    JUMP_TO_PREV_PAGE,
-    JUMP_TO_FIRST_PAGE,
-    JUMP_PAGE_WITH_INDEX,
 } = viewControlSlice.actions
 export default viewControlSlice.reducer
-
-function goToPage(state: ViewControlState, pageIndex: number) {
-    state.currentPageIndex = pageIndex
-    state.stageY = -pageIndex * CANVAS_FULL_HEIGHT * state.stageScale.x
-    centerView(state)
-}
 
 function centerView(state: ViewControlState) {
     if (state.stageWidth >= CANVAS_WIDTH * state.stageScale.x) {
@@ -240,12 +211,6 @@ function zoomToPointWithScale(
     }
 
     state.stageY = zoomPoint.y - mousePointTo.y * newScale
-    updateCurrentPageIndex(state) // check if pageId changed by zooming
-}
-
-function updateCurrentPageIndex(state: ViewControlState) {
-    const canvasY = (state.stageHeight / 2 - state.stageY) / state.stageScale.y
-    state.currentPageIndex = Math.floor(canvasY / CANVAS_FULL_HEIGHT)
 }
 
 /**

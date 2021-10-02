@@ -1,9 +1,6 @@
+import { JUMP_TO_NEXT_PAGE, JUMP_TO_PREV_PAGE } from "redux/slice/boardcontrol"
 import { SET_TYPE } from "../redux/slice/drawcontrol"
 import store from "../redux/store"
-import {
-    JUMP_TO_NEXT_PAGE,
-    JUMP_TO_PREV_PAGE,
-} from "../redux/slice/viewcontrol"
 import { handleRedo, handleUndo } from "../drawing/handlers"
 import { ToolType } from "../drawing/stroke/types"
 

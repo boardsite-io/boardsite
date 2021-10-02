@@ -1,4 +1,5 @@
 import { KonvaEventObject } from "konva/types/Node"
+import { PageMeta } from "types"
 import { LiveStroke, Point, ToolType } from "./types"
 import store from "../../redux/store"
 import {
@@ -121,6 +122,10 @@ export function abortLiveStroke(): void {
 
 export function getPageIndex(pageId: string): number {
     return store.getState().boardControl.pageRank.indexOf(pageId)
+}
+
+export function getPageMeta(pageId: string): PageMeta {
+    return store.getState().boardControl.pageCollection[pageId].meta
 }
 
 // helper function to get current livestroke

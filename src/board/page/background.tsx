@@ -8,8 +8,9 @@ import { useCustomSelector } from "../../redux/hooks"
 import { PageProps } from "./types"
 
 export default memo<PageProps>(({ pageId, pageSize }) => {
+    const page = store.getState().boardControl.pageCollection[pageId]
     // pageId might not be valid anymore, exit then
-    if (!store.getState().boardControl.pageCollection[pageId]) {
+    if (!page) {
         return null
     }
     const ref = useRef<types.Image>(null)

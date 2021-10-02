@@ -7,11 +7,11 @@ import {
 } from "react-icons/cg"
 import { IconButton } from "components"
 import {
+    JUMP_PAGE_WITH_INDEX,
+    JUMP_TO_FIRST_PAGE,
     JUMP_TO_NEXT_PAGE,
     JUMP_TO_PREV_PAGE,
-    JUMP_TO_FIRST_PAGE,
-    JUMP_PAGE_WITH_INDEX,
-} from "../../redux/slice/viewcontrol"
+} from "redux/slice/boardcontrol"
 import store from "../../redux/store"
 import { useCustomSelector } from "../../redux/hooks"
 import {
@@ -22,12 +22,10 @@ import {
 } from "./viewnavigation.styled"
 
 const ViewNavigation: React.FC = () => {
-    const currPageIndex = useCustomSelector(
-        (state) => state.viewControl.currentPageIndex
+    const { currentPageIndex } = useCustomSelector(
+        (state) => state.boardControl
     )
-    const hideNavBar = useCustomSelector(
-        (state) => state.viewControl.hideNavBar
-    )
+    const { hideNavBar } = useCustomSelector((state) => state.viewControl)
     const numPages = useCustomSelector(
         (state) => state.boardControl.pageRank.length
     )
@@ -45,7 +43,7 @@ const ViewNavigation: React.FC = () => {
             </IconButton>
             <IconButtonPageIndex
                 onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
-                <PageIndex>{currPageIndex + 1}</PageIndex>
+                <PageIndex>{currentPageIndex + 1}</PageIndex>
                 <PageIndexHr />
                 <PageIndex>{numPages}</PageIndex>
             </IconButtonPageIndex>

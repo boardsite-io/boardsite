@@ -46,13 +46,13 @@ const PageOptions: React.FC = () => {
     const handleWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const widthValue = parseInt(e.target.value, 10)
         if (widthValue <= maxWidth && widthValue >= minWidth) {
-            dispatch(SET_PAGE_WIDTH(e.target.value))
+            dispatch(SET_PAGE_WIDTH(parseInt(e.target.value, 10)))
         }
     }
     const handleHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const heightValue = parseInt(e.target.value, 10)
         if (heightValue <= maxHeight && heightValue >= minHeight) {
-            dispatch(SET_PAGE_HEIGHT(e.target.value))
+            dispatch(SET_PAGE_HEIGHT(parseInt(e.target.value, 10)))
         }
     }
 
