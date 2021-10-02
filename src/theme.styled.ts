@@ -1,5 +1,14 @@
 import styled from "styled-components"
 
+// eslint-disable-next-line no-shadow
+export enum ScreenSize {
+    Xs = "40rem",
+    Sm = "50rem",
+    Md = "60rem",
+    Lg = "80rem",
+    Xl = "100rem",
+}
+
 export const Theme = styled.div`
     /* Color Overview
         0: Global Background 
