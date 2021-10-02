@@ -88,6 +88,13 @@ const viewControlSlice = createSlice({
             lastDist = 0
             lastCenter = null
         },
+        // use this e.g., on page change
+        INITIAL_VIEW: (state) => {
+            state.stageScale = { x: 1, y: 1 }
+            state.stageX = 0
+            state.stageY = DEFAULT_STAGE_Y
+            centerView(state)
+        },
         RESET_VIEW: (state) => {
             const oldScale = state.stageScale.y
             const newScale = 1
@@ -148,6 +155,7 @@ export const {
     MULTI_TOUCH_MOVE,
     MULTI_TOUCH_END,
     CENTER_VIEW,
+    INITIAL_VIEW,
     RESET_VIEW,
     SET_STAGE_X,
     SET_STAGE_Y,

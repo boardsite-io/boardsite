@@ -1,4 +1,5 @@
 import { Stroke } from "drawing/stroke/types"
+import { INITIAL_VIEW } from "redux/slice/viewcontrol"
 import {
     addPagesSession,
     updatePagesSession,
@@ -37,6 +38,7 @@ export function handleAddPageOver(): void {
     } else {
         page.add(index)
     }
+    store.dispatch(INITIAL_VIEW())
 }
 
 export function handleAddPageUnder(): void {
@@ -48,6 +50,7 @@ export function handleAddPageUnder(): void {
         page.add(index)
     }
     store.dispatch(JUMP_TO_NEXT_PAGE())
+    store.dispatch(INITIAL_VIEW())
 }
 
 export function handleClearPage(): void {

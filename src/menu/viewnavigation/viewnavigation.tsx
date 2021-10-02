@@ -12,6 +12,7 @@ import {
     JUMP_TO_NEXT_PAGE,
     JUMP_TO_PREV_PAGE,
 } from "redux/slice/boardcontrol"
+import { INITIAL_VIEW } from "redux/slice/viewcontrol"
 import store from "../../redux/store"
 import { useCustomSelector } from "../../redux/hooks"
 import {
@@ -21,6 +22,23 @@ import {
     IconButtonPageIndex,
 } from "./viewnavigation.styled"
 
+const firstPage = () => {
+    store.dispatch(JUMP_TO_FIRST_PAGE())
+    store.dispatch(INITIAL_VIEW())
+}
+const previousPage = () => {
+    store.dispatch(JUMP_TO_PREV_PAGE())
+    store.dispatch(INITIAL_VIEW())
+}
+const nextPage = () => {
+    store.dispatch(JUMP_TO_NEXT_PAGE())
+    store.dispatch(INITIAL_VIEW())
+}
+const lastPage = () => {
+    store.dispatch(JUMP_TO_LAST_PAGE())
+    store.dispatch(INITIAL_VIEW())
+}
+
 const ViewNavigation: React.FC = () => {
     const { currentPageIndex, pageRank } = useCustomSelector(
         (state) => state.boardControl
@@ -29,22 +47,21 @@ const ViewNavigation: React.FC = () => {
 
     return hideNavBar ? null : (
         <ViewNavWrapper>
-            <IconButton onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
+            <IconButton onClick={firstPage}>
                 <CgPushChevronUp id="icon" />
             </IconButton>
-            <IconButton onClick={() => store.dispatch(JUMP_TO_PREV_PAGE())}>
+            <IconButton onClick={previousPage}>
                 <CgChevronUp id="icon" />
             </IconButton>
-            <IconButtonPageIndex
-                onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
+            <IconButtonPageIndex onClick={firstPage}>
                 <PageIndex>{currentPageIndex + 1}</PageIndex>
                 <PageIndexHr />
                 <PageIndex>{pageRank.length}</PageIndex>
             </IconButtonPageIndex>
-            <IconButton onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE())}>
+            <IconButton onClick={nextPage}>
                 <CgChevronDown id="icon" />
             </IconButton>
-            <IconButton onClick={() => store.dispatch(JUMP_TO_LAST_PAGE())}>
+            <IconButton onClick={lastPage}>
                 <CgPushChevronDown id="icon" />
             </IconButton>
         </ViewNavWrapper>
