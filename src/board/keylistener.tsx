@@ -6,46 +6,37 @@ import { ToolType } from "../drawing/stroke/types"
 
 export default function keyListener(e: KeyboardEvent): void {
     switch (e.key) {
-        case "ArrowUp": // Previous Page
+        case "ArrowUp":
             store.dispatch(JUMP_TO_PREV_PAGE())
             break
-        case "ArrowDown": // Next Page
+        case "ArrowLeft":
+            store.dispatch(JUMP_TO_PREV_PAGE())
+            break
+        case "ArrowDown":
             store.dispatch(JUMP_TO_NEXT_PAGE())
             break
-        // case "ArrowLeft": // ???
-        //     store.dispatch(FUNC())
-        //     break
-        // case "ArrowRight": // ???
-        //     store.dispatch(FUNC())
-        //     break
-        case "p": // Pen
+        case "ArrowRight":
+            store.dispatch(JUMP_TO_NEXT_PAGE())
+            break
+        case "1":
             store.dispatch(SET_TYPE(ToolType.Pen))
             break
-        case "1": // Pen
-            store.dispatch(SET_TYPE(ToolType.Pen))
-            break
-        case "e": // Eraser
+        case "2":
             store.dispatch(SET_TYPE(ToolType.Eraser))
             break
-        case "2": // Eraser
-            store.dispatch(SET_TYPE(ToolType.Eraser))
-            break
-        case "s": // Selection
+        case "3":
             store.dispatch(SET_TYPE(ToolType.Select))
             break
-        case "3": // Selection
-            store.dispatch(SET_TYPE(ToolType.Select))
+        case "4":
+            store.dispatch(SET_TYPE(ToolType.Pan))
             break
-        case "l": // Line
+        case "5":
             store.dispatch(SET_TYPE(ToolType.Line))
             break
-        case "4": // Line
-            store.dispatch(SET_TYPE(ToolType.Line))
+        case "6":
+            store.dispatch(SET_TYPE(ToolType.Rectangle))
             break
-        case "c": // Circle
-            store.dispatch(SET_TYPE(ToolType.Circle))
-            break
-        case "5": // Circle
+        case "7":
             store.dispatch(SET_TYPE(ToolType.Circle))
             break
         case "z": // Undo (Ctrl + Z)
