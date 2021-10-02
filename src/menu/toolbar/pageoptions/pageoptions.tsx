@@ -18,6 +18,12 @@ import {
 } from "react-icons/bs"
 import { useCustomDispatch, useCustomSelector } from "redux/hooks"
 import { SET_PAGE_HEIGHT, SET_PAGE_WIDTH } from "redux/slice/boardcontrol"
+import {
+    MAX_PAGE_WIDTH,
+    MIN_PAGE_WIDTH,
+    MAX_PAGE_HEIGHT,
+    MIN_PAGE_HEIGHT,
+} from "../../../constants"
 import Background from "./background/background"
 import IconButton from "../../../components/iconbutton/iconbutton"
 import {
@@ -38,20 +44,15 @@ const PageOptions: React.FC = () => {
         (state) => state.boardControl.pageSettings
     )
 
-    const minWidth = 1
-    const maxWidth = 1000
-    const minHeight = 1
-    const maxHeight = 2000
-
     const handleWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const widthValue = parseInt(e.target.value, 10)
-        if (widthValue <= maxWidth && widthValue >= minWidth) {
+        if (widthValue <= MAX_PAGE_WIDTH && widthValue >= MIN_PAGE_WIDTH) {
             dispatch(SET_PAGE_WIDTH(parseInt(e.target.value, 10)))
         }
     }
     const handleHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const heightValue = parseInt(e.target.value, 10)
-        if (heightValue <= maxHeight && heightValue >= minHeight) {
+        if (heightValue <= MAX_PAGE_HEIGHT && heightValue >= MIN_PAGE_HEIGHT) {
             dispatch(SET_PAGE_HEIGHT(parseInt(e.target.value, 10)))
         }
     }
@@ -73,16 +74,16 @@ const PageOptions: React.FC = () => {
                         value={pageWidth}
                         onChange={handleWidthChange}
                         step={1}
-                        min={minWidth}
-                        max={maxWidth}
+                        min={MIN_PAGE_WIDTH}
+                        max={MAX_PAGE_WIDTH}
                     />
                     <NumberInput
                         label="Height"
                         value={pageHeight}
                         onChange={handleHeightChange}
                         step={1}
-                        min={minHeight}
-                        max={maxHeight}
+                        min={MIN_PAGE_HEIGHT}
+                        max={MAX_PAGE_HEIGHT}
                     />
                 </DrawerContent>
                 <DrawerTitle>

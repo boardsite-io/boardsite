@@ -11,6 +11,10 @@ export default function isDev(): boolean {
 export const STROKE_WIDTH_PRESETS = [0.5, 1, 2, 3, 4, 5, 7, 10, 14, 20]
 export const DEFAULT_PAGE_WIDTH = 620
 export const DEFAULT_PAGE_HEIGHT = 877
+export const MIN_PAGE_WIDTH = 1
+export const MAX_PAGE_WIDTH = 2000
+export const MIN_PAGE_HEIGHT = 1
+export const MAX_PAGE_HEIGHT = 2000
 export const CANVAS_WIDTH = 620
 export const CANVAS_HEIGHT = 877
 export const CANVAS_GAP = 20
