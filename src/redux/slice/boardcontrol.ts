@@ -26,7 +26,7 @@ export interface BoardControlState {
     }
 }
 
-const initState: BoardControlState = {
+export const initState: BoardControlState = {
     currentPageIndex: DEFAULT_CURRENT_PAGE_INDEX,
     pageRank: [],
     pageCollection: {},
