@@ -3,7 +3,15 @@ import { BsGear, BsInfoCircle } from "react-icons/bs"
 import isElectron from "is-electron"
 import { VscDebugDisconnect } from "react-icons/vsc"
 import store from "redux/store"
-import { Button, Drawer, IconButton, Switch, TextField } from "components"
+import {
+    Button,
+    Drawer,
+    DrawerContent,
+    DrawerTitle,
+    IconButton,
+    Switch,
+    TextField,
+} from "components"
 import { SET_API_URL } from "redux/slice/webcontrol"
 import {
     TOGGLE_HIDE_NAVBAR,
@@ -15,7 +23,7 @@ import { useCustomSelector } from "redux/hooks"
 import { API_URL } from "../../../api/types"
 import isDev from "../../../constants"
 import About from "../about/about"
-import { Setting, SettingsGroup, SettingsTitle } from "./settings.styled"
+import { Setting } from "./settings.styled"
 
 const Settings: React.FC = () => {
     const [isOpen, setOpen] = useState(false)
@@ -51,11 +59,11 @@ const Settings: React.FC = () => {
                 <BsGear id="icon" />
             </IconButton>
             <Drawer open={isOpen} onClose={() => setOpen(false)}>
-                <SettingsTitle>
+                <DrawerTitle>
                     <BsGear />
                     General Settings
-                </SettingsTitle>
-                <SettingsGroup>
+                </DrawerTitle>
+                <DrawerContent>
                     <Setting>
                         Keep view centered
                         <Switch
@@ -79,12 +87,12 @@ const Settings: React.FC = () => {
                             onClick={() => store.dispatch(TOGGLE_DIRECTDRAW())}
                         />
                     </Setting>
-                </SettingsGroup>
-                <SettingsTitle>
+                </DrawerContent>
+                <DrawerTitle>
                     <VscDebugDisconnect />
                     Connection
-                </SettingsTitle>
-                <SettingsGroup>
+                </DrawerTitle>
+                <DrawerContent>
                     <Setting>
                         <TextField
                             label="API URL"
@@ -98,12 +106,12 @@ const Settings: React.FC = () => {
                             align="left"
                         />
                     </Setting>
-                </SettingsGroup>
-                <SettingsTitle>
+                </DrawerContent>
+                <DrawerTitle>
                     <BsInfoCircle />
                     About
-                </SettingsTitle>
-                <SettingsGroup>
+                </DrawerTitle>
+                <DrawerContent>
                     <Setting>
                         <Button
                             withIcon
@@ -116,7 +124,7 @@ const Settings: React.FC = () => {
                             About boardsite.io
                         </Button>
                     </Setting>
-                </SettingsGroup>
+                </DrawerContent>
             </Drawer>
             <About isOpen={isOpenAbout} setOpen={setOpenAbout} />
         </>

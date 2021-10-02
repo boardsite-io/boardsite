@@ -2,20 +2,17 @@ import React, { useState } from "react"
 import {
     Dialog,
     DialogContent,
-    IconButton,
     DialogOptions,
     Button,
     UploadIcon,
-    DownloadIcon,
 } from "components"
-import { handleExportDocument } from "drawing/handlers"
 import FileDropZone from "./filedropzone"
 
 interface FileDropButtonProps {
     closePageOptions: () => void
 }
 
-const FileDropButton: React.FC<FileDropButtonProps> = ({
+const UploadPDFButton: React.FC<FileDropButtonProps> = ({
     closePageOptions,
 }) => {
     const [dialogOpen, setDialogOpen] = useState(false)
@@ -31,12 +28,10 @@ const FileDropButton: React.FC<FileDropButtonProps> = ({
 
     return (
         <>
-            <IconButton onClick={handleOpen}>
+            <Button withIcon onClick={handleOpen}>
                 <UploadIcon />
-            </IconButton>
-            <IconButton onClick={() => handleExportDocument()}>
-                <DownloadIcon />
-            </IconButton>
+                Upload PDF
+            </Button>
             <Dialog open={dialogOpen} onClose={handleClose}>
                 <DialogContent>
                     <FileDropZone closeDialog={handleClose} />
@@ -51,4 +46,4 @@ const FileDropButton: React.FC<FileDropButtonProps> = ({
     )
 }
 
-export default FileDropButton
+export default UploadPDFButton

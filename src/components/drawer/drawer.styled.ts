@@ -54,3 +54,21 @@ export const DrawerBackground = styled.div`
     right: 0;
     animation: ${fadeInBackground} ${transitionTime} ease-in-out;
 `
+
+export const DrawerTitle = styled.h3`
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: 0.5rem;
+    svg {
+        height: 1em;
+        width: 1em;
+        stroke: black;
+    }
+`
+export const DrawerContent = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+`

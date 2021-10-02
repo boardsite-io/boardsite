@@ -13,7 +13,6 @@ const Toolbar: React.FC = () => (
         <ToolbarGroup>
             <Settings />
             <SessionDialog />
-            <PageOptions />
         </ToolbarGroup>
         <ToolbarGroup>
             <UndoRedo />
@@ -25,6 +24,7 @@ const Toolbar: React.FC = () => (
             <ViewZoom />
         </ToolbarGroup>
         <ToolbarGroup>
+            <PageOptions />
             <ViewOptions />
         </ToolbarGroup>
     </ToolbarStyled>

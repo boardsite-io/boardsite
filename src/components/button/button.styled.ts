@@ -8,6 +8,7 @@ interface Props {
 }
 
 export const StyledButton = styled.button<Props>`
+    text-transform: uppercase;
     padding: 0.5rem 1.5rem;
     outline: none;
     border-width: 0;
@@ -20,6 +21,10 @@ export const StyledButton = styled.button<Props>`
     ${({ $variant }) =>
         $variant === Variants.Primary ? primaryStyle : secondaryStyle};
     ${({ $withIcon }) => ($withIcon ? iconStyle : noIconStyle)};
+    svg {
+        height: 1rem;
+        width: 1rem;
+    }
 `
 
 const primaryStyle = css`
@@ -43,13 +48,11 @@ const secondaryStyle = css`
 
 const iconStyle = css`
     display: flex;
-    /* justify-content: center; */
+    align-items: center;
     gap: 1rem;
-    text-transform: uppercase;
 `
 
 const noIconStyle = css`
     display: inline-block;
     text-align: center;
-    text-transform: uppercase;
 `
