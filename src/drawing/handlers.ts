@@ -17,7 +17,7 @@ import {
 } from "../redux/slice/boardcontrol"
 
 import store from "../redux/store"
-import { PageBackground, PageMeta } from "../types"
+import { PageBackground } from "../types"
 import { toPDF } from "./io"
 import { BoardPage, getPDFfromForm, loadNewPDF } from "./page"
 import {
@@ -95,20 +95,19 @@ export function handleRedo(): void {
 export function handlePageBackground(style: PageBackground): void {
     // update the default page type
     store.dispatch(SET_PAGE_BACKGROUND(style))
-
+    const currentPage = getCurrentPage()
     // cannot update background of doc type
-    if (getCurrentPage().meta.background.style === pageType.DOC) {
+    if (currentPage.meta.background.style === pageType.DOC) {
         return
     }
 
-    const meta: PageMeta = {
-        background: { ...getCurrentPage().meta.background, style },
-    }
+    const newMeta = { ...currentPage.meta }
+    newMeta.background.style = style
 
     if (isConnected()) {
-        updatePagesSession([getCurrentPage().updateMeta(meta)])
+        updatePagesSession([currentPage.updateMeta(newMeta)])
     } else {
-        store.dispatch(SET_PAGEMETA({ pageId: getCurrentPage().pageId, meta }))
+        store.dispatch(SET_PAGEMETA({ pageId: currentPage.pageId, newMeta }))
     }
 }
 

@@ -38,6 +38,8 @@ export interface PageMeta {
         attachId: string
         documentPageNum: number
     }
+    width: number
+    height: number
 }
 
 export type TrRefType = React.RefObject<Transformer>
