@@ -1,14 +1,15 @@
 import React from "react"
+import { Input, Label } from "./numberinput.styled"
 
 interface ButtonProps extends React.InputHTMLAttributes<HTMLInputElement> {
-    label?: string
+    label: string
 }
 
 const NumberInput: React.FC<ButtonProps> = ({ label, ...props }) => (
-    <label htmlFor={props.id}>
+    <Label htmlFor={props.id}>
         {label}
-        <input type="number" {...props} />
-    </label>
+        <Input type="number" {...props} />
+    </Label>
 )
 
 export default NumberInput

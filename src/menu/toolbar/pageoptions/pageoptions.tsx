@@ -69,6 +69,7 @@ const PageOptions: React.FC = () => {
                 <DrawerContent>
                     <Background setOpenOther={setOpen} />
                     <NumberInput
+                        label="Width"
                         value={pageWidth}
                         onChange={handleWidthChange}
                         step={1}
@@ -76,6 +77,7 @@ const PageOptions: React.FC = () => {
                         max={maxWidth}
                     />
                     <NumberInput
+                        label="Height"
                         value={pageHeight}
                         onChange={handleHeightChange}
                         step={1}
