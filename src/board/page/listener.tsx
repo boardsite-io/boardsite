@@ -12,13 +12,7 @@ import { useCustomSelector } from "../../redux/hooks"
 import { PageProps } from "./types"
 
 const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
-    // pageId might not be valid anymore, exit then
-    if (!store.getState().boardControl.pageCollection[pageId]) {
-        return null
-    }
-    const isMouseDown = useCustomSelector(
-        (state) => state.drawControl.isMouseDown
-    )
+    const { isMouseDown } = useCustomSelector((state) => state.drawControl)
 
     const getPointerPositionInStage = (e: KonvaEventObject<MouseEvent>) => {
         const stage = e.target.getStage() as Stage
