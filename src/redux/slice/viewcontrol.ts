@@ -1,8 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { Point } from "drawing/stroke/types"
 import {
-    DEFAULT_STAGE_WIDTH,
-    DEFAULT_STAGE_HEIGHT,
     DEFAULT_STAGE_X,
     DEFAULT_STAGE_Y,
     DEFAULT_STAGE_SCALE,
@@ -35,8 +33,8 @@ interface ViewControlState {
 const initState: ViewControlState = {
     keepCentered: DEFAULT_KEEP_CENTERED,
     hideNavBar: DEFAULT_HIDE_NAVBAR,
-    stageWidth: DEFAULT_STAGE_WIDTH,
-    stageHeight: DEFAULT_STAGE_HEIGHT,
+    stageWidth: window.innerWidth,
+    stageHeight: window.innerHeight,
     stageX: DEFAULT_STAGE_X,
     stageY: DEFAULT_STAGE_Y,
     stageScale: DEFAULT_STAGE_SCALE,
