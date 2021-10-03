@@ -16,6 +16,7 @@ import {
 import { Page } from "../../types"
 import {
     centerView,
+    detectPageChange,
     fitToPage,
     getCenter,
     getDistance,
@@ -217,9 +218,10 @@ const boardSlice = createSlice({
             lastDist = dist
             lastCenter = newCenter
         },
-        MULTI_TOUCH_END: () => {
+        MULTI_TOUCH_END: (state) => {
             lastDist = 0
             lastCenter = null
+            detectPageChange(state as BoardState)
         },
         // use this e.g., on page change
         INITIAL_VIEW: (state) => {
@@ -247,9 +249,11 @@ const boardSlice = createSlice({
         },
         SET_STAGE_Y: (state, action) => {
             state.view.stageY = action.payload
+            detectPageChange(state as BoardState)
         },
         SCROLL_STAGE_Y: (state, action) => {
             state.view.stageY -= action.payload
+            detectPageChange(state as BoardState)
         },
         SET_STAGE_SCALE: (state, action) => {
             state.view.stageScale = action.payload

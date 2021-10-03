@@ -1,6 +1,39 @@
 import { Point } from "drawing/stroke/types"
 import { CANVAS_WIDTH, ZOOM_SCALE_MAX, ZOOM_SCALE_MIN } from "../../constants"
-import { BoardView } from "./types"
+import { BoardState, BoardView } from "./types"
+
+export const getViewCenterY = ({ view }: BoardState): number =>
+    (view.stageHeight / 2 - view.stageY) / view.stageScale.y
+
+export const detectPageChange = (state: BoardState): void => {
+    const centerY = getViewCenterY(state)
+    const currPageId = state.pageRank[state.currentPageIndex]
+    if (!currPageId) {
+        return
+    }
+    const currPageHeight = state.pageCollection[currPageId].meta.height
+    const scale = state.view.stageScale.x
+
+    // Go to next page
+    if (centerY > currPageHeight) {
+        // Check if last page
+        if (state.currentPageIndex < state.pageRank.length - 1) {
+            state.view.stageY += currPageHeight * scale
+            state.currentPageIndex += 1
+        }
+    }
+    // Go to previous page
+    else if (centerY < 0) {
+        // Check if first page
+        if (state.currentPageIndex > 0) {
+            const targetPageId = state.pageRank[state.currentPageIndex - 1]
+            const targetPageHeight =
+                state.pageCollection[targetPageId].meta.height
+            state.view.stageY -= targetPageHeight * scale
+            state.currentPageIndex -= 1
+        }
+    }
+}
 
 export const centerView = (view: BoardView): void => {
     if (view.stageWidth >= CANVAS_WIDTH * view.stageScale.x) {
