@@ -7,17 +7,17 @@ import {
     CLOSE_SDIAG,
     SET_USER_ALIAS,
     SET_USER_COLOR,
-} from "redux/slice/webcontrol"
+} from "redux/session/session"
 import { getSessionPath, joinSession, newSession } from "api/websocket"
 import { Button, DialogContent, TextField } from "components"
 import { UserColorButton, UserSelection } from "./offlinedialogcontent.styled"
 
 const OfflineDialogContent: React.FC = () => {
     const sDiagStatus = useCustomSelector(
-        (state) => state.webControl.sessionDialog
+        (state) => state.session.sessionDialog
     )
-    const userAlias = useCustomSelector((state) => state.webControl.user.alias)
-    const userColor = useCustomSelector((state) => state.webControl.user.color)
+    const userAlias = useCustomSelector((state) => state.session.user.alias)
+    const userColor = useCustomSelector((state) => state.session.user.color)
 
     const dispatch = useCustomDispatch()
     const history = useHistory()
@@ -41,7 +41,7 @@ const OfflineDialogContent: React.FC = () => {
     const handleJoin = async () => {
         try {
             await joinSession()
-            const { sidInput } = store.getState().webControl.sessionDialog
+            const { sidInput } = store.getState().session.sessionDialog
             history.push(getSessionPath(sidInput))
             dispatch(CLOSE_SDIAG())
         } catch (error) {

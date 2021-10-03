@@ -1,3 +1,4 @@
+import store from "redux/store"
 import React, { useState } from "react"
 import {
     Button,
@@ -16,8 +17,8 @@ import {
     BsFileDiff,
     BsGear,
 } from "react-icons/bs"
-import { useCustomDispatch, useCustomSelector } from "redux/hooks"
-import { SET_PAGE_HEIGHT, SET_PAGE_WIDTH } from "redux/slice/boardcontrol"
+import { useCustomSelector } from "redux/hooks"
+import { SET_PAGE_HEIGHT, SET_PAGE_WIDTH } from "redux/board/board"
 import {
     MAX_PAGE_WIDTH,
     MIN_PAGE_WIDTH,
@@ -37,31 +38,28 @@ import {
 import UploadPDFButton from "../uploadpdf/uploadPDF"
 
 const PageOptions: React.FC = () => {
-    const dispatch = useCustomDispatch()
     const [open, setOpen] = useState(false)
     const close = () => setOpen(false)
     const { width: pageWidth, height: pageHeight } = useCustomSelector(
-        (state) => state.boardControl.pageSettings
+        (state) => state.board.pageSettings
     )
 
     const handleWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const widthValue = parseInt(e.target.value, 10)
-        if (widthValue > MAX_PAGE_WIDTH) {
+        if (widthValue <= MAX_PAGE_WIDTH && widthValue >= MIN_PAGE_WIDTH) {
+            store.dispatch(SET_PAGE_WIDTH(widthValue))
+        } else if (widthValue > MAX_PAGE_WIDTH) {
             e.target.value = MAX_PAGE_WIDTH.toString()
-        } else if (widthValue < MIN_PAGE_WIDTH) {
-            // do something
-        } else {
-            dispatch(SET_PAGE_WIDTH(parseInt(e.target.value, 10)))
+            store.dispatch(SET_PAGE_WIDTH(MAX_PAGE_WIDTH))
         }
     }
     const handleHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const heightValue = parseInt(e.target.value, 10)
-        if (heightValue > MAX_PAGE_HEIGHT) {
+        if (heightValue <= MAX_PAGE_HEIGHT && heightValue >= MAX_PAGE_HEIGHT) {
+            store.dispatch(SET_PAGE_HEIGHT(heightValue))
+        } else if (heightValue > MAX_PAGE_HEIGHT) {
             e.target.value = MAX_PAGE_HEIGHT.toString()
-        } else if (heightValue < MIN_PAGE_HEIGHT) {
-            // do something
-        } else {
-            dispatch(SET_PAGE_HEIGHT(parseInt(e.target.value, 10)))
+            store.dispatch(SET_PAGE_HEIGHT(MAX_PAGE_HEIGHT))
         }
     }
 

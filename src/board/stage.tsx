@@ -15,7 +15,7 @@ import {
     ZOOM_TO,
     MULTI_TOUCH_MOVE,
     MULTI_TOUCH_END,
-} from "../redux/slice/viewcontrol"
+} from "../redux/board/board"
 import { LiveStrokeShape } from "./stroke/shape"
 import { ZOOM_IN_WHEEL_SCALE, ZOOM_OUT_WHEEL_SCALE } from "../constants"
 import store, { RootState } from "../redux/store"
@@ -27,7 +27,7 @@ import PageBackground from "./page/background"
 
 const BoardStage: React.FC = () => {
     const isPanMode = useCustomSelector(
-        (state) => state.drawControl.liveStroke.type === ToolType.Pan
+        (state) => state.drawing.liveStroke.type === ToolType.Pan
     )
     const {
         stageWidth,
@@ -36,7 +36,7 @@ const BoardStage: React.FC = () => {
         stageY,
         stageScale,
         keepCentered,
-    } = useCustomSelector((state) => state.viewControl)
+    } = useCustomSelector((state) => state.board.view)
 
     useEffect(() => {
         window.addEventListener("resize", () =>
@@ -156,8 +156,8 @@ export default BoardStage
 const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
     // Only rerender on page change
     const pageCreateSelector = createSelector(
-        (state: RootState) => state.boardControl.currentPageIndex,
-        (state: RootState) => state.boardControl.pageRank,
+        (state: RootState) => state.board.currentPageIndex,
+        (state: RootState) => state.board.pageRank,
         (currentPageIndex, pageRank) => pageRank[currentPageIndex]
     )
     const pageId = useCustomSelector(pageCreateSelector)

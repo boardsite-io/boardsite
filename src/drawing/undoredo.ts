@@ -4,8 +4,8 @@ import {
     ADD_STROKES,
     ERASE_STROKES,
     UPDATE_STROKES,
-} from "../redux/slice/boardcontrol"
-import { SET_TR_NODES } from "../redux/slice/drawcontrol"
+} from "../redux/board/board"
+import { SET_TR_NODES } from "../redux/drawing/drawing"
 import store from "../redux/store"
 
 interface DrawAction {
@@ -61,8 +61,9 @@ export function deleteStrokes(
             // reference the delete stroke for redo
             strokes: strokes.map(
                 (s) =>
-                    store.getState().boardControl.pageCollection[s.pageId]
-                        .strokes[s.id]
+                    store.getState().board.pageCollection[s.pageId].strokes[
+                        s.id
+                    ]
             ),
             handle: addStrokes,
         })
@@ -87,7 +88,7 @@ export function updateStrokes(
                 .map((s) => {
                     // save values of the current stroke
                     const cur =
-                        store.getState().boardControl.pageCollection[s.pageId]
+                        store.getState().board.pageCollection[s.pageId]
                             ?.strokes[s.id]
                     return cur
                         ? ({
@@ -111,8 +112,9 @@ export function updateStrokes(
         sendStrokes(
             strokes.map(
                 (s) =>
-                    store.getState().boardControl.pageCollection[s.pageId]
-                        ?.strokes[s.id]
+                    store.getState().board.pageCollection[s.pageId]?.strokes[
+                        s.id
+                    ]
             )
         )
     }

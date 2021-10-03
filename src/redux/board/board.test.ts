@@ -2,9 +2,18 @@ import { BoardPage } from "drawing/page"
 import { BoardStroke } from "drawing/stroke/stroke"
 import { ToolType } from "drawing/stroke/types"
 import { DocumentImage } from "types"
-import reducer from "./boardcontrol"
-import * as action from "./boardcontrol"
-import { pageType, STROKE_WIDTH_PRESETS } from "../../constants"
+import reducer from "./board"
+import * as action from "./board"
+import {
+    DEFAULT_HIDE_NAVBAR,
+    DEFAULT_KEEP_CENTERED,
+    DEFAULT_STAGE_SCALE,
+    DEFAULT_STAGE_X,
+    DEFAULT_STAGE_Y,
+    pageType,
+    STROKE_WIDTH_PRESETS,
+} from "../../constants"
+import { initState } from "./types"
 
 const page1 = new BoardPage(pageType.CHECKERED).setID("pid1")
 const mockStroke1 = {
@@ -28,7 +37,7 @@ page1.strokes.strkid1 = mockBoardStroke1
 
 describe("boardcontrol reducer", () => {
     it("should return the initial state", () => {
-        expect(reducer(undefined, {} as any)).toEqual(action.initState)
+        expect(reducer(undefined, {} as any)).toEqual(initState)
     })
 
     it("updates a stroke", () => {
@@ -46,6 +55,15 @@ describe("boardcontrol reducer", () => {
                         background: pageType.BLANK,
                         width: 10,
                         height: 10,
+                    },
+                    view: {
+                        keepCentered: DEFAULT_KEEP_CENTERED,
+                        hideNavBar: DEFAULT_HIDE_NAVBAR,
+                        stageWidth: window.innerWidth,
+                        stageHeight: window.innerHeight,
+                        stageX: DEFAULT_STAGE_X,
+                        stageY: DEFAULT_STAGE_Y,
+                        stageScale: DEFAULT_STAGE_SCALE,
                     },
                 },
                 action.UPDATE_STROKES([
@@ -83,6 +101,15 @@ describe("boardcontrol reducer", () => {
                         background: pageType.BLANK,
                         width: 10,
                         height: 10,
+                    },
+                    view: {
+                        keepCentered: DEFAULT_KEEP_CENTERED,
+                        hideNavBar: DEFAULT_HIDE_NAVBAR,
+                        stageWidth: window.innerWidth,
+                        stageHeight: window.innerHeight,
+                        stageX: DEFAULT_STAGE_X,
+                        stageY: DEFAULT_STAGE_Y,
+                        stageScale: DEFAULT_STAGE_SCALE,
                     },
                 },
                 action.UPDATE_STROKES([

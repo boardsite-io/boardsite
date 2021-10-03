@@ -2,13 +2,13 @@ import React from "react"
 import { nanoid } from "@reduxjs/toolkit"
 import { useCustomSelector } from "redux/hooks"
 import store from "redux/store"
-import { SET_WIDTH } from "redux/slice/drawcontrol"
+import { SET_WIDTH } from "redux/drawing/drawing"
 import { Preset, WidthPresetInnerDot, WidthPresets } from "./widthpicker.styled"
 import { STROKE_WIDTH_PRESETS } from "../../../../constants"
 
 const WidthPicker: React.FC = () => {
     const widthSelector = useCustomSelector(
-        (state) => state.drawControl.liveStroke.style.width
+        (state) => state.drawing.liveStroke.style.width
     )
 
     return (

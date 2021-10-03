@@ -9,7 +9,7 @@ const PageContent: React.FC<PageProps> = ({ pageId, pageSize }) => {
     // select key of stroke map as trigger
     // stroke map comparison will only compare references
     const strokeIds = useCustomSelector((state) =>
-        Object.keys(state.boardControl.pageCollection[pageId]?.strokes)
+        Object.keys(state.board.pageCollection[pageId]?.strokes)
     )
 
     return (
@@ -22,7 +22,7 @@ const PageContent: React.FC<PageProps> = ({ pageId, pageSize }) => {
                     <StrokeShape
                         key={id}
                         stroke={
-                            store.getState().boardControl.pageCollection[pageId]
+                            store.getState().board.pageCollection[pageId]
                                 ?.strokes[id]
                         }
                     />

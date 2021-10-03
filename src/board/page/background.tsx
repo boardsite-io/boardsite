@@ -9,13 +9,13 @@ import { PageProps } from "./types"
 export default memo<PageProps>(({ pageId, pageSize }) => {
     const ref = useRef<types.Image>(null)
     const [update, setUpdate] = useState(0)
-    const { document } = useCustomSelector((state) => state.boardControl)
+    const { document } = useCustomSelector((state) => state.board)
     const { background } = useCustomSelector(
-        (state) => state.boardControl.pageCollection[pageId].meta
+        (state) => state.board.pageCollection[pageId].meta
     )
     // select style, selecting background doesnt trigger, bc it compares on the same reference
     const { style } = useCustomSelector(
-        (state) => state.boardControl.pageCollection[pageId].meta.background
+        (state) => state.board.pageCollection[pageId].meta.background
     )
 
     // get correct image data for document type background

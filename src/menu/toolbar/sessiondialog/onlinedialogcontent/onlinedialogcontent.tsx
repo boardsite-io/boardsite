@@ -2,7 +2,7 @@ import { Button, DialogContent } from "components"
 import React from "react"
 import { useHistory } from "react-router-dom"
 import { useCustomDispatch, useCustomSelector } from "redux/hooks"
-import { CLOSE_SDIAG, CLOSE_WS } from "redux/slice/webcontrol"
+import { CLOSE_SDIAG, CLOSE_WS } from "redux/session/session"
 import {
     UserAlias,
     UserColor,
@@ -12,7 +12,7 @@ import {
 
 const OnlineDialogContent: React.FC = () => {
     const connectedUsers = useCustomSelector(
-        (state) => state.webControl.connectedUsers
+        (state) => state.session.connectedUsers
     )
 
     const dispatch = useCustomDispatch()

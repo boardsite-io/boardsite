@@ -9,7 +9,7 @@ import {
     SET_ISMOUSEDOWN,
     SET_TR_NODES,
     SET_ERASED_STROKES,
-} from "../../redux/slice/drawcontrol"
+} from "../../redux/drawing/drawing"
 import { handleAddStroke, handleDeleteStrokes } from "../handlers"
 import { getSelectedShapes } from "./hitbox"
 
@@ -37,7 +37,7 @@ export function startLiveStroke(point: Point, pageId: string): void {
  */
 export function moveLiveStroke(point: Point, pagePosition: Point): void {
     const liveStroke = getLiveStroke()
-    const stageScale = store.getState().viewControl.stageScale.x
+    const stageScale = store.getState().board.view.stageScale.x
     liveStroke.addPoint(point, stageScale)
 
     // the eraser livestroke calculates the collision of the line
@@ -53,9 +53,9 @@ export function moveLiveStroke(point: Point, pagePosition: Point): void {
         const { pointsSegments } = getLiveStroke()
         if (
             Math.abs((pointsSegments ?? [])[0][0] - point.x) >
-                2 / store.getState().viewControl.stageScale.x ||
+                2 / store.getState().board.view.stageScale.x ||
             Math.abs((pointsSegments ?? [])[0][1] - point.y) >
-                2 / store.getState().viewControl.stageScale.x
+                2 / store.getState().board.view.stageScale.x
         ) {
             clearTimeout(tid as number)
             tid = 0
@@ -70,7 +70,7 @@ export async function registerLiveStroke(
     e: KonvaEventObject<MouseEvent>
 ): Promise<void> {
     const liveStroke = getLiveStroke()
-    const stageScale = store.getState().viewControl.stageScale.x
+    const stageScale = store.getState().board.view.stageScale.x
 
     // Finalize & Create stroke from LiveStroke
     const pagePosition = e.target.getPosition()
@@ -78,7 +78,7 @@ export async function registerLiveStroke(
 
     switch (stroke.type) {
         case ToolType.Eraser: {
-            const { erasedStrokes } = store.getState().drawControl
+            const { erasedStrokes } = store.getState().drawing
             const s = Object.keys(erasedStrokes).map((id) => erasedStrokes[id])
             if (s.length > 0) {
                 handleDeleteStrokes(s)
@@ -87,7 +87,7 @@ export async function registerLiveStroke(
         }
         case ToolType.Select: {
             const { strokes } =
-                store.getState().boardControl.pageCollection[stroke.pageId]
+                store.getState().board.pageCollection[stroke.pageId]
             const shapes = getSelectedShapes(stroke, strokes, e)
             store.dispatch(SET_TR_NODES(shapes))
             break
@@ -115,27 +115,26 @@ export function abortLiveStroke(): void {
     if (liveStroke.pointsSegments?.length) {
         store.dispatch(END_LIVESTROKE())
     }
-    if (store.getState().drawControl.isMouseDown) {
+    if (store.getState().drawing.isMouseDown) {
         store.dispatch(SET_ISMOUSEDOWN(false))
     }
 }
 
 export function getPageIndex(pageId: string): number {
-    return store.getState().boardControl.pageRank.indexOf(pageId)
+    return store.getState().board.pageRank.indexOf(pageId)
 }
 
 export function getPageMeta(pageId: string): PageMeta {
-    return store.getState().boardControl.pageCollection[pageId].meta
+    return store.getState().board.pageCollection[pageId].meta
 }
 
 // helper function to get current livestroke
 function getLiveStroke() {
-    return store.getState().drawControl.liveStroke
+    return store.getState().drawing.liveStroke
 }
 
 function moveEraser(liveStroke: LiveStroke, pagePosition: Point): void {
-    const { strokes } =
-        store.getState().boardControl.pageCollection[liveStroke.pageId]
+    const { strokes } = store.getState().board.pageCollection[liveStroke.pageId]
     const selectedStrokes = liveStroke.selectLineCollision(
         strokes,
         pagePosition

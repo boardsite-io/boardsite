@@ -1,46 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { Stroke } from "drawing/stroke/types"
 import {
-    DEFAULT_CURRENT_PAGE_INDEX,
-    DEFAULT_PAGE_HEIGHT,
-    DEFAULT_PAGE_WIDTH,
-    pageType,
+    DEFAULT_STAGE_Y,
+    ZOOM_IN_BUTTON_SCALE,
+    ZOOM_OUT_BUTTON_SCALE,
 } from "../../constants"
+import { Page } from "../../types"
 import {
-    DocumentImage,
-    Page,
-    PageBackground,
-    PageCollection,
-} from "../../types"
+    centerView,
+    detectPageChange,
+    fitToPage,
+    multiTouchEnd,
+    multiTouchMove,
+    zoomToPointWithScale,
+} from "./helpers"
+import { BoardState, initState } from "./types"
 
-export interface BoardControlState {
-    currentPageIndex: number
-    pageRank: string[]
-    pageCollection: PageCollection
-    document: DocumentImage[]
-    documentSrc: string | Uint8Array
-    pageSettings: {
-        background: PageBackground // default,
-        width: number
-        height: number
-    }
-}
-
-export const initState: BoardControlState = {
-    currentPageIndex: DEFAULT_CURRENT_PAGE_INDEX,
-    pageRank: [],
-    pageCollection: {},
-    document: [],
-    documentSrc: "",
-    pageSettings: {
-        background: pageType.BLANK, // default,
-        width: DEFAULT_PAGE_WIDTH,
-        height: DEFAULT_PAGE_HEIGHT,
-    },
-}
-
-const boardControlSlice = createSlice({
-    name: "boardControl",
+const boardSlice = createSlice({
+    name: "board",
     initialState: initState,
     reducers: {
         SYNC_ALL_PAGES: (state, action) => {
@@ -163,6 +140,90 @@ const boardControlSlice = createSlice({
                 state.currentPageIndex = targetIndex
             }
         },
+
+        TOGGLE_SHOULD_CENTER: (state) => {
+            state.view.keepCentered = !state.view.keepCentered
+        },
+        TOGGLE_HIDE_NAVBAR: (state) => {
+            state.view.hideNavBar = !state.view.hideNavBar
+        },
+        MULTI_TOUCH_MOVE: (state, action) => {
+            const { p1, p2 } = action.payload
+            multiTouchMove(state.view, p1, p2)
+        },
+        MULTI_TOUCH_END: (state) => {
+            detectPageChange(state as BoardState)
+            multiTouchEnd()
+        },
+        // use this e.g., on page change
+        INITIAL_VIEW: (state) => {
+            state.view.stageScale = { x: 1, y: 1 }
+            state.view.stageX = 0
+            state.view.stageY = DEFAULT_STAGE_Y
+            centerView(state.view)
+        },
+        RESET_VIEW: (state) => {
+            const oldScale = state.view.stageScale.y
+            const newScale = 1
+            state.view.stageScale = { x: newScale, y: newScale }
+            state.view.stageX = 0
+            state.view.stageY =
+                state.view.stageHeight / 2 -
+                ((state.view.stageHeight / 2 - state.view.stageY) / oldScale) *
+                    newScale
+            centerView(state.view)
+        },
+        CENTER_VIEW: (state) => {
+            centerView(state.view)
+        },
+        SET_STAGE_X: (state, action) => {
+            state.view.stageX = action.payload
+        },
+        SET_STAGE_Y: (state, action) => {
+            state.view.stageY = action.payload
+            detectPageChange(state as BoardState)
+        },
+        SCROLL_STAGE_Y: (state, action) => {
+            state.view.stageY -= action.payload
+            detectPageChange(state as BoardState)
+        },
+        SET_STAGE_SCALE: (state, action) => {
+            state.view.stageScale = action.payload
+        },
+        ON_WINDOW_RESIZE: (state) => {
+            state.view.stageWidth = window.innerWidth
+            state.view.stageHeight = window.innerHeight
+            centerView(state.view)
+        },
+        FIT_WIDTH_TO_PAGE: (state) => {
+            fitToPage(state.view)
+        },
+        ZOOM_TO: (state, action) => {
+            const { zoomPoint, zoomScale } = action.payload
+            zoomToPointWithScale(state.view, zoomPoint, zoomScale)
+        },
+        ZOOM_IN_CENTER: (state) => {
+            const centerOfScreen = {
+                x: state.view.stageWidth / 2,
+                y: state.view.stageHeight / 2,
+            }
+            zoomToPointWithScale(
+                state.view,
+                centerOfScreen,
+                ZOOM_IN_BUTTON_SCALE
+            )
+        },
+        ZOOM_OUT_CENTER: (state) => {
+            const centerOfScreen = {
+                x: state.view.stageWidth / 2,
+                y: state.view.stageHeight / 2,
+            }
+            zoomToPointWithScale(
+                state.view,
+                centerOfScreen,
+                ZOOM_OUT_BUTTON_SCALE
+            )
+        },
     },
 })
 
@@ -186,6 +247,21 @@ export const {
     JUMP_TO_FIRST_PAGE,
     JUMP_TO_LAST_PAGE,
     JUMP_PAGE_WITH_INDEX,
-} = boardControlSlice.actions
-
-export default boardControlSlice.reducer
+    TOGGLE_SHOULD_CENTER,
+    TOGGLE_HIDE_NAVBAR,
+    MULTI_TOUCH_MOVE,
+    MULTI_TOUCH_END,
+    CENTER_VIEW,
+    INITIAL_VIEW,
+    RESET_VIEW,
+    SET_STAGE_X,
+    SET_STAGE_Y,
+    SCROLL_STAGE_Y,
+    SET_STAGE_SCALE,
+    ON_WINDOW_RESIZE,
+    FIT_WIDTH_TO_PAGE,
+    ZOOM_TO,
+    ZOOM_IN_CENTER,
+    ZOOM_OUT_CENTER,
+} = boardSlice.actions
+export default boardSlice.reducer

@@ -9,7 +9,7 @@ import {
     DEFAULT_FAV_TOOLS,
 } from "../../constants"
 
-export interface DrawControlState {
+export interface DrawingState {
     isDraggable: boolean
     isMouseDown: boolean
     directDraw: boolean
@@ -20,7 +20,7 @@ export interface DrawControlState {
     erasedStrokes: StrokeMap
 }
 
-const initState: DrawControlState = {
+const initState: DrawingState = {
     isDraggable: DEFAULT_ISDRAGGABLE,
     isMouseDown: DEFAULT_ISMOUSEDOWN,
     directDraw: DEFAULT_DIRECTDRAW,
@@ -31,8 +31,8 @@ const initState: DrawControlState = {
     erasedStrokes: {},
 }
 
-const drawControlSlice = createSlice({
-    name: "drawControl",
+const drawingSlice = createSlice({
+    name: "drawing",
     initialState: initState,
     reducers: {
         SET_TR_NODES: (state, action) => {
@@ -130,5 +130,5 @@ export const {
     TOGGLE_DIRECTDRAW,
     SET_TR_NODES,
     SET_ERASED_STROKES,
-} = drawControlSlice.actions
-export default drawControlSlice.reducer
+} = drawingSlice.actions
+export default drawingSlice.reducer

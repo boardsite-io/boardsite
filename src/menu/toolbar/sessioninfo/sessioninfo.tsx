@@ -8,9 +8,7 @@ import {
 } from "./sessioninfo.styled"
 
 const SessionInfo: React.FC = () => {
-    const userInfo = useCustomSelector(
-        (state) => state.webControl.connectedUsers
-    )
+    const userInfo = useCustomSelector((state) => state.session.connectedUsers)
     return (
         <SessionInfoWrapper>
             {Object.keys(userInfo).map((userId) => {

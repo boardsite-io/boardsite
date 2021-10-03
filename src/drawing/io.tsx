@@ -14,15 +14,14 @@ export async function pagesToDataURL(
     pixelRatio: number,
     drawBackground?: boolean
 ): Promise<string[]> {
-    const pages = store.getState().boardControl.pageRank
+    const pages = store.getState().board.pageRank
 
-    const imgs = pages.map(async (pageId) => {
+    const imgs = pages.map(async (pageId: string) => {
         const strokeIds = Object.keys(
-            store.getState().boardControl.pageCollection[pageId].strokes
+            store.getState().board.pageCollection[pageId].strokes
         )
         const { style } =
-            store.getState().boardControl.pageCollection[pageId]?.meta
-                ?.background
+            store.getState().board.pageCollection[pageId]?.meta?.background
 
         const tmp = document.createElement("div")
 
@@ -46,8 +45,9 @@ export async function pagesToDataURL(
                                 <StrokeShape
                                     key={id}
                                     stroke={
-                                        store.getState().boardControl
-                                            .pageCollection[pageId]?.strokes[id]
+                                        store.getState().board.pageCollection[
+                                            pageId
+                                        ]?.strokes[id]
                                     }
                                 />
                             ))}
@@ -90,7 +90,7 @@ export async function toPDF(
     const pageImages = await Promise.all(
         pagesData.map((data) => pdf.embedPng(data))
     )
-    const { pageRank, pageCollection } = store.getState().boardControl
+    const { pageRank, pageCollection } = store.getState().board
 
     pageImages.forEach((pageData, i) => {
         const { style, documentPageNum } =

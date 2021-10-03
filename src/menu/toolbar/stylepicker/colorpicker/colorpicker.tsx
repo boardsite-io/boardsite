@@ -1,13 +1,13 @@
 import React from "react"
 import { HexColorPicker } from "react-colorful"
 import { useCustomSelector } from "redux/hooks"
-import { SET_COLOR } from "redux/slice/drawcontrol"
+import { SET_COLOR } from "redux/drawing/drawing"
 import store from "redux/store"
 import "./colorpicker.css"
 
 const ColorPicker: React.FC = () => {
     const color = useCustomSelector(
-        (state) => state.drawControl.liveStroke.style.color
+        (state) => state.drawing.liveStroke.style.color
     )
 
     const handleChange = (newColor: string | undefined) => {

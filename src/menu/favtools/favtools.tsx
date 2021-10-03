@@ -12,11 +12,11 @@ import { ToolType } from "drawing/stroke/types"
 import { FavToolsStyled } from "./favtools.styled"
 import store from "../../redux/store"
 import { useCustomSelector } from "../../redux/hooks"
-import { ADD_FAV_TOOL } from "../../redux/slice/drawcontrol"
+import { ADD_FAV_TOOL } from "../../redux/drawing/drawing"
 import FavToolButton from "./favtoolbutton/favtoolbutton"
 
 const FavTools: React.FC = () => {
-    const favTools = useCustomSelector((state) => state.drawControl.favTools)
+    const favTools = useCustomSelector((state) => state.drawing.favTools)
 
     // add current draw settings as new fav tool
     const addFavTool = () => {
