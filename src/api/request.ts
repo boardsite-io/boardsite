@@ -58,7 +58,7 @@ export async function sendRequest<T>(
     data?: unknown,
     config?: AxiosRequestConfig
 ): Promise<T> {
-    const baseURL = store.getState().webControl.apiURL.toString()
+    const baseURL = store.getState().session.apiURL.toString()
     const response = await apiRequest({
         url: `${baseURL}b/${url}`,
         method,
@@ -137,7 +137,7 @@ export async function postAttachment(
     const formData = new FormData()
     formData.append("file", file)
 
-    const baseURL = store.getState().webControl.apiURL.toString()
+    const baseURL = store.getState().session.apiURL.toString()
     const response = await fileRequest({
         url: `${baseURL}b/${sessionId}/attachments`,
         method: "POST",
@@ -151,7 +151,7 @@ export async function getAttachment(
     sessionId: string,
     attachId: string
 ): Promise<unknown> {
-    const baseURL = store.getState().webControl.apiURL.toString()
+    const baseURL = store.getState().session.apiURL.toString()
     const response = await pdfRequest({
         url: `${baseURL}b/${sessionId}/attachments/${attachId}`,
         method: "GET",

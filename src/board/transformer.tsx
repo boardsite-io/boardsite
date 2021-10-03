@@ -22,7 +22,7 @@ const StrokeTransformer = (): JSX.Element => {
 
     // unselect transformer selection when change tool
     const trSelector = createSelector(
-        (state: RootState) => state.drawControl.trNodes,
+        (state: RootState) => state.drawing.trNodes,
         (trNodes: TrNodesType) => {
             if (trNodes !== undefined) {
                 trRef.current?.nodes(trNodes)
@@ -40,7 +40,7 @@ const StrokeTransformer = (): JSX.Element => {
     }
 
     const updateSelectedStrokes = () => {
-        const strokerefs = store.getState().drawControl.trNodes
+        const strokerefs = store.getState().drawing.trNodes
         const strokes = strokerefs.map(
             (stroke: Node<NodeConfig>) =>
                 ({

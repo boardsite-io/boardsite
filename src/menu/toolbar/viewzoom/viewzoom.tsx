@@ -1,6 +1,6 @@
 import { IconButton, ZoomInIcon, ZoomOutIcon } from "components"
 import React from "react"
-import { ZOOM_IN_CENTER, ZOOM_OUT_CENTER } from "redux/slice/viewcontrol"
+import { ZOOM_IN_CENTER, ZOOM_OUT_CENTER } from "redux/board/board"
 import store from "redux/store"
 
 const ViewZoom: React.FC = () => (

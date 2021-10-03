@@ -1,6 +1,14 @@
 import { BoardStroke } from "drawing/stroke/stroke"
 import { Stroke, ToolType } from "drawing/stroke/types"
 import {
+    ADD_STROKES,
+    CLEAR_PAGE,
+    DELETE_ALL_PAGES,
+    ERASE_STROKES,
+    SET_PAGEMETA,
+    SET_PAGERANK,
+} from "redux/board/board"
+import {
     postPages,
     putPages,
     postSession,
@@ -17,15 +25,7 @@ import {
     SET_SESSION_USERS,
     USER_CONNECT,
     USER_DISCONNECT,
-} from "../redux/slice/webcontrol"
-import {
-    DELETE_ALL_PAGES,
-    ADD_STROKES,
-    SET_PAGERANK,
-    ERASE_STROKES,
-    CLEAR_PAGE,
-    SET_PAGEMETA,
-} from "../redux/slice/boardcontrol"
+} from "../redux/session/session"
 import {
     MessageType,
     Message,
@@ -45,7 +45,7 @@ function createWebsocket(
     user: User
 ): Promise<Event | undefined> {
     return new Promise((resolve, reject) => {
-        const url = new URL(store.getState().webControl.apiURL.toString())
+        const url = new URL(store.getState().session.apiURL.toString())
         url.protocol = url.protocol.replace("http", "ws")
         const ws = new WebSocket(
             `${url.toString()}b/${sessionId}/users/${user.id}/socket`
@@ -64,10 +64,10 @@ function createWebsocket(
 function send(type: MessageType, content: unknown): void {
     const message: Message<typeof content> = {
         type,
-        sender: store.getState().webControl.user.id,
+        sender: store.getState().session.user.id,
         content,
     }
-    const ws = store.getState().webControl.webSocket as WebSocket
+    const ws = store.getState().session.webSocket as WebSocket
     ws.send(JSON.stringify(message))
 }
 
@@ -118,14 +118,14 @@ function syncPages({ pageRank, meta }: ResponsePageSync) {
         store.dispatch(DELETE_ALL_PAGES())
         return
     }
-    const { pageCollection } = store.getState().boardControl
+    const { pageCollection } = store.getState().board
     const newPageCollection: PageCollection = {}
     pageRank.forEach((pid: string) => {
         if (Object.prototype.hasOwnProperty.call(pageCollection, pid)) {
             newPageCollection[pid] = pageCollection[pid]
         } else {
             newPageCollection[pid] = new BoardPage(
-                store.getState().boardControl.pageSettings.background
+                store.getState().board.pageSettings.background
             ).setID(pid)
         }
     })
@@ -149,9 +149,9 @@ function updatePageMeta({ pageId, meta, clear }: ResponsePageUpdate) {
 
 export function isConnected(): boolean {
     return (
-        store.getState().webControl.sessionId !== "" &&
-        store.getState().webControl.webSocket != null &&
-        store.getState().webControl.webSocket.readyState === WebSocket.OPEN
+        store.getState().session.sessionId !== "" &&
+        store.getState().session.webSocket != null &&
+        store.getState().session.webSocket.readyState === WebSocket.OPEN
     )
 }
 
@@ -164,9 +164,9 @@ export async function newSession(): Promise<string> {
 }
 
 export async function joinSession(
-    sessionId = store.getState().webControl.sessionDialog.sidInput,
-    alias = store.getState().webControl.user.alias,
-    color = store.getState().webControl.user.color
+    sessionId = store.getState().session.sessionDialog.sidInput,
+    alias = store.getState().session.user.alias,
+    color = store.getState().session.user.color
 ): Promise<void> {
     // create a new user for us
     const user = await postUser(sessionId, { alias, color } as User)
@@ -194,7 +194,7 @@ export function sendStrokes(strokes: Stroke[]): void {
         messages.Stroke,
         strokes.map((s) => ({
             ...s.serialize?.(),
-            userId: store.getState().webControl.user.id,
+            userId: store.getState().session.user.id,
         }))
     )
 }
@@ -206,17 +206,17 @@ export function eraseStrokes(strokes: { id: string; pageId: string }[]): void {
             id: s.id,
             pageId: s.pageId,
             type: ToolType.Eraser,
-            userId: store.getState().webControl.user.id,
+            userId: store.getState().session.user.id,
         }))
     )
 }
 
 export function addPagesSession(pages: BoardPage[], pageIndex: number[]): void {
-    postPages(store.getState().webControl.sessionId, pages, pageIndex)
+    postPages(store.getState().session.sessionId, pages, pageIndex)
 }
 
 export function deletePagesSession(pageIds: string[]): void {
-    deletePages(store.getState().webControl.sessionId, pageIds)
+    deletePages(store.getState().session.sessionId, pageIds)
 }
 
 // returns the relative path to the session
@@ -231,13 +231,13 @@ export function pingSession(sessionID: string): Promise<ResponsePageSync> {
 }
 
 export function updatePagesSession(pages: BoardPage[], clear = false): void {
-    putPages(store.getState().webControl.sessionId, pages, clear)
+    putPages(store.getState().session.sessionId, pages, clear)
 }
 
 export function addAttachmentSession(file: File): Promise<string> {
-    return postAttachment(store.getState().webControl.sessionId, file)
+    return postAttachment(store.getState().session.sessionId, file)
 }
 
 export function getAttachmentSession(attachId: string): Promise<unknown> {
-    return getAttachment(store.getState().webControl.sessionId, attachId)
+    return getAttachment(store.getState().session.sessionId, attachId)
 }

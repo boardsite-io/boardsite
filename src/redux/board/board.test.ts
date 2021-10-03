@@ -2,8 +2,8 @@ import { BoardPage } from "drawing/page"
 import { BoardStroke } from "drawing/stroke/stroke"
 import { ToolType } from "drawing/stroke/types"
 import { DocumentImage } from "types"
-import reducer from "./boardcontrol"
-import * as action from "./boardcontrol"
+import reducer from "./board"
+import * as action from "./board"
 import { pageType, STROKE_WIDTH_PRESETS } from "../../constants"
 
 const page1 = new BoardPage(pageType.CHECKERED).setID("pid1")

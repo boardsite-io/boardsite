@@ -6,12 +6,12 @@ import { Vector2d } from "konva/types/types"
 import { ToolType } from "drawing/stroke/types"
 import store from "../../redux/store"
 import * as actions from "../../drawing/stroke/actions"
-import { SET_ISMOUSEDOWN } from "../../redux/slice/drawcontrol"
+import { SET_ISMOUSEDOWN } from "../../redux/drawing/drawing"
 import { useCustomSelector } from "../../redux/hooks"
 import { PageProps } from "./types"
 
 const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
-    const { isMouseDown } = useCustomSelector((state) => state.drawControl)
+    const { isMouseDown } = useCustomSelector((state) => state.drawing)
 
     const getPointerPositionInStage = (e: KonvaEventObject<MouseEvent>) => {
         const stage = e.target.getStage() as Stage
@@ -86,7 +86,7 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
         }
         if (
             // exit if draw with finger is not set
-            !store.getState().drawControl.directDraw &&
+            !store.getState().drawing.directDraw &&
             touch1.touchType === "direct"
         ) {
             return false
@@ -95,7 +95,7 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
     }
 
     const isPanMode = useCustomSelector(
-        (state) => state.drawControl.liveStroke.type === ToolType.Pan
+        (state) => state.drawing.liveStroke.type === ToolType.Pan
     )
 
     return (

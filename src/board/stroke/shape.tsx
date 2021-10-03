@@ -16,10 +16,10 @@ import {
 import { LiveStroke, Point, Stroke, ToolType } from "../../drawing/stroke/types"
 
 export const LiveStrokeShape = memo(() => {
-    const { liveStroke } = store.getState().drawControl
+    const { liveStroke } = store.getState().drawing
     // trigger rerender when livestroke is updated
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const u = useCustomSelector((state) => state.drawControl.liveStrokeUpdate)
+    const u = useCustomSelector((state) => state.drawing.liveStrokeUpdate)
     return (
         <>
             {liveStroke.pointsSegments?.map((subPts: number[], i: number) => {
@@ -53,11 +53,9 @@ export const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
     // Tmp Fix: selector for x,y,scale in order to trigger
     // a rerender when stroke is updated/moved
     const strokeSel = useCustomSelector((state) => {
-        const { isDraggable } = state.drawControl
+        const { isDraggable } = state.drawing
         const s =
-            state.boardControl.pageCollection[stroke.pageId]?.strokes[
-                stroke.id ?? ""
-            ]
+            state.board.pageCollection[stroke.pageId]?.strokes[stroke.id ?? ""]
         return {
             isDraggable,
             x: s?.x,
@@ -68,7 +66,7 @@ export const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
     })
 
     const erasedStrokes = useCustomSelector(
-        (state) => state.drawControl.erasedStrokes
+        (state) => state.drawing.erasedStrokes
     )
 
     const getOpacity = (): number => {

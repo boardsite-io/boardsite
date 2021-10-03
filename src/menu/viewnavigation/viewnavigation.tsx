@@ -11,8 +11,8 @@ import {
     JUMP_TO_LAST_PAGE,
     JUMP_TO_NEXT_PAGE,
     JUMP_TO_PREV_PAGE,
-} from "redux/slice/boardcontrol"
-import { INITIAL_VIEW } from "redux/slice/viewcontrol"
+    INITIAL_VIEW,
+} from "redux/board/board"
 import store from "../../redux/store"
 import { useCustomSelector } from "../../redux/hooks"
 import {
@@ -41,9 +41,9 @@ const lastPage = () => {
 
 const ViewNavigation: React.FC = () => {
     const { currentPageIndex, pageRank } = useCustomSelector(
-        (state) => state.boardControl
+        (state) => state.board
     )
-    const { hideNavBar } = useCustomSelector((state) => state.viewControl)
+    const { hideNavBar } = useCustomSelector((state) => state.board.view)
 
     return hideNavBar ? null : (
         <ViewNavWrapper>

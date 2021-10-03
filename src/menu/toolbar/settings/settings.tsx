@@ -12,12 +12,9 @@ import {
     Switch,
     TextField,
 } from "components"
-import { SET_API_URL } from "redux/slice/webcontrol"
-import {
-    TOGGLE_HIDE_NAVBAR,
-    TOGGLE_SHOULD_CENTER,
-} from "redux/slice/viewcontrol"
-import { TOGGLE_DIRECTDRAW } from "redux/slice/drawcontrol"
+import { SET_API_URL } from "redux/session/session"
+import { TOGGLE_HIDE_NAVBAR, TOGGLE_SHOULD_CENTER } from "redux/board/board"
+import { TOGGLE_DIRECTDRAW } from "redux/drawing/drawing"
 import { isConnected } from "api/websocket"
 import { useCustomSelector } from "redux/hooks"
 import { API_URL } from "../../../api/types"
@@ -31,15 +28,10 @@ const Settings: React.FC = () => {
     const [isValidURL, setValidURL] = useState(true)
     const [isOpenAbout, setOpenAbout] = useState(false) // about dialog
 
-    const keepCentered = useCustomSelector(
-        (state) => state.viewControl.keepCentered
+    const { keepCentered, hideNavBar } = useCustomSelector(
+        (state) => state.board.view
     )
-    const hideNavBar = useCustomSelector(
-        (state) => state.viewControl.hideNavBar
-    )
-    const directDraw = useCustomSelector(
-        (state) => state.drawControl.directDraw
-    )
+    const { directDraw } = useCustomSelector((state) => state.drawing)
     // const apiURL = useAppSelector((state) => state.webControl.apiURL)
 
     const handleURLChange = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,5 +1,13 @@
 import { Stroke } from "drawing/stroke/types"
-import { INITIAL_VIEW } from "redux/slice/viewcontrol"
+import {
+    JUMP_TO_NEXT_PAGE,
+    CLEAR_PAGE,
+    DELETE_PAGE,
+    DELETE_ALL_PAGES,
+    SET_PAGEMETA,
+    SET_PAGE_BACKGROUND,
+    INITIAL_VIEW,
+} from "redux/board/board"
 import {
     addPagesSession,
     updatePagesSession,
@@ -9,15 +17,6 @@ import {
     getAttachmentSession,
 } from "../api/websocket"
 import { pageType } from "../constants"
-import {
-    CLEAR_PAGE,
-    DELETE_PAGE,
-    DELETE_ALL_PAGES,
-    SET_PAGEMETA,
-    SET_PAGE_BACKGROUND,
-    JUMP_TO_NEXT_PAGE,
-} from "../redux/slice/boardcontrol"
-
 import store from "../redux/store"
 import { PageBackground } from "../types"
 import { toPDF } from "./io"
@@ -32,7 +31,7 @@ import {
 
 export function handleAddPageOver(): void {
     const page = new BoardPage()
-    const index = store.getState().boardControl.currentPageIndex
+    const index = store.getState().board.currentPageIndex
     if (isConnected()) {
         addPagesSession([page], [index])
     } else {
@@ -43,7 +42,7 @@ export function handleAddPageOver(): void {
 
 export function handleAddPageUnder(): void {
     const page = new BoardPage()
-    const index = store.getState().boardControl.currentPageIndex + 1
+    const index = store.getState().board.currentPageIndex + 1
     if (isConnected()) {
         addPagesSession([page], [index])
     } else {
@@ -71,7 +70,7 @@ export function handleDeletePage(): void {
 
 export function handleDeleteAllPages(): void {
     if (isConnected()) {
-        deletePagesSession(store.getState().boardControl.pageRank)
+        deletePagesSession(store.getState().board.pageRank)
     } else {
         store.dispatch(DELETE_ALL_PAGES())
     }
@@ -129,7 +128,7 @@ export async function handleDocument(file: File): Promise<void> {
 }
 
 export function handleAddDocumentPages(attachId?: string): void {
-    const documentPages = store.getState().boardControl.document
+    const documentPages = store.getState().board.document
 
     handleDeleteAllPages()
 
@@ -149,7 +148,7 @@ export function handleAddDocumentPages(attachId?: string): void {
 export async function handleExportDocument(): Promise<void> {
     // TODO filename
     const filename = "board.pdf"
-    const { documentSrc } = store.getState().boardControl
+    const { documentSrc } = store.getState().board
     if (isConnected()) {
         const src = documentSrc
             ? ((await getAttachmentSession(documentSrc as string)) as string)
@@ -161,15 +160,13 @@ export async function handleExportDocument(): Promise<void> {
 }
 
 function getCurrentPageId() {
-    return store.getState().boardControl.pageRank[
-        store.getState().boardControl.currentPageIndex
+    return store.getState().board.pageRank[
+        store.getState().board.currentPageIndex
     ]
 }
 
 function getCurrentPage() {
-    return store.getState().boardControl.pageCollection[
-        store.getState().boardControl.pageRank[
-            store.getState().boardControl.currentPageIndex
-        ]
+    return store.getState().board.pageCollection[
+        store.getState().board.pageRank[store.getState().board.currentPageIndex]
     ]
 }

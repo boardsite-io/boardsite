@@ -10,17 +10,17 @@ import {
 } from "components"
 import React, { useState } from "react"
 import { useCustomSelector } from "redux/hooks"
-import { SET_TYPE } from "redux/slice/drawcontrol"
+import { SET_TYPE } from "redux/drawing/drawing"
 import store from "redux/store"
 import StylePicker from "../stylepicker/stylepicker"
 
 const PenTool: React.FC = () => {
     const [open, setOpen] = useState(false)
     const typeSelector = useCustomSelector(
-        (state) => state.drawControl.liveStroke.type
+        (state) => state.drawing.liveStroke.type
     )
     const colorSelector = useCustomSelector(
-        (state) => state.drawControl.liveStroke.style.color
+        (state) => state.drawing.liveStroke.style.color
     )
     const isDrawingTool = () =>
         typeSelector === ToolType.Pen ||

@@ -9,14 +9,14 @@ import {
     DialogTitle,
     IconButton,
 } from "components"
-import { SET_SDIAG, CLOSE_SDIAG } from "../../../redux/slice/webcontrol"
+import { SET_SDIAG, CLOSE_SDIAG } from "../../../redux/session/session"
 import { isConnected } from "../../../api/websocket"
 import OfflineDialogContent from "./offlinedialogcontent/offlinedialogcontent"
 import OnlineDialogContent from "./onlinedialogcontent/onlinedialogcontent"
 
 const SessionDialog: React.FC = () => {
     const sDiagStatus = useCustomSelector(
-        (state) => state.webControl.sessionDialog
+        (state) => state.session.sessionDialog
     )
     const dispatch = useCustomDispatch()
     const history = useHistory()

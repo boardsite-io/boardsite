@@ -6,9 +6,8 @@ import { Context } from "konva/types/Context"
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf"
 // import pdfjsWorker from "pdfjs-dist/es5/build/pdf.worker.entry"
 import { RenderParameters } from "pdfjs-dist/types/display/api"
-
+import { ADD_PAGE, SET_PDF } from "redux/board/board"
 import { DOC_SCALE, pageType } from "../constants"
-import { ADD_PAGE, SET_PDF } from "../redux/slice/boardcontrol"
 import store from "../redux/store"
 import { Page, PageBackground, PageMeta } from "../types"
 import { StrokeMap } from "./stroke/types"
@@ -20,7 +19,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
 export class BoardPage implements Page {
     constructor(style?: PageBackground, pageNum?: number, attachId?: string) {
-        const { pageSettings } = store.getState().boardControl
+        const { pageSettings } = store.getState().board
         this.pageId = nanoid(8)
         this.meta = {
             background: {
@@ -144,7 +143,7 @@ export async function loadNewPDF(fileData: Uint8Array | string): Promise<void> {
 }
 
 function getAttachmentURL(attachId: string): URL {
-    const { apiURL, sessionId } = store.getState().webControl
+    const { apiURL, sessionId } = store.getState().session
     return new URL(attachId, `${apiURL.toString()}b/${sessionId}/attachments/`)
 }
 

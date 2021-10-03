@@ -47,8 +47,8 @@ const initState: WebControlState = {
     apiURL: new URL(API_URL),
 }
 
-const webControlSlice = createSlice({
-    name: "webControl",
+const sessionSlice = createSlice({
+    name: "session",
     initialState: initState,
     reducers: {
         CREATE_WS: (state, action) => {
@@ -129,5 +129,5 @@ export const {
     SET_USER_ALIAS,
     SET_USER_COLOR,
     SET_API_URL,
-} = webControlSlice.actions
-export default webControlSlice.reducer
+} = sessionSlice.actions
+export default sessionSlice.reducer

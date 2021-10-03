@@ -10,7 +10,7 @@ interface PageBackgroundProps {
 
 const PageBackgrounds: React.FC<PageBackgroundProps> = () => {
     const { background } = useCustomSelector(
-        (state) => state.boardControl.pageSettings
+        (state) => state.board.pageSettings
     )
 
     return (

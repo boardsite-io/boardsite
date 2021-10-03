@@ -1,8 +1,8 @@
 import React from "react"
 import { ExpandIcon, ShrinkIcon } from "components"
+import { FIT_WIDTH_TO_PAGE, RESET_VIEW } from "redux/board/board"
 import IconButton from "../../../components/iconbutton/iconbutton"
 import store from "../../../redux/store"
-import { FIT_WIDTH_TO_PAGE, RESET_VIEW } from "../../../redux/slice/viewcontrol"
 
 const ViewOptions: React.FC = () => (
     <>

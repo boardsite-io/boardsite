@@ -17,7 +17,7 @@ import {
     BsGear,
 } from "react-icons/bs"
 import { useCustomDispatch, useCustomSelector } from "redux/hooks"
-import { SET_PAGE_HEIGHT, SET_PAGE_WIDTH } from "redux/slice/boardcontrol"
+import { SET_PAGE_HEIGHT, SET_PAGE_WIDTH } from "redux/board/board"
 import {
     MAX_PAGE_WIDTH,
     MIN_PAGE_WIDTH,
@@ -41,7 +41,7 @@ const PageOptions: React.FC = () => {
     const [open, setOpen] = useState(false)
     const close = () => setOpen(false)
     const { width: pageWidth, height: pageHeight } = useCustomSelector(
-        (state) => state.boardControl.pageSettings
+        (state) => state.board.pageSettings
     )
 
     const handleWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
