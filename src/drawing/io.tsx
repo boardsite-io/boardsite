@@ -16,7 +16,7 @@ export async function pagesToDataURL(
 ): Promise<string[]> {
     const pages = store.getState().board.pageRank
 
-    const imgs = pages.map(async (pageId) => {
+    const imgs = pages.map(async (pageId: string) => {
         const strokeIds = Object.keys(
             store.getState().board.pageCollection[pageId].strokes
         )

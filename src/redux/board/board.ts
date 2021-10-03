@@ -1,54 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { Point, Stroke } from "drawing/stroke/types"
+import { Stroke } from "drawing/stroke/types"
 import {
-    DEFAULT_CURRENT_PAGE_INDEX,
-    DEFAULT_PAGE_HEIGHT,
-    DEFAULT_PAGE_WIDTH,
-    pageType,
-    DEFAULT_STAGE_X,
     DEFAULT_STAGE_Y,
-    DEFAULT_STAGE_SCALE,
     ZOOM_IN_BUTTON_SCALE,
     ZOOM_OUT_BUTTON_SCALE,
-    DEFAULT_KEEP_CENTERED,
-    DEFAULT_HIDE_NAVBAR,
 } from "../../constants"
 import { Page } from "../../types"
 import {
     centerView,
     detectPageChange,
     fitToPage,
-    getCenter,
-    getDistance,
+    multiTouchEnd,
+    multiTouchMove,
     zoomToPointWithScale,
 } from "./helpers"
-import { BoardState } from "./types"
-
-// variables for multitouch zoom
-let lastCenter: Point | null = null
-let lastDist = 0
-
-export const initState: BoardState = {
-    currentPageIndex: DEFAULT_CURRENT_PAGE_INDEX,
-    pageRank: [],
-    pageCollection: {},
-    document: [],
-    documentSrc: "",
-    pageSettings: {
-        background: pageType.BLANK, // default,
-        width: DEFAULT_PAGE_WIDTH,
-        height: DEFAULT_PAGE_HEIGHT,
-    },
-    view: {
-        keepCentered: DEFAULT_KEEP_CENTERED,
-        hideNavBar: DEFAULT_HIDE_NAVBAR,
-        stageWidth: window.innerWidth,
-        stageHeight: window.innerHeight,
-        stageX: DEFAULT_STAGE_X,
-        stageY: DEFAULT_STAGE_Y,
-        stageScale: DEFAULT_STAGE_SCALE,
-    },
-}
+import { BoardState, initState } from "./types"
 
 const boardSlice = createSlice({
     name: "board",
@@ -183,45 +149,11 @@ const boardSlice = createSlice({
         },
         MULTI_TOUCH_MOVE: (state, action) => {
             const { p1, p2 } = action.payload
-            if (!lastCenter) {
-                lastCenter = getCenter(p1, p2)
-                return
-            }
-            const newCenter = getCenter(p1, p2)
-            const dist = getDistance(p1, p2)
-
-            if (!lastDist) {
-                lastDist = dist
-            }
-
-            // local coordinates of center point
-            const pointTo = {
-                x: (newCenter.x - state.view.stageX) / state.view.stageScale.x,
-                y: (newCenter.y - state.view.stageY) / state.view.stageScale.x,
-            }
-
-            // OPTION 1:
-            const scale = state.view.stageScale.x * (dist / lastDist)
-            state.view.stageScale = { x: scale, y: scale }
-
-            // calculate new position of the stage
-            const dx = newCenter.x - lastCenter.x
-            const dy = newCenter.y - lastCenter.y
-
-            state.view.stageX = newCenter.x - pointTo.x * scale + dx
-            state.view.stageY = newCenter.y - pointTo.y * scale + dy
-
-            // OPTION 2
-            // zoomToPointWithScale(state, pointTo, dist / lastDist)
-
-            // update info
-            lastDist = dist
-            lastCenter = newCenter
+            multiTouchMove(state.view, p1, p2)
         },
         MULTI_TOUCH_END: (state) => {
-            lastDist = 0
-            lastCenter = null
             detectPageChange(state as BoardState)
+            multiTouchEnd()
         },
         // use this e.g., on page change
         INITIAL_VIEW: (state) => {

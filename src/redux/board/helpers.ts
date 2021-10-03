@@ -104,3 +104,49 @@ export const getCenter = (p1: Point, p2: Point): Point => ({
     x: (p1.x + p2.x) / 2,
     y: (p1.y + p2.y) / 2,
 })
+
+// variables for multitouch zoom
+let lastCenter: Point | null = null
+let lastDist = 0
+
+export const multiTouchMove = (view: BoardView, p1: Point, p2: Point): void => {
+    if (!lastCenter) {
+        lastCenter = getCenter(p1, p2)
+        return
+    }
+    const newCenter = getCenter(p1, p2)
+    const dist = getDistance(p1, p2)
+
+    if (!lastDist) {
+        lastDist = dist
+    }
+
+    // local coordinates of center point
+    const pointTo = {
+        x: (newCenter.x - view.stageX) / view.stageScale.x,
+        y: (newCenter.y - view.stageY) / view.stageScale.x,
+    }
+
+    // OPTION 1:
+    const scale = view.stageScale.x * (dist / lastDist)
+    view.stageScale = { x: scale, y: scale }
+
+    // calculate new position of the stage
+    const dx = newCenter.x - lastCenter.x
+    const dy = newCenter.y - lastCenter.y
+
+    view.stageX = newCenter.x - pointTo.x * scale + dx
+    view.stageY = newCenter.y - pointTo.y * scale + dy
+
+    // OPTION 2
+    // zoomToPointWithScale(state, pointTo, dist / lastDist)
+
+    // update info
+    lastDist = dist
+    lastCenter = newCenter
+}
+
+export const multiTouchEnd = (): void => {
+    lastDist = 0
+    lastCenter = null
+}
