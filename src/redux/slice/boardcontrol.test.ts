@@ -28,26 +28,25 @@ page1.strokes.strkid1 = mockBoardStroke1
 
 describe("boardcontrol reducer", () => {
     it("should return the initial state", () => {
-        expect(reducer(undefined, {} as any)).toEqual({
-            pageRank: [],
-            pageCollection: {},
-            document: [] as DocumentImage[],
-            documentSrc: "",
-            pageBG: pageType.BLANK,
-        })
+        expect(reducer(undefined, {} as any)).toEqual(action.initState)
     })
 
     it("updates a stroke", () => {
         expect(
             reducer(
                 {
+                    currentPageIndex: 0,
                     pageRank: ["pid1"],
                     pageCollection: {
                         pid1: page1,
                     },
                     document: [] as DocumentImage[],
                     documentSrc: "",
-                    pageBG: pageType.BLANK,
+                    pageSettings: {
+                        background: pageType.BLANK,
+                        width: 10,
+                        height: 10,
+                    },
                 },
                 action.UPDATE_STROKES([
                     {
@@ -73,13 +72,18 @@ describe("boardcontrol reducer", () => {
         expect(
             reducer(
                 {
+                    currentPageIndex: 0,
                     pageRank: ["pid1"],
                     pageCollection: {
                         pid1: page1,
                     },
                     document: [] as DocumentImage[],
                     documentSrc: "",
-                    pageBG: pageType.BLANK,
+                    pageSettings: {
+                        background: pageType.BLANK,
+                        width: 10,
+                        height: 10,
+                    },
                 },
                 action.UPDATE_STROKES([
                     {

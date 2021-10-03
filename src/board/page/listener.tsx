@@ -1,6 +1,5 @@
-import React, { useEffect, useRef } from "react"
+import React from "react"
 import { Rect } from "react-konva"
-import * as types from "konva/types/shapes/Rect"
 import { KonvaEventObject } from "konva/types/Node"
 import { Stage } from "konva/types/Stage"
 import { Vector2d } from "konva/types/types"
@@ -12,13 +11,7 @@ import { useCustomSelector } from "../../redux/hooks"
 import { PageProps } from "./types"
 
 const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
-    // pageId might not be valid anymore, exit then
-    if (!store.getState().boardControl.pageCollection[pageId]) {
-        return null
-    }
-    const isMouseDown = useCustomSelector(
-        (state) => state.drawControl.isMouseDown
-    )
+    const { isMouseDown } = useCustomSelector((state) => state.drawControl)
 
     const getPointerPositionInStage = (e: KonvaEventObject<MouseEvent>) => {
         const stage = e.target.getStage() as Stage
@@ -101,12 +94,6 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
         return !(touch1 && touch2) // double finger
     }
 
-    // cache the rect for performance
-    const ref = useRef<types.Rect>(null)
-    useEffect(() => {
-        ref.current?.cache()
-    }, [])
-
     const isPanMode = useCustomSelector(
         (state) => state.drawControl.liveStroke.type === ToolType.Pan
     )
@@ -114,7 +101,6 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
     return (
         <Rect
             {...pageSize}
-            ref={ref}
             draggable={false}
             listening={!isPanMode}
             onMouseDown={onMouseDown}

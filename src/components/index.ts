@@ -4,11 +4,13 @@ export { default as Button } from "./button/button"
 export { default as Popup } from "./popup/popup"
 export { default as Switch } from "./switch/switch"
 export { default as TextField } from "./textfield/textfield"
+export { default as NumberInput } from "./numberinput/numberinput"
 export { default as Dialog } from "./dialog/dialog"
 export { default as Drawer } from "./drawer/drawer"
 export { default as Divider } from "./divider/divider"
 export {
-    DialogContent,
     DialogTitle,
+    DialogContent,
     DialogOptions,
 } from "./dialog/dialog.styled"
+export { DrawerTitle, DrawerContent } from "./drawer/drawer.styled"

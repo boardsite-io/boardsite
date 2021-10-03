@@ -20,13 +20,16 @@ pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
 export class BoardPage implements Page {
     constructor(style?: PageBackground, pageNum?: number, attachId?: string) {
+        const { pageSettings } = store.getState().boardControl
         this.pageId = nanoid(8)
         this.meta = {
             background: {
-                style: style ?? store.getState().boardControl.pageBG, // fallback type
+                style: style ?? pageSettings.background, // fallback type
                 attachId: attachId ?? "",
                 documentPageNum: pageNum ?? 0,
             },
+            width: pageSettings.width,
+            height: pageSettings.height,
         }
     }
 

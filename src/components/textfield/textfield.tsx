@@ -10,7 +10,7 @@ import {
     TextAlign,
 } from "./textfield.styled"
 
-interface ButtonProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
     helperText?: string
     label?: string
     value: string
@@ -18,7 +18,7 @@ interface ButtonProps extends React.InputHTMLAttributes<HTMLInputElement> {
     error?: boolean
 }
 
-const TextField: React.FC<ButtonProps> = ({
+const TextField: React.FC<TextFieldProps> = ({
     helperText = "",
     label = "",
     value = "",

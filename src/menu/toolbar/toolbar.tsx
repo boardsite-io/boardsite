@@ -10,21 +10,21 @@ import ViewZoom from "./viewzoom/viewzoom"
 
 const Toolbar: React.FC = () => (
     <ToolbarStyled>
-        <ToolbarGroup>
+        <ToolbarGroup className="toolbar-general">
             <Settings />
             <SessionDialog />
-            <PageOptions />
         </ToolbarGroup>
-        <ToolbarGroup>
+        <ToolbarGroup className="toolbar-undo">
             <UndoRedo />
         </ToolbarGroup>
-        <ToolbarGroup>
+        <ToolbarGroup className="toolbar-toolring">
             <ToolRing />
         </ToolbarGroup>
-        <ToolbarGroup>
+        <ToolbarGroup className="toolbar-zoom">
             <ViewZoom />
         </ToolbarGroup>
-        <ToolbarGroup>
+        <ToolbarGroup className="toolbar-view">
+            <PageOptions />
             <ViewOptions />
         </ToolbarGroup>
     </ToolbarStyled>

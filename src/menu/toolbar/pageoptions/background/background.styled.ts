@@ -1,30 +1,38 @@
 import styled, { css } from "styled-components"
 
-export const PageOptions = styled.div`
+export const Backgrounds = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 1.5rem;
 `
 
-const sharedStyle = css`
+const sharedStyle = css<props>`
+    border: none;
     /* remove a pixel for pixel perfect symmetry */
     height: calc(5rem - 1px);
     width: calc(5rem - 1px);
-    outline: none;
     border-radius: var(--button-border-radius);
-    border: 1px solid var(--color3);
-    box-shadow: var(--box-shadow);
+    ${({ $active }) => ($active ? active : inactive)};
     &:hover {
         cursor: pointer;
     }
 `
+const active = css`
+    box-shadow: 0 0 0 4px var(--color3);
+`
+const inactive = css`
+    box-shadow: 0 0 0 1px green, var(--box-shadow);
+`
 
-export const PagePreviewBlank = styled.button`
+interface props {
+    $active: boolean
+}
+export const Blank = styled.button<props>`
     ${sharedStyle}
     background: white;
 `
-export const PagePreviewCheckered = styled.button`
+export const Checkered = styled.button<props>`
     ${sharedStyle}
     background-image: repeating-linear-gradient(
             90deg,
@@ -39,7 +47,7 @@ export const PagePreviewCheckered = styled.button`
             teal 1rem
         );
 `
-export const PagePreviewRuled = styled.button`
+export const Ruled = styled.button<props>`
     ${sharedStyle}
     background-image: repeating-linear-gradient(
         white 0, 

@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { Stroke } from "drawing/stroke/types"
-import { pageType } from "../../constants"
+import {
+    DEFAULT_CURRENT_PAGE_INDEX,
+    DEFAULT_PAGE_HEIGHT,
+    DEFAULT_PAGE_WIDTH,
+    pageType,
+} from "../../constants"
 import {
     DocumentImage,
     Page,
@@ -9,19 +14,29 @@ import {
 } from "../../types"
 
 export interface BoardControlState {
+    currentPageIndex: number
     pageRank: string[]
     pageCollection: PageCollection
     document: DocumentImage[]
     documentSrc: string | Uint8Array
-    pageBG: PageBackground
+    pageSettings: {
+        background: PageBackground // default,
+        width: number
+        height: number
+    }
 }
 
-const initState: BoardControlState = {
+export const initState: BoardControlState = {
+    currentPageIndex: DEFAULT_CURRENT_PAGE_INDEX,
     pageRank: [],
     pageCollection: {},
-    document: [] as DocumentImage[],
+    document: [],
     documentSrc: "",
-    pageBG: pageType.BLANK as PageBackground, // default
+    pageSettings: {
+        background: pageType.BLANK, // default,
+        width: DEFAULT_PAGE_WIDTH,
+        height: DEFAULT_PAGE_HEIGHT,
+    },
 }
 
 const boardControlSlice = createSlice({
@@ -45,12 +60,19 @@ const boardControlSlice = createSlice({
             state.pageCollection[pageId]?.updateMeta(meta)
         },
 
-        SET_PAGEBG: (state, action) => {
+        SET_PAGE_BACKGROUND: (state, action) => {
             const style = action.payload
-            state.pageBG = style
+            state.pageSettings.background = style
         },
 
-        // Add a new page
+        SET_PAGE_WIDTH: (state, action: { payload: number }) => {
+            state.pageSettings.width = action.payload
+        },
+
+        SET_PAGE_HEIGHT: (state, action: { payload: number }) => {
+            state.pageSettings.height = action.payload
+        },
+
         ADD_PAGE: (state, action) => {
             const { page, index } = action.payload as {
                 page: Page
@@ -64,20 +86,17 @@ const boardControlSlice = createSlice({
             }
         },
 
-        // Clear page
         CLEAR_PAGE: (state, action) => {
             const pageId = action.payload
             state.pageCollection[pageId]?.clear()
         },
 
-        // Delete page
         DELETE_PAGE: (state, action) => {
             const pageId = action.payload
             delete state.pageCollection[pageId]
             state.pageRank.splice(state.pageRank.indexOf(pageId), 1)
         },
 
-        // Delete all pages
         DELETE_ALL_PAGES: (state) => {
             state.pageRank = []
             state.pageCollection = {}
@@ -122,6 +141,28 @@ const boardControlSlice = createSlice({
             state.document = pageImages
             state.documentSrc = documentSrc
         },
+        JUMP_TO_NEXT_PAGE: (state) => {
+            if (state.currentPageIndex < state.pageRank.length - 1) {
+                state.currentPageIndex += 1
+            }
+        },
+        JUMP_TO_PREV_PAGE: (state) => {
+            if (state.currentPageIndex > 0) {
+                state.currentPageIndex -= 1
+            }
+        },
+        JUMP_TO_FIRST_PAGE: (state) => {
+            state.currentPageIndex = 0
+        },
+        JUMP_TO_LAST_PAGE: (state) => {
+            state.currentPageIndex = state.pageRank.length - 1
+        },
+        JUMP_PAGE_WITH_INDEX: (state, action) => {
+            const targetIndex = action.payload
+            if (targetIndex <= state.pageRank.length - 1 && targetIndex >= 0) {
+                state.currentPageIndex = targetIndex
+            }
+        },
     },
 })
 
@@ -137,7 +178,14 @@ export const {
     ERASE_STROKES,
     UPDATE_STROKES,
     SET_PDF,
-    SET_PAGEBG,
+    SET_PAGE_BACKGROUND,
+    SET_PAGE_HEIGHT,
+    SET_PAGE_WIDTH,
+    JUMP_TO_NEXT_PAGE,
+    JUMP_TO_PREV_PAGE,
+    JUMP_TO_FIRST_PAGE,
+    JUMP_TO_LAST_PAGE,
+    JUMP_PAGE_WITH_INDEX,
 } = boardControlSlice.actions
 
 export default boardControlSlice.reducer

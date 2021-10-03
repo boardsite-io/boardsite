@@ -9,6 +9,12 @@ export default function isDev(): boolean {
 }
 
 export const STROKE_WIDTH_PRESETS = [0.5, 1, 2, 3, 4, 5, 7, 10, 14, 20]
+export const DEFAULT_PAGE_WIDTH = 620
+export const DEFAULT_PAGE_HEIGHT = 877
+export const MIN_PAGE_WIDTH = 400
+export const MAX_PAGE_WIDTH = 2000
+export const MIN_PAGE_HEIGHT = 400
+export const MAX_PAGE_HEIGHT = 2000
 export const CANVAS_WIDTH = 620
 export const CANVAS_HEIGHT = 877
 export const CANVAS_GAP = 20
@@ -22,8 +28,6 @@ export const ZOOM_OUT_BUTTON_SCALE = 0.9
 export const ZOOM_SCALE_MAX = 5.0
 export const ZOOM_SCALE_MIN = 0.5
 export const DEFAULT_CURRENT_PAGE_INDEX = 0
-export const DEFAULT_STAGE_WIDTH = window.innerWidth
-export const DEFAULT_STAGE_HEIGHT = window.innerHeight
 export const DEFAULT_STAGE_X = 0
 export const DEFAULT_STAGE_Y = 60
 export const DEFAULT_STAGE_SCALE: Point = { x: 1, y: 1 }

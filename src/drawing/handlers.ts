@@ -1,4 +1,5 @@
 import { Stroke } from "drawing/stroke/types"
+import { INITIAL_VIEW } from "redux/slice/viewcontrol"
 import {
     addPagesSession,
     updatePagesSession,
@@ -12,12 +13,13 @@ import {
     CLEAR_PAGE,
     DELETE_PAGE,
     DELETE_ALL_PAGES,
-    SET_PAGEBG,
     SET_PAGEMETA,
+    SET_PAGE_BACKGROUND,
+    JUMP_TO_NEXT_PAGE,
 } from "../redux/slice/boardcontrol"
 
 import store from "../redux/store"
-import { PageBackground, PageMeta } from "../types"
+import { PageBackground } from "../types"
 import { toPDF } from "./io"
 import { BoardPage, getPDFfromForm, loadNewPDF } from "./page"
 import {
@@ -30,22 +32,25 @@ import {
 
 export function handleAddPageOver(): void {
     const page = new BoardPage()
-    const index = store.getState().viewControl.currentPageIndex
+    const index = store.getState().boardControl.currentPageIndex
     if (isConnected()) {
         addPagesSession([page], [index])
     } else {
         page.add(index)
     }
+    store.dispatch(INITIAL_VIEW())
 }
 
 export function handleAddPageUnder(): void {
     const page = new BoardPage()
-    const index = store.getState().viewControl.currentPageIndex + 1
+    const index = store.getState().boardControl.currentPageIndex + 1
     if (isConnected()) {
         addPagesSession([page], [index])
     } else {
         page.add(index)
     }
+    store.dispatch(JUMP_TO_NEXT_PAGE())
+    store.dispatch(INITIAL_VIEW())
 }
 
 export function handleClearPage(): void {
@@ -94,21 +99,20 @@ export function handleRedo(): void {
 
 export function handlePageBackground(style: PageBackground): void {
     // update the default page type
-    store.dispatch(SET_PAGEBG(style))
-
+    store.dispatch(SET_PAGE_BACKGROUND(style))
+    const currentPage = getCurrentPage()
     // cannot update background of doc type
-    if (getCurrentPage().meta.background.style === pageType.DOC) {
+    if (currentPage.meta.background.style === pageType.DOC) {
         return
     }
 
-    const meta: PageMeta = {
-        background: { ...getCurrentPage().meta.background, style },
-    }
+    const newMeta = { ...currentPage.meta }
+    newMeta.background.style = style
 
     if (isConnected()) {
-        updatePagesSession([getCurrentPage().updateMeta(meta)])
+        updatePagesSession([currentPage.updateMeta(newMeta)])
     } else {
-        store.dispatch(SET_PAGEMETA({ pageId: getCurrentPage().pageId, meta }))
+        store.dispatch(SET_PAGEMETA({ pageId: currentPage.pageId, newMeta }))
     }
 }
 
@@ -158,14 +162,14 @@ export async function handleExportDocument(): Promise<void> {
 
 function getCurrentPageId() {
     return store.getState().boardControl.pageRank[
-        store.getState().viewControl.currentPageIndex
+        store.getState().boardControl.currentPageIndex
     ]
 }
 
 function getCurrentPage() {
     return store.getState().boardControl.pageCollection[
         store.getState().boardControl.pageRank[
-            store.getState().viewControl.currentPageIndex
+            store.getState().boardControl.currentPageIndex
         ]
     ]
 }
