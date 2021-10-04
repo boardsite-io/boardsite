@@ -7,6 +7,9 @@ A whiteboard built for the web, desktop and mobile
 ## Features
 - [x] Note, annotate and draw with stylus/pen support
 - [x] Share your notes and collaborate with peers via sessions
+- [x] Import / Export PDFs
+- [x] Custom page sizes and backgrounds
+- [x] Save favorite tools 
 
 ![boardsite](/showcase.png)
 
