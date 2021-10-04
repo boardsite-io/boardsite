@@ -6,7 +6,7 @@ import { Provider } from "react-redux"
 import { Layer, Stage, Rect } from "react-konva"
 import * as types from "konva/types/Layer"
 import { StrokeShape } from "board/stroke/shape"
-import { CANVAS_HEIGHT, CANVAS_WIDTH, pageType } from "../constants"
+import { CANVAS_HEIGHT, CANVAS_WIDTH, pageType } from "consts"
 import store from "../redux/store"
 import { pageBackground } from "./page"
 

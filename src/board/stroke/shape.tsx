@@ -2,8 +2,6 @@ import React, { memo, useState } from "react"
 import { Circle, Ellipse, Line, Rect } from "react-konva"
 import { LineJoin, LineCap } from "konva/types/Shape"
 import { LineConfig } from "konva/types/shapes/Line"
-import { useCustomSelector } from "../../redux/hooks"
-import store from "../../redux/store"
 import {
     ERASED_OPACITY,
     ERASER_WIDTH,
@@ -12,8 +10,10 @@ import {
     SEL_FILL_ENABLED,
     SEL_STROKE,
     SEL_STROKE_ENABLED,
-} from "../../constants"
-import { LiveStroke, Point, Stroke, ToolType } from "../../drawing/stroke/types"
+} from "consts"
+import store from "redux/store"
+import { useCustomSelector } from "redux/hooks"
+import { LiveStroke, Point, Stroke, ToolType } from "drawing/stroke/types"
 
 export const LiveStrokeShape = memo(() => {
     const { liveStroke } = store.getState().drawing

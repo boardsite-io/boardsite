@@ -6,6 +6,7 @@ import { KonvaEventObject } from "konva/types/Node"
 import { ToolType } from "drawing/stroke/types"
 import { getPageMeta } from "drawing/stroke/actions"
 import { createSelector } from "reselect"
+import { ZOOM_IN_WHEEL_SCALE, ZOOM_OUT_WHEEL_SCALE } from "consts"
 import {
     CENTER_VIEW,
     ON_WINDOW_RESIZE,
@@ -15,11 +16,10 @@ import {
     ZOOM_TO,
     MULTI_TOUCH_MOVE,
     MULTI_TOUCH_END,
-} from "../redux/board/board"
+} from "redux/board/board"
+import store, { RootState } from "redux/store"
+import { useCustomSelector } from "redux/hooks"
 import { LiveStrokeShape } from "./stroke/shape"
-import { ZOOM_IN_WHEEL_SCALE, ZOOM_OUT_WHEEL_SCALE } from "../constants"
-import store, { RootState } from "../redux/store"
-import { useCustomSelector } from "../redux/hooks"
 import StrokeTransformer from "./transformer"
 import PageListener from "./page/listener"
 import PageContent from "./page/content"

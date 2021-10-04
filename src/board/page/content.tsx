@@ -1,8 +1,8 @@
 import React from "react"
 import { Group } from "react-konva"
-import store from "../../redux/store"
+import store from "redux/store"
+import { useCustomSelector } from "redux/hooks"
 import { StrokeShape } from "../stroke/shape"
-import { useCustomSelector } from "../../redux/hooks"
 import { PageProps } from "./types"
 
 const PageContent: React.FC<PageProps> = ({ pageId, pageSize }) => {

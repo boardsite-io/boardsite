@@ -6,6 +6,7 @@ import {
     Drawer,
     DrawerContent,
     DrawerTitle,
+    IconButton,
     NumberInput,
 } from "components"
 import {
@@ -24,9 +25,7 @@ import {
     MIN_PAGE_WIDTH,
     MAX_PAGE_HEIGHT,
     MIN_PAGE_HEIGHT,
-} from "../../../constants"
-import Background from "./background/background"
-import IconButton from "../../../components/iconbutton/iconbutton"
+} from "consts"
 import {
     handleAddPageOver,
     handleAddPageUnder,
@@ -34,7 +33,8 @@ import {
     handleDeleteAllPages,
     handleDeletePage,
     handleExportDocument,
-} from "../../../drawing/handlers"
+} from "drawing/handlers"
+import Background from "./background/background"
 import UploadPDFButton from "../uploadpdf/uploadPDF"
 
 const PageOptions: React.FC = () => {

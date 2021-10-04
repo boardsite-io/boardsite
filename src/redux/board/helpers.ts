@@ -1,5 +1,5 @@
 import { Point } from "drawing/stroke/types"
-import { CANVAS_WIDTH, ZOOM_SCALE_MAX, ZOOM_SCALE_MIN } from "../../constants"
+import { CANVAS_WIDTH, ZOOM_SCALE_MAX, ZOOM_SCALE_MIN } from "consts"
 import { BoardState, BoardView } from "./types"
 
 export const getViewCenterY = ({ view }: BoardState): number =>

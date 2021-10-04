@@ -5,8 +5,8 @@ import {
     REPLACE_FAV_TOOL,
     REMOVE_FAV_TOOL,
     SET_TOOL,
-} from "../../../redux/drawing/drawing"
-import store from "../../../redux/store"
+} from "redux/drawing/drawing"
+import store from "redux/store"
 import {
     FavToolOptions,
     FavToolWidth,

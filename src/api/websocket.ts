@@ -9,6 +9,15 @@ import {
     SET_PAGERANK,
 } from "redux/board/board"
 import {
+    CREATE_WS,
+    SET_SESSION_USERS,
+    USER_CONNECT,
+    USER_DISCONNECT,
+} from "redux/session/session"
+import { BoardPage } from "drawing/page"
+import store from "redux/store"
+import { PageCollection, User } from "types"
+import {
     postPages,
     putPages,
     postSession,
@@ -21,21 +30,12 @@ import {
     getAttachment,
 } from "./request"
 import {
-    CREATE_WS,
-    SET_SESSION_USERS,
-    USER_CONNECT,
-    USER_DISCONNECT,
-} from "../redux/session/session"
-import {
     MessageType,
     Message,
     messages,
     ResponsePageSync,
     ResponsePageUpdate,
 } from "./types"
-import { PageCollection, User } from "../types"
-import { BoardPage } from "../drawing/page"
-import store from "../redux/store"
 
 /**
  * Connect to Websocket.

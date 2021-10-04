@@ -1,13 +1,13 @@
 import { StrokeMap, Tool, ToolType } from "drawing/stroke/types"
 import { createSlice } from "@reduxjs/toolkit"
-import { BoardLiveStroke } from "../../drawing/stroke/livestroke"
-import { TrNodesType } from "../../types"
 import {
     DEFAULT_ISDRAGGABLE,
     DEFAULT_ISMOUSEDOWN,
     DEFAULT_DIRECTDRAW,
     DEFAULT_FAV_TOOLS,
-} from "../../constants"
+} from "consts"
+import { BoardLiveStroke } from "drawing/stroke/livestroke"
+import { TrNodesType } from "types"
 
 export interface DrawingState {
     isDraggable: boolean

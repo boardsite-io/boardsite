@@ -15,10 +15,10 @@ import {
     isConnected,
     addAttachmentSession,
     getAttachmentSession,
-} from "../api/websocket"
-import { pageType } from "../constants"
-import store from "../redux/store"
-import { PageBackground } from "../types"
+} from "api/websocket"
+import { pageType } from "consts"
+import store from "redux/store"
+import { PageBackground } from "types"
 import { toPDF } from "./io"
 import { BoardPage, getPDFfromForm, loadNewPDF } from "./page"
 import {

@@ -1,7 +1,6 @@
 import { KonvaEventObject } from "konva/types/Node"
 import { PageMeta } from "types"
-import { LiveStroke, Point, ToolType } from "./types"
-import store from "../../redux/store"
+import store from "redux/store"
 import {
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
@@ -9,8 +8,9 @@ import {
     SET_ISMOUSEDOWN,
     SET_TR_NODES,
     SET_ERASED_STROKES,
-} from "../../redux/drawing/drawing"
+} from "redux/drawing/drawing"
 import { handleAddStroke, handleDeleteStrokes } from "../handlers"
+import { LiveStroke, Point, ToolType } from "./types"
 import { getSelectedShapes } from "./hitbox"
 
 let tid: number | NodeJS.Timeout = 0

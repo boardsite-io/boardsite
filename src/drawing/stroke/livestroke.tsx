@@ -7,7 +7,7 @@ import {
     MAX_LIVESTROKE_PTS,
     RDP_EPSILON,
     RDP_FORCE_SECTIONS,
-} from "../../constants"
+} from "consts"
 import { simplifyRDP } from "../simplify"
 import { getHitboxPolygon, matchStrokeCollision } from "./hitbox"
 import { BoardStroke } from "./stroke"

@@ -13,8 +13,8 @@ import {
     JUMP_TO_PREV_PAGE,
     INITIAL_VIEW,
 } from "redux/board/board"
-import store from "../../redux/store"
-import { useCustomSelector } from "../../redux/hooks"
+import store from "redux/store"
+import { useCustomSelector } from "redux/hooks"
 import {
     ViewNavWrapper,
     PageIndex,
