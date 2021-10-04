@@ -1,8 +1,8 @@
 import { JUMP_TO_NEXT_PAGE, JUMP_TO_PREV_PAGE } from "redux/board/board"
-import { SET_TYPE } from "../redux/drawing/drawing"
-import store from "../redux/store"
-import { handleRedo, handleUndo } from "../drawing/handlers"
-import { ToolType } from "../drawing/stroke/types"
+import { SET_TYPE } from "redux/drawing/drawing"
+import store from "redux/store"
+import { handleRedo, handleUndo } from "drawing/handlers"
+import { ToolType } from "drawing/stroke/types"
 
 export default function keyListener(e: KeyboardEvent): void {
     switch (e.key) {

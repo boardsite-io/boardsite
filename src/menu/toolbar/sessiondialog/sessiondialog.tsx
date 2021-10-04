@@ -9,8 +9,8 @@ import {
     DialogTitle,
     IconButton,
 } from "components"
-import { SET_SDIAG, CLOSE_SDIAG } from "../../../redux/session/session"
-import { isConnected } from "../../../api/websocket"
+import { SET_SDIAG, CLOSE_SDIAG } from "redux/session/session"
+import { isConnected } from "api/websocket"
 import OfflineDialogContent from "./offlinedialogcontent/offlinedialogcontent"
 import OnlineDialogContent from "./onlinedialogcontent/onlinedialogcontent"
 

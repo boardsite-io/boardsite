@@ -4,8 +4,8 @@ import {
     DEFAULT_STAGE_Y,
     ZOOM_IN_BUTTON_SCALE,
     ZOOM_OUT_BUTTON_SCALE,
-} from "../../constants"
-import { Page } from "../../types"
+} from "consts"
+import { Page } from "types"
 import {
     centerView,
     detectPageChange,

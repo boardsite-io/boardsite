@@ -1,8 +1,8 @@
 import React from "react"
 import { handlePageBackground } from "drawing/handlers"
 import { useCustomSelector } from "redux/hooks"
+import { pageType } from "consts"
 import { Backgrounds, Blank, Checkered, Ruled } from "./background.styled"
-import { pageType } from "../../../../constants"
 
 interface PageBackgroundProps {
     setOpenOther: React.Dispatch<React.SetStateAction<boolean>>

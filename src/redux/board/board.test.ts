@@ -2,8 +2,6 @@ import { BoardPage } from "drawing/page"
 import { BoardStroke } from "drawing/stroke/stroke"
 import { ToolType } from "drawing/stroke/types"
 import { DocumentImage } from "types"
-import reducer from "./board"
-import * as action from "./board"
 import {
     DEFAULT_HIDE_NAVBAR,
     DEFAULT_KEEP_CENTERED,
@@ -12,7 +10,9 @@ import {
     DEFAULT_STAGE_Y,
     pageType,
     STROKE_WIDTH_PRESETS,
-} from "../../constants"
+} from "consts"
+import reducer from "./board"
+import * as action from "./board"
 import { initState } from "./types"
 
 const page1 = new BoardPage(pageType.CHECKERED).setID("pid1")

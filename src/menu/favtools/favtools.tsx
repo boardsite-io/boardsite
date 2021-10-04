@@ -9,10 +9,10 @@ import {
     SquareIcon,
 } from "components"
 import { ToolType } from "drawing/stroke/types"
+import store from "redux/store"
+import { useCustomSelector } from "redux/hooks"
+import { ADD_FAV_TOOL } from "redux/drawing/drawing"
 import { FavToolsStyled } from "./favtools.styled"
-import store from "../../redux/store"
-import { useCustomSelector } from "../../redux/hooks"
-import { ADD_FAV_TOOL } from "../../redux/drawing/drawing"
 import FavToolButton from "./favtoolbutton/favtoolbutton"
 
 const FavTools: React.FC = () => {

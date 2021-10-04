@@ -3,8 +3,8 @@ import { nanoid } from "@reduxjs/toolkit"
 import { useCustomSelector } from "redux/hooks"
 import store from "redux/store"
 import { SET_WIDTH } from "redux/drawing/drawing"
+import { STROKE_WIDTH_PRESETS } from "consts"
 import { Preset, WidthPresetInnerDot, WidthPresets } from "./widthpicker.styled"
-import { STROKE_WIDTH_PRESETS } from "../../../../constants"
 
 const WidthPicker: React.FC = () => {
     const widthSelector = useCustomSelector(

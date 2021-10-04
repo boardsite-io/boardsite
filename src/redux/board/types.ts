@@ -10,7 +10,7 @@ import {
     DEFAULT_STAGE_SCALE,
     DEFAULT_KEEP_CENTERED,
     DEFAULT_HIDE_NAVBAR,
-} from "../../constants"
+} from "consts"
 
 export interface BoardView {
     keepCentered: boolean

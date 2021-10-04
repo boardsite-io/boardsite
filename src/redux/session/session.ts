@@ -6,8 +6,8 @@ import {
     colors,
     uniqueNamesGenerator,
 } from "unique-names-generator"
-import { API_URL } from "../../api/types"
-import { User } from "../../types"
+import { API_URL } from "api/types"
+import { User } from "types"
 
 interface WebControlState {
     sessionDialog: {
