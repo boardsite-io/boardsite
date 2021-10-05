@@ -1,11 +1,9 @@
-import React, { useEffect, memo } from "react"
-import { ReactReduxContext, ReactReduxContextValue } from "react-redux"
-import { Stage, Layer } from "react-konva"
+import React, { useEffect } from "react"
+import { ReactReduxContext } from "react-redux"
+import { Stage } from "react-konva"
 import { Vector2d } from "konva/types/types"
 import { KonvaEventObject } from "konva/types/Node"
 import { ToolType } from "drawing/stroke/types"
-import { getPageMeta } from "drawing/stroke/actions"
-import { createSelector } from "reselect"
 import { ZOOM_IN_WHEEL_SCALE, ZOOM_OUT_WHEEL_SCALE } from "consts"
 import {
     CENTER_VIEW,
@@ -17,13 +15,9 @@ import {
     MULTI_TOUCH_MOVE,
     MULTI_TOUCH_END,
 } from "redux/board/board"
-import store, { RootState } from "redux/store"
+import store from "redux/store"
 import { useCustomSelector } from "redux/hooks"
-import { LiveStrokeShape } from "./stroke/shape"
-import StrokeTransformer from "./transformer"
-import PageListener from "./page/listener"
-import PageContent from "./page/content"
-import PageBackground from "./page/background"
+import Content from "./content"
 
 const BoardStage: React.FC = () => {
     const isPanMode = useCustomSelector(
@@ -141,7 +135,7 @@ const BoardStage: React.FC = () => {
                         onTouchEnd={isPanMode ? undefined : handleTouchEnd}
                         onWheel={onWheel}>
                         <ReactReduxContext.Provider value={value}>
-                            <StageContent value={value} />
+                            <Content value={value} />
                         </ReactReduxContext.Provider>
                     </Stage>
                 )}
@@ -149,47 +143,4 @@ const BoardStage: React.FC = () => {
         </div>
     )
 }
-
 export default BoardStage
-
-// all pages and content are in this component
-const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
-    // Only rerender on page change
-    const pageCreateSelector = createSelector(
-        (state: RootState) => state.board.currentPageIndex,
-        (state: RootState) => state.board.pageRank,
-        (currentPageIndex, pageRank) => pageRank[currentPageIndex]
-    )
-    const pageId = useCustomSelector(pageCreateSelector)
-
-    if (pageId === undefined) {
-        return null
-    }
-
-    const meta = getPageMeta(pageId)
-    const props = {
-        pageId,
-        pageSize: {
-            height: meta.height,
-            width: meta.width,
-            x: -meta.width / 2,
-            y: 0,
-        },
-    }
-
-    return (
-        <>
-            <Layer key={pageId}>
-                <PageBackground {...props} />
-                <PageContent {...props} />
-                <PageListener {...props} />
-            </Layer>
-            <Layer draggable={false} listening={false}>
-                <LiveStrokeShape />
-            </Layer>
-            <Layer>
-                <StrokeTransformer />
-            </Layer>
-        </>
-    )
-})
