@@ -5,7 +5,7 @@ import { useCustomSelector } from "redux/hooks"
 import { StrokeShape } from "../stroke/shape"
 import { PageProps } from "./types"
 
-const PageContent: React.FC<PageProps> = ({ pageId, pageSize }) => {
+const Strokes: React.FC<PageProps> = ({ pageId, pageSize }) => {
     // select key of stroke map as trigger
     // stroke map comparison will only compare references
     const strokeIds = useCustomSelector((state) =>
@@ -32,4 +32,4 @@ const PageContent: React.FC<PageProps> = ({ pageId, pageSize }) => {
     )
 }
 
-export default PageContent
+export default Strokes
