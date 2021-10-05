@@ -156,7 +156,7 @@ export function isConnected(): boolean {
 }
 
 export async function newSession(): Promise<string> {
-    const sessionId = await postSession()
+    const { sessionId } = await postSession()
     store.dispatch(DELETE_ALL_PAGES())
     // create a pageid which will be added when joining
     await postPages(sessionId, [new BoardPage()], [0])
@@ -234,8 +234,12 @@ export function updatePagesSession(pages: BoardPage[], clear = false): void {
     putPages(store.getState().session.sessionId, pages, clear)
 }
 
-export function addAttachmentSession(file: File): Promise<string> {
-    return postAttachment(store.getState().session.sessionId, file)
+export async function addAttachmentSession(file: File): Promise<string> {
+    const { attachId } = await postAttachment(
+        store.getState().session.sessionId,
+        file
+    )
+    return attachId
 }
 
 export function getAttachmentSession(attachId: string): Promise<unknown> {

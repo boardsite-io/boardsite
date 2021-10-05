@@ -24,6 +24,10 @@ export interface Message<T> {
     content: T
 }
 
+export interface ResponsePostSession {
+    sessionId: string
+}
+
 export interface ResponsePageSync {
     pageRank: string[]
     meta: {
@@ -37,4 +41,8 @@ export interface ResponsePageUpdate {
         [pid: string]: PageMeta
     }
     clear: boolean
+}
+
+export interface ResponsePostAttachment {
+    attachId: string
 }
