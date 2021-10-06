@@ -38,7 +38,7 @@
         "worker-loader": "^3.0.8"
     },
     "scripts": {
-        "start": "REACT_APP_B_API_URL=http://localhost:8000 react-scripts start",
+        "start": "REACT_APP_B_API_URL=https://api.test.boardsite.io react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test --env=jsdom",
         "eject": "react-scripts eject",
