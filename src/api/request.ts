@@ -2,14 +2,18 @@ import axios, { AxiosRequestConfig } from "axios"
 import { Stroke } from "drawing/stroke/types"
 import store from "redux/store"
 import { Page, User } from "../types"
-import { ResponsePageSync } from "./types"
+import {
+    ResponsePageSync,
+    ResponsePostSession,
+    ResponsePostAttachment,
+} from "./types"
 
 const apiRequest = axios.create({
-    transformRequest: [(data) => JSON.stringify({ content: data })], // for routes we dont need message type
+    transformRequest: [(data) => JSON.stringify(data) ?? ""], // for routes we dont need message type
     transformResponse: [
         (data) => {
             try {
-                return JSON.parse(data).content // only need content
+                return JSON.parse(data)
             } catch {
                 return data
             }
@@ -27,7 +31,7 @@ const fileRequest = axios.create({
     transformResponse: [
         (data) => {
             try {
-                return JSON.parse(data).content // only need content
+                return JSON.parse(data)
             } catch {
                 return {}
             }
@@ -68,7 +72,7 @@ export async function sendRequest<T>(
     return response.data
 }
 
-export function postSession(): Promise<string> {
+export function postSession(): Promise<ResponsePostSession> {
     return sendRequest("create", "post")
 }
 
@@ -133,7 +137,7 @@ export function deletePages(
 export async function postAttachment(
     sessionId: string,
     file: File
-): Promise<string> {
+): Promise<ResponsePostAttachment> {
     const formData = new FormData()
     formData.append("file", file)
 
