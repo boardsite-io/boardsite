@@ -25,10 +25,10 @@ const fileHoverAnimation = css`
 interface Props {
     $hovering: boolean
 }
-export const StyledFileDropZone = styled.div<Props>`
+export const DropZone = styled.div<Props>`
     display: flex;
     flex-direction: column;
-    height: 12rem;
+    min-height: 12rem;
     border-radius: 0.4rem;
     border-style: ${({ $hovering }) => ($hovering ? "solid" : "dashed")};
     border-width: 1px;
@@ -38,7 +38,7 @@ export const StyledFileDropZone = styled.div<Props>`
     :hover {
         cursor: pointer;
     }
-    #big-cloud-icon {
+    svg {
         stroke: var(--color3);
         height: 4rem;
         width: 4rem;
@@ -47,12 +47,19 @@ export const StyledFileDropZone = styled.div<Props>`
     ${({ $hovering }) => ($hovering ? fileHoverAnimation : null)};
 `
 
-export const StyledTitle = styled.h4`
-    margin: 0.2rem 0;
+const textStyle = css`
+    max-width: 12rem;
+    margin: 0.2rem 1rem;
+    pointer-events: none;
 `
 
-export const StyledSubtitle = styled.p`
-    margin: 0.2rem 0;
+export const InfoText = styled.h4`
+    ${textStyle}
+`
+
+export const ErrorText = styled.p`
+    color: red;
+    ${textStyle}
 `
 
 export const InvisibleInput = styled.input`

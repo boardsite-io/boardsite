@@ -3,9 +3,9 @@ import { UploadIcon } from "components"
 import { handleDocument } from "drawing/handlers"
 import {
     InvisibleInput,
-    StyledFileDropZone,
-    StyledSubtitle,
-    StyledTitle,
+    DropZone,
+    InfoText,
+    ErrorText,
 } from "./filedropzone.styled"
 
 interface FileDropZoneProps {
@@ -14,14 +14,16 @@ interface FileDropZoneProps {
 
 const FileDropZone: React.FC<FileDropZoneProps> = ({ closeDialog }) => {
     const [hovering, setHovering] = useState<boolean>(false)
+    const [invalidInput, setInvalidInput] = useState<boolean>(false)
 
-    const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
-        e.preventDefault() // Prevent file from being opened
-        setHovering(false)
+    const isValidFormat = (file: File) => file.type === "application/pdf"
 
-        const file = e.dataTransfer.items[0].getAsFile()
-        if (file) {
+    const processFile = (file: File) => {
+        if (isValidFormat(file)) {
             handleDocument(file).then(() => closeDialog())
+            setInvalidInput(false)
+        } else {
+            setInvalidInput(true)
         }
     }
 
@@ -33,28 +35,50 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ closeDialog }) => {
     const onDragLeave = () => {
         setHovering(false)
     }
+
+    const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault() // Prevent file from being opened
+        setHovering(false)
+        const file = e.dataTransfer.items[0].getAsFile()
+        if (file) {
+            processFile(file)
+        }
+    }
+
     const onInput = (e: React.SyntheticEvent) => {
         const target = e.target as HTMLInputElement
-        if (target.files && target.files[0]) {
-            handleDocument(target.files[0]).then(() => closeDialog())
+        const file = target.files?.[0]
+        if (file) {
+            processFile(file)
         }
     }
 
     return (
         <>
-            <StyledFileDropZone
+            <DropZone
                 onClick={() => document.getElementById("selectedFile")?.click()}
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 onDragLeave={onDragLeave}
                 $hovering={hovering}>
-                <UploadIcon id="big-cloud-icon" />
-                <StyledTitle>{hovering ? "" : "Browse Files"}</StyledTitle>
-                <StyledSubtitle>
-                    {hovering ? "" : "Drag and drop files here"}
-                </StyledSubtitle>
-            </StyledFileDropZone>
-            <InvisibleInput type="file" id="selectedFile" onInput={onInput} />
+                <UploadIcon />
+                <InfoText>
+                    {hovering
+                        ? "Release to upload"
+                        : "Click to browse files or drag and drop a PDF file here"}
+                </InfoText>
+                {invalidInput && (
+                    <ErrorText>
+                        Invalid file type - please upload a valid PDF file
+                    </ErrorText>
+                )}
+            </DropZone>
+            <InvisibleInput
+                type="file"
+                accept="application/pdf"
+                id="selectedFile"
+                onInput={onInput}
+            />
         </>
     )
 }
