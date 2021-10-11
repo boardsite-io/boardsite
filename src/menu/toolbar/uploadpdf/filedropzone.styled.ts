@@ -28,7 +28,7 @@ interface Props {
 export const DropZone = styled.div<Props>`
     display: flex;
     flex-direction: column;
-    height: 12rem;
+    min-height: 12rem;
     border-radius: 0.4rem;
     border-style: ${({ $hovering }) => ($hovering ? "solid" : "dashed")};
     border-width: 1px;
@@ -47,10 +47,19 @@ export const DropZone = styled.div<Props>`
     ${({ $hovering }) => ($hovering ? fileHoverAnimation : null)};
 `
 
-export const InfoText = styled.h4`
-    width: 12rem;
+const textStyle = css`
+    max-width: 12rem;
     margin: 0.2rem 1rem;
     pointer-events: none;
+`
+
+export const InfoText = styled.h4`
+    ${textStyle}
+`
+
+export const ErrorText = styled.p`
+    color: red;
+    ${textStyle}
 `
 
 export const InvisibleInput = styled.input`

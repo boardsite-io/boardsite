@@ -1,7 +1,12 @@
 import React, { useState } from "react"
 import { UploadIcon } from "components"
 import { handleDocument } from "drawing/handlers"
-import { InvisibleInput, DropZone, InfoText } from "./filedropzone.styled"
+import {
+    InvisibleInput,
+    DropZone,
+    InfoText,
+    ErrorText,
+} from "./filedropzone.styled"
 
 interface FileDropZoneProps {
     closeDialog: () => void
@@ -9,14 +14,16 @@ interface FileDropZoneProps {
 
 const FileDropZone: React.FC<FileDropZoneProps> = ({ closeDialog }) => {
     const [hovering, setHovering] = useState<boolean>(false)
+    const [invalidInput, setInvalidInput] = useState<boolean>(false)
 
     const isValidFormat = (file: File) => file.type === "application/pdf"
 
     const processFile = (file: File) => {
         if (isValidFormat(file)) {
             handleDocument(file).then(() => closeDialog())
+            setInvalidInput(false)
         } else {
-            // TODO: invalid file type message
+            setInvalidInput(true)
         }
     }
 
@@ -60,6 +67,11 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ closeDialog }) => {
                         ? "Release to upload"
                         : "Click to browse files or drag and drop a PDF file here"}
                 </InfoText>
+                {invalidInput && (
+                    <ErrorText>
+                        Invalid file type - please upload a valid PDF file
+                    </ErrorText>
+                )}
             </DropZone>
             <InvisibleInput
                 type="file"
