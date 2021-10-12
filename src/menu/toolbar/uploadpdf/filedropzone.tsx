@@ -46,8 +46,7 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ closeDialog }) => {
     }
 
     const onInput = (e: React.SyntheticEvent) => {
-        const target = e.target as HTMLInputElement
-        const file = target.files?.[0]
+        const file = (e.target as HTMLInputElement).files?.[0]
         if (file) {
             processFile(file)
         }
