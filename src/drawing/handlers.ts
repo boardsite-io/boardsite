@@ -100,6 +100,10 @@ export function handlePageBackground(style: PageBackground): void {
     // update the default page type
     store.dispatch(SET_PAGE_BACKGROUND(style))
     const currentPage = getCurrentPage()
+    // there is no current page, eg. when all pages have been removed
+    if (!currentPage) {
+        return
+    }
     // cannot update background of doc type
     if (currentPage.meta.background.style === pageType.DOC) {
         return
