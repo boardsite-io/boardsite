@@ -6,6 +6,10 @@ import { StrokeShape } from "../stroke/shape"
 import { PageProps } from "./types"
 
 const Strokes: React.FC<PageProps> = ({ pageId, pageSize }) => {
+    // pageId might not be valid anymore, exit then
+    if (!store.getState().board.pageCollection[pageId]) {
+        return null
+    }
     // select key of stroke map as trigger
     // stroke map comparison will only compare references
     const strokeIds = useCustomSelector((state) =>
