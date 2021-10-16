@@ -1,6 +1,7 @@
 import React, { useEffect } from "react"
 import { useParams } from "react-router-dom"
 import SessionInfo from "menu/toolbar/sessioninfo/sessioninfo"
+import Loading from "menu/loading/loading"
 import { handleAddPageOver, handleDeleteAllPages } from "../drawing/handlers"
 import boardKeyListener from "../board/keylistener"
 import Toolbar from "../menu/toolbar/toolbar"
@@ -61,6 +62,7 @@ const Whiteboard: React.FC = () => {
             <Toolbar />
             <FavTools />
             <ViewNav />
+            <Loading />
         </WhiteboardStyled>
     )
 }

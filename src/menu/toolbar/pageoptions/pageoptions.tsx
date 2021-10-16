@@ -34,7 +34,7 @@ import {
     handleDeletePage,
 } from "drawing/handlers"
 import Background from "./background/background"
-import PdfUpload from "./uploadpdf/uploadPDF"
+import PdfUpload from "./pdfupload/pdfupload"
 import PdfDownload from "./pdfdownload/pdfdownload"
 
 const PageOptions: React.FC = () => {
