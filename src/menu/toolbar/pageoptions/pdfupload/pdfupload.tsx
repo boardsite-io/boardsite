@@ -8,13 +8,11 @@ import {
 } from "components"
 import FileDropZone from "./filedropzone"
 
-interface FileDropButtonProps {
+interface PdfUploadProps {
     closePageOptions: () => void
 }
 
-const UploadPDFButton: React.FC<FileDropButtonProps> = ({
-    closePageOptions,
-}) => {
+const PdfUpload: React.FC<PdfUploadProps> = ({ closePageOptions }) => {
     const [dialogOpen, setDialogOpen] = useState(false)
 
     const handleOpen = () => {
@@ -46,4 +44,4 @@ const UploadPDFButton: React.FC<FileDropButtonProps> = ({
     )
 }
 
-export default UploadPDFButton
+export default PdfUpload
