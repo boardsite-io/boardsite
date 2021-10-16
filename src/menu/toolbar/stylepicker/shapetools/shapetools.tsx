@@ -7,9 +7,8 @@ import {
     PenIcon,
     SquareIcon,
 } from "components"
-import { SET_TYPE } from "redux/drawing/drawing"
 import store from "redux/store"
-import { ToolType } from "drawing/stroke/types"
+import { ToolType } from "redux/drawing/drawing.types"
 import { StyledShapeTools } from "./shapetools.styled"
 
 const ShapeTools: React.FC = () => {
@@ -23,9 +22,12 @@ const ShapeTools: React.FC = () => {
         <StyledShapeTools>
             <IconButton
                 active={typeSelector === ToolType.Pen}
-                onClick={() => {
-                    store.dispatch(SET_TYPE(ToolType.Pen))
-                }}
+                onClick={() =>
+                    store.dispatch({
+                        type: "SET_TYPE",
+                        payload: ToolType.Pen,
+                    })
+                }
                 style={
                     typeSelector === ToolType.Pen
                         ? { background: colorSelector }
@@ -35,9 +37,12 @@ const ShapeTools: React.FC = () => {
             </IconButton>
             <IconButton
                 active={typeSelector === ToolType.Line}
-                onClick={() => {
-                    store.dispatch(SET_TYPE(ToolType.Line))
-                }}
+                onClick={() =>
+                    store.dispatch({
+                        type: "SET_TYPE",
+                        payload: ToolType.Line,
+                    })
+                }
                 style={
                     typeSelector === ToolType.Line
                         ? { background: colorSelector }
@@ -47,9 +52,12 @@ const ShapeTools: React.FC = () => {
             </IconButton>
             <IconButton
                 active={typeSelector === ToolType.Rectangle}
-                onClick={() => {
-                    store.dispatch(SET_TYPE(ToolType.Rectangle))
-                }}
+                onClick={() =>
+                    store.dispatch({
+                        type: "SET_TYPE",
+                        payload: ToolType.Rectangle,
+                    })
+                }
                 style={
                     typeSelector === ToolType.Rectangle
                         ? { background: colorSelector }
@@ -59,9 +67,12 @@ const ShapeTools: React.FC = () => {
             </IconButton>
             <IconButton
                 active={typeSelector === ToolType.Circle}
-                onClick={() => {
-                    store.dispatch(SET_TYPE(ToolType.Circle))
-                }}
+                onClick={() =>
+                    store.dispatch({
+                        type: "SET_TYPE",
+                        payload: ToolType.Circle,
+                    })
+                }
                 style={
                     typeSelector === ToolType.Circle
                         ? { background: colorSelector }

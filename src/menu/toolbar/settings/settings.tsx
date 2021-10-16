@@ -12,9 +12,6 @@ import {
     Switch,
     TextField,
 } from "components"
-import { SET_API_URL } from "redux/session/session"
-import { TOGGLE_HIDE_NAVBAR, TOGGLE_SHOULD_CENTER } from "redux/board/board"
-import { TOGGLE_DIRECTDRAW } from "redux/drawing/drawing"
 import { isConnected } from "api/websocket"
 import { useCustomSelector } from "redux/hooks"
 import { API_URL } from "api/types"
@@ -38,7 +35,10 @@ const Settings: React.FC = () => {
         setURL(event.target.value)
         try {
             const u = new URL(event.target.value)
-            store.dispatch(SET_API_URL(u))
+            store.dispatch({
+                type: "SET_API_URL",
+                payload: u,
+            })
             setValidURL(true)
         } catch {
             setValidURL(false)
@@ -61,7 +61,10 @@ const Settings: React.FC = () => {
                         <Switch
                             enabled={keepCentered}
                             onClick={() =>
-                                store.dispatch(TOGGLE_SHOULD_CENTER())
+                                store.dispatch({
+                                    type: "TOGGLE_SHOULD_CENTER",
+                                    payload: undefined,
+                                })
                             }
                         />
                     </Setting>
@@ -69,14 +72,24 @@ const Settings: React.FC = () => {
                         Hide navigation bar
                         <Switch
                             enabled={hideNavBar}
-                            onClick={() => store.dispatch(TOGGLE_HIDE_NAVBAR())}
+                            onClick={() =>
+                                store.dispatch({
+                                    type: "TOGGLE_HIDE_NAVBAR",
+                                    payload: undefined,
+                                })
+                            }
                         />
                     </Setting>
                     <Setting>
                         Enable Direct Drawing
                         <Switch
                             enabled={directDraw}
-                            onClick={() => store.dispatch(TOGGLE_DIRECTDRAW())}
+                            onClick={() =>
+                                store.dispatch({
+                                    type: "TOGGLE_DIRECTDRAW",
+                                    payload: undefined,
+                                })
+                            }
                         />
                     </Setting>
                 </DrawerContent>
@@ -89,7 +102,7 @@ const Settings: React.FC = () => {
                         <TextField
                             label="API URL"
                             inputMode="url"
-                            value={url.toString()}
+                            value={url}
                             onChange={handleURLChange}
                             error={!isValidURL}
                             disabled={

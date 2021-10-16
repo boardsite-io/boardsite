@@ -1,6 +1,6 @@
 import { BoardPage } from "drawing/page"
-import { BoardStroke } from "drawing/stroke/stroke"
-import { ToolType } from "drawing/stroke/types"
+import { BoardStroke } from "redux/drawing/stroke/stroke"
+import { ToolType } from "redux/drawing/drawing.types"
 import { DocumentImage } from "types"
 import {
     DEFAULT_HIDE_NAVBAR,
@@ -13,7 +13,7 @@ import {
 } from "consts"
 import reducer from "./board"
 import * as action from "./board"
-import { initState } from "./types"
+import { initState } from "./board.types"
 
 const page1 = new BoardPage(pageType.CHECKERED).setID("pid1")
 const mockStroke1 = {

@@ -1,4 +1,3 @@
-import { nanoid } from "@reduxjs/toolkit"
 import React from "react"
 import {
     CircleIcon,
@@ -8,10 +7,10 @@ import {
     PlusIcon,
     SquareIcon,
 } from "components"
-import { ToolType } from "drawing/stroke/types"
+import { ToolType } from "redux/drawing/drawing.types"
+import { nanoid } from "nanoid"
 import store from "redux/store"
 import { useCustomSelector } from "redux/hooks"
-import { ADD_FAV_TOOL } from "redux/drawing/drawing"
 import { FavToolsStyled } from "./favtools.styled"
 import FavToolButton from "./favtoolbutton/favtoolbutton"
 
@@ -20,7 +19,7 @@ const FavTools: React.FC = () => {
 
     // add current draw settings as new fav tool
     const addFavTool = () => {
-        store.dispatch(ADD_FAV_TOOL())
+        store.dispatch({ type: "ADD_FAV_TOOL", payload: undefined })
     }
 
     return (

@@ -1,4 +1,3 @@
-import { createSlice } from "@reduxjs/toolkit"
 import Konva from "konva"
 import {
     adjectives,
@@ -6,26 +5,11 @@ import {
     colors,
     uniqueNamesGenerator,
 } from "unique-names-generator"
+import { deleteObjectProperty } from "redux/helpers"
 import { API_URL } from "api/types"
-import { User } from "types"
+import { ConnectedUsers, SessionState } from "./session.types"
 
-interface WebControlState {
-    sessionDialog: {
-        open: boolean
-        invalidSid: boolean
-        joinOnly: boolean
-        sidInput: string
-    }
-    webSocket: WebSocket
-    sessionId: string
-    user: User
-    connectedUsers: {
-        [uid: string]: User
-    }
-    apiURL: URL
-}
-
-const initState: WebControlState = {
+const initState: SessionState = {
     sessionDialog: {
         open: false,
         invalidSid: false,
@@ -47,32 +31,8 @@ const initState: WebControlState = {
     apiURL: new URL(API_URL),
 }
 
-const sessionSlice = createSlice({
-    name: "session",
-    initialState: initState,
-    reducers: {
-        CREATE_WS: (state, action) => {
-            const { ws, sessionId, user } = action.payload
-            state.webSocket = ws
-            state.sessionId = sessionId
-            state.user = user
-            state.connectedUsers[user.id] = user
-        },
-        CLOSE_WS: (state) => {
-            state.webSocket.close()
-            // state.webSocket = null
-            state.sessionId = ""
-            state.user = {
-                id: "",
-                alias: uniqueNamesGenerator({
-                    dictionaries: [adjectives, colors, animals],
-                    separator: "",
-                    style: "capital",
-                }),
-                color: Konva.Util.getRandomColor(),
-            } as User
-            state.connectedUsers = {}
-        },
+const sessionReducer = (state = initState, action: any): SessionState => {
+    switch (action.type) {
         // RECEIVE_STROKES: (state, action) => {
         //     const { data } = action.payload
         //     console.log(data)
@@ -84,50 +44,87 @@ const sessionSlice = createSlice({
         //     const stroke = { ...action.payload, userId: state.user.id }
         //     state.webSocket.send(JSON.stringify([stroke]))
         // },
-        USER_CONNECT: (state, action) => {
-            const user = action.payload
-            state.connectedUsers[user.id] = user
-        },
-        USER_DISCONNECT: (state, action) => {
-            const { id } = action.payload
-            delete state.connectedUsers[id]
-        },
-        SET_SESSION_USERS: (state, action) => {
-            state.connectedUsers = action.payload
-        },
-        SET_SDIAG: (state, action) => {
-            state.sessionDialog = { ...state.sessionDialog, ...action.payload }
-        },
-        CLOSE_SDIAG: (state) => {
-            state.sessionDialog = {
-                open: false,
-                invalidSid: false,
-                joinOnly: false,
-                sidInput: "",
+        case "CREATE_WS": {
+            const { ws, sessionId, user } = action.payload
+            return {
+                ...state,
+                webSocket: ws,
+                sessionId,
+                user,
+                connectedUsers: { ...state.connectedUsers, [user.id]: user },
             }
-        },
-        SET_USER_ALIAS: (state, action) => {
-            state.user.alias = action.payload
-        },
-        SET_USER_COLOR: (state) => {
-            state.user.color = Konva.Util.getRandomColor()
-        },
-        SET_API_URL: (state, action) => {
-            state.apiURL = action.payload
-        },
-    },
-})
-
-export const {
-    CREATE_WS,
-    CLOSE_WS,
-    USER_CONNECT,
-    USER_DISCONNECT,
-    SET_SESSION_USERS,
-    SET_SDIAG,
-    CLOSE_SDIAG,
-    SET_USER_ALIAS,
-    SET_USER_COLOR,
-    SET_API_URL,
-} = sessionSlice.actions
-export default sessionSlice.reducer
+        }
+        case "CLOSE_WS": {
+            state.webSocket.close()
+            // state.webSocket = null
+            return {
+                ...state,
+                sessionId: "",
+                user: {
+                    id: "",
+                    alias: uniqueNamesGenerator({
+                        dictionaries: [adjectives, colors, animals],
+                        separator: "",
+                        style: "capital",
+                    }),
+                    color: Konva.Util.getRandomColor(),
+                },
+                connectedUsers: {},
+            }
+        }
+        case "USER_CONNECT": {
+            const user = action.payload
+            return {
+                ...state,
+                user: action.payload,
+                connectedUsers: { ...state.connectedUsers, [user.id]: user },
+            }
+        }
+        case "USER_DISCONNECT": {
+            const { id } = action.payload
+            const newConnectedUsers = deleteObjectProperty(
+                id,
+                state.connectedUsers
+            ) as ConnectedUsers
+            return {
+                ...state,
+                connectedUsers: newConnectedUsers,
+            }
+        }
+        case "SET_SESSION_USERS": {
+            return { ...state, connectedUsers: action.payload }
+        }
+        case "SET_SDIAG": {
+            return {
+                ...state,
+                sessionDialog: { ...state.sessionDialog, ...action.payload },
+            }
+        }
+        case "CLOSE_SDIAG": {
+            return {
+                ...state,
+                sessionDialog: {
+                    open: false,
+                    invalidSid: false,
+                    joinOnly: false,
+                    sidInput: "",
+                },
+            }
+        }
+        case "SET_USER_ALIAS": {
+            return { ...state, user: { ...state.user, alias: action.payload } }
+        }
+        case "SET_USER_COLOR": {
+            return {
+                ...state,
+                user: { ...state.user, color: Konva.Util.getRandomColor() },
+            }
+        }
+        case "SET_API_URL": {
+            return { ...state, apiURL: action.payload }
+        }
+        default:
+            return state
+    }
+}
+export default sessionReducer

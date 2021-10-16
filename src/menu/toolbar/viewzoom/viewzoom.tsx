@@ -1,14 +1,25 @@
 import { IconButton, ZoomInIcon, ZoomOutIcon } from "components"
 import React from "react"
-import { ZOOM_IN_CENTER, ZOOM_OUT_CENTER } from "redux/board/board"
 import store from "redux/store"
 
 const ViewZoom: React.FC = () => (
     <>
-        <IconButton onClick={() => store.dispatch(ZOOM_IN_CENTER())}>
+        <IconButton
+            onClick={() =>
+                store.dispatch({
+                    type: "ZOOM_IN_CENTER",
+                    payload: undefined,
+                })
+            }>
             <ZoomInIcon />
         </IconButton>
-        <IconButton onClick={() => store.dispatch(ZOOM_OUT_CENTER())}>
+        <IconButton
+            onClick={() =>
+                store.dispatch({
+                    type: "ZOOM_OUT_CENTER",
+                    payload: undefined,
+                })
+            }>
             <ZoomOutIcon />
         </IconButton>
     </>

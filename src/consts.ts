@@ -1,5 +1,5 @@
-import { Point, Tool, ToolType } from "drawing/stroke/types"
-import { PageBackground } from "./types"
+import { Point, Tool, ToolType } from "redux/drawing/drawing.types"
+import { PageVariants } from "redux/board/board.types"
 
 /**
  * Returns true if in development mode
@@ -69,11 +69,15 @@ export const RDP_FORCE_SECTIONS = 3
 
 // scale factor for importet documents
 export const DOC_SCALE = 4
-export const pageType = {
-    BLANK: "blank" as PageBackground,
-    CHECKERED: "checkered" as PageBackground,
-    RULED: "ruled" as PageBackground,
-    DOC: "doc" as PageBackground,
+
+interface PageType {
+    [key: string]: PageVariants
+}
+export const pageType: PageType = {
+    BLANK: "blank",
+    CHECKERED: "checkered",
+    RULED: "ruled",
+    DOC: "doc",
 }
 
 const tool1: Tool = {

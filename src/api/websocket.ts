@@ -1,22 +1,7 @@
-import { BoardStroke } from "drawing/stroke/stroke"
-import { Stroke, ToolType } from "drawing/stroke/types"
-import {
-    ADD_STROKES,
-    CLEAR_PAGE,
-    DELETE_ALL_PAGES,
-    ERASE_STROKES,
-    SET_PAGEMETA,
-    SET_PAGERANK,
-} from "redux/board/board"
-import {
-    CREATE_WS,
-    SET_SESSION_USERS,
-    USER_CONNECT,
-    USER_DISCONNECT,
-} from "redux/session/session"
-import { BoardPage } from "drawing/page"
+import { Stroke, ToolType } from "redux/drawing/drawing.types"
+import { Page, PageCollection } from "redux/board/board.types"
+import { createPage } from "redux/board/util/page"
 import store from "redux/store"
-import { PageCollection, User } from "types"
 import {
     postPages,
     putPages,
@@ -30,6 +15,7 @@ import {
     getAttachment,
 } from "./request"
 import {
+    User,
     MessageType,
     Message,
     messages,
@@ -54,7 +40,10 @@ function createWebsocket(
             receive(JSON.parse(msg.data))
         }
         ws.onopen = () => {
-            store.dispatch(CREATE_WS({ ws, sessionId, user }))
+            store.dispatch({
+                type: "CREATE_WS",
+                payload: { ws, sessionId, user },
+            })
             resolve(undefined)
         }
         ws.onerror = (ev) => reject(ev)
@@ -89,11 +78,17 @@ function receive(message: Message<unknown>) {
             break
 
         case messages.UserConnected:
-            store.dispatch(USER_CONNECT(message.content))
+            store.dispatch({
+                type: "USER_CONNECT",
+                payload: message.content,
+            })
             break
 
         case messages.UserDisconnected:
-            store.dispatch(USER_DISCONNECT(message.content))
+            store.dispatch({
+                type: "USER_DISCONNECT",
+                payload: message.content,
+            })
             break
 
         default:
@@ -104,18 +99,25 @@ function receive(message: Message<unknown>) {
 function receiveStrokes(strokes: Stroke[]) {
     strokes.forEach((stroke) => {
         if (stroke.type > 0) {
-            // add stroke, IMPORTANT: create BoardStroke instance
-            store.dispatch(ADD_STROKES([new BoardStroke(stroke)]))
+            store.dispatch({
+                type: "ADD_STROKES",
+                payload: [stroke],
+            })
         } else if (stroke.type === 0) {
-            // delete stroke
-            store.dispatch(ERASE_STROKES([stroke]))
+            store.dispatch({
+                type: "ERASE_STROKES",
+                payload: [stroke],
+            })
         }
     })
 }
 
 function syncPages({ pageRank, meta }: ResponsePageSync) {
     if (pageRank.length === 0) {
-        store.dispatch(DELETE_ALL_PAGES())
+        store.dispatch({
+            type: "DELETE_ALL_PAGES",
+            payload: undefined,
+        })
         return
     }
     const { pageCollection } = store.getState().board
@@ -124,26 +126,39 @@ function syncPages({ pageRank, meta }: ResponsePageSync) {
         if (Object.prototype.hasOwnProperty.call(pageCollection, pid)) {
             newPageCollection[pid] = pageCollection[pid]
         } else {
-            newPageCollection[pid] = new BoardPage(
-                store.getState().board.pageSettings.background
-            ).setID(pid)
+            newPageCollection[pid] = createPage({
+                id: pid,
+                style: store.getState().board.pageSettings.background,
+            })
         }
     })
 
-    store.dispatch(
-        SET_PAGERANK({ pageRank, pageCollection: newPageCollection })
-    )
+    store.dispatch({
+        type: "SET_PAGERANK",
+        payload: { pageRank, pageCollection: newPageCollection },
+    })
     Object.keys(meta).forEach((pageId) =>
-        store.dispatch(SET_PAGEMETA({ pageId, meta: meta[pageId] }))
+        store.dispatch({
+            type: "SET_PAGEMETA",
+            payload: { pageId, meta: meta[pageId] },
+        })
     )
 }
 
 function updatePageMeta({ pageId, meta, clear }: ResponsePageUpdate) {
     if (clear) {
-        pageId.forEach((pid) => store.dispatch(CLEAR_PAGE(pid)))
+        pageId.forEach((pid) =>
+            store.dispatch({
+                type: "CLEAR_PAGE",
+                payload: pid,
+            })
+        )
     }
     pageId.forEach((pid) =>
-        store.dispatch(SET_PAGEMETA({ pageId: pid, meta: meta[pid] }))
+        store.dispatch({
+            type: "SET_PAGEMETA",
+            payload: { pageId: pid, meta: meta[pid] },
+        })
     )
 }
 
@@ -157,9 +172,12 @@ export function isConnected(): boolean {
 
 export async function newSession(): Promise<string> {
     const { sessionId } = await postSession()
-    store.dispatch(DELETE_ALL_PAGES())
+    store.dispatch({
+        type: "DELETE_ALL_PAGES",
+        payload: undefined,
+    })
     // create a pageid which will be added when joining
-    await postPages(sessionId, [new BoardPage()], [0])
+    await postPages(sessionId, [createPage({})], [0])
     return sessionId
 }
 
@@ -172,19 +190,26 @@ export async function joinSession(
     const user = await postUser(sessionId, { alias, color } as User)
     await createWebsocket(sessionId, user)
 
-    store.dispatch(SET_SESSION_USERS(await getUsers(sessionId)))
+    store.dispatch({
+        type: "SET_SESSION_USERS",
+        payload: await getUsers(sessionId),
+    })
 
     // set the pages according to api
-    store.dispatch(DELETE_ALL_PAGES())
+    store.dispatch({
+        type: "DELETE_ALL_PAGES",
+        payload: undefined,
+    })
     const { pageRank, meta } = await getPages(sessionId)
     syncPages({ pageRank, meta })
 
     // fetch data from each page
     pageRank.forEach(async (pageId) => {
-        let strokes = await getStrokes(sessionId, pageId)
-        // IMPORTANT: create BoardStroke instance
-        strokes = strokes.map((stroke) => new BoardStroke(stroke))
-        store.dispatch(ADD_STROKES(strokes))
+        const strokes = await getStrokes(sessionId, pageId)
+        store.dispatch({
+            type: "ADD_STROKES",
+            payload: strokes,
+        })
     })
 }
 
@@ -192,8 +217,9 @@ export function sendStrokes(strokes: Stroke[]): void {
     // append the user id to strokes
     send(
         messages.Stroke,
-        strokes.map((s) => ({
-            ...s.serialize?.(),
+        strokes.map((stroke) => ({
+            ...stroke,
+            hitboxes: undefined,
             userId: store.getState().session.user.id,
         }))
     )
@@ -202,16 +228,16 @@ export function sendStrokes(strokes: Stroke[]): void {
 export function eraseStrokes(strokes: { id: string; pageId: string }[]): void {
     send(
         messages.Stroke,
-        strokes.map((s) => ({
-            id: s.id,
-            pageId: s.pageId,
+        strokes.map((stroke) => ({
+            id: stroke.id,
+            pageId: stroke.pageId,
             type: ToolType.Eraser,
             userId: store.getState().session.user.id,
         }))
     )
 }
 
-export function addPagesSession(pages: BoardPage[], pageIndex: number[]): void {
+export function addPagesSession(pages: Page[], pageIndex: number[]): void {
     postPages(store.getState().session.sessionId, pages, pageIndex)
 }
 
@@ -230,7 +256,7 @@ export function pingSession(sessionID: string): Promise<ResponsePageSync> {
     return getPages(sessionID)
 }
 
-export function updatePagesSession(pages: BoardPage[], clear = false): void {
+export function updatePagesSession(pages: Page[], clear = false): void {
     putPages(store.getState().session.sessionId, pages, clear)
 }
 

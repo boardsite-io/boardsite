@@ -1,98 +1,149 @@
-import { createSlice } from "@reduxjs/toolkit"
-import { Stroke } from "drawing/stroke/types"
+import { Stroke } from "redux/drawing/drawing.types"
 import {
-    DEFAULT_STAGE_Y,
     ZOOM_IN_BUTTON_SCALE,
     ZOOM_OUT_BUTTON_SCALE,
+    DEFAULT_CURRENT_PAGE_INDEX,
+    DEFAULT_PAGE_HEIGHT,
+    DEFAULT_PAGE_WIDTH,
+    pageType,
+    DEFAULT_STAGE_X,
+    DEFAULT_STAGE_Y,
+    DEFAULT_STAGE_SCALE,
+    DEFAULT_KEEP_CENTERED,
+    DEFAULT_HIDE_NAVBAR,
 } from "consts"
-import { Page } from "types"
+import { deleteObjectProperty, removeArrayItem } from "redux/helpers"
 import {
     centerView,
     detectPageChange,
     fitToPage,
+    insertPage,
     multiTouchEnd,
     multiTouchMove,
     zoomToPointWithScale,
-} from "./helpers"
-import { BoardState, initState } from "./types"
+} from "./util/helpers"
+import { BoardState, PageCollection } from "./board.types"
 
-const boardSlice = createSlice({
-    name: "board",
-    initialState: initState,
-    reducers: {
-        SYNC_ALL_PAGES: (state, action) => {
+export const initState: BoardState = {
+    currentPageIndex: DEFAULT_CURRENT_PAGE_INDEX,
+    pageRank: [],
+    pageCollection: {},
+    document: [],
+    documentSrc: "",
+    pageSettings: {
+        background: pageType.BLANK, // default,
+        width: DEFAULT_PAGE_WIDTH,
+        height: DEFAULT_PAGE_HEIGHT,
+    },
+    view: {
+        keepCentered: DEFAULT_KEEP_CENTERED,
+        hideNavBar: DEFAULT_HIDE_NAVBAR,
+        stageWidth: window.innerWidth,
+        stageHeight: window.innerHeight,
+        stageX: DEFAULT_STAGE_X,
+        stageY: DEFAULT_STAGE_Y,
+        stageScale: DEFAULT_STAGE_SCALE,
+    },
+}
+
+const boardReducer = (state = initState, action: any): BoardState => {
+    switch (action.type) {
+        case "SYNC_ALL_PAGES": {
             const { pageRank, pageCollection } = action.payload
-            state.pageRank = pageRank
-            state.pageCollection = pageCollection
-        },
-
-        SET_PAGERANK: (state, action) => {
+            return { ...state, pageRank, pageCollection }
+        }
+        case "SET_PAGERANK": {
             const { pageRank, pageCollection } = action.payload
-            state.pageRank = pageRank
-            state.pageCollection = pageCollection
-        },
-
-        SET_PAGEMETA: (state, action) => {
+            return { ...state, pageRank, pageCollection }
+        }
+        case "SET_PAGEMETA": {
             const { pageId, meta } = action.payload
-            state.pageCollection[pageId]?.updateMeta(meta)
-        },
-
-        SET_PAGE_BACKGROUND: (state, action) => {
-            const style = action.payload
-            state.pageSettings.background = style
-        },
-
-        SET_PAGE_WIDTH: (state, action: { payload: number }) => {
-            state.pageSettings.width = action.payload
-        },
-
-        SET_PAGE_HEIGHT: (state, action: { payload: number }) => {
-            state.pageSettings.height = action.payload
-        },
-
-        ADD_PAGE: (state, action) => {
-            const { page, index } = action.payload as {
-                page: Page
-                index: number
+            const page = state.pageCollection[pageId]
+            return {
+                ...state,
+                pageCollection: {
+                    ...state.pageCollection,
+                    [pageId]: { ...page, meta: { ...page.meta, ...meta } },
+                },
             }
-            state.pageCollection[page.pageId] = page
-            if (index >= 0) {
-                state.pageRank.splice(index, 0, page.pageId)
-            } else {
-                state.pageRank.push(page.pageId)
+        }
+        case "SET_PAGE_BACKGROUND": {
+            return {
+                ...state,
+                pageSettings: {
+                    ...state.pageSettings,
+                    background: action.payload,
+                },
             }
-        },
-
-        CLEAR_PAGE: (state, action) => {
+        }
+        case "SET_PAGE_WIDTH": {
+            return {
+                ...state,
+                pageSettings: { ...state.pageSettings, width: action.payload },
+            }
+        }
+        case "SET_PAGE_HEIGHT": {
+            return {
+                ...state,
+                pageSettings: { ...state.pageSettings, height: action.payload },
+            }
+        }
+        case "ADD_PAGE": {
+            const { page, index } = action.payload
+            return {
+                ...state,
+                pageRank: insertPage(state.pageRank, index, page.pageId),
+                pageCollection: {
+                    ...state.pageCollection,
+                    [page.pageId]: page,
+                },
+            }
+        }
+        case "CLEAR_PAGE": {
             const pageId = action.payload
-            state.pageCollection[pageId]?.clear()
-        },
-
-        DELETE_PAGE: (state, action) => {
+            return {
+                ...state,
+                pageCollection: {
+                    ...state.pageCollection,
+                    [pageId]: { ...state.pageCollection[pageId], strokes: {} },
+                },
+            }
+        }
+        case "DELETE_PAGE": {
             const pageId = action.payload
-            delete state.pageCollection[pageId]
-            state.pageRank.splice(state.pageRank.indexOf(pageId), 1)
-        },
 
-        DELETE_ALL_PAGES: (state) => {
-            state.pageRank = []
-            state.pageCollection = {}
-        },
+            const newPageCollection = deleteObjectProperty(
+                pageId,
+                state.pageCollection
+            ) as PageCollection
 
-        // Add strokes to collection
-        ADD_STROKES: (state, action) => {
+            const newPageRank = removeArrayItem(
+                state.pageRank,
+                state.pageRank.indexOf(pageId)
+            ) as string[]
+
+            return {
+                ...state,
+                pageCollection: newPageCollection,
+                pageRank: newPageRank,
+            }
+        }
+        case "DELETE_ALL_PAGES": {
+            return { ...state, pageRank: [], pageCollection: {} }
+        }
+        case "ADD_STROKES": {
+            const stateCopy = { ...state }
             const strokes = action.payload
             strokes.sort((a: Stroke, b: Stroke) => a.id > b.id)
-            strokes.forEach((s: Stroke) => {
-                const page = state.pageCollection[s.pageId]
+            strokes.forEach((stroke: Stroke) => {
+                const page = stateCopy.pageCollection[stroke.pageId]
                 if (page) {
-                    page.strokes[s.id] = s
+                    page.strokes[stroke.id] = stroke
                 }
             })
-        },
-
-        // Erase strokes from collection
-        ERASE_STROKES(state, action) {
+            return stateCopy
+        }
+        case "ERASE_STROKES": {
             const strokes: Stroke[] = action.payload
             strokes.forEach(({ id, pageId }) => {
                 const page = state.pageCollection[pageId]
@@ -100,168 +151,181 @@ const boardSlice = createSlice({
                     delete page.strokes[id]
                 }
             })
-        },
-
-        // Update stroke position after dragging
-        UPDATE_STROKES(state, action) {
+            return state
+        }
+        case "UPDATE_STROKES": {
             const strokes: Stroke[] = action.payload
+            const pageCollectionCopy = { ...state.pageCollection }
             strokes.forEach(({ id, pageId, x, y, scaleX, scaleY }) => {
-                const stroke = state.pageCollection[pageId]?.strokes[
-                    id
-                ] as Stroke
-                stroke.update({ x, y }, { x: scaleX, y: scaleY })
+                pageCollectionCopy[pageId].strokes[id] = {
+                    ...pageCollectionCopy[pageId].strokes[id],
+                    x,
+                    y,
+                    scaleX,
+                    scaleY,
+                }
             })
-        },
-
-        SET_PDF: (state, action) => {
-            const { pageImages, documentSrc } = action.payload
-            state.document = pageImages
-            state.documentSrc = documentSrc
-        },
-        JUMP_TO_NEXT_PAGE: (state) => {
+            return { ...state, pageCollection: pageCollectionCopy }
+        }
+        case "SET_PDF": {
+            const { pageImages: document, documentSrc } = action.payload
+            return { ...state, document, documentSrc }
+        }
+        case "JUMP_TO_NEXT_PAGE": {
             if (state.currentPageIndex < state.pageRank.length - 1) {
                 state.currentPageIndex += 1
             }
-        },
-        JUMP_TO_PREV_PAGE: (state) => {
+            return state
+        }
+        case "JUMP_TO_PREV_PAGE": {
             if (state.currentPageIndex > 0) {
                 state.currentPageIndex -= 1
             }
-        },
-        JUMP_TO_FIRST_PAGE: (state) => {
-            state.currentPageIndex = 0
-        },
-        JUMP_TO_LAST_PAGE: (state) => {
-            state.currentPageIndex = state.pageRank.length - 1
-        },
-        JUMP_PAGE_WITH_INDEX: (state, action) => {
+            return state
+        }
+        case "JUMP_TO_FIRST_PAGE": {
+            return { ...state, currentPageIndex: 0 }
+        }
+        case "JUMP_TO_LAST_PAGE": {
+            return { ...state, currentPageIndex: state.pageRank.length - 1 }
+        }
+        case "JUMP_PAGE_WITH_INDEX": {
             const targetIndex = action.payload
             if (targetIndex <= state.pageRank.length - 1 && targetIndex >= 0) {
-                state.currentPageIndex = targetIndex
+                return { ...state, currentPageIndex: targetIndex }
             }
-        },
-
-        TOGGLE_SHOULD_CENTER: (state) => {
+            return state
+        }
+        case "TOGGLE_SHOULD_CENTER": {
             state.view.keepCentered = !state.view.keepCentered
-        },
-        TOGGLE_HIDE_NAVBAR: (state) => {
+            return state
+        }
+        case "TOGGLE_HIDE_NAVBAR": {
             state.view.hideNavBar = !state.view.hideNavBar
-        },
-        MULTI_TOUCH_MOVE: (state, action) => {
+            return state
+        }
+        case "MULTI_TOUCH_MOVE": {
             const { p1, p2 } = action.payload
-            multiTouchMove(state.view, p1, p2)
-        },
-        MULTI_TOUCH_END: (state) => {
-            detectPageChange(state as BoardState)
+            return { ...state, view: multiTouchMove(state.view, p1, p2) }
+        }
+        case "MULTI_TOUCH_END": {
             multiTouchEnd()
-        },
-        // use this e.g., on page change
-        INITIAL_VIEW: (state) => {
-            state.view.stageScale = { x: 1, y: 1 }
-            state.view.stageX = 0
-            state.view.stageY = DEFAULT_STAGE_Y
-            centerView(state.view)
-        },
-        RESET_VIEW: (state) => {
+            return detectPageChange(state)
+        }
+        case "INITIAL_VIEW": {
+            return {
+                ...state,
+                view: centerView({
+                    ...state.view,
+                    stageScale: { x: 1, y: 1 },
+                    stageX: 0,
+                    stageY: DEFAULT_STAGE_Y,
+                }),
+            }
+        }
+        case "RESET_VIEW": {
             const oldScale = state.view.stageScale.y
             const newScale = 1
-            state.view.stageScale = { x: newScale, y: newScale }
-            state.view.stageX = 0
-            state.view.stageY =
-                state.view.stageHeight / 2 -
-                ((state.view.stageHeight / 2 - state.view.stageY) / oldScale) *
-                    newScale
-            centerView(state.view)
-        },
-        CENTER_VIEW: (state) => {
-            centerView(state.view)
-        },
-        SET_STAGE_X: (state, action) => {
+            return {
+                ...state,
+                view: centerView({
+                    ...state.view,
+                    stageX: 0,
+                    stageY:
+                        state.view.stageHeight / 2 -
+                        ((state.view.stageHeight / 2 - state.view.stageY) /
+                            oldScale) *
+                            newScale,
+                    stageScale: { x: newScale, y: newScale },
+                }),
+            }
+        }
+        case "CENTER_VIEW": {
+            return {
+                ...state,
+                view: centerView(state.view),
+            }
+        }
+        case "SET_STAGE_X": {
             state.view.stageX = action.payload
-        },
-        SET_STAGE_Y: (state, action) => {
-            state.view.stageY = action.payload
-            detectPageChange(state as BoardState)
-        },
-        SCROLL_STAGE_Y: (state, action) => {
-            state.view.stageY -= action.payload
-            detectPageChange(state as BoardState)
-        },
-        SET_STAGE_SCALE: (state, action) => {
+            return state
+        }
+        case "SET_STAGE_Y": {
+            return detectPageChange({
+                ...state,
+                view: {
+                    ...state.view,
+                    stageY: action.payload,
+                },
+            })
+        }
+        case "SCROLL_STAGE_Y": {
+            return detectPageChange({
+                ...state,
+                view: {
+                    ...state.view,
+                    stageY: state.view.stageY - action.payload,
+                },
+            })
+        }
+        case "SET_STAGE_SCALE": {
             state.view.stageScale = action.payload
-        },
-        ON_WINDOW_RESIZE: (state) => {
-            state.view.stageWidth = window.innerWidth
-            state.view.stageHeight = window.innerHeight
-            centerView(state.view)
-        },
-        FIT_WIDTH_TO_PAGE: (state) => {
-            fitToPage(state.view)
-        },
-        ZOOM_TO: (state, action) => {
+            return state
+        }
+        case "ON_WINDOW_RESIZE": {
+            return {
+                ...state,
+                view: centerView({
+                    ...state.view,
+                    stageWidth: window.innerWidth,
+                    stageHeight: window.innerHeight,
+                }),
+            }
+        }
+        case "FIT_WIDTH_TO_PAGE": {
+            return { ...state, view: fitToPage({ ...state.view }) }
+        }
+        case "ZOOM_TO": {
             const { zoomPoint, zoomScale } = action.payload
-            zoomToPointWithScale(state.view, zoomPoint, zoomScale)
-        },
-        ZOOM_IN_CENTER: (state) => {
+            return {
+                ...state,
+                view: zoomToPointWithScale(
+                    { ...state.view },
+                    zoomPoint,
+                    zoomScale
+                ),
+            }
+        }
+        case "ZOOM_IN_CENTER": {
             const centerOfScreen = {
                 x: state.view.stageWidth / 2,
                 y: state.view.stageHeight / 2,
             }
-            zoomToPointWithScale(
-                state.view,
-                centerOfScreen,
-                ZOOM_IN_BUTTON_SCALE
-            )
-        },
-        ZOOM_OUT_CENTER: (state) => {
+            return {
+                ...state,
+                view: zoomToPointWithScale(
+                    { ...state.view },
+                    centerOfScreen,
+                    ZOOM_IN_BUTTON_SCALE
+                ),
+            }
+        }
+        case "ZOOM_OUT_CENTER": {
             const centerOfScreen = {
                 x: state.view.stageWidth / 2,
                 y: state.view.stageHeight / 2,
             }
-            zoomToPointWithScale(
-                state.view,
-                centerOfScreen,
-                ZOOM_OUT_BUTTON_SCALE
-            )
-        },
-    },
-})
-
-export const {
-    SYNC_ALL_PAGES,
-    SET_PAGERANK,
-    ADD_PAGE,
-    SET_PAGEMETA,
-    CLEAR_PAGE,
-    DELETE_PAGE,
-    DELETE_ALL_PAGES,
-    ADD_STROKES,
-    ERASE_STROKES,
-    UPDATE_STROKES,
-    SET_PDF,
-    SET_PAGE_BACKGROUND,
-    SET_PAGE_HEIGHT,
-    SET_PAGE_WIDTH,
-    JUMP_TO_NEXT_PAGE,
-    JUMP_TO_PREV_PAGE,
-    JUMP_TO_FIRST_PAGE,
-    JUMP_TO_LAST_PAGE,
-    JUMP_PAGE_WITH_INDEX,
-    TOGGLE_SHOULD_CENTER,
-    TOGGLE_HIDE_NAVBAR,
-    MULTI_TOUCH_MOVE,
-    MULTI_TOUCH_END,
-    CENTER_VIEW,
-    INITIAL_VIEW,
-    RESET_VIEW,
-    SET_STAGE_X,
-    SET_STAGE_Y,
-    SCROLL_STAGE_Y,
-    SET_STAGE_SCALE,
-    ON_WINDOW_RESIZE,
-    FIT_WIDTH_TO_PAGE,
-    ZOOM_TO,
-    ZOOM_IN_CENTER,
-    ZOOM_OUT_CENTER,
-} = boardSlice.actions
-export default boardSlice.reducer
+            return {
+                ...state,
+                view: zoomToPointWithScale(
+                    state.view,
+                    centerOfScreen,
+                    ZOOM_OUT_BUTTON_SCALE
+                ),
+            }
+        }
+        default:
+            return state
+    }
+}
+export default boardReducer

@@ -2,20 +2,21 @@ import React, { useEffect } from "react"
 import { useParams } from "react-router-dom"
 import SessionInfo from "menu/toolbar/sessioninfo/sessioninfo"
 import Loading from "menu/loading/loading"
-import { handleAddPageOver, handleDeleteAllPages } from "../drawing/handlers"
-import boardKeyListener from "../board/keylistener"
+import store from "redux/store"
+import {
+    handleAddPageOver,
+    handleDeleteAllPages,
+} from "../redux/drawing/util/handlers"
+import boardKeyListener from "../render/keylistener"
 import Toolbar from "../menu/toolbar/toolbar"
-import BoardStage from "../board/stage"
+import BoardStage from "../render/stage"
 import ViewNav from "../menu/viewnavigation/viewnavigation"
-import { SET_SDIAG } from "../redux/session/session"
 import { isConnected, pingSession } from "../api/websocket"
 import FavTools from "../menu/favtools/favtools"
-import { useCustomDispatch } from "../redux/hooks"
 import { WhiteboardStyled } from "./whiteboard.styled"
 
 const Whiteboard: React.FC = () => {
     const { sid } = useParams<{ sid: string }>()
-    const dispatch = useCustomDispatch()
 
     useEffect(() => {
         if (!isConnected()) {
@@ -24,24 +25,26 @@ const Whiteboard: React.FC = () => {
                 pingSession(sid)
                     .then(() => {
                         // session ok
-                        dispatch(
-                            SET_SDIAG({
+                        store.dispatch({
+                            type: "SET_SDIAG",
+                            payload: {
                                 open: true,
                                 invalidSid: false,
                                 joinOnly: true,
                                 sidInput: sid,
-                            })
-                        )
+                            },
+                        })
                     })
                     .catch(() => {
                         // session not existing
-                        dispatch(
-                            SET_SDIAG({
+                        store.dispatch({
+                            type: "SET_SDIAG",
+                            payload: {
                                 open: true,
                                 invalidSid: true,
                                 joinOnly: false,
-                            })
-                        )
+                            },
+                        })
                     })
             } else {
                 // url is "/", add default page
@@ -49,7 +52,7 @@ const Whiteboard: React.FC = () => {
                 handleAddPageOver()
             }
         }
-    }, [sid, dispatch])
+    }, [sid])
 
     useEffect(() => {
         document.addEventListener("keydown", boardKeyListener)

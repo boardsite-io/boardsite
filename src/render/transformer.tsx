@@ -13,9 +13,8 @@ import {
 } from "consts"
 import { useCustomSelector } from "redux/hooks"
 import store, { RootState } from "redux/store"
-import { TrNodesType, TrRefType } from "../types"
-import { handleUpdateStrokes } from "../drawing/handlers"
-import { Stroke } from "../drawing/stroke/types"
+import { handleUpdateStrokes } from "../redux/drawing/util/handlers"
+import { Stroke, TrNodesType, TrRefType } from "../redux/drawing/drawing.types"
 
 const StrokeTransformer = (): JSX.Element => {
     const trRef: TrRefType = useRef(null)

@@ -1,12 +1,6 @@
-import { Stroke } from "drawing/stroke/types"
-import { eraseStrokes, isConnected, sendStrokes } from "../api/websocket"
-import {
-    ADD_STROKES,
-    ERASE_STROKES,
-    UPDATE_STROKES,
-} from "../redux/board/board"
-import { SET_TR_NODES } from "../redux/drawing/drawing"
-import store from "../redux/store"
+import { eraseStrokes, isConnected, sendStrokes } from "api/websocket"
+import store from "redux/store"
+import { Stroke } from "../drawing.types"
 
 interface DrawAction {
     strokes: Stroke[]
@@ -43,7 +37,10 @@ export function addStrokes(
         })
     }
 
-    store.dispatch(ADD_STROKES(strokes))
+    store.dispatch({
+        type: "ADD_STROKES",
+        payload: strokes,
+    })
     if (isConnected()) {
         // relay stroke in session
         sendStrokes(strokes)
@@ -69,8 +66,15 @@ export function deleteStrokes(
         })
     }
 
-    store.dispatch(SET_TR_NODES([])) // remove selection to prevent undefined refs in transformer
-    store.dispatch(ERASE_STROKES(strokes))
+    // remove selection to prevent undefined refs in transformer
+    store.dispatch({
+        type: "SET_TR_NODES",
+        payload: [],
+    })
+    store.dispatch({
+        type: "ERASE_STROKES",
+        payload: strokes,
+    })
     if (isConnected()) {
         eraseStrokes(strokes)
     }
@@ -106,7 +110,11 @@ export function updateStrokes(
         })
     }
 
-    store.dispatch(UPDATE_STROKES(strokes))
+    store.dispatch({
+        type: "UPDATE_STROKES",
+        payload: strokes,
+    })
+
     if (isConnected()) {
         // send updated stroke
         sendStrokes(

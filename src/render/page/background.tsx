@@ -2,10 +2,10 @@ import { Image } from "react-konva"
 import React, { memo, useEffect, useRef, useState } from "react"
 import * as types from "konva/types/shapes/Image"
 import { DOC_SCALE, pageType } from "consts"
-import { loadNewPDF, pageBackground } from "drawing/page"
 import { useCustomSelector } from "redux/hooks"
 import { createSelector } from "reselect"
 import store, { RootState } from "redux/store"
+import { loadNewPDF, pageBackground } from "redux/board/util/page"
 import { PageProps } from "./types"
 
 export default memo<PageProps>(({ pageId, pageSize }) => {

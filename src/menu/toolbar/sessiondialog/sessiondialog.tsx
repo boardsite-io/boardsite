@@ -9,7 +9,6 @@ import {
     DialogTitle,
     IconButton,
 } from "components"
-import { SET_SDIAG, CLOSE_SDIAG } from "redux/session/session"
 import { isConnected } from "api/websocket"
 import OfflineDialogContent from "./offlinedialogcontent/offlinedialogcontent"
 import OnlineDialogContent from "./onlinedialogcontent/onlinedialogcontent"
@@ -22,17 +21,21 @@ const SessionDialog: React.FC = () => {
     const history = useHistory()
 
     const handleClickOpen = () => {
-        dispatch(
-            SET_SDIAG({
+        dispatch({
+            type: "SET_SDIAG",
+            payload: {
                 open: true,
                 invalidSid: false,
                 joinOnly: false,
-            })
-        )
+            },
+        })
     }
 
     const handleClose = () => {
-        dispatch(CLOSE_SDIAG())
+        dispatch({
+            type: "CLOSE_SDIAG",
+            payload: undefined,
+        })
         if (!isConnected()) {
             history.push("/")
         }

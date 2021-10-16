@@ -1,32 +1,21 @@
 import { KonvaEventObject } from "konva/types/Node"
-import { PageMeta } from "types"
 import store from "redux/store"
-import {
-    UPDATE_LIVESTROKE,
-    END_LIVESTROKE,
-    SET_TYPE,
-    SET_ISMOUSEDOWN,
-    SET_TR_NODES,
-    SET_ERASED_STROKES,
-} from "redux/drawing/drawing"
-import { handleAddStroke, handleDeleteStrokes } from "../handlers"
-import { LiveStroke, Point, ToolType } from "./types"
+import { PageMeta } from "redux/board/board.types"
+import { handleAddStroke, handleDeleteStrokes } from "./handlers"
 import { getSelectedShapes } from "./hitbox"
+import { Point, ToolType } from "../drawing.types"
+import { finaliseStroke } from "./finalise"
 
 let tid: number | NodeJS.Timeout = 0
 
-/**
- * Start the current stroke when mouse is pressed down
- * @param {*} point
- */
 export function startLiveStroke(point: Point, pageId: string): void {
-    const liveStroke = getLiveStroke()
-    liveStroke.start(point, pageId)
+    store.dispatch({ type: "START_LIVESTROKE", payload: { point, pageId } })
 
     // set Line type when mouse hasnt moved for 1 sec
+    const liveStroke = getLiveStroke()
     if (liveStroke.type === ToolType.Pen) {
         tid = setTimeout(() => {
-            store.dispatch(SET_TYPE(ToolType.Line))
+            store.dispatch({ type: "SET_TYPE", payload: ToolType.Line })
         }, 1000)
     }
 }
@@ -36,26 +25,20 @@ export function startLiveStroke(point: Point, pageId: string): void {
  * @param {*} point
  */
 export function moveLiveStroke(point: Point, pagePosition: Point): void {
-    const liveStroke = getLiveStroke()
     const stageScale = store.getState().board.view.stageScale.x
-    liveStroke.addPoint(point, stageScale)
-
-    // the eraser livestroke calculates the collision of the line
-    // between the 2 latest points and all strokes in the page
-    if (liveStroke.type === ToolType.Eraser) {
-        moveEraser(liveStroke, pagePosition)
-    }
-
-    store.dispatch(UPDATE_LIVESTROKE())
+    const liveStroke = getLiveStroke()
+    const { strokes } = store.getState().board.pageCollection[liveStroke.pageId]
+    store.dispatch({
+        type: "UPDATE_LIVESTROKE",
+        payload: { point, stageScale, strokes, pagePosition },
+    })
 
     // check if mouse is stationary, else disable switchToLine
-    if (tid !== 0 && getLiveStroke().type === ToolType.Pen) {
+    if (tid !== 0 && liveStroke.type === ToolType.Pen) {
         const { pointsSegments } = getLiveStroke()
         if (
-            Math.abs((pointsSegments ?? [])[0][0] - point.x) >
-                2 / store.getState().board.view.stageScale.x ||
-            Math.abs((pointsSegments ?? [])[0][1] - point.y) >
-                2 / store.getState().board.view.stageScale.x
+            Math.abs((pointsSegments ?? [])[0][0] - point.x) > 2 / stageScale ||
+            Math.abs((pointsSegments ?? [])[0][1] - point.y) > 2 / stageScale
         ) {
             clearTimeout(tid as number)
             tid = 0
@@ -69,19 +52,20 @@ export function moveLiveStroke(point: Point, pagePosition: Point): void {
 export async function registerLiveStroke(
     e: KonvaEventObject<MouseEvent>
 ): Promise<void> {
-    const liveStroke = getLiveStroke()
     const stageScale = store.getState().board.view.stageScale.x
 
     // Finalize & Create stroke from LiveStroke
     const pagePosition = e.target.getPosition()
-    const stroke = liveStroke.finalize(stageScale, pagePosition)
+    const stroke = finaliseStroke(stageScale, pagePosition)
 
     switch (stroke.type) {
         case ToolType.Eraser: {
             const { erasedStrokes } = store.getState().drawing
-            const s = Object.keys(erasedStrokes).map((id) => erasedStrokes[id])
-            if (s.length > 0) {
-                handleDeleteStrokes(s)
+            const strokes = Object.keys(erasedStrokes).map(
+                (id) => erasedStrokes[id]
+            )
+            if (strokes.length > 0) {
+                handleDeleteStrokes(strokes)
             }
             break
         }
@@ -89,21 +73,30 @@ export async function registerLiveStroke(
             const { strokes } =
                 store.getState().board.pageCollection[stroke.pageId]
             const shapes = getSelectedShapes(stroke, strokes, e)
-            store.dispatch(SET_TR_NODES(shapes))
+
+            store.dispatch({
+                type: "SET_TR_NODES",
+                payload: shapes,
+            })
             break
         }
         default:
             handleAddStroke(stroke)
     }
 
-    // notify the livestroke renderer
-    store.dispatch(END_LIVESTROKE())
-
     if (tid !== 0) {
-        store.dispatch(SET_TYPE(ToolType.Pen))
+        store.dispatch({
+            type: "SET_TYPE",
+            payload: ToolType.Pen,
+        })
         clearTimeout(tid as number)
         tid = 0
     }
+
+    store.dispatch({
+        type: "END_LIVESTROKE",
+        payload: undefined,
+    })
 }
 
 export function abortLiveStroke(): void {
@@ -113,10 +106,16 @@ export function abortLiveStroke(): void {
     }
     const liveStroke = getLiveStroke()
     if (liveStroke.pointsSegments?.length) {
-        store.dispatch(END_LIVESTROKE())
+        store.dispatch({
+            type: "END_LIVESTROKE",
+            payload: undefined,
+        })
     }
     if (store.getState().drawing.isMouseDown) {
-        store.dispatch(SET_ISMOUSEDOWN(false))
+        store.dispatch({
+            type: "SET_ISMOUSEDOWN",
+            payload: false,
+        })
     }
 }
 
@@ -131,15 +130,4 @@ export function getPageMeta(pageId: string): PageMeta {
 // helper function to get current livestroke
 function getLiveStroke() {
     return store.getState().drawing.liveStroke
-}
-
-function moveEraser(liveStroke: LiveStroke, pagePosition: Point): void {
-    const { strokes } = store.getState().board.pageCollection[liveStroke.pageId]
-    const selectedStrokes = liveStroke.selectLineCollision(
-        strokes,
-        pagePosition
-    )
-    if (Object.keys(selectedStrokes).length > 0) {
-        store.dispatch(SET_ERASED_STROKES(selectedStrokes))
-    }
 }

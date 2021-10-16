@@ -13,7 +13,12 @@ import {
 } from "consts"
 import store from "redux/store"
 import { useCustomSelector } from "redux/hooks"
-import { LiveStroke, Point, Stroke, ToolType } from "drawing/stroke/types"
+import {
+    LiveStroke,
+    Point,
+    Stroke,
+    ToolType,
+} from "redux/drawing/drawing.types"
 
 export const LiveStrokeShape = memo(() => {
     const { liveStroke } = store.getState().drawing

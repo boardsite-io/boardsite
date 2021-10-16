@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { UploadIcon } from "components"
-import { handleDocument } from "drawing/handlers"
+import { handleDocument } from "redux/drawing/util/handlers"
 import {
     InvisibleInput,
     DropZone,

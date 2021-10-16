@@ -3,18 +3,8 @@ import { ReactReduxContext } from "react-redux"
 import { Stage } from "react-konva"
 import { Vector2d } from "konva/types/types"
 import { KonvaEventObject } from "konva/types/Node"
-import { ToolType } from "drawing/stroke/types"
+import { ToolType } from "redux/drawing/drawing.types"
 import { ZOOM_IN_WHEEL_SCALE, ZOOM_OUT_WHEEL_SCALE } from "consts"
-import {
-    CENTER_VIEW,
-    ON_WINDOW_RESIZE,
-    SET_STAGE_X,
-    SET_STAGE_Y,
-    SCROLL_STAGE_Y,
-    ZOOM_TO,
-    MULTI_TOUCH_MOVE,
-    MULTI_TOUCH_END,
-} from "redux/board/board"
 import store from "redux/store"
 import { useCustomSelector } from "redux/hooks"
 import Content from "./content"
@@ -33,10 +23,18 @@ const BoardStage: React.FC = () => {
     } = useCustomSelector((state) => state.board.view)
 
     useEffect(() => {
+        // listen for resize to update stage dimensions
         window.addEventListener("resize", () =>
-            store.dispatch(ON_WINDOW_RESIZE())
-        ) // listen for resize to update stage dimensions
-        store.dispatch(CENTER_VIEW())
+            store.dispatch({
+                type: "ON_WINDOW_RESIZE",
+                payload: undefined,
+            })
+        )
+        // center initial view
+        store.dispatch({
+            type: "CENTER_VIEW",
+            payload: undefined,
+        })
     }, [])
 
     /**
@@ -52,14 +50,18 @@ const BoardStage: React.FC = () => {
             } else {
                 zoomScale = ZOOM_OUT_WHEEL_SCALE
             }
-            store.dispatch(
-                ZOOM_TO({
+            store.dispatch({
+                type: "ZOOM_TO",
+                payload: {
                     zoomPoint: e.target.getStage()?.getPointerPosition(),
                     zoomScale,
-                })
-            )
+                },
+            })
         } else {
-            store.dispatch(SCROLL_STAGE_Y(e.evt.deltaY))
+            store.dispatch({
+                type: "SCROLL_STAGE_Y",
+                payload: e.evt.deltaY,
+            })
         }
     }
 
@@ -69,8 +71,14 @@ const BoardStage: React.FC = () => {
      */
     const onDragEnd = (e: KonvaEventObject<DragEvent>) => {
         if (e.target.attrs.className === "stage") {
-            store.dispatch(SET_STAGE_X(e.target.attrs.x))
-            store.dispatch(SET_STAGE_Y(e.target.attrs.y))
+            store.dispatch({
+                type: "SET_STAGE_X",
+                payload: e.target.attrs.x,
+            })
+            store.dispatch({
+                type: "SET_STAGE_Y",
+                payload: e.target.attrs.y,
+            })
         }
     }
 
@@ -103,12 +111,18 @@ const BoardStage: React.FC = () => {
                 x: touch2.clientX,
                 y: touch2.clientY,
             }
-            store.dispatch(MULTI_TOUCH_MOVE({ p1, p2 }))
+            store.dispatch({
+                type: "MULTI_TOUCH_MOVE",
+                payload: { p1, p2 },
+            })
         }
     }
 
     const handleTouchEnd = () => {
-        store.dispatch(MULTI_TOUCH_END())
+        store.dispatch({
+            type: "MULTI_TOUCH_END",
+            payload: undefined,
+        })
     }
 
     return (

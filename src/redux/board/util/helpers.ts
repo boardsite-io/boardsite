@@ -1,20 +1,29 @@
-import { Point } from "drawing/stroke/types"
+import { Point } from "redux/drawing/drawing.types"
 import {
     CANVAS_WIDTH,
     DEFAULT_PAGE_GAP,
     ZOOM_SCALE_MAX,
     ZOOM_SCALE_MIN,
 } from "consts"
-import { BoardState, BoardView } from "./types"
+import { BoardState, BoardView } from "../board.types"
+
+export const insertPage = (
+    pageRank: string[],
+    index: number,
+    newItem: string
+): string[] =>
+    index >= 0
+        ? [...pageRank.slice(0, index), newItem, ...pageRank.slice(index)]
+        : [...pageRank, newItem]
 
 export const getViewCenterY = ({ view }: BoardState): number =>
     (view.stageHeight / 2 - view.stageY) / view.stageScale.y
 
-export const detectPageChange = (state: BoardState): void => {
+export const detectPageChange = (state: BoardState): BoardState => {
     const centerY = getViewCenterY(state)
     const currPageId = state.pageRank[state.currentPageIndex]
     if (!currPageId) {
-        return
+        return state
     }
     const currPageHeight = state.pageCollection[currPageId].meta.height
     const scale = state.view.stageScale.x
@@ -38,35 +47,38 @@ export const detectPageChange = (state: BoardState): void => {
             state.currentPageIndex -= 1
         }
     }
+    return state
 }
 
-export const centerView = (view: BoardView): void => {
+export const centerView = (view: BoardView): BoardView => {
     if (view.stageWidth >= CANVAS_WIDTH * view.stageScale.x) {
         view.stageX = view.stageWidth / 2
     } else {
         fitToPage(view)
     }
+    return view
 }
 
-export const fitToPage = (view: BoardView): void => {
-    const oldScale = view.stageScale.y
+export const fitToPage = (viewCopy: BoardView): BoardView => {
+    const oldScale = viewCopy.stageScale.y
     const newScale = window.innerWidth / CANVAS_WIDTH
-    view.stageScale = { x: newScale, y: newScale }
-    view.stageX = view.stageWidth / 2
-    view.stageY =
-        view.stageHeight / 2 -
-        ((view.stageHeight / 2 - view.stageY) / oldScale) * newScale
+    viewCopy.stageScale = { x: newScale, y: newScale }
+    viewCopy.stageX = viewCopy.stageWidth / 2
+    viewCopy.stageY =
+        viewCopy.stageHeight / 2 -
+        ((viewCopy.stageHeight / 2 - viewCopy.stageY) / oldScale) * newScale
+    return viewCopy
 }
 
 export const zoomToPointWithScale = (
-    view: BoardView,
+    viewCopy: BoardView,
     zoomPoint: Point,
     zoomScale: number
-): void => {
-    const oldScale = view.stageScale.x
+): BoardView => {
+    const oldScale = viewCopy.stageScale.x
     const mousePointTo = {
-        x: (zoomPoint.x - view.stageX) / oldScale,
-        y: (zoomPoint.y - view.stageY) / oldScale,
+        x: (zoomPoint.x - viewCopy.stageX) / oldScale,
+        y: (zoomPoint.y - viewCopy.stageY) / oldScale,
     }
     let newScale = oldScale * zoomScale
     if (newScale > ZOOM_SCALE_MAX) {
@@ -75,21 +87,22 @@ export const zoomToPointWithScale = (
         newScale = ZOOM_SCALE_MIN
     }
 
-    view.stageScale = { x: newScale, y: newScale }
+    viewCopy.stageScale = { x: newScale, y: newScale }
 
-    if (view.keepCentered) {
+    if (viewCopy.keepCentered) {
         // if zoomed out then center, else zoom to mouse coords
         const x = (window.innerWidth - CANVAS_WIDTH * newScale) / 2
         if (x >= 0) {
-            view.stageX = x
+            viewCopy.stageX = x
         } else {
-            view.stageX = zoomPoint.x - mousePointTo.x * newScale
+            viewCopy.stageX = zoomPoint.x - mousePointTo.x * newScale
         }
     } else {
-        view.stageX = zoomPoint.x - mousePointTo.x * newScale
+        viewCopy.stageX = zoomPoint.x - mousePointTo.x * newScale
     }
 
-    view.stageY = zoomPoint.y - mousePointTo.y * newScale
+    viewCopy.stageY = zoomPoint.y - mousePointTo.y * newScale
+    return viewCopy
 }
 
 /**
@@ -114,10 +127,14 @@ export const getCenter = (p1: Point, p2: Point): Point => ({
 let lastCenter: Point | null = null
 let lastDist = 0
 
-export const multiTouchMove = (view: BoardView, p1: Point, p2: Point): void => {
+export const multiTouchMove = (
+    view: BoardView,
+    p1: Point,
+    p2: Point
+): BoardView => {
     if (!lastCenter) {
         lastCenter = getCenter(p1, p2)
-        return
+        return view
     }
     const newCenter = getCenter(p1, p2)
     const dist = getDistance(p1, p2)
@@ -149,6 +166,7 @@ export const multiTouchMove = (view: BoardView, p1: Point, p2: Point): void => {
     // update info
     lastDist = dist
     lastCenter = newCenter
+    return view
 }
 
 export const multiTouchEnd = (): void => {

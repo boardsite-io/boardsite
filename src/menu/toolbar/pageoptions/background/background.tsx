@@ -1,5 +1,5 @@
 import React from "react"
-import { handlePageBackground } from "drawing/handlers"
+import { handlePageBackground } from "redux/drawing/util/handlers"
 import { useCustomSelector } from "redux/hooks"
 import { pageType } from "consts"
 import { Backgrounds, Blank, Checkered, Ruled } from "./background.styled"

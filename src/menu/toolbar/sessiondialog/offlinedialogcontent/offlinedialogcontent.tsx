@@ -2,12 +2,6 @@ import React from "react"
 import { useHistory } from "react-router-dom"
 import { useCustomDispatch, useCustomSelector } from "redux/hooks"
 import store from "redux/store"
-import {
-    SET_SDIAG,
-    CLOSE_SDIAG,
-    SET_USER_ALIAS,
-    SET_USER_COLOR,
-} from "redux/session/session"
 import { getSessionPath, joinSession, newSession } from "api/websocket"
 import { Button, DialogContent, TextField } from "components"
 import { UserColorButton, UserSelection } from "./offlinedialogcontent.styled"
@@ -28,7 +22,10 @@ const OfflineDialogContent: React.FC = () => {
     const handleCreate = async () => {
         try {
             const sessionId = await newSession()
-            dispatch(SET_SDIAG({ sidInput: sessionId }))
+            dispatch({
+                type: "SET_SDIAG",
+                payload: { sidInput: sessionId },
+            })
             await handleJoin()
         } catch (error) {
             // console.log("error")
@@ -43,15 +40,19 @@ const OfflineDialogContent: React.FC = () => {
             await joinSession()
             const { sidInput } = store.getState().session.sessionDialog
             history.push(getSessionPath(sidInput))
-            dispatch(CLOSE_SDIAG())
+            dispatch({
+                type: "CLOSE_SDIAG",
+                payload: undefined,
+            })
         } catch (error) {
-            dispatch(
-                SET_SDIAG({
+            dispatch({
+                type: "SET_SDIAG",
+                payload: {
                     open: true,
                     invalidSid: true,
                     joinOnly: false,
-                })
-            )
+                },
+            })
         }
     }
 
@@ -60,15 +61,24 @@ const OfflineDialogContent: React.FC = () => {
      * @param {event} e event object
      */
     const handleTextFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(SET_SDIAG({ sidInput: e.target.value }))
+        dispatch({
+            type: "SET_SDIAG",
+            payload: { sidInput: e.target.value },
+        })
     }
 
     const handleAliasChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(SET_USER_ALIAS(e.target.value))
+        dispatch({
+            type: "SET_USER_ALIAS",
+            payload: e.target.value,
+        })
     }
 
     const newRandomColor = () => {
-        dispatch(SET_USER_COLOR())
+        dispatch({
+            type: "SET_USER_COLOR",
+            payload: undefined,
+        })
     }
 
     return (

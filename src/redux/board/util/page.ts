@@ -1,60 +1,48 @@
+import store from "redux/store"
+
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { nanoid } from "@reduxjs/toolkit"
 import { Shape, ShapeConfig } from "konva/types/Shape"
 import { Context } from "konva/types/Context"
 // eslint-disable-next-line import/no-unresolved
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf"
 // import pdfjsWorker from "pdfjs-dist/es5/build/pdf.worker.entry"
 import { RenderParameters } from "pdfjs-dist/types/display/api"
-import { ADD_PAGE, SET_PDF } from "redux/board/board"
 import { DOC_SCALE, pageType } from "consts"
-import store from "redux/store"
-import { Page, PageBackground, PageMeta } from "../types"
-import { StrokeMap } from "./stroke/types"
+import { nanoid } from "nanoid"
+import { Page, PageVariants } from "../board.types"
+
+interface createPageProps {
+    id?: string
+    style?: PageVariants
+    pageNum?: number
+    attachId?: string
+}
+export const createPage = ({
+    id,
+    style,
+    pageNum,
+    attachId,
+}: createPageProps): Page => {
+    const { width, height, background } = store.getState().board.pageSettings
+    return {
+        pageId: id ?? nanoid(8),
+        meta: {
+            background: {
+                style: style ?? background,
+                attachId: attachId ?? "",
+                documentPageNum: pageNum ?? 0,
+            },
+            width,
+            height,
+        },
+        strokes: {},
+    }
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const pdfjsWorker: any = require("pdfjs-dist/legacy/build/pdf.worker.entry")
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
-
-export class BoardPage implements Page {
-    constructor(style?: PageBackground, pageNum?: number, attachId?: string) {
-        const { pageSettings } = store.getState().board
-        this.pageId = nanoid(8)
-        this.meta = {
-            background: {
-                style: style ?? pageSettings.background, // fallback type
-                attachId: attachId ?? "",
-                documentPageNum: pageNum ?? 0,
-            },
-            width: pageSettings.width,
-            height: pageSettings.height,
-        }
-    }
-
-    pageId: string
-    strokes: StrokeMap = {}
-    meta: PageMeta
-
-    setID(pageId: string): BoardPage {
-        this.pageId = pageId
-        return this
-    }
-
-    add(index?: number): void {
-        store.dispatch(ADD_PAGE({ page: this, index }))
-    }
-
-    clear(): void {
-        this.strokes = {}
-    }
-
-    updateMeta(meta: PageMeta): BoardPage {
-        // update only fields that are different
-        this.meta = { ...this.meta, ...meta }
-        return this
-    }
-}
 
 export async function getPDFfromForm(file: File): Promise<Uint8Array> {
     const fileReader = new FileReader()
@@ -134,12 +122,13 @@ export async function loadNewPDF(fileData: Uint8Array | string): Promise<void> {
 
     // save loaded pages in store
     const data = await Promise.all(pages)
-    store.dispatch(
-        SET_PDF({
+    store.dispatch({
+        type: "SET_PDF",
+        payload: {
             pageImages: data,
             documentSrc: fileData,
-        })
-    )
+        },
+    })
 }
 
 function getAttachmentURL(attachId: string): URL {
@@ -202,7 +191,10 @@ const ruled = (context: Context, shape: Shape<ShapeConfig>): void => {
     context.stroke()
 }
 
-export const pageBackground = {
+interface PageBackground {
+    [x: string]: (context: Context, shape: Shape<ShapeConfig>) => void
+}
+export const pageBackground: PageBackground = {
     [pageType.BLANK]: blank,
     [pageType.CHECKERED]: checkered,
     [pageType.RULED]: ruled,

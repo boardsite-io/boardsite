@@ -19,7 +19,6 @@ import {
     BsGear,
 } from "react-icons/bs"
 import { useCustomSelector } from "redux/hooks"
-import { SET_PAGE_HEIGHT, SET_PAGE_WIDTH } from "redux/board/board"
 import {
     MAX_PAGE_WIDTH,
     MIN_PAGE_WIDTH,
@@ -32,7 +31,7 @@ import {
     handleClearPage,
     handleDeleteAllPages,
     handleDeletePage,
-} from "drawing/handlers"
+} from "redux/drawing/util/handlers"
 import Background from "./background/background"
 import PdfUpload from "./pdfupload/pdfupload"
 import PdfDownload from "./pdfdownload/pdfdownload"
@@ -47,19 +46,31 @@ const PageOptions: React.FC = () => {
     const handleWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const widthValue = parseInt(e.target.value, 10)
         if (widthValue <= MAX_PAGE_WIDTH && widthValue >= MIN_PAGE_WIDTH) {
-            store.dispatch(SET_PAGE_WIDTH(widthValue))
+            store.dispatch({
+                type: "SET_PAGE_WIDTH",
+                payload: widthValue,
+            })
         } else if (widthValue > MAX_PAGE_WIDTH) {
             e.target.value = MAX_PAGE_WIDTH.toString()
-            store.dispatch(SET_PAGE_WIDTH(MAX_PAGE_WIDTH))
+            store.dispatch({
+                type: "SET_PAGE_WIDTH",
+                payload: MAX_PAGE_WIDTH,
+            })
         }
     }
     const handleHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const heightValue = parseInt(e.target.value, 10)
         if (heightValue <= MAX_PAGE_HEIGHT && heightValue >= MAX_PAGE_HEIGHT) {
-            store.dispatch(SET_PAGE_HEIGHT(heightValue))
+            store.dispatch({
+                type: "SET_PAGE_HEIGHT",
+                payload: heightValue,
+            })
         } else if (heightValue > MAX_PAGE_HEIGHT) {
             e.target.value = MAX_PAGE_HEIGHT.toString()
-            store.dispatch(SET_PAGE_HEIGHT(MAX_PAGE_HEIGHT))
+            store.dispatch({
+                type: "SET_PAGE_HEIGHT",
+                payload: MAX_PAGE_HEIGHT,
+            })
         }
     }
 

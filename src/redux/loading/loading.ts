@@ -1,28 +1,28 @@
-import { createSlice } from "@reduxjs/toolkit"
-
-export interface LoadingState {
-    isLoading: boolean
-    message: string
-}
+import { LoadingState } from "./loading.types"
 
 const initState: LoadingState = {
     isLoading: false,
     message: "Loading...",
 }
 
-const loadingSlice = createSlice({
-    name: "loading",
-    initialState: initState,
-    reducers: {
-        START_LOADING: (state, action: { payload: string }) => {
-            state.message = action.payload
-            state.isLoading = true
-        },
-        END_LOADING: (state) => {
+const loadingReducer = (state = initState, action: any): LoadingState => {
+    switch (action.type) {
+        case "START_LOADING": {
+            return {
+                ...state,
+                message: action.payload,
+                isLoading: true,
+            }
+        }
+        case "END_LOADING": {
             state.isLoading = false
-        },
-    },
-})
-
-export const { START_LOADING, END_LOADING } = loadingSlice.actions
-export default loadingSlice.reducer
+            return {
+                ...state,
+                isLoading: false,
+            }
+        }
+        default:
+            return state
+    }
+}
+export default loadingReducer

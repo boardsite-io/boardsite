@@ -2,7 +2,6 @@ import { Button, DialogContent } from "components"
 import React from "react"
 import { useHistory } from "react-router-dom"
 import { useCustomDispatch, useCustomSelector } from "redux/hooks"
-import { CLOSE_SDIAG, CLOSE_WS } from "redux/session/session"
 import {
     UserAlias,
     UserColor,
@@ -18,8 +17,14 @@ const OnlineDialogContent: React.FC = () => {
     const dispatch = useCustomDispatch()
     const history = useHistory()
     const handleLeave = () => {
-        dispatch(CLOSE_WS())
-        dispatch(CLOSE_SDIAG())
+        dispatch({
+            type: "CLOSE_WS",
+            payload: undefined,
+        })
+        dispatch({
+            type: "CLOSE_SDIAG",
+            payload: undefined,
+        })
         history.push("/")
     }
 

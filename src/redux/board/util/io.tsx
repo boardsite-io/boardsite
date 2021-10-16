@@ -5,10 +5,10 @@ import download from "downloadjs"
 import { Provider } from "react-redux"
 import { Layer, Stage, Rect } from "react-konva"
 import * as types from "konva/types/Layer"
-import { StrokeShape } from "board/stroke/shape"
+import { StrokeShape } from "render/stroke/shape"
 import { CANVAS_HEIGHT, CANVAS_WIDTH, pageType } from "consts"
-import store from "../redux/store"
-import { pageBackground } from "./page"
+import { pageBackground } from "redux/board/util/page"
+import store from "redux/store"
 
 export async function pagesToDataURL(
     pixelRatio: number,
@@ -17,12 +17,9 @@ export async function pagesToDataURL(
     const pages = store.getState().board.pageRank
 
     const imgs = pages.map(async (pageId: string) => {
-        const strokeIds = Object.keys(
-            store.getState().board.pageCollection[pageId].strokes
-        )
-        const { style } =
-            store.getState().board.pageCollection[pageId]?.meta?.background
-
+        const page = store.getState().board.pageCollection[pageId]
+        const strokeIds = Object.keys(page?.strokes)
+        const { style } = page?.meta?.background
         const tmp = document.createElement("div")
 
         let ref: React.Ref<types.Layer> = null

@@ -1,13 +1,12 @@
 import { Dialog, DialogContent } from "components"
 import React from "react"
 import { useCustomSelector } from "redux/hooks"
-import { END_LOADING } from "redux/loading/loading"
 import store from "redux/store"
 
 const Loading: React.FC = () => {
-    const { isLoading, message } = useCustomSelector((state) => state.info)
+    const { isLoading, message } = useCustomSelector((state) => state.loading)
     const onClose = () => {
-        store.dispatch(END_LOADING())
+        store.dispatch({ type: "END_LOADING", payload: undefined })
     }
 
     return (

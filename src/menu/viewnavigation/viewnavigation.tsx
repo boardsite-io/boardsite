@@ -6,13 +6,6 @@ import {
     CgPushChevronDown,
 } from "react-icons/cg"
 import { IconButton } from "components"
-import {
-    JUMP_TO_FIRST_PAGE,
-    JUMP_TO_LAST_PAGE,
-    JUMP_TO_NEXT_PAGE,
-    JUMP_TO_PREV_PAGE,
-    INITIAL_VIEW,
-} from "redux/board/board"
 import store from "redux/store"
 import { useCustomSelector } from "redux/hooks"
 import {
@@ -23,20 +16,44 @@ import {
 } from "./viewnavigation.styled"
 
 const firstPage = () => {
-    store.dispatch(JUMP_TO_FIRST_PAGE())
-    store.dispatch(INITIAL_VIEW())
+    store.dispatch({
+        type: "JUMP_TO_FIRST_PAGE",
+        payload: undefined,
+    })
+    store.dispatch({
+        type: "INITIAL_VIEW",
+        payload: undefined,
+    })
 }
 const previousPage = () => {
-    store.dispatch(JUMP_TO_PREV_PAGE())
-    store.dispatch(INITIAL_VIEW())
+    store.dispatch({
+        type: "JUMP_TO_PREV_PAGE",
+        payload: undefined,
+    })
+    store.dispatch({
+        type: "INITIAL_VIEW",
+        payload: undefined,
+    })
 }
 const nextPage = () => {
-    store.dispatch(JUMP_TO_NEXT_PAGE())
-    store.dispatch(INITIAL_VIEW())
+    store.dispatch({
+        type: "JUMP_TO_NEXT_PAGE",
+        payload: undefined,
+    })
+    store.dispatch({
+        type: "INITIAL_VIEW",
+        payload: undefined,
+    })
 }
 const lastPage = () => {
-    store.dispatch(JUMP_TO_LAST_PAGE())
-    store.dispatch(INITIAL_VIEW())
+    store.dispatch({
+        type: "JUMP_TO_LAST_PAGE",
+        payload: undefined,
+    })
+    store.dispatch({
+        type: "INITIAL_VIEW",
+        payload: undefined,
+    })
 }
 
 const ViewNavigation: React.FC = () => {

@@ -1,9 +1,8 @@
 import React from "react"
-import { nanoid } from "@reduxjs/toolkit"
 import { useCustomSelector } from "redux/hooks"
 import store from "redux/store"
-import { SET_WIDTH } from "redux/drawing/drawing"
 import { STROKE_WIDTH_PRESETS } from "consts"
+import { nanoid } from "nanoid"
 import { Preset, WidthPresetInnerDot, WidthPresets } from "./widthpicker.styled"
 
 const WidthPicker: React.FC = () => {
@@ -17,7 +16,12 @@ const WidthPicker: React.FC = () => {
                 <Preset
                     key={nanoid()}
                     $active={widthSelector === strokeWidth}
-                    onClick={() => store.dispatch(SET_WIDTH(strokeWidth))}>
+                    onClick={() =>
+                        store.dispatch({
+                            type: "SET_WIDTH",
+                            payload: strokeWidth,
+                        })
+                    }>
                     <WidthPresetInnerDot $strokeWidth={strokeWidth} />
                 </Preset>
             ))}

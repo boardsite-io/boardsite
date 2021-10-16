@@ -1,7 +1,6 @@
 import React from "react"
 import { HexColorPicker } from "react-colorful"
 import { useCustomSelector } from "redux/hooks"
-import { SET_COLOR } from "redux/drawing/drawing"
 import store from "redux/store"
 import "./colorpicker.css"
 
@@ -11,7 +10,10 @@ const ColorPicker: React.FC = () => {
     )
 
     const handleChange = (newColor: string | undefined) => {
-        store.dispatch(SET_COLOR(newColor))
+        store.dispatch({
+            type: "SET_COLOR",
+            payload: newColor,
+        })
     }
 
     return (

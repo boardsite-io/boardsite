@@ -3,10 +3,9 @@ import { Rect } from "react-konva"
 import { KonvaEventObject } from "konva/types/Node"
 import { Stage } from "konva/types/Stage"
 import { Vector2d } from "konva/types/types"
-import { ToolType } from "drawing/stroke/types"
+import { ToolType } from "redux/drawing/drawing.types"
 import store from "redux/store"
-import * as actions from "drawing/stroke/actions"
-import { SET_ISMOUSEDOWN } from "redux/drawing/drawing"
+import * as actions from "redux/drawing/util/actions"
 import { useCustomSelector } from "redux/hooks"
 import { PageProps } from "./types"
 
@@ -24,7 +23,11 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
         if (e.evt.buttons === 2) {
             return
         }
-        store.dispatch(SET_ISMOUSEDOWN(true))
+        store.dispatch({
+            type: "SET_ISMOUSEDOWN",
+            payload: true,
+        })
+
         const pos = getPointerPositionInStage(e)
         actions.startLiveStroke(pos, pageId)
     }
@@ -49,7 +52,10 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
             return
         } // Ignore reentering
 
-        store.dispatch(SET_ISMOUSEDOWN(false))
+        store.dispatch({
+            type: "SET_ISMOUSEDOWN",
+            payload: false,
+        })
 
         // update last position
         const pos = getPointerPositionInStage(e)

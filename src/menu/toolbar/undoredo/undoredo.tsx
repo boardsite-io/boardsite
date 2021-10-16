@@ -1,5 +1,5 @@
 import { IconButton, RedoIcon, UndoIcon } from "components"
-import { handleRedo, handleUndo } from "drawing/handlers"
+import { handleRedo, handleUndo } from "redux/drawing/util/handlers"
 import React from "react"
 
 const UndoRedo: React.FC = () => (

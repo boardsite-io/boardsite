@@ -1,7 +1,13 @@
-import { PageMeta } from "../types"
+import { PageMeta } from "redux/board/board.types"
 
 // api
 export const API_URL = process.env.REACT_APP_B_API_URL as string
+
+export interface User {
+    id: string
+    alias: string
+    color: string
+}
 
 export type MessageType =
     | "stroke"
@@ -10,13 +16,16 @@ export type MessageType =
     | "pagesync"
     | "pageupdate"
 
-export const messages = {
-    Stroke: "stroke" as MessageType,
-    UserConnected: "userconn" as MessageType,
-    UserDisconnected: "userdisc" as MessageType,
-    PageSync: "pagesync" as MessageType,
-    PageUpdate: "pageupdate" as MessageType,
+interface Messages {
+    [x: string]: MessageType
 }
+export const messages = {
+    Stroke: "stroke",
+    UserConnected: "userconn",
+    UserDisconnected: "userdisc",
+    PageSync: "pagesync",
+    PageUpdate: "pageupdate",
+} as Messages
 
 export interface Message<T> {
     type: MessageType

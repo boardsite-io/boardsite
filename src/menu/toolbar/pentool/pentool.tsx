@@ -1,4 +1,4 @@
-import { ToolType } from "drawing/stroke/types"
+import { ToolType } from "redux/drawing/drawing.types"
 import {
     CircleIcon,
     IconButton,
@@ -10,7 +10,6 @@ import {
 } from "components"
 import React, { useState } from "react"
 import { useCustomSelector } from "redux/hooks"
-import { SET_TYPE } from "redux/drawing/drawing"
 import store from "redux/store"
 import StylePicker from "../stylepicker/stylepicker"
 
@@ -54,7 +53,12 @@ const PenTool: React.FC = () => {
                 </IconButton>
             ) : (
                 <IconButton
-                    onClick={() => store.dispatch(SET_TYPE(ToolType.Pen))}>
+                    onClick={() =>
+                        store.dispatch({
+                            type: "SET_TYPE",
+                            payload: ToolType.Pen,
+                        })
+                    }>
                     <IconX />
                 </IconButton>
             )}
