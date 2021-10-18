@@ -12,7 +12,8 @@ import {
     TR_ANCHOR_CORNER_RADIUS,
 } from "consts"
 import { useCustomSelector } from "redux/hooks"
-import store, { RootState } from "redux/store"
+import store from "redux/store"
+import { RootState } from "redux/types"
 import { TrNodesType, TrRefType } from "../types"
 import { handleUpdateStrokes } from "../drawing/handlers"
 import { Stroke } from "../drawing/stroke/types"

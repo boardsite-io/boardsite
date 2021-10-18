@@ -5,7 +5,8 @@ import { DOC_SCALE, pageType } from "consts"
 import { loadNewPDF, pageBackground } from "drawing/page"
 import { useCustomSelector } from "redux/hooks"
 import { createSelector } from "reselect"
-import store, { RootState } from "redux/store"
+import store from "redux/store"
+import { RootState } from "redux/types"
 import { PageProps } from "./types"
 
 export default memo<PageProps>(({ pageId, pageSize }) => {

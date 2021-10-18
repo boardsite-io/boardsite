@@ -16,6 +16,7 @@ import {
 } from "redux/session/session"
 import { BoardPage } from "drawing/page"
 import store from "redux/store"
+import { isConnectedState } from "redux/session/helpers"
 import { PageCollection, User } from "types"
 import {
     postPages,
@@ -148,11 +149,7 @@ function updatePageMeta({ pageId, meta, clear }: ResponsePageUpdate) {
 }
 
 export function isConnected(): boolean {
-    return (
-        store.getState().session.sessionId !== "" &&
-        store.getState().session.webSocket != null &&
-        store.getState().session.webSocket.readyState === WebSocket.OPEN
-    )
+    return isConnectedState(store.getState().session)
 }
 
 export async function newSession(): Promise<string> {
