@@ -44,8 +44,8 @@ const Whiteboard: React.FC = () => {
                     })
             } else {
                 // url is "/", add default page
-                handleDeleteAllPages()
-                handleAddPageOver()
+                // handleDeleteAllPages()
+                // handleAddPageOver()
             }
         }
     }, [sid, dispatch])

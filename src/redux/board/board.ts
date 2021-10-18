@@ -6,6 +6,7 @@ import {
     ZOOM_OUT_BUTTON_SCALE,
 } from "consts"
 import { Page } from "types"
+import { BoardStroke } from "drawing/stroke/stroke"
 import {
     centerView,
     detectPageChange,
@@ -15,6 +16,18 @@ import {
     zoomToPointWithScale,
 } from "./helpers"
 import { BoardState, initState } from "./types"
+
+export function deserialize(state: BoardState): BoardState {
+    const { pageCollection } = state
+    Object.keys(pageCollection).forEach((pageId) => {
+        const { strokes } = pageCollection[pageId]
+        Object.keys(strokes).forEach((strokeId) => {
+            const stroke = strokes[strokeId]
+            strokes[strokeId] = new BoardStroke(stroke) // deserialize a new instance
+        })
+    })
+    return state
+}
 
 const boardSlice = createSlice({
     name: "board",

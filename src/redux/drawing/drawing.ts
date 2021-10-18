@@ -31,6 +31,14 @@ const initState: DrawingState = {
     erasedStrokes: {},
 }
 
+export function deserialize(state: DrawingState): DrawingState {
+    state.liveStroke = new BoardLiveStroke(state.liveStroke) // deserialize a new instance
+    state.liveStrokeUpdate = 0
+    state.trNodes = []
+    state.erasedStrokes = {}
+    return state
+}
+
 const drawingSlice = createSlice({
     name: "drawing",
     initialState: initState,
