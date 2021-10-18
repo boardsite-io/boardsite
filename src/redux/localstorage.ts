@@ -1,5 +1,6 @@
 import * as boardState from "./board/serialize"
 import * as drawingState from "./drawing/serialize"
+import { isConnectedState } from "./session/helpers"
 import { RootState } from "./types"
 
 const debounce = 1000
@@ -41,10 +42,12 @@ export const load = (): RootState => {
 }
 
 function saveState(state: RootState) {
-    localStorage.setItem(
-        `${namespace}_board`,
-        boardState.serialize(state.board)
-    )
+    if (!isConnectedState(state.session)) {
+        localStorage.setItem(
+            `${namespace}_board`,
+            boardState.serialize(state.board)
+        )
+    }
 
     localStorage.setItem(
         `${namespace}_drawing`,
