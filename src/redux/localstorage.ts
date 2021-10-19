@@ -1,9 +1,11 @@
-import * as boardState from "./board/serialize"
-import * as drawingState from "./drawing/serialize"
+import * as boardState from "./board/state"
+import * as drawingState from "./drawing/state"
 import { isConnectedState } from "./session/helpers"
-import { RootState } from "./types"
+import { WebControlState } from "./session/session"
+import { RootState, SerializableState } from "./types"
 
 const debounce = 1000
+const states = ["board", "drawing"]
 const namespace = "boardsite"
 let debounceTimeout: NodeJS.Timeout
 
@@ -19,38 +21,44 @@ export const save = (state: RootState): void => {
 }
 
 export const load = (): RootState => {
-    const state = {} as RootState
-    try {
-        const val = localStorage.getItem(`${namespace}_board`)
-        if (val) {
-            state.board = boardState.deserialize(val)
-        }
-    } catch (err) {
-        console.log(err)
-    }
+    const state: { [name: string]: object | undefined } = {}
+    states.forEach((name) => {
+        try {
+            const val = localStorage.getItem(`${namespace}_${name}`)
+            if (val) {
+                switch (name) {
+                    case "board":
+                        state[name] = boardState.newState().deserialize?.(val)
+                        break
 
-    try {
-        const val = localStorage.getItem(`${namespace}_drawing`)
-        if (val) {
-            state.drawing = drawingState.deserialize(val)
-        }
-    } catch (err) {
-        console.log(err)
-    }
+                    case "drawing":
+                        state[name] = drawingState.newState().deserialize?.(val)
+                        break
 
-    return state
+                    default:
+                        break
+                }
+            }
+        } catch {}
+    })
+
+    return state as RootState
 }
 
-function saveState(state: RootState) {
-    if (!isConnectedState(state.session)) {
-        localStorage.setItem(
-            `${namespace}_board`,
-            boardState.serialize(state.board)
-        )
-    }
-
-    localStorage.setItem(
-        `${namespace}_drawing`,
-        drawingState.serialize(state.drawing)
-    )
+function saveState(state: { [name: string]: object }) {
+    states.forEach((name) => {
+        // dont store board state in sessions
+        if (
+            !(
+                isConnectedState(state.session as WebControlState) &&
+                name === "board"
+            )
+        ) {
+            const serializableState = state[name] as SerializableState
+            localStorage.setItem(
+                `${namespace}_${name}`,
+                serializableState.serialize()
+            )
+        }
+    })
 }

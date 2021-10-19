@@ -13,7 +13,7 @@ import {
 } from "consts"
 import reducer from "./board"
 import * as action from "./board"
-import { initState } from "./types"
+import { initState } from "./state"
 
 const page1 = new BoardPage(pageType.CHECKERED).setID("pid1")
 const mockStroke1 = {
