@@ -32,10 +32,10 @@ import {
     handleClearPage,
     handleDeleteAllPages,
     handleDeletePage,
-    handleExportDocument,
 } from "drawing/handlers"
 import Background from "./background/background"
-import UploadPDFButton from "../uploadpdf/uploadPDF"
+import PdfUpload from "./pdfupload/pdfupload"
+import PdfDownload from "./pdfdownload/pdfdownload"
 
 const PageOptions: React.FC = () => {
     const [open, setOpen] = useState(false)
@@ -143,16 +143,8 @@ const PageOptions: React.FC = () => {
                     Import / Export PDFs
                 </DrawerTitle>
                 <DrawerContent>
-                    <UploadPDFButton closePageOptions={close} />
-                    <Button
-                        withIcon
-                        onClick={() => {
-                            handleExportDocument()
-                            close()
-                        }}>
-                        <DownloadIcon />
-                        Export as PDF
-                    </Button>
+                    <PdfUpload closePageOptions={close} />
+                    <PdfDownload closePageOptions={close} />
                 </DrawerContent>
             </Drawer>
         </>

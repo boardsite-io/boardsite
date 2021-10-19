@@ -4,9 +4,7 @@ import * as types from "konva/types/shapes/Image"
 import { DOC_SCALE, pageType } from "consts"
 import { loadNewPDF, pageBackground } from "drawing/page"
 import { useCustomSelector } from "redux/hooks"
-import { createSelector } from "reselect"
 import store from "redux/store"
-import { RootState } from "redux/types"
 import { PageProps } from "./types"
 
 export default memo<PageProps>(({ pageId, pageSize }) => {
@@ -18,20 +16,12 @@ export default memo<PageProps>(({ pageId, pageSize }) => {
     const ref = useRef<types.Image>(null)
     const [update, setUpdate] = useState(0)
 
-    const pageSelector = createSelector(
-        (state: RootState) => state.board.document,
-        (state: RootState) =>
-            state.board.pageCollection[pageId]?.meta.background,
-        // select style, selecting background doesnt trigger, bc it compares on the same reference
-        (state: RootState) =>
-            state.board.pageCollection[pageId]?.meta.background.style,
-        (document, background, style) => ({
-            document,
-            background,
-            style,
-        })
+    const { document } = store.getState().board
+    const { background } = store.getState().board.pageCollection[pageId].meta
+    // select style, selecting background doesnt trigger, bc it compares on the same reference
+    const style = useCustomSelector(
+        (state) => state.board.pageCollection[pageId].meta.background.style
     )
-    const { document, background, style } = useCustomSelector(pageSelector)
 
     // get correct image data for document type background
     const getImage = () => {
