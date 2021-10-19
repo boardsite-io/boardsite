@@ -11,7 +11,7 @@ import {
 } from "consts"
 import { BoardStroke } from "drawing/stroke/stroke"
 import { Point } from "drawing/stroke/types"
-import { DocumentImage, PageBackground, PageCollection } from "types"
+import { PageBackground, PageCollection } from "types"
 
 export interface BoardView {
     keepCentered: boolean
@@ -27,7 +27,7 @@ export interface BoardState {
     currentPageIndex: number
     pageRank: string[]
     pageCollection: PageCollection
-    document: DocumentImage[]
+    documentImages: string[]
     documentSrc: string | Uint8Array
     pageSettings: {
         background: PageBackground // default,
@@ -44,7 +44,7 @@ export const newState = (state?: BoardState): BoardState => ({
     currentPageIndex: DEFAULT_CURRENT_PAGE_INDEX,
     pageRank: [],
     pageCollection: {},
-    document: [],
+    documentImages: [],
     documentSrc: "",
     pageSettings: {
         background: pageType.BLANK, // default,

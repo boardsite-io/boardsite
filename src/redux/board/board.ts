@@ -114,8 +114,8 @@ const boardSlice = createSlice({
         },
 
         SET_PDF: (state, action) => {
-            const { pageImages, documentSrc } = action.payload
-            state.document = pageImages
+            const { documentImages, documentSrc } = action.payload
+            state.documentImages = documentImages
             state.documentSrc = documentSrc
         },
         JUMP_TO_NEXT_PAGE: (state) => {

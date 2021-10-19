@@ -132,7 +132,7 @@ export async function handleDocument(file: File): Promise<void> {
 }
 
 export function handleAddDocumentPages(attachId?: string): void {
-    const documentPages = store.getState().board.document
+    const documentPages = store.getState().board.documentImages
 
     handleDeleteAllPages()
 

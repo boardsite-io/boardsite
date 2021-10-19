@@ -19,8 +19,6 @@ export interface Page {
     updateMeta: (meta: PageMeta) => Page
 }
 
-export type DocumentImage = HTMLImageElement
-
 export interface PageCollection {
     [pid: string]: Page
 }

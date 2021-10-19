@@ -125,18 +125,17 @@ export async function loadNewPDF(fileData: Uint8Array | string): Promise<void> {
 
         // wait until pdf render is finished
         await renderTask
-        const img = document.createElement("img")
-        img.src = canvas.toDataURL("image/png")
+        const imgSrc = canvas.toDataURL("image/png")
         canvas.remove()
 
-        return img
+        return imgSrc
     })
 
     // save loaded pages in store
-    const data = await Promise.all(pages)
+    const documentImages = await Promise.all(pages)
     store.dispatch(
         SET_PDF({
-            pageImages: data,
+            documentImages,
             documentSrc: fileData,
         })
     )
@@ -178,7 +177,7 @@ const checkered = (context: Context, shape: Shape<ShapeConfig>): void => {
         context.moveTo(x, 0)
         context.lineTo(x, height)
     }
-    context.setAttr("strokeStyle", "#00000088")
+    context.setAttr("strokeStyle", "#00000044")
     context.stroke()
 }
 
@@ -198,7 +197,7 @@ const ruled = (context: Context, shape: Shape<ShapeConfig>): void => {
         context.moveTo(0, y)
         context.lineTo(width, y)
     }
-    context.setAttr("strokeStyle", "#00000088")
+    context.setAttr("strokeStyle", "#00000044")
     context.stroke()
 }
 
