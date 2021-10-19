@@ -1,8 +1,8 @@
 import styled, { css } from "styled-components"
 
-export const Backgrounds = styled.div`
+export const Backgrounds = styled.form`
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     gap: 1.5rem;
 `
@@ -28,11 +28,11 @@ const inactive = css`
 interface props {
     $active: boolean
 }
-export const Blank = styled.button<props>`
+export const Blank = styled.input<props>`
     ${sharedStyle}
     background: white;
 `
-export const Checkered = styled.button<props>`
+export const Checkered = styled.input<props>`
     ${sharedStyle}
     background-image: repeating-linear-gradient(
             90deg,
@@ -47,7 +47,7 @@ export const Checkered = styled.button<props>`
             teal 1rem
         );
 `
-export const Ruled = styled.button<props>`
+export const Ruled = styled.input<props>`
     ${sharedStyle}
     background-image: repeating-linear-gradient(
         white 0, 
