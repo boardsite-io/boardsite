@@ -76,6 +76,16 @@ export const pageType = {
     DOC: "doc" as PageBackground,
 }
 
+// eslint-disable-next-line no-shadow
+export const enum sizePreset {
+    A4_LANDSCAPE,
+    A4_PORTRAIT,
+}
+export const pageSize = {
+    [sizePreset.A4_LANDSCAPE]: { width: 620, height: 877 },
+    [sizePreset.A4_PORTRAIT]: { width: 877, height: 620 },
+}
+
 const tool1: Tool = {
     type: ToolType.Pen,
     style: {

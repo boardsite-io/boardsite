@@ -2,14 +2,14 @@ import { Point } from "drawing/stroke/types"
 import { DocumentImage, PageBackground, PageCollection } from "types"
 import {
     DEFAULT_CURRENT_PAGE_INDEX,
-    DEFAULT_PAGE_HEIGHT,
-    DEFAULT_PAGE_WIDTH,
-    pageType,
     DEFAULT_STAGE_X,
     DEFAULT_STAGE_Y,
     DEFAULT_STAGE_SCALE,
     DEFAULT_KEEP_CENTERED,
     DEFAULT_HIDE_NAVBAR,
+    pageType,
+    pageSize,
+    sizePreset,
 } from "consts"
 
 export interface BoardView {
@@ -30,8 +30,7 @@ export interface BoardState {
     documentSrc: string | Uint8Array
     pageSettings: {
         background: PageBackground // default,
-        width: number
-        height: number
+        size: { width: number; height: number }
     }
     view: BoardView
 }
@@ -44,8 +43,7 @@ export const initState: BoardState = {
     documentSrc: "",
     pageSettings: {
         background: pageType.BLANK, // default,
-        width: DEFAULT_PAGE_WIDTH,
-        height: DEFAULT_PAGE_HEIGHT,
+        size: pageSize[sizePreset.A4_LANDSCAPE],
     },
     view: {
         keepCentered: DEFAULT_KEEP_CENTERED,
