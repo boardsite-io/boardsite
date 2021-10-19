@@ -118,6 +118,12 @@ const boardSlice = createSlice({
             state.documentImages = documentImages
             state.documentSrc = documentSrc
         },
+
+        CLEAR_PDF: (state) => {
+            state.documentImages = []
+            state.documentSrc = ""
+        },
+
         JUMP_TO_NEXT_PAGE: (state) => {
             if (state.currentPageIndex < state.pageRank.length - 1) {
                 state.currentPageIndex += 1
@@ -239,6 +245,7 @@ export const {
     ERASE_STROKES,
     UPDATE_STROKES,
     SET_PDF,
+    CLEAR_PDF,
     SET_PAGE_BACKGROUND,
     SET_PAGE_HEIGHT,
     SET_PAGE_WIDTH,
