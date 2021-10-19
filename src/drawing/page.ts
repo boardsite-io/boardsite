@@ -27,8 +27,8 @@ export class BoardPage implements Page {
                 attachId: attachId ?? "",
                 documentPageNum: pageNum ?? 0,
             },
-            width: pageSettings.width,
-            height: pageSettings.height,
+            width: pageSettings.size.width,
+            height: pageSettings.size.height,
         }
     }
 

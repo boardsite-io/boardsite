@@ -42,12 +42,8 @@ const boardSlice = createSlice({
             state.pageSettings.background = style
         },
 
-        SET_PAGE_WIDTH: (state, action: { payload: number }) => {
-            state.pageSettings.width = action.payload
-        },
-
-        SET_PAGE_HEIGHT: (state, action: { payload: number }) => {
-            state.pageSettings.height = action.payload
+        SET_PAGE_SIZE: (state, action) => {
+            state.pageSettings.size = action.payload
         },
 
         ADD_PAGE: (state, action) => {
@@ -247,8 +243,7 @@ export const {
     SET_PDF,
     CLEAR_PDF,
     SET_PAGE_BACKGROUND,
-    SET_PAGE_HEIGHT,
-    SET_PAGE_WIDTH,
+    SET_PAGE_SIZE,
     JUMP_TO_NEXT_PAGE,
     JUMP_TO_PREV_PAGE,
     JUMP_TO_FIRST_PAGE,

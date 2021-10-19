@@ -7,9 +7,9 @@ import { RootState } from "redux/types"
 import { useCustomSelector } from "redux/hooks"
 import { Layer } from "react-konva"
 import { PageMeta } from "types"
-import { LiveStrokeShape } from "./stroke/shape"
 import StrokeTransformer from "./transformer"
 import Page from "./page"
+import { LiveStrokeShape } from "./stroke/livestroke"
 
 interface PageLayerProps {
     pageId: string

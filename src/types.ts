@@ -30,6 +30,7 @@ export interface User {
 }
 
 export type PageBackground = "blank" | "checkered" | "ruled" | "doc"
+
 export interface PageMeta {
     background: {
         style: PageBackground
