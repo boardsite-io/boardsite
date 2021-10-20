@@ -1,12 +1,21 @@
 import { Point } from "drawing/stroke/types"
 
-function findPerpendicularDistance(point: Point, line: [Point, Point]) {
+/**
+ * Find the perpendicular distance between a point and a reference line.
+ * @param point
+ * @param line
+ * @returns Perpendicular distance
+ */
+export function perpendicularDistance(
+    point: Point,
+    line: [Point, Point]
+): number {
     const slope = (line[1].y - line[0].y) / (line[1].x - line[0].x)
     const intercept = line[0].y - slope * line[0].x
-    const result =
+    return (
         Math.abs(slope * point.x - point.y + intercept) /
         Math.sqrt(slope ** 2 + 1)
-    return result
+    )
 }
 
 /**
@@ -30,7 +39,7 @@ export function simplifyRDP(
 
     let maxIndex = 0
     let maxDistance = 0
-    let perpendicularDistance
+    let dist
     let filteredPoints
 
     if (sections > 0) {
@@ -41,16 +50,13 @@ export function simplifyRDP(
 
     // find the point with the maximum distance
     for (let i = 2; i < points.length - 2; i += 2) {
-        perpendicularDistance = findPerpendicularDistance(
-            { x: points[i], y: points[i + 1] },
-            [
-                { x: points[0], y: points[1] },
-                { x: points[points.length - 2], y: points[points.length - 1] },
-            ]
-        )
-        if (perpendicularDistance > maxDistance) {
+        dist = perpendicularDistance({ x: points[i], y: points[i + 1] }, [
+            { x: points[0], y: points[1] },
+            { x: points[points.length - 2], y: points[points.length - 1] },
+        ])
+        if (dist > maxDistance) {
             maxIndex = i
-            maxDistance = perpendicularDistance
+            maxDistance = dist
         }
     }
     // if max distance is greater than epsilon, recursively simplify

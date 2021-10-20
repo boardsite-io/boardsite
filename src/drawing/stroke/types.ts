@@ -17,6 +17,23 @@ export type Point = {
     y: number
 }
 
+export function newPoint(x: number, y: number): Point {
+    return {
+        x,
+        y,
+    }
+}
+
+export function reduceToPoints(val: Point[], cur: number, i: number): Point[] {
+    // x val
+    if (i % 2 === 0) {
+        val.push(newPoint(cur, 0))
+    } else {
+        val[val.length - 1].y = cur
+    }
+    return val
+}
+
 export type Scale = {
     x: number
     y: number

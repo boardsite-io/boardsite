@@ -20,7 +20,7 @@ export const CANVAS_WIDTH = 620
 export const CANVAS_HEIGHT = 877
 export const CANVAS_GAP = 20
 export const CANVAS_FULL_HEIGHT = CANVAS_HEIGHT + CANVAS_GAP
-export const DEFAULT_WIDTH = STROKE_WIDTH_PRESETS[3]
+export const DEFAULT_WIDTH = STROKE_WIDTH_PRESETS[1]
 export const DEFAULT_COLOR = "#000000"
 export const ZOOM_IN_WHEEL_SCALE = 1.1
 export const ZOOM_OUT_WHEEL_SCALE = 0.9
@@ -63,7 +63,8 @@ export const DEFAULT_DIRECTDRAW = true
 // maximum number of points a livestroke can have until cached
 export const MAX_LIVESTROKE_PTS = 20
 // epsilon for the Ramer–Douglas–Peucker algorithm
-export const RDP_EPSILON = 0.4
+export const RDP_EPSILON = 0.35
+export const RDP_EPSILON_LIVESTROKE = 0.08
 // force the rdp algorithm to split the curve at least 2^3 times
 export const RDP_FORCE_SECTIONS = 3
 

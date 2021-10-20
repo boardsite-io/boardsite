@@ -6,12 +6,20 @@ import {
     ERASER_WIDTH,
     MAX_LIVESTROKE_PTS,
     RDP_EPSILON,
+    RDP_EPSILON_LIVESTROKE,
     RDP_FORCE_SECTIONS,
 } from "consts"
-import { simplifyRDP } from "../simplify"
+import { perpendicularDistance, simplifyRDP } from "../simplify"
 import { getHitboxPolygon, matchStrokeCollision } from "./hitbox"
 import { BoardStroke } from "./stroke"
-import { LiveStroke, Point, Stroke, StrokeMap, ToolType } from "./types"
+import {
+    LiveStroke,
+    Point,
+    reduceToPoints,
+    Stroke,
+    StrokeMap,
+    ToolType,
+} from "./types"
 
 export class BoardLiveStroke implements LiveStroke {
     type = DEFAULT_TOOL as ToolType
@@ -41,7 +49,7 @@ export class BoardLiveStroke implements LiveStroke {
             case ToolType.Eraser:
                 // for continuous strokes
                 if (lastSegment.length < MAX_LIVESTROKE_PTS) {
-                    appendLinePoint(lastSegment, point)
+                    appendLinePoint(lastSegment, point, scale)
                 } else {
                     newStrokeSegment(pointsSegments, lastSegment, scale, point)
                 }
@@ -157,26 +165,33 @@ export class BoardLiveStroke implements LiveStroke {
     }
 }
 
-const appendLinePoint = (pts: number[], newPoint: Point): void => {
+const appendLinePoint = (pts: number[], pEnd: Point, scale: number): void => {
     if (pts.length < 4) {
-        pts.push(newPoint.x, newPoint.y)
+        pts.push(pEnd.x, pEnd.y)
         return
     }
 
     // fix the interim point to remove jitter
-    const [x1, y1] = pts.slice(pts.length - 4, pts.length - 2)
-    const interimPoint: Point = {
-        x: x1 + (newPoint.x - x1) / 2,
-        y: y1 + (newPoint.y - y1) / 2,
+    const [pMid] = pts
+        .slice(pts.length - 2, pts.length)
+        .reduce(reduceToPoints, [] as Point[])
+    const [pStart] = pts
+        .slice(pts.length - 4, pts.length - 2)
+        .reduce(reduceToPoints, [] as Point[])
+
+    const threshold = 1
+    if (perpendicularDistance(pMid, [pStart, pEnd]) > threshold / scale) {
+        // for points that deviate more than the threshold eg. intentional peaks in the line should be kept
+        pts.push(pEnd.x, pEnd.y)
+    } else {
+        // patch the middle point
+        // deviations below the threshold can be considered `noise` and normalized
+        const pInterim: Point = {
+            x: pStart.x + (pEnd.x - pStart.x) / 2,
+            y: pStart.y + (pEnd.y - pStart.y) / 2,
+        }
+        pts.splice(pts.length - 2, 2, pInterim.x, pInterim.y, pEnd.x, pEnd.y)
     }
-    pts.splice(
-        pts.length - 2,
-        2,
-        interimPoint.x,
-        interimPoint.y,
-        newPoint.x,
-        newPoint.y
-    )
 }
 
 const newStrokeSegment = (
@@ -187,7 +202,7 @@ const newStrokeSegment = (
 ) => {
     pointsSegments[pointsSegments.length - 1] = simplifyRDP(
         lastSegment,
-        0.2 / scale,
+        RDP_EPSILON_LIVESTROKE / scale,
         1
     )
     // create a new subarray
