@@ -96,10 +96,10 @@ export function handleRedo(): void {
     redo()
 }
 
-export function handlePageBackground(style: PageBackground): void {
+export function handleChangePageBackground(): void {
     // update the default page type
-    store.dispatch(SET_PAGE_BACKGROUND(style))
     const currentPage = getCurrentPage()
+    const { background } = store.getState().board.pageSettings
     // there is no current page, eg. when all pages have been removed
     if (!currentPage) {
         return
@@ -110,7 +110,7 @@ export function handlePageBackground(style: PageBackground): void {
     }
 
     const newMeta = { ...currentPage.meta }
-    newMeta.background.style = style
+    newMeta.background.style = background
 
     if (isConnected()) {
         updatePagesSession([currentPage.updateMeta(newMeta)])

@@ -22,6 +22,7 @@ import {
     handleClearPage,
     handleDeleteAllPages,
     handleDeletePage,
+    handleChangePageBackground,
 } from "drawing/handlers"
 import Background from "./background/background"
 import Size from "./size/size"
@@ -44,6 +45,15 @@ const PageOptions: React.FC = () => {
                 </DrawerTitle>
                 <DrawerContent>
                     <Background setOpenOther={setOpen} />
+                    <Button
+                        withIcon
+                        onClick={() => {
+                            handleChangePageBackground()
+                            close()
+                        }}>
+                        <BsFileArrowUp />
+                        Apply to page
+                    </Button>
                     <Size />
                 </DrawerContent>
                 <DrawerTitle>
