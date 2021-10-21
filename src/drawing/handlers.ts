@@ -5,7 +5,6 @@ import {
     DELETE_PAGE,
     DELETE_ALL_PAGES,
     SET_PAGEMETA,
-    SET_PAGE_BACKGROUND,
     INITIAL_VIEW,
 } from "redux/board/board"
 import {
@@ -18,7 +17,6 @@ import {
 } from "api/websocket"
 import { pageType } from "consts"
 import store from "redux/store"
-import { PageBackground } from "types"
 import { toPDF } from "./io"
 import { BoardPage, getPDFfromForm, loadNewPDF } from "./page"
 import {
