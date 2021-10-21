@@ -9,7 +9,7 @@ import { RenderParameters } from "pdfjs-dist/types/display/api"
 import { ADD_PAGE, SET_PDF } from "redux/board/board"
 import { DOC_SCALE, pageType } from "consts"
 import store from "redux/store"
-import { Page, PageBackground, PageMeta } from "../types"
+import { Page, PageBackground, PageMeta, PageSize } from "../types"
 import { StrokeMap } from "./stroke/types"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -18,7 +18,12 @@ const pdfjsWorker: any = require("pdfjs-dist/legacy/build/pdf.worker.entry")
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
 export class BoardPage implements Page {
-    constructor(style?: PageBackground, pageNum?: number, attachId?: string) {
+    constructor(
+        style?: PageBackground,
+        pageNum?: number,
+        attachId?: string,
+        size?: PageSize
+    ) {
         const { pageSettings } = store.getState().board
         this.pageId = nanoid(8)
         this.meta = {
@@ -27,8 +32,8 @@ export class BoardPage implements Page {
                 attachId: attachId ?? "",
                 documentPageNum: pageNum ?? 0,
             },
-            width: pageSettings.size.width,
-            height: pageSettings.size.height,
+            width: size?.width ?? pageSettings.size.width,
+            height: size?.height ?? pageSettings.size.height,
         }
     }
 

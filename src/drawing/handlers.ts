@@ -133,9 +133,13 @@ export function handleAddDocumentPages(attachId?: string): void {
     const documentPages = store.getState().board.document
 
     handleDeleteAllPages()
-
+    const PIXEL_RATIO = 2
     const pages = documentPages.map(
-        (_, i) => new BoardPage(pageType.DOC, i, attachId)
+        (img, i) =>
+            new BoardPage(pageType.DOC, i, attachId, {
+                width: img.width / PIXEL_RATIO,
+                height: img.height / PIXEL_RATIO,
+            })
     )
     if (isConnected()) {
         addPagesSession(

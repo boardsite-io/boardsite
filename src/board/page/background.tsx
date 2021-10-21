@@ -24,18 +24,15 @@ export default memo<PageProps>(({ pageId, pageSize }) => {
     )
 
     // get correct image data for document type background
-    const getImage = () => {
-        if (style !== pageType.DOC) {
-            return undefined
-        }
-        const img = document[background.documentPageNum]
+    let image
+    if (style === pageType.DOC) {
+        image = document[background.documentPageNum]
         // if image data not available, load document
-        if (!img) {
+        if (!image) {
             loadNewPDF(background.attachId).then(() =>
                 setUpdate((prev) => prev + 1)
             )
         }
-        return img
     }
 
     // cache the shape on update
@@ -54,7 +51,7 @@ export default memo<PageProps>(({ pageId, pageSize }) => {
         <Image
             {...pageSize}
             ref={ref}
-            image={getImage()}
+            image={image}
             stroke="#000"
             strokeWidth={0.2}
             fill="#ffffff"
