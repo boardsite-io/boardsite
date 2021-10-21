@@ -4,7 +4,6 @@ export const Backgrounds = styled.form`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1.5rem;
 `
 
 const sharedStyle = css<props>`
