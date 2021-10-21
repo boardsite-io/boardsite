@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components"
+import { active, inactive } from "../pageoptions.styled"
 
 export const SizePresets = styled.form`
     display: flex;
@@ -13,12 +14,6 @@ const sharedStyle = css<props>`
     &:hover {
         cursor: pointer;
     }
-`
-const active = css`
-    box-shadow: 0 0 0 4px var(--color3);
-`
-const inactive = css`
-    box-shadow: 0 0 0 1px green, var(--box-shadow);
 `
 
 // Define size relatively to A4 page height
