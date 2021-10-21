@@ -80,10 +80,12 @@ export const pageType = {
 export const enum sizePreset {
     A4_LANDSCAPE,
     A4_PORTRAIT,
+    Square,
 }
 export const pageSize = {
     [sizePreset.A4_LANDSCAPE]: { width: 620, height: 877 },
     [sizePreset.A4_PORTRAIT]: { width: 877, height: 620 },
+    [sizePreset.Square]: { width: 877, height: 877 },
 }
 
 const tool1: Tool = {
