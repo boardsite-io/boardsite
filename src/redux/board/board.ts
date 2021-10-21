@@ -196,7 +196,7 @@ const boardSlice = createSlice({
         },
         ZOOM_TO: (state, action) => {
             const { zoomPoint, zoomScale } = action.payload
-            zoomToPointWithScale(state.view, zoomPoint, zoomScale)
+            zoomToPointWithScale(state as BoardState, zoomPoint, zoomScale)
         },
         ZOOM_IN_CENTER: (state) => {
             const centerOfScreen = {
@@ -204,7 +204,7 @@ const boardSlice = createSlice({
                 y: state.view.stageHeight / 2,
             }
             zoomToPointWithScale(
-                state.view,
+                state as BoardState,
                 centerOfScreen,
                 ZOOM_IN_BUTTON_SCALE
             )
@@ -215,7 +215,7 @@ const boardSlice = createSlice({
                 y: state.view.stageHeight / 2,
             }
             zoomToPointWithScale(
-                state.view,
+                state as BoardState,
                 centerOfScreen,
                 ZOOM_OUT_BUTTON_SCALE
             )
