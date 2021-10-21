@@ -43,10 +43,10 @@ const Size: React.FC = () => {
                 <Square
                     id="square"
                     type="button"
-                    $active={size === pageSize[sizePreset.A4_PORTRAIT]}
+                    $active={size === pageSize[sizePreset.Square]}
                     onClick={() =>
                         store.dispatch(
-                            SET_PAGE_SIZE(pageSize[sizePreset.A4_PORTRAIT])
+                            SET_PAGE_SIZE(pageSize[sizePreset.Square])
                         )
                     }
                 />
