@@ -40,22 +40,22 @@ export const detectPageChange = (state: BoardState): void => {
     }
 }
 
-export const centerView = (view: BoardView): void => {
-    if (view.stageWidth >= CANVAS_WIDTH * view.stageScale.x) {
-        view.stageX = view.stageWidth / 2
+export const centerView = (state: BoardState): void => {
+    if (state.view.stageWidth >= CANVAS_WIDTH * state.view.stageScale.x) {
+        state.view.stageX = state.view.stageWidth / 2
     } else {
-        fitToPage(view)
+        fitToPage(state)
     }
 }
 
-export const fitToPage = (view: BoardView): void => {
-    const oldScale = view.stageScale.y
+export const fitToPage = (state: BoardState): void => {
+    const oldScale = state.view.stageScale.y
     const newScale = window.innerWidth / CANVAS_WIDTH
-    view.stageScale = { x: newScale, y: newScale }
-    view.stageX = view.stageWidth / 2
-    view.stageY =
-        view.stageHeight / 2 -
-        ((view.stageHeight / 2 - view.stageY) / oldScale) * newScale
+    state.view.stageScale = { x: newScale, y: newScale }
+    state.view.stageX = state.view.stageWidth / 2
+    state.view.stageY =
+        state.view.stageHeight / 2 -
+        ((state.view.stageHeight / 2 - state.view.stageY) / oldScale) * newScale
 }
 
 export const zoomToPointWithScale = (
