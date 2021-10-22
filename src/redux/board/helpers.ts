@@ -1,10 +1,5 @@
 import { Point } from "drawing/stroke/types"
-import {
-    CANVAS_WIDTH,
-    DEFAULT_PAGE_GAP,
-    ZOOM_SCALE_MAX,
-    ZOOM_SCALE_MIN,
-} from "consts"
+import { DEFAULT_PAGE_GAP, ZOOM_SCALE_MAX, ZOOM_SCALE_MIN } from "consts"
 import { BoardState, BoardView } from "./state"
 
 export const getViewCenterY = ({ view }: BoardState): number =>
@@ -40,33 +35,46 @@ export const detectPageChange = (state: BoardState): void => {
     }
 }
 
-export const centerView = (view: BoardView): void => {
-    if (view.stageWidth >= CANVAS_WIDTH * view.stageScale.x) {
-        view.stageX = view.stageWidth / 2
+const getCurrentPageWidth = (state: BoardState) => {
+    const pageId = state.pageRank[state.currentPageIndex]
+    return state.pageCollection[pageId]?.meta?.width
+}
+
+export const centerView = (state: BoardState): void => {
+    const pageWidth = getCurrentPageWidth(state)
+    if (!pageWidth) {
+        return
+    }
+    if (state.view.stageWidth >= pageWidth * state.view.stageScale.x) {
+        state.view.stageX = state.view.stageWidth / 2
     } else {
-        fitToPage(view)
+        fitToPage(state)
     }
 }
 
-export const fitToPage = (view: BoardView): void => {
-    const oldScale = view.stageScale.y
-    const newScale = window.innerWidth / CANVAS_WIDTH
-    view.stageScale = { x: newScale, y: newScale }
-    view.stageX = view.stageWidth / 2
-    view.stageY =
-        view.stageHeight / 2 -
-        ((view.stageHeight / 2 - view.stageY) / oldScale) * newScale
+export const fitToPage = (state: BoardState): void => {
+    const oldScale = state.view.stageScale.y
+    const pageWidth = getCurrentPageWidth(state)
+    if (!pageWidth) {
+        return
+    }
+    const newScale = window.innerWidth / pageWidth
+    state.view.stageScale = { x: newScale, y: newScale }
+    state.view.stageX = state.view.stageWidth / 2
+    state.view.stageY =
+        state.view.stageHeight / 2 -
+        ((state.view.stageHeight / 2 - state.view.stageY) / oldScale) * newScale
 }
 
 export const zoomToPointWithScale = (
-    view: BoardView,
+    state: BoardState,
     zoomPoint: Point,
     zoomScale: number
 ): void => {
-    const oldScale = view.stageScale.x
+    const oldScale = state.view.stageScale.x
     const mousePointTo = {
-        x: (zoomPoint.x - view.stageX) / oldScale,
-        y: (zoomPoint.y - view.stageY) / oldScale,
+        x: (zoomPoint.x - state.view.stageX) / oldScale,
+        y: (zoomPoint.y - state.view.stageY) / oldScale,
     }
     let newScale = oldScale * zoomScale
     if (newScale > ZOOM_SCALE_MAX) {
@@ -75,21 +83,23 @@ export const zoomToPointWithScale = (
         newScale = ZOOM_SCALE_MIN
     }
 
-    view.stageScale = { x: newScale, y: newScale }
+    state.view.stageScale = { x: newScale, y: newScale }
 
-    if (view.keepCentered) {
+    if (state.view.keepCentered) {
+        const pageWidth =
+            state.pageCollection[state.currentPageIndex]?.meta.width
         // if zoomed out then center, else zoom to mouse coords
-        const x = (window.innerWidth - CANVAS_WIDTH * newScale) / 2
+        const x = (window.innerWidth - pageWidth * newScale) / 2
         if (x >= 0) {
-            view.stageX = x
+            state.view.stageX = x
         } else {
-            view.stageX = zoomPoint.x - mousePointTo.x * newScale
+            state.view.stageX = zoomPoint.x - mousePointTo.x * newScale
         }
     } else {
-        view.stageX = zoomPoint.x - mousePointTo.x * newScale
+        state.view.stageX = zoomPoint.x - mousePointTo.x * newScale
     }
 
-    view.stageY = zoomPoint.y - mousePointTo.y * newScale
+    state.view.stageY = zoomPoint.y - mousePointTo.y * newScale
 }
 
 /**

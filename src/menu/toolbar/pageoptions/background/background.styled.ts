@@ -1,14 +1,15 @@
 import styled, { css } from "styled-components"
+import { active, inactive } from "../pageoptions.styled"
 
 export const Backgrounds = styled.form`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1.5rem;
 `
 
 const sharedStyle = css<props>`
     border: none;
+    background: white;
     /* remove a pixel for pixel perfect symmetry */
     height: calc(5rem - 1px);
     width: calc(5rem - 1px);
@@ -18,21 +19,14 @@ const sharedStyle = css<props>`
         cursor: pointer;
     }
 `
-const active = css`
-    box-shadow: 0 0 0 4px var(--color3);
-`
-const inactive = css`
-    box-shadow: 0 0 0 1px green, var(--box-shadow);
-`
 
 interface props {
     $active: boolean
 }
-export const Blank = styled.input<props>`
+export const Blank = styled.button<props>`
     ${sharedStyle}
-    background: white;
 `
-export const Checkered = styled.input<props>`
+export const Checkered = styled.button<props>`
     ${sharedStyle}
     background-image: repeating-linear-gradient(
             90deg,
@@ -40,14 +34,15 @@ export const Checkered = styled.input<props>`
             transparent 0.95rem,
             teal 0.95rem,
             teal 1rem
-        ), repeating-linear-gradient(
-            white 0, 
+        ),
+        repeating-linear-gradient(
+            white 0,
             white 0.95rem,
             teal 0.95rem,
             teal 1rem
         );
 `
-export const Ruled = styled.input<props>`
+export const Ruled = styled.button<props>`
     ${sharedStyle}
     background-image: repeating-linear-gradient(
         white 0, 

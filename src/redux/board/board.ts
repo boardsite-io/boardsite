@@ -162,7 +162,7 @@ const boardSlice = createSlice({
             state.view.stageScale = { x: 1, y: 1 }
             state.view.stageX = 0
             state.view.stageY = DEFAULT_STAGE_Y
-            centerView(state.view)
+            centerView(state as BoardState)
         },
         RESET_VIEW: (state) => {
             const oldScale = state.view.stageScale.y
@@ -173,10 +173,10 @@ const boardSlice = createSlice({
                 state.view.stageHeight / 2 -
                 ((state.view.stageHeight / 2 - state.view.stageY) / oldScale) *
                     newScale
-            centerView(state.view)
+            centerView(state as BoardState)
         },
         CENTER_VIEW: (state) => {
-            centerView(state.view)
+            centerView(state as BoardState)
         },
         SET_STAGE_X: (state, action) => {
             state.view.stageX = action.payload
@@ -195,14 +195,14 @@ const boardSlice = createSlice({
         ON_WINDOW_RESIZE: (state) => {
             state.view.stageWidth = window.innerWidth
             state.view.stageHeight = window.innerHeight
-            centerView(state.view)
+            centerView(state as BoardState)
         },
         FIT_WIDTH_TO_PAGE: (state) => {
-            fitToPage(state.view)
+            fitToPage(state as BoardState)
         },
         ZOOM_TO: (state, action) => {
             const { zoomPoint, zoomScale } = action.payload
-            zoomToPointWithScale(state.view, zoomPoint, zoomScale)
+            zoomToPointWithScale(state as BoardState, zoomPoint, zoomScale)
         },
         ZOOM_IN_CENTER: (state) => {
             const centerOfScreen = {
@@ -210,7 +210,7 @@ const boardSlice = createSlice({
                 y: state.view.stageHeight / 2,
             }
             zoomToPointWithScale(
-                state.view,
+                state as BoardState,
                 centerOfScreen,
                 ZOOM_IN_BUTTON_SCALE
             )
@@ -221,7 +221,7 @@ const boardSlice = createSlice({
                 y: state.view.stageHeight / 2,
             }
             zoomToPointWithScale(
-                state.view,
+                state as BoardState,
                 centerOfScreen,
                 ZOOM_OUT_BUTTON_SCALE
             )
