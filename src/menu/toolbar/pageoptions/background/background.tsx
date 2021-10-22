@@ -17,18 +17,21 @@ const PageBackgrounds: React.FC<PageBackgroundProps> = () => {
     return (
         <Backgrounds>
             <Blank
+                type="button"
                 $active={background === pageType.BLANK}
                 onClick={() =>
                     store.dispatch(SET_PAGE_BACKGROUND(pageType.BLANK))
                 }
             />
             <Checkered
+                type="button"
                 $active={background === pageType.CHECKERED}
                 onClick={() =>
                     store.dispatch(SET_PAGE_BACKGROUND(pageType.CHECKERED))
                 }
             />
             <Ruled
+                type="button"
                 $active={background === pageType.RULED}
                 onClick={() =>
                     store.dispatch(SET_PAGE_BACKGROUND(pageType.RULED))
