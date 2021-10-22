@@ -15,7 +15,7 @@ import {
     addAttachmentSession,
     getAttachmentSession,
 } from "api/websocket"
-import { pageType } from "consts"
+import { pageType, PIXEL_RATIO } from "consts"
 import store from "redux/store"
 import { toPDF } from "./io"
 import { BoardPage, getPDFfromForm, loadNewPDF } from "./page"
@@ -133,7 +133,6 @@ export function handleAddDocumentPages(attachId?: string): void {
     const documentPages = store.getState().board.documentImages
 
     handleDeleteAllPages()
-    const PIXEL_RATIO = 2
     const pages = documentPages.map(
         (img, i) =>
             new BoardPage(pageType.DOC, i, attachId, {

@@ -6,12 +6,11 @@ import { Provider } from "react-redux"
 import { Layer, Stage, Rect } from "react-konva"
 import * as types from "konva/types/Layer"
 import { StrokeShape } from "board/stroke/shape"
-import { pageType } from "consts"
+import { pageType, PIXEL_RATIO } from "consts"
 import store from "../redux/store"
 import { pageBackground } from "./page"
 
 export async function pagesToDataURL(
-    pixelRatio: number,
     drawBackground?: boolean
 ): Promise<string[]> {
     const { pageRank } = store.getState().board
@@ -61,7 +60,7 @@ export async function pagesToDataURL(
         const data = (
             ref as unknown as React.RefObject<types.Layer>
         )?.current?.toDataURL({
-            pixelRatio,
+            pixelRatio: PIXEL_RATIO,
         })
         tmp.remove()
         return data ?? ""
@@ -87,7 +86,7 @@ export async function toPDF(
 
     // embedd images in document
     // TODO set draw background
-    const pagesData = await pagesToDataURL(4, true)
+    const pagesData = await pagesToDataURL(true)
     const pageImages = await Promise.all(
         pagesData.map((data) => pdf.embedPng(data))
     )
