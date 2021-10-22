@@ -31,18 +31,18 @@ export const SizePresetLabel = styled.label`
 interface props {
     $active: boolean
 }
-export const A4Landscape = styled.input<props>`
+export const A4Landscape = styled.button<props>`
     ${sharedStyle}
     height: ${a4height};
     width: ${a4width};
 `
-export const A4Portrait = styled.input<props>`
+export const A4Portrait = styled.button<props>`
     ${sharedStyle};
     margin-top: calc((${a4height} - ${a4width}) / 2);
     height: ${a4width};
     width: ${a4height};
 `
-export const Square = styled.input<props>`
+export const Square = styled.button<props>`
     ${sharedStyle}
     height: 5rem;
     width: 5rem;

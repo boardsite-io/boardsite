@@ -18,7 +18,6 @@ const Size: React.FC = () => {
             <SizePresetLabel htmlFor="a4-landscape">
                 <A4Landscape
                     id="a4-landscape"
-                    type="button"
                     $active={size === pageSize[sizePreset.A4_LANDSCAPE]}
                     onClick={() => {
                         store.dispatch(
@@ -30,7 +29,6 @@ const Size: React.FC = () => {
             <SizePresetLabel htmlFor="a4-portrait">
                 <A4Portrait
                     id="a4-portrait"
-                    type="button"
                     $active={size === pageSize[sizePreset.A4_PORTRAIT]}
                     onClick={() =>
                         store.dispatch(
@@ -42,7 +40,6 @@ const Size: React.FC = () => {
             <SizePresetLabel htmlFor="square">
                 <Square
                     id="square"
-                    type="button"
                     $active={size === pageSize[sizePreset.Square]}
                     onClick={() =>
                         store.dispatch(
