@@ -12,6 +12,12 @@ import {
 import { BoardStroke } from "drawing/stroke/stroke"
 import { Point } from "drawing/stroke/types"
 import { PageBackground, PageCollection } from "types"
+import { cloneDeep } from "lodash"
+
+// version of the board state reducer to allow backward compatibility for stored data
+//
+// [1.0] - 2021-10-22 - Added versioning
+export const boardVersion = "1.0"
 
 export interface BoardView {
     keepCentered: boolean
@@ -60,19 +66,42 @@ export const newState = (state?: BoardState): BoardState => ({
     },
 
     serialize(): string {
-        const stateCopy = { ...this }
-        const { pageCollection } = stateCopy
-        Object.keys(pageCollection).forEach((pageId) => {
-            const strokes = { ...pageCollection[pageId].strokes }
+        // clone to not mutate current state
+        const stateCopy = cloneDeep<BoardState>(this)
+        Object.keys(stateCopy.pageCollection).forEach((pageId) => {
+            const { strokes } = stateCopy.pageCollection[pageId]
             Object.keys(strokes).forEach((strokeId) => {
                 strokes[strokeId] = strokes[strokeId].serialize()
             })
         })
-        return JSON.stringify(stateCopy)
+        return JSON.stringify({ version: boardVersion, ...stateCopy })
     },
 
     deserialize(stateStr: string): BoardState {
-        Object.assign(this, JSON.parse(stateStr))
+        const parsed = JSON.parse(stateStr)
+        const { version } = parsed
+        if (!version) {
+            throw new Error("cannot deserialize state, missing version")
+        }
+        delete parsed.version
+
+        switch (version) {
+            case boardVersion:
+                // latest version; no preprocessing required
+                break
+
+            // E.g.
+            // case "0.9":
+            // parsed = parseV0_9(parsed)
+            // break
+
+            default:
+                throw new Error(
+                    `cannot deserialize state, unkown version ${version}`
+                )
+        }
+
+        Object.assign(this, parsed)
         const { pageCollection } = this
         Object.keys(pageCollection).forEach((pageId) => {
             const { strokes } = pageCollection[pageId]
