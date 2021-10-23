@@ -1,6 +1,6 @@
 import { Point } from "drawing/stroke/types"
 import { DEFAULT_PAGE_GAP, ZOOM_SCALE_MAX, ZOOM_SCALE_MIN } from "consts"
-import { BoardState, BoardView } from "./types"
+import { BoardState, BoardView } from "./state"
 
 export const getViewCenterY = ({ view }: BoardState): number =>
     (view.stageHeight / 2 - view.stageY) / view.stageScale.y

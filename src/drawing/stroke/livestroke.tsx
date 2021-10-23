@@ -11,20 +11,37 @@ import {
 import { simplifyRDP } from "../simplify"
 import { getHitboxPolygon, matchStrokeCollision } from "./hitbox"
 import { BoardStroke } from "./stroke"
-import { LiveStroke, Point, Stroke, StrokeMap, ToolType } from "./types"
+import { LiveStroke, Point, Stroke, StrokeMap, Tool, ToolType } from "./types"
 
 export class BoardLiveStroke implements LiveStroke {
-    type = DEFAULT_TOOL as ToolType
-    style = {
-        color: DEFAULT_COLOR as string,
-        width: DEFAULT_WIDTH as number,
-        opacity: 1 as number,
+    type: ToolType
+    style: {
+        color: string
+        width: number
+        opacity: number
     }
-    pageId = ""
-    x = 0
-    y = 0
-    points = [] as number[]
-    pointsSegments = [] as number[][]
+
+    pageId: string
+
+    x: number
+    y: number
+
+    points: number[]
+    pointsSegments: number[][]
+
+    constructor(tool?: Tool) {
+        this.pageId = ""
+        this.x = 0
+        this.y = 0
+        this.type = tool?.type ?? DEFAULT_TOOL
+        this.style = tool?.style ?? {
+            color: DEFAULT_COLOR,
+            width: DEFAULT_WIDTH,
+            opacity: 1,
+        }
+        this.points = [] as number[]
+        this.pointsSegments = [] as number[][]
+    }
 
     start({ x, y }: Point, pageId: string): void {
         this.reset()

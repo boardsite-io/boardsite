@@ -1,4 +1,5 @@
 import { Button, DialogContent } from "components"
+import { handleDeleteAllPages } from "drawing/handlers"
 import React from "react"
 import { useHistory } from "react-router-dom"
 import { useCustomDispatch, useCustomSelector } from "redux/hooks"
@@ -20,6 +21,7 @@ const OnlineDialogContent: React.FC = () => {
     const handleLeave = () => {
         dispatch(CLOSE_WS())
         dispatch(CLOSE_SDIAG())
+        handleDeleteAllPages()
         history.push("/")
     }
 

@@ -9,7 +9,7 @@ import {
 import { API_URL } from "api/types"
 import { User } from "types"
 
-interface WebControlState {
+export interface WebControlState {
     sessionDialog: {
         open: boolean
         invalidSid: boolean

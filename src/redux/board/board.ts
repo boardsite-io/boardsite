@@ -14,11 +14,11 @@ import {
     multiTouchMove,
     zoomToPointWithScale,
 } from "./helpers"
-import { BoardState, initState } from "./types"
+import { BoardState, newState } from "./state"
 
 const boardSlice = createSlice({
     name: "board",
-    initialState: initState,
+    initialState: newState(),
     reducers: {
         SYNC_ALL_PAGES: (state, action) => {
             const { pageRank, pageCollection } = action.payload
@@ -110,10 +110,16 @@ const boardSlice = createSlice({
         },
 
         SET_PDF: (state, action) => {
-            const { pageImages, documentSrc } = action.payload
-            state.document = pageImages
+            const { documentImages, documentSrc } = action.payload
+            state.documentImages = documentImages
             state.documentSrc = documentSrc
         },
+
+        CLEAR_PDF: (state) => {
+            state.documentImages = []
+            state.documentSrc = ""
+        },
+
         JUMP_TO_NEXT_PAGE: (state) => {
             if (state.currentPageIndex < state.pageRank.length - 1) {
                 state.currentPageIndex += 1
@@ -148,7 +154,7 @@ const boardSlice = createSlice({
             multiTouchMove(state.view, p1, p2)
         },
         MULTI_TOUCH_END: (state) => {
-            detectPageChange(state as BoardState)
+            detectPageChange(state as unknown as BoardState)
             multiTouchEnd()
         },
         // use this e.g., on page change
@@ -177,11 +183,11 @@ const boardSlice = createSlice({
         },
         SET_STAGE_Y: (state, action) => {
             state.view.stageY = action.payload
-            detectPageChange(state as BoardState)
+            detectPageChange(state as unknown as BoardState)
         },
         SCROLL_STAGE_Y: (state, action) => {
             state.view.stageY -= action.payload
-            detectPageChange(state as BoardState)
+            detectPageChange(state as unknown as BoardState)
         },
         SET_STAGE_SCALE: (state, action) => {
             state.view.stageScale = action.payload
@@ -235,6 +241,7 @@ export const {
     ERASE_STROKES,
     UPDATE_STROKES,
     SET_PDF,
+    CLEAR_PDF,
     SET_PAGE_BACKGROUND,
     SET_PAGE_SIZE,
     JUMP_TO_NEXT_PAGE,

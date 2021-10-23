@@ -1,11 +1,20 @@
-import { configureStore } from "@reduxjs/toolkit"
+import { configureStore, Middleware } from "@reduxjs/toolkit"
+import { load, save } from "./localstorage"
 import rootReducer from "./reducer"
+import { RootState } from "./types"
+
+export const localStoreMiddleware: Middleware<unknown, RootState> =
+    (rootStore) => (next) => (action) => {
+        const result = next(action)
+        save(rootStore.getState())
+        return result
+    }
 
 const store = configureStore({
     reducer: rootReducer,
-    middleware: [], // disable middleware
+    middleware: [localStoreMiddleware],
+    preloadedState: load() as object,
 })
 
-export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
 export default store

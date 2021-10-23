@@ -1,8 +1,9 @@
 import React, { useEffect } from "react"
 import { useParams } from "react-router-dom"
 import SessionInfo from "menu/toolbar/sessioninfo/sessioninfo"
+import store from "redux/store"
 import Loading from "menu/loading/loading"
-import { handleAddPageOver, handleDeleteAllPages } from "../drawing/handlers"
+import { handleAddPageUnder } from "../drawing/handlers"
 import boardKeyListener from "../board/keylistener"
 import Toolbar from "../menu/toolbar/toolbar"
 import BoardStage from "../board/stage"
@@ -43,10 +44,9 @@ const Whiteboard: React.FC = () => {
                             })
                         )
                     })
-            } else {
-                // url is "/", add default page
-                handleDeleteAllPages()
-                handleAddPageOver()
+            } else if (store.getState().board.pageRank.length === 0) {
+                // if there is noting in the (local) store, add a default page
+                handleAddPageUnder()
             }
         }
     }, [sid, dispatch])

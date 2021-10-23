@@ -1,39 +1,10 @@
 import { StrokeMap, Tool, ToolType } from "drawing/stroke/types"
 import { createSlice } from "@reduxjs/toolkit"
-import {
-    DEFAULT_ISDRAGGABLE,
-    DEFAULT_ISMOUSEDOWN,
-    DEFAULT_DIRECTDRAW,
-    DEFAULT_FAV_TOOLS,
-} from "consts"
-import { BoardLiveStroke } from "drawing/stroke/livestroke"
-import { TrNodesType } from "types"
-
-export interface DrawingState {
-    isDraggable: boolean
-    isMouseDown: boolean
-    directDraw: boolean
-    liveStroke: BoardLiveStroke
-    liveStrokeUpdate: number
-    favTools: Tool[]
-    trNodes: TrNodesType
-    erasedStrokes: StrokeMap
-}
-
-const initState: DrawingState = {
-    isDraggable: DEFAULT_ISDRAGGABLE,
-    isMouseDown: DEFAULT_ISMOUSEDOWN,
-    directDraw: DEFAULT_DIRECTDRAW,
-    liveStroke: new BoardLiveStroke(),
-    liveStrokeUpdate: 0,
-    favTools: DEFAULT_FAV_TOOLS,
-    trNodes: [],
-    erasedStrokes: {},
-}
+import { newState } from "./state"
 
 const drawingSlice = createSlice({
     name: "drawing",
-    initialState: initState,
+    initialState: newState(),
     reducers: {
         SET_TR_NODES: (state, action) => {
             state.trNodes = action.payload

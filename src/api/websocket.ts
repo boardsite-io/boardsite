@@ -3,6 +3,7 @@ import { Stroke, ToolType } from "drawing/stroke/types"
 import {
     ADD_STROKES,
     CLEAR_PAGE,
+    CLEAR_PDF,
     DELETE_ALL_PAGES,
     ERASE_STROKES,
     SET_PAGEMETA,
@@ -16,6 +17,7 @@ import {
 } from "redux/session/session"
 import { BoardPage } from "drawing/page"
 import store from "redux/store"
+import { isConnectedState } from "redux/session/helpers"
 import { PageCollection, User } from "types"
 import {
     postPages,
@@ -148,11 +150,7 @@ function updatePageMeta({ pageId, meta, clear }: ResponsePageUpdate) {
 }
 
 export function isConnected(): boolean {
-    return (
-        store.getState().session.sessionId !== "" &&
-        store.getState().session.webSocket != null &&
-        store.getState().session.webSocket.readyState === WebSocket.OPEN
-    )
+    return isConnectedState(store.getState().session)
 }
 
 export async function newSession(): Promise<string> {
@@ -175,6 +173,7 @@ export async function joinSession(
     store.dispatch(SET_SESSION_USERS(await getUsers(sessionId)))
 
     // set the pages according to api
+    store.dispatch(CLEAR_PDF()) // clear documents which may be overwritten by session
     store.dispatch(DELETE_ALL_PAGES())
     const { pageRank, meta } = await getPages(sessionId)
     syncPages({ pageRank, meta })
