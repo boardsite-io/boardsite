@@ -1,34 +1,12 @@
-import { Image, Rect } from "react-konva"
+import { Image } from "react-konva"
 import React, { memo, useEffect, useRef, useState } from "react"
 import * as types from "konva/types/shapes/Image"
-import * as rectTypes from "konva/types/shapes/Rect"
 import { DOC_SCALE, pageType } from "consts"
 import { loadNewPDF, pageBackground } from "drawing/page"
 import { useCustomSelector } from "redux/hooks"
 import store from "redux/store"
 import { PageProps } from "./types"
-
-const PageBoundary: React.FC<PageProps> = ({ pageSize }) => {
-    const ref = useRef<rectTypes.Rect>(null)
-
-    useEffect(() => {
-        ref.current?.cache()
-    }, [])
-
-    return (
-        <Rect
-            {...pageSize}
-            ref={ref}
-            stroke="#000"
-            strokeWidth={0.2}
-            fill="#ffffff"
-            shadowColor="#000000"
-            shadowBlur={10}
-            shadowOffset={{ x: 0, y: 0 }}
-            shadowOpacity={0.5}
-        />
-    )
-}
+import PageBoundary from "./boundary"
 
 export default memo<PageProps>(({ pageId, pageSize }) => {
     // pageId might not be valid anymore, exit then
