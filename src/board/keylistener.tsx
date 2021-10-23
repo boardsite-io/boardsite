@@ -3,6 +3,7 @@ import { SET_TYPE } from "redux/drawing/drawing"
 import store from "redux/store"
 import { handleRedo, handleUndo } from "drawing/handlers"
 import { ToolType } from "drawing/stroke/types"
+import { saveWorkspace } from "redux/workspace"
 
 export default function keyListener(e: KeyboardEvent): void {
     switch (e.key) {
@@ -51,6 +52,9 @@ export default function keyListener(e: KeyboardEvent): void {
             break
         // case " ": // Spacebar - UNSET
         //     break
+        case "s":
+            saveWorkspace("test", store.getState().board)
+            break
         default:
             break
     }
