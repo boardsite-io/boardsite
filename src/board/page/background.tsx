@@ -2,9 +2,11 @@ import { Image } from "react-konva"
 import React, { memo, useEffect, useRef, useState } from "react"
 import * as types from "konva/types/shapes/Image"
 import { DOC_SCALE, pageType } from "consts"
-import { loadNewPDF, pageBackground } from "drawing/page"
+import { pageBackground } from "drawing/page"
 import { useCustomSelector } from "redux/hooks"
 import store from "redux/store"
+import { handleLoadDocument } from "drawing/handlers"
+import { isConnected } from "api/websocket"
 import { PageProps } from "./types"
 import PageBoundary from "./boundary"
 
@@ -35,9 +37,14 @@ export default memo<PageProps>(({ pageId, pageSize }) => {
         // get correct image data for document type background
         if (style === pageType.DOC) {
             const src = documentImages[background.documentPageNum]
-            // if image data not available, load document
+            // if image data not available, we need to reload the document
             if (!src) {
-                loadNewPDF(background.attachId).then(() => scheduleCaching(ref))
+                const fileOriginSrc = isConnected()
+                    ? new URL(background.attachURL as string)
+                    : store.getState().board.documentSrc
+                handleLoadDocument(fileOriginSrc).then(() =>
+                    scheduleCaching(ref)
+                )
                 return
             }
             setImg(() => {

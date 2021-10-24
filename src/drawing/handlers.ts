@@ -6,6 +6,7 @@ import {
     DELETE_ALL_PAGES,
     SET_PAGEMETA,
     INITIAL_VIEW,
+    SET_PDF,
 } from "redux/board/board"
 import {
     addPagesSession,
@@ -18,7 +19,7 @@ import {
 import { pageType } from "consts"
 import store from "redux/store"
 import { toPDF } from "./io"
-import { BoardPage, getPDFfromForm, loadNewPDF } from "./page"
+import { BoardPage } from "./page"
 import {
     addStrokes,
     deleteStrokes,
@@ -26,6 +27,7 @@ import {
     undo,
     updateStrokes,
 } from "./undoredo"
+import { getPDFfromForm, PDFtoImageData } from "./document"
 
 export function handleAddPageOver(): void {
     const page = new BoardPage()
@@ -117,32 +119,41 @@ export function handleChangePageBackground(): void {
     }
 }
 
-export async function handleDocument(file: File): Promise<void> {
-    if (isConnected()) {
-        const attachId = await addAttachmentSession(file)
-        await loadNewPDF(attachId)
-        handleAddDocumentPages(attachId)
-    } else {
-        const fileSrc = await getPDFfromForm(file)
-        await loadNewPDF(fileSrc)
-        handleAddDocumentPages()
-    }
+export async function handleGetDocumentFile(
+    file: File
+): Promise<URL | Uint8Array> {
+    return isConnected() ? addAttachmentSession(file) : getPDFfromForm(file)
 }
 
-export function handleAddDocumentPages(attachId?: string): void {
-    const documentPages = store.getState().board.documentImages
+export async function handleLoadDocument(
+    fileOriginSrc: URL | string | Uint8Array
+): Promise<void> {
+    const documentImages = await PDFtoImageData(fileOriginSrc)
+    store.dispatch(
+        SET_PDF({
+            documentImages,
+            documentSrc: fileOriginSrc,
+        })
+    )
+}
+
+export function handleAddDocumentPages(fileOriginSrc: URL | Uint8Array): void {
+    const { documentImages } = store.getState().board
 
     handleDeleteAllPages()
 
-    const pages = documentPages.map(
-        (_, i) => new BoardPage(pageType.DOC, i, attachId)
-    )
     if (isConnected()) {
+        const pages = documentImages.map(
+            (_, i) => new BoardPage(pageType.DOC, i, fileOriginSrc as URL)
+        )
         addPagesSession(
             pages,
             pages.map(() => -1)
         )
     } else {
+        const pages = documentImages.map(
+            (_, i) => new BoardPage(pageType.DOC, i)
+        )
         pages.forEach((page) => page.add(-1)) // append subsequent pages at the end
     }
 }
@@ -152,12 +163,10 @@ export async function handleExportDocument(): Promise<void> {
     const filename = "board.pdf"
     const { documentSrc } = store.getState().board
     if (isConnected()) {
-        const src = documentSrc
-            ? ((await getAttachmentSession(documentSrc as string)) as string)
-            : ""
-        toPDF(filename, src)
+        const [src] = await getAttachmentSession(documentSrc as string)
+        toPDF(filename, src as Uint8Array)
     } else {
-        toPDF(filename, documentSrc)
+        toPDF(filename, documentSrc as Uint8Array)
     }
 }
 

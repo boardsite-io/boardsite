@@ -1,6 +1,10 @@
 import React, { useState } from "react"
 import { UploadIcon } from "components"
-import { handleDocument } from "drawing/handlers"
+import {
+    handleGetDocumentFile,
+    handleLoadDocument,
+    handleAddDocumentPages,
+} from "drawing/handlers"
 import {
     InvisibleInput,
     DropZone,
@@ -20,7 +24,12 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ closeDialog }) => {
 
     const processFile = (file: File) => {
         if (isValidFormat(file)) {
-            handleDocument(file).then(() => closeDialog())
+            // eslint-disable-next-line @typescript-eslint/no-extra-semi
+            ;(async () => {
+                const origin = await handleGetDocumentFile(file)
+                await handleLoadDocument(origin)
+                handleAddDocumentPages(origin)
+            })().then(() => closeDialog())
             setInvalidInput(false)
         } else {
             setInvalidInput(true)

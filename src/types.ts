@@ -34,7 +34,7 @@ export type PageBackground = "blank" | "checkered" | "ruled" | "doc"
 export interface PageMeta {
     background: {
         style: PageBackground
-        attachId: string
+        attachURL: URL | string
         documentPageNum: number
     }
     width: number

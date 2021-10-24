@@ -233,14 +233,25 @@ export function updatePagesSession(pages: BoardPage[], clear = false): void {
     putPages(store.getState().session.sessionId, pages, clear)
 }
 
-export async function addAttachmentSession(file: File): Promise<string> {
+export async function addAttachmentSession(file: File): Promise<URL> {
     const { attachId } = await postAttachment(
         store.getState().session.sessionId,
         file
     )
-    return attachId
+    return getAttachmentURL(attachId)
 }
 
-export function getAttachmentSession(attachId: string): Promise<unknown> {
-    return getAttachment(store.getState().session.sessionId, attachId)
+export async function getAttachmentSession(
+    attachId: string
+): Promise<[unknown, URL]> {
+    const attachData = await getAttachment(
+        store.getState().session.sessionId,
+        attachId
+    )
+    return [attachData, getAttachmentURL(attachId)]
+}
+
+function getAttachmentURL(attachId: string): URL {
+    const { apiURL, sessionId } = store.getState().session
+    return new URL(attachId, `${apiURL.toString()}b/${sessionId}/attachments/`)
 }

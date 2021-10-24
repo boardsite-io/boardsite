@@ -34,7 +34,7 @@ export interface BoardState {
     pageRank: string[]
     pageCollection: PageCollection
     documentImages: string[]
-    documentSrc: string | Uint8Array
+    documentSrc: URL | string | Uint8Array
     pageSettings: {
         background: PageBackground // default,
         size: { width: number; height: number }
@@ -68,6 +68,9 @@ export const newState = (state?: BoardState): BoardState => ({
     serialize(): string {
         // clone to not mutate current state
         const stateCopy = cloneDeep<BoardState>(this)
+
+        // dont pollute the serialized object with image data
+        stateCopy.documentImages = []
         Object.keys(stateCopy.pageCollection).forEach((pageId) => {
             const { strokes } = stateCopy.pageCollection[pageId]
             Object.keys(strokes).forEach((strokeId) => {
