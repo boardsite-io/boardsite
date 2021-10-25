@@ -41,9 +41,11 @@ export interface BoardState {
     }
     view: BoardView
 
-    serialize?(): string
-    deserialize?(state: string): BoardState
+    serialize?(): BoardState
+    deserialize?(parsed: SerializedBoardState): BoardState
 }
+
+export type SerializedBoardState = BoardState & { version?: string }
 
 export const newState = (state?: BoardState): BoardState => ({
     currentPageIndex: DEFAULT_CURRENT_PAGE_INDEX,
@@ -65,7 +67,7 @@ export const newState = (state?: BoardState): BoardState => ({
         stageScale: DEFAULT_STAGE_SCALE,
     },
 
-    serialize(): string {
+    serialize(): SerializedBoardState {
         // clone to not mutate current state
         const stateCopy = cloneDeep<BoardState>(this)
 
@@ -77,11 +79,14 @@ export const newState = (state?: BoardState): BoardState => ({
                 strokes[strokeId] = strokes[strokeId].serialize()
             })
         })
-        return JSON.stringify({ version: boardVersion, ...stateCopy })
+
+        delete stateCopy.serialize
+        delete stateCopy.deserialize
+
+        return { version: boardVersion, ...stateCopy }
     },
 
-    deserialize(stateStr: string): BoardState {
-        const parsed = JSON.parse(stateStr)
+    deserialize(parsed: SerializedBoardState): BoardState {
         const { version } = parsed
         if (!version) {
             throw new Error("cannot deserialize state, missing version")

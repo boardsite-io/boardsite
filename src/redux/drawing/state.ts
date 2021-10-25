@@ -6,6 +6,7 @@ import {
 } from "consts"
 import { BoardLiveStroke } from "drawing/stroke/livestroke"
 import { StrokeMap, Tool } from "drawing/stroke/types"
+import { cloneDeep } from "lodash"
 import { TrNodesType } from "types"
 
 // version of the board state reducer to allow backward compatibility for stored data
@@ -23,9 +24,11 @@ export interface DrawingState {
     trNodes: TrNodesType
     erasedStrokes: StrokeMap
 
-    serialize?(): string
-    deserialize?(state: string): DrawingState
+    serialize?(): SerializedDrawingState
+    deserialize?(parsed: SerializedDrawingState): DrawingState
 }
+
+export type SerializedDrawingState = DrawingState & { version?: string }
 
 export const newState = (state?: DrawingState): DrawingState => ({
     isDraggable: DEFAULT_ISDRAGGABLE,
@@ -37,18 +40,21 @@ export const newState = (state?: DrawingState): DrawingState => ({
     trNodes: [],
     erasedStrokes: {},
 
-    serialize(): string {
-        const stateCopy = { version: drawingVersion, ...this }
+    serialize(): SerializedDrawingState {
+        const stateCopy = cloneDeep<DrawingState>(this)
         stateCopy.liveStroke.points = []
         stateCopy.liveStroke.pointsSegments = []
         stateCopy.liveStrokeUpdate = 0
         stateCopy.trNodes = []
         stateCopy.erasedStrokes = {}
-        return JSON.stringify(stateCopy)
+
+        delete stateCopy.serialize
+        delete stateCopy.deserialize
+
+        return { version: drawingVersion, ...stateCopy }
     },
 
-    deserialize(stateStr: string): DrawingState {
-        const parsed = JSON.parse(stateStr)
+    deserialize(parsed: SerializedDrawingState): DrawingState {
         const { version } = parsed
         if (!version) {
             throw new Error("cannot deserialize state, missing version")

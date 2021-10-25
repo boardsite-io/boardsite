@@ -17,7 +17,13 @@ export function saveLocalStore(
     ...states: string[]
 ): void {
     debounce(() => {
-        save(rootState, states, localStorage)
+        states.forEach((name) => {
+            const serializableState = rootState[name] as SerializableState
+            localStorage.setItem(
+                `${namespace}_${name}`,
+                JSON.stringify(serializableState.serialize?.())
+            )
+        })
     })
 }
 
@@ -26,21 +32,13 @@ export function saveIndexedDB(
     ...states: string[]
 ): void {
     debounce(() => {
-        save(rootState, states, localforage)
-    })
-}
-
-function save(
-    rootState: { [name: string]: object },
-    states: string[],
-    storage: Storage | LocalForage
-) {
-    states.forEach((name) => {
-        const serializableState = rootState[name] as SerializableState
-        storage.setItem(
-            `${namespace}_${name}`,
-            serializableState.serialize?.() as string
-        )
+        states.forEach((name) => {
+            const serializableState = rootState[name] as SerializableState
+            localforage.setItem(
+                `${namespace}_${name}`,
+                serializableState.serialize?.()
+            )
+        })
     })
 }
 
@@ -50,7 +48,7 @@ export function loadLocalStorage(...states: string[]): RootState {
         try {
             const val = localStorage.getItem(`${namespace}_${name}`)
             if (val) {
-                state[name] = newState(name)?.deserialize?.(val)
+                state[name] = newState(name)?.deserialize?.(JSON.parse(val))
             }
         } catch (err) {
             // eslint-disable-next-line no-console
@@ -66,7 +64,7 @@ export async function loadIndexedDB(...states: string[]): Promise<RootState> {
         try {
             const val = await localforage.getItem(`${namespace}_${name}`)
             if (val) {
-                state[name] = newState(name)?.deserialize?.(val as string)
+                state[name] = newState(name)?.deserialize?.(val as object)
             }
         } catch (err) {
             // eslint-disable-next-line no-console
