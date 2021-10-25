@@ -1,9 +1,9 @@
+import { disconnect } from "api/websocket"
 import { Button, DialogContent } from "components"
-import { handleDeleteAllPages } from "drawing/handlers"
 import React from "react"
 import { useHistory } from "react-router-dom"
 import { useCustomDispatch, useCustomSelector } from "redux/hooks"
-import { CLOSE_SDIAG, CLOSE_WS } from "redux/session/session"
+import { CLOSE_SDIAG } from "redux/session/session"
 import {
     UserAlias,
     UserColor,
@@ -19,9 +19,8 @@ const OnlineDialogContent: React.FC = () => {
     const dispatch = useCustomDispatch()
     const history = useHistory()
     const handleLeave = () => {
-        dispatch(CLOSE_WS())
+        disconnect()
         dispatch(CLOSE_SDIAG())
-        handleDeleteAllPages()
         history.push("/")
     }
 

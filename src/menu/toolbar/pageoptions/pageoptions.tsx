@@ -21,7 +21,7 @@ import {
     handleAddPageUnder,
     handleClearPage,
     handleDeleteAllPages,
-    handleDeletePage,
+    handleDeleteCurrentPage,
     handleChangePageBackground,
 } from "drawing/handlers"
 import Background from "./background/background"
@@ -82,7 +82,7 @@ const PageOptions: React.FC = () => {
                     <Button
                         withIcon
                         onClick={() => {
-                            handleDeletePage()
+                            handleDeleteCurrentPage()
                             close()
                         }}>
                         <BsFileMinus />

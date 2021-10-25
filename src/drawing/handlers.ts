@@ -2,7 +2,7 @@ import { Stroke } from "drawing/stroke/types"
 import {
     JUMP_TO_NEXT_PAGE,
     CLEAR_PAGE,
-    DELETE_PAGE,
+    DELETE_PAGES,
     DELETE_ALL_PAGES,
     SET_PAGEMETA,
     INITIAL_VIEW,
@@ -60,17 +60,21 @@ export function handleClearPage(): void {
     }
 }
 
-export function handleDeletePage(): void {
+export function handleDeleteCurrentPage(): void {
+    handleDeletePages(...getCurrentPageId())
+}
+
+export function handleDeletePages(...pageIds: string[]): void {
     if (isConnected()) {
-        deletePagesSession([getCurrentPageId()])
+        deletePagesSession(...pageIds)
     } else {
-        store.dispatch(DELETE_PAGE(getCurrentPageId()))
+        store.dispatch(DELETE_PAGES([getCurrentPageId()]))
     }
 }
 
 export function handleDeleteAllPages(): void {
     if (isConnected()) {
-        deletePagesSession(store.getState().board.pageRank)
+        deletePagesSession(...store.getState().board.pageRank)
     } else {
         store.dispatch(DELETE_ALL_PAGES())
     }

@@ -68,15 +68,27 @@ const boardSlice = createSlice({
             state.pageCollection[pageId]?.clear()
         },
 
-        DELETE_PAGE: (state, action) => {
-            const pageId = action.payload
-            delete state.pageCollection[pageId]
-            state.pageRank.splice(state.pageRank.indexOf(pageId), 1)
+        DELETE_PAGES: (state, action) => {
+            const pageIds: string[] = action.payload
+            pageIds.forEach((pid) => {
+                delete state.pageCollection[pid]
+                state.pageRank.splice(state.pageRank.indexOf(pid), 1)
+                state.documentImages.splice(
+                    state.pageCollection[pid].meta.background.documentPageNum,
+                    1
+                )
+            })
         },
 
+        // removes all pages but leaves the document
         DELETE_ALL_PAGES: (state) => {
             state.pageRank = []
             state.pageCollection = {}
+        },
+
+        CLEAR_DOCS: (state) => {
+            state.documentImages = []
+            state.documentSrc = ""
         },
 
         // Add strokes to collection
@@ -117,11 +129,6 @@ const boardSlice = createSlice({
             const { documentImages, documentSrc } = action.payload
             state.documentImages = documentImages
             state.documentSrc = documentSrc
-        },
-
-        CLEAR_PDF: (state) => {
-            state.documentImages = []
-            state.documentSrc = ""
         },
 
         JUMP_TO_NEXT_PAGE: (state) => {
@@ -239,13 +246,13 @@ export const {
     ADD_PAGE,
     SET_PAGEMETA,
     CLEAR_PAGE,
-    DELETE_PAGE,
+    DELETE_PAGES,
     DELETE_ALL_PAGES,
     ADD_STROKES,
     ERASE_STROKES,
     UPDATE_STROKES,
     SET_PDF,
-    CLEAR_PDF,
+    CLEAR_DOCS,
     SET_PAGE_BACKGROUND,
     SET_PAGE_SIZE,
     JUMP_TO_NEXT_PAGE,
