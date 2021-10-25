@@ -20,6 +20,10 @@ const boardSlice = createSlice({
     name: "board",
     initialState: newState(),
     reducers: {
+        LOAD_BOARD_STATE: (state, action) => {
+            Object.assign(state, action.payload)
+        },
+
         SYNC_ALL_PAGES: (state, action) => {
             const { pageRank, pageCollection } = action.payload
             state.pageRank = pageRank

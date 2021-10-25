@@ -11,6 +11,6 @@ export type RootState = {
 }
 
 export interface SerializableState {
-    serialize(): string
-    deserialize(state: string): object
+    serialize?(): string
+    deserialize?(state: string): object
 }
