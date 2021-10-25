@@ -5,7 +5,7 @@ import { RootState, SerializableState } from "./types"
 
 const debounceTime = 1000
 const namespace = "boardsite"
-let debounceTimeout: NodeJS.Timeout
+const debounceTimeout: { [name: string]: NodeJS.Timeout } = {}
 
 localforage.config({
     name: namespace,
@@ -16,8 +16,8 @@ export function saveLocalStore(
     rootState: { [name: string]: object },
     ...states: string[]
 ): void {
-    debounce(() => {
-        states.forEach((name) => {
+    states.forEach((name) => {
+        debounce(name, () => {
             const serializableState = rootState[name] as SerializableState
             localStorage.setItem(
                 `${namespace}_${name}`,
@@ -31,8 +31,8 @@ export function saveIndexedDB(
     rootState: { [name: string]: object },
     ...states: string[]
 ): void {
-    debounce(() => {
-        states.forEach((name) => {
+    states.forEach((name) => {
+        debounce(name, () => {
             const serializableState = rootState[name] as SerializableState
             localforage.setItem(
                 `${namespace}_${name}`,
@@ -75,13 +75,13 @@ export async function loadIndexedDB(...states: string[]): Promise<RootState> {
     return state as RootState
 }
 
-function debounce(callback: () => void): void {
-    if (debounceTimeout) {
-        clearTimeout(debounceTimeout)
+function debounce(stateName: string, callback: () => void): void {
+    if (debounceTimeout[stateName]) {
+        clearTimeout(debounceTimeout[stateName])
     }
 
     // Save to LocalStorage after the debounce period has elapsed
-    debounceTimeout = setTimeout(() => {
+    debounceTimeout[stateName] = setTimeout(() => {
         callback()
     }, debounceTime)
 }
