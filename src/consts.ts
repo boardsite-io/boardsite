@@ -8,18 +8,9 @@ export default function isDev(): boolean {
     return !process.env.NODE_ENV || process.env.NODE_ENV === "development"
 }
 
+export const PIXEL_RATIO = 4
 export const STROKE_WIDTH_PRESETS = [0.5, 1, 2, 3, 4, 5, 7, 10, 14, 20]
-export const DEFAULT_PAGE_WIDTH = 620
-export const DEFAULT_PAGE_HEIGHT = 877
-export const DEFAULT_PAGE_GAP = 30
-export const MIN_PAGE_WIDTH = 400
-export const MAX_PAGE_WIDTH = 2000
-export const MIN_PAGE_HEIGHT = 400
-export const MAX_PAGE_HEIGHT = 2000
-export const CANVAS_WIDTH = 620
-export const CANVAS_HEIGHT = 877
-export const CANVAS_GAP = 20
-export const CANVAS_FULL_HEIGHT = CANVAS_HEIGHT + CANVAS_GAP
+export const DEFAULT_PAGE_GAP = 20
 export const DEFAULT_WIDTH = STROKE_WIDTH_PRESETS[3]
 export const DEFAULT_COLOR = "#000000"
 export const ZOOM_IN_WHEEL_SCALE = 1.1

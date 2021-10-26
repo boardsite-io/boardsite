@@ -15,7 +15,7 @@ import {
     addAttachmentSession,
     getAttachmentSession,
 } from "api/websocket"
-import { pageType } from "consts"
+import { pageType, PIXEL_RATIO } from "consts"
 import store from "redux/store"
 import { toPDF } from "./io"
 import { BoardPage, getPDFfromForm, loadNewPDF } from "./page"
@@ -129,14 +129,28 @@ export async function handleDocument(file: File): Promise<void> {
     }
 }
 
+function getDimensions(base64: string) {
+    const header = atob(base64.split(",")[1].slice(0, 50)).slice(16, 24)
+    const uint8 = Uint8Array.from(header, (c) => c.charCodeAt(0))
+    const dataView = new DataView(uint8.buffer)
+
+    return {
+        pageWidth: dataView.getInt32(0),
+        pageHeight: dataView.getInt32(4),
+    }
+}
+
 export function handleAddDocumentPages(attachId?: string): void {
     const documentPages = store.getState().board.documentImages
 
     handleDeleteAllPages()
-
-    const pages = documentPages.map(
-        (_, i) => new BoardPage(pageType.DOC, i, attachId)
-    )
+    const pages = documentPages.map((img, i) => {
+        const { pageWidth, pageHeight } = getDimensions(img)
+        return new BoardPage(pageType.DOC, i, attachId, {
+            width: pageWidth / PIXEL_RATIO,
+            height: pageHeight / PIXEL_RATIO,
+        })
+    })
     if (isConnected()) {
         addPagesSession(
             pages,

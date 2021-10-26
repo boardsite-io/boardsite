@@ -6,22 +6,22 @@ import { Provider } from "react-redux"
 import { Layer, Stage, Rect } from "react-konva"
 import * as types from "konva/types/Layer"
 import { StrokeShape } from "board/stroke/shape"
-import { CANVAS_HEIGHT, CANVAS_WIDTH, pageType } from "consts"
+import { pageType, PIXEL_RATIO } from "consts"
 import store from "../redux/store"
 import { pageBackground } from "./page"
 
 export async function pagesToDataURL(
-    pixelRatio: number,
     drawBackground?: boolean
 ): Promise<string[]> {
-    const pages = store.getState().board.pageRank
+    const { pageRank } = store.getState().board
 
-    const imgs = pages.map(async (pageId: string) => {
+    const imgs = pageRank.map(async (pageId: string) => {
         const strokeIds = Object.keys(
             store.getState().board.pageCollection[pageId].strokes
         )
-        const { style } =
-            store.getState().board.pageCollection[pageId]?.meta?.background
+        const { meta } = store.getState().board.pageCollection[pageId]
+        const { style } = meta.background
+        const { height, width } = meta
 
         const tmp = document.createElement("div")
 
@@ -29,12 +29,12 @@ export async function pagesToDataURL(
         const LayerTest = () => {
             ref = React.useRef<types.Layer>(null)
             return (
-                <Stage height={CANVAS_HEIGHT} width={CANVAS_WIDTH}>
+                <Stage height={height} width={width}>
                     <Provider store={store}>
                         <Layer ref={ref}>
                             <Rect
-                                height={CANVAS_HEIGHT}
-                                width={CANVAS_WIDTH}
+                                height={height}
+                                width={width}
                                 sceneFunc={
                                     drawBackground
                                         ? pageBackground[style]
@@ -60,7 +60,7 @@ export async function pagesToDataURL(
         const data = (
             ref as unknown as React.RefObject<types.Layer>
         )?.current?.toDataURL({
-            pixelRatio,
+            pixelRatio: PIXEL_RATIO,
         })
         tmp.remove()
         return data ?? ""
@@ -86,24 +86,25 @@ export async function toPDF(
 
     // embedd images in document
     // TODO set draw background
-    const pagesData = await pagesToDataURL(4, true)
+    const pagesData = await pagesToDataURL(true)
     const pageImages = await Promise.all(
         pagesData.map((data) => pdf.embedPng(data))
     )
     const { pageRank, pageCollection } = store.getState().board
 
     pageImages.forEach((pageData, i) => {
-        const { style, documentPageNum } =
-            pageCollection[pageRank[i]].meta.background
+        const { width, height, background } = pageCollection[pageRank[i]].meta
+        const { style, documentPageNum } = background
         const page =
             style === pageType.DOC
                 ? pdf.addPage(pdfPages[documentPageNum])
                 : pdf.addPage()
+        page.setSize(width, height)
         page.drawImage(pageData, {
             x: 0,
             y: 0,
-            width: page.getSize().width,
-            height: page.getSize().height,
+            width,
+            height,
         })
     })
 
