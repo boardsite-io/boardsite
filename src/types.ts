@@ -31,14 +31,16 @@ export interface User {
 
 export type PageBackground = "blank" | "checkered" | "ruled" | "doc"
 
-export interface PageMeta {
+export interface PageSize {
+    width: number
+    height: number
+}
+export interface PageMeta extends PageSize {
     background: {
         style: PageBackground
         attachURL: URL | string
         documentPageNum: number
     }
-    width: number
-    height: number
 }
 
 export type TrRefType = React.RefObject<Transformer>

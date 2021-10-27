@@ -16,7 +16,7 @@ import {
     addAttachmentSession,
     getAttachmentSession,
 } from "api/websocket"
-import { pageType } from "consts"
+import { pageType, PIXEL_RATIO } from "consts"
 import store from "redux/store"
 import { toPDF } from "./io"
 import { BoardPage } from "./page"
@@ -147,9 +147,13 @@ export function handleAddDocumentPages(fileOriginSrc: URL | Uint8Array): void {
     handleDeleteAllPages()
 
     if (isConnected()) {
-        const pages = documentImages.map(
-            (_, i) => new BoardPage(pageType.DOC, i, fileOriginSrc as URL)
-        )
+        const pages = documentImages.map((img, i) => {
+            const { pageWidth, pageHeight } = getPageDimensions(img)
+            return new BoardPage(pageType.DOC, i, fileOriginSrc as URL, {
+                width: pageWidth / PIXEL_RATIO,
+                height: pageHeight / PIXEL_RATIO,
+            })
+        })
         addPagesSession(
             pages,
             pages.map(() => -1)
@@ -184,4 +188,15 @@ function getCurrentPage() {
     return store.getState().board.pageCollection[
         store.getState().board.pageRank[store.getState().board.currentPageIndex]
     ]
+}
+
+function getPageDimensions(dataURL: string) {
+    const header = atob(dataURL.split(",")[1].slice(0, 50)).slice(16, 24)
+    const uint8 = Uint8Array.from(header, (c) => c.charCodeAt(0))
+    const dataView = new DataView(uint8.buffer)
+
+    return {
+        pageWidth: dataView.getInt32(0),
+        pageHeight: dataView.getInt32(4),
+    }
 }

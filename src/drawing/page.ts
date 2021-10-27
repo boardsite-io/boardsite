@@ -4,14 +4,15 @@ import { Context } from "konva/types/Context"
 import { ADD_PAGE } from "redux/board/board"
 import { pageType } from "consts"
 import store from "redux/store"
-import { Page, PageBackground, PageMeta } from "../types"
+import { Page, PageBackground, PageMeta, PageSize } from "../types"
 import { StrokeMap } from "./stroke/types"
 
 export class BoardPage implements Page {
     constructor(
         style?: PageBackground,
         pageNum?: number,
-        attachURL?: URL | string
+        attachURL?: URL | string,
+        size?: PageSize
     ) {
         const { pageSettings } = store.getState().board
         this.pageId = nanoid(8)
@@ -21,8 +22,8 @@ export class BoardPage implements Page {
                 attachURL: attachURL ?? "",
                 documentPageNum: pageNum ?? 0,
             },
-            width: pageSettings.size.width,
-            height: pageSettings.size.height,
+            width: size?.width ?? pageSettings.size.width,
+            height: size?.height ?? pageSettings.size.height,
         }
     }
 
