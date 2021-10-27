@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
+import { pick, keys, assign } from "lodash"
 import { Stroke } from "drawing/stroke/types"
 import {
     DEFAULT_STAGE_Y,
@@ -21,7 +22,7 @@ const boardSlice = createSlice({
     initialState: newState(),
     reducers: {
         LOAD_BOARD_STATE: (state, action) => {
-            Object.assign(state, action.payload)
+            assign(state, pick(action.payload, keys(state)))
         },
 
         SYNC_ALL_PAGES: (state, action) => {

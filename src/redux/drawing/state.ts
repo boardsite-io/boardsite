@@ -6,7 +6,7 @@ import {
 } from "consts"
 import { BoardLiveStroke } from "drawing/stroke/livestroke"
 import { StrokeMap, Tool } from "drawing/stroke/types"
-import { cloneDeep } from "lodash"
+import { pick, keys, assign, cloneDeep } from "lodash"
 import { TrNodesType } from "types"
 
 // version of the board state reducer to allow backward compatibility for stored data
@@ -41,7 +41,7 @@ export const newState = (state?: DrawingState): DrawingState => ({
     erasedStrokes: {},
 
     serialize(): SerializedDrawingState {
-        const stateCopy = cloneDeep<DrawingState>(this)
+        const stateCopy = cloneDeep<SerializedDrawingState>(this)
         stateCopy.liveStroke.points = []
         stateCopy.liveStroke.pointsSegments = []
         stateCopy.liveStrokeUpdate = 0
@@ -55,11 +55,10 @@ export const newState = (state?: DrawingState): DrawingState => ({
     },
 
     deserialize(parsed: SerializedDrawingState): DrawingState {
-        const { version } = parsed
+        const { version } = parsed // avoid side-effects
         if (!version) {
             throw new Error("cannot deserialize state, missing version")
         }
-        delete parsed.version
 
         switch (version) {
             case drawingVersion:
@@ -72,7 +71,9 @@ export const newState = (state?: DrawingState): DrawingState => ({
                 )
         }
 
-        Object.assign(this, parsed)
+        // update all valid keys
+        assign(this, pick(parsed, keys(this)))
+
         this.liveStroke = new BoardLiveStroke(this.liveStroke) // deserialize a new instance
         return this
     },

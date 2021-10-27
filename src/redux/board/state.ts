@@ -12,7 +12,7 @@ import {
 import { BoardStroke } from "drawing/stroke/stroke"
 import { Point } from "drawing/stroke/types"
 import { PageBackground, PageCollection } from "types"
-import { cloneDeep } from "lodash"
+import { pick, keys, assign, cloneDeep } from "lodash"
 
 // version of the board state reducer to allow backward compatibility for stored data
 //
@@ -41,7 +41,7 @@ export interface BoardState {
     }
     view: BoardView
 
-    serialize?(): BoardState
+    serialize?(): SerializedBoardState
     deserialize?(parsed: SerializedBoardState): BoardState
 }
 
@@ -91,7 +91,6 @@ export const newState = (state?: BoardState): BoardState => ({
         if (!version) {
             throw new Error("cannot deserialize state, missing version")
         }
-        delete parsed.version
 
         switch (version) {
             case boardVersion:
@@ -109,7 +108,9 @@ export const newState = (state?: BoardState): BoardState => ({
                 )
         }
 
-        Object.assign(this, parsed)
+        // update all valid keys
+        assign(this, pick(parsed, keys(this)))
+
         const { pageCollection } = this
         Object.keys(pageCollection).forEach((pageId) => {
             const { strokes } = pageCollection[pageId]

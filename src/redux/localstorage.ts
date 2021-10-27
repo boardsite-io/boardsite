@@ -68,7 +68,7 @@ export async function loadIndexedDB(...states: string[]): Promise<RootState> {
             }
         } catch (err) {
             // eslint-disable-next-line no-console
-            console.error(err)
+            // console.error(err) // debugging
         }
     })
     await Promise.all(res)

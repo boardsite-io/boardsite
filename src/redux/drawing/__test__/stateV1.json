@@ -2,10 +2,10 @@
     "version": "1.0",
     "isDraggable": false,
     "isMouseDown": false,
-    "directDraw": true,
+    "directDraw": false,
     "liveStroke": {
-        "type": 1,
-        "style": { "color": "#000000", "width": 3, "opacity": 1 },
+        "type": 2,
+        "style": { "color": "#0211a3", "width": 1.5, "opacity": 0.5 },
         "pageId": "",
         "x": 0,
         "y": 0,
