@@ -56,7 +56,7 @@ export default memo<PageProps>(({ pageId, pageSize }) => {
 
         // schedule new caching
         scheduleCaching(ref)
-    }, [style])
+    }, [style, documentImages.length])
 
     // cache the shape on update
     useEffect(() => {

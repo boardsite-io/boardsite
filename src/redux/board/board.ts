@@ -72,12 +72,12 @@ const boardSlice = createSlice({
         DELETE_PAGES: (state, action) => {
             const pageIds: string[] = action.payload
             pageIds.forEach((pid) => {
-                delete state.pageCollection[pid]
                 state.pageRank.splice(state.pageRank.indexOf(pid), 1)
                 state.documentImages.splice(
                     state.pageCollection[pid].meta.background.documentPageNum,
                     1
                 )
+                delete state.pageCollection[pid]
             })
         },
 
