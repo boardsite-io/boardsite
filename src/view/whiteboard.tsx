@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom"
 import SessionInfo from "menu/toolbar/sessioninfo/sessioninfo"
 import store from "redux/store"
 import Loading from "menu/loading/loading"
+import { CENTER_VIEW, ON_WINDOW_RESIZE } from "redux/board/board"
 import { handleAddPageUnder } from "../drawing/handlers"
 import boardKeyListener from "../board/keylistener"
 import Toolbar from "../menu/toolbar/toolbar"
@@ -53,6 +54,10 @@ const Whiteboard: React.FC = () => {
 
     useEffect(() => {
         document.addEventListener("keydown", boardKeyListener)
+
+        // Adjust loaded or new state to window size on initial mount
+        store.dispatch(ON_WINDOW_RESIZE())
+        store.dispatch(CENTER_VIEW())
     }, [])
 
     return (

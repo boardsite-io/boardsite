@@ -4,7 +4,11 @@ import { Stage } from "react-konva"
 import { Vector2d } from "konva/types/types"
 import { KonvaEventObject } from "konva/types/Node"
 import { ToolType } from "drawing/stroke/types"
-import { ZOOM_IN_WHEEL_SCALE, ZOOM_OUT_WHEEL_SCALE } from "consts"
+import {
+    RESIZE_DEBOUNCE,
+    ZOOM_IN_WHEEL_SCALE,
+    ZOOM_OUT_WHEEL_SCALE,
+} from "consts"
 import {
     CENTER_VIEW,
     ON_WINDOW_RESIZE,
@@ -17,6 +21,7 @@ import {
 } from "redux/board/board"
 import store from "redux/store"
 import { useCustomSelector } from "redux/hooks"
+import { debounce } from "lodash"
 import Content from "./content"
 
 const BoardStage: React.FC = () => {
@@ -32,12 +37,13 @@ const BoardStage: React.FC = () => {
         keepCentered,
     } = useCustomSelector((state) => state.board.view)
 
-    useEffect(() => {
-        window.addEventListener("resize", () =>
-            store.dispatch(ON_WINDOW_RESIZE())
-        ) // listen for resize to update stage dimensions
+    const resize = () => {
+        store.dispatch(ON_WINDOW_RESIZE())
         store.dispatch(CENTER_VIEW())
-    }, [])
+    }
+    const onResize = debounce(resize, RESIZE_DEBOUNCE)
+
+    useEffect(() => window.addEventListener("resize", onResize), [])
 
     /**
      * Wheel event handler function
