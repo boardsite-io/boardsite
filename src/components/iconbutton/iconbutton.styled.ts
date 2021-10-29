@@ -49,8 +49,7 @@ const active = css`
 const inactive = css`
     &:hover {
         svg {
-            height: 95%;
-            width: 95%;
+            transform: var(--button-hover-transform);
         }
     }
 `
