@@ -1,11 +1,10 @@
 import styled from "styled-components"
 
 export const StyledShapeTools = styled.div`
-    display: flex;
-    flex-direction: column;
+    display: grid;
     justify-content: space-between;
-    padding: var(--menu-padding);
     align-items: center;
+    padding: var(--style-picker-padding);
     border-radius: var(--menubar-border-radius);
     background: var(--color2);
 `

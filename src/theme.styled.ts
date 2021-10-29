@@ -31,13 +31,25 @@ export const Theme = styled.div`
     --color7: #00ff00;
     --color8: #263238; /* Blue Grey 900 */
 
+    --icon-button-size: 2rem;
+    --icon-stroke-width: 8;
+
+    --style-picker-hue-width: 1.2rem;
+    --style-picker-hue-height: 2rem;
+    --style-picker-pointer-border: 2px solid var(--color1);
+    --style-picker-padding: var(--menu-padding) var(--button-gap);
+
     --menu-padding: 0.2rem;
     --menubar-box-shadow: 0px 0px 2px 0px #00000088;
     --menubar-border-radius: 0.5rem;
-    --button-gap: 0.1rem;
+
+    --button-gap: 0.4rem;
     --button-border-radius: 0.35rem;
+    --button-hover-transform: scale(1.2, 1.2);
+    --button-hover-box-shadow: 0 0 1rem 0 var(--color7);
+    --button-active-box-shadow: inset 0 0 0.5rem 0 var(--color7),
+        0 0 0.5rem 0 var(--color7);
     --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    --icon-button-size: 2rem;
 
     font-family: "Lato", sans-serif;
     font-size: 1rem;

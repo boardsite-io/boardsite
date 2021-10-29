@@ -1,17 +1,26 @@
 import styled from "styled-components"
 
 export const StyledStylePicker = styled.div`
-    display: flex;
-    gap: 0.4rem;
     position: fixed;
     top: 3.5rem;
     left: 50%;
     transform: translateX(-50%);
+    display: flex;
     flex-direction: row;
-    background: #00000088;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: var(--color2);
     border-radius: var(--menubar-border-radius);
-    height: 200px;
-    padding: 0.3rem;
+    min-height: min-content;
+    height: 70%;
+    max-height: 20rem;
+    min-width: 20rem;
+    width: 75%;
+    max-width: 40rem;
     box-shadow: var(--box-shadow);
-    justify-content: space-between;
+
+    .react-colorful {
+        width: 100%;
+        height: 100%;
+    }
 `
