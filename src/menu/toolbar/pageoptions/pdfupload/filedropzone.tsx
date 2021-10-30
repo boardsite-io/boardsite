@@ -22,16 +22,18 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ closeDialog }) => {
 
     const isValidFormat = (file: File) => file.type === "application/pdf"
 
-    const processFile = (file: File) => {
-        if (isValidFormat(file)) {
-            // eslint-disable-next-line @typescript-eslint/no-extra-semi
-            ;(async () => {
-                const origin = await handleGetDocumentFile(file)
-                await handleLoadDocument(origin)
-                handleAddDocumentPages(origin)
-            })().then(() => closeDialog())
+    const processFile = async (file: File) => {
+        try {
+            if (!isValidFormat(file)) {
+                throw new Error("invalid file type")
+            }
+            const origin = await handleGetDocumentFile(file)
+            await handleLoadDocument(origin)
+            handleAddDocumentPages(origin)
+
             setInvalidInput(false)
-        } else {
+            closeDialog()
+        } catch {
             setInvalidInput(true)
         }
     }

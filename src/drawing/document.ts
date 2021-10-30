@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-// eslint-disable-next-line import/no-unresolved
 import { DOC_SCALE } from "consts"
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf"
 // import pdfjsWorker from "pdfjs-dist/es5/build/pdf.worker.entry"
