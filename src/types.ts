@@ -38,7 +38,7 @@ export interface PageSize {
 export interface PageMeta extends PageSize {
     background: {
         style: PageBackground
-        attachId: string
+        attachURL: URL | string
         documentPageNum: number
     }
 }

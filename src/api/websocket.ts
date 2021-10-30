@@ -3,13 +3,14 @@ import { Stroke, ToolType } from "drawing/stroke/types"
 import {
     ADD_STROKES,
     CLEAR_PAGE,
-    CLEAR_PDF,
-    DELETE_ALL_PAGES,
+    CLEAR_DOCS,
     ERASE_STROKES,
     SET_PAGEMETA,
     SET_PAGERANK,
+    DELETE_ALL_PAGES,
 } from "redux/board/board"
 import {
+    CLOSE_WS,
     CREATE_WS,
     SET_SESSION_USERS,
     USER_CONNECT,
@@ -173,7 +174,7 @@ export async function joinSession(
     store.dispatch(SET_SESSION_USERS(await getUsers(sessionId)))
 
     // set the pages according to api
-    store.dispatch(CLEAR_PDF()) // clear documents which may be overwritten by session
+    store.dispatch(CLEAR_DOCS()) // clear documents which may be overwritten by session
     store.dispatch(DELETE_ALL_PAGES())
     const { pageRank, meta } = await getPages(sessionId)
     syncPages({ pageRank, meta })
@@ -185,6 +186,12 @@ export async function joinSession(
         strokes = strokes.map((stroke) => new BoardStroke(stroke))
         store.dispatch(ADD_STROKES(strokes))
     })
+}
+
+export function disconnect(): void {
+    store.dispatch(CLOSE_WS())
+    store.dispatch(CLEAR_DOCS())
+    store.dispatch(DELETE_ALL_PAGES())
 }
 
 export function sendStrokes(strokes: Stroke[]): void {
@@ -214,7 +221,7 @@ export function addPagesSession(pages: BoardPage[], pageIndex: number[]): void {
     postPages(store.getState().session.sessionId, pages, pageIndex)
 }
 
-export function deletePagesSession(pageIds: string[]): void {
+export function deletePagesSession(...pageIds: string[]): void {
     deletePages(store.getState().session.sessionId, pageIds)
 }
 
@@ -233,14 +240,25 @@ export function updatePagesSession(pages: BoardPage[], clear = false): void {
     putPages(store.getState().session.sessionId, pages, clear)
 }
 
-export async function addAttachmentSession(file: File): Promise<string> {
+export async function addAttachmentSession(file: File): Promise<URL> {
     const { attachId } = await postAttachment(
         store.getState().session.sessionId,
         file
     )
-    return attachId
+    return getAttachmentURL(attachId)
 }
 
-export function getAttachmentSession(attachId: string): Promise<unknown> {
-    return getAttachment(store.getState().session.sessionId, attachId)
+export async function getAttachmentSession(
+    attachId: string
+): Promise<[unknown, URL]> {
+    const attachData = await getAttachment(
+        store.getState().session.sessionId,
+        attachId
+    )
+    return [attachData, getAttachmentURL(attachId)]
+}
+
+function getAttachmentURL(attachId: string): URL {
+    const { apiURL, sessionId } = store.getState().session
+    return new URL(attachId, `${apiURL.toString()}b/${sessionId}/attachments/`)
 }

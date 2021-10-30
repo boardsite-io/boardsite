@@ -12,7 +12,7 @@ import {
 import { BoardStroke } from "drawing/stroke/stroke"
 import { Point } from "drawing/stroke/types"
 import { PageBackground, PageCollection } from "types"
-import { cloneDeep } from "lodash"
+import { pick, keys, assign, cloneDeep } from "lodash"
 
 // version of the board state reducer to allow backward compatibility for stored data
 //
@@ -34,16 +34,18 @@ export interface BoardState {
     pageRank: string[]
     pageCollection: PageCollection
     documentImages: string[]
-    documentSrc: string | Uint8Array
+    documentSrc: URL | string | Uint8Array
     pageSettings: {
         background: PageBackground // default,
         size: { width: number; height: number }
     }
     view: BoardView
 
-    serialize?(): string
-    deserialize?(state: string): BoardState
+    serialize?(): SerializedBoardState
+    deserialize?(parsed: SerializedBoardState): BoardState
 }
+
+export type SerializedBoardState = BoardState & { version?: string }
 
 export const newState = (state?: BoardState): BoardState => ({
     currentPageIndex: DEFAULT_CURRENT_PAGE_INDEX,
@@ -65,25 +67,30 @@ export const newState = (state?: BoardState): BoardState => ({
         stageScale: DEFAULT_STAGE_SCALE,
     },
 
-    serialize(): string {
+    serialize(): SerializedBoardState {
         // clone to not mutate current state
         const stateCopy = cloneDeep<BoardState>(this)
+
+        // dont pollute the serialized object with image data
+        stateCopy.documentImages = []
         Object.keys(stateCopy.pageCollection).forEach((pageId) => {
             const { strokes } = stateCopy.pageCollection[pageId]
             Object.keys(strokes).forEach((strokeId) => {
                 strokes[strokeId] = strokes[strokeId].serialize()
             })
         })
-        return JSON.stringify({ version: boardVersion, ...stateCopy })
+
+        delete stateCopy.serialize
+        delete stateCopy.deserialize
+
+        return { version: boardVersion, ...stateCopy }
     },
 
-    deserialize(stateStr: string): BoardState {
-        const parsed = JSON.parse(stateStr)
+    deserialize(parsed: SerializedBoardState): BoardState {
         const { version } = parsed
         if (!version) {
             throw new Error("cannot deserialize state, missing version")
         }
-        delete parsed.version
 
         switch (version) {
             case boardVersion:
@@ -101,7 +108,9 @@ export const newState = (state?: BoardState): BoardState => ({
                 )
         }
 
-        Object.assign(this, parsed)
+        // update all valid keys
+        assign(this, pick(parsed, keys(this)))
+
         const { pageCollection } = this
         Object.keys(pageCollection).forEach((pageId) => {
             const { strokes } = pageCollection[pageId]

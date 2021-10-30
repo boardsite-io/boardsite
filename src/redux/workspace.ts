@@ -40,9 +40,9 @@ const concatFileSegments = (...segments: Uint8Array[]): Uint8Array => {
 }
 
 export const saveWorkspace = (filename: string, state: BoardState): void => {
-    const stateStr = state.serialize?.()
+    const s = state.serialize?.()
     const header = createFileHeader(fileVersion, statesToSave)
-    const body = deflate(stateStr ?? "")
+    const body = deflate(JSON.stringify(s))
 
     const content = concatFileSegments(header, body)
 

@@ -2,10 +2,11 @@ import { Stroke } from "drawing/stroke/types"
 import {
     JUMP_TO_NEXT_PAGE,
     CLEAR_PAGE,
-    DELETE_PAGE,
+    DELETE_PAGES,
     DELETE_ALL_PAGES,
     SET_PAGEMETA,
     INITIAL_VIEW,
+    SET_PDF,
 } from "redux/board/board"
 import {
     addPagesSession,
@@ -18,7 +19,7 @@ import {
 import { pageType, PIXEL_RATIO } from "consts"
 import store from "redux/store"
 import { toPDF } from "./io"
-import { BoardPage, getPDFfromForm, loadNewPDF } from "./page"
+import { BoardPage } from "./page"
 import {
     addStrokes,
     deleteStrokes,
@@ -26,6 +27,7 @@ import {
     undo,
     updateStrokes,
 } from "./undoredo"
+import { getPDFfromForm, PDFtoImageData } from "./document"
 
 export function handleAddPageOver(): void {
     const page = new BoardPage()
@@ -58,17 +60,21 @@ export function handleClearPage(): void {
     }
 }
 
-export function handleDeletePage(): void {
+export function handleDeleteCurrentPage(): void {
+    handleDeletePages(...getCurrentPageId())
+}
+
+export function handleDeletePages(...pageIds: string[]): void {
     if (isConnected()) {
-        deletePagesSession([getCurrentPageId()])
+        deletePagesSession(...pageIds)
     } else {
-        store.dispatch(DELETE_PAGE(getCurrentPageId()))
+        store.dispatch(DELETE_PAGES([getCurrentPageId()]))
     }
 }
 
 export function handleDeleteAllPages(): void {
     if (isConnected()) {
-        deletePagesSession(store.getState().board.pageRank)
+        deletePagesSession(...store.getState().board.pageRank)
     } else {
         store.dispatch(DELETE_ALL_PAGES())
     }
@@ -117,46 +123,45 @@ export function handleChangePageBackground(): void {
     }
 }
 
-export async function handleDocument(file: File): Promise<void> {
-    if (isConnected()) {
-        const attachId = await addAttachmentSession(file)
-        await loadNewPDF(attachId)
-        handleAddDocumentPages(attachId)
-    } else {
-        const fileSrc = await getPDFfromForm(file)
-        await loadNewPDF(fileSrc)
-        handleAddDocumentPages()
-    }
+export async function handleGetDocumentFile(
+    file: File
+): Promise<URL | Uint8Array> {
+    return isConnected() ? addAttachmentSession(file) : getPDFfromForm(file)
 }
 
-function getDimensions(base64: string) {
-    const header = atob(base64.split(",")[1].slice(0, 50)).slice(16, 24)
-    const uint8 = Uint8Array.from(header, (c) => c.charCodeAt(0))
-    const dataView = new DataView(uint8.buffer)
-
-    return {
-        pageWidth: dataView.getInt32(0),
-        pageHeight: dataView.getInt32(4),
-    }
+export async function handleLoadDocument(
+    fileOriginSrc: URL | string | Uint8Array
+): Promise<void> {
+    const documentImages = await PDFtoImageData(fileOriginSrc)
+    store.dispatch(
+        SET_PDF({
+            documentImages,
+            documentSrc: fileOriginSrc,
+        })
+    )
 }
 
-export function handleAddDocumentPages(attachId?: string): void {
-    const documentPages = store.getState().board.documentImages
+export function handleAddDocumentPages(fileOriginSrc: URL | Uint8Array): void {
+    const { documentImages } = store.getState().board
 
     handleDeleteAllPages()
-    const pages = documentPages.map((img, i) => {
-        const { pageWidth, pageHeight } = getDimensions(img)
-        return new BoardPage(pageType.DOC, i, attachId, {
-            width: pageWidth / PIXEL_RATIO,
-            height: pageHeight / PIXEL_RATIO,
-        })
-    })
+
     if (isConnected()) {
+        const pages = documentImages.map((img, i) => {
+            const { pageWidth, pageHeight } = getPageDimensions(img)
+            return new BoardPage(pageType.DOC, i, fileOriginSrc as URL, {
+                width: pageWidth / PIXEL_RATIO,
+                height: pageHeight / PIXEL_RATIO,
+            })
+        })
         addPagesSession(
             pages,
             pages.map(() => -1)
         )
     } else {
+        const pages = documentImages.map(
+            (_, i) => new BoardPage(pageType.DOC, i)
+        )
         pages.forEach((page) => page.add(-1)) // append subsequent pages at the end
     }
 }
@@ -166,12 +171,10 @@ export async function handleExportDocument(): Promise<void> {
     const filename = "board.pdf"
     const { documentSrc } = store.getState().board
     if (isConnected()) {
-        const src = documentSrc
-            ? ((await getAttachmentSession(documentSrc as string)) as string)
-            : ""
-        toPDF(filename, src)
+        const [src] = await getAttachmentSession(documentSrc as string)
+        toPDF(filename, src as Uint8Array)
     } else {
-        toPDF(filename, documentSrc)
+        toPDF(filename, documentSrc as Uint8Array)
     }
 }
 
@@ -185,4 +188,15 @@ function getCurrentPage() {
     return store.getState().board.pageCollection[
         store.getState().board.pageRank[store.getState().board.currentPageIndex]
     ]
+}
+
+function getPageDimensions(dataURL: string) {
+    const header = atob(dataURL.split(",")[1].slice(0, 50)).slice(16, 24)
+    const uint8 = Uint8Array.from(header, (c) => c.charCodeAt(0))
+    const dataView = new DataView(uint8.buffer)
+
+    return {
+        pageWidth: dataView.getInt32(0),
+        pageHeight: dataView.getInt32(4),
+    }
 }

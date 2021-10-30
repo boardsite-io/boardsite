@@ -1,3 +1,4 @@
+import { cloneDeep } from "lodash"
 import { Polygon } from "sat"
 import { getHitboxPolygon } from "./hitbox"
 import { LiveStroke, Scale, Point, Stroke, ToolType } from "./types"
@@ -41,7 +42,9 @@ export class BoardStroke implements Stroke {
      * Generate a serializable stroke for e.g. WS transmission
      */
     serialize(): Stroke {
-        return { ...this, hitboxes: undefined }
+        const strokeCopy = cloneDeep<Stroke>(this)
+        delete strokeCopy.hitboxes
+        return strokeCopy
     }
 
     /**
