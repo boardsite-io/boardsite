@@ -23,6 +23,8 @@ describe("board reducer state", () => {
             .deserialize?.(cloneDeep(stateV1) as any)
             .serialize?.()
         const want = stateV1
+        want.view.stageHeight = window.innerHeight
+        want.view.stageWidth = window.innerWidth
         expect(JSON.stringify(got)).toEqual(JSON.stringify(want))
     })
 
