@@ -1,30 +1,28 @@
 import { nanoid } from "@reduxjs/toolkit"
 import { Shape, ShapeConfig } from "konva/types/Shape"
 import { Context } from "konva/types/Context"
-import { ADD_PAGE } from "redux/board/board"
-import { pageType } from "consts"
-import store from "redux/store"
-import { Page, PageBackground, PageMeta, PageSize } from "../types"
+import { assign, pick, keys } from "lodash"
+import { pageSize, pageType, sizePreset } from "consts"
+import { Page, PageMeta, PageSettings } from "../types"
 import { StrokeMap } from "./stroke/types"
 
 export class BoardPage implements Page {
-    constructor(
-        style?: PageBackground,
-        pageNum?: number,
-        attachURL?: URL | string,
-        size?: PageSize
-    ) {
-        const { pageSettings } = store.getState().board
-        this.pageId = nanoid(8)
+    constructor(page?: Page | BoardPage, pageSettings?: PageSettings) {
+        this.pageId = page?.pageId ?? nanoid(8)
+        this.strokes = page?.strokes ?? {}
         this.meta = {
             background: {
-                style: style ?? pageSettings.background, // fallback type
-                attachURL: attachURL ?? "",
-                documentPageNum: pageNum ?? 0,
+                style:
+                    page?.meta.background.style ??
+                    pageSettings?.background ??
+                    pageType.BLANK, // fallback type
+                attachURL: page?.meta.background.attachURL ?? "",
+                documentPageNum: page?.meta.background.documentPageNum ?? 0,
             },
-            width: size?.width ?? pageSettings.size.width,
-            height: size?.height ?? pageSettings.size.height,
+            width: pageSize[sizePreset.A4_LANDSCAPE].width,
+            height: pageSize[sizePreset.A4_LANDSCAPE].height,
         }
+        assign(this.meta, pick(pageSettings, ["width, height"]))
     }
 
     pageId: string
@@ -36,17 +34,17 @@ export class BoardPage implements Page {
         return this
     }
 
-    add(index?: number): void {
-        store.dispatch(ADD_PAGE({ page: this, index }))
-    }
-
     clear(): void {
         this.strokes = {}
     }
 
     updateMeta(meta: PageMeta): BoardPage {
         // update only fields that are different
-        this.meta = { ...this.meta, ...meta }
+        assign(this.meta, pick(meta, ["width, height"]))
+        assign(
+            this.meta.background,
+            pick(meta.background, keys(this.meta.background))
+        )
         return this
     }
 }

@@ -8,13 +8,17 @@ export enum Variants {
     Secondary = "SECONDARY",
 }
 
+export interface PageSettings {
+    background: PageBackground // default,
+    size: { width: number; height: number }
+}
+
 export interface Page {
     pageId: string
     strokes: StrokeMap
     meta: PageMeta
 
     setID: (pageId: string) => Page
-    add: (index?: number) => void
     clear: () => void
     updateMeta: (meta: PageMeta) => Page
 }

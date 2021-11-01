@@ -10,10 +10,13 @@ import {
     pageType,
     STROKE_WIDTH_PRESETS,
 } from "consts"
+import { PageMeta } from "types"
 import reducer from "./board"
 import * as action from "./board"
 
-const page1 = new BoardPage(pageType.CHECKERED).setID("pid1")
+const page1 = new BoardPage()
+    .setID("pid1")
+    .updateMeta({ background: { style: pageType.CHECKERED } } as PageMeta)
 const mockStroke1 = {
     id: "strkid1",
     pageId: "pid1",

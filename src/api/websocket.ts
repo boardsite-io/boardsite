@@ -127,9 +127,7 @@ function syncPages({ pageRank, meta }: ResponsePageSync) {
         if (Object.prototype.hasOwnProperty.call(pageCollection, pid)) {
             newPageCollection[pid] = pageCollection[pid]
         } else {
-            newPageCollection[pid] = new BoardPage(
-                store.getState().board.pageSettings.background
-            ).setID(pid)
+            newPageCollection[pid] = new BoardPage().setID(pid)
         }
     })
 
@@ -236,7 +234,7 @@ export function pingSession(sessionID: string): Promise<ResponsePageSync> {
     return getPages(sessionID)
 }
 
-export function updatePagesSession(pages: BoardPage[], clear = false): void {
+export function updatePagesSession(clear = false, ...pages: BoardPage[]): void {
     putPages(store.getState().session.sessionId, pages, clear)
 }
 
