@@ -119,6 +119,11 @@ export const newState = (state?: BoardState): BoardState => ({
                 strokes[strokeId] = new BoardStroke(stroke) // deserialize a new instance
             })
         })
+
+        // Update stage dimensions for initial indexedDB data load on new window
+        this.view.stageHeight = window.innerHeight
+        this.view.stageWidth = window.innerWidth
+
         return this
     },
 
