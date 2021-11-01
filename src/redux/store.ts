@@ -35,6 +35,10 @@ const store = configureStore({
         type: "board/LOAD_BOARD_STATE",
         payload: state.board,
     } as AnyAction)
+    store.dispatch({
+        type: "board/CENTER_VIEW",
+        payload: state.board,
+    } as AnyAction)
 })()
 
 export type AppDispatch = typeof store.dispatch
