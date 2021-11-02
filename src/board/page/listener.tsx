@@ -10,6 +10,8 @@ import { SET_ISMOUSEDOWN } from "redux/drawing/drawing"
 import { useCustomSelector } from "redux/hooks"
 import { PageProps } from "./types"
 
+type CustomTouch = Touch & { touchType?: string }
+
 const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
     const { isMouseDown } = useCustomSelector((state) => state.drawing)
 
@@ -79,8 +81,8 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
 
     const isValidTouch = (e: KonvaEventObject<TouchEvent>) => {
         e.evt.preventDefault()
-        const touch1 = e.evt.touches[0]
-        const touch2 = e.evt.touches[1]
+        const touch1 = e.evt.touches[0] as CustomTouch
+        const touch2 = e.evt.touches[1] as CustomTouch
         if (touch1.touchType === undefined) {
             return false
         }

@@ -20,12 +20,14 @@
         "no-param-reassign": 0, // redux slices
         "no-use-before-define": 0, // hoisting
         "no-empty": 0, // allow empty catch blocks
+        "func-names": 0, // anonymous functions
         "react/jsx-props-no-spreading": 0, // spreading props sometimes makes things easier and more fun :)
         "react/prop-types": 0,
         "react/jsx-filename-extension": [
             "warn",
             { "extensions": [".ts", ".tsx"] }
         ],
+        "react/require-default-props": 0, // dont always have default props
         "jsx-a11y/click-events-have-key-events": 0,
         "prettier/prettier": [
             "error",
