@@ -1,3 +1,4 @@
+import { cloneDeep } from "lodash"
 import { Stroke } from "drawing/stroke/types"
 import {
     JUMP_TO_NEXT_PAGE,
@@ -7,6 +8,7 @@ import {
     SET_PAGEMETA,
     INITIAL_VIEW,
     SET_PDF,
+    ADD_PAGE,
 } from "redux/board/board"
 import {
     addPagesSession,
@@ -18,6 +20,7 @@ import {
 } from "api/websocket"
 import { pageType, PIXEL_RATIO } from "consts"
 import store from "redux/store"
+import { PageMeta } from "types"
 import { toPDF } from "./io"
 import { BoardPage } from "./page"
 import {
@@ -35,7 +38,7 @@ export function handleAddPageOver(): void {
     if (isConnected()) {
         addPagesSession([page], [index])
     } else {
-        page.add(index)
+        store.dispatch(ADD_PAGE({ page, index }))
     }
     store.dispatch(INITIAL_VIEW())
 }
@@ -46,7 +49,7 @@ export function handleAddPageUnder(): void {
     if (isConnected()) {
         addPagesSession([page], [index])
     } else {
-        page.add(index)
+        store.dispatch(ADD_PAGE({ page, index }))
     }
     store.dispatch(JUMP_TO_NEXT_PAGE())
     store.dispatch(INITIAL_VIEW())
@@ -54,7 +57,7 @@ export function handleAddPageUnder(): void {
 
 export function handleClearPage(): void {
     if (isConnected()) {
-        updatePagesSession([getCurrentPage()], true)
+        updatePagesSession(true, getCurrentPage())
     } else {
         store.dispatch(CLEAR_PAGE(getCurrentPageId()))
     }
@@ -113,13 +116,15 @@ export function handleChangePageBackground(): void {
         return
     }
 
-    const newMeta = { ...currentPage.meta }
+    const newMeta = cloneDeep<PageMeta>(currentPage.meta)
     newMeta.background.style = background
 
     if (isConnected()) {
-        updatePagesSession([currentPage.updateMeta(newMeta)])
+        updatePagesSession(false, currentPage.updateMeta(newMeta))
     } else {
-        store.dispatch(SET_PAGEMETA({ pageId: currentPage.pageId, newMeta }))
+        store.dispatch(
+            SET_PAGEMETA({ pageId: currentPage.pageId, meta: newMeta })
+        )
     }
 }
 
@@ -149,7 +154,12 @@ export function handleAddDocumentPages(fileOriginSrc: URL | Uint8Array): void {
     if (isConnected()) {
         const pages = documentImages.map((img, i) => {
             const { pageWidth, pageHeight } = getPageDimensions(img)
-            return new BoardPage(pageType.DOC, i, fileOriginSrc as URL, {
+            return new BoardPage().updateMeta({
+                background: {
+                    style: pageType.DOC,
+                    attachURL: fileOriginSrc as URL,
+                    documentPageNum: i,
+                },
                 width: pageWidth / PIXEL_RATIO,
                 height: pageHeight / PIXEL_RATIO,
             })
@@ -159,10 +169,14 @@ export function handleAddDocumentPages(fileOriginSrc: URL | Uint8Array): void {
             pages.map(() => -1)
         )
     } else {
-        const pages = documentImages.map(
-            (_, i) => new BoardPage(pageType.DOC, i)
+        const pages = documentImages.map((_, i) =>
+            new BoardPage().updateMeta({
+                background: { style: pageType.DOC, documentPageNum: i },
+            } as PageMeta)
         )
-        pages.forEach((page) => page.add(-1)) // append subsequent pages at the end
+        pages.forEach((page) => {
+            store.dispatch(ADD_PAGE({ page, index: -1 }))
+        }) // append subsequent pages at the end
     }
 }
 

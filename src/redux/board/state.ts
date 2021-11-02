@@ -11,8 +11,9 @@ import {
 } from "consts"
 import { BoardStroke } from "drawing/stroke/stroke"
 import { Point } from "drawing/stroke/types"
-import { PageBackground, PageCollection } from "types"
+import { PageCollection, PageSettings } from "types"
 import { pick, keys, assign, cloneDeep } from "lodash"
+import { BoardPage } from "drawing/page"
 
 // version of the board state reducer to allow backward compatibility for stored data
 //
@@ -35,10 +36,7 @@ export interface BoardState {
     pageCollection: PageCollection
     documentImages: string[]
     documentSrc: URL | string | Uint8Array
-    pageSettings: {
-        background: PageBackground // default,
-        size: { width: number; height: number }
-    }
+    pageSettings: PageSettings
     view: BoardView
 
     serialize?(): SerializedBoardState
@@ -113,6 +111,8 @@ export const newState = (state?: BoardState): BoardState => ({
 
         const { pageCollection } = this
         Object.keys(pageCollection).forEach((pageId) => {
+            const page = pageCollection[pageId]
+            pageCollection[pageId] = new BoardPage(page)
             const { strokes } = pageCollection[pageId]
             Object.keys(strokes).forEach((strokeId) => {
                 const stroke = strokes[strokeId]
