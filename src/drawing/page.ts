@@ -67,7 +67,7 @@ const checkered = (context: Context, shape: Shape<ShapeConfig>): void => {
     context.fillStrokeShape(shape)
 
     // make checkered math paper
-    const gap = 20
+    const gap = 15
     const rows = Math.ceil(height / gap)
     const columns = Math.ceil(width / gap)
     for (let i = 1; i < rows; i += 1) {
@@ -81,6 +81,7 @@ const checkered = (context: Context, shape: Shape<ShapeConfig>): void => {
         context.lineTo(x, height)
     }
     context.setAttr("strokeStyle", "#00000044")
+    context.setAttr("lineWidth", 0.5)
     context.stroke()
 }
 
@@ -92,7 +93,7 @@ const ruled = (context: Context, shape: Shape<ShapeConfig>): void => {
     context.rect(0, 0, width, height)
     context.fillStrokeShape(shape)
 
-    const numRows = 30
+    const numRows = 36
     // make ruled math paper
     const gap = height / numRows
     for (let i = 1; i < numRows; i += 1) {
@@ -100,7 +101,16 @@ const ruled = (context: Context, shape: Shape<ShapeConfig>): void => {
         context.moveTo(0, y)
         context.lineTo(width, y)
     }
+
+    const boundary = 0.1
+    context.moveTo(boundary * width, 0)
+    context.lineTo(boundary * width, height)
+
+    context.moveTo((1 - boundary) * width, 0)
+    context.lineTo((1 - boundary) * width, height)
+
     context.setAttr("strokeStyle", "#00000044")
+    context.setAttr("lineWidth", 0.5)
     context.stroke()
 }
 
