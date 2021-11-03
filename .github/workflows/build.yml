@@ -2,9 +2,13 @@ name: Build
 
 on:
   push:
-    paths-ignore:
-      - "README.md"
-      - ".gitignore"
+    paths:
+      - "src/**"
+      - "public/**"
+      - ".github/workflows/**"
+      - ".env"
+      - "package.json"
+      - "yarn.lock"
     branches: [ master ]
 
 jobs:
