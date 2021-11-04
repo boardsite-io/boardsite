@@ -1,6 +1,5 @@
-import { Transformer } from "konva/types/shapes/Transformer"
-import { Node, NodeConfig } from "konva/types/Node"
 import { StrokeMap } from "drawing/stroke/types"
+import { Node, NodeConfig } from "konva/lib/Node"
 
 // eslint-disable-next-line no-shadow
 export enum Variants {

@@ -1,7 +1,5 @@
 import React, { memo, useState } from "react"
 import { Circle, Ellipse, Line, Rect } from "react-konva"
-import { LineJoin, LineCap } from "konva/types/Shape"
-import { LineConfig } from "konva/types/shapes/Line"
 import {
     ERASED_OPACITY,
     ERASER_WIDTH,
@@ -13,10 +11,14 @@ import {
 } from "consts"
 import { useCustomSelector } from "redux/hooks"
 import { LiveStroke, Point, Stroke, ToolType } from "drawing/stroke/types"
+import { LineCap, LineJoin } from "konva/lib/Shape"
+import { LineConfig } from "konva/lib/shapes/Line"
 
 interface StrokeShapeProps {
     stroke: Stroke | LiveStroke
 }
+
+type CustomLineConfig = LineConfig & { points: number[] }
 
 /**
  * Super component implementing all stroke types and their visualization in the canvas
@@ -82,7 +84,7 @@ export const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
 // Use LineConfig since it requires points prop
 const getShape = (
     stroke: Stroke | LiveStroke,
-    shapeProps: LineConfig
+    shapeProps: CustomLineConfig
 ): JSX.Element => {
     switch (stroke.type) {
         case ToolType.Eraser: {

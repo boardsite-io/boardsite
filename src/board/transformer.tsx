@@ -1,7 +1,5 @@
 import React, { useRef } from "react"
 import { Transformer } from "react-konva"
-import { Box } from "konva/types/shapes/Transformer"
-import { Node, NodeConfig } from "konva/types/Node"
 import { createSelector } from "reselect"
 import {
     TR_BORDER_STROKE,
@@ -14,6 +12,8 @@ import {
 import { useCustomSelector } from "redux/hooks"
 import store from "redux/store"
 import { RootState } from "redux/types"
+import { Box } from "konva/lib/shapes/Transformer"
+import { Node, NodeConfig } from "konva/lib/Node"
 import { TrNodesType, TrRefType } from "../types"
 import { handleUpdateStrokes } from "../drawing/handlers"
 import { Stroke } from "../drawing/stroke/types"
@@ -58,7 +58,6 @@ const StrokeTransformer = (): JSX.Element => {
 
     const onDragEnd = () => {
         updateSelectedStrokes()
-        trRef.current?.forceUpdate()
     }
 
     const onTransformEnd = () => {
