@@ -2,7 +2,7 @@
 import { DOC_SCALE } from "consts"
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf"
 // import pdfjsWorker from "pdfjs-dist/es5/build/pdf.worker.entry"
-import { RenderParameters } from "pdfjs-dist/types/src/display/api"
+import { RenderParameters } from "pdfjs-dist/types/display/api"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const pdfjsWorker: any = require("pdfjs-dist/legacy/build/pdf.worker.entry")
@@ -12,6 +12,8 @@ pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 export async function getPDFfromForm(file: File): Promise<Uint8Array> {
     const fileReader = new FileReader()
     const p = new Promise<Uint8Array>((resolve) => {
+        // eslint-disable-next-line prettier/prettier
+        // eslint-disable-next-line func-names
         fileReader.onload = function () {
             resolve(new Uint8Array(this.result as ArrayBuffer))
         }
