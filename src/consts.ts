@@ -74,7 +74,6 @@ export const enum sizePreset {
     A4_PORTRAIT,
     Square,
 }
-
 export const pageSize = {
     [sizePreset.A4_LANDSCAPE]: { width: 620, height: 877 },
     [sizePreset.A4_PORTRAIT]: { width: 877, height: 620 },
