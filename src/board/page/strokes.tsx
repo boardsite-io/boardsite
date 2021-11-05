@@ -3,7 +3,7 @@ import { Group } from "react-konva"
 import store from "redux/store"
 import { useCustomSelector } from "redux/hooks"
 import { StrokeShape } from "../stroke/shape"
-import { PageProps } from "./types"
+import { PageProps } from "./index.types"
 
 const Strokes: React.FC<PageProps> = ({ pageId, pageSize }) => {
     // pageId might not be valid anymore, exit then

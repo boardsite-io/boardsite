@@ -7,7 +7,7 @@ import { useCustomSelector } from "redux/hooks"
 import store from "redux/store"
 import { handleLoadDocument } from "drawing/handlers"
 import { isConnected } from "api/websocket"
-import { PageProps } from "./types"
+import { PageProps } from "./index.types"
 import PageBoundary from "./boundary"
 
 export default memo<PageProps>(({ pageId, pageSize }) => {

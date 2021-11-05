@@ -8,7 +8,7 @@ import store from "redux/store"
 import * as actions from "drawing/stroke/actions"
 import { SET_ISMOUSEDOWN } from "redux/drawing/drawing"
 import { useCustomSelector } from "redux/hooks"
-import { PageProps } from "./types"
+import { PageProps } from "./index.types"
 
 const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
     const { isMouseDown } = useCustomSelector((state) => state.drawing)
