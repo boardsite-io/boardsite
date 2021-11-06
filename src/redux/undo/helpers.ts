@@ -1,43 +1,38 @@
 import { Stroke } from "drawing/stroke/types"
-import { eraseStrokes, isConnected, sendStrokes } from "../api/websocket"
-import {
-    ADD_STROKES,
-    ERASE_STROKES,
-    UPDATE_STROKES,
-} from "../redux/board/board"
-import { SET_TR_NODES } from "../redux/drawing/drawing"
-import store from "../redux/store"
-
-interface DrawAction {
-    strokes: Stroke[]
-    handle: (stroke: Stroke[], isRedoable: boolean, stack: DrawAction[]) => void
-}
-
-const undoStack: DrawAction[] = []
-const redoStack: DrawAction[] = []
+import { eraseStrokes, isConnected, sendStrokes } from "../../api/websocket"
+import { ADD_STROKES, ERASE_STROKES, UPDATE_STROKES } from "../board/board"
+import { SET_TR_NODES } from "../drawing/drawing"
+import store from "../store"
+import { DrawAction, REDO_POP, REDO_PUSH, UNDO_POP, UNDO_PUSH } from "./undo"
 
 export function undo(): void {
-    const undoStroke = undoStack.pop()
+    const undoStroke = store.getState().undo.undoStack.slice().pop()
+    store.dispatch(UNDO_POP())
     if (undoStroke) {
-        undoStroke.handle(undoStroke.strokes, true, redoStack)
+        undoStroke.handle(undoStroke.strokes, true, false)
     }
 }
 
 export function redo(): void {
-    const redoStroke = redoStack.pop()
+    const redoStroke = store.getState().undo.redoStack.slice().pop()
+    store.dispatch(REDO_POP())
     if (redoStroke) {
-        redoStroke.handle(redoStroke.strokes, true, undoStack)
+        redoStroke.handle(redoStroke.strokes, true, true)
     }
 }
+
+const dispatchStackPush = (forUndo: boolean, payload: DrawAction) =>
+    forUndo
+        ? store.dispatch(UNDO_PUSH(payload))
+        : store.dispatch(REDO_PUSH(payload))
 
 export function addStrokes(
     strokes: Stroke[],
     isRedoable = true,
-    stack = undoStack
+    forUndo = true
 ): void {
     if (isRedoable) {
-        // Add to UndoStack
-        stack.push({
+        dispatchStackPush(forUndo, {
             strokes,
             handle: deleteStrokes,
         })
@@ -53,11 +48,10 @@ export function addStrokes(
 export function deleteStrokes(
     strokes: Stroke[],
     isRedoable = true,
-    stack = undoStack
+    forUndo = true
 ): void {
     if (isRedoable) {
-        // Add to UndoStack
-        stack.push({
+        dispatchStackPush(forUndo, {
             // reference the delete stroke for redo
             strokes: strokes.map(
                 (s) =>
@@ -79,11 +73,10 @@ export function deleteStrokes(
 export function updateStrokes(
     strokes: Stroke[],
     isRedoable = true,
-    stack = undoStack
+    forUndo = true
 ): void {
     if (isRedoable) {
-        // Add to UndoStack
-        stack.push({
+        dispatchStackPush(forUndo, {
             strokes: strokes
                 .map((s) => {
                     // save values of the current stroke

@@ -20,16 +20,16 @@ import {
 } from "api/websocket"
 import { pageType, PIXEL_RATIO } from "consts"
 import store from "redux/store"
-import { PageMeta } from "types"
-import { toPDF } from "./io"
-import { BoardPage } from "./page"
 import {
     addStrokes,
     deleteStrokes,
     redo,
     undo,
     updateStrokes,
-} from "./undoredo"
+} from "redux/undo/helpers"
+import { PageMeta } from "types"
+import { toPDF } from "./io"
+import { BoardPage } from "./page"
 import { getPDFfromForm, PDFtoImageData } from "./document"
 
 export function handleAddPageOver(): void {
