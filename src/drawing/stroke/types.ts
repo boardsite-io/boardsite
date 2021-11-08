@@ -1,4 +1,4 @@
-import { ShapeConfig } from "konva/types/Shape"
+import { ShapeConfig } from "konva/lib/Shape"
 import { Polygon } from "sat"
 
 export type Hitbox = {

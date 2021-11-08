@@ -1,13 +1,13 @@
 import React from "react"
 import { Rect } from "react-konva"
-import { KonvaEventObject } from "konva/types/Node"
-import { Stage } from "konva/types/Stage"
-import { Vector2d } from "konva/types/types"
+import { Stage } from "konva/lib/Stage"
 import { ToolType } from "drawing/stroke/types"
 import store from "redux/store"
 import * as actions from "drawing/stroke/actions"
 import { SET_ISMOUSEDOWN } from "redux/drawing/drawing"
 import { useCustomSelector } from "redux/hooks"
+import { KonvaEventObject } from "konva/lib/Node"
+import { Vector2d } from "konva/lib/types"
 import { PageProps } from "./types"
 
 const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {

@@ -1,8 +1,8 @@
 import { nanoid } from "@reduxjs/toolkit"
-import { Shape, ShapeConfig } from "konva/types/Shape"
-import { Context } from "konva/types/Context"
 import { assign, pick, keys } from "lodash"
 import { pageSize, pageType, sizePreset } from "consts"
+import { Context } from "konva/lib/Context"
+import { Shape, ShapeConfig } from "konva/lib/Shape"
 import { Page, PageMeta, PageSettings } from "../types"
 import { StrokeMap } from "./stroke/types"
 

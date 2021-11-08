@@ -1,6 +1,6 @@
 import { Image } from "react-konva"
 import React, { memo, useEffect, useRef, useState } from "react"
-import * as types from "konva/types/shapes/Image"
+import * as types from "konva/lib/shapes/Image"
 import { DOC_SCALE, pageType } from "consts"
 import { pageBackground } from "drawing/page"
 import { useCustomSelector } from "redux/hooks"
