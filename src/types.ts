@@ -46,5 +46,4 @@ export interface PageMeta extends PageSize {
     }
 }
 
-export type TrRefType = React.RefObject<Transformer>
 export type TrNodesType = Node<NodeConfig>[]

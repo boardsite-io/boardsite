@@ -85,7 +85,6 @@ export function getSelectedShapes(
     e.target
         .getParent()
         ?.find(`.${selection.pageId}`)
-        .toArray()
         .forEach((element: Node<NodeConfig>) => {
             if (selectedIds[element.attrs.id]) {
                 selectedShapes.push(element)
