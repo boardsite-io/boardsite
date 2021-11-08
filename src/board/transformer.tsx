@@ -61,6 +61,7 @@ const StrokeTransformer = (): JSX.Element => {
 
     const onDragEnd = () => {
         updateSelectedStrokes()
+        trRef.current?.forceUpdate()
     }
 
     const onTransformEnd = () => {
