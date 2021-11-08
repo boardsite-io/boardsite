@@ -10,7 +10,7 @@ import {
     sizePreset,
 } from "consts"
 import { BoardStroke } from "drawing/stroke/stroke"
-import { Point } from "drawing/stroke/types"
+import { Point, Stroke } from "drawing/stroke/types"
 import { PageCollection, PageSettings } from "types"
 import { pick, keys, assign, cloneDeep } from "lodash"
 import { BoardPage } from "drawing/page"
@@ -38,12 +38,25 @@ export interface BoardState {
     documentSrc: URL | string | Uint8Array
     pageSettings: PageSettings
     view: BoardView
+    undoStack?: BoardAction[]
+    redoStack?: BoardAction[]
 
     serialize?(): SerializedBoardState
     deserialize?(parsed: SerializedBoardState): BoardState
 }
 
 export type SerializedBoardState = BoardState & { version?: string }
+
+export interface BoardAction {
+    strokes: Stroke[]
+    handleFunc: (
+        state: BoardState,
+        strokes: Stroke[],
+        isRedoable?: boolean,
+        stack?: BoardAction[]
+    ) => void
+    sessionHandleFunc?: () => void
+}
 
 export const newState = (state?: BoardState): BoardState => ({
     currentPageIndex: DEFAULT_CURRENT_PAGE_INDEX,
@@ -64,6 +77,8 @@ export const newState = (state?: BoardState): BoardState => ({
         stageY: DEFAULT_STAGE_Y,
         stageScale: DEFAULT_STAGE_SCALE,
     },
+    undoStack: [],
+    redoStack: [],
 
     serialize(): SerializedBoardState {
         // clone to not mutate current state
@@ -80,6 +95,10 @@ export const newState = (state?: BoardState): BoardState => ({
 
         delete stateCopy.serialize
         delete stateCopy.deserialize
+
+        // dont save undo redo actions
+        delete stateCopy.undoStack
+        delete stateCopy.redoStack
 
         return { version: boardVersion, ...stateCopy }
     },

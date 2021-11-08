@@ -9,7 +9,7 @@ import {
     SET_TR_NODES,
     SET_ERASED_STROKES,
 } from "redux/drawing/drawing"
-import { handleAddStroke, handleDeleteStrokes } from "../handlers"
+import { handleAddStrokes, handleDeleteStrokes } from "../handlers"
 import { LiveStroke, Point, ToolType } from "./types"
 import { getSelectedShapes } from "./hitbox"
 
@@ -93,7 +93,7 @@ export async function registerLiveStroke(
             break
         }
         default:
-            handleAddStroke(stroke)
+            handleAddStrokes(stroke)
     }
 
     // notify the livestroke renderer

@@ -5,10 +5,10 @@ import { useCustomSelector } from "redux/hooks"
 
 const UndoRedo: React.FC = () => {
     const disableUndoStack = useCustomSelector(
-        (state) => state.undo.undoStack.length === 0
+        (state) => state.board.undoStack?.length === 0
     )
     const disableRedoStack = useCustomSelector(
-        (state) => state.undo.redoStack.length === 0
+        (state) => state.board.redoStack?.length === 0
     )
     return (
         <>

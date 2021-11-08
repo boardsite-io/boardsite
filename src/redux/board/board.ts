@@ -8,6 +8,13 @@ import {
 } from "consts"
 import { Page } from "types"
 import {
+    addStrokes,
+    deleteStrokes,
+    redo,
+    undo,
+    updateStrokes,
+} from "./undoredo"
+import {
     centerView,
     detectPageChange,
     fitToPage,
@@ -94,42 +101,35 @@ const boardSlice = createSlice({
 
         // Add strokes to collection
         ADD_STROKES: (state, action) => {
-            const strokes = action.payload
+            const { strokes, isRedoable } = action.payload
             strokes.sort((a: Stroke, b: Stroke) => a.id > b.id)
-            strokes.forEach((s: Stroke) => {
-                const page = state.pageCollection[s.pageId]
-                if (page) {
-                    page.strokes[s.id] = s
-                }
-            })
+            addStrokes(state, strokes, isRedoable)
         },
 
         // Erase strokes from collection
         ERASE_STROKES(state, action) {
-            const strokes: Stroke[] = action.payload
-            strokes.forEach(({ id, pageId }) => {
-                const page = state.pageCollection[pageId]
-                if (page) {
-                    delete page.strokes[id]
-                }
-            })
+            const { strokes, isRedoable } = action.payload
+            deleteStrokes(state, strokes, isRedoable)
         },
 
         // Update stroke position after dragging
         UPDATE_STROKES(state, action) {
-            const strokes: Stroke[] = action.payload
-            strokes.forEach(({ id, pageId, x, y, scaleX, scaleY }) => {
-                const stroke = state.pageCollection[pageId]?.strokes[
-                    id
-                ] as Stroke
-                stroke.update({ x, y }, { x: scaleX, y: scaleY })
-            })
+            const { strokes, isRedoable } = action.payload
+            updateStrokes(state, strokes, isRedoable)
         },
 
         SET_PDF: (state, action) => {
             const { documentImages, documentSrc } = action.payload
             state.documentImages = documentImages
             state.documentSrc = documentSrc
+        },
+
+        UNDO_ACTION: (state) => {
+            undo(state)
+        },
+
+        REDO_ACTION: (state) => {
+            redo(state)
         },
 
         JUMP_TO_NEXT_PAGE: (state) => {
@@ -253,6 +253,8 @@ export const {
     ERASE_STROKES,
     UPDATE_STROKES,
     SET_PDF,
+    UNDO_ACTION,
+    REDO_ACTION,
     CLEAR_DOCS,
     SET_PAGE_BACKGROUND,
     SET_PAGE_SIZE,

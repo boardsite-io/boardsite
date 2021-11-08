@@ -9,6 +9,11 @@ import {
     INITIAL_VIEW,
     SET_PDF,
     ADD_PAGE,
+    ADD_STROKES,
+    UPDATE_STROKES,
+    ERASE_STROKES,
+    UNDO_ACTION,
+    REDO_ACTION,
 } from "redux/board/board"
 import {
     addPagesSession,
@@ -17,16 +22,12 @@ import {
     isConnected,
     addAttachmentSession,
     getAttachmentSession,
+    sendStrokes,
+    eraseStrokes,
 } from "api/websocket"
 import { pageType, PIXEL_RATIO } from "consts"
+import { SET_TR_NODES } from "redux/drawing/drawing"
 import store from "redux/store"
-import {
-    addStrokes,
-    deleteStrokes,
-    redo,
-    undo,
-    updateStrokes,
-} from "redux/undo/helpers"
 import { PageMeta } from "types"
 import { toPDF } from "./io"
 import { BoardPage } from "./page"
@@ -83,24 +84,44 @@ export function handleDeleteAllPages(): void {
     }
 }
 
-export function handleAddStroke(stroke: Stroke): void {
-    addStrokes([stroke])
+export function handleAddStrokes(...strokes: Stroke[]): void {
+    store.dispatch(ADD_STROKES({ strokes, isRedoable: true }))
+    if (isConnected()) {
+        // relay stroke in session
+        sendStrokes(strokes)
+    }
 }
 
-export function handleUpdateStrokes(strokes: Stroke[]): void {
-    updateStrokes(strokes)
+export function handleUpdateStrokes(...strokes: Stroke[]): void {
+    // if (isConnected()) {
+    //     // send updated stroke
+    //     sendStrokes(
+    //         strokes.map(
+    //             (s) =>
+    //                 store.getState().board.pageCollection[s.pageId]?.strokes[
+    //                     s.id
+    //                 ]
+    //         )
+    //     )
+    // }
+    store.dispatch(UPDATE_STROKES({ strokes, isRedoable: true }))
 }
 
 export function handleDeleteStrokes(strokes: Stroke[]): void {
-    deleteStrokes(strokes)
+    // remove selection to prevent undefined refs in transformer
+    store.dispatch(SET_TR_NODES([]))
+    store.dispatch(ERASE_STROKES({ strokes, isRedoable: true }))
+    if (isConnected()) {
+        eraseStrokes(strokes)
+    }
 }
 
 export function handleUndo(): void {
-    undo()
+    store.dispatch(UNDO_ACTION())
 }
 
 export function handleRedo(): void {
-    redo()
+    store.dispatch(REDO_ACTION())
 }
 
 export function handleChangePageBackground(): void {

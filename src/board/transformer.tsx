@@ -53,7 +53,7 @@ const StrokeTransformer = (): JSX.Element => {
                     y: stroke.attrs.y,
                 } as Stroke)
         )
-        handleUpdateStrokes(strokes)
+        handleUpdateStrokes(...strokes)
     }
 
     const onDragEnd = () => {
