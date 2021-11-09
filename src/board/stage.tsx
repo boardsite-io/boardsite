@@ -1,8 +1,6 @@
 import React, { useEffect } from "react"
 import { ReactReduxContext } from "react-redux"
 import { Stage } from "react-konva"
-import { Vector2d } from "konva/types/types"
-import { KonvaEventObject } from "konva/types/Node"
 import { ToolType } from "drawing/stroke/types"
 import {
     RESIZE_DEBOUNCE,
@@ -22,6 +20,8 @@ import {
 import store from "redux/store"
 import { useCustomSelector } from "redux/hooks"
 import { debounce } from "lodash"
+import { KonvaEventObject } from "konva/lib/Node"
+import { Vector2d } from "konva/lib/types"
 import Content from "./content"
 
 const BoardStage: React.FC = () => {

@@ -1,4 +1,4 @@
-import { KonvaEventObject, Node, NodeConfig } from "konva/types/Node"
+import { KonvaEventObject, Node, NodeConfig } from "konva/lib/Node"
 import { Vector, Polygon, Box, testPolygonPolygon } from "sat"
 import { Stroke, Scale, StrokeMap } from "./types"
 
@@ -85,7 +85,6 @@ export function getSelectedShapes(
     e.target
         .getParent()
         ?.find(`.${selection.pageId}`)
-        .toArray()
         .forEach((element: Node<NodeConfig>) => {
             if (selectedIds[element.attrs.id]) {
                 selectedShapes.push(element)

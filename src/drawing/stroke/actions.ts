@@ -1,4 +1,3 @@
-import { KonvaEventObject } from "konva/types/Node"
 import { PageMeta } from "types"
 import store from "redux/store"
 import {
@@ -9,6 +8,7 @@ import {
     SET_TR_NODES,
     SET_ERASED_STROKES,
 } from "redux/drawing/drawing"
+import { KonvaEventObject } from "konva/lib/Node"
 import { handleAddStrokes, handleDeleteStrokes } from "../handlers"
 import { LiveStroke, Point, ToolType } from "./types"
 import { getSelectedShapes } from "./hitbox"

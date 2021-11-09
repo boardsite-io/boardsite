@@ -1,7 +1,5 @@
 import React, { useRef } from "react"
 import { Transformer } from "react-konva"
-import { Box } from "konva/types/shapes/Transformer"
-import { Node, NodeConfig } from "konva/types/Node"
 import { createSelector } from "reselect"
 import {
     TR_BORDER_STROKE,
@@ -14,12 +12,17 @@ import {
 import { useCustomSelector } from "redux/hooks"
 import store from "redux/store"
 import { RootState } from "redux/types"
-import { TrNodesType, TrRefType } from "../types"
+import {
+    Box,
+    Transformer as TransformerType,
+} from "konva/lib/shapes/Transformer"
+import { Node, NodeConfig } from "konva/lib/Node"
+import { TrNodesType } from "../types"
 import { handleUpdateStrokes } from "../drawing/handlers"
 import { Stroke } from "../drawing/stroke/types"
 
 const StrokeTransformer = (): JSX.Element => {
-    const trRef: TrRefType = useRef(null)
+    const trRef: React.RefObject<TransformerType> = useRef(null)
 
     // unselect transformer selection when change tool
     const trSelector = createSelector(
