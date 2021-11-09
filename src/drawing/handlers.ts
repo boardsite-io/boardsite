@@ -9,6 +9,11 @@ import {
     INITIAL_VIEW,
     SET_PDF,
     ADD_PAGE,
+    ADD_STROKES,
+    UPDATE_STROKES,
+    ERASE_STROKES,
+    UNDO_ACTION,
+    REDO_ACTION,
 } from "redux/board/board"
 import {
     addPagesSession,
@@ -17,19 +22,18 @@ import {
     isConnected,
     addAttachmentSession,
     getAttachmentSession,
+    sendStrokes,
+    eraseStrokes,
+    getUserId,
+    getSocket,
 } from "api/websocket"
 import { pageType, PIXEL_RATIO } from "consts"
+import { SET_TR_NODES } from "redux/drawing/drawing"
+import { StrokeAction } from "redux/board/state"
 import store from "redux/store"
 import { PageMeta } from "types"
 import { toPDF } from "./io"
 import { BoardPage } from "./page"
-import {
-    addStrokes,
-    deleteStrokes,
-    redo,
-    undo,
-    updateStrokes,
-} from "./undoredo"
 import { getPDFfromForm, PDFtoImageData } from "./document"
 
 export function handleAddPageOver(): void {
@@ -83,24 +87,64 @@ export function handleDeleteAllPages(): void {
     }
 }
 
-export function handleAddStroke(stroke: Stroke): void {
-    addStrokes([stroke])
+export function handleAddStrokes(...strokes: Stroke[]): void {
+    const payload: StrokeAction = {
+        strokes,
+        isRedoable: true,
+    }
+
+    if (isConnected()) {
+        const ws = getSocket()
+        const userId = getUserId()
+        payload.sessionHandler = () => sendStrokes(ws, userId, ...strokes)
+        payload.sessionUndoHandler = () => eraseStrokes(ws, userId, ...strokes)
+    }
+
+    store.dispatch(ADD_STROKES(payload))
 }
 
-export function handleUpdateStrokes(strokes: Stroke[]): void {
-    updateStrokes(strokes)
+export function handleDeleteStrokes(...strokes: Stroke[]): void {
+    const payload: StrokeAction = {
+        strokes,
+        isRedoable: true,
+    }
+
+    if (isConnected()) {
+        const ws = getSocket()
+        const userId = getUserId()
+        payload.sessionHandler = () => eraseStrokes(ws, userId, ...strokes)
+        payload.sessionUndoHandler = () => sendStrokes(ws, userId, ...strokes)
+    }
+
+    // remove selection to prevent undefined refs in transformer
+    store.dispatch(SET_TR_NODES([]))
+    store.dispatch(ERASE_STROKES(payload))
 }
 
-export function handleDeleteStrokes(strokes: Stroke[]): void {
-    deleteStrokes(strokes)
+export function handleUpdateStrokes(...strokes: Stroke[]): void {
+    const payload: StrokeAction = {
+        strokes,
+        isRedoable: true,
+    }
+
+    if (isConnected()) {
+        const ws = getSocket()
+        const userId = getUserId()
+        payload.sessionHandler = (...updates: Stroke[]) =>
+            sendStrokes(ws, userId, ...updates)
+        payload.sessionUndoHandler = (...updates: Stroke[]) =>
+            sendStrokes(ws, userId, ...updates)
+    }
+
+    store.dispatch(UPDATE_STROKES(payload))
 }
 
 export function handleUndo(): void {
-    undo()
+    store.dispatch(UNDO_ACTION())
 }
 
 export function handleRedo(): void {
-    redo()
+    store.dispatch(REDO_ACTION())
 }
 
 export function handleChangePageBackground(): void {

@@ -1,7 +1,7 @@
 import { Rect } from "react-konva"
 import React, { useEffect, useRef } from "react"
 import * as types from "konva/lib/shapes/Rect"
-import { PageProps } from "./types"
+import { PageProps } from "./index.types"
 
 const PageBoundary: React.FC<PageProps> = ({ pageSize }) => {
     const ref = useRef<types.Rect>(null)

@@ -8,7 +8,7 @@ import { SET_ISMOUSEDOWN } from "redux/drawing/drawing"
 import { useCustomSelector } from "redux/hooks"
 import { KonvaEventObject } from "konva/lib/Node"
 import { Vector2d } from "konva/lib/types"
-import { PageProps } from "./types"
+import { PageProps } from "./index.types"
 
 const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
     const { isMouseDown } = useCustomSelector((state) => state.drawing)

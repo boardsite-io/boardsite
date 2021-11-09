@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components"
 
 interface Props {
+    $deactivated?: boolean
     $active?: boolean
     $background?: string
 }
@@ -28,6 +29,7 @@ export const StyledIconButton = styled.button<Props>`
     }
 
     ${({ $active }) => ($active ? active : inactive)};
+    ${({ $deactivated }) => ($deactivated ? deactivated : null)};
 `
 
 const noBackground = css`
@@ -51,5 +53,11 @@ const inactive = css`
         svg {
             transform: var(--button-hover-transform);
         }
+    }
+`
+const deactivated = css`
+    cursor: not-allowed;
+    svg {
+        stroke: var(--color2);
     }
 `

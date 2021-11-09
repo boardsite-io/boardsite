@@ -8,6 +8,14 @@ import {
 } from "consts"
 import { Page } from "types"
 import {
+    addAction,
+    addStrokes,
+    deleteStrokes,
+    redoAction,
+    undoAction,
+    updateStrokes,
+} from "./undoredo"
+import {
     centerView,
     detectPageChange,
     fitToPage,
@@ -94,42 +102,84 @@ const boardSlice = createSlice({
 
         // Add strokes to collection
         ADD_STROKES: (state, action) => {
-            const strokes = action.payload
+            const { strokes, isRedoable, sessionHandler, sessionUndoHandler } =
+                action.payload
+
             strokes.sort((a: Stroke, b: Stroke) => a.id > b.id)
-            strokes.forEach((s: Stroke) => {
-                const page = state.pageCollection[s.pageId]
-                if (page) {
-                    page.strokes[s.id] = s
-                }
-            })
+
+            const handler = (boardState: BoardState) => {
+                addStrokes(boardState, ...strokes)
+                sessionHandler?.()
+            }
+            const undoHandler = (boardState: BoardState) => {
+                deleteStrokes(boardState, ...strokes)
+                sessionUndoHandler?.()
+            }
+            addAction(handler, undoHandler, state, state.undoStack, isRedoable)
         },
 
         // Erase strokes from collection
         ERASE_STROKES(state, action) {
-            const strokes: Stroke[] = action.payload
-            strokes.forEach(({ id, pageId }) => {
-                const page = state.pageCollection[pageId]
-                if (page) {
-                    delete page.strokes[id]
-                }
-            })
+            const { strokes, isRedoable, sessionHandler, sessionUndoHandler } =
+                action.payload
+
+            const handler = (boardState: BoardState) => {
+                deleteStrokes(boardState, ...strokes)
+                sessionHandler?.()
+            }
+            const undoHandler = (boardState: BoardState) => {
+                addStrokes(boardState, ...strokes)
+                sessionUndoHandler?.()
+            }
+            addAction(handler, undoHandler, state, state.undoStack, isRedoable)
         },
 
         // Update stroke position after dragging
         UPDATE_STROKES(state, action) {
-            const strokes: Stroke[] = action.payload
-            strokes.forEach(({ id, pageId, x, y, scaleX, scaleY }) => {
-                const stroke = state.pageCollection[pageId]?.strokes[
-                    id
-                ] as Stroke
-                stroke.update({ x, y }, { x: scaleX, y: scaleY })
-            })
+            const { strokes, isRedoable, sessionHandler, sessionUndoHandler } =
+                action.payload
+
+            const copy = strokes
+                .map((s: Stroke) => {
+                    // save values of the current stroke
+                    const cur = state.pageCollection[s.pageId]?.strokes[s.id]
+                    if (cur) {
+                        return {
+                            id: s.id,
+                            pageId: s.pageId,
+                            x: cur.x,
+                            y: cur.y,
+                            scaleX: cur.scaleX,
+                            scaleY: cur.scaleY,
+                        }
+                    }
+                    return undefined
+                })
+                .filter((s: Stroke) => s !== undefined) as Stroke[]
+
+            const handler = (boardState: BoardState) => {
+                const updated = updateStrokes(boardState, ...strokes)
+                sessionHandler?.(...updated)
+            }
+            const undoHandler = (boardState: BoardState) => {
+                const updated = updateStrokes(boardState, ...copy)
+                sessionUndoHandler?.(...updated)
+            }
+            addAction(handler, undoHandler, state, state.undoStack, isRedoable)
         },
 
         SET_PDF: (state, action) => {
             const { documentImages, documentSrc } = action.payload
             state.documentImages = documentImages
             state.documentSrc = documentSrc
+        },
+
+        UNDO_ACTION: (state) => {
+            undoAction(state)
+        },
+
+        REDO_ACTION: (state) => {
+            redoAction(state)
         },
 
         JUMP_TO_NEXT_PAGE: (state) => {
@@ -253,6 +303,8 @@ export const {
     ERASE_STROKES,
     UPDATE_STROKES,
     SET_PDF,
+    UNDO_ACTION,
+    REDO_ACTION,
     CLEAR_DOCS,
     SET_PAGE_BACKGROUND,
     SET_PAGE_SIZE,
