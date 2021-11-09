@@ -64,13 +64,21 @@ function createWebsocket(
     })
 }
 
-function send(type: MessageType, content: unknown): void {
+export function getSocket(): WebSocket {
+    return store.getState().session.webSocket
+}
+
+function send(
+    ws: WebSocket,
+    type: MessageType,
+    userId: string,
+    content: unknown
+): void {
     const message: Message<typeof content> = {
         type,
-        sender: store.getState().session.user.id,
+        sender: userId,
         content,
     }
-    const ws = store.getState().session.webSocket as WebSocket
     ws.send(JSON.stringify(message))
 }
 
@@ -108,10 +116,10 @@ function receiveStrokes(strokes: Stroke[]) {
     strokes.forEach((stroke) => {
         if (stroke.type > 0) {
             // add stroke, IMPORTANT: create BoardStroke instance
-            store.dispatch(ADD_STROKES([new BoardStroke(stroke)]))
+            store.dispatch(ADD_STROKES({ strokes: [new BoardStroke(stroke)] }))
         } else if (stroke.type === 0) {
             // delete stroke
-            store.dispatch(ERASE_STROKES([stroke]))
+            store.dispatch(ERASE_STROKES({ strokes: [stroke] }))
         }
     })
 }
@@ -182,7 +190,7 @@ export async function joinSession(
         let strokes = await getStrokes(sessionId, pageId)
         // IMPORTANT: create BoardStroke instance
         strokes = strokes.map((stroke) => new BoardStroke(stroke))
-        store.dispatch(ADD_STROKES(strokes))
+        store.dispatch(ADD_STROKES({ strokes }))
     })
 }
 
@@ -192,25 +200,41 @@ export function disconnect(): void {
     store.dispatch(DELETE_ALL_PAGES())
 }
 
-export function sendStrokes(strokes: Stroke[]): void {
+export function sendStrokes(
+    ws: WebSocket,
+    userId: string,
+    ...strokes: Stroke[]
+): void {
     // append the user id to strokes
     send(
+        ws,
         messages.Stroke,
+        userId,
         strokes.map((s) => ({
             ...s.serialize?.(),
-            userId: store.getState().session.user.id,
+            userId,
         }))
     )
 }
 
-export function eraseStrokes(strokes: { id: string; pageId: string }[]): void {
+export function getUserId(): string {
+    return store.getState().session.user.id
+}
+
+export function eraseStrokes(
+    ws: WebSocket,
+    userId: string,
+    ...strokes: { id: string; pageId: string }[]
+): void {
     send(
+        ws,
         messages.Stroke,
+        userId,
         strokes.map((s) => ({
             id: s.id,
             pageId: s.pageId,
             type: ToolType.Eraser,
-            userId: store.getState().session.user.id,
+            userId,
         }))
     )
 }

@@ -48,14 +48,16 @@ export interface BoardState {
 export type SerializedBoardState = BoardState & { version?: string }
 
 export interface BoardAction {
+    // strokes: Stroke[]
+    handleFunc: (boardState: BoardState) => void
+    undoHandleFunc: (boardState: BoardState) => void
+}
+
+export interface StrokeAction {
     strokes: Stroke[]
-    handleFunc: (
-        state: BoardState,
-        strokes: Stroke[],
-        isRedoable?: boolean,
-        stack?: BoardAction[]
-    ) => void
-    sessionHandleFunc?: () => void
+    isRedoable?: boolean
+    sessionHandler?: (...updates: Stroke[]) => void
+    sessionUndoHandler?: (...updates: Stroke[]) => void
 }
 
 export const newState = (state?: BoardState): BoardState => ({

@@ -81,7 +81,7 @@ export async function registerLiveStroke(
             const { erasedStrokes } = store.getState().drawing
             const s = Object.keys(erasedStrokes).map((id) => erasedStrokes[id])
             if (s.length > 0) {
-                handleDeleteStrokes(s)
+                handleDeleteStrokes(...s)
             }
             break
         }

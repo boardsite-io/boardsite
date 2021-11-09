@@ -1,34 +1,51 @@
 import { Stroke } from "drawing/stroke/types"
 import { BoardState, BoardAction } from "./state"
 
-export function undo(state: BoardState): void {
-    const undoStroke = state.undoStack?.pop()
-    if (undoStroke) {
-        undoStroke.handleFunc(state, undoStroke.strokes, true, state.redoStack)
+export function undoAction(state: BoardState): void {
+    const action = state.undoStack?.pop()
+    if (action) {
+        addAction(
+            action.handleFunc,
+            action.undoHandleFunc,
+            state,
+            state.redoStack,
+            true
+        )
     }
 }
 
-export function redo(state: BoardState): void {
-    const redoStroke = state.redoStack?.pop()
-    if (redoStroke) {
-        redoStroke.handleFunc(state, redoStroke.strokes, true, state.undoStack)
+export function redoAction(state: BoardState): void {
+    const action = state.redoStack?.pop()
+    if (action) {
+        addAction(
+            action.handleFunc,
+            action.undoHandleFunc,
+            state,
+            state.undoStack,
+            true
+        )
     }
 }
 
-export function addStrokes(
+export function addAction(
+    handler: (boardState: BoardState) => void,
+    undoHandler: (boardState: BoardState) => void,
     state: BoardState,
-    strokes: Stroke[],
-    isRedoable?: boolean,
-    stack?: BoardAction[]
+    stack?: BoardAction[],
+    isRedoable?: boolean
 ): void {
-    stack = stack ?? state.undoStack ?? []
     if (isRedoable) {
-        stack.push({
-            strokes,
-            handleFunc: deleteStrokes,
+        stack = stack ?? []
+        stack?.push({
+            handleFunc: undoHandler,
+            undoHandleFunc: handler,
         })
     }
 
+    handler(state)
+}
+
+export function addStrokes(state: BoardState, ...strokes: Stroke[]): void {
     strokes.forEach((s: Stroke) => {
         const page = state.pageCollection[s.pageId]
         if (page) {
@@ -37,23 +54,7 @@ export function addStrokes(
     })
 }
 
-export function deleteStrokes(
-    state: BoardState,
-    strokes: Stroke[],
-    isRedoable?: boolean,
-    stack?: BoardAction[]
-): void {
-    stack = stack ?? state.undoStack ?? []
-    if (isRedoable) {
-        stack.push({
-            // reference the delete stroke for redo
-            strokes: strokes.map(
-                (s) => state.pageCollection[s.pageId].strokes[s.id]
-            ),
-            handleFunc: addStrokes,
-        })
-    }
-
+export function deleteStrokes(state: BoardState, ...strokes: Stroke[]): void {
     strokes.forEach(({ id, pageId }) => {
         const page = state.pageCollection[pageId]
         if (page) {
@@ -64,35 +65,11 @@ export function deleteStrokes(
 
 export function updateStrokes(
     state: BoardState,
-    strokes: Stroke[],
-    isRedoable?: boolean,
-    stack?: BoardAction[]
-): void {
-    stack = stack ?? state.undoStack ?? []
-    if (isRedoable) {
-        stack?.push({
-            strokes: strokes
-                .map((s) => {
-                    // save values of the current stroke
-                    const cur = state.pageCollection[s.pageId]?.strokes[s.id]
-                    return cur
-                        ? ({
-                              id: s.id,
-                              pageId: s.pageId,
-                              x: cur.x,
-                              y: cur.y,
-                              scaleX: cur.scaleX,
-                              scaleY: cur.scaleY,
-                          } as Stroke) // make copy to redo update
-                        : undefined
-                })
-                .filter((s) => s !== undefined) as Stroke[], // filter out invalid strokes
-            handleFunc: updateStrokes,
-        })
-    }
-
-    strokes.forEach(({ id, pageId, x, y, scaleX, scaleY }) => {
+    ...strokes: Stroke[]
+): Stroke[] {
+    return strokes.map(({ id, pageId, x, y, scaleX, scaleY }) => {
         const stroke = state.pageCollection[pageId]?.strokes[id]
         stroke.update({ x, y }, { x: scaleX, y: scaleY })
+        return stroke
     })
 }
