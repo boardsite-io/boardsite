@@ -67,9 +67,11 @@ export function updateStrokes(
     state: BoardState,
     ...strokes: Stroke[]
 ): Stroke[] {
-    return strokes.map(({ id, pageId, x, y, scaleX, scaleY }) => {
-        const stroke = state.pageCollection[pageId]?.strokes[id]
-        stroke.update({ x, y }, { x: scaleX, y: scaleY })
-        return stroke
-    })
+    return strokes
+        .map(({ id, pageId, x, y, scaleX, scaleY }) => {
+            const stroke = state.pageCollection[pageId]?.strokes[id]
+            stroke?.update({ x, y }, { x: scaleX, y: scaleY })
+            return stroke
+        })
+        .filter((s) => s !== undefined) as Stroke[]
 }
