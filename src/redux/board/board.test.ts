@@ -69,16 +69,18 @@ describe("boardcontrol reducer", () => {
                         stageScale: DEFAULT_STAGE_SCALE,
                     },
                 },
-                action.UPDATE_STROKES([
-                    {
-                        pageId: "pid1",
-                        id: "strkid1",
-                        x: 1234,
-                        y: 5678,
-                        scaleX: 3.32,
-                        scaleY: 5.34,
-                    },
-                ])
+                action.UPDATE_STROKES({
+                    strokes: [
+                        {
+                            pageId: "pid1",
+                            id: "strkid1",
+                            x: 1234,
+                            y: 5678,
+                            scaleX: 3.32,
+                            scaleY: 5.34,
+                        },
+                    ],
+                })
             )
         ).toHaveProperty("pageCollection.pid1.strokes.strkid1", {
             ...mockBoardStroke1,
@@ -117,12 +119,14 @@ describe("boardcontrol reducer", () => {
                         stageScale: DEFAULT_STAGE_SCALE,
                     },
                 },
-                action.UPDATE_STROKES([
-                    {
-                        pageId: "pid1",
-                        id: "strkid1",
-                    },
-                ])
+                action.UPDATE_STROKES({
+                    strokes: [
+                        {
+                            pageId: "pid1",
+                            id: "strkid1",
+                        },
+                    ],
+                })
             )
         ).toHaveProperty("pageCollection.pid1.strokes.strkid1", {
             ...mockBoardStroke1,

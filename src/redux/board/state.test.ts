@@ -4,12 +4,6 @@ import stateV1 from "./__test__/stateV1.json"
 import { boardVersion, newState } from "./state"
 
 describe("board reducer state", () => {
-    it("should serialize the default state", () => {
-        const got = JSON.stringify(newState().serialize?.())
-        const want = JSON.stringify({ version: boardVersion, ...newState() })
-        expect(got).toEqual(want)
-    })
-
     it("should deserialize an emtpy object and set the defaults", () => {
         const got = newState().deserialize?.({ version: boardVersion } as any)
         const want = newState()
