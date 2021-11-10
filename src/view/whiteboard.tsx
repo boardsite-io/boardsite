@@ -8,7 +8,7 @@ import boardKeyListener from "../board/keylistener"
 import Toolbar from "../menu/toolbar/toolbar"
 import BoardStage from "../board/stage"
 import ViewNav from "../menu/viewnavigation/viewnavigation"
-import { SET_SDIAG } from "../redux/session/session"
+import { SET_SESSION_DIALOG } from "../redux/session/session"
 import { isConnected, pingSession } from "../api/websocket"
 import FavTools from "../menu/favtools/favtools"
 import { useCustomDispatch } from "../redux/hooks"
@@ -26,7 +26,7 @@ const Whiteboard: React.FC = () => {
                     .then(() => {
                         // session ok
                         dispatch(
-                            SET_SDIAG({
+                            SET_SESSION_DIALOG({
                                 open: true,
                                 invalidSid: false,
                                 joinOnly: true,
@@ -37,7 +37,7 @@ const Whiteboard: React.FC = () => {
                     .catch(() => {
                         // session not existing
                         dispatch(
-                            SET_SDIAG({
+                            SET_SESSION_DIALOG({
                                 open: true,
                                 invalidSid: true,
                                 joinOnly: false,

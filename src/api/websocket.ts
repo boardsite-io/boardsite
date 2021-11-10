@@ -16,10 +16,11 @@ import {
     USER_CONNECT,
     USER_DISCONNECT,
 } from "redux/session/session"
+import { User } from "redux/session/session.types"
 import { BoardPage } from "drawing/page"
 import store from "redux/store"
 import { isConnectedState } from "redux/session/helpers"
-import { PageCollection, User } from "types"
+import { PageCollection } from "types"
 import {
     postPages,
     putPages,
@@ -100,11 +101,11 @@ function receive(message: Message<unknown>) {
             break
 
         case messages.UserConnected:
-            store.dispatch(USER_CONNECT(message.content))
+            store.dispatch(USER_CONNECT(message.content as User))
             break
 
         case messages.UserDisconnected:
-            store.dispatch(USER_DISCONNECT(message.content))
+            store.dispatch(USER_DISCONNECT(message.content as User))
             break
 
         default:

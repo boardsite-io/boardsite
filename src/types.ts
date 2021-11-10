@@ -26,12 +26,6 @@ export interface PageCollection {
     [pid: string]: Page
 }
 
-export interface User {
-    id: string
-    alias: string
-    color: string
-}
-
 export type PageBackground = "blank" | "checkered" | "ruled" | "doc"
 
 export interface PageSize {
