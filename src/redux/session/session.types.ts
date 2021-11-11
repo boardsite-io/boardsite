@@ -35,11 +35,6 @@ export type CreateWs = {
 export type UserConnect = User
 export type UserDisconnect = User
 export type SetSessionUsers = ConnectedUsers
-export type SetSessionDialog = {
-    open?: boolean
-    invalidSid?: boolean
-    joinOnly?: boolean
-    sidInput?: string
-}
+export type SetSessionDialog = Partial<SessionDialog> // Partial makes props optional
 export type SetUserAlias = UserAlias
 export type SetApiUrl = URL
