@@ -17,22 +17,21 @@ const Strokes: React.FC<PageProps> = ({ pageId, pageSize }) => {
     )
 
     return (
-        <>
-            <Group
-                {...pageSize}
-                globalCompositeOperation="source-atop"
-                listening={false}>
-                {strokeIds.map((id) => (
-                    <StrokeShape
-                        key={id}
-                        stroke={
-                            store.getState().board.pageCollection[pageId]
-                                ?.strokes[id]
-                        }
-                    />
-                ))}
-            </Group>
-        </>
+        <Group
+            {...pageSize}
+            globalCompositeOperation="source-atop"
+            listening={false}>
+            {strokeIds.map((id) => (
+                <StrokeShape
+                    key={id}
+                    stroke={
+                        store.getState().board.pageCollection[pageId]?.strokes[
+                            id
+                        ]
+                    }
+                />
+            ))}
+        </Group>
     )
 }
 

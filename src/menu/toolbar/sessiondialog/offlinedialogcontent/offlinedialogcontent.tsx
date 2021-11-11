@@ -3,8 +3,8 @@ import { useHistory } from "react-router-dom"
 import { useCustomDispatch, useCustomSelector } from "redux/hooks"
 import store from "redux/store"
 import {
-    SET_SDIAG,
-    CLOSE_SDIAG,
+    SET_SESSION_DIALOG,
+    CLOSE_SESSION_DIALOG,
     SET_USER_ALIAS,
     SET_USER_COLOR,
 } from "redux/session/session"
@@ -28,7 +28,7 @@ const OfflineDialogContent: React.FC = () => {
     const handleCreate = async () => {
         try {
             const sessionId = await newSession()
-            dispatch(SET_SDIAG({ sidInput: sessionId }))
+            dispatch(SET_SESSION_DIALOG({ sidInput: sessionId }))
             await handleJoin()
         } catch (error) {
             // console.log("error")
@@ -43,10 +43,10 @@ const OfflineDialogContent: React.FC = () => {
             await joinSession()
             const { sidInput } = store.getState().session.sessionDialog
             history.push(getSessionPath(sidInput))
-            dispatch(CLOSE_SDIAG())
+            dispatch(CLOSE_SESSION_DIALOG())
         } catch (error) {
             dispatch(
-                SET_SDIAG({
+                SET_SESSION_DIALOG({
                     open: true,
                     invalidSid: true,
                     joinOnly: false,
@@ -60,7 +60,7 @@ const OfflineDialogContent: React.FC = () => {
      * @param {event} e event object
      */
     const handleTextFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(SET_SDIAG({ sidInput: e.target.value }))
+        dispatch(SET_SESSION_DIALOG({ sidInput: e.target.value }))
     }
 
     const handleAliasChange = (e: React.ChangeEvent<HTMLInputElement>) => {
