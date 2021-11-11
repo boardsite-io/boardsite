@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import Konva from "konva"
 import {
     adjectives,
@@ -46,7 +46,7 @@ const sessionSlice = createSlice({
     name: "session",
     initialState: initState,
     reducers: {
-        CREATE_WS: (state, action: CreateWs) => {
+        CREATE_WS: (state, action: PayloadAction<CreateWs>) => {
             const { ws, sessionId, user } = action.payload
             state.webSocket = ws
             state.sessionId = sessionId
@@ -79,18 +79,21 @@ const sessionSlice = createSlice({
         //     const stroke = { ...action.payload, userId: state.user.id }
         //     state.webSocket.send(JSON.stringify([stroke]))
         // },
-        USER_CONNECT: (state, action: UserConnect) => {
+        USER_CONNECT: (state, action: PayloadAction<UserConnect>) => {
             const user = action.payload
             state.connectedUsers[user.id] = user
         },
-        USER_DISCONNECT: (state, action: UserDisconnect) => {
+        USER_DISCONNECT: (state, action: PayloadAction<UserDisconnect>) => {
             const { id } = action.payload
             delete state.connectedUsers[id]
         },
-        SET_SESSION_USERS: (state, action: SetSessionUsers) => {
+        SET_SESSION_USERS: (state, action: PayloadAction<SetSessionUsers>) => {
             state.connectedUsers = action.payload
         },
-        SET_SESSION_DIALOG: (state, action: SetSessionDialog) => {
+        SET_SESSION_DIALOG: (
+            state,
+            action: PayloadAction<SetSessionDialog>
+        ) => {
             state.sessionDialog = { ...state.sessionDialog, ...action.payload }
         },
         CLOSE_SESSION_DIALOG: (state) => {
@@ -101,13 +104,13 @@ const sessionSlice = createSlice({
                 sidInput: "",
             }
         },
-        SET_USER_ALIAS: (state, action: SetUserAlias) => {
+        SET_USER_ALIAS: (state, action: PayloadAction<SetUserAlias>) => {
             state.user.alias = action.payload
         },
         SET_USER_COLOR: (state) => {
             state.user.color = Konva.Util.getRandomColor()
         },
-        SET_API_URL: (state, action: SetApiUrl) => {
+        SET_API_URL: (state, action: PayloadAction<SetApiUrl>) => {
             state.apiURL = action.payload
         },
     },

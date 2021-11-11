@@ -28,32 +28,18 @@ export type ConnectedUsers = {
 
 /* ------- Reducer Action Types ------- */
 export type CreateWs = {
-    payload: {
-        ws: WebSocket
-        sessionId: string
-        user: User
-    }
+    ws: WebSocket
+    sessionId: string
+    user: User
 }
-export type UserConnect = {
-    payload: User
-}
-export type UserDisconnect = {
-    payload: User
-}
-export type SetSessionUsers = {
-    payload: ConnectedUsers
-}
+export type UserConnect = User
+export type UserDisconnect = User
+export type SetSessionUsers = ConnectedUsers
 export type SetSessionDialog = {
-    payload: {
-        open?: boolean
-        invalidSid?: boolean
-        joinOnly?: boolean
-        sidInput?: string
-    }
+    open?: boolean
+    invalidSid?: boolean
+    joinOnly?: boolean
+    sidInput?: string
 }
-export type SetUserAlias = {
-    payload: UserAlias
-}
-export type SetApiUrl = {
-    payload: URL
-}
+export type SetUserAlias = UserAlias
+export type SetApiUrl = URL
