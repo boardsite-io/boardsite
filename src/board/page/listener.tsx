@@ -6,12 +6,13 @@ import store from "redux/store"
 import * as actions from "drawing/stroke/actions"
 import { SET_ISMOUSEDOWN } from "redux/drawing/drawing"
 import { useCustomSelector } from "redux/hooks"
+import { DOC_SCALE } from "consts"
 import { KonvaEventObject } from "konva/lib/Node"
 import { Vector2d } from "konva/lib/types"
 import { PageProps } from "./index.types"
 
 const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
-    const { isMouseDown } = useCustomSelector((state) => state.drawing)
+    const isMouseDown = useCustomSelector((state) => state.drawing.isMouseDown)
 
     const getPointerPositionInStage = (e: KonvaEventObject<MouseEvent>) => {
         const stage = e.target.getStage() as Stage
@@ -24,6 +25,12 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
         if (e.evt.buttons === 2) {
             return
         }
+
+        const { type } = store.getState().drawing.liveStroke
+        if (type === ToolType.Eraser || type === ToolType.Select) {
+            e.target.parent?.clearCache()
+        }
+
         store.dispatch(SET_ISMOUSEDOWN(true))
         const pos = getPointerPositionInStage(e)
         actions.startLiveStroke(pos, pageId)
@@ -49,6 +56,8 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
             return
         } // Ignore reentering
 
+        // e.target.parent?.clearCache()
+
         store.dispatch(SET_ISMOUSEDOWN(false))
 
         // update last position
@@ -57,6 +66,7 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
 
         // register finished stroke
         actions.registerLiveStroke(e)
+        e.target.parent?.cache({ pixelRatio: DOC_SCALE })
     }
 
     const onTouchStart = (e: KonvaEventObject<TouchEvent>) => {
@@ -79,8 +89,8 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
 
     const isValidTouch = (e: KonvaEventObject<TouchEvent>) => {
         e.evt.preventDefault()
-        const touch1 = e.evt.touches[0]
-        const touch2 = e.evt.touches[1]
+        const touch1 = e.evt.touches[0] as Touch & { touchType: string }
+        const touch2 = e.evt.touches[1] as Touch & { touchType: string }
         if (touch1.touchType === undefined) {
             return false
         }

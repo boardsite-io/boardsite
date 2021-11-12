@@ -1,12 +1,12 @@
-import React, { memo } from "react"
+import React, { memo, useEffect, useRef } from "react"
 import { ReactReduxContextValue } from "react-redux"
 import { getPageMeta } from "drawing/stroke/actions"
 import { createSelector } from "reselect"
-import { DEFAULT_PAGE_GAP } from "consts"
+import { DEFAULT_PAGE_GAP, DOC_SCALE } from "consts"
 import { RootState } from "redux/types"
 import { useCustomSelector } from "redux/hooks"
 import { Layer } from "react-konva"
-import { nanoid } from "@reduxjs/toolkit"
+import { Layer as LayerType } from "konva/lib/Layer"
 import StrokeTransformer from "./transformer"
 import Page from "./page"
 import { LiveStrokeShape } from "./stroke/livestroke"
@@ -17,9 +17,16 @@ interface PageLayerProps {
 }
 
 const PageLayer = ({ pageId, relativeIndex }: PageLayerProps) => {
+    const ref = useRef<LayerType>(null)
     const meta = getPageMeta(pageId)
+
+    useEffect(() => {
+        // cache the layer/page by default
+        ref.current?.cache({ pixelRatio: DOC_SCALE })
+    })
+
     return (
-        <Layer key={pageId}>
+        <Layer key={pageId} ref={ref}>
             <Page
                 pageId={pageId}
                 pageSize={{
@@ -53,7 +60,7 @@ const Content = memo<{ value: ReactReduxContextValue }>(() => {
                 (pageId, index) =>
                     pageId && (
                         <PageLayer
-                            key={nanoid()}
+                            key={pageId}
                             pageId={pageId}
                             relativeIndex={index - 1}
                         />

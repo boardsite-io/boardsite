@@ -28,6 +28,9 @@ export default memo<PageProps>(({ pageId, pageSize }) => {
     )
 
     const scheduleCaching = (r: React.RefObject<types.Image>) => {
+        // clear the cache of the layer
+        r.current?.parent?.clearCache()
+
         r.current?.clearCache()
         triggerCache((prev) => prev + 1)
     }
@@ -64,7 +67,7 @@ export default memo<PageProps>(({ pageId, pageSize }) => {
         if (style !== pageType.DOC) {
             ref.current?.cache({ pixelRatio: DOC_SCALE })
         }
-        // setTimeout(() => ref.current?.cache({ pixelRatio: DOC_SCALE }), 500)
+        setTimeout(() => ref.current?.parent?.cache(), 500)
     }, [cache])
 
     return (
