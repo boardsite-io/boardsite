@@ -28,21 +28,6 @@ type CustomLineConfig = LineConfig & { points: number[] }
  */
 export const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
     const [isDragging, setDragging] = useState(false)
-    // Tmp Fix: selector for x,y,scale in order to trigger
-    // a rerender when stroke is updated/moved
-    const strokeSel = useCustomSelector((state) => {
-        const { isDraggable } = state.drawing
-        const s =
-            state.board.pageCollection[stroke.pageId]?.strokes[stroke.id ?? ""]
-        return {
-            isDraggable,
-            x: s?.x,
-            y: s?.y,
-            scaleX: s?.scaleX,
-            scaleY: s?.scaleY,
-        }
-    })
-
     const erasedStrokes = useCustomSelector(
         (state) => state.drawing.erasedStrokes
     )
@@ -55,6 +40,13 @@ export const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
             return ERASED_OPACITY
         }
         return stroke.style.opacity
+    }
+
+    const onDragStart = () => {
+        setDragging(true)
+    }
+    const onDragEnd = () => {
+        setDragging(false)
     }
 
     const shapeProps = {
@@ -70,10 +62,10 @@ export const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
         fill: undefined,
         strokeWidth: stroke.style.width,
         opacity: getOpacity(),
-        draggable: strokeSel.isDraggable ?? false,
-        onDragStart: () => setDragging(true),
-        onDragEnd: () => setDragging(false),
-        listening: true,
+        listening: false,
+        draggable: false,
+        onDragStart,
+        onDragEnd,
         shadowForStrokeEnabled: false, // for performance, see Konva docs
         points: stroke.points, // external supplied points may overwrite stroke.points for e.g. livestroke
     }

@@ -1,6 +1,5 @@
-import { KonvaEventObject, Node, NodeConfig } from "konva/lib/Node"
 import { Vector, Polygon, Box, testPolygonPolygon } from "sat"
-import { Stroke, Scale, StrokeMap } from "./types"
+import { Scale, StrokeMap } from "./types"
 
 export function getHitboxPolygon(
     [x1, y1, x2, y2]: number[],
@@ -55,14 +54,17 @@ export function getSelectionPolygon([x1, y1, x2, y2]: number[]): Polygon {
  */
 export function matchStrokeCollision(
     strokes: StrokeMap,
-    selection: Polygon
+    selectionPolygon: Polygon
 ): StrokeMap {
     const result: StrokeMap = {}
     Object.keys(strokes).forEach((id) => {
         // test each hitbox segment
         for (let i = 0; i < (strokes[id].hitboxes ?? []).length; i += 1) {
             if (
-                testPolygonPolygon((strokes[id].hitboxes ?? [])[i], selection)
+                testPolygonPolygon(
+                    (strokes[id].hitboxes ?? [])[i],
+                    selectionPolygon
+                )
             ) {
                 result[id] = strokes[id]
                 break
@@ -72,23 +74,23 @@ export function matchStrokeCollision(
     return result
 }
 
-export function getSelectedShapes(
-    selection: Stroke, // selection rectangle
-    strokes: StrokeMap,
-    e: KonvaEventObject<MouseEvent>
-): Node<NodeConfig>[] {
-    const selectedIds = matchStrokeCollision(
-        strokes,
-        getSelectionPolygon(selection.points)
-    )
-    const selectedShapes: Node<NodeConfig>[] = []
-    e.target
-        .getParent()
-        ?.find(`.${selection.pageId}`)
-        .forEach((element: Node<NodeConfig>) => {
-            if (selectedIds[element.attrs.id]) {
-                selectedShapes.push(element)
-            }
-        })
-    return selectedShapes
-}
+// export function getSelectedShapes(
+//     selection: Stroke, // selection rectangle
+//     strokes: StrokeMap,
+//     e: KonvaEventObject<MouseEvent>
+// ): Node<NodeConfig>[] {
+//     const selectedIds = matchStrokeCollision(
+//         strokes,
+//         getSelectionPolygon(selection.points)
+//     )
+//     const selectedShapes: Node<NodeConfig>[] = []
+//     e.target
+//         .getParent()
+//         ?.find(`.${selection.pageId}`)
+//         .forEach((element: Node<NodeConfig>) => {
+//             if (selectedIds[element.attrs.id]) {
+//                 selectedShapes.push(element)
+//             }
+//         })
+//     return selectedShapes
+// }

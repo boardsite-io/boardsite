@@ -7,9 +7,8 @@ import {
     PenIcon,
     SquareIcon,
 } from "components"
-import { SET_TYPE } from "redux/drawing/drawing"
-import store from "redux/store"
 import { ToolType } from "drawing/stroke/types"
+import { handleSetTool } from "drawing/handlers"
 import { StyledShapeTools } from "./shapetools.styled"
 
 const ShapeTools: React.FC = () => {
@@ -24,7 +23,7 @@ const ShapeTools: React.FC = () => {
             <IconButton
                 active={typeSelector === ToolType.Pen}
                 onClick={() => {
-                    store.dispatch(SET_TYPE(ToolType.Pen))
+                    handleSetTool({ type: ToolType.Pen })
                 }}
                 style={
                     typeSelector === ToolType.Pen
@@ -36,7 +35,7 @@ const ShapeTools: React.FC = () => {
             <IconButton
                 active={typeSelector === ToolType.Line}
                 onClick={() => {
-                    store.dispatch(SET_TYPE(ToolType.Line))
+                    handleSetTool({ type: ToolType.Line })
                 }}
                 style={
                     typeSelector === ToolType.Line
@@ -48,7 +47,7 @@ const ShapeTools: React.FC = () => {
             <IconButton
                 active={typeSelector === ToolType.Rectangle}
                 onClick={() => {
-                    store.dispatch(SET_TYPE(ToolType.Rectangle))
+                    handleSetTool({ type: ToolType.Rectangle })
                 }}
                 style={
                     typeSelector === ToolType.Rectangle
@@ -60,7 +59,7 @@ const ShapeTools: React.FC = () => {
             <IconButton
                 active={typeSelector === ToolType.Circle}
                 onClick={() => {
-                    store.dispatch(SET_TYPE(ToolType.Circle))
+                    handleSetTool({ type: ToolType.Circle })
                 }}
                 style={
                     typeSelector === ToolType.Circle

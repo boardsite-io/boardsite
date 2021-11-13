@@ -1,5 +1,5 @@
 import { cloneDeep } from "lodash"
-import { Stroke } from "drawing/stroke/types"
+import { Stroke, Tool } from "drawing/stroke/types"
 import {
     JUMP_TO_NEXT_PAGE,
     CLEAR_PAGE,
@@ -14,6 +14,7 @@ import {
     ERASE_STROKES,
     UNDO_ACTION,
     REDO_ACTION,
+    CLEAR_TRANSFORM,
 } from "redux/board/board"
 import {
     addPagesSession,
@@ -28,13 +29,18 @@ import {
     getSocket,
 } from "api/websocket"
 import { pageType, PIXEL_RATIO } from "consts"
-import { SET_TR_NODES } from "redux/drawing/drawing"
 import { StrokeAction } from "redux/board/state"
 import store from "redux/store"
 import { PageMeta } from "types"
+import { SET_TOOL } from "redux/drawing/drawing"
 import { toPDF } from "./io"
 import { BoardPage } from "./page"
 import { getPDFfromForm, PDFtoImageData } from "./document"
+
+export function handleSetTool(tool: Partial<Tool>): void {
+    store.dispatch(SET_TOOL(tool))
+    store.dispatch(CLEAR_TRANSFORM())
+}
 
 export function handleAddPageOver(): void {
     const page = new BoardPage()
@@ -116,8 +122,6 @@ export function handleDeleteStrokes(...strokes: Stroke[]): void {
         payload.sessionUndoHandler = () => sendStrokes(ws, userId, ...strokes)
     }
 
-    // remove selection to prevent undefined refs in transformer
-    store.dispatch(SET_TR_NODES([]))
     store.dispatch(ERASE_STROKES(payload))
 }
 

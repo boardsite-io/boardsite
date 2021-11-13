@@ -34,13 +34,14 @@ export enum ToolType {
     Pan,
 }
 
+export type ToolStyle = {
+    color: string
+    width: number
+    opacity: number
+}
 export interface Tool {
     type: ToolType
-    style: {
-        color: string
-        width: number
-        opacity: number
-    }
+    style: ToolStyle
 }
 
 export interface BaseStroke extends Tool {

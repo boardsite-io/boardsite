@@ -1,12 +1,9 @@
 import { Tool } from "drawing/stroke/types"
 import { IconButton, MinusIcon, PlusIcon, Popup } from "components"
 import React, { useState } from "react"
-import {
-    REPLACE_FAV_TOOL,
-    REMOVE_FAV_TOOL,
-    SET_TOOL,
-} from "redux/drawing/drawing"
+import { REPLACE_FAV_TOOL, REMOVE_FAV_TOOL } from "redux/drawing/drawing"
 import store from "redux/store"
+import { handleSetTool } from "drawing/handlers"
 import {
     FavToolOptions,
     FavToolWidth,
@@ -25,11 +22,6 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({
     index,
 }) => {
     const [open, setOpen] = useState(false)
-
-    // apply fav tool as setting
-    const setTool = (toolToSet: Tool) => {
-        store.dispatch(SET_TOOL(toolToSet))
-    }
 
     const replaceTool = () => {
         store.dispatch(REPLACE_FAV_TOOL(index))
@@ -55,7 +47,7 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({
 
     const endClick = () => {
         if (timeoutActive) {
-            setTool(tool)
+            handleSetTool(tool)
             timeoutActive = false
         }
         clickActive = false

@@ -1,4 +1,4 @@
-export interface PageProps {
+export type PageProps = {
     pageId: string
     pageSize: {
         x: number

@@ -3,15 +3,18 @@ import store from "redux/store"
 import {
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
-    SET_TYPE,
     SET_ISMOUSEDOWN,
-    SET_TR_NODES,
     SET_ERASED_STROKES,
 } from "redux/drawing/drawing"
 import { KonvaEventObject } from "konva/lib/Node"
-import { handleAddStrokes, handleDeleteStrokes } from "../handlers"
+import { MOVE_SHAPES_TO_DRAG_LAYER } from "redux/board/board"
+import {
+    handleSetTool,
+    handleAddStrokes,
+    handleDeleteStrokes,
+} from "../handlers"
 import { LiveStroke, Point, ToolType } from "./types"
-import { getSelectedShapes } from "./hitbox"
+import { getSelectionPolygon, matchStrokeCollision } from "./hitbox"
 
 let tid: number | NodeJS.Timeout = 0
 
@@ -26,7 +29,7 @@ export function startLiveStroke(point: Point, pageId: string): void {
     // set Line type when mouse hasnt moved for 1 sec
     if (liveStroke.type === ToolType.Pen) {
         tid = setTimeout(() => {
-            store.dispatch(SET_TYPE(ToolType.Line))
+            handleSetTool({ type: ToolType.Line })
         }, 1000)
     }
 }
@@ -88,8 +91,14 @@ export async function registerLiveStroke(
         case ToolType.Select: {
             const { strokes } =
                 store.getState().board.pageCollection[stroke.pageId]
-            const shapes = getSelectedShapes(stroke, strokes, e)
-            store.dispatch(SET_TR_NODES(shapes))
+            const selectedStrokes = matchStrokeCollision(
+                strokes,
+                getSelectionPolygon(stroke.points)
+            )
+
+            store.dispatch(
+                MOVE_SHAPES_TO_DRAG_LAYER({ selectedStrokes, pagePosition })
+            )
             break
         }
         default:
@@ -100,7 +109,7 @@ export async function registerLiveStroke(
     store.dispatch(END_LIVESTROKE())
 
     if (tid !== 0) {
-        store.dispatch(SET_TYPE(ToolType.Pen))
+        handleSetTool({ type: ToolType.Pen })
         clearTimeout(tid as number)
         tid = 0
     }

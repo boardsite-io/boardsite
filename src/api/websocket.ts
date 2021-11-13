@@ -188,10 +188,13 @@ export async function joinSession(
 
     // fetch data from each page
     pageRank.forEach(async (pageId) => {
-        let strokes = await getStrokes(sessionId, pageId)
+        const strokes = await getStrokes(sessionId, pageId)
         // IMPORTANT: create BoardStroke instance
-        strokes = strokes.map((stroke) => new BoardStroke(stroke))
-        store.dispatch(ADD_STROKES({ strokes }))
+        store.dispatch(
+            ADD_STROKES({
+                strokes: strokes.map((stroke) => new BoardStroke(stroke)),
+            })
+        )
     })
 }
 

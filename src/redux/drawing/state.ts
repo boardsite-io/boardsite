@@ -7,7 +7,6 @@ import {
 import { BoardLiveStroke } from "drawing/stroke/livestroke"
 import { StrokeMap, Tool } from "drawing/stroke/types"
 import { pick, keys, assign, cloneDeep } from "lodash"
-import { TrNodesType } from "types"
 
 // version of the board state reducer to allow backward compatibility for stored data
 //
@@ -21,7 +20,6 @@ export interface DrawingState {
     liveStroke: BoardLiveStroke
     liveStrokeUpdate: number
     favTools: Tool[]
-    trNodes: TrNodesType
     erasedStrokes: StrokeMap
 
     serialize?(): SerializedDrawingState
@@ -37,7 +35,6 @@ export const newState = (state?: DrawingState): DrawingState => ({
     liveStroke: new BoardLiveStroke(),
     liveStrokeUpdate: 0,
     favTools: DEFAULT_FAV_TOOLS,
-    trNodes: [],
     erasedStrokes: {},
 
     serialize(): SerializedDrawingState {
@@ -45,7 +42,6 @@ export const newState = (state?: DrawingState): DrawingState => ({
         stateCopy.liveStroke.points = []
         stateCopy.liveStroke.pointsSegments = []
         stateCopy.liveStrokeUpdate = 0
-        stateCopy.trNodes = []
         stateCopy.erasedStrokes = {}
 
         delete stateCopy.serialize

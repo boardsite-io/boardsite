@@ -6,9 +6,6 @@ const drawingSlice = createSlice({
     name: "drawing",
     initialState: newState(),
     reducers: {
-        SET_TR_NODES: (state, action) => {
-            state.trNodes = action.payload
-        },
         REPLACE_FAV_TOOL: (state, action) => {
             const index = action.payload as number
             const tool: Tool = {
@@ -44,10 +41,13 @@ const drawingSlice = createSlice({
         },
         SET_TOOL: (state, action) => {
             const { type, style } = action.payload
-            state.liveStroke.style = { ...style }
-            state.liveStroke.type = type
-            state.isDraggable = type === ToolType.Select
-            state.trNodes = []
+            if (type !== undefined) {
+                state.liveStroke.type = type
+                state.isDraggable = type === ToolType.Select
+            }
+            if (style !== undefined) {
+                state.liveStroke.style = { ...style }
+            }
         },
         SET_COLOR: (state, action) => {
             const color = action.payload
@@ -56,12 +56,6 @@ const drawingSlice = createSlice({
         SET_WIDTH: (state, action) => {
             const width = action.payload
             state.liveStroke.style.width = width
-        },
-        SET_TYPE: (state, action) => {
-            const type = action.payload
-            state.liveStroke.type = type
-            state.isDraggable = type === ToolType.Select
-            state.trNodes = []
         },
         SET_ISMOUSEDOWN: (state, action) => {
             const isMouseDown = action.payload
@@ -94,12 +88,10 @@ export const {
     SET_TOOL,
     SET_COLOR,
     SET_WIDTH,
-    SET_TYPE,
     SET_ISMOUSEDOWN,
     UPDATE_LIVESTROKE,
     END_LIVESTROKE,
     TOGGLE_DIRECTDRAW,
-    SET_TR_NODES,
     SET_ERASED_STROKES,
 } = drawingSlice.actions
 export default drawingSlice.reducer

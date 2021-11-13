@@ -1,6 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit"
-import { pick, keys, assign } from "lodash"
-import { Stroke } from "drawing/stroke/types"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { pick, keys, assign, cloneDeep } from "lodash"
+import { Point, Stroke, StrokeMap } from "drawing/stroke/types"
 import {
     DEFAULT_STAGE_Y,
     ZOOM_IN_BUTTON_SCALE,
@@ -100,6 +100,35 @@ const boardSlice = createSlice({
             state.documentSrc = ""
         },
 
+        CLEAR_TRANSFORM: (state) => {
+            delete state.transformStrokes
+        },
+
+        MOVE_SHAPES_TO_DRAG_LAYER: (
+            state,
+            action: PayloadAction<{
+                selectedStrokes: StrokeMap
+                pagePosition: Point
+            }>
+        ) => {
+            const { selectedStrokes, pagePosition } = action.payload
+            const selectedStrokeIds = Object.keys(selectedStrokes)
+
+            state.transformPagePosition = pagePosition
+            state.transformStrokes = selectedStrokeIds.map((strokeId) => {
+                const { pageId } = selectedStrokes[strokeId]
+                const strokesCopy = cloneDeep<StrokeMap>(
+                    state.pageCollection[pageId].strokes
+                )
+
+                return strokesCopy[strokeId]
+            })
+        },
+
+        UPDATE_TRANSFORM_STROKES: (state, action: PayloadAction<Stroke[]>) => {
+            state.transformStrokes = action.payload
+        },
+
         // Add strokes to collection
         ADD_STROKES: (state, action) => {
             const { strokes, isRedoable, sessionHandler, sessionUndoHandler } =
@@ -115,7 +144,13 @@ const boardSlice = createSlice({
                 deleteStrokes(boardState, ...strokes)
                 sessionUndoHandler?.()
             }
-            addAction(handler, undoHandler, state, state.undoStack, isRedoable)
+            addAction(
+                handler,
+                undoHandler,
+                state as BoardState,
+                state.undoStack,
+                isRedoable
+            )
         },
 
         // Erase strokes from collection
@@ -131,7 +166,13 @@ const boardSlice = createSlice({
                 addStrokes(boardState, ...strokes)
                 sessionUndoHandler?.()
             }
-            addAction(handler, undoHandler, state, state.undoStack, isRedoable)
+            addAction(
+                handler,
+                undoHandler,
+                state as BoardState,
+                state.undoStack,
+                isRedoable
+            )
         },
 
         // Update stroke position after dragging
@@ -165,7 +206,13 @@ const boardSlice = createSlice({
                 const updated = updateStrokes(boardState, ...copy)
                 sessionUndoHandler?.(...updated)
             }
-            addAction(handler, undoHandler, state, state.undoStack, isRedoable)
+            addAction(
+                handler,
+                undoHandler,
+                state as BoardState,
+                state.undoStack,
+                isRedoable
+            )
         },
 
         SET_PDF: (state, action) => {
@@ -175,11 +222,11 @@ const boardSlice = createSlice({
         },
 
         UNDO_ACTION: (state) => {
-            undoAction(state)
+            undoAction(state as BoardState)
         },
 
         REDO_ACTION: (state) => {
-            redoAction(state)
+            redoAction(state as BoardState)
         },
 
         JUMP_TO_NEXT_PAGE: (state) => {
@@ -299,6 +346,8 @@ export const {
     CLEAR_PAGE,
     DELETE_PAGES,
     DELETE_ALL_PAGES,
+    MOVE_SHAPES_TO_DRAG_LAYER,
+    UPDATE_TRANSFORM_STROKES,
     ADD_STROKES,
     ERASE_STROKES,
     UPDATE_STROKES,
@@ -306,6 +355,7 @@ export const {
     UNDO_ACTION,
     REDO_ACTION,
     CLEAR_DOCS,
+    CLEAR_TRANSFORM,
     SET_PAGE_BACKGROUND,
     SET_PAGE_SIZE,
     JUMP_TO_NEXT_PAGE,

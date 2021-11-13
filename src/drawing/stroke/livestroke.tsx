@@ -163,12 +163,12 @@ export class BoardLiveStroke implements LiveStroke {
                 .concat(p.slice(p.length - 2))
 
             this.numUpdates = 0
-            const sel = getHitboxPolygon(
+            const selectionPolygon = getHitboxPolygon(
                 subPageOffset(line, pagePosition), // compensate page offset in stage
                 ERASER_WIDTH
             )
 
-            return matchStrokeCollision(strokes, sel)
+            return matchStrokeCollision(strokes, selectionPolygon)
         }
         return res
     }

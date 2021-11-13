@@ -10,8 +10,7 @@ import {
 } from "components"
 import React, { useState } from "react"
 import { useCustomSelector } from "redux/hooks"
-import { SET_TYPE } from "redux/drawing/drawing"
-import store from "redux/store"
+import { handleSetTool } from "drawing/handlers"
 import StylePicker from "../stylepicker/stylepicker"
 
 const PenTool: React.FC = () => {
@@ -54,7 +53,7 @@ const PenTool: React.FC = () => {
                 </IconButton>
             ) : (
                 <IconButton
-                    onClick={() => store.dispatch(SET_TYPE(ToolType.Pen))}>
+                    onClick={() => handleSetTool({ type: ToolType.Pen })}>
                     <IconX />
                 </IconButton>
             )}
