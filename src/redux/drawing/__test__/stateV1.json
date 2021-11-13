@@ -5,15 +5,8 @@
     "directDraw": false,
     "liveStroke": {
         "type": 2,
-        "style": { "color": "#0211a3", "width": 1.5, "opacity": 0.5 },
-        "pageId": "",
-        "x": 0,
-        "y": 0,
-        "points": [],
-        "pointsSegments": [],
-        "numUpdates": 0
+        "style": { "color": "#0211a3", "width": 1.5, "opacity": 0.5 }
     },
-    "liveStrokeUpdate": 0,
     "favTools": [
         {
             "type": 1,
