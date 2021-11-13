@@ -1,11 +1,11 @@
-import React from "react"
+import React, { memo } from "react"
 import { Group } from "react-konva"
 import store from "redux/store"
 import { useCustomSelector } from "redux/hooks"
 import { StrokeShape } from "../stroke/shape"
 import { PageProps } from "./index.types"
 
-const Strokes: React.FC<PageProps> = ({ pageId, pageSize }) => {
+const Strokes = memo<PageProps>(({ pageId, pageSize }) => {
     // pageId might not be valid anymore, exit then
     if (!store.getState().board.pageCollection[pageId]) {
         return null
@@ -33,6 +33,6 @@ const Strokes: React.FC<PageProps> = ({ pageId, pageSize }) => {
             ))}
         </Group>
     )
-}
+})
 
 export default Strokes

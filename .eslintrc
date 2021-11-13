@@ -46,7 +46,8 @@
             }
         ],
         "@typescript-eslint/triple-slash-reference": "off",
-        "@typescript-eslint/ban-types": "off"
+        "@typescript-eslint/ban-types": "off",
+        "react/require-default-props": 0
     },
     "settings": {
         "import/parsers": {

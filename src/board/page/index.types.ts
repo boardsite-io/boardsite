@@ -1,3 +1,5 @@
+import { LiveStroke } from "drawing/stroke/types"
+
 export interface PageProps {
     pageId: string
     pageSize: {
@@ -6,4 +8,6 @@ export interface PageProps {
         width: number
         height: number
     }
+    liveStroke?: () => LiveStroke
+    setLiveStrokeTrigger?: React.Dispatch<React.SetStateAction<number>>
 }

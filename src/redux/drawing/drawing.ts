@@ -67,14 +67,6 @@ const drawingSlice = createSlice({
             const isMouseDown = action.payload
             state.isMouseDown = isMouseDown
         },
-        // Update the current live stroke position
-        UPDATE_LIVESTROKE: (state) => {
-            state.liveStrokeUpdate += 1
-        },
-        END_LIVESTROKE: (state) => {
-            state.liveStrokeUpdate = 0
-            state.erasedStrokes = {}
-        },
         TOGGLE_DIRECTDRAW: (state) => {
             state.directDraw = !state.directDraw
         },
@@ -96,8 +88,6 @@ export const {
     SET_WIDTH,
     SET_TYPE,
     SET_ISMOUSEDOWN,
-    UPDATE_LIVESTROKE,
-    END_LIVESTROKE,
     TOGGLE_DIRECTDRAW,
     SET_TR_NODES,
     SET_ERASED_STROKES,
