@@ -118,10 +118,6 @@ const boardSlice = createSlice({
             )
         },
 
-        UPDATE_TRANSFORM_STROKES: (state, action: PayloadAction<Stroke[]>) => {
-            state.transformStrokes = action.payload
-        },
-
         // Add strokes to collection
         ADD_STROKES: (state, action) => {
             const { strokes, isRedoable, sessionHandler, sessionUndoHandler } =
@@ -340,7 +336,6 @@ export const {
     DELETE_PAGES,
     DELETE_ALL_PAGES,
     MOVE_SHAPES_TO_DRAG_LAYER,
-    UPDATE_TRANSFORM_STROKES,
     ADD_STROKES,
     ERASE_STROKES,
     UPDATE_STROKES,

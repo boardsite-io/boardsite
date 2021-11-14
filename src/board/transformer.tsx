@@ -76,13 +76,16 @@ const CustomTransformer = memo<CustomTransformerProps>(
             }
 
             const updatedStrokes = transformStrokes.map((stroke) => {
-                const scale: Scale = { x: 1, y: 1 } // TODO scale
-                stroke.update(offset, scale)
+                const newScale: Scale = { x: 1, y: 1 } // TODO scale
+                const newPosition = {
+                    x: stroke.x + offset.x,
+                    y: stroke.y + offset.y,
+                }
+                stroke.update(newPosition, newScale)
                 return stroke
             })
 
             handleAddStrokes(...updatedStrokes)
-            // store.dispatch(UPDATE_TRANSFORM_STROKES(updatedStrokes))
         }
 
         const onTransformEnd = () => {
