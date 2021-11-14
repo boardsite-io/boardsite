@@ -21,10 +21,9 @@ import {
 import { BoardStroke } from "./stroke"
 import { LiveStroke, Point, Stroke, StrokeMap, Tool, ToolType } from "./types"
 
-export function generateLiveStroke(): () => BoardLiveStroke {
-    const l = new BoardLiveStroke(store.getState().drawing.liveStroke)
-    return () => l
-}
+export const generateLiveStroke =
+    (liveStroke: BoardLiveStroke) => (): BoardLiveStroke =>
+        liveStroke
 
 export class BoardLiveStroke implements LiveStroke {
     type: ToolType

@@ -6,7 +6,7 @@ import { RootState } from "redux/types"
 import { useCustomSelector } from "redux/hooks"
 import { Layer } from "react-konva"
 import { LiveStroke } from "drawing/stroke/types"
-import { generateLiveStroke } from "drawing/stroke/livestroke"
+import { BoardLiveStroke, generateLiveStroke } from "drawing/stroke/livestroke"
 import store from "redux/store"
 import StrokeTransformer from "./transformer"
 import Page from "./page"
@@ -40,10 +40,13 @@ const PageLayer = memo<PageLayerProps>(
     }
 )
 
+const liveStrokeHandle = generateLiveStroke(
+    new BoardLiveStroke(store.getState().drawing.liveStroke)
+)
+
 // all pages and content are in this component
 const Content = memo<{ value: ReactReduxContextValue }>(() => {
-    const fn = generateLiveStroke()
-    const [liveStroke] = useState(() => fn) // wrap the again or else useState will call it instantly??... wtf react
+    const [liveStroke] = useState(() => liveStrokeHandle) // wrap the again or else useState will call it instantly??... wtf react
     const [liveStrokeTrigger, setLiveStrokeTrigger] = useState(0)
 
     // Only rerender on page change
