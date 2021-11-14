@@ -17,25 +17,22 @@ import { Group as GroupType } from "konva/lib/Group"
 import store from "redux/store"
 import { TransformStrokes } from "types"
 import { KonvaEventObject } from "konva/lib/Node"
-import { BoardStroke } from "drawing/stroke/stroke"
-import { UPDATE_TRANSFORM_STROKES } from "redux/board/board"
-import { cloneDeep } from "lodash"
 import { handleAddStrokes, handleDeleteStrokes } from "../drawing/handlers"
-import { Point, Stroke } from "../drawing/stroke/types"
+import { Point, Scale, Stroke } from "../drawing/stroke/types"
 import { StrokeShape } from "./stroke/shape"
 
-const StrokeTransformer = (): JSX.Element | null => {
+const StrokeTransformer = memo(() => {
     const transformStrokes = useCustomSelector(
         (state) => state.board.transformStrokes
     )
     return <CustomTransformer transformStrokes={transformStrokes} />
-}
+})
 
 interface CustomTransformerProps {
     transformStrokes: TransformStrokes | undefined
 }
-const CustomTransformer = memo(
-    ({ transformStrokes }: CustomTransformerProps): JSX.Element | null => {
+const CustomTransformer = memo<CustomTransformerProps>(
+    ({ transformStrokes }) => {
         const { transformPagePosition } = store.getState().board
         if (!transformStrokes || !transformPagePosition) {
             return null
@@ -65,11 +62,13 @@ const CustomTransformer = memo(
 
         let dragStartPosition: Point
         const onDragStart = (e: KonvaEventObject<DragEvent>) => {
+            console.log("drag start")
             dragStartPosition = getPosition(e)
             handleDeleteStrokes(...transformStrokes)
         }
 
         const onDragEnd = (e: KonvaEventObject<DragEvent>) => {
+            console.log("drag end")
             const dragEndPosition = getPosition(e)
             const offset = {
                 x: dragEndPosition.x - dragStartPosition.x,
@@ -77,18 +76,13 @@ const CustomTransformer = memo(
             }
 
             const updatedStrokes = transformStrokes.map((stroke) => {
-                const strokeCopy = cloneDeep<Stroke>(stroke)
-                const newPosition = {
-                    x: strokeCopy.x + offset.x,
-                    y: strokeCopy.y + offset.y,
-                }
-                strokeCopy.x = newPosition.x
-                strokeCopy.y = newPosition.y
-                return new BoardStroke(strokeCopy)
+                const scale: Scale = { x: 1, y: 1 } // TODO scale
+                stroke.update(offset, scale)
+                return stroke
             })
 
             handleAddStrokes(...updatedStrokes)
-            store.dispatch(UPDATE_TRANSFORM_STROKES(updatedStrokes))
+            // store.dispatch(UPDATE_TRANSFORM_STROKES(updatedStrokes))
         }
 
         const onTransformEnd = () => {

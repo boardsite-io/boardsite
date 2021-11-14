@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { pick, keys, assign, cloneDeep } from "lodash"
+import { pick, keys, assign } from "lodash"
 import { Point, Stroke, StrokeMap } from "drawing/stroke/types"
 import {
     DEFAULT_STAGE_Y,
@@ -112,17 +112,10 @@ const boardSlice = createSlice({
             }>
         ) => {
             const { selectedStrokes, pagePosition } = action.payload
-            const selectedStrokeIds = Object.keys(selectedStrokes)
-
             state.transformPagePosition = pagePosition
-            state.transformStrokes = selectedStrokeIds.map((strokeId) => {
-                const { pageId } = selectedStrokes[strokeId]
-                const strokesCopy = cloneDeep<StrokeMap>(
-                    state.pageCollection[pageId].strokes
-                )
-
-                return strokesCopy[strokeId]
-            })
+            state.transformStrokes = Object.values(selectedStrokes).map(
+                (stroke) => stroke.serialize() // copy
+            )
         },
 
         UPDATE_TRANSFORM_STROKES: (state, action: PayloadAction<Stroke[]>) => {
