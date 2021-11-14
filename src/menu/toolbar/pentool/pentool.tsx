@@ -16,11 +16,9 @@ import StylePicker from "../stylepicker/stylepicker"
 
 const PenTool: React.FC = () => {
     const [open, setOpen] = useState(false)
-    const typeSelector = useCustomSelector(
-        (state) => state.drawing.liveStroke.type
-    )
+    const typeSelector = useCustomSelector((state) => state.drawing.tool.type)
     const colorSelector = useCustomSelector(
-        (state) => state.drawing.liveStroke.style.color
+        (state) => state.drawing.tool.style.color
     )
     const isDrawingTool = () =>
         typeSelector === ToolType.Pen ||

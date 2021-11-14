@@ -8,10 +8,22 @@ import {
     RDP_EPSILON,
     RDP_FORCE_SECTIONS,
 } from "consts"
+import { handleAddStrokes, handleDeleteStrokes } from "drawing/handlers"
+import { KonvaEventObject } from "konva/lib/Node"
+import { SET_ERASED_STROKES, SET_TR_NODES } from "redux/drawing/drawing"
+import store from "redux/store"
 import { simplifyRDP } from "../simplify"
-import { getHitboxPolygon, matchStrokeCollision } from "./hitbox"
+import {
+    getHitboxPolygon,
+    getSelectedShapes,
+    matchStrokeCollision,
+} from "./hitbox"
 import { BoardStroke } from "./stroke"
 import { LiveStroke, Point, Stroke, StrokeMap, Tool, ToolType } from "./types"
+
+export const generateLiveStroke =
+    (liveStroke: BoardLiveStroke) => (): BoardLiveStroke =>
+        liveStroke
 
 export class BoardLiveStroke implements LiveStroke {
     type: ToolType
@@ -43,10 +55,32 @@ export class BoardLiveStroke implements LiveStroke {
         this.pointsSegments = [] as number[][]
     }
 
-    start({ x, y }: Point, pageId: string): void {
+    setTool(tool: Tool): BoardLiveStroke {
+        this.type = tool.type
+        this.style = tool.style
+        return this
+    }
+
+    start({ x, y }: Point, pageId: string): BoardLiveStroke {
         this.reset()
         this.pageId = pageId
         this.pointsSegments = [[x, y]]
+        return this
+    }
+
+    move(point: Point, pagePosition: Point): void {
+        this.addPoint(point, getStageScale())
+        if (this.type === ToolType.Eraser) {
+            this.moveEraser(pagePosition)
+        }
+    }
+
+    moveEraser(pagePosition: Point): void {
+        const { strokes } = store.getState().board.pageCollection[this.pageId]
+        const selectedStrokes = this.selectLineCollision(strokes, pagePosition)
+        if (Object.keys(selectedStrokes).length > 0) {
+            store.dispatch(SET_ERASED_STROKES(selectedStrokes))
+        }
     }
 
     addPoint(point: Point, scale: number): void {
@@ -81,6 +115,35 @@ export class BoardLiveStroke implements LiveStroke {
         this.pointsSegments = [
             [lastSegment[0], lastSegment[1], point.x, point.y],
         ]
+    }
+
+    async register(e: KonvaEventObject<MouseEvent>): Promise<void> {
+        const pagePosition = e.target.getPosition()
+        const stroke = this.finalize(getStageScale(), pagePosition)
+
+        switch (stroke.type) {
+            case ToolType.Eraser: {
+                const { erasedStrokes } = store.getState().drawing
+                const s = Object.keys(erasedStrokes).map(
+                    (id) => erasedStrokes[id]
+                )
+                if (s.length > 0) {
+                    handleDeleteStrokes(...s)
+                }
+                break
+            }
+            case ToolType.Select: {
+                const { strokes } =
+                    store.getState().board.pageCollection[stroke.pageId]
+                const shapes = getSelectedShapes(stroke, strokes, e)
+                store.dispatch(SET_TR_NODES(shapes))
+                break
+            }
+            default:
+                handleAddStrokes(stroke)
+        }
+
+        this.reset()
     }
 
     /**
@@ -147,6 +210,10 @@ export class BoardLiveStroke implements LiveStroke {
         this.y = 0
         this.points = []
         this.pointsSegments = []
+    }
+
+    isReset(): boolean {
+        return this.points.length === 0 && this.pointsSegments.length === 0
     }
 
     private numUpdates = 0
@@ -227,3 +294,5 @@ const subPageOffset = (points: number[], pagePosition: Point): number[] =>
         }
         return pt
     })
+
+const getStageScale = (): number => store.getState().board.view.stageScale.x

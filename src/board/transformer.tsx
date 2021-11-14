@@ -1,4 +1,4 @@
-import React, { useRef } from "react"
+import React, { memo, useRef } from "react"
 import { Transformer } from "react-konva"
 import { createSelector } from "reselect"
 import {
@@ -21,7 +21,7 @@ import { TrNodesType } from "../types"
 import { handleUpdateStrokes } from "../drawing/handlers"
 import { Stroke } from "../drawing/stroke/types"
 
-const StrokeTransformer = (): JSX.Element => {
+const StrokeTransformer = memo(() => {
     const trRef: React.RefObject<TransformerType> = useRef(null)
 
     // unselect transformer selection when change tool
@@ -86,6 +86,6 @@ const StrokeTransformer = (): JSX.Element => {
             onTransformEnd={onTransformEnd}
         />
     )
-}
+})
 
 export default StrokeTransformer

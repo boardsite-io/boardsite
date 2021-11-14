@@ -7,9 +7,7 @@ import { SET_TYPE } from "redux/drawing/drawing"
 import PenTool from "../pentool/pentool"
 
 const ToolRing: React.FC = () => {
-    const typeSelector = useCustomSelector(
-        (state) => state.drawing.liveStroke.type
-    )
+    const typeSelector = useCustomSelector((state) => state.drawing.tool.type)
 
     return (
         <>
