@@ -78,17 +78,31 @@ const CustomTransformer = memo<CustomTransformerProps>(
                 y: (dragEndPosition.y - dragStartPosition.y) / stageScaleY,
             }
 
-            const updatedStrokes = transformStrokes.map((stroke) => {
+            // Update transformNodes and transformStrokes
+            transformStrokes.map((stroke, i) => {
                 const newScale: Scale = { x: 1, y: 1 } // TODO scale
                 const newPosition = {
                     x: stroke.x + offset.x,
                     y: stroke.y + offset.y,
                 }
                 stroke.update(newPosition, newScale)
-                return stroke
+
+                /* 
+                    transformNodes and transformStrokes array is in same 
+                    order set internal node attrs to prevent mismatch between 
+                    rendered strokes and internal transformer nodes
+
+                    TODO: check if the onDragend offset can be fixed 
+                    => only seems to occur for single nodes 
+                */
+                groupRef.current?.children?.[i]?.setAttr("x", stroke.x)
+                groupRef.current?.children?.[i]?.setAttr("y", stroke.y)
+
+                return null
             })
 
-            handleAddStrokes(...updatedStrokes)
+            // Add transformNodes back to the contentLayer
+            handleAddStrokes(...transformStrokes)
         }
 
         const onTransformEnd = () => {
