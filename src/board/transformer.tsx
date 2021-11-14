@@ -62,17 +62,20 @@ const CustomTransformer = memo<CustomTransformerProps>(
 
         let dragStartPosition: Point
         const onDragStart = (e: KonvaEventObject<DragEvent>) => {
-            console.log("drag start")
+            console.log("drag start", e)
             dragStartPosition = getPosition(e)
             handleDeleteStrokes(...transformStrokes)
         }
 
         const onDragEnd = (e: KonvaEventObject<DragEvent>) => {
-            console.log("drag end")
+            console.log("drag end", e)
+            const { x: stageScaleX, y: stageScaleY } =
+                store.getState().board.view.stageScale
+
             const dragEndPosition = getPosition(e)
             const offset = {
-                x: dragEndPosition.x - dragStartPosition.x,
-                y: dragEndPosition.y - dragStartPosition.y,
+                x: (dragEndPosition.x - dragStartPosition.x) / stageScaleX,
+                y: (dragEndPosition.y - dragStartPosition.y) / stageScaleY,
             }
 
             const updatedStrokes = transformStrokes.map((stroke) => {
