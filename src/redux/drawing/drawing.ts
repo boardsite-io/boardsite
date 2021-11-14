@@ -12,8 +12,8 @@ const drawingSlice = createSlice({
         REPLACE_FAV_TOOL: (state, action) => {
             const index = action.payload as number
             const tool: Tool = {
-                type: state.liveStroke.type,
-                style: { ...state.liveStroke.style },
+                type: state.tool.type,
+                style: { ...state.tool.style },
             }
 
             // validate tool candidate
@@ -30,8 +30,8 @@ const drawingSlice = createSlice({
         },
         ADD_FAV_TOOL: (state) => {
             const tool: Tool = {
-                type: state.liveStroke.type,
-                style: { ...state.liveStroke.style },
+                type: state.tool.type,
+                style: { ...state.tool.style },
             }
 
             // validate tool candidate
@@ -44,22 +44,22 @@ const drawingSlice = createSlice({
         },
         SET_TOOL: (state, action) => {
             const { type, style } = action.payload
-            state.liveStroke.style = { ...style }
-            state.liveStroke.type = type
+            state.tool.style = { ...style }
+            state.tool.type = type
             state.isDraggable = type === ToolType.Select
             state.trNodes = []
         },
         SET_COLOR: (state, action) => {
             const color = action.payload
-            state.liveStroke.style.color = color
+            state.tool.style.color = color
         },
         SET_WIDTH: (state, action) => {
             const width = action.payload
-            state.liveStroke.style.width = width
+            state.tool.style.width = width
         },
         SET_TYPE: (state, action) => {
             const type = action.payload
-            state.liveStroke.type = type
+            state.tool.type = type
             state.isDraggable = type === ToolType.Select
             state.trNodes = []
         },

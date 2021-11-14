@@ -20,7 +20,7 @@ export interface DrawingState {
     isDraggable: boolean
     isMouseDown: boolean
     directDraw: boolean
-    liveStroke: Tool
+    tool: Tool
     favTools: Tool[]
     trNodes: TrNodesType
     erasedStrokes: StrokeMap
@@ -35,7 +35,7 @@ export const newState = (state?: DrawingState): DrawingState => ({
     isDraggable: DEFAULT_ISDRAGGABLE,
     isMouseDown: DEFAULT_ISMOUSEDOWN,
     directDraw: DEFAULT_DIRECTDRAW,
-    liveStroke: {
+    tool: {
         type: DEFAULT_TOOL,
         style: {
             color: DEFAULT_COLOR,

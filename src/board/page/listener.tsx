@@ -29,7 +29,7 @@ const PageListener = memo<PageProps>(
             store.dispatch(SET_ISMOUSEDOWN(true))
             const pos = getPointerPositionInStage(e)
             const ls = liveStroke?.()
-            ls?.setTool(store.getState().drawing.liveStroke).start(pos, pageId)
+            ls?.setTool(store.getState().drawing.tool).start(pos, pageId)
             setLiveStrokeTrigger?.(0)
         }
 
@@ -107,7 +107,7 @@ const PageListener = memo<PageProps>(
         }
 
         const isPanMode = useCustomSelector(
-            (state) => state.drawing.liveStroke.type === ToolType.Pan
+            (state) => state.drawing.tool.type === ToolType.Pan
         )
 
         return (

@@ -3,7 +3,7 @@
     "isDraggable": false,
     "isMouseDown": false,
     "directDraw": false,
-    "liveStroke": {
+    "tool": {
         "type": 2,
         "style": { "color": "#0211a3", "width": 1.5, "opacity": 0.5 }
     },

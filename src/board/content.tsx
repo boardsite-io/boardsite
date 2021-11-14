@@ -41,7 +41,7 @@ const PageLayer = memo<PageLayerProps>(
 )
 
 const liveStrokeHandle = generateLiveStroke(
-    new BoardLiveStroke(store.getState().drawing.liveStroke)
+    new BoardLiveStroke(store.getState().drawing.tool)
 )
 
 // all pages and content are in this component
