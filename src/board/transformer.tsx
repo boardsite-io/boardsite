@@ -54,55 +54,68 @@ const CustomTransformer = memo<CustomTransformerProps>(
             return newBox
         }
 
-        const getTransformPosition = () => ({
-            x: transformRef.current?.getX() ?? 0,
-            y: transformRef.current?.getY() ?? 0,
-        })
-
-        let startPosition: Point
-
+        let startPosition: Point | undefined
         const onMouseDown = () => {
-            startPosition = getTransformPosition()
+            startPosition = transformRef.current?.getPosition()
         }
+
         const onDragStart = () => {
             handleDeleteStrokes(...transformStrokes)
         }
+        const onTransformStart = () => {
+            handleDeleteStrokes(...transformStrokes)
+        }
+
         const onDragEnd = () => {
+            const endPosition = transformRef.current?.getPosition()
+            if (startPosition === undefined || endPosition === undefined) {
+                return
+            }
+
             const { x: stageScaleX, y: stageScaleY } =
                 store.getState().board.view.stageScale
 
-            const endPosition = getTransformPosition()
             const offset = {
                 x: (endPosition.x - startPosition.x) / stageScaleX,
                 y: (endPosition.y - startPosition.y) / stageScaleY,
             }
 
-            // Update transformNodes and transformStrokes
             transformStrokes.map((stroke, i) => {
-                const newScale: Scale = { x: 1, y: 1 } // TODO scale
                 const newPosition = {
                     x: stroke.x + offset.x,
                     y: stroke.y + offset.y,
                 }
+                const newScale = undefined
                 stroke.update(newPosition, newScale)
-
                 /* 
                     transformNodes and transformStrokes array is in same 
                     order set internal node attrs to prevent mismatch between 
                     rendered strokes and internal transformer nodes
                 */
-                groupRef.current?.children?.[i]?.setAttr("x", stroke.x)
-                groupRef.current?.children?.[i]?.setAttr("y", stroke.y)
-
+                groupRef.current?.children?.[i]?.setAttrs({ ...newPosition })
                 return null
             })
 
-            // Add transformNodes back to the contentLayer
+            // Add transformStrokes back to the contentLayer
             handleAddStrokes(...transformStrokes)
         }
 
         const onTransformEnd = () => {
-            // updateSelectedStrokes()
+            transformStrokes.map((stroke, i) => {
+                // transformNodes and transformStrokes are in same order
+                const { scaleX, scaleY, x, y } =
+                    groupRef.current?.children?.[i]?.getAttrs()
+
+                if (scaleX !== undefined && scaleY !== undefined) {
+                    const newPosition = { x, y } as Point
+                    const newScale = { x: scaleX, y: scaleY } as Scale
+                    stroke.update(newPosition, newScale)
+                }
+                return null
+            })
+
+            // Add transformStrokes back to the contentLayer
+            handleAddStrokes(...transformStrokes)
         }
 
         return (
@@ -132,6 +145,7 @@ const CustomTransformer = memo<CustomTransformerProps>(
                     onTouchStart={onMouseDown}
                     onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
+                    onTransformStart={onTransformStart}
                     onTransformEnd={onTransformEnd}
                 />
             </>
