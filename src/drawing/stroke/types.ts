@@ -61,7 +61,9 @@ export interface Stroke extends BaseStroke {
     scaleY: number
 
     serialize: () => Stroke
-    update: (position?: Point, scale?: Scale) => void
+    update: (position?: Point, scale?: Scale) => Stroke
+    getPosition(): Point
+    getScale(): Scale
     calculateHitbox: () => void
 }
 

@@ -63,15 +63,22 @@ export function deleteStrokes(state: BoardState, ...strokes: Stroke[]): void {
     })
 }
 
-export function updateStrokes(
+export function updateOrAddStrokes(
     state: BoardState,
     ...strokes: Stroke[]
-): Stroke[] {
-    return strokes
-        .map(({ id, pageId, x, y, scaleX, scaleY }) => {
-            const stroke = state.pageCollection[pageId]?.strokes[id]
-            stroke?.update({ x, y }, { x: scaleX, y: scaleY })
-            return stroke
-        })
-        .filter((s) => s !== undefined) as Stroke[]
+): void {
+    strokes.forEach((stroke) => {
+        const page = state.pageCollection[stroke.pageId]
+        if (page) {
+            if (page.strokes[stroke.id]) {
+                // stroke exists -> update
+                page.strokes[stroke.id].update(
+                    stroke.getPosition(),
+                    stroke.getScale()
+                )
+            } else {
+                page.strokes[stroke.id] = stroke
+            }
+        }
+    })
 }

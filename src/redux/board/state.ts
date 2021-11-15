@@ -42,6 +42,7 @@ export interface BoardState {
     redoStack?: BoardAction[]
     transformStrokes?: TransformStrokes
     transformPagePosition?: Point
+    triggerUpdate?: number
 
     serialize?(): SerializedBoardState
     deserialize?(parsed: SerializedBoardState): BoardState
@@ -57,9 +58,10 @@ export interface BoardAction {
 
 export interface StrokeAction {
     strokes: Stroke[]
+    updates?: Stroke[]
     isRedoable?: boolean
-    sessionHandler?: (...updates: Stroke[]) => void
-    sessionUndoHandler?: (...updates: Stroke[]) => void
+    sessionHandler?: () => void
+    sessionUndoHandler?: () => void
 }
 
 export const newState = (state?: BoardState): BoardState => ({
@@ -81,10 +83,11 @@ export const newState = (state?: BoardState): BoardState => ({
         stageY: DEFAULT_STAGE_Y,
         stageScale: DEFAULT_STAGE_SCALE,
     },
-    undoStack: undefined,
-    redoStack: undefined,
+    undoStack: [],
+    redoStack: [],
     transformStrokes: undefined,
     transformPagePosition: undefined,
+    triggerUpdate: 0,
 
     serialize(): SerializedBoardState {
         // clone to not mutate current state
@@ -107,6 +110,9 @@ export const newState = (state?: BoardState): BoardState => ({
         delete stateCopy.redoStack
 
         delete stateCopy.transformStrokes
+        delete stateCopy.transformPagePosition
+
+        delete stateCopy.triggerUpdate
 
         return { version: boardVersion, ...stateCopy }
     },

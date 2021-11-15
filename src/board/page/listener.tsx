@@ -56,8 +56,6 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
             return
         } // Ignore reentering
 
-        // e.target.parent?.clearCache()
-
         store.dispatch(SET_ISMOUSEDOWN(false))
 
         // update last position

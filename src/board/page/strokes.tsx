@@ -15,15 +15,13 @@ const Strokes: React.FC<PageProps> = memo(({ pageId, pageSize }) => {
     }
     // select key of stroke map as trigger
     // stroke map comparison will only compare references
-    const len = useCustomSelector(
-        (state) =>
-            Object.keys(state.board.pageCollection[pageId]?.strokes).length
-    )
+    const trigger = useCustomSelector((state) => state.board.triggerUpdate)
 
     useEffect(() => {
         ref.current?.parent?.clearCache()
-        ref.current?.parent?.cache()
-    }, [len])
+        // delay caching a bit to redraw updated strokes
+        setTimeout(() => ref.current?.parent?.cache(), 100)
+    }, [trigger])
 
     return (
         <Group

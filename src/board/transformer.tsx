@@ -16,7 +16,10 @@ import {
 import { Group as GroupType } from "konva/lib/Group"
 import store from "redux/store"
 import { TransformStrokes } from "types"
-import { handleAddStrokes, handleDeleteStrokes } from "../drawing/handlers"
+import {
+    handleUpdateDeleteStrokes,
+    handleUpdateStrokes,
+} from "../drawing/handlers"
 import { Point, Scale, Stroke } from "../drawing/stroke/types"
 import { StrokeShape } from "./stroke/shape"
 
@@ -30,6 +33,7 @@ const StrokeTransformer = memo(() => {
 interface CustomTransformerProps {
     transformStrokes: TransformStrokes | undefined
 }
+
 const CustomTransformer = memo<CustomTransformerProps>(
     ({ transformStrokes }) => {
         const { transformPagePosition } = store.getState().board
@@ -59,16 +63,28 @@ const CustomTransformer = memo<CustomTransformerProps>(
             startPosition = transformRef.current?.getPosition()
         }
 
-        const onDragStart = () => {
-            handleDeleteStrokes(...transformStrokes)
+        const startDragTransform = () => {
+            // update the reference strokes in the transformer to get the correct starting point
+            transformStrokes.forEach((stroke) => {
+                const ref =
+                    store.getState().board.pageCollection[stroke.pageId]
+                        .strokes[stroke.id]
+                stroke.update(ref.getPosition(), ref.getScale())
+            })
+            handleUpdateDeleteStrokes(...transformStrokes)
         }
+
+        const onDragStart = () => {
+            startDragTransform()
+        }
+
         const onTransformStart = () => {
-            handleDeleteStrokes(...transformStrokes)
+            startDragTransform()
         }
 
         const onDragEnd = () => {
             const endPosition = transformRef.current?.getPosition()
-            if (startPosition === undefined || endPosition === undefined) {
+            if (!startPosition || !endPosition) {
                 return
             }
 
@@ -80,42 +96,35 @@ const CustomTransformer = memo<CustomTransformerProps>(
                 y: (endPosition.y - startPosition.y) / stageScaleY,
             }
 
-            transformStrokes.map((stroke, i) => {
+            const updatedStrokes = transformStrokes.map((stroke, i) => {
                 const newPosition = {
                     x: stroke.x + offset.x,
                     y: stroke.y + offset.y,
                 }
-                const newScale = undefined
-                stroke.update(newPosition, newScale)
-                /* 
-                    transformNodes and transformStrokes array is in same 
-                    order set internal node attrs to prevent mismatch between 
-                    rendered strokes and internal transformer nodes
-                */
+                // transformNodes and transformStrokes array is in same
+                // order set internal node attrs to prevent mismatch between
+                // rendered strokes and internal transformer nodes
                 groupRef.current?.children?.[i]?.setAttrs({ ...newPosition })
-                return null
+                return stroke.serialize().update(newPosition)
             })
 
             // Add transformStrokes back to the contentLayer
-            handleAddStrokes(...transformStrokes)
+            handleUpdateStrokes(transformStrokes, updatedStrokes)
         }
 
         const onTransformEnd = () => {
-            transformStrokes.map((stroke, i) => {
+            const updatedStrokes = transformStrokes.map((stroke, i) => {
                 // transformNodes and transformStrokes are in same order
                 const { scaleX, scaleY, x, y } =
                     groupRef.current?.children?.[i]?.getAttrs()
 
-                if (scaleX !== undefined && scaleY !== undefined) {
-                    const newPosition = { x, y } as Point
-                    const newScale = { x: scaleX, y: scaleY } as Scale
-                    stroke.update(newPosition, newScale)
-                }
-                return null
+                const newPosition: Point = { x, y }
+                const newScale: Scale = { x: scaleX, y: scaleY }
+                return stroke.serialize().update(newPosition, newScale)
             })
 
             // Add transformStrokes back to the contentLayer
-            handleAddStrokes(...transformStrokes)
+            handleUpdateStrokes(transformStrokes, updatedStrokes)
         }
 
         return (

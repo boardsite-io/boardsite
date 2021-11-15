@@ -50,16 +50,27 @@ export class BoardStroke implements Stroke {
     /**
      * Update stroke such as position and/or scale.
      */
-    update(position?: Point, scale?: Scale): void {
-        if (position) {
-            this.x = position.x
-            this.y = position.y
-        }
-        if (scale) {
-            this.scaleX = scale.x
-            this.scaleY = scale.y
-        }
+    update(position?: Point, scale?: Scale): Stroke {
+        this.x = position?.x ?? 0
+        this.y = position?.y ?? 0
+        this.scaleX = scale?.x ?? 1
+        this.scaleY = scale?.y ?? 1
         this.calculateHitbox() // recalculate hitbox
+        return this
+    }
+
+    getPosition(): Point {
+        return {
+            x: this.x,
+            y: this.y,
+        }
+    }
+
+    getScale(): Scale {
+        return {
+            x: this.scaleX,
+            y: this.scaleY,
+        }
     }
 
     calculateHitbox(): void {

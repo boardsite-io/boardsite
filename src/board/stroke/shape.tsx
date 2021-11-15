@@ -32,6 +32,19 @@ export const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
         (state) => state.drawing.erasedStrokes
     )
 
+    // used to trigger a stroke redraw for positional updates
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const strokeSel = useCustomSelector((state) => {
+        const s =
+            state.board.pageCollection[stroke.pageId]?.strokes[stroke.id ?? ""]
+        return {
+            x: s?.x,
+            y: s?.y,
+            scaleX: s?.scaleX,
+            scaleY: s?.scaleY,
+        }
+    })
+
     const getOpacity = (): number => {
         if (isDragging) {
             return MOVE_OPACITY

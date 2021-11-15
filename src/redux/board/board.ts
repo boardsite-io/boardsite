@@ -13,7 +13,7 @@ import {
     deleteStrokes,
     redoAction,
     undoAction,
-    updateStrokes,
+    updateOrAddStrokes,
 } from "./undoredo"
 import {
     centerView,
@@ -101,7 +101,7 @@ const boardSlice = createSlice({
         },
 
         CLEAR_TRANSFORM: (state) => {
-            delete state.transformStrokes
+            state.transformStrokes = []
         },
 
         MOVE_SHAPES_TO_DRAG_LAYER: (
@@ -140,6 +140,8 @@ const boardSlice = createSlice({
                 state.undoStack,
                 isRedoable
             )
+            // manual update
+            state.triggerUpdate = (state.triggerUpdate ?? 0) + 1
         },
 
         // Erase strokes from collection
@@ -162,38 +164,27 @@ const boardSlice = createSlice({
                 state.undoStack,
                 isRedoable
             )
+            // manual update
+            state.triggerUpdate = (state.triggerUpdate ?? 0) + 1
         },
 
         // Update stroke position after dragging
         UPDATE_STROKES(state, action) {
-            const { strokes, isRedoable, sessionHandler, sessionUndoHandler } =
-                action.payload
-
-            const copy = strokes
-                .map((s: Stroke) => {
-                    // save values of the current stroke
-                    const cur = state.pageCollection[s.pageId]?.strokes[s.id]
-                    if (cur) {
-                        return {
-                            id: s.id,
-                            pageId: s.pageId,
-                            x: cur.x,
-                            y: cur.y,
-                            scaleX: cur.scaleX,
-                            scaleY: cur.scaleY,
-                        }
-                    }
-                    return undefined
-                })
-                .filter((s: Stroke) => s !== undefined) as Stroke[]
+            const {
+                strokes,
+                updates,
+                isRedoable,
+                sessionHandler,
+                sessionUndoHandler,
+            } = action.payload
 
             const handler = (boardState: BoardState) => {
-                const updated = updateStrokes(boardState, ...strokes)
-                sessionHandler?.(...updated)
+                updateOrAddStrokes(boardState, ...updates)
+                sessionHandler?.()
             }
             const undoHandler = (boardState: BoardState) => {
-                const updated = updateStrokes(boardState, ...copy)
-                sessionUndoHandler?.(...updated)
+                updateOrAddStrokes(boardState, ...strokes)
+                sessionUndoHandler?.()
             }
             addAction(
                 handler,
@@ -202,6 +193,8 @@ const boardSlice = createSlice({
                 state.undoStack,
                 isRedoable
             )
+            // manual update
+            state.triggerUpdate = (state.triggerUpdate ?? 0) + 1
         },
 
         SET_PDF: (state, action) => {
@@ -212,10 +205,14 @@ const boardSlice = createSlice({
 
         UNDO_ACTION: (state) => {
             undoAction(state as BoardState)
+            // manual update
+            state.triggerUpdate = (state.triggerUpdate ?? 0) + 1
         },
 
         REDO_ACTION: (state) => {
             redoAction(state as BoardState)
+            // manual update
+            state.triggerUpdate = (state.triggerUpdate ?? 0) + 1
         },
 
         JUMP_TO_NEXT_PAGE: (state) => {
