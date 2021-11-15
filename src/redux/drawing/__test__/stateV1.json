@@ -25,6 +25,5 @@
         },
         { "type": 1, "style": { "color": "#ff0000", "width": 4, "opacity": 1 } }
     ],
-    "trNodes": [],
     "erasedStrokes": {}
 }
