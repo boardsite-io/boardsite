@@ -129,6 +129,7 @@ const CustomTransformer = memo<CustomTransformerProps>(
                     rotateEnabled={false}
                     boundBoxFunc={boundBoxFunc}
                     onMouseDown={onMouseDown}
+                    onTouchStart={onMouseDown}
                     onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
                     onTransformEnd={onTransformEnd}
