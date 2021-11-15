@@ -16,7 +16,6 @@ import {
 import { Group as GroupType } from "konva/lib/Group"
 import store from "redux/store"
 import { TransformStrokes } from "types"
-import { KonvaEventObject } from "konva/lib/Node"
 import { handleAddStrokes, handleDeleteStrokes } from "../drawing/handlers"
 import { Point, Scale, Stroke } from "../drawing/stroke/types"
 import { StrokeShape } from "./stroke/shape"
@@ -55,27 +54,27 @@ const CustomTransformer = memo<CustomTransformerProps>(
             return newBox
         }
 
-        const getPosition = (e: KonvaEventObject<DragEvent>) => ({
-            x: e.target.x() ?? 0,
-            y: e.target.y() ?? 0,
+        const getTransformPosition = () => ({
+            x: transformRef.current?.getX() ?? 0,
+            y: transformRef.current?.getY() ?? 0,
         })
 
-        let dragStartPosition: Point
-        const onDragStart = (e: KonvaEventObject<DragEvent>) => {
-            console.log("drag start", e)
-            dragStartPosition = getPosition(e)
+        let startPosition: Point
+
+        const onMouseDown = () => {
+            startPosition = getTransformPosition()
+        }
+        const onDragStart = () => {
             handleDeleteStrokes(...transformStrokes)
         }
-
-        const onDragEnd = (e: KonvaEventObject<DragEvent>) => {
-            console.log("drag end", e)
+        const onDragEnd = () => {
             const { x: stageScaleX, y: stageScaleY } =
                 store.getState().board.view.stageScale
 
-            const dragEndPosition = getPosition(e)
+            const endPosition = getTransformPosition()
             const offset = {
-                x: (dragEndPosition.x - dragStartPosition.x) / stageScaleX,
-                y: (dragEndPosition.y - dragStartPosition.y) / stageScaleY,
+                x: (endPosition.x - startPosition.x) / stageScaleX,
+                y: (endPosition.y - startPosition.y) / stageScaleY,
             }
 
             // Update transformNodes and transformStrokes
@@ -91,9 +90,6 @@ const CustomTransformer = memo<CustomTransformerProps>(
                     transformNodes and transformStrokes array is in same 
                     order set internal node attrs to prevent mismatch between 
                     rendered strokes and internal transformer nodes
-
-                    TODO: check if the onDragend offset can be fixed 
-                    => only seems to occur for single nodes 
                 */
                 groupRef.current?.children?.[i]?.setAttr("x", stroke.x)
                 groupRef.current?.children?.[i]?.setAttr("y", stroke.y)
@@ -132,6 +128,7 @@ const CustomTransformer = memo<CustomTransformerProps>(
                     anchorCornerRadius={TR_ANCHOR_CORNER_RADIUS}
                     rotateEnabled={false}
                     boundBoxFunc={boundBoxFunc}
+                    onMouseDown={onMouseDown}
                     onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
                     onTransformEnd={onTransformEnd}
