@@ -7,7 +7,7 @@ import {
     SET_ERASED_STROKES,
 } from "redux/drawing/drawing"
 import { KonvaEventObject } from "konva/lib/Node"
-import { MOVE_SHAPES_TO_DRAG_LAYER } from "redux/board/board"
+import { CLEAR_TRANSFORM, MOVE_SHAPES_TO_DRAG_LAYER } from "redux/board/board"
 import {
     handleSetTool,
     handleAddStrokes,
@@ -31,6 +31,8 @@ export function startLiveStroke(point: Point, pageId: string): void {
         tid = setTimeout(() => {
             handleSetTool({ type: ToolType.Line })
         }, 1000)
+    } else if (liveStroke.type === ToolType.Select) {
+        store.dispatch(CLEAR_TRANSFORM())
     }
 }
 
