@@ -17,9 +17,10 @@ import { Group as GroupType } from "konva/lib/Group"
 import store from "redux/store"
 import { TransformStrokes } from "types"
 import {
-    handleUpdateDeleteStrokes,
-    handleUpdateStrokes,
-} from "../drawing/handlers"
+    MOVE_SHAPES_TO_DRAG_LAYER,
+    UPDATE_DELETE_STROKES,
+} from "redux/board/board"
+import { handleUpdateStrokes } from "../drawing/handlers"
 import { Point, Scale, Stroke } from "../drawing/stroke/types"
 import { StrokeShape } from "./stroke/shape"
 
@@ -64,14 +65,7 @@ const CustomTransformer = memo<CustomTransformerProps>(
         }
 
         const startDragTransform = () => {
-            // update the reference strokes in the transformer to get the correct starting point
-            transformStrokes.forEach((stroke) => {
-                const ref =
-                    store.getState().board.pageCollection[stroke.pageId]
-                        .strokes[stroke.id]
-                stroke.update(ref.getPosition(), ref.getScale())
-            })
-            handleUpdateDeleteStrokes(...transformStrokes)
+            store.dispatch(UPDATE_DELETE_STROKES({ strokes: transformStrokes }))
         }
 
         const onDragStart = () => {
@@ -105,11 +99,14 @@ const CustomTransformer = memo<CustomTransformerProps>(
                 // order set internal node attrs to prevent mismatch between
                 // rendered strokes and internal transformer nodes
                 groupRef.current?.children?.[i]?.setAttrs({ ...newPosition })
-                return stroke.serialize().update(newPosition)
+                return stroke.update(newPosition)
             })
 
+            store.dispatch(
+                MOVE_SHAPES_TO_DRAG_LAYER({ strokes: updatedStrokes })
+            )
             // Add transformStrokes back to the contentLayer
-            handleUpdateStrokes(transformStrokes, updatedStrokes)
+            handleUpdateStrokes(...updatedStrokes)
         }
 
         const onTransformEnd = () => {
@@ -120,11 +117,14 @@ const CustomTransformer = memo<CustomTransformerProps>(
 
                 const newPosition: Point = { x, y }
                 const newScale: Scale = { x: scaleX, y: scaleY }
-                return stroke.serialize().update(newPosition, newScale)
+                return stroke.update(newPosition, newScale)
             })
 
+            store.dispatch(
+                MOVE_SHAPES_TO_DRAG_LAYER({ strokes: updatedStrokes })
+            )
             // Add transformStrokes back to the contentLayer
-            handleUpdateStrokes(transformStrokes, updatedStrokes)
+            handleUpdateStrokes(...updatedStrokes)
         }
 
         return (

@@ -125,30 +125,19 @@ export function handleDeleteStrokes(...strokes: Stroke[]): void {
     store.dispatch(ERASE_STROKES(payload))
 }
 
-export function handleUpdateDeleteStrokes(...strokes: Stroke[]): void {
+export function handleUpdateStrokes(...strokes: Stroke[]): void {
     const payload: StrokeAction = {
         strokes,
-        isRedoable: false,
-    }
-
-    store.dispatch(ERASE_STROKES(payload))
-}
-
-export function handleUpdateStrokes(
-    strokes: Stroke[],
-    updates: Stroke[]
-): void {
-    const payload: StrokeAction = {
-        strokes,
-        updates,
         isRedoable: true,
     }
 
     if (isConnected()) {
         const ws = getSocket()
         const userId = getUserId()
-        payload.sessionHandler = () => sendStrokes(ws, userId, ...updates)
-        payload.sessionUndoHandler = () => sendStrokes(ws, userId, ...strokes)
+        payload.sessionHandler = (...updates: Stroke[]) =>
+            sendStrokes(ws, userId, ...updates)
+        payload.sessionUndoHandler = (...updates: Stroke[]) =>
+            sendStrokes(ws, userId, ...updates)
     }
 
     store.dispatch(UPDATE_STROKES(payload))

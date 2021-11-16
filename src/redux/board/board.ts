@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { pick, keys, assign } from "lodash"
-import { Point, Stroke, StrokeMap } from "drawing/stroke/types"
+import { pick, keys, assign, cloneDeep } from "lodash"
+import { Point, Stroke } from "drawing/stroke/types"
 import {
     DEFAULT_STAGE_Y,
     ZOOM_IN_BUTTON_SCALE,
@@ -23,7 +23,7 @@ import {
     multiTouchMove,
     zoomToPointWithScale,
 } from "./helpers"
-import { BoardState, newState } from "./state"
+import { BoardState, newState, StrokeAction } from "./state"
 
 const boardSlice = createSlice({
     name: "board",
@@ -102,20 +102,22 @@ const boardSlice = createSlice({
 
         CLEAR_TRANSFORM: (state) => {
             state.transformStrokes = []
+            state.updatedStrokes = []
         },
 
+        // sets the currently selected strokes
         MOVE_SHAPES_TO_DRAG_LAYER: (
             state,
             action: PayloadAction<{
-                selectedStrokes: StrokeMap
-                pagePosition: Point
+                strokes: Stroke[]
+                pagePosition?: Point
             }>
         ) => {
-            const { selectedStrokes, pagePosition } = action.payload
-            state.transformPagePosition = pagePosition
-            state.transformStrokes = Object.values(selectedStrokes).map(
-                (stroke) => stroke.serialize() // copy
-            )
+            const { strokes, pagePosition } = action.payload
+            if (pagePosition) {
+                state.transformPagePosition = pagePosition
+            }
+            state.transformStrokes = strokes
         },
 
         // Add strokes to collection
@@ -168,22 +170,27 @@ const boardSlice = createSlice({
             state.triggerUpdate = (state.triggerUpdate ?? 0) + 1
         },
 
+        // removes strokes in order to correctly display move transformer
+        UPDATE_DELETE_STROKES(state, action: PayloadAction<StrokeAction>) {
+            const { strokes } = action.payload
+            // make copy to save the old strokes
+            state.updatedStrokes = strokes.map((s) => s.serialize()) as Stroke[]
+            deleteStrokes(state, ...strokes)
+        },
+
         // Update stroke position after dragging
         UPDATE_STROKES(state, action) {
-            const {
-                strokes,
-                updates,
-                isRedoable,
-                sessionHandler,
-                sessionUndoHandler,
-            } = action.payload
+            const { strokes, isRedoable, sessionHandler, sessionUndoHandler } =
+                action.payload
+            const strokesCopy = cloneDeep(strokes)
+            const updatesCopy = cloneDeep(state.updatedStrokes) as Stroke[]
 
             const handler = (boardState: BoardState) => {
-                updateOrAddStrokes(boardState, ...updates)
+                updateOrAddStrokes(boardState, ...strokesCopy)
                 sessionHandler?.()
             }
             const undoHandler = (boardState: BoardState) => {
-                updateOrAddStrokes(boardState, ...strokes)
+                updateOrAddStrokes(boardState, ...updatesCopy)
                 sessionUndoHandler?.()
             }
             addAction(
@@ -335,6 +342,7 @@ export const {
     MOVE_SHAPES_TO_DRAG_LAYER,
     ADD_STROKES,
     ERASE_STROKES,
+    UPDATE_DELETE_STROKES,
     UPDATE_STROKES,
     SET_PDF,
     UNDO_ACTION,

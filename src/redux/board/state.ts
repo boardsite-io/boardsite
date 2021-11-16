@@ -40,6 +40,7 @@ export interface BoardState {
     view: BoardView
     undoStack?: BoardAction[]
     redoStack?: BoardAction[]
+    updatedStrokes?: Stroke[]
     transformStrokes?: TransformStrokes
     transformPagePosition?: Point
     triggerUpdate?: number
@@ -60,8 +61,8 @@ export interface StrokeAction {
     strokes: Stroke[]
     updates?: Stroke[]
     isRedoable?: boolean
-    sessionHandler?: () => void
-    sessionUndoHandler?: () => void
+    sessionHandler?: (...updates: Stroke[]) => void
+    sessionUndoHandler?: (...updates: Stroke[]) => void
 }
 
 export const newState = (state?: BoardState): BoardState => ({
@@ -85,6 +86,7 @@ export const newState = (state?: BoardState): BoardState => ({
     },
     undoStack: [],
     redoStack: [],
+    updatedStrokes: [],
     transformStrokes: undefined,
     transformPagePosition: undefined,
     triggerUpdate: 0,
@@ -109,6 +111,7 @@ export const newState = (state?: BoardState): BoardState => ({
         delete stateCopy.undoStack
         delete stateCopy.redoStack
 
+        delete stateCopy.updatedStrokes
         delete stateCopy.transformStrokes
         delete stateCopy.transformPagePosition
 

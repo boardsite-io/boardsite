@@ -99,7 +99,10 @@ export async function registerLiveStroke(
             )
 
             store.dispatch(
-                MOVE_SHAPES_TO_DRAG_LAYER({ selectedStrokes, pagePosition })
+                MOVE_SHAPES_TO_DRAG_LAYER({
+                    strokes: Object.values(selectedStrokes),
+                    pagePosition,
+                })
             )
             break
         }

@@ -1,4 +1,5 @@
 import { Stroke } from "drawing/stroke/types"
+import { cloneDeep } from "lodash"
 import { BoardState, BoardAction } from "./state"
 
 export function undoAction(state: BoardState): void {
@@ -77,7 +78,7 @@ export function updateOrAddStrokes(
                     stroke.getScale()
                 )
             } else {
-                page.strokes[stroke.id] = stroke
+                page.strokes[stroke.id] = cloneDeep(stroke)
             }
         }
     })
