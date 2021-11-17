@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useCallback, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import store from "redux/store"
 import { handleAddPageUnder } from "drawing/handlers"
@@ -18,35 +18,36 @@ const Whiteboard: React.FC = () => {
     const { sid } = useParams<{ sid: string }>()
     const dispatch = useCustomDispatch()
 
+    const checkSessionStatus = useCallback(async () => {
+        try {
+            await pingSession(sid)
+            // Session exists
+            dispatch(
+                SET_SESSION_DIALOG({
+                    open: true,
+                    invalidSid: false,
+                    joinOnly: true,
+                    sidInput: sid,
+                })
+            )
+        } catch (error) {
+            // Session doesn't exist
+            dispatch(
+                SET_SESSION_DIALOG({
+                    open: true,
+                    invalidSid: true,
+                    joinOnly: false,
+                })
+            )
+        }
+    }, [])
+
     useEffect(() => {
         if (!isConnected()) {
             if (sid !== undefined && sid.length > 0) {
-                // ping the session
-                pingSession(sid)
-                    .then(() => {
-                        // session ok
-                        dispatch(
-                            SET_SESSION_DIALOG({
-                                open: true,
-                                invalidSid: false,
-                                joinOnly: true,
-                                sidInput: sid,
-                            })
-                        )
-                    })
-                    .catch(() => {
-                        // session not existing
-                        dispatch(
-                            SET_SESSION_DIALOG({
-                                open: true,
-                                invalidSid: true,
-                                joinOnly: false,
-                            })
-                        )
-                    })
+                checkSessionStatus()
             } else if (store.getState().board.pageRank.length === 0) {
-                // if there is noting in the (local) store, add a default page
-                handleAddPageUnder()
+                handleAddPageUnder() // Add default page if pageRank is empty
             }
         }
     }, [sid, dispatch])
