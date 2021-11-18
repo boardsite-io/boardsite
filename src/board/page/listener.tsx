@@ -3,7 +3,6 @@ import { Rect } from "react-konva"
 import { Stage } from "konva/lib/Stage"
 import { ToolType } from "drawing/stroke/types"
 import store from "redux/store"
-import { SET_ISMOUSEDOWN } from "redux/drawing/drawing"
 import { useCustomSelector } from "redux/hooks"
 import { LAYER_CACHE_PXL } from "consts"
 import { KonvaEventObject } from "konva/lib/Node"
@@ -12,9 +11,7 @@ import { PageProps } from "./index.types"
 
 const PageListener = memo<PageProps>(
     ({ pageId, pageSize, liveStroke, setLiveStrokeTrigger }) => {
-        const isMouseDown = useCustomSelector(
-            (state) => state.drawing.isMouseDown
-        )
+        let isMouseDown = false
 
         const getPointerPositionInStage = (e: KonvaEventObject<MouseEvent>) => {
             const stage = e.target.getStage() as Stage
@@ -33,7 +30,7 @@ const PageListener = memo<PageProps>(
                 e.target.parent?.clearCache()
             }
 
-            store.dispatch(SET_ISMOUSEDOWN(true))
+            isMouseDown = true
             const pos = getPointerPositionInStage(e)
             const ls = liveStroke?.()
             ls?.setTool(store.getState().drawing.tool).start(pos, pageId)
@@ -64,7 +61,7 @@ const PageListener = memo<PageProps>(
                 return
             } // Ignore reentering
 
-            store.dispatch(SET_ISMOUSEDOWN(false))
+            isMouseDown = false
             // update last position
             const pos = getPointerPositionInStage(e)
             liveStroke?.().move(pos, e.target.getPosition())

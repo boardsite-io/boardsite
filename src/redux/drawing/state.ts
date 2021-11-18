@@ -3,7 +3,6 @@ import {
     DEFAULT_DIRECTDRAW,
     DEFAULT_FAV_TOOLS,
     DEFAULT_ISDRAGGABLE,
-    DEFAULT_ISMOUSEDOWN,
     DEFAULT_TOOL,
     DEFAULT_WIDTH,
 } from "consts"
@@ -17,7 +16,6 @@ export const drawingVersion = "1.0"
 
 export interface DrawingState {
     isDraggable: boolean
-    isMouseDown: boolean
     directDraw: boolean
     tool: Tool
     favTools: Tool[]
@@ -31,7 +29,6 @@ export type SerializedDrawingState = DrawingState & { version?: string }
 
 export const newState = (state?: DrawingState): DrawingState => ({
     isDraggable: DEFAULT_ISDRAGGABLE,
-    isMouseDown: DEFAULT_ISMOUSEDOWN,
     directDraw: DEFAULT_DIRECTDRAW,
     tool: {
         type: DEFAULT_TOOL,

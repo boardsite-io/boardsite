@@ -57,10 +57,6 @@ const drawingSlice = createSlice({
             const width = action.payload
             state.tool.style.width = width
         },
-        SET_ISMOUSEDOWN: (state, action) => {
-            const isMouseDown = action.payload
-            state.isMouseDown = isMouseDown
-        },
         TOGGLE_DIRECTDRAW: (state) => {
             state.directDraw = !state.directDraw
         },
@@ -83,7 +79,6 @@ export const {
     SET_TOOL,
     SET_COLOR,
     SET_WIDTH,
-    SET_ISMOUSEDOWN,
     TOGGLE_DIRECTDRAW,
     SET_ERASED_STROKES,
     CLEAR_ERASED_STROKES,

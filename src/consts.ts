@@ -25,7 +25,6 @@ export const DEFAULT_STAGE_X = 0
 export const DEFAULT_STAGE_Y = 60
 export const DEFAULT_STAGE_SCALE: Point = { x: 1, y: 1 }
 export const DEFAULT_ISDRAGGABLE = false
-export const DEFAULT_ISMOUSEDOWN = false
 export const DEFAULT_KEEP_CENTERED = false
 export const DEFAULT_HIDE_NAVBAR = false
 export const DRAG_SHADOW_BLUR = 4
@@ -81,7 +80,7 @@ export const pageSize = {
 }
 
 export const BACKGROUND_CACHE_PXL = 3
-export const LAYER_CACHE_PXL = 6
+export const LAYER_CACHE_PXL = 4
 
 const tool1: Tool = {
     type: ToolType.Pen,
