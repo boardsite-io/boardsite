@@ -1,7 +1,14 @@
-import { cloneDeep } from "lodash"
+import { assign, cloneDeep, pick } from "lodash"
 import { Polygon } from "sat"
 import { getHitboxPolygon } from "./hitbox"
-import { LiveStroke, Scale, Point, Stroke, ToolType } from "./types"
+import {
+    LiveStroke,
+    Scale,
+    Point,
+    Stroke,
+    ToolType,
+    StrokeUpdate,
+} from "./types"
 
 export class BoardStroke implements Stroke {
     type: ToolType
@@ -47,14 +54,16 @@ export class BoardStroke implements Stroke {
         return strokeCopy
     }
 
+    // returns a copy of the stroke with the update properties
+    serializeUpdate(): StrokeUpdate {
+        return pick(this, ["id", "pageId", "x", "y", "scaleX", "scaleY"])
+    }
+
     /**
      * Update stroke such as position and/or scale.
      */
-    update(position?: Point, scale?: Scale): Stroke {
-        this.x = position?.x ?? 0
-        this.y = position?.y ?? 0
-        this.scaleX = scale?.x ?? 1
-        this.scaleY = scale?.y ?? 1
+    update(strokeUpdate: Stroke | StrokeUpdate): Stroke {
+        assign(this, pick(strokeUpdate, ["x", "y", "scaleX", "scaleY"]))
         this.calculateHitbox() // recalculate hitbox
         return this
     }

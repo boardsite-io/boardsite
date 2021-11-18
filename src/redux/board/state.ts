@@ -10,7 +10,7 @@ import {
     sizePreset,
 } from "consts"
 import { BoardStroke } from "drawing/stroke/stroke"
-import { Point, Stroke } from "drawing/stroke/types"
+import { Point, Stroke, StrokeUpdate } from "drawing/stroke/types"
 import { PageCollection, PageSettings, TransformStrokes } from "types"
 import { pick, keys, assign, cloneDeep } from "lodash"
 import { BoardPage } from "drawing/page"
@@ -40,10 +40,12 @@ export interface BoardState {
     view: BoardView
     undoStack?: BoardAction[]
     redoStack?: BoardAction[]
-    updatedStrokes?: Stroke[]
+    strokeUpdates?: StrokeUpdate[]
     transformStrokes?: TransformStrokes
     transformPagePosition?: Point
-    triggerUpdate?: number
+    renderTrigger?: number
+
+    triggerManualUpdate?(): void
 
     serialize?(): SerializedBoardState
     deserialize?(parsed: SerializedBoardState): BoardState
@@ -86,10 +88,14 @@ export const newState = (state?: BoardState): BoardState => ({
     },
     undoStack: [],
     redoStack: [],
-    updatedStrokes: [],
+    strokeUpdates: [],
     transformStrokes: undefined,
     transformPagePosition: undefined,
-    triggerUpdate: 0,
+    renderTrigger: 0,
+
+    triggerManualUpdate(): void {
+        this.renderTrigger = (this.renderTrigger ?? 0) + 1
+    },
 
     serialize(): SerializedBoardState {
         // clone to not mutate current state
@@ -104,6 +110,7 @@ export const newState = (state?: BoardState): BoardState => ({
             })
         })
 
+        delete stateCopy.triggerManualUpdate
         delete stateCopy.serialize
         delete stateCopy.deserialize
 
@@ -111,11 +118,11 @@ export const newState = (state?: BoardState): BoardState => ({
         delete stateCopy.undoStack
         delete stateCopy.redoStack
 
-        delete stateCopy.updatedStrokes
+        delete stateCopy.strokeUpdates
         delete stateCopy.transformStrokes
         delete stateCopy.transformPagePosition
 
-        delete stateCopy.triggerUpdate
+        delete stateCopy.renderTrigger
 
         return { version: boardVersion, ...stateCopy }
     },

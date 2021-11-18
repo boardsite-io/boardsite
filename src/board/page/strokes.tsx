@@ -15,7 +15,7 @@ const Strokes: React.FC<PageProps> = memo(({ pageId, pageSize }) => {
     }
     // select key of stroke map as trigger
     // stroke map comparison will only compare references
-    const trigger = useCustomSelector((state) => state.board.triggerUpdate)
+    const trigger = useCustomSelector((state) => state.board.renderTrigger)
 
     useEffect(() => {
         ref.current?.parent?.clearCache()

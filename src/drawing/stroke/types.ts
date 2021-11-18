@@ -55,13 +55,23 @@ export interface BaseStroke extends Tool {
     hitboxes?: Polygon[]
 }
 
+export interface StrokeUpdate {
+    id?: string
+    pageId?: string
+    x?: number
+    y?: number
+    scaleX?: number
+    scaleY?: number
+}
+
 export interface Stroke extends BaseStroke {
     id: string
     scaleX: number
     scaleY: number
 
     serialize: () => Stroke
-    update: (position?: Point, scale?: Scale) => Stroke
+    serializeUpdate(): StrokeUpdate
+    update: (strokeUpdate: Stroke | StrokeUpdate) => Stroke
     getPosition(): Point
     getScale(): Scale
     calculateHitbox: () => void

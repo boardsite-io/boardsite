@@ -1,4 +1,4 @@
-import { Stroke } from "drawing/stroke/types"
+import { Stroke, StrokeUpdate } from "drawing/stroke/types"
 import { cloneDeep } from "lodash"
 import { BoardState, BoardAction } from "./state"
 
@@ -66,19 +66,16 @@ export function deleteStrokes(state: BoardState, ...strokes: Stroke[]): void {
 
 export function updateOrAddStrokes(
     state: BoardState,
-    ...strokes: Stroke[]
+    ...strokes: Stroke[] | StrokeUpdate[]
 ): void {
     strokes.forEach((stroke) => {
-        const page = state.pageCollection[stroke.pageId]
-        if (page) {
+        const page = state.pageCollection[stroke.pageId ?? ""]
+        if (page && stroke.id) {
             if (page.strokes[stroke.id]) {
                 // stroke exists -> update
-                page.strokes[stroke.id].update(
-                    stroke.getPosition(),
-                    stroke.getScale()
-                )
+                page.strokes[stroke.id].update(stroke)
             } else {
-                page.strokes[stroke.id] = cloneDeep(stroke)
+                page.strokes[stroke.id] = cloneDeep(stroke) as Stroke
             }
         }
     })

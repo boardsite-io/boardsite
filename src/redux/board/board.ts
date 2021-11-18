@@ -102,7 +102,7 @@ const boardSlice = createSlice({
 
         CLEAR_TRANSFORM: (state) => {
             state.transformStrokes = []
-            state.updatedStrokes = []
+            state.strokeUpdates = []
         },
 
         // sets the currently selected strokes
@@ -142,8 +142,8 @@ const boardSlice = createSlice({
                 state.undoStack,
                 isRedoable
             )
-            // manual update
-            state.triggerUpdate = (state.triggerUpdate ?? 0) + 1
+
+            state.triggerManualUpdate?.()
         },
 
         // Erase strokes from collection
@@ -166,16 +166,17 @@ const boardSlice = createSlice({
                 state.undoStack,
                 isRedoable
             )
-            // manual update
-            state.triggerUpdate = (state.triggerUpdate ?? 0) + 1
+
+            state.triggerManualUpdate?.()
         },
 
         // removes strokes in order to correctly display move transformer
         UPDATE_DELETE_STROKES(state, action: PayloadAction<StrokeAction>) {
             const { strokes } = action.payload
-            // make copy to save the old strokes
-            state.updatedStrokes = strokes.map((s) => s.serialize()) as Stroke[]
+            // make copy to save the old stroke position
+            state.strokeUpdates = strokes.map((s) => s.serializeUpdate())
             deleteStrokes(state, ...strokes)
+            state.triggerManualUpdate?.()
         },
 
         // Update stroke position after dragging
@@ -183,7 +184,7 @@ const boardSlice = createSlice({
             const { strokes, isRedoable, sessionHandler, sessionUndoHandler } =
                 action.payload
             const strokesCopy = cloneDeep(strokes)
-            const updatesCopy = cloneDeep(state.updatedStrokes) as Stroke[]
+            const updatesCopy = cloneDeep(state.strokeUpdates)
 
             const handler = (boardState: BoardState) => {
                 updateOrAddStrokes(boardState, ...strokesCopy)
@@ -200,8 +201,8 @@ const boardSlice = createSlice({
                 state.undoStack,
                 isRedoable
             )
-            // manual update
-            state.triggerUpdate = (state.triggerUpdate ?? 0) + 1
+
+            state.triggerManualUpdate?.()
         },
 
         SET_PDF: (state, action) => {
@@ -212,14 +213,12 @@ const boardSlice = createSlice({
 
         UNDO_ACTION: (state) => {
             undoAction(state as BoardState)
-            // manual update
-            state.triggerUpdate = (state.triggerUpdate ?? 0) + 1
+            state.triggerManualUpdate?.()
         },
 
         REDO_ACTION: (state) => {
             redoAction(state as BoardState)
-            // manual update
-            state.triggerUpdate = (state.triggerUpdate ?? 0) + 1
+            state.triggerManualUpdate?.()
         },
 
         JUMP_TO_NEXT_PAGE: (state) => {

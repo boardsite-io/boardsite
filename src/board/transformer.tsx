@@ -8,7 +8,7 @@ import {
     TR_ANCHOR_SIZE,
     TR_ANCHOR_CORNER_RADIUS,
 } from "consts"
-import { useCustomSelector } from "redux/hooks"
+import { useCustomDispatch, useCustomSelector } from "redux/hooks"
 import {
     Box,
     Transformer as TransformerType,
@@ -21,7 +21,7 @@ import {
     UPDATE_DELETE_STROKES,
 } from "redux/board/board"
 import { handleUpdateStrokes } from "../drawing/handlers"
-import { Point, Scale, Stroke } from "../drawing/stroke/types"
+import { Point, Stroke } from "../drawing/stroke/types"
 import { StrokeShape } from "./stroke/shape"
 
 const StrokeTransformer = memo(() => {
@@ -43,6 +43,7 @@ const CustomTransformer = memo<CustomTransformerProps>(
         }
         const transformRef: React.RefObject<TransformerType> = useRef(null)
         const groupRef: React.RefObject<GroupType> = useRef(null)
+        const dispatch = useCustomDispatch()
 
         React.useEffect(() => {
             const selectedNodes = groupRef.current?.children
@@ -65,7 +66,7 @@ const CustomTransformer = memo<CustomTransformerProps>(
         }
 
         const startDragTransform = () => {
-            store.dispatch(UPDATE_DELETE_STROKES({ strokes: transformStrokes }))
+            dispatch(UPDATE_DELETE_STROKES({ strokes: transformStrokes }))
         }
 
         const onDragStart = () => {
@@ -99,7 +100,7 @@ const CustomTransformer = memo<CustomTransformerProps>(
                 // order set internal node attrs to prevent mismatch between
                 // rendered strokes and internal transformer nodes
                 groupRef.current?.children?.[i]?.setAttrs({ ...newPosition })
-                return stroke.update(newPosition)
+                return stroke.update({ ...newPosition })
             })
 
             store.dispatch(
@@ -114,10 +115,7 @@ const CustomTransformer = memo<CustomTransformerProps>(
                 // transformNodes and transformStrokes are in same order
                 const { scaleX, scaleY, x, y } =
                     groupRef.current?.children?.[i]?.getAttrs()
-
-                const newPosition: Point = { x, y }
-                const newScale: Scale = { x: scaleX, y: scaleY }
-                return stroke.update(newPosition, newScale)
+                return stroke.update({ scaleX, scaleY, x, y })
             })
 
             store.dispatch(
