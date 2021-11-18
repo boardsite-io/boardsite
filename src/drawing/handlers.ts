@@ -1,5 +1,5 @@
 import { cloneDeep } from "lodash"
-import { Stroke, Tool } from "drawing/stroke/types"
+import { Stroke, StrokeUpdate, Tool } from "drawing/stroke/types"
 import {
     JUMP_TO_NEXT_PAGE,
     CLEAR_PAGE,
@@ -134,9 +134,9 @@ export function handleUpdateStrokes(...strokes: Stroke[]): void {
     if (isConnected()) {
         const ws = getSocket()
         const userId = getUserId()
-        payload.sessionHandler = (...updates: Stroke[]) =>
+        payload.sessionHandler = (...updates: Stroke[] | StrokeUpdate[]) =>
             sendStrokes(ws, userId, ...updates)
-        payload.sessionUndoHandler = (...updates: Stroke[]) =>
+        payload.sessionUndoHandler = (...updates: Stroke[] | StrokeUpdate[]) =>
             sendStrokes(ws, userId, ...updates)
     }
 

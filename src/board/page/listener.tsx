@@ -6,7 +6,7 @@ import store from "redux/store"
 import * as actions from "drawing/stroke/actions"
 import { SET_ISMOUSEDOWN } from "redux/drawing/drawing"
 import { useCustomSelector } from "redux/hooks"
-import { DOC_SCALE } from "consts"
+import { LAYER_CACHE_PXL } from "consts"
 import { KonvaEventObject } from "konva/lib/Node"
 import { Vector2d } from "konva/lib/types"
 import { PageProps } from "./index.types"
@@ -64,7 +64,7 @@ const PageListener: React.FC<PageProps> = ({ pageId, pageSize }) => {
 
         // register finished stroke
         actions.registerLiveStroke(e)
-        e.target.parent?.cache({ pixelRatio: DOC_SCALE })
+        e.target.parent?.cache({ pixelRatio: LAYER_CACHE_PXL })
     }
 
     const onTouchStart = (e: KonvaEventObject<TouchEvent>) => {

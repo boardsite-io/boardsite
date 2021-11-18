@@ -2,7 +2,7 @@ import React, { memo, useEffect, useRef } from "react"
 import { ReactReduxContextValue } from "react-redux"
 import { getPageMeta } from "drawing/stroke/actions"
 import { createSelector } from "reselect"
-import { DEFAULT_PAGE_GAP, DOC_SCALE } from "consts"
+import { DEFAULT_PAGE_GAP, LAYER_CACHE_PXL } from "consts"
 import { RootState } from "redux/types"
 import { useCustomSelector } from "redux/hooks"
 import { Layer } from "react-konva"
@@ -22,7 +22,7 @@ const PageLayer = ({ pageId, relativeIndex }: PageLayerProps) => {
 
     useEffect(() => {
         // cache the layer/page by default
-        ref.current?.cache({ pixelRatio: DOC_SCALE })
+        ref.current?.cache({ pixelRatio: LAYER_CACHE_PXL })
     })
 
     return (

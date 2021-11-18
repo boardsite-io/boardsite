@@ -60,11 +60,10 @@ export interface BoardAction {
 }
 
 export interface StrokeAction {
-    strokes: Stroke[]
-    updates?: Stroke[]
+    strokes: Stroke[] | StrokeUpdate[]
     isRedoable?: boolean
-    sessionHandler?: (...updates: Stroke[]) => void
-    sessionUndoHandler?: (...updates: Stroke[]) => void
+    sessionHandler?: (...updates: Stroke[] | StrokeUpdate[]) => void
+    sessionUndoHandler?: (...updates: Stroke[] | StrokeUpdate[]) => void
 }
 
 export const newState = (state?: BoardState): BoardState => ({

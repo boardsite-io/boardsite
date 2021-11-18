@@ -1,5 +1,5 @@
 import { BoardStroke } from "drawing/stroke/stroke"
-import { Stroke, ToolType } from "drawing/stroke/types"
+import { Stroke, StrokeUpdate, ToolType } from "drawing/stroke/types"
 import {
     ADD_STROKES,
     CLEAR_PAGE,
@@ -116,8 +116,7 @@ function receive(message: Message<unknown>) {
 function receiveStrokes(strokes: Stroke[]) {
     strokes.forEach((stroke) => {
         if (stroke.type > 0) {
-            // add stroke, IMPORTANT: create BoardStroke instance
-            store.dispatch(ADD_STROKES({ strokes: [new BoardStroke(stroke)] }))
+            store.dispatch(ADD_STROKES({ strokes }))
         } else if (stroke.type === 0) {
             // delete stroke
             store.dispatch(ERASE_STROKES({ strokes: [stroke] }))
@@ -207,18 +206,22 @@ export function disconnect(): void {
 export function sendStrokes(
     ws: WebSocket,
     userId: string,
-    ...strokes: Stroke[]
+    ...strokes: Stroke[] | StrokeUpdate[]
 ): void {
-    // append the user id to strokes
-    send(
-        ws,
-        messages.Stroke,
-        userId,
-        strokes.map((s) => ({
-            ...s.serialize?.(),
-            userId,
-        }))
-    )
+    const strokesToSend = strokes
+        .map((s) => {
+            if (s.id && s.pageId) {
+                const serialized = (s as Stroke).serialize?.()
+                return {
+                    ...s,
+                    ...serialized,
+                    userId, // append the user id to strokes
+                }
+            }
+            return null
+        })
+        .filter((s) => s)
+    send(ws, messages.Stroke, userId, strokesToSend)
 }
 
 export function getUserId(): string {

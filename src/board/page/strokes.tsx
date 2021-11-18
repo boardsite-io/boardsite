@@ -3,6 +3,7 @@ import { Group } from "react-konva"
 import store from "redux/store"
 import { Group as GroupType } from "konva/lib/Group"
 import { useCustomSelector } from "redux/hooks"
+import { LAYER_CACHE_PXL } from "consts"
 import { StrokeShape } from "../stroke/shape"
 import { PageProps } from "./index.types"
 
@@ -20,7 +21,10 @@ const Strokes: React.FC<PageProps> = memo(({ pageId, pageSize }) => {
     useEffect(() => {
         ref.current?.parent?.clearCache()
         // delay caching a bit to redraw updated strokes
-        setTimeout(() => ref.current?.parent?.cache(), 100)
+        setTimeout(
+            () => ref.current?.parent?.cache({ pixelRatio: LAYER_CACHE_PXL }),
+            100
+        )
     }, [trigger])
 
     return (

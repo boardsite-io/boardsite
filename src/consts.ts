@@ -80,6 +80,9 @@ export const pageSize = {
     [sizePreset.Square]: { width: 877, height: 877 },
 }
 
+export const BACKGROUND_CACHE_PXL = 3
+export const LAYER_CACHE_PXL = 6
+
 const tool1: Tool = {
     type: ToolType.Pen,
     style: {

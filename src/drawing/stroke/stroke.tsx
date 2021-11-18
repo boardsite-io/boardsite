@@ -42,7 +42,11 @@ export class BoardStroke implements Stroke {
         this.type = stroke.type
         this.style = { ...stroke.style }
         this.points = [...stroke.points]
-        this.calculateHitbox()
+        if ((stroke as Stroke).hitboxes?.length) {
+            this.hitboxes = (stroke as Stroke).hitboxes ?? []
+        } else {
+            this.calculateHitbox()
+        }
     }
 
     /**
@@ -56,7 +60,15 @@ export class BoardStroke implements Stroke {
 
     // returns a copy of the stroke with the update properties
     serializeUpdate(): StrokeUpdate {
-        return pick(this, ["id", "pageId", "x", "y", "scaleX", "scaleY"])
+        return pick(this, [
+            "id",
+            "pageId",
+            "type",
+            "x",
+            "y",
+            "scaleX",
+            "scaleY",
+        ])
     }
 
     /**

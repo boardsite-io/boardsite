@@ -9,11 +9,10 @@ import {
 import { Page } from "types"
 import {
     addAction,
-    addStrokes,
     deleteStrokes,
     redoAction,
     undoAction,
-    updateOrAddStrokes,
+    addOrUpdateStrokes,
 } from "./undoredo"
 import {
     centerView,
@@ -37,17 +36,20 @@ const boardSlice = createSlice({
             const { pageRank, pageCollection } = action.payload
             state.pageRank = pageRank
             state.pageCollection = pageCollection
+            state.triggerManualUpdate?.()
         },
 
         SET_PAGERANK: (state, action) => {
             const { pageRank, pageCollection } = action.payload
             state.pageRank = pageRank
             state.pageCollection = pageCollection
+            state.triggerManualUpdate?.()
         },
 
         SET_PAGEMETA: (state, action) => {
             const { pageId, meta } = action.payload
             state.pageCollection[pageId]?.updateMeta(meta)
+            state.triggerManualUpdate?.()
         },
 
         SET_PAGE_BACKGROUND: (state, action) => {
@@ -57,6 +59,7 @@ const boardSlice = createSlice({
 
         SET_PAGE_SIZE: (state, action) => {
             state.pageSettings.size = action.payload
+            state.triggerManualUpdate?.()
         },
 
         ADD_PAGE: (state, action) => {
@@ -70,11 +73,13 @@ const boardSlice = createSlice({
             } else {
                 state.pageRank.push(page.pageId)
             }
+            state.triggerManualUpdate?.()
         },
 
         CLEAR_PAGE: (state, action) => {
             const pageId = action.payload
             state.pageCollection[pageId]?.clear()
+            state.triggerManualUpdate?.()
         },
 
         DELETE_PAGES: (state, action) => {
@@ -86,12 +91,14 @@ const boardSlice = createSlice({
                     1
                 )
                 delete state.pageCollection[pid]
+                state.triggerManualUpdate?.()
             })
         },
 
         // removes all pages but leaves the document
         DELETE_ALL_PAGES: (state) => {
             state.pageRank = []
+            state.triggerManualUpdate?.()
             state.pageCollection = {}
         },
 
@@ -121,14 +128,14 @@ const boardSlice = createSlice({
         },
 
         // Add strokes to collection
-        ADD_STROKES: (state, action) => {
+        ADD_STROKES: (state, action: PayloadAction<StrokeAction>) => {
             const { strokes, isRedoable, sessionHandler, sessionUndoHandler } =
                 action.payload
 
-            strokes.sort((a: Stroke, b: Stroke) => a.id > b.id)
+            strokes.sort((a, b) => ((a.id ?? "") > (b.id ?? "") ? 1 : -1))
 
             const handler = (boardState: BoardState) => {
-                addStrokes(boardState, ...strokes)
+                addOrUpdateStrokes(boardState, ...strokes)
                 sessionHandler?.()
             }
             const undoHandler = (boardState: BoardState) => {
@@ -156,7 +163,7 @@ const boardSlice = createSlice({
                 sessionHandler?.()
             }
             const undoHandler = (boardState: BoardState) => {
-                addStrokes(boardState, ...strokes)
+                addOrUpdateStrokes(boardState, ...strokes)
                 sessionUndoHandler?.()
             }
             addAction(
@@ -172,7 +179,7 @@ const boardSlice = createSlice({
 
         // removes strokes in order to correctly display move transformer
         UPDATE_DELETE_STROKES(state, action: PayloadAction<StrokeAction>) {
-            const { strokes } = action.payload
+            const strokes = action.payload.strokes as Stroke[]
             // make copy to save the old stroke position
             state.strokeUpdates = strokes.map((s) => s.serializeUpdate())
             deleteStrokes(state, ...strokes)
@@ -180,19 +187,20 @@ const boardSlice = createSlice({
         },
 
         // Update stroke position after dragging
-        UPDATE_STROKES(state, action) {
+        UPDATE_STROKES(state, action: PayloadAction<StrokeAction>) {
             const { strokes, isRedoable, sessionHandler, sessionUndoHandler } =
                 action.payload
-            const strokesCopy = cloneDeep(strokes)
             const updatesCopy = cloneDeep(state.strokeUpdates)
 
             const handler = (boardState: BoardState) => {
-                updateOrAddStrokes(boardState, ...strokesCopy)
-                sessionHandler?.()
+                // copy to not mutate the reference
+                const strokesCopy = cloneDeep(strokes)
+                addOrUpdateStrokes(boardState, ...strokesCopy)
+                sessionHandler?.(...strokesCopy)
             }
             const undoHandler = (boardState: BoardState) => {
-                updateOrAddStrokes(boardState, ...updatesCopy)
-                sessionUndoHandler?.()
+                addOrUpdateStrokes(boardState, ...updatesCopy)
+                sessionUndoHandler?.(...updatesCopy)
             }
             addAction(
                 handler,
@@ -327,6 +335,9 @@ const boardSlice = createSlice({
                 ZOOM_OUT_BUTTON_SCALE
             )
         },
+        TRIGGER_BOARD_RERENDER: (state) => {
+            state.triggerManualUpdate?.()
+        },
     },
 })
 
@@ -371,5 +382,6 @@ export const {
     ZOOM_TO,
     ZOOM_IN_CENTER,
     ZOOM_OUT_CENTER,
+    TRIGGER_BOARD_RERENDER,
 } = boardSlice.actions
 export default boardSlice.reducer
