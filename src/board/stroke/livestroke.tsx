@@ -1,17 +1,19 @@
 import { LiveStroke } from "drawing/stroke/types"
 import React, { memo } from "react"
-import { useCustomSelector } from "redux/hooks"
-import store from "redux/store"
 import { StrokeShape } from "./shape"
 
-export const LiveStrokeShape = memo(() => {
-    useCustomSelector((state) => state.drawing.liveStrokeUpdate) // trigger update
-    const { liveStroke } = store.getState().drawing
-    return (
+interface LiveStrokeShapeProps {
+    liveStroke: () => LiveStroke
+    liveStrokeTrigger: number
+}
+
+export const LiveStrokeShape = memo<LiveStrokeShapeProps>(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    ({ liveStroke, liveStrokeTrigger }) => (
         <>
-            {liveStroke.pointsSegments.map((subPts: number[], i: number) => {
+            {liveStroke().pointsSegments.map((subPts: number[], i: number) => {
                 const strokeSegment = {
-                    ...liveStroke,
+                    ...liveStroke(),
                     points: subPts.slice(),
                 } as LiveStroke
                 // we can use the array index as key here
@@ -21,4 +23,4 @@ export const LiveStrokeShape = memo(() => {
             })}
         </>
     )
-})
+)

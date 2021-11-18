@@ -7,7 +7,7 @@ import { LAYER_CACHE_PXL } from "consts"
 import { StrokeShape } from "../stroke/shape"
 import { PageProps } from "./index.types"
 
-const Strokes: React.FC<PageProps> = memo(({ pageId, pageSize }) => {
+const Strokes = memo<PageProps>(({ pageId, pageSize }) => {
     const ref = useRef<GroupType>(null)
 
     // pageId might not be valid anymore, exit then

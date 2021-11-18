@@ -6,9 +6,7 @@ import { ToolType } from "drawing/stroke/types"
 import PenTool from "../pentool/pentool"
 
 const ToolRing: React.FC = () => {
-    const typeSelector = useCustomSelector(
-        (state) => state.drawing.liveStroke.type
-    )
+    const typeSelector = useCustomSelector((state) => state.drawing.tool.type)
 
     return (
         <>

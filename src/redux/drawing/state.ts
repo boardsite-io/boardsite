@@ -1,10 +1,12 @@
 import {
+    DEFAULT_COLOR,
     DEFAULT_DIRECTDRAW,
     DEFAULT_FAV_TOOLS,
     DEFAULT_ISDRAGGABLE,
     DEFAULT_ISMOUSEDOWN,
+    DEFAULT_TOOL,
+    DEFAULT_WIDTH,
 } from "consts"
-import { BoardLiveStroke } from "drawing/stroke/livestroke"
 import { StrokeMap, Tool } from "drawing/stroke/types"
 import { pick, keys, assign, cloneDeep } from "lodash"
 
@@ -17,8 +19,7 @@ export interface DrawingState {
     isDraggable: boolean
     isMouseDown: boolean
     directDraw: boolean
-    liveStroke: BoardLiveStroke
-    liveStrokeUpdate: number
+    tool: Tool
     favTools: Tool[]
     erasedStrokes: StrokeMap
 
@@ -32,16 +33,19 @@ export const newState = (state?: DrawingState): DrawingState => ({
     isDraggable: DEFAULT_ISDRAGGABLE,
     isMouseDown: DEFAULT_ISMOUSEDOWN,
     directDraw: DEFAULT_DIRECTDRAW,
-    liveStroke: new BoardLiveStroke(),
-    liveStrokeUpdate: 0,
+    tool: {
+        type: DEFAULT_TOOL,
+        style: {
+            color: DEFAULT_COLOR,
+            width: DEFAULT_WIDTH,
+            opacity: 1,
+        },
+    },
     favTools: DEFAULT_FAV_TOOLS,
     erasedStrokes: {},
 
     serialize(): SerializedDrawingState {
         const stateCopy = cloneDeep<SerializedDrawingState>(this)
-        stateCopy.liveStroke.points = []
-        stateCopy.liveStroke.pointsSegments = []
-        stateCopy.liveStrokeUpdate = 0
         stateCopy.erasedStrokes = {}
 
         delete stateCopy.serialize
@@ -70,7 +74,6 @@ export const newState = (state?: DrawingState): DrawingState => ({
         // update all valid keys
         assign(this, pick(parsed, keys(this)))
 
-        this.liveStroke = new BoardLiveStroke(this.liveStroke) // deserialize a new instance
         return this
     },
 

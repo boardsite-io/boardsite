@@ -1,3 +1,4 @@
+import { KonvaEventObject } from "konva/lib/Node"
 import { ShapeConfig } from "konva/lib/Shape"
 import { Polygon } from "sat"
 
@@ -80,11 +81,15 @@ export interface Stroke extends BaseStroke {
 export interface LiveStroke extends BaseStroke {
     pointsSegments: number[][]
 
+    setTool(tool: Tool): LiveStroke
     start({ x, y }: Point, pageId: string): void
+    move(point: Point, pagePosition: Point): void
     addPoint(point: Point, scale: number): void
+    register(e: KonvaEventObject<MouseEvent>): Promise<void>
     flatPoints(): void
     processPoints(stageScale: number, pagePosition: Point): void
     reset(): void
+    isReset(): boolean
     selectLineCollision(strokes: StrokeMap, pagePosition: Point): StrokeMap
 }
 

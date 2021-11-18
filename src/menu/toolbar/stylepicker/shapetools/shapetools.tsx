@@ -12,11 +12,9 @@ import { handleSetTool } from "drawing/handlers"
 import { StyledShapeTools } from "./shapetools.styled"
 
 const ShapeTools: React.FC = () => {
-    const typeSelector = useCustomSelector(
-        (state) => state.drawing.liveStroke.type
-    )
+    const typeSelector = useCustomSelector((state) => state.drawing.tool.type)
     const colorSelector = useCustomSelector(
-        (state) => state.drawing.liveStroke.style.color
+        (state) => state.drawing.tool.style.color
     )
     return (
         <StyledShapeTools>

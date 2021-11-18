@@ -5,9 +5,7 @@ import store from "redux/store"
 import { CustomColorPicker } from "./colorpicker.styled"
 
 const ColorPicker: React.FC = () => {
-    const color = useCustomSelector(
-        (state) => state.drawing.liveStroke.style.color
-    )
+    const color = useCustomSelector((state) => state.drawing.tool.style.color)
     const handleChange = (newColor: string | undefined) => {
         store.dispatch(SET_COLOR(newColor))
     }

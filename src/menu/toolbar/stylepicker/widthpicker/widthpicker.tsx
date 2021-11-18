@@ -8,7 +8,7 @@ import { Preset, WidthPresetInnerDot, WidthPresets } from "./widthpicker.styled"
 
 const WidthPicker: React.FC = () => {
     const widthSelector = useCustomSelector(
-        (state) => state.drawing.liveStroke.style.width
+        (state) => state.drawing.tool.style.width
     )
 
     return (

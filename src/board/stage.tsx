@@ -26,7 +26,7 @@ import Content from "./content"
 
 const BoardStage: React.FC = () => {
     const isPanMode = useCustomSelector(
-        (state) => state.drawing.liveStroke.type === ToolType.Pan
+        (state) => state.drawing.tool.type === ToolType.Pan
     )
     const {
         stageWidth,
