@@ -130,10 +130,6 @@ describe("boardcontrol reducer", () => {
             )
         ).toHaveProperty("pageCollection.pid1.strokes.strkid1", {
             ...mockBoardStroke1,
-            x: 0,
-            y: 0,
-            scaleX: 1,
-            scaleY: 1,
         })
     })
 })
