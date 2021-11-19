@@ -48,6 +48,7 @@ const PageListener = memo<PageProps>(
                     liveStroke?.().reset()
                     setLiveStrokeTrigger?.((prev) => prev + 1)
                 }
+                isMouseDown = false
                 return
             }
 
@@ -87,6 +88,7 @@ const PageListener = memo<PageProps>(
             } else {
                 liveStroke?.().reset()
                 setLiveStrokeTrigger?.((prev) => prev + 1)
+                isMouseDown = false
             }
         }
 
@@ -96,9 +98,9 @@ const PageListener = memo<PageProps>(
 
         const isValidTouch = (e: KonvaEventObject<TouchEvent>) => {
             e.evt.preventDefault()
-            const touch1 = e.evt.touches[0] as Touch & { touchType: string }
-            const touch2 = e.evt.touches[1] as Touch & { touchType: string }
-            if (touch1.touchType === undefined) {
+            const touch1 = e.evt.touches?.[0] as Touch & { touchType: string }
+            const touch2 = e.evt.touches?.[1] as Touch & { touchType: string }
+            if (touch1?.touchType === undefined) {
                 return false
             }
             if (
