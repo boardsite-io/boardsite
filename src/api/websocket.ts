@@ -1,4 +1,3 @@
-import { BoardStroke } from "drawing/stroke/stroke"
 import { Stroke, StrokeUpdate, ToolType } from "drawing/stroke/types"
 import {
     ADD_STROKES,
@@ -114,14 +113,15 @@ function receive(message: Message<unknown>) {
 }
 
 function receiveStrokes(strokes: Stroke[]) {
-    strokes.forEach((stroke) => {
-        if (stroke.type > 0) {
-            store.dispatch(ADD_STROKES({ strokes }))
-        } else if (stroke.type === 0) {
-            // delete stroke
-            store.dispatch(ERASE_STROKES({ strokes: [stroke] }))
-        }
-    })
+    const erasedStrokes = strokes.filter((s) => s.type === 0)
+    if (erasedStrokes.length > 0) {
+        store.dispatch(ERASE_STROKES({ strokes: erasedStrokes }))
+    }
+
+    strokes = strokes.filter((s) => s.type !== 0)
+    if (strokes.length > 0) {
+        store.dispatch(ADD_STROKES({ strokes }))
+    }
 }
 
 function syncPages({ pageRank, meta }: ResponsePageSync) {
@@ -188,12 +188,7 @@ export async function joinSession(
     // fetch data from each page
     pageRank.forEach(async (pageId) => {
         const strokes = await getStrokes(sessionId, pageId)
-        // IMPORTANT: create BoardStroke instance
-        store.dispatch(
-            ADD_STROKES({
-                strokes: strokes.map((stroke) => new BoardStroke(stroke)),
-            })
-        )
+        store.dispatch(ADD_STROKES({ strokes }))
     })
 }
 
