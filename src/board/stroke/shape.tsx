@@ -101,7 +101,7 @@ const getShape = (
             return <Line tension={0.35} {...shapeProps} />
         }
         case ToolType.Line:
-            return <Line tension={0.35} {...shapeProps} />
+            return <Line {...shapeProps} />
         case ToolType.Circle:
             return (
                 <Ellipse

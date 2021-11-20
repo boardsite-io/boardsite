@@ -84,10 +84,10 @@ export interface LiveStroke extends BaseStroke {
     setTool(tool: Tool): LiveStroke
     start({ x, y }: Point, pageId: string): void
     move(point: Point, pagePosition: Point): void
-    addPoint(point: Point, scale: number): void
+    newStrokeSegment(point: Point): void
+    addPoint(point: Point): void
     register(e: KonvaEventObject<MouseEvent>): Promise<void>
-    flatPoints(): void
-    processPoints(stageScale: number, pagePosition: Point): void
+    processPoints(pagePosition: Point): void
     reset(): void
     isReset(): boolean
     selectLineCollision(strokes: StrokeMap, pagePosition: Point): StrokeMap

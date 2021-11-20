@@ -51,12 +51,9 @@ export const ERASER_WIDTH = 3
 export const DEFAULT_TOOL = ToolType.Pen
 // allow drawing with finger
 export const DEFAULT_DIRECTDRAW = true
-// maximum number of points a livestroke can have until cached
-export const MAX_LIVESTROKE_PTS = 20
-// epsilon for the Ramer–Douglas–Peucker algorithm
-export const RDP_EPSILON = 0.4
-// force the rdp algorithm to split the curve at least 2^3 times
-export const RDP_FORCE_SECTIONS = 3
+
+const ELEMENTS_PER_POINT = 2
+export const LIVESTROKE_SEGMENT_SIZE = 40 * ELEMENTS_PER_POINT
 
 // scale factor for importet documents
 export const DOC_SCALE = 4
