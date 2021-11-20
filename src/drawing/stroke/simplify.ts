@@ -18,20 +18,21 @@ export const perfectDrawing = (points: number[]): number[] => {
         // Whether to simulate pressure based on velocity.
         simulatePressure: false,
         // An easing function to apply to each point's pressure.
-        easing: undefined,
+        // easing: (t) => t,
         // Tapering options for the start of the line.
-        start: {
-            // cap: true,
-            // taper: 0,
-            // easing: (t) => t,
-        },
+        // start: {
+        //     cap: true,
+        //     taper: 0,
+        //     easing: (t) => t,
+        // },
         // Tapering options for the end of the line.
-        end: {
-            // cap: true,
-            // taper: 0,
-            // easing: (t) => t,
-        },
-        last: true, // Whether the stroke is complete.
+        // end: {
+        //     cap: true,
+        //     taper: 0,
+        //     easing: (t) => t,
+        // },
+        // Whether the stroke is complete.
+        last: true,
     }
 
     const stroke = getStrokePoints(formattedPoints, options)
