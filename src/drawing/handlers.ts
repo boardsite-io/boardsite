@@ -144,10 +144,12 @@ export function handleUpdateStrokes(...strokes: Stroke[]): void {
 }
 
 export function handleUndo(): void {
+    store.dispatch(CLEAR_TRANSFORM())
     store.dispatch(UNDO_ACTION())
 }
 
 export function handleRedo(): void {
+    store.dispatch(CLEAR_TRANSFORM())
     store.dispatch(REDO_ACTION())
 }
 
