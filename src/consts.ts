@@ -53,7 +53,7 @@ export const DEFAULT_TOOL = ToolType.Pen
 export const DEFAULT_DIRECTDRAW = true
 
 const ELEMENTS_PER_POINT = 2
-export const LIVESTROKE_SEGMENT_SIZE = 40 * ELEMENTS_PER_POINT
+export const LIVESTROKE_SEGMENT_SIZE = 420 * ELEMENTS_PER_POINT
 
 // scale factor for importet documents
 export const DOC_SCALE = 4
