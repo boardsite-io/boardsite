@@ -1,10 +1,9 @@
 import { getStrokePoints, StrokeOptions } from "perfect-freehand"
 
 export const perfectDrawing = (points: number[]): number[] => {
-    const formattedPoints: number[][] = []
-    for (let i = 0; i < points.length; i += 2) {
-        formattedPoints.push([points[i], points[i + 1]])
-    }
+    const formattedPoints = new Array(points.length / 2)
+        .fill(undefined)
+        .map((_, i) => [points[2 * i], points[2 * i + 1]])
 
     const options: StrokeOptions = {
         // The base size (diameter) of the stroke.
@@ -35,10 +34,7 @@ export const perfectDrawing = (points: number[]): number[] => {
         last: true,
     }
 
-    const stroke = getStrokePoints(formattedPoints, options)
-
-    const perfectPoints: number[] = []
-    stroke.map((x) => perfectPoints.push(...x.point))
-
-    return perfectPoints
+    return getStrokePoints(formattedPoints, options)
+        .map((strokePoint) => strokePoint.point)
+        .flat()
 }
