@@ -25,7 +25,6 @@ export const DEFAULT_STAGE_X = 0
 export const DEFAULT_STAGE_Y = 60
 export const DEFAULT_STAGE_SCALE: Point = { x: 1, y: 1 }
 export const DEFAULT_ISDRAGGABLE = false
-export const DEFAULT_ISMOUSEDOWN = false
 export const DEFAULT_KEEP_CENTERED = false
 export const DEFAULT_HIDE_NAVBAR = false
 export const DRAG_SHADOW_BLUR = 4
@@ -52,12 +51,9 @@ export const ERASER_WIDTH = 3
 export const DEFAULT_TOOL = ToolType.Pen
 // allow drawing with finger
 export const DEFAULT_DIRECTDRAW = true
-// maximum number of points a livestroke can have until cached
-export const MAX_LIVESTROKE_PTS = 20
-// epsilon for the Ramer–Douglas–Peucker algorithm
-export const RDP_EPSILON = 0.4
-// force the rdp algorithm to split the curve at least 2^3 times
-export const RDP_FORCE_SECTIONS = 3
+
+const ELEMENTS_PER_POINT = 2
+export const LIVESTROKE_SEGMENT_SIZE = 420 * ELEMENTS_PER_POINT
 
 // scale factor for importet documents
 export const DOC_SCALE = 4
@@ -79,6 +75,9 @@ export const pageSize = {
     [sizePreset.A4_PORTRAIT]: { width: 877, height: 620 },
     [sizePreset.Square]: { width: 877, height: 877 },
 }
+
+export const BACKGROUND_CACHE_PXL = 3
+export const LAYER_CACHE_PXL = 4
 
 const tool1: Tool = {
     type: ToolType.Pen,

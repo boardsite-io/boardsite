@@ -1,4 +1,5 @@
-import { Stroke } from "drawing/stroke/types"
+import { BoardStroke } from "drawing/stroke/stroke"
+import { Stroke, StrokeUpdate } from "drawing/stroke/types"
 import { BoardState, BoardAction } from "./state"
 
 export function undoAction(state: BoardState): void {
@@ -45,33 +46,31 @@ export function addAction(
     handler(state)
 }
 
-export function addStrokes(state: BoardState, ...strokes: Stroke[]): void {
-    strokes.forEach((s: Stroke) => {
-        const page = state.pageCollection[s.pageId]
-        if (page) {
-            page.strokes[s.id] = s
-        }
-    })
-}
-
-export function deleteStrokes(state: BoardState, ...strokes: Stroke[]): void {
+export function deleteStrokes(
+    state: BoardState,
+    ...strokes: Stroke[] | StrokeUpdate[]
+): void {
     strokes.forEach(({ id, pageId }) => {
-        const page = state.pageCollection[pageId]
-        if (page) {
+        const page = state.pageCollection[pageId ?? ""]
+        if (page && id) {
             delete page.strokes[id]
         }
     })
 }
 
-export function updateStrokes(
+export function addOrUpdateStrokes(
     state: BoardState,
-    ...strokes: Stroke[]
-): Stroke[] {
-    return strokes
-        .map(({ id, pageId, x, y, scaleX, scaleY }) => {
-            const stroke = state.pageCollection[pageId]?.strokes[id]
-            stroke?.update({ x, y }, { x: scaleX, y: scaleY })
-            return stroke
-        })
-        .filter((s) => s !== undefined) as Stroke[]
+    ...strokes: Stroke[] | StrokeUpdate[]
+): void {
+    strokes.forEach((stroke) => {
+        const page = state.pageCollection[stroke.pageId ?? ""]
+        if (page && stroke.id) {
+            if (page.strokes[stroke.id]) {
+                // stroke exists -> update
+                page.strokes[stroke.id].update(stroke)
+            } else {
+                page.strokes[stroke.id] = new BoardStroke(stroke as Stroke)
+            }
+        }
+    })
 }

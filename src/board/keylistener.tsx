@@ -1,7 +1,6 @@
 import { JUMP_TO_NEXT_PAGE, JUMP_TO_PREV_PAGE } from "redux/board/board"
-import { SET_TYPE } from "redux/drawing/drawing"
 import store from "redux/store"
-import { handleRedo, handleUndo } from "drawing/handlers"
+import { handleSetTool, handleRedo, handleUndo } from "drawing/handlers"
 import { ToolType } from "drawing/stroke/types"
 import { saveWorkspace } from "redux/workspace"
 
@@ -20,25 +19,25 @@ export default function keyListener(e: KeyboardEvent): void {
             store.dispatch(JUMP_TO_NEXT_PAGE())
             break
         case "1":
-            store.dispatch(SET_TYPE(ToolType.Pen))
+            handleSetTool({ type: ToolType.Pen })
             break
         case "2":
-            store.dispatch(SET_TYPE(ToolType.Eraser))
+            handleSetTool({ type: ToolType.Eraser })
             break
         case "3":
-            store.dispatch(SET_TYPE(ToolType.Select))
+            handleSetTool({ type: ToolType.Select })
             break
         case "4":
-            store.dispatch(SET_TYPE(ToolType.Pan))
+            handleSetTool({ type: ToolType.Pan })
             break
         case "5":
-            store.dispatch(SET_TYPE(ToolType.Line))
+            handleSetTool({ type: ToolType.Line })
             break
         case "6":
-            store.dispatch(SET_TYPE(ToolType.Rectangle))
+            handleSetTool({ type: ToolType.Rectangle })
             break
         case "7":
-            store.dispatch(SET_TYPE(ToolType.Circle))
+            handleSetTool({ type: ToolType.Circle })
             break
         case "z": // Undo (Ctrl + Z)
             if (e.ctrlKey && !e.repeat) {

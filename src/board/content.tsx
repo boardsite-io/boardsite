@@ -1,10 +1,11 @@
-import React, { memo, useState } from "react"
+import React, { memo, useEffect, useRef, useState } from "react"
 import { ReactReduxContextValue } from "react-redux"
 import { createSelector } from "reselect"
-import { DEFAULT_PAGE_GAP } from "consts"
+import { DEFAULT_PAGE_GAP, LAYER_CACHE_PXL } from "consts"
 import { RootState } from "redux/types"
 import { useCustomSelector } from "redux/hooks"
 import { Layer } from "react-konva"
+import { Layer as LayerType } from "konva/lib/Layer"
 import { LiveStroke } from "drawing/stroke/types"
 import { BoardLiveStroke, generateLiveStroke } from "drawing/stroke/livestroke"
 import store from "redux/store"
@@ -21,9 +22,16 @@ interface PageLayerProps {
 
 const PageLayer = memo<PageLayerProps>(
     ({ pageId, relativeIndex, liveStroke, setLiveStrokeTrigger }) => {
+        const ref = useRef<LayerType>(null)
         const { meta } = store.getState().board.pageCollection[pageId]
+
+        useEffect(() => {
+            // cache the layer/page by default
+            ref.current?.cache({ pixelRatio: LAYER_CACHE_PXL })
+        })
+
         return (
-            <Layer key={pageId}>
+            <Layer key={pageId} ref={ref}>
                 <Page
                     pageId={pageId}
                     pageSize={{

@@ -1,6 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit"
-import { pick, keys, assign } from "lodash"
-import { Stroke } from "drawing/stroke/types"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { pick, keys, assign, cloneDeep } from "lodash"
+import { Point, Stroke } from "drawing/stroke/types"
 import {
     DEFAULT_STAGE_Y,
     ZOOM_IN_BUTTON_SCALE,
@@ -9,11 +9,10 @@ import {
 import { Page } from "types"
 import {
     addAction,
-    addStrokes,
     deleteStrokes,
     redoAction,
     undoAction,
-    updateStrokes,
+    addOrUpdateStrokes,
 } from "./undoredo"
 import {
     centerView,
@@ -23,7 +22,7 @@ import {
     multiTouchMove,
     zoomToPointWithScale,
 } from "./helpers"
-import { BoardState, newState } from "./state"
+import { BoardState, newState, StrokeAction } from "./state"
 
 const boardSlice = createSlice({
     name: "board",
@@ -37,17 +36,20 @@ const boardSlice = createSlice({
             const { pageRank, pageCollection } = action.payload
             state.pageRank = pageRank
             state.pageCollection = pageCollection
+            state.triggerManualUpdate?.()
         },
 
         SET_PAGERANK: (state, action) => {
             const { pageRank, pageCollection } = action.payload
             state.pageRank = pageRank
             state.pageCollection = pageCollection
+            state.triggerManualUpdate?.()
         },
 
         SET_PAGEMETA: (state, action) => {
             const { pageId, meta } = action.payload
             state.pageCollection[pageId]?.updateMeta(meta)
+            state.triggerManualUpdate?.()
         },
 
         SET_PAGE_BACKGROUND: (state, action) => {
@@ -57,6 +59,7 @@ const boardSlice = createSlice({
 
         SET_PAGE_SIZE: (state, action) => {
             state.pageSettings.size = action.payload
+            state.triggerManualUpdate?.()
         },
 
         ADD_PAGE: (state, action) => {
@@ -70,11 +73,13 @@ const boardSlice = createSlice({
             } else {
                 state.pageRank.push(page.pageId)
             }
+            state.triggerManualUpdate?.()
         },
 
         CLEAR_PAGE: (state, action) => {
             const pageId = action.payload
             state.pageCollection[pageId]?.clear()
+            state.triggerManualUpdate?.()
         },
 
         DELETE_PAGES: (state, action) => {
@@ -86,12 +91,14 @@ const boardSlice = createSlice({
                     1
                 )
                 delete state.pageCollection[pid]
+                state.triggerManualUpdate?.()
             })
         },
 
         // removes all pages but leaves the document
         DELETE_ALL_PAGES: (state) => {
             state.pageRank = []
+            state.triggerManualUpdate?.()
             state.pageCollection = {}
         },
 
@@ -100,22 +107,50 @@ const boardSlice = createSlice({
             state.documentSrc = ""
         },
 
+        CLEAR_TRANSFORM: (state) => {
+            state.transformStrokes = []
+            state.strokeUpdates = []
+        },
+
+        // sets the currently selected strokes
+        MOVE_SHAPES_TO_DRAG_LAYER: (
+            state,
+            action: PayloadAction<{
+                strokes: Stroke[]
+                pagePosition?: Point
+            }>
+        ) => {
+            const { strokes, pagePosition } = action.payload
+            if (pagePosition) {
+                state.transformPagePosition = pagePosition
+            }
+            state.transformStrokes = strokes
+        },
+
         // Add strokes to collection
-        ADD_STROKES: (state, action) => {
+        ADD_STROKES: (state, action: PayloadAction<StrokeAction>) => {
             const { strokes, isRedoable, sessionHandler, sessionUndoHandler } =
                 action.payload
 
-            strokes.sort((a: Stroke, b: Stroke) => a.id > b.id)
+            strokes.sort((a, b) => ((a.id ?? "") > (b.id ?? "") ? 1 : -1))
 
             const handler = (boardState: BoardState) => {
-                addStrokes(boardState, ...strokes)
+                addOrUpdateStrokes(boardState, ...strokes)
                 sessionHandler?.()
             }
             const undoHandler = (boardState: BoardState) => {
                 deleteStrokes(boardState, ...strokes)
                 sessionUndoHandler?.()
             }
-            addAction(handler, undoHandler, state, state.undoStack, isRedoable)
+            addAction(
+                handler,
+                undoHandler,
+                state as BoardState,
+                state.undoStack,
+                isRedoable
+            )
+
+            state.triggerManualUpdate?.()
         },
 
         // Erase strokes from collection
@@ -128,44 +163,54 @@ const boardSlice = createSlice({
                 sessionHandler?.()
             }
             const undoHandler = (boardState: BoardState) => {
-                addStrokes(boardState, ...strokes)
+                addOrUpdateStrokes(boardState, ...strokes)
                 sessionUndoHandler?.()
             }
-            addAction(handler, undoHandler, state, state.undoStack, isRedoable)
+            addAction(
+                handler,
+                undoHandler,
+                state as BoardState,
+                state.undoStack,
+                isRedoable
+            )
+
+            state.triggerManualUpdate?.()
+        },
+
+        // removes strokes in order to correctly display move transformer
+        UPDATE_DELETE_STROKES(state, action: PayloadAction<StrokeAction>) {
+            const strokes = action.payload.strokes as Stroke[]
+            // make copy to save the old stroke position
+            state.strokeUpdates = strokes.map((s) => s.serializeUpdate())
+            deleteStrokes(state, ...strokes)
+            state.triggerManualUpdate?.()
         },
 
         // Update stroke position after dragging
-        UPDATE_STROKES(state, action) {
+        UPDATE_STROKES(state, action: PayloadAction<StrokeAction>) {
             const { strokes, isRedoable, sessionHandler, sessionUndoHandler } =
                 action.payload
-
-            const copy = strokes
-                .map((s: Stroke) => {
-                    // save values of the current stroke
-                    const cur = state.pageCollection[s.pageId]?.strokes[s.id]
-                    if (cur) {
-                        return {
-                            id: s.id,
-                            pageId: s.pageId,
-                            x: cur.x,
-                            y: cur.y,
-                            scaleX: cur.scaleX,
-                            scaleY: cur.scaleY,
-                        }
-                    }
-                    return undefined
-                })
-                .filter((s: Stroke) => s !== undefined) as Stroke[]
+            const updatesCopy = cloneDeep(state.strokeUpdates)
 
             const handler = (boardState: BoardState) => {
-                const updated = updateStrokes(boardState, ...strokes)
-                sessionHandler?.(...updated)
+                // copy to not mutate the reference
+                const strokesCopy = cloneDeep(strokes)
+                addOrUpdateStrokes(boardState, ...strokesCopy)
+                sessionHandler?.(...strokesCopy)
             }
             const undoHandler = (boardState: BoardState) => {
-                const updated = updateStrokes(boardState, ...copy)
-                sessionUndoHandler?.(...updated)
+                addOrUpdateStrokes(boardState, ...updatesCopy)
+                sessionUndoHandler?.(...updatesCopy)
             }
-            addAction(handler, undoHandler, state, state.undoStack, isRedoable)
+            addAction(
+                handler,
+                undoHandler,
+                state as BoardState,
+                state.undoStack,
+                isRedoable
+            )
+
+            state.triggerManualUpdate?.()
         },
 
         SET_PDF: (state, action) => {
@@ -175,11 +220,13 @@ const boardSlice = createSlice({
         },
 
         UNDO_ACTION: (state) => {
-            undoAction(state)
+            undoAction(state as BoardState)
+            state.triggerManualUpdate?.()
         },
 
         REDO_ACTION: (state) => {
-            redoAction(state)
+            redoAction(state as BoardState)
+            state.triggerManualUpdate?.()
         },
 
         JUMP_TO_NEXT_PAGE: (state) => {
@@ -288,6 +335,9 @@ const boardSlice = createSlice({
                 ZOOM_OUT_BUTTON_SCALE
             )
         },
+        TRIGGER_BOARD_RERENDER: (state) => {
+            state.triggerManualUpdate?.()
+        },
     },
 })
 
@@ -299,13 +349,16 @@ export const {
     CLEAR_PAGE,
     DELETE_PAGES,
     DELETE_ALL_PAGES,
+    MOVE_SHAPES_TO_DRAG_LAYER,
     ADD_STROKES,
     ERASE_STROKES,
+    UPDATE_DELETE_STROKES,
     UPDATE_STROKES,
     SET_PDF,
     UNDO_ACTION,
     REDO_ACTION,
     CLEAR_DOCS,
+    CLEAR_TRANSFORM,
     SET_PAGE_BACKGROUND,
     SET_PAGE_SIZE,
     JUMP_TO_NEXT_PAGE,
@@ -329,5 +382,6 @@ export const {
     ZOOM_TO,
     ZOOM_IN_CENTER,
     ZOOM_OUT_CENTER,
+    TRIGGER_BOARD_RERENDER,
 } = boardSlice.actions
 export default boardSlice.reducer

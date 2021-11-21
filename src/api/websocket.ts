@@ -1,5 +1,4 @@
-import { BoardStroke } from "drawing/stroke/stroke"
-import { Stroke, ToolType } from "drawing/stroke/types"
+import { Stroke, StrokeUpdate, ToolType } from "drawing/stroke/types"
 import {
     ADD_STROKES,
     CLEAR_PAGE,
@@ -114,15 +113,15 @@ function receive(message: Message<unknown>) {
 }
 
 function receiveStrokes(strokes: Stroke[]) {
-    strokes.forEach((stroke) => {
-        if (stroke.type > 0) {
-            // add stroke, IMPORTANT: create BoardStroke instance
-            store.dispatch(ADD_STROKES({ strokes: [new BoardStroke(stroke)] }))
-        } else if (stroke.type === 0) {
-            // delete stroke
-            store.dispatch(ERASE_STROKES({ strokes: [stroke] }))
-        }
-    })
+    const erasedStrokes = strokes.filter((s) => s.type === 0)
+    if (erasedStrokes.length > 0) {
+        store.dispatch(ERASE_STROKES({ strokes: erasedStrokes }))
+    }
+
+    strokes = strokes.filter((s) => s.type !== 0)
+    if (strokes.length > 0) {
+        store.dispatch(ADD_STROKES({ strokes }))
+    }
 }
 
 function syncPages({ pageRank, meta }: ResponsePageSync) {
@@ -188,9 +187,7 @@ export async function joinSession(
 
     // fetch data from each page
     pageRank.forEach(async (pageId) => {
-        let strokes = await getStrokes(sessionId, pageId)
-        // IMPORTANT: create BoardStroke instance
-        strokes = strokes.map((stroke) => new BoardStroke(stroke))
+        const strokes = await getStrokes(sessionId, pageId)
         store.dispatch(ADD_STROKES({ strokes }))
     })
 }
@@ -204,18 +201,22 @@ export function disconnect(): void {
 export function sendStrokes(
     ws: WebSocket,
     userId: string,
-    ...strokes: Stroke[]
+    ...strokes: Stroke[] | StrokeUpdate[]
 ): void {
-    // append the user id to strokes
-    send(
-        ws,
-        messages.Stroke,
-        userId,
-        strokes.map((s) => ({
-            ...s.serialize?.(),
-            userId,
-        }))
-    )
+    const strokesToSend = strokes
+        .map((s) => {
+            if (s.id && s.pageId) {
+                const serialized = (s as Stroke).serialize?.()
+                return {
+                    ...s,
+                    ...serialized,
+                    userId, // append the user id to strokes
+                }
+            }
+            return null
+        })
+        .filter((s) => s)
+    send(ws, messages.Stroke, userId, strokesToSend)
 }
 
 export function getUserId(): string {

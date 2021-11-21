@@ -35,13 +35,14 @@ export enum ToolType {
     Pan,
 }
 
+export type ToolStyle = {
+    color: string
+    width: number
+    opacity: number
+}
 export interface Tool {
     type: ToolType
-    style: {
-        color: string
-        width: number
-        opacity: number
-    }
+    style: ToolStyle
 }
 
 export interface BaseStroke extends Tool {
@@ -55,13 +56,25 @@ export interface BaseStroke extends Tool {
     hitboxes?: Polygon[]
 }
 
+export interface StrokeUpdate {
+    id?: string
+    pageId?: string
+    x?: number
+    y?: number
+    scaleX?: number
+    scaleY?: number
+}
+
 export interface Stroke extends BaseStroke {
     id: string
     scaleX: number
     scaleY: number
 
     serialize: () => Stroke
-    update: (position: Point, scale: Scale) => void
+    serializeUpdate(): StrokeUpdate
+    update: (strokeUpdate: Stroke | StrokeUpdate) => Stroke
+    getPosition(): Point
+    getScale(): Scale
     calculateHitbox: () => void
 }
 
@@ -71,10 +84,10 @@ export interface LiveStroke extends BaseStroke {
     setTool(tool: Tool): LiveStroke
     start({ x, y }: Point, pageId: string): void
     move(point: Point, pagePosition: Point): void
-    addPoint(point: Point, scale: number): void
+    newStrokeSegment(point: Point): void
+    addPoint(point: Point): void
     register(e: KonvaEventObject<MouseEvent>): Promise<void>
-    flatPoints(): void
-    processPoints(stageScale: number, pagePosition: Point): void
+    processPoints(pagePosition: Point): void
     reset(): void
     isReset(): boolean
     selectLineCollision(strokes: StrokeMap, pagePosition: Point): StrokeMap

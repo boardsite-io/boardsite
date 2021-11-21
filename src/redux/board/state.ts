@@ -10,8 +10,8 @@ import {
     sizePreset,
 } from "consts"
 import { BoardStroke } from "drawing/stroke/stroke"
-import { Point, Stroke } from "drawing/stroke/types"
-import { PageCollection, PageSettings } from "types"
+import { Point, Stroke, StrokeUpdate } from "drawing/stroke/types"
+import { PageCollection, PageSettings, TransformStrokes } from "types"
 import { pick, keys, assign, cloneDeep } from "lodash"
 import { BoardPage } from "drawing/page"
 
@@ -40,6 +40,12 @@ export interface BoardState {
     view: BoardView
     undoStack?: BoardAction[]
     redoStack?: BoardAction[]
+    strokeUpdates?: StrokeUpdate[]
+    transformStrokes?: TransformStrokes
+    transformPagePosition?: Point
+    renderTrigger?: number
+
+    triggerManualUpdate?(): void
 
     serialize?(): SerializedBoardState
     deserialize?(parsed: SerializedBoardState): BoardState
@@ -54,10 +60,10 @@ export interface BoardAction {
 }
 
 export interface StrokeAction {
-    strokes: Stroke[]
+    strokes: Stroke[] | StrokeUpdate[]
     isRedoable?: boolean
-    sessionHandler?: (...updates: Stroke[]) => void
-    sessionUndoHandler?: (...updates: Stroke[]) => void
+    sessionHandler?: (...updates: Stroke[] | StrokeUpdate[]) => void
+    sessionUndoHandler?: (...updates: Stroke[] | StrokeUpdate[]) => void
 }
 
 export const newState = (state?: BoardState): BoardState => ({
@@ -81,6 +87,14 @@ export const newState = (state?: BoardState): BoardState => ({
     },
     undoStack: [],
     redoStack: [],
+    strokeUpdates: [],
+    transformStrokes: undefined,
+    transformPagePosition: undefined,
+    renderTrigger: 0,
+
+    triggerManualUpdate(): void {
+        this.renderTrigger = (this.renderTrigger ?? 0) + 1
+    },
 
     serialize(): SerializedBoardState {
         // clone to not mutate current state
@@ -95,12 +109,19 @@ export const newState = (state?: BoardState): BoardState => ({
             })
         })
 
+        delete stateCopy.triggerManualUpdate
         delete stateCopy.serialize
         delete stateCopy.deserialize
 
-        // dont save undo redo actions
+        // dont save undo redo actions and transform layer
         delete stateCopy.undoStack
         delete stateCopy.redoStack
+
+        delete stateCopy.strokeUpdates
+        delete stateCopy.transformStrokes
+        delete stateCopy.transformPagePosition
+
+        delete stateCopy.renderTrigger
 
         return { version: boardVersion, ...stateCopy }
     },

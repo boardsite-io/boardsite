@@ -1,5 +1,4 @@
-import { StrokeMap } from "drawing/stroke/types"
-import { Node, NodeConfig } from "konva/lib/Node"
+import { Stroke, StrokeMap } from "drawing/stroke/types"
 
 // eslint-disable-next-line no-shadow
 export enum Variants {
@@ -40,4 +39,4 @@ export interface PageMeta extends PageSize {
     }
 }
 
-export type TrNodesType = Node<NodeConfig>[]
+export type TransformStrokes = Stroke[]

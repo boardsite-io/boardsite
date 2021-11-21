@@ -1,7 +1,7 @@
 import { Image } from "react-konva"
 import React, { memo, useEffect, useRef, useState } from "react"
 import * as types from "konva/lib/shapes/Image"
-import { DOC_SCALE, pageType } from "consts"
+import { BACKGROUND_CACHE_PXL, LAYER_CACHE_PXL, pageType } from "consts"
 import { pageBackground } from "drawing/page"
 import { useCustomSelector } from "redux/hooks"
 import store from "redux/store"
@@ -28,6 +28,9 @@ export default memo<PageProps>(({ pageId, pageSize }) => {
     )
 
     const scheduleCaching = (r: React.RefObject<types.Image>) => {
+        // clear the cache of the layer
+        r.current?.parent?.clearCache()
+
         r.current?.clearCache()
         triggerCache((prev) => prev + 1)
     }
@@ -62,9 +65,12 @@ export default memo<PageProps>(({ pageId, pageSize }) => {
     useEffect(() => {
         // for some reason, document type need an additional clear cache to work properly
         if (style !== pageType.DOC) {
-            ref.current?.cache({ pixelRatio: DOC_SCALE })
+            ref.current?.cache({ pixelRatio: BACKGROUND_CACHE_PXL })
         }
-        // setTimeout(() => ref.current?.cache({ pixelRatio: DOC_SCALE }), 500)
+        setTimeout(
+            () => ref.current?.parent?.cache({ pixelRatio: LAYER_CACHE_PXL }),
+            500
+        )
     }, [cache])
 
     return (

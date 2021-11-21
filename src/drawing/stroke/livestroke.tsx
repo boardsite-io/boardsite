@@ -4,18 +4,17 @@ import {
     DEFAULT_TOOL,
     DEFAULT_WIDTH,
     ERASER_WIDTH,
-    MAX_LIVESTROKE_PTS,
-    RDP_EPSILON,
-    RDP_FORCE_SECTIONS,
+    LIVESTROKE_SEGMENT_SIZE,
 } from "consts"
 import { handleAddStrokes, handleDeleteStrokes } from "drawing/handlers"
 import { KonvaEventObject } from "konva/lib/Node"
-import { SET_ERASED_STROKES, SET_TR_NODES } from "redux/drawing/drawing"
+import { MOVE_SHAPES_TO_DRAG_LAYER } from "redux/board/board"
+import { CLEAR_ERASED_STROKES, SET_ERASED_STROKES } from "redux/drawing/drawing"
 import store from "redux/store"
-import { simplifyRDP } from "../simplify"
+import { perfectDrawing } from "./simplify"
 import {
     getHitboxPolygon,
-    getSelectedShapes,
+    getSelectionPolygon,
     matchStrokeCollision,
 } from "./hitbox"
 import { BoardStroke } from "./stroke"
@@ -64,12 +63,13 @@ export class BoardLiveStroke implements LiveStroke {
     start({ x, y }: Point, pageId: string): BoardLiveStroke {
         this.reset()
         this.pageId = pageId
+        this.points = [x, y]
         this.pointsSegments = [[x, y]]
         return this
     }
 
     move(point: Point, pagePosition: Point): void {
-        this.addPoint(point, getStageScale())
+        this.addPoint(point)
         if (this.type === ToolType.Eraser) {
             this.moveEraser(pagePosition)
         }
@@ -83,21 +83,29 @@ export class BoardLiveStroke implements LiveStroke {
         }
     }
 
-    addPoint(point: Point, scale: number): void {
-        const { pointsSegments } = this
-        const lastSegment = pointsSegments[pointsSegments.length - 1]
+    newStrokeSegment = (point: Point): void => {
+        // New point is already in this.points so there is no gap to the new segment
+        this.pointsSegments = [perfectDrawing(this.points), [point.x, point.y]]
+    }
+
+    addPoint(point: Point): void {
+        const lastSegment = this.pointsSegments[this.pointsSegments.length - 1]
 
         switch (this.type) {
             case ToolType.Pen:
-            case ToolType.Eraser:
-                // for continuous strokes
-                if (lastSegment.length < MAX_LIVESTROKE_PTS) {
-                    appendLinePoint(lastSegment, point)
+            case ToolType.Eraser: {
+                const segLen = this.points.length % LIVESTROKE_SEGMENT_SIZE
+                this.points.push(point.x, point.y)
+
+                if (segLen === 0) {
+                    this.newStrokeSegment(point)
                 } else {
-                    newStrokeSegment(pointsSegments, lastSegment, scale, point)
+                    // Calculate smooth stroke using the unaltered points as input
+                    this.pointsSegments[this.pointsSegments.length - 1] =
+                        perfectDrawing(this.points.slice(-segLen - 2))
                 }
-                this.pointsSegments = pointsSegments
                 return
+            }
             case ToolType.Circle:
                 this.x = lastSegment[0] + (point.x - lastSegment[0]) / 2
                 this.y = lastSegment[1] + (point.y - lastSegment[1]) / 2
@@ -112,14 +120,13 @@ export class BoardLiveStroke implements LiveStroke {
         }
 
         // only start & end point required for non continuous
-        this.pointsSegments = [
-            [lastSegment[0], lastSegment[1], point.x, point.y],
-        ]
+        this.points = [lastSegment[0], lastSegment[1], point.x, point.y]
+        this.pointsSegments = [this.points]
     }
 
     async register(e: KonvaEventObject<MouseEvent>): Promise<void> {
         const pagePosition = e.target.getPosition()
-        const stroke = this.finalize(getStageScale(), pagePosition)
+        const stroke = this.finalize(pagePosition)
 
         switch (stroke.type) {
             case ToolType.Eraser: {
@@ -130,13 +137,22 @@ export class BoardLiveStroke implements LiveStroke {
                 if (s.length > 0) {
                     handleDeleteStrokes(...s)
                 }
+                store.dispatch(CLEAR_ERASED_STROKES())
                 break
             }
             case ToolType.Select: {
                 const { strokes } =
                     store.getState().board.pageCollection[stroke.pageId]
-                const shapes = getSelectedShapes(stroke, strokes, e)
-                store.dispatch(SET_TR_NODES(shapes))
+                const selectedStrokes = matchStrokeCollision(
+                    strokes,
+                    getSelectionPolygon(stroke.points)
+                )
+                store.dispatch(
+                    MOVE_SHAPES_TO_DRAG_LAYER({
+                        strokes: Object.values(selectedStrokes),
+                        pagePosition,
+                    })
+                )
                 break
             }
             default:
@@ -151,41 +167,22 @@ export class BoardLiveStroke implements LiveStroke {
      * @param stageScale scale for adjusting the RDP algorithm
      * @param pageIndex page index of the pageId
      */
-    finalize(stageScale: number, pagePosition: Point): Stroke {
-        this.flatPoints()
-        this.processPoints(stageScale, pagePosition)
+    finalize(pagePosition: Point): Stroke {
+        this.processPoints(pagePosition)
         const stroke = new BoardStroke(this)
         this.reset()
         return stroke
     }
 
-    flatPoints(): void {
-        const segments = this.pointsSegments
-        if (segments.length === 0) {
-            this.points = []
-        } else if (segments.length === 1) {
-            this.points = segments[0]
-        } else {
-            let pts: number[] = []
-            for (let i = 0; i < segments.length - 1; i += 1) {
-                pts = pts.concat(segments[i].slice(0, segments[i].length - 2))
-            }
-            this.points = pts.concat(segments[segments.length - 1])
-        }
-    }
-
-    processPoints(stageScale: number, pagePosition: Point): void {
+    processPoints(pagePosition: Point): void {
         const { x: pageX, y: pageY } = pagePosition
+        // const stageScale = getStageScale();
 
         switch (this.type) {
-            case ToolType.Pen:
-                // simplify the points
-                this.points = simplifyRDP(
-                    this.points,
-                    RDP_EPSILON / stageScale,
-                    RDP_FORCE_SECTIONS + 1
-                )
+            case ToolType.Pen: {
+                this.points = perfectDrawing(this.points)
                 break
+            }
             case ToolType.Rectangle:
             case ToolType.Circle:
                 this.x -= pageX
@@ -230,58 +227,15 @@ export class BoardLiveStroke implements LiveStroke {
                 .concat(p.slice(p.length - 2))
 
             this.numUpdates = 0
-            const sel = getHitboxPolygon(
+            const selectionPolygon = getHitboxPolygon(
                 subPageOffset(line, pagePosition), // compensate page offset in stage
                 ERASER_WIDTH
             )
 
-            return matchStrokeCollision(strokes, sel)
+            return matchStrokeCollision(strokes, selectionPolygon)
         }
         return res
     }
-}
-
-const appendLinePoint = (pts: number[], newPoint: Point): void => {
-    if (pts.length < 4) {
-        pts.push(newPoint.x, newPoint.y)
-        return
-    }
-
-    // fix the interim point to remove jitter
-    const [x1, y1] = pts.slice(pts.length - 4, pts.length - 2)
-    const interimPoint: Point = {
-        x: x1 + (newPoint.x - x1) / 2,
-        y: y1 + (newPoint.y - y1) / 2,
-    }
-    pts.splice(
-        pts.length - 2,
-        2,
-        interimPoint.x,
-        interimPoint.y,
-        newPoint.x,
-        newPoint.y
-    )
-}
-
-const newStrokeSegment = (
-    pointsSegments: number[][],
-    lastSegment: number[],
-    scale: number,
-    point: Point
-) => {
-    pointsSegments[pointsSegments.length - 1] = simplifyRDP(
-        lastSegment,
-        0.2 / scale,
-        1
-    )
-    // create a new subarray
-    // with the last point from the previous subarray as entry
-    // in order to not get a gap in the stroke
-    pointsSegments.push(
-        lastSegment
-            .slice(lastSegment.length - 2, lastSegment.length)
-            .concat([point.x, point.y])
-    )
 }
 
 const subPageOffset = (points: number[], pagePosition: Point): number[] =>
@@ -295,4 +249,4 @@ const subPageOffset = (points: number[], pagePosition: Point): number[] =>
         return pt
     })
 
-const getStageScale = (): number => store.getState().board.view.stageScale.x
+// const getStageScale = (): number => store.getState().board.view.stageScale.x

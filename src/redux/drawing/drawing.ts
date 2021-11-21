@@ -6,9 +6,6 @@ const drawingSlice = createSlice({
     name: "drawing",
     initialState: newState(),
     reducers: {
-        SET_TR_NODES: (state, action) => {
-            state.trNodes = action.payload
-        },
         REPLACE_FAV_TOOL: (state, action) => {
             const index = action.payload as number
             const tool: Tool = {
@@ -44,10 +41,13 @@ const drawingSlice = createSlice({
         },
         SET_TOOL: (state, action) => {
             const { type, style } = action.payload
-            state.tool.style = { ...style }
-            state.tool.type = type
-            state.isDraggable = type === ToolType.Select
-            state.trNodes = []
+            if (type !== undefined) {
+                state.tool.type = type
+                state.isDraggable = type === ToolType.Select
+            }
+            if (style !== undefined) {
+                state.tool.style = { ...style }
+            }
         },
         SET_COLOR: (state, action) => {
             const color = action.payload
@@ -57,16 +57,6 @@ const drawingSlice = createSlice({
             const width = action.payload
             state.tool.style.width = width
         },
-        SET_TYPE: (state, action) => {
-            const type = action.payload
-            state.tool.type = type
-            state.isDraggable = type === ToolType.Select
-            state.trNodes = []
-        },
-        SET_ISMOUSEDOWN: (state, action) => {
-            const isMouseDown = action.payload
-            state.isMouseDown = isMouseDown
-        },
         TOGGLE_DIRECTDRAW: (state) => {
             state.directDraw = !state.directDraw
         },
@@ -75,6 +65,9 @@ const drawingSlice = createSlice({
             Object.keys(strokes).forEach((id) => {
                 state.erasedStrokes[id] = strokes[id]
             })
+        },
+        CLEAR_ERASED_STROKES: (state) => {
+            state.erasedStrokes = {}
         },
     },
 })
@@ -86,10 +79,8 @@ export const {
     SET_TOOL,
     SET_COLOR,
     SET_WIDTH,
-    SET_TYPE,
-    SET_ISMOUSEDOWN,
     TOGGLE_DIRECTDRAW,
-    SET_TR_NODES,
     SET_ERASED_STROKES,
+    CLEAR_ERASED_STROKES,
 } = drawingSlice.actions
 export default drawingSlice.reducer

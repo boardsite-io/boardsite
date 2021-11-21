@@ -3,13 +3,11 @@ import {
     DEFAULT_DIRECTDRAW,
     DEFAULT_FAV_TOOLS,
     DEFAULT_ISDRAGGABLE,
-    DEFAULT_ISMOUSEDOWN,
     DEFAULT_TOOL,
     DEFAULT_WIDTH,
 } from "consts"
 import { StrokeMap, Tool } from "drawing/stroke/types"
 import { pick, keys, assign, cloneDeep } from "lodash"
-import { TrNodesType } from "types"
 
 // version of the board state reducer to allow backward compatibility for stored data
 //
@@ -18,11 +16,9 @@ export const drawingVersion = "1.0"
 
 export interface DrawingState {
     isDraggable: boolean
-    isMouseDown: boolean
     directDraw: boolean
     tool: Tool
     favTools: Tool[]
-    trNodes: TrNodesType
     erasedStrokes: StrokeMap
 
     serialize?(): SerializedDrawingState
@@ -33,7 +29,6 @@ export type SerializedDrawingState = DrawingState & { version?: string }
 
 export const newState = (state?: DrawingState): DrawingState => ({
     isDraggable: DEFAULT_ISDRAGGABLE,
-    isMouseDown: DEFAULT_ISMOUSEDOWN,
     directDraw: DEFAULT_DIRECTDRAW,
     tool: {
         type: DEFAULT_TOOL,
@@ -44,12 +39,10 @@ export const newState = (state?: DrawingState): DrawingState => ({
         },
     },
     favTools: DEFAULT_FAV_TOOLS,
-    trNodes: [],
     erasedStrokes: {},
 
     serialize(): SerializedDrawingState {
         const stateCopy = cloneDeep<SerializedDrawingState>(this)
-        stateCopy.trNodes = []
         stateCopy.erasedStrokes = {}
 
         delete stateCopy.serialize
