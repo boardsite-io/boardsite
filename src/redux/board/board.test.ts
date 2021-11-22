@@ -7,16 +7,16 @@ import {
     DEFAULT_STAGE_SCALE,
     DEFAULT_STAGE_X,
     DEFAULT_STAGE_Y,
-    pageType,
+    backgroundStyle,
     STROKE_WIDTH_PRESETS,
 } from "consts"
-import { PageMeta } from "types"
 import reducer from "./board"
 import * as action from "./board"
+import { PageMeta } from "./board.types"
 
-const page1 = new BoardPage()
-    .setID("pid1")
-    .updateMeta({ background: { style: pageType.CHECKERED } } as PageMeta)
+const page1 = new BoardPage().setID("pid1").updateMeta({
+    background: { style: backgroundStyle.CHECKERED },
+} as PageMeta)
 const mockStroke1 = {
     id: "strkid1",
     pageId: "pid1",
@@ -53,7 +53,7 @@ describe("boardcontrol reducer", () => {
                     documentImages: [],
                     documentSrc: "",
                     pageSettings: {
-                        background: pageType.BLANK,
+                        background: backgroundStyle.BLANK,
                         size: {
                             width: 10,
                             height: 10,
@@ -103,7 +103,7 @@ describe("boardcontrol reducer", () => {
                     documentImages: [],
                     documentSrc: "",
                     pageSettings: {
-                        background: pageType.BLANK,
+                        background: backgroundStyle.BLANK,
                         size: {
                             width: 10,
                             height: 10,

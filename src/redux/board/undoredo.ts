@@ -1,6 +1,6 @@
 import { BoardStroke } from "drawing/stroke/stroke"
 import { Stroke, StrokeUpdate } from "drawing/stroke/types"
-import { BoardState, BoardAction } from "./state"
+import { BoardState, BoardAction } from "./board.types"
 
 export function undoAction(state: BoardState): void {
     const action = state.undoStack?.pop()

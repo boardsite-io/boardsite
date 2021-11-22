@@ -15,11 +15,11 @@ import {
 } from "konva/lib/shapes/Transformer"
 import { Group as GroupType } from "konva/lib/Group"
 import store from "redux/store"
-import { TransformStrokes } from "types"
 import {
     MOVE_SHAPES_TO_DRAG_LAYER,
     UPDATE_DELETE_STROKES,
 } from "redux/board/board"
+import { TransformStrokes } from "redux/board/board.types"
 import { handleUpdateStrokes } from "../drawing/handlers"
 import { Point, Stroke } from "../drawing/stroke/types"
 import { StrokeShape } from "./stroke/shape"

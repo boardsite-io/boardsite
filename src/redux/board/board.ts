@@ -6,7 +6,6 @@ import {
     ZOOM_IN_BUTTON_SCALE,
     ZOOM_OUT_BUTTON_SCALE,
 } from "consts"
-import { Page } from "types"
 import {
     addAction,
     deleteStrokes,
@@ -22,7 +21,8 @@ import {
     multiTouchMove,
     zoomToPointWithScale,
 } from "./helpers"
-import { BoardState, newState, StrokeAction } from "./state"
+import { newState } from "./state"
+import { BoardState, Page, StrokeAction } from "./board.types"
 
 const boardSlice = createSlice({
     name: "board",

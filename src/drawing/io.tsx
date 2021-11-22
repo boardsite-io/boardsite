@@ -6,9 +6,9 @@ import { Provider } from "react-redux"
 import { Layer, Stage, Rect } from "react-konva"
 import * as types from "konva/lib/Layer"
 import { StrokeShape } from "board/stroke/shape"
-import { pageType, PIXEL_RATIO } from "consts"
-import store from "../redux/store"
+import { backgroundStyle, PIXEL_RATIO } from "consts"
 import { pageBackground } from "./page"
+import store from "../redux/store"
 
 export async function pagesToDataURL(
     drawBackground?: boolean
@@ -96,7 +96,7 @@ export async function toPDF(
         const { width, height, background } = pageCollection[pageRank[i]].meta
         const { style, documentPageNum } = background
         const page =
-            style === pageType.DOC
+            style === backgroundStyle.DOC
                 ? pdf.addPage(pdfPages[documentPageNum])
                 : pdf.addPage()
         page.setSize(width, height)

@@ -1,7 +1,7 @@
 import React from "react"
 import { useCustomSelector } from "redux/hooks"
 import store from "redux/store"
-import { pageSize, sizePreset } from "consts"
+import { pageSize } from "consts"
 import { SET_PAGE_SIZE } from "redux/board/board"
 import {
     A4Landscape,
@@ -19,11 +19,9 @@ const Size: React.FC = () => {
                 <A4Landscape
                     type="button"
                     id="a4-landscape"
-                    $active={size === pageSize[sizePreset.A4_LANDSCAPE]}
+                    $active={size === pageSize.a4landscape}
                     onClick={() => {
-                        store.dispatch(
-                            SET_PAGE_SIZE(pageSize[sizePreset.A4_LANDSCAPE])
-                        )
+                        store.dispatch(SET_PAGE_SIZE(pageSize.a4landscape))
                     }}
                 />
             </SizePresetLabel>
@@ -31,11 +29,9 @@ const Size: React.FC = () => {
                 <A4Portrait
                     type="button"
                     id="a4-portrait"
-                    $active={size === pageSize[sizePreset.A4_PORTRAIT]}
+                    $active={size === pageSize.a4portrait}
                     onClick={() =>
-                        store.dispatch(
-                            SET_PAGE_SIZE(pageSize[sizePreset.A4_PORTRAIT])
-                        )
+                        store.dispatch(SET_PAGE_SIZE(pageSize.a4portrait))
                     }
                 />
             </SizePresetLabel>
@@ -43,11 +39,9 @@ const Size: React.FC = () => {
                 <Square
                     type="button"
                     id="square"
-                    $active={size === pageSize[sizePreset.Square]}
+                    $active={size === pageSize.square}
                     onClick={() =>
-                        store.dispatch(
-                            SET_PAGE_SIZE(pageSize[sizePreset.Square])
-                        )
+                        store.dispatch(SET_PAGE_SIZE(pageSize.square))
                     }
                 />
             </SizePresetLabel>

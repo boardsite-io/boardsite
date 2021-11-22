@@ -1,8 +1,8 @@
 import React from "react"
 import { useCustomSelector } from "redux/hooks"
-import { pageType } from "consts"
 import store from "redux/store"
 import { SET_PAGE_BACKGROUND } from "redux/board/board"
+import { backgroundStyle } from "consts"
 import { Backgrounds, Blank, Checkered, Ruled } from "./background.styled"
 
 interface PageBackgroundProps {
@@ -18,23 +18,25 @@ const PageBackgrounds: React.FC<PageBackgroundProps> = () => {
         <Backgrounds>
             <Blank
                 type="button"
-                $active={background === pageType.BLANK}
+                $active={background === backgroundStyle.BLANK}
                 onClick={() =>
-                    store.dispatch(SET_PAGE_BACKGROUND(pageType.BLANK))
+                    store.dispatch(SET_PAGE_BACKGROUND(backgroundStyle.BLANK))
                 }
             />
             <Checkered
                 type="button"
-                $active={background === pageType.CHECKERED}
+                $active={background === backgroundStyle.CHECKERED}
                 onClick={() =>
-                    store.dispatch(SET_PAGE_BACKGROUND(pageType.CHECKERED))
+                    store.dispatch(
+                        SET_PAGE_BACKGROUND(backgroundStyle.CHECKERED)
+                    )
                 }
             />
             <Ruled
                 type="button"
-                $active={background === pageType.RULED}
+                $active={background === backgroundStyle.RULED}
                 onClick={() =>
-                    store.dispatch(SET_PAGE_BACKGROUND(pageType.RULED))
+                    store.dispatch(SET_PAGE_BACKGROUND(backgroundStyle.RULED))
                 }
             />
         </Backgrounds>

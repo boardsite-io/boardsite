@@ -5,66 +5,18 @@ import {
     DEFAULT_STAGE_SCALE,
     DEFAULT_KEEP_CENTERED,
     DEFAULT_HIDE_NAVBAR,
-    pageType,
     pageSize,
-    sizePreset,
+    backgroundStyle,
 } from "consts"
 import { BoardStroke } from "drawing/stroke/stroke"
-import { Point, Stroke, StrokeUpdate } from "drawing/stroke/types"
-import { PageCollection, PageSettings, TransformStrokes } from "types"
 import { pick, keys, assign, cloneDeep } from "lodash"
 import { BoardPage } from "drawing/page"
+import { BoardState, SerializedBoardState } from "./board.types"
 
 // version of the board state reducer to allow backward compatibility for stored data
 //
 // [1.0] - 2021-10-22 - Added versioning
 export const boardVersion = "1.0"
-
-export interface BoardView {
-    keepCentered: boolean
-    hideNavBar: boolean
-    stageWidth: number
-    stageHeight: number
-    stageX: number
-    stageY: number
-    stageScale: Point
-}
-
-export interface BoardState {
-    currentPageIndex: number
-    pageRank: string[]
-    pageCollection: PageCollection
-    documentImages: string[]
-    documentSrc: URL | string | Uint8Array
-    pageSettings: PageSettings
-    view: BoardView
-    undoStack?: BoardAction[]
-    redoStack?: BoardAction[]
-    strokeUpdates?: StrokeUpdate[]
-    transformStrokes?: TransformStrokes
-    transformPagePosition?: Point
-    renderTrigger?: number
-
-    triggerManualUpdate?(): void
-
-    serialize?(): SerializedBoardState
-    deserialize?(parsed: SerializedBoardState): BoardState
-}
-
-export type SerializedBoardState = BoardState & { version?: string }
-
-export interface BoardAction {
-    // strokes: Stroke[]
-    handleFunc: (boardState: BoardState) => void
-    undoHandleFunc: (boardState: BoardState) => void
-}
-
-export interface StrokeAction {
-    strokes: Stroke[] | StrokeUpdate[]
-    isRedoable?: boolean
-    sessionHandler?: (...updates: Stroke[] | StrokeUpdate[]) => void
-    sessionUndoHandler?: (...updates: Stroke[] | StrokeUpdate[]) => void
-}
 
 export const newState = (state?: BoardState): BoardState => ({
     currentPageIndex: DEFAULT_CURRENT_PAGE_INDEX,
@@ -73,8 +25,8 @@ export const newState = (state?: BoardState): BoardState => ({
     documentImages: [],
     documentSrc: "",
     pageSettings: {
-        background: pageType.BLANK, // default,
-        size: pageSize[sizePreset.A4_LANDSCAPE],
+        background: backgroundStyle.BLANK, // default,
+        size: pageSize.a4landscape,
     },
     view: {
         keepCentered: DEFAULT_KEEP_CENTERED,
