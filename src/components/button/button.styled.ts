@@ -1,8 +1,8 @@
+import { Variant } from "consts"
 import styled, { css } from "styled-components"
-import { Variants } from "types"
 
 interface Props {
-    $variant: Variants
+    $variant: Variant
     $withIcon: boolean
     $fullWidth: boolean
 }
@@ -19,7 +19,7 @@ export const StyledButton = styled.button<Props>`
     }
     width: ${({ $fullWidth }) => ($fullWidth ? "100%" : "auto")};
     ${({ $variant }) =>
-        $variant === Variants.Primary ? primaryStyle : secondaryStyle};
+        $variant === Variant.Primary ? primaryStyle : secondaryStyle};
     ${({ $withIcon }) => ($withIcon ? iconStyle : noIconStyle)};
     svg {
         height: 1rem;

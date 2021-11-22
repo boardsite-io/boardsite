@@ -1,12 +1,12 @@
 import { Image } from "react-konva"
 import React, { memo, useEffect, useRef, useState } from "react"
 import * as types from "konva/lib/shapes/Image"
-import { BACKGROUND_CACHE_PXL, LAYER_CACHE_PXL, pageType } from "consts"
-import { pageBackground } from "drawing/page"
+import { BACKGROUND_CACHE_PXL, LAYER_CACHE_PXL, backgroundStyle } from "consts"
 import { useCustomSelector } from "redux/hooks"
 import store from "redux/store"
 import { handleLoadDocument } from "drawing/handlers"
 import { isConnected } from "api/websocket"
+import { pageBackground } from "drawing/page"
 import { PageProps } from "./index.types"
 import PageBoundary from "./boundary"
 
@@ -38,7 +38,7 @@ export default memo<PageProps>(({ pageId, pageSize }) => {
     // clear the cache and redraw when pagebackground changes
     useEffect(() => {
         // get correct image data for document type background
-        if (style === pageType.DOC) {
+        if (style === backgroundStyle.DOC) {
             const src = documentImages[background.documentPageNum]
             // if image data not available, we need to reload the document
             if (!src) {
@@ -64,7 +64,7 @@ export default memo<PageProps>(({ pageId, pageSize }) => {
     // cache the shape on update
     useEffect(() => {
         // for some reason, document type need an additional clear cache to work properly
-        if (style !== pageType.DOC) {
+        if (style !== backgroundStyle.DOC) {
             ref.current?.cache({ pixelRatio: BACKGROUND_CACHE_PXL })
         }
         setTimeout(
@@ -81,7 +81,9 @@ export default memo<PageProps>(({ pageId, pageSize }) => {
                 ref={ref}
                 image={img}
                 sceneFunc={
-                    style !== pageType.DOC ? pageBackground[style] : undefined
+                    style !== backgroundStyle.DOC
+                        ? pageBackground[style]
+                        : undefined
                 }
             />
         </>

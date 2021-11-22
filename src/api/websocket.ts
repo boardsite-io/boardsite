@@ -16,10 +16,10 @@ import {
     USER_DISCONNECT,
 } from "redux/session/session"
 import { User } from "redux/session/session.types"
+import { PageCollection } from "redux/board/board.types"
 import { BoardPage } from "drawing/page"
 import store from "redux/store"
 import { isConnectedState } from "redux/session/helpers"
-import { PageCollection } from "types"
 import {
     postPages,
     putPages,

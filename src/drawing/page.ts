@@ -1,9 +1,9 @@
 import { nanoid } from "@reduxjs/toolkit"
 import { assign, pick, keys } from "lodash"
-import { pageSize, pageType, sizePreset } from "consts"
+import { backgroundStyle, pageSize } from "consts"
 import { Context } from "konva/lib/Context"
 import { Shape, ShapeConfig } from "konva/lib/Shape"
-import { Page, PageMeta, PageSettings } from "../types"
+import { Page, PageMeta, PageSettings } from "redux/board/board.types"
 import { StrokeMap } from "./stroke/types"
 
 export class BoardPage implements Page {
@@ -15,12 +15,12 @@ export class BoardPage implements Page {
                 style:
                     page?.meta.background.style ??
                     pageSettings?.background ??
-                    pageType.BLANK, // fallback type
+                    backgroundStyle.BLANK, // fallback type
                 attachURL: page?.meta.background.attachURL ?? "",
                 documentPageNum: page?.meta.background.documentPageNum ?? 0,
             },
-            width: pageSize[sizePreset.A4_LANDSCAPE].width,
-            height: pageSize[sizePreset.A4_LANDSCAPE].height,
+            width: pageSize.a4landscape.width,
+            height: pageSize.a4landscape.height,
         }
         assign(this.meta, pick(pageSettings, ["width, height"]))
     }
@@ -115,7 +115,7 @@ const ruled = (context: Context, shape: Shape<ShapeConfig>): void => {
 }
 
 export const pageBackground = {
-    [pageType.BLANK]: blank,
-    [pageType.CHECKERED]: checkered,
-    [pageType.RULED]: ruled,
+    [backgroundStyle.BLANK]: blank,
+    [backgroundStyle.CHECKERED]: checkered,
+    [backgroundStyle.RULED]: ruled,
 }

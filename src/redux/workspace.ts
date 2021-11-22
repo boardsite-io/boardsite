@@ -1,6 +1,6 @@
 import download from "downloadjs"
 import { deflate } from "pako"
-import { BoardState } from "./board/state"
+import { BoardState } from "./board/board.types"
 
 const fileVersion = "1.0"
 const fileExt = ".boardio"

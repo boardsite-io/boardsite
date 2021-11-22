@@ -1,5 +1,5 @@
 import { Point, Tool, ToolType } from "drawing/stroke/types"
-import { PageBackground } from "./types"
+import { PageBackgroundStyle } from "redux/board/board.types"
 
 /**
  * Returns true if in development mode
@@ -54,26 +54,27 @@ export const DEFAULT_DIRECTDRAW = true
 
 const ELEMENTS_PER_POINT = 2
 export const LIVESTROKE_SEGMENT_SIZE = 420 * ELEMENTS_PER_POINT
+export const DOC_SCALE = 4 // scale factor for imported documents
 
-// scale factor for importet documents
-export const DOC_SCALE = 4
-export const pageType = {
-    BLANK: "blank" as PageBackground,
-    CHECKERED: "checkered" as PageBackground,
-    RULED: "ruled" as PageBackground,
-    DOC: "doc" as PageBackground,
+type BackgroundStyle = Record<string, PageBackgroundStyle>
+
+export const backgroundStyle: BackgroundStyle = {
+    BLANK: "blank",
+    CHECKERED: "checkered",
+    RULED: "ruled",
+    DOC: "doc",
+}
+
+export const pageSize = {
+    a4landscape: { width: 620, height: 877 },
+    a4portrait: { width: 877, height: 620 },
+    square: { width: 877, height: 877 },
 }
 
 // eslint-disable-next-line no-shadow
-export const enum sizePreset {
-    A4_LANDSCAPE,
-    A4_PORTRAIT,
-    Square,
-}
-export const pageSize = {
-    [sizePreset.A4_LANDSCAPE]: { width: 620, height: 877 },
-    [sizePreset.A4_PORTRAIT]: { width: 877, height: 620 },
-    [sizePreset.Square]: { width: 877, height: 877 },
+export enum Variant {
+    Primary,
+    Secondary,
 }
 
 export const BACKGROUND_CACHE_PXL = 3

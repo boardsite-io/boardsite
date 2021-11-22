@@ -1,8 +1,8 @@
 import axios, { AxiosRequestConfig } from "axios"
 import { Stroke } from "drawing/stroke/types"
+import { Page } from "redux/board/board.types"
 import { User } from "redux/session/session.types"
 import store from "redux/store"
-import { Page } from "../types"
 import {
     ResponsePageSync,
     ResponsePostSession,

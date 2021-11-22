@@ -28,11 +28,10 @@ import {
     getUserId,
     getSocket,
 } from "api/websocket"
-import { pageType, PIXEL_RATIO } from "consts"
-import { StrokeAction } from "redux/board/state"
+import { backgroundStyle, PIXEL_RATIO } from "consts"
 import store from "redux/store"
-import { PageMeta } from "types"
 import { SET_TOOL } from "redux/drawing/drawing"
+import { PageMeta, StrokeAction } from "redux/board/board.types"
 import { toPDF } from "./io"
 import { BoardPage } from "./page"
 import { getPDFfromForm, PDFtoImageData } from "./document"
@@ -162,7 +161,7 @@ export function handleChangePageBackground(): void {
         return
     }
     // cannot update background of doc type
-    if (currentPage.meta.background.style === pageType.DOC) {
+    if (currentPage.meta.background.style === backgroundStyle.DOC) {
         return
     }
 
@@ -206,7 +205,7 @@ export function handleAddDocumentPages(fileOriginSrc: URL | Uint8Array): void {
             const { pageWidth, pageHeight } = getPageDimensions(img)
             return new BoardPage().updateMeta({
                 background: {
-                    style: pageType.DOC,
+                    style: backgroundStyle.DOC,
                     attachURL: fileOriginSrc as URL,
                     documentPageNum: i,
                 },
@@ -221,7 +220,10 @@ export function handleAddDocumentPages(fileOriginSrc: URL | Uint8Array): void {
     } else {
         const pages = documentImages.map((_, i) =>
             new BoardPage().updateMeta({
-                background: { style: pageType.DOC, documentPageNum: i },
+                background: {
+                    style: backgroundStyle.DOC,
+                    documentPageNum: i,
+                },
             } as PageMeta)
         )
         pages.forEach((page) => {

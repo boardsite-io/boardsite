@@ -1,15 +1,15 @@
+import { Variant } from "consts"
 import React from "react"
-import { Variants } from "types"
 import { StyledButton } from "./button.styled"
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: Variants
+    variant?: Variant
     withIcon?: boolean
     fullWidth?: boolean
 }
 
 const Button: React.FC<ButtonProps> = ({
-    variant = Variants.Primary,
+    variant = Variant.Primary,
     withIcon = false,
     fullWidth = false,
     children,
