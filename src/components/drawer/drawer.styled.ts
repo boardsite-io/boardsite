@@ -18,28 +18,34 @@ export const DrawerBox = styled.div<DrawerBoxProps>`
     overflow-y: auto;
     overflow-x: hidden;
     transition: 250ms ease-in-out;
+    -webkit-transition: transform 250ms;
+    -webkit-transition: -webkit-transform 250ms;
     ${({ open, position }) => {
         if (open && position === "left") {
             return css`
                 left: 0;
                 transform: translateX(0);
+                -webkit-transform: translateX(0);
             `
         }
         if (!open && position === "left") {
             return css`
                 left: 0;
                 transform: translateX(-100%);
+                -webkit-transform: translateX(-100%);
             `
         }
         if (open && position === "right") {
             return css`
                 right: 0;
                 transform: translateX(0);
+                -webkit-transform: translateX(0);
             `
         }
         return css`
             right: 0;
             transform: translateX(100%);
+            -webkit-transform: translateX(100%);
         `
     }}
 `
