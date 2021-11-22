@@ -5,11 +5,7 @@ import { SET_PAGE_BACKGROUND } from "redux/board/board"
 import { backgroundStyle } from "consts"
 import { Backgrounds, Blank, Checkered, Ruled } from "./background.styled"
 
-interface PageBackgroundProps {
-    setOpenOther: React.Dispatch<React.SetStateAction<boolean>>
-}
-
-const PageBackgrounds: React.FC<PageBackgroundProps> = () => {
+const PageBackgrounds: React.FC = () => {
     const background = useCustomSelector(
         (state) => state.board.pageSettings.background
     )

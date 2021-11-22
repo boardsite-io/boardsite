@@ -13,6 +13,9 @@ import Toolbar from "./toolbar/toolbar"
 import FavTools from "./favtools/favtools"
 import Loading from "./loading/loading"
 import ViewNav from "./viewnavigation/viewnavigation"
+import Settings from "./settings/settings"
+import About from "./about/about"
+import PageOptions from "./pageoptions/pageoptions"
 
 const Whiteboard: React.FC = () => {
     const { sid } = useParams<{ sid: string }>()
@@ -64,6 +67,9 @@ const Whiteboard: React.FC = () => {
             <FavTools />
             <ViewNav />
             <Loading />
+            <Settings />
+            <About />
+            <PageOptions />
         </WhiteboardStyled>
     )
 }
