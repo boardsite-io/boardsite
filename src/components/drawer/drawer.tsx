@@ -13,12 +13,13 @@ const Drawer: React.FC<DrawerProps> = ({
     open,
     onClose,
     children,
-}) =>
-    open ? (
-        <>
-            <DrawerBackground onClick={onClose} />
-            <DrawerBox position={position}>{children}</DrawerBox>
-        </>
-    ) : null
+}) => (
+    <>
+        <DrawerBackground open={open} onClick={onClose} />
+        <DrawerBox open={open} position={position}>
+            {children}
+        </DrawerBox>
+    </>
+)
 
 export default Drawer
