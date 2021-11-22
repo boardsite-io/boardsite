@@ -1,6 +1,9 @@
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 
-export const DialogBox = styled.div`
+interface DialogProps {
+    open: boolean
+}
+export const DialogBox = styled.div<DialogProps>`
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -13,16 +16,33 @@ export const DialogBox = styled.div`
     max-height: 80vh;
     border-radius: var(--button-border-radius);
     box-shadow: var(--box-shadow);
+    transition: 250ms ease-in-out;
+    ${({ open }) =>
+        open
+            ? css`
+                  opacity: 1;
+              `
+            : css`
+                  opacity: 0;
+                  pointer-events: none;
+              `};
 `
 
-export const DialogBackground = styled.div`
+export const DialogBackground = styled.div<DialogProps>`
+    z-index: 900;
     position: fixed;
     background: var(--color6);
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 900;
+    inset: 0;
+    transition: 250ms ease-in-out;
+    ${({ open }) =>
+        open
+            ? css`
+                  opacity: 1;
+              `
+            : css`
+                  opacity: 0;
+                  pointer-events: none;
+              `};
 `
 
 export const DialogContent = styled.div`
