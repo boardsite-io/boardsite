@@ -1,12 +1,13 @@
 import React, { memo } from "react"
 import { Rect } from "react-konva"
 import { Stage } from "konva/lib/Stage"
-import { ToolType } from "drawing/stroke/types"
+import { Stroke, ToolType } from "drawing/stroke/types"
 import store from "redux/store"
 import { useCustomSelector } from "redux/hooks"
 import { LAYER_CACHE_PXL } from "consts"
 import { KonvaEventObject } from "konva/lib/Node"
 import { Vector2d } from "konva/lib/types"
+import { BoardLiveStroke } from "drawing/stroke/livestroke"
 import { PageProps } from "./index.types"
 
 const PageListener = memo<PageProps>(
@@ -32,8 +33,9 @@ const PageListener = memo<PageProps>(
 
             isMouseDown = true
             const pos = getPointerPositionInStage(e)
-            const ls = liveStroke?.()
-            ls?.setTool(store.getState().drawing.tool).start(pos, pageId)
+            liveStroke?.()
+                .setTool(store.getState().drawing.tool)
+                .start(pos, pageId)
             setLiveStrokeTrigger?.(0)
         }
 
@@ -62,17 +64,18 @@ const PageListener = memo<PageProps>(
                 return
             } // Ignore reentering
 
-            isMouseDown = false
             // update last position
             const pos = getPointerPositionInStage(e)
             liveStroke?.().move(pos, e.target.getPosition())
-            setLiveStrokeTrigger?.((prev) => prev + 1)
 
             // register finished stroke
-            liveStroke?.()
-                .register(e)
-                .then(() => setLiveStrokeTrigger?.((prev) => prev + 1))
+            const stroke = liveStroke?.().finalize(
+                e.target.getPosition()
+            ) as Stroke
+            isMouseDown = false
+            setLiveStrokeTrigger?.((prev) => prev + 1)
 
+            BoardLiveStroke.register(stroke, e.target.getPosition())
             e.target.parent?.cache({ pixelRatio: LAYER_CACHE_PXL })
         }
 
