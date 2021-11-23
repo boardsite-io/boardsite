@@ -14,6 +14,7 @@ export const WidthPresets = styled.div`
 interface PresetProps {
     $active: boolean
 }
+
 export const Preset = styled.div<PresetProps>`
     display: flex;
     justify-content: center;
@@ -46,6 +47,7 @@ const inActivePreset = css`
 interface StrokeWidth {
     $strokeWidth: number
 }
+
 export const WidthPresetInnerDot = styled.div<StrokeWidth>`
     height: ${({ $strokeWidth }) => `${$strokeWidth}px`};
     width: ${({ $strokeWidth }) => `${$strokeWidth}px`};

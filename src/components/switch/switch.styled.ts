@@ -3,6 +3,7 @@ import styled, { css } from "styled-components"
 interface StyledSwitchProps {
     $enabled: boolean
 }
+
 export const StyledSwitch = styled.div<StyledSwitchProps>`
     --thumbDiameter: 1.2rem;
     --railHeight: 0.8rem;

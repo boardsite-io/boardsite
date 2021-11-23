@@ -47,7 +47,16 @@
         ],
         "@typescript-eslint/triple-slash-reference": "off",
         "@typescript-eslint/ban-types": "off",
-        "react/require-default-props": 0
+        "react/require-default-props": 0,
+        "padding-line-between-statements": "off",
+        "@typescript-eslint/padding-line-between-statements": [
+            "warn",
+            {
+                "blankLine": "always",
+                "prev": ["function", "class", "interface", "type"],
+                "next": "*"
+            }
+        ]
     },
     "settings": {
         "import/parsers": {

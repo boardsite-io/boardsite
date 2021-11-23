@@ -3,6 +3,7 @@ import styled from "styled-components"
 interface UserColorProps {
     $color: string
 }
+
 export const UserColorButton = styled.button`
     background: ${(props: UserColorProps) => props.$color};
     height: 1.5rem;

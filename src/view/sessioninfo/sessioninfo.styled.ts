@@ -30,6 +30,7 @@ export const UserInfo = styled.div`
 interface UserColorProps {
     $color: string
 }
+
 export const UserColor = styled.div`
     background: ${(props: UserColorProps) => props.$color};
     width: 18px;

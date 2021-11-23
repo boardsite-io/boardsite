@@ -25,6 +25,7 @@ const fileHoverAnimation = css`
 interface Props {
     $hovering: boolean
 }
+
 export const DropZone = styled.div<Props>`
     display: flex;
     flex-direction: column;

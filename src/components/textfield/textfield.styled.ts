@@ -8,6 +8,7 @@ export type AlignItems = "center" | "flex-start" | "flex-end"
 interface InputWrapperProps {
     $alignItems: AlignItems
 }
+
 export const InputWrapper = styled.div`
     position: relative;
     height: 4rem;
@@ -20,6 +21,7 @@ export const InputWrapper = styled.div`
 interface InputLabelProps {
     $hasFocus: boolean
 }
+
 export const InputLabel = styled.label`
     pointer-events: none;
     position: absolute;
@@ -44,6 +46,7 @@ interface InputBarProps {
     $hasFocus: boolean
     $error: boolean
 }
+
 export const InputBar = styled.div`
     position: absolute;
     bottom: 1rem;
@@ -65,6 +68,7 @@ export type TextAlign = "left" | "center" | "right"
 interface InputProps {
     $textAlign: TextAlign
 }
+
 export const StyledInput = styled.input`
     position: absolute;
     padding: 0;

@@ -2,7 +2,7 @@
 import { DOC_SCALE } from "consts"
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf"
 // import pdfjsWorker from "pdfjs-dist/es5/build/pdf.worker.entry"
-import { RenderParameters } from "pdfjs-dist/types/display/api"
+import { RenderParameters } from "pdfjs-dist/types/src/display/api"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const pdfjsWorker: any = require("pdfjs-dist/legacy/build/pdf.worker.entry")
