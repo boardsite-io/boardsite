@@ -53,6 +53,7 @@ export const DrawerBox = styled.div<DrawerBoxProps>`
 interface DrawerBackgroundProps {
     open: boolean
 }
+
 export const DrawerBackground = styled.div<DrawerBackgroundProps>`
     z-index: 900;
     position: fixed;

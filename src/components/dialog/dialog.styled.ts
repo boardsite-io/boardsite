@@ -3,6 +3,7 @@ import styled, { css } from "styled-components"
 interface DialogProps {
     open: boolean
 }
+
 export const DialogBox = styled.div<DialogProps>`
     display: flex;
     flex-direction: column;
