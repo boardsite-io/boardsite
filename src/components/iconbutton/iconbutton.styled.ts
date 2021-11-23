@@ -5,6 +5,7 @@ interface Props {
     $active?: boolean
     $background?: string
 }
+
 export const StyledIconButton = styled.button<Props>`
     cursor: pointer;
     display: flex;

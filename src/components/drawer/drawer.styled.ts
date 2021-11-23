@@ -19,6 +19,7 @@ const positionRight = css`
 interface DrawerBoxProps {
     position: "left" | "right"
 }
+
 export const DrawerBox = styled.div<DrawerBoxProps>`
     z-index: 1000;
     position: fixed;

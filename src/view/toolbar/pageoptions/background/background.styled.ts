@@ -23,6 +23,7 @@ const sharedStyle = css<props>`
 interface props {
     $active: boolean
 }
+
 export const Blank = styled.button<props>`
     ${sharedStyle}
 `

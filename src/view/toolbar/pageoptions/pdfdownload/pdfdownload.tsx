@@ -7,6 +7,7 @@ import store from "redux/store"
 interface PdfDownloadProps {
     closePageOptions: () => void
 }
+
 const PdfDownload: React.FC<PdfDownloadProps> = ({ closePageOptions }) => {
     const onClick = async () => {
         store.dispatch(START_LOADING("Processing..."))

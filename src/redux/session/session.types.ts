@@ -14,8 +14,11 @@ export type SessionDialog = {
     sidInput: string
 }
 type UserId = string
+
 type UserAlias = string
+
 type UserColor = string
+
 export type User = {
     id: UserId
     alias: UserAlias
