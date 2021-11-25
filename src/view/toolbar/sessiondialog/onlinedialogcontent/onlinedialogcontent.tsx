@@ -1,7 +1,7 @@
 import { disconnect } from "api/websocket"
 import { Button, DialogContent } from "components"
 import React from "react"
-import { useHistory } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useCustomDispatch, useCustomSelector } from "hooks"
 import { CLOSE_SESSION_DIALOG } from "redux/session/session"
 import {
@@ -17,11 +17,11 @@ const OnlineDialogContent: React.FC = () => {
     )
 
     const dispatch = useCustomDispatch()
-    const history = useHistory()
+    const navigate = useNavigate()
     const handleLeave = () => {
         disconnect()
         dispatch(CLOSE_SESSION_DIALOG())
-        history.push("/")
+        navigate("/")
     }
 
     return (

@@ -1,6 +1,6 @@
 import React from "react"
 import { BsPeople } from "react-icons/bs"
-import { useHistory } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useCustomDispatch, useCustomSelector } from "hooks"
 import {
     Button,
@@ -19,7 +19,7 @@ const SessionDialog: React.FC = () => {
         (state) => state.session.sessionDialog
     )
     const dispatch = useCustomDispatch()
-    const history = useHistory()
+    const navigate = useNavigate()
 
     const handleClickOpen = () => {
         dispatch(
@@ -34,7 +34,7 @@ const SessionDialog: React.FC = () => {
     const handleClose = () => {
         dispatch(CLOSE_SESSION_DIALOG())
         if (!isConnected()) {
-            history.push("/")
+            navigate("/")
         }
     }
 

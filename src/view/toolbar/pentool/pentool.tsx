@@ -25,6 +25,7 @@ const PenTool: React.FC = () => {
         typeSelector === ToolType.Rectangle ||
         typeSelector === ToolType.Circle
 
+    // eslint-disable-next-line react/no-unstable-nested-components
     const IconX: React.FC<IconProps> = (props) => {
         switch (typeSelector) {
             case ToolType.Pen:

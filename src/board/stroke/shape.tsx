@@ -72,6 +72,7 @@ export const Shape = ({
                 />
             )
         default:
+            // eslint-disable-next-line react/jsx-no-useless-fragment
             return <></>
     }
 }

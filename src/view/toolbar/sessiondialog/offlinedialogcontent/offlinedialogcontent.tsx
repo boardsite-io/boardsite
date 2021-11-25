@@ -1,5 +1,5 @@
 import React from "react"
-import { useHistory } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useCustomDispatch, useCustomSelector } from "hooks"
 import store from "redux/store"
 import {
@@ -20,7 +20,7 @@ const OfflineDialogContent: React.FC = () => {
     const userColor = useCustomSelector((state) => state.session.user.color)
 
     const dispatch = useCustomDispatch()
-    const history = useHistory()
+    const navigate = useNavigate()
 
     /**
      * Handle the create session button click in the session dialog
@@ -42,7 +42,7 @@ const OfflineDialogContent: React.FC = () => {
         try {
             await joinSession()
             const { sidInput } = store.getState().session.sessionDialog
-            history.push(getSessionPath(sidInput))
+            navigate(getSessionPath(sidInput))
             dispatch(CLOSE_SESSION_DIALOG())
         } catch (error) {
             dispatch(
