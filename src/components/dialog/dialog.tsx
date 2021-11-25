@@ -7,12 +7,11 @@ interface DialogProps {
     children: ReactNode
 }
 
-const Dialog: React.FC<DialogProps> = ({ open, onClose, children }) =>
-    open ? (
-        <>
-            <DialogBackground onClick={onClose} />
-            <DialogBox>{children}</DialogBox>
-        </>
-    ) : null
+const Dialog: React.FC<DialogProps> = ({ open, onClose, children }) => (
+    <>
+        <DialogBackground open={open} onClick={onClose} />
+        <DialogBox open={open}>{children}</DialogBox>
+    </>
+)
 
 export default Dialog
