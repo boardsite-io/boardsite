@@ -109,16 +109,8 @@ const PageOptions: React.FC = () => {
                 Import / Export PDFs
             </DrawerTitle>
             <DrawerContent>
-                <PdfUpload
-                    closePageOptions={() =>
-                        store.dispatch(CLOSE_PAGE_ACTIONS())
-                    }
-                />
-                <PdfDownload
-                    closePageOptions={() =>
-                        store.dispatch(CLOSE_PAGE_ACTIONS())
-                    }
-                />
+                <PdfUpload />
+                <PdfDownload />
             </DrawerContent>
         </Drawer>
     )
