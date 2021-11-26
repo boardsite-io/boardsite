@@ -16,6 +16,7 @@ import ViewNav from "./viewnavigation/viewnavigation"
 import Settings from "./settings/settings"
 import About from "./about/about"
 import PageOptions from "./pageoptions/pageoptions"
+import PdfUpload from "./pdfupload/pdfupload"
 
 const Whiteboard: React.FC = () => {
     const { sid } = useParams<{ sid: string }>()
@@ -70,6 +71,7 @@ const Whiteboard: React.FC = () => {
             <Settings />
             <About />
             <PageOptions />
+            <PdfUpload />
         </WhiteboardStyled>
     )
 }

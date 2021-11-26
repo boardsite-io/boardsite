@@ -2,13 +2,10 @@ import { Button, DownloadIcon } from "components"
 import { handleExportDocument } from "drawing/handlers"
 import React from "react"
 import { END_LOADING, START_LOADING } from "redux/loading/loading"
+import { CLOSE_PAGE_ACTIONS } from "redux/menu/menu"
 import store from "redux/store"
 
-interface PdfDownloadProps {
-    closePageOptions: () => void
-}
-
-const PdfDownload: React.FC<PdfDownloadProps> = ({ closePageOptions }) => {
+const PdfDownload: React.FC = () => {
     const onClick = async () => {
         store.dispatch(START_LOADING("Processing..."))
         // Use setTimeout to start handleExportDocument in its own thread
@@ -16,7 +13,7 @@ const PdfDownload: React.FC<PdfDownloadProps> = ({ closePageOptions }) => {
         setTimeout(async () => {
             await handleExportDocument()
             store.dispatch(END_LOADING())
-            closePageOptions()
+            store.dispatch(CLOSE_PAGE_ACTIONS())
         }, 0)
     }
 

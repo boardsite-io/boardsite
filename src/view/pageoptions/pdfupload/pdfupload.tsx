@@ -1,46 +1,18 @@
-import React, { useState } from "react"
-import {
-    Dialog,
-    DialogContent,
-    DialogOptions,
-    Button,
-    UploadIcon,
-} from "components"
-import FileDropZone from "./filedropzone"
+import React from "react"
+import { Button, UploadIcon } from "components"
+import store from "redux/store"
+import { OPEN_PDF_UPLOAD } from "redux/menu/menu"
 
-interface PdfUploadProps {
-    closePageOptions: () => void
-}
-
-const PdfUpload: React.FC<PdfUploadProps> = ({ closePageOptions }) => {
-    const [dialogOpen, setDialogOpen] = useState(false)
-
+const PdfUpload: React.FC = () => {
     const handleOpen = () => {
-        setDialogOpen(true)
-    }
-
-    const handleClose = () => {
-        setDialogOpen(false)
-        closePageOptions()
+        store.dispatch(OPEN_PDF_UPLOAD())
     }
 
     return (
-        <>
-            <Button withIcon onClick={handleOpen}>
-                <UploadIcon />
-                Upload PDF
-            </Button>
-            <Dialog open={dialogOpen} onClose={handleClose}>
-                <DialogContent>
-                    <FileDropZone closeDialog={handleClose} />
-                </DialogContent>
-                <DialogOptions>
-                    <Button onClick={handleClose} color="primary">
-                        Close
-                    </Button>
-                </DialogOptions>
-            </Dialog>
-        </>
+        <Button withIcon onClick={handleOpen}>
+            <UploadIcon />
+            Upload PDF
+        </Button>
     )
 }
 
