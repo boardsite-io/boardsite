@@ -114,6 +114,7 @@ const CustomTransformer = memo<CustomTransformerProps>(
             const updatedStrokes = transformStrokes.map((stroke, i) => {
                 // transformNodes and transformStrokes are in same order
                 const { scaleX, scaleY, x, y } =
+                    // eslint-disable-next-line no-unsafe-optional-chaining
                     groupRef.current?.children?.[i]?.getAttrs()
                 return stroke.update({ scaleX, scaleY, x, y })
             })

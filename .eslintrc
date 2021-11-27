@@ -56,7 +56,8 @@
                 "prev": ["function", "class", "interface", "type"],
                 "next": "*"
             }
-        ]
+        ],
+        "react/function-component-definition": "off"
     },
     "settings": {
         "import/parsers": {

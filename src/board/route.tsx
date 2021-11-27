@@ -1,16 +1,18 @@
 import React from "react"
-import { HashRouter, Route } from "react-router-dom"
+import { HashRouter, Routes, Route } from "react-router-dom"
 import isElectron from "is-electron"
 import Whiteboard from "../view/whiteboard"
 
 export default isElectron() ? (
     <HashRouter>
-        <Route exact path="/" component={Whiteboard} />
-        <Route exact path="/b/:sid" component={Whiteboard} />
+        <Routes>
+            <Route path="/" element={<Whiteboard />} />
+            <Route path="/b/:sid" element={<Whiteboard />} />
+        </Routes>
     </HashRouter>
 ) : (
-    <Route>
-        <Route exact path="/" component={Whiteboard} />
-        <Route exact path="/b/:sid" component={Whiteboard} />
-    </Route>
+    <Routes>
+        <Route path="/" element={<Whiteboard />} />
+        <Route path="/b/:sid" element={<Whiteboard />} />
+    </Routes>
 )

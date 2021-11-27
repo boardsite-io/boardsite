@@ -19,12 +19,12 @@ import PdfUpload from "./pdfupload/pdfupload"
 
 const Whiteboard: React.FC = () => {
     useKeyboardShortcuts()
-    const { sid } = useParams<{ sid: string }>()
+    const { sid } = useParams()
     const dispatch = useCustomDispatch()
 
     const checkSessionStatus = useCallback(async () => {
         try {
-            await pingSession(sid)
+            await pingSession(sid as string)
             // Session exists
             dispatch(
                 SET_SESSION_DIALOG({
