@@ -2,10 +2,9 @@ import React, { useCallback, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import store from "redux/store"
 import { handleAddPageUnder } from "drawing/handlers"
-import boardKeyListener from "board/keylistener"
 import BoardStage from "board/stage"
 import { SET_SESSION_DIALOG } from "redux/session/session"
-import { useCustomDispatch } from "hooks"
+import { useCustomDispatch, useKeyboardShortcuts } from "hooks"
 import { isConnected, pingSession } from "api/websocket"
 import { WhiteboardStyled } from "./whiteboard.styled"
 import SessionInfo from "./sessioninfo/sessioninfo"
@@ -19,6 +18,7 @@ import PageOptions from "./pageoptions/pageoptions"
 import PdfUpload from "./pdfupload/pdfupload"
 
 const Whiteboard: React.FC = () => {
+    useKeyboardShortcuts()
     const { sid } = useParams<{ sid: string }>()
     const dispatch = useCustomDispatch()
 
@@ -55,10 +55,6 @@ const Whiteboard: React.FC = () => {
             }
         }
     }, [sid, dispatch])
-
-    useEffect(() => {
-        document.addEventListener("keydown", boardKeyListener)
-    }, [])
 
     return (
         <WhiteboardStyled>
