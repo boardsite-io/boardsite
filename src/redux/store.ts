@@ -31,6 +31,7 @@ const store = configureStore({
 // load the board state async
 ;(async () => {
     const state = await loadIndexedDB("board")
+
     store.dispatch({
         type: "board/LOAD_BOARD_STATE",
         payload: state.board,

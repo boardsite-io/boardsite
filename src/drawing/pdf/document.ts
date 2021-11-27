@@ -3,6 +3,7 @@ import { DOC_SCALE } from "consts"
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf"
 // import pdfjsWorker from "pdfjs-dist/es5/build/pdf.worker.entry"
 import { RenderParameters } from "pdfjs-dist/types/src/display/api"
+import { DocumentImages, DocumentSrc } from "redux/board/board.types"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const pdfjsWorker: any = require("pdfjs-dist/legacy/build/pdf.worker.entry")
@@ -31,9 +32,9 @@ export const getPDFfromForm = async (file: File): Promise<Uint8Array> =>
  *
  * @param fileData
  */
-export async function PDFtoImageData(
-    fileSrc: URL | string | Uint8Array
-): Promise<string[]> {
+export async function sourceToImageData(
+    fileSrc: DocumentSrc
+): Promise<DocumentImages> {
     // also support strings as URL
     if (typeof fileSrc === "string") {
         fileSrc = new URL(fileSrc as string)

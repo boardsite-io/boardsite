@@ -18,7 +18,7 @@ import { Vector2d } from "konva/lib/types"
 import { KonvaEventObject } from "konva/lib/Node"
 import { StageAttrs } from "redux/board/board.types"
 import { zoomTo } from "./util/adjustView"
-import { multiTouchEnd, multiTouchMove } from "./util/multitouch"
+import { multiTouchEnd, multiTouchMove } from "./util/multiTouch"
 import Content from "./content"
 import { detectPageChange } from "./util/detectPageChange"
 import { UpdateStage } from "./updateStage"
@@ -54,13 +54,18 @@ const BoardStage: React.FC = memo(() => {
             if (!stage) return
 
             // Check if page index should change
-            detectPageChange(store.getState().board, attrsCopy)
+            const isDetected = detectPageChange(
+                store.getState().board,
+                attrsCopy
+            )
 
-            // Update internal state
-            stage.setAttrs(attrsCopy)
+            if (!isDetected) {
+                // Update internal state
+                stage.setAttrs(attrsCopy)
 
-            // Synchronise the redux state with the internal state
-            updateRedux(attrsCopy)
+                // Synchronise the redux state with the internal state
+                updateRedux(attrsCopy)
+            }
         },
         [stageRef]
     )
@@ -107,7 +112,7 @@ const BoardStage: React.FC = memo(() => {
                 } = store.getState().board
 
                 const pageWidth =
-                    pageCollection[currentPageIndex]?.meta.width ??
+                    pageCollection[currentPageIndex]?.meta.size.width ??
                     pageSize.a4landscape.width
 
                 const newAttrs = zoomTo({

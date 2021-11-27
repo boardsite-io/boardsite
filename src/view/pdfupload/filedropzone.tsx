@@ -1,10 +1,6 @@
 import React, { useState } from "react"
 import { UploadIcon } from "components"
-import {
-    handleGetDocumentFile,
-    handleLoadDocument,
-    handleAddDocumentPages,
-} from "drawing/handlers"
+import { handleImportFile } from "drawing/pdf"
 import {
     InvisibleInput,
     DropZone,
@@ -27,10 +23,8 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ closeDialog }) => {
             if (!isValidFormat(file)) {
                 throw new Error("invalid file type")
             }
-            const origin = await handleGetDocumentFile(file)
-            await handleLoadDocument(origin)
-            handleAddDocumentPages(origin)
 
+            await handleImportFile(file)
             setInvalidInput(false)
             closeDialog()
         } catch {

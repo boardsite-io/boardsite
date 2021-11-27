@@ -1,12 +1,10 @@
 import { cloneDeep } from "lodash"
 import { Stroke, StrokeUpdate, Tool } from "drawing/stroke/types"
 import {
-    JUMP_TO_NEXT_PAGE,
     CLEAR_PAGE,
     DELETE_PAGES,
     DELETE_ALL_PAGES,
     SET_PAGEMETA,
-    SET_PDF,
     ADD_PAGE,
     ADD_STROKES,
     UPDATE_STROKES,
@@ -14,26 +12,26 @@ import {
     UNDO_ACTION,
     REDO_ACTION,
     CLEAR_TRANSFORM,
+    JUMP_TO_NEXT_PAGE,
 } from "redux/board/board"
 import {
     addPagesSession,
     updatePagesSession,
     deletePagesSession,
     isConnected,
-    addAttachmentSession,
-    getAttachmentSession,
     sendStrokes,
     eraseStrokes,
     getUserId,
     getSocket,
 } from "api/websocket"
-import { backgroundStyle, PIXEL_RATIO } from "consts"
+import { backgroundStyle } from "consts"
 import store from "redux/store"
 import { SET_TOOL } from "redux/drawing/drawing"
 import { PageMeta, StrokeAction } from "redux/board/board.types"
-import { toPDF } from "./pdf/io"
 import { BoardPage } from "./page"
-import { getPDFfromForm, PDFtoImageData } from "./pdf/document"
+
+const createPage = (): BoardPage =>
+    new BoardPage().updateMeta(store.getState().board.pageMeta)
 
 export function handleSetTool(tool: Partial<Tool>): void {
     store.dispatch(SET_TOOL(tool))
@@ -41,7 +39,7 @@ export function handleSetTool(tool: Partial<Tool>): void {
 }
 
 export function handleAddPageOver(): void {
-    const page = new BoardPage()
+    const page = createPage()
     const index = store.getState().board.currentPageIndex
     if (isConnected()) {
         addPagesSession([page], [index])
@@ -51,14 +49,14 @@ export function handleAddPageOver(): void {
 }
 
 export function handleAddPageUnder(): void {
-    const page = new BoardPage()
+    const page = createPage()
     const index = store.getState().board.currentPageIndex + 1
     if (isConnected()) {
         addPagesSession([page], [index])
     } else {
         store.dispatch(ADD_PAGE({ page, index }))
     }
-    store.dispatch(JUMP_TO_NEXT_PAGE(true))
+    store.dispatch(JUMP_TO_NEXT_PAGE())
 }
 
 export function handleClearPage(): void {
@@ -152,7 +150,6 @@ export function handleRedo(): void {
 export function handleChangePageBackground(): void {
     // update the default page type
     const currentPage = getCurrentPage()
-    const { background } = store.getState().board.pageSettings
     // there is no current page, eg. when all pages have been removed
     if (!currentPage) {
         return
@@ -163,7 +160,7 @@ export function handleChangePageBackground(): void {
     }
 
     const newMeta = cloneDeep<PageMeta>(currentPage.meta)
-    newMeta.background.style = background
+    newMeta.background.style = store.getState().board.pageMeta.background.style
 
     if (isConnected()) {
         updatePagesSession(false, currentPage.updateMeta(newMeta))
@@ -171,73 +168,6 @@ export function handleChangePageBackground(): void {
         store.dispatch(
             SET_PAGEMETA({ pageId: currentPage.pageId, meta: newMeta })
         )
-    }
-}
-
-export async function handleGetDocumentFile(
-    file: File
-): Promise<URL | Uint8Array> {
-    return isConnected() ? addAttachmentSession(file) : getPDFfromForm(file)
-}
-
-export async function handleLoadDocument(
-    fileOriginSrc: URL | string | Uint8Array
-): Promise<void> {
-    const documentImages = await PDFtoImageData(fileOriginSrc)
-    store.dispatch(
-        SET_PDF({
-            documentImages,
-            documentSrc: fileOriginSrc,
-        })
-    )
-}
-
-export function handleAddDocumentPages(fileOriginSrc: URL | Uint8Array): void {
-    const { documentImages } = store.getState().board
-
-    handleDeleteAllPages()
-
-    if (isConnected()) {
-        const pages = documentImages.map((img, i) => {
-            const { pageWidth, pageHeight } = getPageDimensions(img)
-            return new BoardPage().updateMeta({
-                background: {
-                    style: backgroundStyle.DOC,
-                    attachURL: fileOriginSrc as URL,
-                    documentPageNum: i,
-                },
-                width: pageWidth / PIXEL_RATIO,
-                height: pageHeight / PIXEL_RATIO,
-            })
-        })
-        addPagesSession(
-            pages,
-            pages.map(() => -1)
-        )
-    } else {
-        const pages = documentImages.map((_, i) =>
-            new BoardPage().updateMeta({
-                background: {
-                    style: backgroundStyle.DOC,
-                    documentPageNum: i,
-                },
-            } as PageMeta)
-        )
-        pages.forEach((page) => {
-            store.dispatch(ADD_PAGE({ page, index: -1 }))
-        }) // append subsequent pages at the end
-    }
-}
-
-export async function handleExportDocument(): Promise<void> {
-    // TODO filename
-    const filename = "board.pdf"
-    const { documentSrc } = store.getState().board
-    if (isConnected()) {
-        const [src] = await getAttachmentSession(documentSrc as string)
-        toPDF(filename, src as Uint8Array)
-    } else {
-        toPDF(filename, documentSrc as Uint8Array)
     }
 }
 
@@ -251,15 +181,4 @@ function getCurrentPage() {
     return store.getState().board.pageCollection[
         store.getState().board.pageRank[store.getState().board.currentPageIndex]
     ]
-}
-
-function getPageDimensions(dataURL: string) {
-    const header = atob(dataURL.split(",")[1].slice(0, 50)).slice(16, 24)
-    const uint8 = Uint8Array.from(header, (c) => c.charCodeAt(0))
-    const dataView = new DataView(uint8.buffer)
-
-    return {
-        pageWidth: dataView.getInt32(0),
-        pageHeight: dataView.getInt32(4),
-    }
 }

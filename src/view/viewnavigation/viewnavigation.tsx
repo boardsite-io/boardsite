@@ -35,7 +35,7 @@ const ViewNavigation: React.FC = () => {
             <IconButton onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
                 <CgPushChevronUp id="icon" />
             </IconButton>
-            <IconButton onClick={() => store.dispatch(JUMP_TO_PREV_PAGE(true))}>
+            <IconButton onClick={() => store.dispatch(JUMP_TO_PREV_PAGE())}>
                 <CgChevronUp id="icon" />
             </IconButton>
             <IconButtonPageIndex
@@ -44,7 +44,7 @@ const ViewNavigation: React.FC = () => {
                 <PageIndexHr />
                 <PageIndex>{pageRank.length}</PageIndex>
             </IconButtonPageIndex>
-            <IconButton onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE(true))}>
+            <IconButton onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE())}>
                 <CgChevronDown id="icon" />
             </IconButton>
             <IconButton onClick={() => store.dispatch(JUMP_TO_LAST_PAGE())}>

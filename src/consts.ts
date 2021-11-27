@@ -78,7 +78,6 @@ export enum Variant {
     Secondary,
 }
 
-export const BACKGROUND_CACHE_PXL = 3
 export const LAYER_CACHE_PXL = 4
 
 const tool1: Tool = {

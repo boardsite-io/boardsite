@@ -1,5 +1,5 @@
 import { Button, DownloadIcon } from "components"
-import { handleExportDocument } from "drawing/handlers"
+import { handleExportDocument } from "drawing/pdf"
 import React from "react"
 import { END_LOADING, START_LOADING } from "redux/loading/loading"
 import { CLOSE_PAGE_ACTIONS } from "redux/menu/menu"

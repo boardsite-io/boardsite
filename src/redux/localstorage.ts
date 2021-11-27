@@ -1,4 +1,6 @@
+import { sourceToImageData } from "drawing/pdf/document"
 import localforage from "localforage"
+import { BoardState } from "./board/board.types"
 import * as boardState from "./board/state"
 import * as drawingState from "./drawing/state"
 import { RootState, SerializableState } from "./types"
@@ -72,6 +74,13 @@ export async function loadIndexedDB(...states: string[]): Promise<RootState> {
         }
     })
     await Promise.all(res)
+
+    const bs = state?.board as BoardState
+    const src = bs?.documentSrc
+    if (src) {
+        bs.documentImages = await sourceToImageData(src)
+    }
+
     return state as RootState
 }
 

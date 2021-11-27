@@ -1,85 +1,65 @@
 import { Image } from "react-konva"
-import React, { memo, useEffect, useRef, useState } from "react"
+import React, { memo, useEffect, useRef } from "react"
 import * as types from "konva/lib/shapes/Image"
-import { BACKGROUND_CACHE_PXL, LAYER_CACHE_PXL, backgroundStyle } from "consts"
+import { backgroundStyle, LAYER_CACHE_PXL } from "consts"
 import { useCustomSelector } from "hooks"
 import store from "redux/store"
-import { handleLoadDocument } from "drawing/handlers"
-import { isConnected } from "api/websocket"
 import { pageBackground } from "drawing/page"
 import { PageProps } from "./index.types"
 import PageBoundary from "./boundary"
 
-export default memo<PageProps>(({ pageId, pageSize }) => {
+const Background = memo<PageProps>(({ pageId, pageInfo }) => {
     // pageId might not be valid anymore, exit then
     if (!store.getState().board.pageCollection[pageId]) {
         return null
     }
 
-    const ref = useRef<types.Image>(null)
-    const [cache, triggerCache] = useState(0)
-    const [img, setImg] = useState<HTMLImageElement>()
-
-    const { documentImages } = store.getState().board
-    const { background } = store.getState().board.pageCollection[pageId].meta
     // select style, selecting background doesnt trigger, bc it compares on the same reference
     const style = useCustomSelector(
         (state) => state.board.pageCollection[pageId].meta.background.style
     )
+    const documentImages = useCustomSelector(
+        (state) => state.board.documentImages
+    )
+    const imageRef = useRef<types.Image>(null)
 
-    const scheduleCaching = (r: React.RefObject<types.Image>) => {
-        // clear the cache of the layer
-        r.current?.parent?.clearCache()
-
-        r.current?.clearCache()
-        triggerCache((prev) => prev + 1)
-    }
-
-    // clear the cache and redraw when pagebackground changes
     useEffect(() => {
-        // get correct image data for document type background
-        if (style === backgroundStyle.DOC) {
-            const src = documentImages[background.documentPageNum]
-            // if image data not available, we need to reload the document
-            if (!src) {
-                const fileOriginSrc = isConnected()
-                    ? new URL(background.attachURL as string)
-                    : store.getState().board.documentSrc
-                handleLoadDocument(fileOriginSrc).then(() =>
-                    scheduleCaching(ref)
-                )
-                return
-            }
-            setImg(() => {
-                const image = new window.Image()
-                image.src = src
-                return image
+        imageRef.current?.parent?.clearCache()
+        imageRef.current?.parent?.cache({
+            pixelRatio: LAYER_CACHE_PXL,
+        })
+    })
+
+    const { documentPageNum } =
+        store.getState().board.pageCollection[pageId].meta.background
+
+    let image: CanvasImageSource | undefined
+
+    if (
+        style === backgroundStyle.DOC &&
+        documentPageNum !== undefined &&
+        !!documentImages[documentPageNum]
+    ) {
+        image = new window.Image()
+        image.src = documentImages[documentPageNum]
+        image.onload = () => {
+            imageRef.current?.parent?.clearCache()
+            imageRef.current?.parent?.cache({
+                pixelRatio: LAYER_CACHE_PXL,
+            })
+            imageRef.current?.cache({
+                pixelRatio: LAYER_CACHE_PXL,
             })
         }
-
-        // schedule new caching
-        scheduleCaching(ref)
-    }, [style, documentImages.length])
-
-    // cache the shape on update
-    useEffect(() => {
-        // for some reason, document type need an additional clear cache to work properly
-        if (style !== backgroundStyle.DOC) {
-            ref.current?.cache({ pixelRatio: BACKGROUND_CACHE_PXL })
-        }
-        setTimeout(
-            () => ref.current?.parent?.cache({ pixelRatio: LAYER_CACHE_PXL }),
-            500
-        )
-    }, [cache])
+    }
 
     return (
         <>
-            <PageBoundary pageId={pageId} pageSize={pageSize} />
+            <PageBoundary pageId={pageId} pageInfo={pageInfo} />
             <Image
-                {...pageSize}
-                ref={ref}
-                image={img}
+                {...pageInfo}
+                ref={imageRef}
+                image={image}
                 sceneFunc={
                     style !== backgroundStyle.DOC
                         ? pageBackground[style]
@@ -89,3 +69,5 @@ export default memo<PageProps>(({ pageId, pageSize }) => {
         </>
     )
 })
+
+export default Background

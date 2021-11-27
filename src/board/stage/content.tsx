@@ -1,62 +1,19 @@
-import React, { memo, useEffect, useRef, useState } from "react"
+import React, { memo, useCallback, useRef } from "react"
 import { ReactReduxContextValue } from "react-redux"
 import { createSelector } from "reselect"
-import { DEFAULT_PAGE_GAP, LAYER_CACHE_PXL } from "consts"
+import { DEFAULT_PAGE_GAP } from "consts"
 import { RootState } from "redux/types"
 import { useCustomSelector } from "hooks"
 import { Layer } from "react-konva"
-import { Layer as LayerType } from "konva/lib/Layer"
-import { LiveStroke } from "drawing/stroke/types"
-import { BoardLiveStroke, generateLiveStroke } from "drawing/stroke/livestroke"
+import type { Layer as LayerType } from "konva/lib/Layer"
 import store from "redux/store"
-import StrokeTransformer from "../transformer"
-import Page from "../page"
-import { LiveStrokeShape } from "../stroke/livestroke"
-
-interface PageLayerProps {
-    pageId: string
-    relativeIndex: number
-    liveStroke?: () => LiveStroke
-    setLiveStrokeTrigger?: React.Dispatch<React.SetStateAction<number>>
-}
-
-const PageLayer = memo<PageLayerProps>(
-    ({ pageId, relativeIndex, liveStroke, setLiveStrokeTrigger }) => {
-        const ref = useRef<LayerType>(null)
-        const { meta } = store.getState().board.pageCollection[pageId]
-
-        useEffect(() => {
-            // cache the layer/page by default
-            ref.current?.cache({ pixelRatio: LAYER_CACHE_PXL })
-        })
-
-        return (
-            <Layer key={pageId} ref={ref}>
-                <Page
-                    pageId={pageId}
-                    pageSize={{
-                        height: meta.height,
-                        width: meta.width,
-                        x: -meta.width / 2,
-                        y: relativeIndex * (meta.height + DEFAULT_PAGE_GAP),
-                    }}
-                    liveStroke={liveStroke}
-                    setLiveStrokeTrigger={setLiveStrokeTrigger}
-                />
-            </Layer>
-        )
-    }
-)
-
-const liveStrokeHandle = generateLiveStroke(
-    new BoardLiveStroke(store.getState().drawing.tool)
-)
+import LiveStroke from "board/livestroke"
+import StrokeTransformer from "board/transformer"
+import PageLayer from "board/page"
+import { PageInfo } from "board/page/index.types"
 
 // all pages and content are in this component
 const Content = memo<{ value: ReactReduxContextValue }>(() => {
-    const [liveStroke] = useState(() => liveStrokeHandle) // wrap the again or else useState will call it instantly??... wtf react
-    const [liveStrokeTrigger, setLiveStrokeTrigger] = useState(0)
-
     // Only rerender on page change
     const pageIdSelector = createSelector(
         (state: RootState) => state.board.currentPageIndex,
@@ -68,26 +25,67 @@ const Content = memo<{ value: ReactReduxContextValue }>(() => {
         ]
     )
     const pageRankSection = useCustomSelector(pageIdSelector)
+    const meta = pageRankSection.map(
+        (pageId) => store.getState().board.pageCollection[pageId]?.meta
+    )
+
+    const pageRef1 = useRef<LayerType>(null)
+    const pageRef2 = useRef<LayerType>(null)
+    const pageRef3 = useRef<LayerType>(null)
+    const pageRefs = [pageRef1, pageRef2, pageRef3]
+
+    const getPageY = useCallback(
+        (i: number) => {
+            if (i === 2) {
+                return meta[1].size.height + DEFAULT_PAGE_GAP
+            }
+            return i ? 0 : -(meta[0].size.height + DEFAULT_PAGE_GAP)
+        },
+        [meta]
+    )
+
+    const getPageInfo = useCallback(
+        (i: number): PageInfo => ({
+            height: meta[i].size.height,
+            width: meta[i].size.width,
+            x: -meta[i].size.width / 2,
+            y: getPageY(i),
+        }),
+        [meta, getPageY]
+    )
+
+    const isValid = useCallback(
+        (i: number): boolean => !!meta[1] && !!meta[i],
+        [meta]
+    )
+
+    if (!meta[1]) return null
 
     return (
         <>
             {pageRankSection.map(
-                (pageId, index) =>
-                    pageId && (
+                (pageId, i) =>
+                    isValid(i) && (
                         <PageLayer
                             key={pageId}
+                            layerRef={pageRefs[i]}
                             pageId={pageId}
-                            relativeIndex={index - 1}
-                            liveStroke={liveStroke}
-                            setLiveStrokeTrigger={setLiveStrokeTrigger}
+                            pageInfo={getPageInfo(i)}
                         />
                     )
             )}
-            <Layer draggable={false} listening={false}>
-                <LiveStrokeShape
-                    liveStroke={liveStroke}
-                    liveStrokeTrigger={liveStrokeTrigger}
-                />
+            <Layer>
+                {pageRankSection.map(
+                    (pageId, i) =>
+                        isValid(i) && (
+                            <LiveStroke
+                                key={pageId}
+                                layerRef={pageRefs[i]}
+                                pageId={pageId}
+                                pageInfo={getPageInfo(i)}
+                            />
+                        )
+                )}
             </Layer>
             <Layer>
                 <StrokeTransformer />

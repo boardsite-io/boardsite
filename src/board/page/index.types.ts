@@ -1,13 +1,14 @@
-import { LiveStroke } from "drawing/stroke/types"
+import { Layer } from "konva/lib/Layer"
+
+export type PageInfo = {
+    x: number
+    y: number
+    width: number
+    height: number
+}
 
 export interface PageProps {
+    layerRef?: React.RefObject<Layer>
     pageId: string
-    pageSize: {
-        x: number
-        y: number
-        width: number
-        height: number
-    }
-    liveStroke?: () => LiveStroke
-    setLiveStrokeTrigger?: React.Dispatch<React.SetStateAction<number>>
+    pageInfo: PageInfo
 }

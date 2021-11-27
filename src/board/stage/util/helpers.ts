@@ -5,5 +5,5 @@ export const getViewCenterY = (attrs: StageAttrs): number =>
 
 export const getCurrentPageWidth = (state: BoardState): number | undefined => {
     const pageId = state.pageRank[state.currentPageIndex]
-    return state.pageCollection[pageId]?.meta?.width
+    return state.pageCollection[pageId]?.meta?.size.width
 }
