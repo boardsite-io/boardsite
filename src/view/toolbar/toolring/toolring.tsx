@@ -1,5 +1,5 @@
 import React from "react"
-import { useCustomSelector } from "redux/hooks"
+import { useCustomSelector } from "hooks"
 import { EraserIcon, IconButton, PanIcon, SelectIcon } from "components"
 import { handleSetTool } from "drawing/handlers"
 import { ToolType } from "drawing/stroke/types"

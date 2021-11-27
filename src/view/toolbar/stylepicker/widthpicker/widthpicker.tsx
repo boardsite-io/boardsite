@@ -1,6 +1,6 @@
 import React from "react"
 import { nanoid } from "@reduxjs/toolkit"
-import { useCustomSelector } from "redux/hooks"
+import { useCustomSelector } from "hooks"
 import store from "redux/store"
 import { SET_WIDTH } from "redux/drawing/drawing"
 import { STROKE_WIDTH_PRESETS } from "consts"

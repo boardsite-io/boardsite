@@ -14,7 +14,7 @@ import {
     INITIAL_VIEW,
 } from "redux/board/board"
 import store from "redux/store"
-import { useCustomSelector } from "redux/hooks"
+import { useCustomSelector } from "hooks"
 import {
     ViewNavWrapper,
     PageIndex,

@@ -1,5 +1,5 @@
 import React from "react"
-import { useCustomSelector } from "redux/hooks"
+import { useCustomSelector } from "hooks"
 import store from "redux/store"
 import { SET_PAGE_BACKGROUND } from "redux/board/board"
 import { backgroundStyle } from "consts"

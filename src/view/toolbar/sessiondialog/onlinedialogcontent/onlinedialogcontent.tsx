@@ -2,7 +2,7 @@ import { disconnect } from "api/websocket"
 import { Button, DialogContent } from "components"
 import React from "react"
 import { useHistory } from "react-router-dom"
-import { useCustomDispatch, useCustomSelector } from "redux/hooks"
+import { useCustomDispatch, useCustomSelector } from "hooks"
 import { CLOSE_SESSION_DIALOG } from "redux/session/session"
 import {
     UserAlias,

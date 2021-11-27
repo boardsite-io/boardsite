@@ -18,7 +18,7 @@ import {
     MULTI_TOUCH_END,
 } from "redux/board/board"
 import store from "redux/store"
-import { useCustomSelector } from "redux/hooks"
+import { useCustomSelector } from "hooks"
 import { debounce } from "lodash"
 import { KonvaEventObject } from "konva/lib/Node"
 import { Vector2d } from "konva/lib/types"

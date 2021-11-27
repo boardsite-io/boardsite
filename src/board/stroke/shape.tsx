@@ -1,17 +1,13 @@
-import React, { memo, useState } from "react"
+import React from "react"
 import { Circle, Ellipse, Line, Rect } from "react-konva"
 import {
-    ERASED_OPACITY,
     ERASER_WIDTH,
-    MOVE_OPACITY,
     SEL_FILL,
     SEL_FILL_ENABLED,
     SEL_STROKE,
     SEL_STROKE_ENABLED,
 } from "consts"
-import { useCustomSelector } from "redux/hooks"
 import { LiveStroke, Point, Stroke, ToolType } from "drawing/stroke/types"
-import { LineCap, LineJoin } from "konva/lib/Shape"
 import { LineConfig } from "konva/lib/shapes/Line"
 
 interface StrokeShapeProps {
@@ -20,77 +16,16 @@ interface StrokeShapeProps {
 
 type CustomLineConfig = LineConfig & { points: number[] }
 
-/**
- * Super component implementing all stroke types and their visualization in the canvas
- * In order for memo to work correctly, we have to pass the stroke props by value
- * referencing an object will result in unwanted rerenders, since we just compare
- * the object references.
- */
-export const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
-    const [isDragging, setDragging] = useState(false)
-    const erasedStrokes = useCustomSelector(
-        (state) => state.drawing.erasedStrokes
-    )
-
-    // used to trigger a stroke redraw for positional updates
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const strokeSel = useCustomSelector((state) => {
-        const s =
-            state.board.pageCollection[stroke.pageId]?.strokes[stroke.id ?? ""]
-        return {
-            x: s?.x,
-            y: s?.y,
-            scaleX: s?.scaleX,
-            scaleY: s?.scaleY,
-        }
-    })
-
-    const getOpacity = (): number => {
-        if (isDragging) {
-            return MOVE_OPACITY
-        }
-        if (erasedStrokes[stroke.id ?? ""]) {
-            return ERASED_OPACITY
-        }
-        return stroke.style.opacity
-    }
-
-    const onDragStart = () => {
-        setDragging(true)
-    }
-    const onDragEnd = () => {
-        setDragging(false)
-    }
-
-    const shapeProps = {
-        name: stroke.pageId, // required to find via selector
-        id: stroke.id,
-        x: stroke.x,
-        y: stroke.y,
-        scaleX: stroke.scaleX,
-        scaleY: stroke.scaleY,
-        lineCap: "round" as LineCap,
-        lineJoin: "round" as LineJoin,
-        stroke: stroke.style.color,
-        fill: undefined,
-        strokeWidth: stroke.style.width,
-        opacity: getOpacity(),
-        listening: false,
-        draggable: false,
-        onDragStart,
-        onDragEnd,
-        shadowForStrokeEnabled: false, // for performance, see Konva docs
-        points: stroke.points, // external supplied points may overwrite stroke.points for e.g. livestroke
-    }
-
-    return getShape(stroke, shapeProps)
-})
+interface StrokeShapeProps {
+    stroke: Stroke | LiveStroke
+    shapeProps: CustomLineConfig
+}
 
 // Use LineConfig since it requires points prop
-const getShape = (
-    stroke: Stroke | LiveStroke,
-    shapeProps: CustomLineConfig
-): JSX.Element => {
+export const Shape = ({
+    stroke,
+    shapeProps,
+}: StrokeShapeProps): JSX.Element => {
     switch (stroke.type) {
         case ToolType.Eraser: {
             shapeProps.strokeWidth = ERASER_WIDTH

@@ -9,7 +9,7 @@ import {
     IconProps,
 } from "components"
 import React, { useState } from "react"
-import { useCustomSelector } from "redux/hooks"
+import { useCustomSelector } from "hooks"
 import { handleSetTool } from "drawing/handlers"
 import StylePicker from "../stylepicker/stylepicker"
 

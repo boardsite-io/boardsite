@@ -3,8 +3,18 @@ import store from "redux/store"
 import { handleSetTool, handleRedo, handleUndo } from "drawing/handlers"
 import { ToolType } from "drawing/stroke/types"
 import { saveWorkspace } from "redux/workspace"
+import { useEffect } from "react"
 
-export default function keyListener(e: KeyboardEvent): void {
+export const useKeyboardShortcuts = (): void => {
+    useEffect(() => {
+        document.addEventListener("keydown", keyListener)
+        return () => {
+            document.removeEventListener("keydown", keyListener)
+        }
+    }, [])
+}
+
+const keyListener = (e: KeyboardEvent): void => {
     switch (e.key) {
         case "ArrowUp":
             store.dispatch(JUMP_TO_PREV_PAGE())

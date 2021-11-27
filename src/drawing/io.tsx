@@ -5,7 +5,8 @@ import download from "downloadjs"
 import { Provider } from "react-redux"
 import { Layer, Stage, Rect } from "react-konva"
 import * as types from "konva/lib/Layer"
-import { StrokeShape } from "board/stroke/shape"
+import { Shape } from "board/stroke/shape"
+import { LineCap, LineJoin } from "konva/lib/Shape"
 import { backgroundStyle, PIXEL_RATIO } from "consts"
 import { pageBackground } from "./page"
 import store from "../redux/store"
@@ -41,16 +42,46 @@ export async function pagesToDataURL(
                                         : undefined
                                 }
                             />
-                            {strokeIds.map((id) => (
-                                <StrokeShape
-                                    key={id}
-                                    stroke={
-                                        store.getState().board.pageCollection[
-                                            pageId
-                                        ]?.strokes[id]
-                                    }
-                                />
-                            ))}
+                            {strokeIds.map((id) => {
+                                const stroke =
+                                    store.getState().board.pageCollection[
+                                        pageId
+                                    ]?.strokes[id]
+                                if (!stroke) return null
+
+                                const pdfShapeProps = {
+                                    name: stroke.pageId,
+                                    id: stroke.id,
+                                    x: stroke.x,
+                                    y: stroke.y,
+                                    scaleX: stroke.scaleX,
+                                    scaleY: stroke.scaleY,
+                                    lineCap: "round" as LineCap,
+                                    lineJoin: "round" as LineJoin,
+                                    stroke: stroke.style.color,
+                                    fill: undefined,
+                                    strokeWidth: stroke.style.width,
+                                    opacity: stroke.style.opacity,
+                                    listening: false,
+                                    draggable: false,
+                                    onDragStart: undefined,
+                                    onDragEnd: undefined,
+                                    shadowForStrokeEnabled: false,
+                                    points: stroke.points,
+                                }
+
+                                return (
+                                    <Shape
+                                        key={id}
+                                        stroke={
+                                            store.getState().board
+                                                .pageCollection[pageId]
+                                                ?.strokes[id]
+                                        }
+                                        shapeProps={pdfShapeProps}
+                                    />
+                                )
+                            })}
                         </Layer>
                     </Provider>
                 </Stage>
