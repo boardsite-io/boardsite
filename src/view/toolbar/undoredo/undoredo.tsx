@@ -1,7 +1,7 @@
 import { IconButton, RedoIcon, UndoIcon } from "components"
 import { handleRedo, handleUndo } from "drawing/handlers"
 import React from "react"
-import { useCustomSelector } from "redux/hooks"
+import { useCustomSelector } from "hooks"
 
 const UndoRedo: React.FC = () => {
     const disableUndoStack = useCustomSelector(

@@ -8,7 +8,7 @@ import {
     TR_ANCHOR_SIZE,
     TR_ANCHOR_CORNER_RADIUS,
 } from "consts"
-import { useCustomDispatch, useCustomSelector } from "redux/hooks"
+import { useCustomDispatch, useCustomSelector } from "hooks"
 import {
     Box,
     Transformer as TransformerType,

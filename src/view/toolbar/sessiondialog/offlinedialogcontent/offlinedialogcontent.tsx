@@ -1,6 +1,6 @@
 import React from "react"
 import { useHistory } from "react-router-dom"
-import { useCustomDispatch, useCustomSelector } from "redux/hooks"
+import { useCustomDispatch, useCustomSelector } from "hooks"
 import store from "redux/store"
 import {
     SET_SESSION_DIALOG,

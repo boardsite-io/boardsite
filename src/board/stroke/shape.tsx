@@ -9,7 +9,7 @@ import {
     SEL_STROKE,
     SEL_STROKE_ENABLED,
 } from "consts"
-import { useCustomSelector } from "redux/hooks"
+import { useCustomSelector } from "hooks"
 import { LiveStroke, Point, Stroke, ToolType } from "drawing/stroke/types"
 import { LineCap, LineJoin } from "konva/lib/Shape"
 import { LineConfig } from "konva/lib/shapes/Line"

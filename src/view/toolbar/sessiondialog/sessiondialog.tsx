@@ -1,7 +1,7 @@
 import React from "react"
 import { BsPeople } from "react-icons/bs"
 import { useHistory } from "react-router-dom"
-import { useCustomDispatch, useCustomSelector } from "redux/hooks"
+import { useCustomDispatch, useCustomSelector } from "hooks"
 import {
     Button,
     Dialog,

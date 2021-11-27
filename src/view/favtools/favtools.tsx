@@ -10,7 +10,7 @@ import {
 } from "components"
 import { ToolType } from "drawing/stroke/types"
 import store from "redux/store"
-import { useCustomSelector } from "redux/hooks"
+import { useCustomSelector } from "hooks"
 import { ADD_FAV_TOOL } from "redux/drawing/drawing"
 import { RootState } from "redux/types"
 import { FavToolsStyled } from "./favtools.styled"

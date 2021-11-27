@@ -1,5 +1,5 @@
 import React from "react"
-import { useCustomSelector } from "redux/hooks"
+import { useCustomSelector } from "hooks"
 import {
     SessionInfoWrapper,
     UserAlias,

@@ -1,6 +1,6 @@
 import { Dialog, DialogContent } from "components"
 import React from "react"
-import { useCustomSelector } from "redux/hooks"
+import { useCustomSelector } from "hooks"
 import { END_LOADING } from "redux/loading/loading"
 import store from "redux/store"
 

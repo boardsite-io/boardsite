@@ -6,7 +6,7 @@ import {
     DialogOptions,
 } from "components"
 import React from "react"
-import { useCustomSelector } from "redux/hooks"
+import { useCustomSelector } from "hooks"
 import { CLOSE_ABOUT } from "redux/menu/menu"
 import store from "redux/store"
 

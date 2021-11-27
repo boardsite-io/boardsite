@@ -23,7 +23,7 @@ import {
     handleDeleteCurrentPage,
     handleChangePageBackground,
 } from "drawing/handlers"
-import { useCustomSelector } from "redux/hooks"
+import { useCustomSelector } from "hooks"
 import store from "redux/store"
 import { CLOSE_PAGE_ACTIONS } from "redux/menu/menu"
 import Background from "./background/background"
