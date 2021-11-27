@@ -1,7 +1,7 @@
 import { LIVESTROKE_SEGMENT_SIZE } from "consts"
 import { LiveStroke } from "drawing/stroke/types"
 import React, { memo, useCallback } from "react"
-import { StrokeShape } from "./shape"
+import { StrokeShape } from "./strokeShape"
 
 interface LiveStrokeShapeProps {
     liveStroke: () => LiveStroke

@@ -22,7 +22,7 @@ import {
 import { TransformStrokes } from "redux/board/board.types"
 import { handleUpdateStrokes } from "../drawing/handlers"
 import { Point, Stroke } from "../drawing/stroke/types"
-import { StrokeShape } from "./stroke/shape"
+import { StrokeShape } from "./stroke/strokeShape"
 
 const StrokeTransformer = memo(() => {
     const transformStrokes = useCustomSelector(
