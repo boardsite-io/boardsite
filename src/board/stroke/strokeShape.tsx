@@ -69,7 +69,11 @@ export const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
         onDragStart,
         onDragEnd,
         shadowForStrokeEnabled: false, // for performance, see Konva docs
-        points: stroke.points, // external supplied points may overwrite stroke.points for e.g. livestroke
+        // external supplied points may overwrite stroke.points for e.g. livestroke
+        points:
+            stroke.points.length >= 4
+                ? stroke.points
+                : [...stroke.points, ...stroke.points], // first point needs copy for rectangles
     }
 
     return <Shape stroke={stroke} shapeProps={shapeProps} />
