@@ -32,9 +32,9 @@ import { backgroundStyle, PIXEL_RATIO } from "consts"
 import store from "redux/store"
 import { SET_TOOL } from "redux/drawing/drawing"
 import { PageMeta, StrokeAction } from "redux/board/board.types"
-import { toPDF } from "./io"
+import { toPDF } from "./pdf/io"
 import { BoardPage } from "./page"
-import { getPDFfromForm, PDFtoImageData } from "./document"
+import { getPDFfromForm, PDFtoImageData } from "./pdf/document"
 
 export function handleSetTool(tool: Partial<Tool>): void {
     store.dispatch(SET_TOOL(tool))

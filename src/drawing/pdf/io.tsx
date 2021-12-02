@@ -3,13 +3,13 @@ import ReactDOM from "react-dom"
 import { PDFDocument, PDFPage } from "pdf-lib"
 import download from "downloadjs"
 import { Provider } from "react-redux"
+import store from "redux/store"
 import { Layer, Stage, Rect } from "react-konva"
 import * as types from "konva/lib/Layer"
 import { Shape } from "board/stroke/shape"
 import { LineCap, LineJoin } from "konva/lib/Shape"
 import { backgroundStyle, PIXEL_RATIO } from "consts"
-import { pageBackground } from "./page"
-import store from "../redux/store"
+import { pageBackground } from "../page"
 
 export async function pagesToDataURL(
     drawBackground?: boolean
