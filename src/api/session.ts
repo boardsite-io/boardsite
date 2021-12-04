@@ -85,11 +85,7 @@ export class BoardSession implements Session {
 
         this.setID(sessionId)
         // create a new user for us
-        const usrCfg = {
-            alias: this.user.alias,
-            color: this.user.color,
-        }
-        const { id } = await this.request.postUser(usrCfg)
+        const { id } = await this.request.postUser(this.user)
         this.user.id = id
         await this.createSocket()
 
@@ -116,12 +112,8 @@ export class BoardSession implements Session {
             this.socket = new WebSocket(
                 `${url.toString()}b/${this.id}/users/${this.user.id}/socket`
             )
-            this.socket.onmessage = (msg) => {
-                this.receive(JSON.parse(msg.data))
-            }
-            this.socket.onopen = () => {
-                resolve()
-            }
+            this.socket.onmessage = (msg) => this.receive(JSON.parse(msg.data))
+            this.socket.onopen = () => resolve()
             this.socket.onerror = (ev) => reject(ev)
         })
     }

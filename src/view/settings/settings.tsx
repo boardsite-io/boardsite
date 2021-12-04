@@ -35,8 +35,7 @@ const Settings: React.FC = () => {
     const handleURLChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setURL(event.target.value)
         try {
-            const u = new URL(event.target.value)
-            currentSession().setAPIURL(u)
+            currentSession().setAPIURL(new URL(event.target.value))
             setValidURL(true)
         } catch {
             setValidURL(false)

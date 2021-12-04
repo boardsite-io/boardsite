@@ -11,15 +11,12 @@ const SessionInfo: React.FC = () => {
     const userInfo = useCustomSelector((state) => state.session.session?.users)
     return (
         <SessionInfoWrapper>
-            {Object.values(userInfo ?? {}).map((user) => {
-                const { alias, color, id } = user
-                return (
-                    <UserInfo key={id}>
-                        <UserColor $color={color} />
-                        <UserAlias>{alias}</UserAlias>
-                    </UserInfo>
-                )
-            })}
+            {Object.values(userInfo ?? {}).map(({ alias, color, id }) => (
+                <UserInfo key={id}>
+                    <UserColor $color={color} />
+                    <UserAlias>{alias}</UserAlias>
+                </UserInfo>
+            ))}
         </SessionInfoWrapper>
     )
 }
