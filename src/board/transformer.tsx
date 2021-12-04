@@ -1,4 +1,4 @@
-import React, { memo, useRef } from "react"
+import React, { memo, useCallback, useRef } from "react"
 import { Group, Transformer } from "react-konva"
 import {
     TR_BORDER_STROKE,
@@ -8,20 +8,16 @@ import {
     TR_ANCHOR_SIZE,
     TR_ANCHOR_CORNER_RADIUS,
 } from "consts"
-import { useCustomDispatch, useCustomSelector } from "hooks"
+import { useCustomSelector } from "hooks"
 import {
     Box,
     Transformer as TransformerType,
 } from "konva/lib/shapes/Transformer"
 import { Group as GroupType } from "konva/lib/Group"
 import store from "redux/store"
-import {
-    MOVE_SHAPES_TO_DRAG_LAYER,
-    UPDATE_DELETE_STROKES,
-} from "redux/board/board"
 import { TransformStrokes } from "redux/board/board.types"
-import { handleUpdateStrokes } from "../drawing/handlers"
-import { Point, Stroke } from "../drawing/stroke/types"
+import { handleDeleteStrokes, handleUpdateStrokes } from "../drawing/handlers"
+import { Stroke } from "../drawing/stroke/types"
 import { StrokeShape } from "./stroke/strokeShape"
 
 const StrokeTransformer = memo(() => {
@@ -43,8 +39,10 @@ const CustomTransformer = memo<CustomTransformerProps>(
         }
         const transformRef: React.RefObject<TransformerType> = useRef(null)
         const groupRef: React.RefObject<GroupType> = useRef(null)
-        const dispatch = useCustomDispatch()
 
+        /**
+         * Insert the group nodes into the transformer
+         */
         React.useEffect(() => {
             const selectedNodes = groupRef.current?.children
             if (selectedNodes) {
@@ -52,79 +50,37 @@ const CustomTransformer = memo<CustomTransformerProps>(
             }
         }, [transformStrokes])
 
-        const boundBoxFunc = (oldBox: Box, newBox: Box) => {
-            // limit resize
-            if (newBox.width < 5 || newBox.height < 5) {
-                return oldBox
-            }
-            return newBox
-        }
+        /**
+         * Customise the resizing limits
+         */
+        const boundBoxFunc = useCallback(
+            (oldBox: Box, newBox: Box) =>
+                newBox.width < 5 || newBox.height < 5 ? oldBox : newBox,
+            []
+        )
 
-        let startPosition: Point | undefined
-        const onMouseDown = () => {
-            startPosition = transformRef.current?.getPosition()
-        }
+        /**
+         * Start of dragging or scaling transform event
+         */
+        const onStart = useCallback(() => {
+            // Remove transformStrokes from the contentLayer
+            handleDeleteStrokes(...transformStrokes)
+        }, [transformStrokes])
 
-        const startDragTransform = () => {
-            dispatch(UPDATE_DELETE_STROKES({ strokes: transformStrokes }))
-        }
-
-        const onDragStart = () => {
-            startDragTransform()
-        }
-
-        const onTransformStart = () => {
-            startDragTransform()
-        }
-
-        const onDragEnd = () => {
-            const endPosition = transformRef.current?.getPosition()
-            if (!startPosition || !endPosition) {
-                return
-            }
-
-            const { scaleX: stageScaleX, scaleY: stageScaleY } =
-                store.getState().board.stage.attrs
-
-            const offset = {
-                x: (endPosition.x - startPosition.x) / stageScaleX,
-                y: (endPosition.y - startPosition.y) / stageScaleY,
-            }
-
+        /**
+         * End of dragging or scaling transform event
+         */
+        const onEnd = useCallback(() => {
+            // Update stroke attributes using the internal konva states of the nodes
             const updatedStrokes = transformStrokes.map((stroke, i) => {
-                const newPosition = {
-                    x: stroke.x + offset.x,
-                    y: stroke.y + offset.y,
-                }
-                // transformNodes and transformStrokes array is in same
-                // order set internal node attrs to prevent mismatch between
-                // rendered strokes and internal transformer nodes
-                groupRef.current?.children?.[i]?.setAttrs({ ...newPosition })
-                return stroke.update({ ...newPosition })
+                const newAttrs = groupRef.current?.children?.[i]?.getAttrs()
+
+                return newAttrs ? stroke.update(newAttrs) : stroke
             })
 
-            store.dispatch(
-                MOVE_SHAPES_TO_DRAG_LAYER({ strokes: updatedStrokes })
-            )
             // Add transformStrokes back to the contentLayer
             handleUpdateStrokes(...updatedStrokes)
-        }
-
-        const onTransformEnd = () => {
-            const updatedStrokes = transformStrokes.map((stroke, i) => {
-                // transformNodes and transformStrokes are in same order
-                const { scaleX, scaleY, x, y } =
-                    // eslint-disable-next-line no-unsafe-optional-chaining
-                    groupRef.current?.children?.[i]?.getAttrs()
-                return stroke.update({ scaleX, scaleY, x, y })
-            })
-
-            store.dispatch(
-                MOVE_SHAPES_TO_DRAG_LAYER({ strokes: updatedStrokes })
-            )
-            // Add transformStrokes back to the contentLayer
-            handleUpdateStrokes(...updatedStrokes)
-        }
+        }, [transformStrokes])
 
         return (
             <>
@@ -149,12 +105,10 @@ const CustomTransformer = memo<CustomTransformerProps>(
                     anchorCornerRadius={TR_ANCHOR_CORNER_RADIUS}
                     rotateEnabled={false}
                     boundBoxFunc={boundBoxFunc}
-                    onMouseDown={onMouseDown}
-                    onTouchStart={onMouseDown}
-                    onDragStart={onDragStart}
-                    onDragEnd={onDragEnd}
-                    onTransformStart={onTransformStart}
-                    onTransformEnd={onTransformEnd}
+                    onMouseDown={onStart}
+                    onTouchStart={onStart}
+                    onDragEnd={onEnd}
+                    onTransformEnd={onEnd}
                 />
             </>
         )
