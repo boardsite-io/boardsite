@@ -17,16 +17,16 @@ export const useKeyboardShortcuts = (): void => {
 const keyListener = (e: KeyboardEvent): void => {
     switch (e.key) {
         case "ArrowUp":
-            store.dispatch(JUMP_TO_PREV_PAGE())
+            store.dispatch(JUMP_TO_PREV_PAGE(true))
             break
         case "ArrowLeft":
-            store.dispatch(JUMP_TO_PREV_PAGE())
+            store.dispatch(JUMP_TO_PREV_PAGE(true))
             break
         case "ArrowDown":
-            store.dispatch(JUMP_TO_NEXT_PAGE())
+            store.dispatch(JUMP_TO_NEXT_PAGE(true))
             break
         case "ArrowRight":
-            store.dispatch(JUMP_TO_NEXT_PAGE())
+            store.dispatch(JUMP_TO_NEXT_PAGE(true))
             break
         case "1":
             handleSetTool({ type: ToolType.Pen })

@@ -6,7 +6,6 @@ import {
     DELETE_PAGES,
     DELETE_ALL_PAGES,
     SET_PAGEMETA,
-    INITIAL_VIEW,
     SET_PDF,
     ADD_PAGE,
     ADD_STROKES,
@@ -49,7 +48,6 @@ export function handleAddPageOver(): void {
     } else {
         store.dispatch(ADD_PAGE({ page, index }))
     }
-    store.dispatch(INITIAL_VIEW())
 }
 
 export function handleAddPageUnder(): void {
@@ -60,8 +58,7 @@ export function handleAddPageUnder(): void {
     } else {
         store.dispatch(ADD_PAGE({ page, index }))
     }
-    store.dispatch(JUMP_TO_NEXT_PAGE())
-    store.dispatch(INITIAL_VIEW())
+    store.dispatch(JUMP_TO_NEXT_PAGE(true))
 }
 
 export function handleClearPage(): void {

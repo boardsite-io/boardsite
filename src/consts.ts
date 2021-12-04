@@ -1,4 +1,4 @@
-import { Point, Tool, ToolType } from "drawing/stroke/types"
+import { Tool, ToolType } from "drawing/stroke/types"
 import { PageBackgroundStyle } from "redux/board/board.types"
 
 /**
@@ -8,7 +8,8 @@ export default function isDev(): boolean {
     return !process.env.NODE_ENV || process.env.NODE_ENV === "development"
 }
 
-export const RESIZE_DEBOUNCE = 250 // debounce time in ms
+export const STAGE_RESIZE_DEBOUNCE = 250 // debounce time in ms
+export const STAGE_UPDATE_DEBOUNCE = 250 // debounce time in ms
 export const PIXEL_RATIO = 4
 export const STROKE_WIDTH_PRESETS = [0.5, 1, 2, 3, 4, 5, 7, 10, 14, 20]
 export const DEFAULT_PAGE_GAP = 20
@@ -21,9 +22,9 @@ export const ZOOM_OUT_BUTTON_SCALE = 0.9
 export const ZOOM_SCALE_MAX = 5.0
 export const ZOOM_SCALE_MIN = 0.5
 export const DEFAULT_CURRENT_PAGE_INDEX = 0
-export const DEFAULT_STAGE_X = 0
+export const DEFAULT_STAGE_X = window.innerWidth / 2
 export const DEFAULT_STAGE_Y = 60
-export const DEFAULT_STAGE_SCALE: Point = { x: 1, y: 1 }
+export const DEFAULT_STAGE_SCALE = 1
 export const DEFAULT_ISDRAGGABLE = false
 export const DEFAULT_KEEP_CENTERED = false
 export const DEFAULT_HIDE_NAVBAR = false

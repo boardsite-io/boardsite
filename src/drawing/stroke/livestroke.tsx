@@ -117,7 +117,7 @@ export class BoardLiveStroke implements LiveStroke {
 
     processPoints(pagePosition: Point): void {
         const { x: pageX, y: pageY } = pagePosition
-        const stageScale = store.getState().board.view.stageScale.x
+        const stageScale = store.getState().board.stage.attrs.scaleX
 
         switch (this.type) {
             case ToolType.Pen: {
