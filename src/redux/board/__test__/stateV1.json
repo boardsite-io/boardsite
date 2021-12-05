@@ -40,13 +40,17 @@
         "background": "blank",
         "size": { "width": 620, "height": 877 }
     },
-    "view": {
+    "stage": {
         "keepCentered": false,
         "hideNavBar": false,
-        "stageWidth": 1054,
-        "stageHeight": 829,
-        "stageX": 527,
-        "stageY": 60,
-        "stageScale": { "x": 1, "y": 1 }
+        "attrs": {
+            "width": 620,
+            "height": 870,
+            "x": 527,
+            "y": 60,
+            "scaleX": 1,
+            "scaleY": 1
+        },
+        "renderTrigger": "false"
     }
 }

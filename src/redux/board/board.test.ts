@@ -59,14 +59,18 @@ describe("boardcontrol reducer", () => {
                             height: 10,
                         },
                     },
-                    view: {
+                    stage: {
                         keepCentered: DEFAULT_KEEP_CENTERED,
                         hideNavBar: DEFAULT_HIDE_NAVBAR,
-                        stageWidth: window.innerWidth,
-                        stageHeight: window.innerHeight,
-                        stageX: DEFAULT_STAGE_X,
-                        stageY: DEFAULT_STAGE_Y,
-                        stageScale: DEFAULT_STAGE_SCALE,
+                        attrs: {
+                            width: window.innerWidth,
+                            height: window.innerHeight,
+                            x: DEFAULT_STAGE_X,
+                            y: DEFAULT_STAGE_Y,
+                            scaleX: DEFAULT_STAGE_SCALE,
+                            scaleY: DEFAULT_STAGE_SCALE,
+                        },
+                        renderTrigger: false,
                     },
                 },
                 action.UPDATE_STROKES({
@@ -109,14 +113,18 @@ describe("boardcontrol reducer", () => {
                             height: 10,
                         },
                     },
-                    view: {
+                    stage: {
                         keepCentered: DEFAULT_KEEP_CENTERED,
                         hideNavBar: DEFAULT_HIDE_NAVBAR,
-                        stageWidth: window.innerWidth,
-                        stageHeight: window.innerHeight,
-                        stageX: DEFAULT_STAGE_X,
-                        stageY: DEFAULT_STAGE_Y,
-                        stageScale: DEFAULT_STAGE_SCALE,
+                        attrs: {
+                            width: window.innerWidth,
+                            height: window.innerHeight,
+                            x: DEFAULT_STAGE_X,
+                            y: DEFAULT_STAGE_Y,
+                            scaleX: DEFAULT_STAGE_SCALE,
+                            scaleY: DEFAULT_STAGE_SCALE,
+                        },
+                        renderTrigger: false,
                     },
                 },
                 action.UPDATE_STROKES({
