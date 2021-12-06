@@ -83,8 +83,8 @@ const CustomTransformer = memo<CustomTransformerProps>(
                 return
             }
 
-            const { x: stageScaleX, y: stageScaleY } =
-                store.getState().board.view.stageScale
+            const { scaleX: stageScaleX, scaleY: stageScaleY } =
+                store.getState().board.stage.attrs
 
             const offset = {
                 x: (endPosition.x - startPosition.x) / stageScaleX,

@@ -28,14 +28,18 @@ export const newState = (state?: BoardState): BoardState => ({
         background: backgroundStyle.BLANK, // default,
         size: pageSize.a4landscape,
     },
-    view: {
+    stage: {
         keepCentered: DEFAULT_KEEP_CENTERED,
         hideNavBar: DEFAULT_HIDE_NAVBAR,
-        stageWidth: window.innerWidth,
-        stageHeight: window.innerHeight,
-        stageX: DEFAULT_STAGE_X,
-        stageY: DEFAULT_STAGE_Y,
-        stageScale: DEFAULT_STAGE_SCALE,
+        attrs: {
+            width: window.innerWidth,
+            height: window.innerHeight,
+            x: DEFAULT_STAGE_X,
+            y: DEFAULT_STAGE_Y,
+            scaleX: DEFAULT_STAGE_SCALE,
+            scaleY: DEFAULT_STAGE_SCALE,
+        },
+        renderTrigger: false,
     },
     undoStack: [],
     redoStack: [],
@@ -115,8 +119,8 @@ export const newState = (state?: BoardState): BoardState => ({
         })
 
         // Update stage dimensions for initial indexedDB data load on new window
-        this.view.stageHeight = window.innerHeight
-        this.view.stageWidth = window.innerWidth
+        this.stage.attrs.height = window.innerHeight
+        this.stage.attrs.width = window.innerWidth
 
         return this
     },

@@ -2,10 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { pick, keys, assign, cloneDeep } from "lodash"
 import { Point, Stroke } from "drawing/stroke/types"
 import {
-    DEFAULT_STAGE_Y,
-    ZOOM_IN_BUTTON_SCALE,
-    ZOOM_OUT_BUTTON_SCALE,
-} from "consts"
+    centerView,
+    fitToPage,
+    initialView,
+    resetView,
+    zoomCenter,
+} from "board/stage/util/adjustView"
 import {
     addAction,
     deleteStrokes,
@@ -13,16 +15,8 @@ import {
     undoAction,
     addOrUpdateStrokes,
 } from "./undoredo"
-import {
-    centerView,
-    detectPageChange,
-    fitToPage,
-    multiTouchEnd,
-    multiTouchMove,
-    zoomToPointWithScale,
-} from "./helpers"
 import { newState } from "./state"
-import { BoardState, Page, StrokeAction } from "./board.types"
+import { BoardState, Page, StageAttrs, StrokeAction } from "./board.types"
 
 const boardSlice = createSlice({
     name: "board",
@@ -74,6 +68,7 @@ const boardSlice = createSlice({
                 state.pageRank.push(page.pageId)
             }
             state.triggerManualUpdate?.()
+            initialView(state)
         },
 
         CLEAR_PAGE: (state, action) => {
@@ -229,111 +224,81 @@ const boardSlice = createSlice({
             state.triggerManualUpdate?.()
         },
 
-        JUMP_TO_NEXT_PAGE: (state) => {
+        JUMP_TO_NEXT_PAGE: (state, action: PayloadAction<boolean>) => {
             if (state.currentPageIndex < state.pageRank.length - 1) {
                 state.currentPageIndex += 1
+
+                if (action.payload) {
+                    initialView(state)
+                    state.stage.renderTrigger = !state.stage.renderTrigger
+                }
             }
         },
-        JUMP_TO_PREV_PAGE: (state) => {
+        JUMP_TO_PREV_PAGE: (state, action: PayloadAction<boolean>) => {
             if (state.currentPageIndex > 0) {
                 state.currentPageIndex -= 1
+
+                if (action.payload) {
+                    initialView(state)
+                    state.stage.renderTrigger = !state.stage.renderTrigger
+                }
             }
         },
         JUMP_TO_FIRST_PAGE: (state) => {
             state.currentPageIndex = 0
+            initialView(state)
+            state.stage.renderTrigger = !state.stage.renderTrigger
         },
         JUMP_TO_LAST_PAGE: (state) => {
             state.currentPageIndex = state.pageRank.length - 1
+            initialView(state)
+            state.stage.renderTrigger = !state.stage.renderTrigger
         },
         JUMP_PAGE_WITH_INDEX: (state, action) => {
             const targetIndex = action.payload
             if (targetIndex <= state.pageRank.length - 1 && targetIndex >= 0) {
                 state.currentPageIndex = targetIndex
             }
+            state.stage.renderTrigger = !state.stage.renderTrigger
         },
 
         TOGGLE_SHOULD_CENTER: (state) => {
-            state.view.keepCentered = !state.view.keepCentered
+            state.stage.keepCentered = !state.stage.keepCentered
         },
         TOGGLE_HIDE_NAVBAR: (state) => {
-            state.view.hideNavBar = !state.view.hideNavBar
-        },
-        MULTI_TOUCH_MOVE: (state, action) => {
-            const { p1, p2 } = action.payload
-            multiTouchMove(state.view, p1, p2)
-        },
-        MULTI_TOUCH_END: (state) => {
-            detectPageChange(state as unknown as BoardState)
-            multiTouchEnd()
-        },
-        // use this e.g., on page change
-        INITIAL_VIEW: (state) => {
-            state.view.stageScale = { x: 1, y: 1 }
-            state.view.stageX = 0
-            state.view.stageY = DEFAULT_STAGE_Y
-            centerView(state as BoardState)
+            state.stage.hideNavBar = !state.stage.hideNavBar
         },
         RESET_VIEW: (state) => {
-            const oldScale = state.view.stageScale.y
-            const newScale = 1
-            state.view.stageScale = { x: newScale, y: newScale }
-            state.view.stageX = 0
-            state.view.stageY =
-                state.view.stageHeight / 2 -
-                ((state.view.stageHeight / 2 - state.view.stageY) / oldScale) *
-                    newScale
-            centerView(state as BoardState)
+            resetView(state as BoardState)
+            state.stage.renderTrigger = !state.stage.renderTrigger
         },
         CENTER_VIEW: (state) => {
             centerView(state as BoardState)
+            state.stage.renderTrigger = !state.stage.renderTrigger
         },
-        SET_STAGE_X: (state, action) => {
-            state.view.stageX = action.payload
-        },
-        SET_STAGE_Y: (state, action) => {
-            state.view.stageY = action.payload
-            detectPageChange(state as unknown as BoardState)
-        },
-        SCROLL_STAGE_Y: (state, action) => {
-            state.view.stageY -= action.payload
-            detectPageChange(state as unknown as BoardState)
-        },
-        SET_STAGE_SCALE: (state, action) => {
-            state.view.stageScale = action.payload
+        SET_STAGE_ATTRS: (state, action: PayloadAction<StageAttrs>) => {
+            assign(
+                state.stage.attrs,
+                pick(action.payload, keys(state.stage.attrs))
+            )
         },
         ON_WINDOW_RESIZE: (state) => {
-            state.view.stageWidth = window.innerWidth
-            state.view.stageHeight = window.innerHeight
+            state.stage.attrs.width = window.innerWidth
+            state.stage.attrs.height = window.innerHeight
             centerView(state as BoardState)
+            state.stage.renderTrigger = !state.stage.renderTrigger
         },
         FIT_WIDTH_TO_PAGE: (state) => {
             fitToPage(state as BoardState)
-        },
-        ZOOM_TO: (state, action) => {
-            const { zoomPoint, zoomScale } = action.payload
-            zoomToPointWithScale(state as BoardState, zoomPoint, zoomScale)
+            state.stage.renderTrigger = !state.stage.renderTrigger
         },
         ZOOM_IN_CENTER: (state) => {
-            const centerOfScreen = {
-                x: state.view.stageWidth / 2,
-                y: state.view.stageHeight / 2,
-            }
-            zoomToPointWithScale(
-                state as BoardState,
-                centerOfScreen,
-                ZOOM_IN_BUTTON_SCALE
-            )
+            zoomCenter(state, true)
+            state.stage.renderTrigger = !state.stage.renderTrigger
         },
         ZOOM_OUT_CENTER: (state) => {
-            const centerOfScreen = {
-                x: state.view.stageWidth / 2,
-                y: state.view.stageHeight / 2,
-            }
-            zoomToPointWithScale(
-                state as BoardState,
-                centerOfScreen,
-                ZOOM_OUT_BUTTON_SCALE
-            )
+            zoomCenter(state, false)
+            state.stage.renderTrigger = !state.stage.renderTrigger
         },
         TRIGGER_BOARD_RERENDER: (state) => {
             state.triggerManualUpdate?.()
@@ -368,18 +333,11 @@ export const {
     JUMP_PAGE_WITH_INDEX,
     TOGGLE_SHOULD_CENTER,
     TOGGLE_HIDE_NAVBAR,
-    MULTI_TOUCH_MOVE,
-    MULTI_TOUCH_END,
     CENTER_VIEW,
-    INITIAL_VIEW,
     RESET_VIEW,
-    SET_STAGE_X,
-    SET_STAGE_Y,
-    SCROLL_STAGE_Y,
-    SET_STAGE_SCALE,
     ON_WINDOW_RESIZE,
+    SET_STAGE_ATTRS,
     FIT_WIDTH_TO_PAGE,
-    ZOOM_TO,
     ZOOM_IN_CENTER,
     ZOOM_OUT_CENTER,
     TRIGGER_BOARD_RERENDER,

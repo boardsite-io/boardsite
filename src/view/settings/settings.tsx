@@ -28,7 +28,7 @@ const Settings: React.FC = () => {
 
     const settingsOpen = useCustomSelector((state) => state.menu.settingsOpen)
     const { keepCentered, hideNavBar } = useCustomSelector(
-        (state) => state.board.view
+        (state) => state.board.stage
     )
     const { directDraw } = useCustomSelector((state) => state.drawing)
     // const apiURL = useAppSelector((state) => state.webControl.apiURL)

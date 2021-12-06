@@ -9,9 +9,9 @@ import { Layer as LayerType } from "konva/lib/Layer"
 import { LiveStroke } from "drawing/stroke/types"
 import { BoardLiveStroke, generateLiveStroke } from "drawing/stroke/livestroke"
 import store from "redux/store"
-import StrokeTransformer from "./transformer"
-import Page from "./page"
-import { LiveStrokeShape } from "./stroke/livestroke"
+import StrokeTransformer from "../transformer"
+import Page from "../page"
+import { LiveStrokeShape } from "../stroke/livestroke"
 
 interface PageLayerProps {
     pageId: string

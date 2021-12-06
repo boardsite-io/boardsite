@@ -8,7 +8,7 @@ export interface BoardState {
     documentImages: string[]
     documentSrc: URL | string | Uint8Array
     pageSettings: PageSettings
-    view: BoardView
+    stage: BoardStage
     undoStack?: BoardAction[]
     redoStack?: BoardAction[]
     strokeUpdates?: StrokeUpdate[]
@@ -22,14 +22,19 @@ export interface BoardState {
     deserialize?(parsed: SerializedBoardState): BoardState
 }
 
-export interface BoardView {
+export type StageAttrs = {
+    width: number
+    height: number
+    x: number
+    y: number
+    scaleX: number
+    scaleY: number
+}
+export interface BoardStage {
+    attrs: StageAttrs
     keepCentered: boolean
     hideNavBar: boolean
-    stageWidth: number
-    stageHeight: number
-    stageX: number
-    stageY: number
-    stageScale: Point
+    renderTrigger: boolean
 }
 
 export interface BoardAction {

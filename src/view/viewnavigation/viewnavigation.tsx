@@ -11,7 +11,6 @@ import {
     JUMP_TO_LAST_PAGE,
     JUMP_TO_NEXT_PAGE,
     JUMP_TO_PREV_PAGE,
-    INITIAL_VIEW,
 } from "redux/board/board"
 import store from "redux/store"
 import { useCustomSelector } from "hooks"
@@ -22,46 +21,33 @@ import {
     IconButtonPageIndex,
 } from "./viewnavigation.styled"
 
-const firstPage = () => {
-    store.dispatch(JUMP_TO_FIRST_PAGE())
-    store.dispatch(INITIAL_VIEW())
-}
-const previousPage = () => {
-    store.dispatch(JUMP_TO_PREV_PAGE())
-    store.dispatch(INITIAL_VIEW())
-}
-const nextPage = () => {
-    store.dispatch(JUMP_TO_NEXT_PAGE())
-    store.dispatch(INITIAL_VIEW())
-}
-const lastPage = () => {
-    store.dispatch(JUMP_TO_LAST_PAGE())
-    store.dispatch(INITIAL_VIEW())
-}
-
 const ViewNavigation: React.FC = () => {
-    const { currentPageIndex, pageRank } = useCustomSelector(
-        (state) => state.board
+    const pageRank = useCustomSelector((state) => state.board.pageRank)
+    const currentPageIndex = useCustomSelector(
+        (state) => state.board.currentPageIndex
     )
-    const { hideNavBar } = useCustomSelector((state) => state.board.view)
+    const hideNavBar = useCustomSelector(
+        (state) => state.board.stage.hideNavBar
+    )
 
     return hideNavBar ? null : (
         <ViewNavWrapper>
-            <IconButton onClick={firstPage}>
+            <IconButton onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
                 <CgPushChevronUp id="icon" />
             </IconButton>
-            <IconButton onClick={previousPage}>
+            <IconButton onClick={() => store.dispatch(JUMP_TO_PREV_PAGE(true))}>
                 <CgChevronUp id="icon" />
             </IconButton>
-            <IconButtonPageIndex onClick={firstPage}>
+            <IconButtonPageIndex
+                onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
                 <PageIndex>{currentPageIndex + 1}</PageIndex>
                 <PageIndexHr />
                 <PageIndex>{pageRank.length}</PageIndex>
             </IconButtonPageIndex>
-            <IconButton onClick={nextPage}>
+            <IconButton onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE(true))}>
                 <CgChevronDown id="icon" />
             </IconButton>
-            <IconButton onClick={lastPage}>
+            <IconButton onClick={() => store.dispatch(JUMP_TO_LAST_PAGE())}>
                 <CgPushChevronDown id="icon" />
             </IconButton>
         </ViewNavWrapper>
