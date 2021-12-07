@@ -235,7 +235,12 @@ const boardSlice = createSlice({
         NEXT_PAGE: (state, action: PayloadAction<{ attrs: StageAttrs }>) => {
             if (state.currentPageIndex < state.pageRank.length - 1) {
                 state.currentPageIndex += 1
-                state.stage.attrs = action.payload.attrs
+
+                assign(
+                    state.stage.attrs,
+                    pick(action.payload.attrs, keys(state.stage.attrs))
+                )
+
                 state.stage.renderTrigger = !state.stage.renderTrigger
             }
         },
@@ -243,7 +248,12 @@ const boardSlice = createSlice({
         PREV_PAGE: (state, action: PayloadAction<{ attrs: StageAttrs }>) => {
             if (state.currentPageIndex > 0) {
                 state.currentPageIndex -= 1
-                state.stage.attrs = action.payload.attrs
+
+                assign(
+                    state.stage.attrs,
+                    pick(action.payload.attrs, keys(state.stage.attrs))
+                )
+
                 state.stage.renderTrigger = !state.stage.renderTrigger
             }
         },

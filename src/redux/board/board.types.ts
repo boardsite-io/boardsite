@@ -19,7 +19,7 @@ export interface BoardState {
     triggerManualUpdate?(): void
 
     serialize?(): SerializedBoardState
-    deserialize?(parsed: SerializedBoardState): BoardState
+    deserialize?(parsed: SerializedBoardState): Promise<BoardState>
 }
 
 export type StageAttrs = {

@@ -73,6 +73,5 @@ export const newState = (state?: DrawingState): DrawingState => ({
 
         return this
     },
-
     ...state,
 })

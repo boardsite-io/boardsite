@@ -52,8 +52,8 @@ describe("boardcontrol reducer", () => {
                     },
                     documentImages: [],
                     documentSrc: "",
-                    pageSettings: {
-                        background: backgroundStyle.BLANK,
+                    pageMeta: {
+                        background: { style: backgroundStyle.BLANK },
                         size: {
                             width: 10,
                             height: 10,
@@ -106,8 +106,8 @@ describe("boardcontrol reducer", () => {
                     },
                     documentImages: [],
                     documentSrc: "",
-                    pageSettings: {
-                        background: backgroundStyle.BLANK,
+                    pageMeta: {
+                        background: { style: backgroundStyle.BLANK },
                         size: {
                             width: 10,
                             height: 10,

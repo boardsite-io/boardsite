@@ -14,5 +14,6 @@ export type RootState = {
 
 export interface SerializableState {
     serialize?(): object
-    deserialize?(parsed: object): object
+    // Localstorage is non-async for usage of preloadedState
+    deserialize?(parsed: object): Promise<object> | object
 }

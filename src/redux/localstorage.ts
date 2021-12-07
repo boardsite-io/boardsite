@@ -1,6 +1,4 @@
-import { sourceToImageData } from "drawing/pdf/document"
 import localforage from "localforage"
-import { BoardState } from "./board/board.types"
 import * as boardState from "./board/state"
 import * as drawingState from "./drawing/state"
 import { RootState, SerializableState } from "./types"
@@ -57,6 +55,7 @@ export function loadLocalStorage(...states: string[]): RootState {
             console.error(err)
         }
     })
+
     return state as RootState
 }
 
@@ -66,7 +65,7 @@ export async function loadIndexedDB(...states: string[]): Promise<RootState> {
         try {
             const val = await localforage.getItem(`${namespace}_${name}`)
             if (val) {
-                state[name] = newState(name)?.deserialize?.(val as object)
+                state[name] = await newState(name)?.deserialize?.(val as object)
             }
         } catch (err) {
             // eslint-disable-next-line no-console
@@ -74,12 +73,6 @@ export async function loadIndexedDB(...states: string[]): Promise<RootState> {
         }
     })
     await Promise.all(res)
-
-    const bs = state?.board as BoardState
-    const src = bs?.documentSrc
-    if (src) {
-        bs.documentImages = await sourceToImageData(src)
-    }
 
     return state as RootState
 }
