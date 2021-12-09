@@ -1,9 +1,4 @@
-import {
-    addAttachmentSession,
-    addPagesSession,
-    getAttachmentSession,
-    isConnected,
-} from "api/websocket"
+import { currentSession, isConnected } from "api/session"
 import { backgroundStyle, PIXEL_RATIO } from "consts"
 import { handleDeleteAllPages } from "drawing/handlers"
 import { BoardPage } from "drawing/page"
@@ -22,7 +17,9 @@ export const handleImportFile = async (file: File): Promise<void> => {
 export async function handleGetDocumentFile(
     file: File
 ): Promise<URL | Uint8Array> {
-    return isConnected() ? addAttachmentSession(file) : getPDFfromForm(file)
+    return isConnected()
+        ? currentSession().addAttachment(file)
+        : getPDFfromForm(file)
 }
 
 export async function handleAddDocumentPages(
@@ -43,7 +40,7 @@ export async function handleAddDocumentPages(
                 size: getPageSize(img),
             })
         )
-        addPagesSession(
+        currentSession().addPages(
             pages,
             pages.map(() => -1)
         )
@@ -70,7 +67,9 @@ export async function handleExportDocument(): Promise<void> {
     const filename = "board.pdf"
     const { documentSrc } = store.getState().board
     if (isConnected()) {
-        const [src] = await getAttachmentSession(documentSrc as string)
+        const [src] = await currentSession().getAttachment(
+            documentSrc as string
+        )
         toPDF(filename, src as Uint8Array)
     } else {
         toPDF(filename, documentSrc as Uint8Array)

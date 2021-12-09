@@ -8,11 +8,11 @@ import {
 } from "./sessioninfo.styled"
 
 const SessionInfo: React.FC = () => {
-    const userInfo = useCustomSelector((state) => state.session.connectedUsers)
+    const userInfo = useCustomSelector((state) => state.session.session?.users)
     return (
         <SessionInfoWrapper>
-            {Object.keys(userInfo).map((userId) => {
-                const { alias, color, id } = userInfo[userId]
+            {Object.values(userInfo ?? {}).map((user) => {
+                const { alias, color, id } = user
                 return (
                     <UserInfo key={id}>
                         <UserColor $color={color} />
