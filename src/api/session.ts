@@ -1,6 +1,6 @@
 import { PageCollection } from "redux/board/board.types"
 import { Stroke, StrokeUpdate, ToolType } from "drawing/stroke/types"
-import Konva from "konva"
+import { Util } from "konva/lib/Util"
 import {
     adjectives,
     animals,
@@ -30,6 +30,7 @@ import {
     ResponsePageSync,
     ResponsePageUpdate,
     Session,
+    StrokeDelete,
     User,
 } from "./types"
 import { Request } from "./request"
@@ -42,8 +43,8 @@ export class BoardSession implements Session {
     socket?: WebSocket
     users?: ConnectedUsers
 
-    constructor() {
-        this.apiURL = new URL(API_URL)
+    constructor(url?: string) {
+        this.apiURL = new URL(url ?? API_URL)
         this.request = new Request(this.apiURL.toString())
         this.user = {
             alias: uniqueNamesGenerator({
@@ -51,7 +52,7 @@ export class BoardSession implements Session {
                 separator: "",
                 style: "capital",
             }),
-            color: Konva.Util.getRandomColor(),
+            color: Util.getRandomColor(),
         }
     }
 
@@ -78,18 +79,10 @@ export class BoardSession implements Session {
         return sessionId
     }
 
-    async join(sessionId?: string): Promise<void> {
-        if (!sessionId) {
-            throw new Error("no sessionId given")
+    async join(): Promise<void> {
+        if (!isConnected) {
+            throw new Error("no open websocket")
         }
-
-        this.setID(sessionId)
-        // create a new user for us
-        const { id } = await this.request.postUser(this.user)
-        this.user.id = id
-        await this.createSocket()
-
-        // store.dispatch(SET_SESSION_USERS(await getUsers(sessionId)))
         this.users = await this.request.getUsers()
 
         // set the pages according to api
@@ -105,7 +98,12 @@ export class BoardSession implements Session {
         })
     }
 
-    async createSocket(): Promise<void> {
+    async createSocket(sessionId: string): Promise<void> {
+        this.setID(sessionId)
+        // create a new user for us
+        const { id } = await this.request.postUser(this.user)
+        this.user.id = id
+
         return new Promise((resolve, reject) => {
             const url = new URL(this.apiURL.toString())
             url.protocol = url.protocol.replace("http", "ws")
@@ -148,7 +146,6 @@ export class BoardSession implements Session {
                 if (s.id && s.pageId) {
                     const serialized = (s as Stroke).serialize?.()
                     return {
-                        ...s,
                         ...serialized,
                         userId: this.user.id, // append the user id to strokes
                     }
@@ -159,7 +156,7 @@ export class BoardSession implements Session {
         this.send(messages.Stroke, strokesToSend)
     }
 
-    eraseStrokes(...strokes: { id: string; pageId: string }[]): void {
+    eraseStrokes(...strokes: StrokeDelete[]): void {
         this.send(
             messages.Stroke,
             strokes.map((s) => ({

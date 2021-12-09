@@ -16,7 +16,8 @@ export interface Session {
     setAPIURL(url: URL): void
     setID(sessionId: string): Session
     create(): Promise<string>
-    join(sessionId?: string): Promise<void>
+    join(): Promise<void>
+    createSocket(sessionId: string): Promise<void>
     isConnected(): boolean
     disconnect(): void
     send(type: MessageType, content: unknown): void
@@ -37,6 +38,11 @@ export type User = {
     color: string
 }
 export type ConnectedUsers = Record<string, User>
+
+export type StrokeDelete = {
+    id: string
+    pageId: string
+}
 
 export type MessageType =
     | "stroke"
