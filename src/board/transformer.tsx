@@ -16,7 +16,8 @@ import {
 import { Group as GroupType } from "konva/lib/Group"
 import store from "redux/store"
 import { TransformStrokes } from "redux/board/board.types"
-import { handleDeleteStrokes, handleUpdateStrokes } from "../drawing/handlers"
+import { cloneDeep } from "lodash"
+import { handleAddStrokes, handleDeleteStrokes } from "../drawing/handlers"
 import { Stroke } from "../drawing/stroke/types"
 import { StrokeShape } from "./stroke/strokeShape"
 
@@ -64,7 +65,7 @@ const CustomTransformer = memo<CustomTransformerProps>(
          */
         const onStart = useCallback(() => {
             // Remove transformStrokes from the contentLayer
-            handleDeleteStrokes(...transformStrokes)
+            handleDeleteStrokes(...cloneDeep(transformStrokes))
         }, [transformStrokes])
 
         /**
@@ -79,7 +80,7 @@ const CustomTransformer = memo<CustomTransformerProps>(
             })
 
             // Add transformStrokes back to the contentLayer
-            handleUpdateStrokes(...updatedStrokes)
+            handleAddStrokes(true, ...cloneDeep(updatedStrokes))
         }, [transformStrokes])
 
         return (

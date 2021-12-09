@@ -1,5 +1,5 @@
 import { cloneDeep } from "lodash"
-import { Stroke, StrokeUpdate, Tool } from "drawing/stroke/types"
+import { Stroke, Tool } from "drawing/stroke/types"
 import {
     CLEAR_PAGE,
     DELETE_PAGES,
@@ -7,7 +7,6 @@ import {
     SET_PAGEMETA,
     ADD_PAGE,
     ADD_STROKES,
-    UPDATE_STROKES,
     ERASE_STROKES,
     UNDO_ACTION,
     REDO_ACTION,
@@ -87,9 +86,13 @@ export function handleDeleteAllPages(): void {
     }
 }
 
-export function handleAddStrokes(...strokes: Stroke[]): void {
+export function handleAddStrokes(
+    isUpdate: boolean,
+    ...strokes: Stroke[]
+): void {
     const payload: StrokeAction = {
         strokes,
+        isUpdate,
         isRedoable: true,
     }
 
@@ -97,7 +100,7 @@ export function handleAddStrokes(...strokes: Stroke[]): void {
         const ws = getSocket()
         const userId = getUserId()
         payload.sessionHandler = () => sendStrokes(ws, userId, ...strokes)
-        payload.sessionUndoHandler = () => eraseStrokes(ws, userId, ...strokes)
+        payload.sessionUndoHandler = () => sendStrokes(ws, userId, ...strokes)
     }
 
     store.dispatch(ADD_STROKES(payload))
@@ -117,24 +120,6 @@ export function handleDeleteStrokes(...strokes: Stroke[]): void {
     }
 
     store.dispatch(ERASE_STROKES(payload))
-}
-
-export function handleUpdateStrokes(...strokes: Stroke[]): void {
-    const payload: StrokeAction = {
-        strokes,
-        isRedoable: true,
-    }
-
-    if (isConnected()) {
-        const ws = getSocket()
-        const userId = getUserId()
-        payload.sessionHandler = (...updates: Stroke[] | StrokeUpdate[]) =>
-            sendStrokes(ws, userId, ...updates)
-        payload.sessionUndoHandler = (...updates: Stroke[] | StrokeUpdate[]) =>
-            sendStrokes(ws, userId, ...updates)
-    }
-
-    store.dispatch(UPDATE_STROKES(payload))
 }
 
 export function handleUndo(): void {
