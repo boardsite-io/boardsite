@@ -5,7 +5,7 @@ import { RootState, SerializableState } from "./types"
 
 const debounceTime = 1000
 const namespace = "boardsite"
-const debounceTimeout: { [name: string]: NodeJS.Timeout } = {}
+const debounceTimeout: Record<string, NodeJS.Timeout> = {}
 
 localforage.config({
     name: namespace,
@@ -13,42 +13,43 @@ localforage.config({
 })
 
 export function saveLocalStore(
-    rootState: { [name: string]: object },
+    rootState: Record<string, object>,
     ...states: string[]
 ): void {
     states.forEach((name) => {
         debounce(name, () => {
-            const serializableState = rootState[name] as SerializableState
+            const state: SerializableState<object, object> = rootState[name]
             localStorage.setItem(
                 `${namespace}_${name}`,
-                JSON.stringify(serializableState.serialize?.())
+                JSON.stringify(state.serialize?.())
             )
         })
     })
 }
 
 export function saveIndexedDB(
-    rootState: { [name: string]: object },
+    rootState: Record<string, object>,
     ...states: string[]
 ): void {
     states.forEach((name) => {
         debounce(name, () => {
-            const serializableState = rootState[name] as SerializableState
-            localforage.setItem(
-                `${namespace}_${name}`,
-                serializableState.serialize?.()
-            )
+            const state: SerializableState<object, Promise<object>> = rootState[
+                name
+            ]
+            localforage.setItem(`${namespace}_${name}`, state.serialize?.())
         })
     })
 }
 
 export function loadLocalStorage(...states: string[]): RootState {
-    const state: { [name: string]: object | undefined } = {}
+    const state: Record<string, object | undefined> = {}
     states.forEach((name) => {
         try {
             const val = localStorage.getItem(`${namespace}_${name}`)
             if (val) {
-                state[name] = newState(name)?.deserialize?.(JSON.parse(val))
+                state[name] = newState<object, object>(name)?.deserialize?.(
+                    JSON.parse(val)
+                )
             }
         } catch (err) {
             // eslint-disable-next-line no-console
@@ -60,12 +61,14 @@ export function loadLocalStorage(...states: string[]): RootState {
 }
 
 export async function loadIndexedDB(...states: string[]): Promise<RootState> {
-    const state: { [name: string]: object | undefined } = {}
+    const state: Record<string, object | undefined> = {}
     const res = states.map(async (name) => {
         try {
             const val = await localforage.getItem(`${namespace}_${name}`)
             if (val) {
-                state[name] = await newState(name)?.deserialize?.(val as object)
+                state[name] = await newState<object, Promise<object>>(
+                    name
+                )?.deserialize?.(val as object)
             }
         } catch (err) {
             // eslint-disable-next-line no-console
@@ -88,13 +91,15 @@ function debounce(stateName: string, callback: () => void): void {
     }, debounceTime)
 }
 
-function newState(stateName: string): SerializableState | undefined {
+function newState<T extends object, U extends object>(
+    stateName: string
+): SerializableState<T, U> | undefined {
     switch (stateName) {
         case "board":
-            return boardState.newState()
+            return boardState.newState() as SerializableState<T, U>
 
         case "drawing":
-            return drawingState.newState()
+            return drawingState.newState() as SerializableState<T, U>
 
         default:
             return undefined

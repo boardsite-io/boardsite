@@ -12,8 +12,7 @@ export type RootState = {
     menu: MenuState
 }
 
-export interface SerializableState {
-    serialize?(): object
-    // Localstorage is non-async for usage of preloadedState
-    deserialize?(parsed: object): Promise<object> | object
+export interface SerializableState<T extends object, U extends object> {
+    serialize?(): T
+    deserialize?(parsed: object): U
 }
