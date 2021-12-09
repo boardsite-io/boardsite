@@ -9,8 +9,9 @@ import {
     backgroundStyle,
 } from "consts"
 import { BoardStroke } from "drawing/stroke/stroke"
-import { pick, keys, assign, cloneDeep } from "lodash"
 import { BoardPage } from "drawing/page"
+import { sourceToImageData } from "drawing/pdf/document"
+import { pick, keys, assign, cloneDeep } from "lodash"
 import { BoardState, SerializedBoardState } from "./board.types"
 
 // version of the board state reducer to allow backward compatibility for stored data
@@ -22,12 +23,12 @@ export const newState = (state?: BoardState): BoardState => ({
     currentPageIndex: DEFAULT_CURRENT_PAGE_INDEX,
     pageRank: [],
     pageCollection: {},
-    documentImages: [],
-    documentSrc: "",
-    pageSettings: {
-        background: backgroundStyle.BLANK, // default,
+    pageMeta: {
+        background: { style: backgroundStyle.BLANK },
         size: pageSize.a4landscape,
     },
+    documentImages: [],
+    documentSrc: "",
     stage: {
         keepCentered: DEFAULT_KEEP_CENTERED,
         hideNavBar: DEFAULT_HIDE_NAVBAR,
@@ -58,6 +59,7 @@ export const newState = (state?: BoardState): BoardState => ({
 
         // dont pollute the serialized object with image data
         stateCopy.documentImages = []
+
         Object.keys(stateCopy.pageCollection).forEach((pageId) => {
             const { strokes } = stateCopy.pageCollection[pageId]
             Object.keys(strokes).forEach((strokeId) => {
@@ -82,7 +84,7 @@ export const newState = (state?: BoardState): BoardState => ({
         return { version: boardVersion, ...stateCopy }
     },
 
-    deserialize(parsed: SerializedBoardState): BoardState {
+    async deserialize(parsed: SerializedBoardState): Promise<BoardState> {
         const { version } = parsed
         if (!version) {
             throw new Error("cannot deserialize state, missing version")
@@ -121,6 +123,11 @@ export const newState = (state?: BoardState): BoardState => ({
         // Update stage dimensions for initial indexedDB data load on new window
         this.stage.attrs.height = window.innerHeight
         this.stage.attrs.width = window.innerWidth
+
+        const src = this.documentSrc
+        if (src) {
+            this.documentImages = await sourceToImageData(src)
+        }
 
         return this
     },

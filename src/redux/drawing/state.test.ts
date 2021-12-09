@@ -28,7 +28,7 @@ describe("board reducer state", () => {
         expect(JSON.stringify(got)).toBe(JSON.stringify(want))
     })
 
-    it("throws an error for unkown or missing version", () => {
+    it("throws an error for unknown or missing version", () => {
         expect(() => newState().deserialize?.({} as any)).toThrowError()
         expect(() =>
             newState().deserialize?.({

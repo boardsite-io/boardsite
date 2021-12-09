@@ -59,7 +59,8 @@ export const zoomCenter = (state: BoardState, isZoomingIn: boolean): void => {
         zoomPoint: centerOfScreen,
         zoomScale: isZoomingIn ? ZOOM_IN_WHEEL_SCALE : ZOOM_OUT_WHEEL_SCALE,
         keepCentered: state.stage.keepCentered,
-        pageWidth: state.pageCollection[state.currentPageIndex]?.meta.width,
+        pageWidth:
+            state.pageCollection[state.currentPageIndex]?.meta.size.width,
     })
 }
 
@@ -68,6 +69,7 @@ export const initialView = (state: BoardState): void => {
     state.stage.attrs.scaleY = 1
     state.stage.attrs.y = DEFAULT_STAGE_Y
     centerView(state)
+    state.stage.renderTrigger = !state.stage.renderTrigger
 }
 
 export const resetView = (state: BoardState): void => {

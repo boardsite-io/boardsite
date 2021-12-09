@@ -4,7 +4,7 @@ import * as types from "konva/lib/shapes/Rect"
 import { LAYER_CACHE_PXL } from "consts"
 import { PageProps } from "./index.types"
 
-const PageBoundary: React.FC<PageProps> = ({ pageSize }) => {
+const PageBoundary: React.FC<PageProps> = ({ pageInfo }) => {
     const ref = useRef<types.Rect>(null)
 
     useEffect(() => {
@@ -13,7 +13,7 @@ const PageBoundary: React.FC<PageProps> = ({ pageSize }) => {
 
     return (
         <Rect
-            {...pageSize}
+            {...pageInfo}
             ref={ref}
             stroke="#000"
             strokeWidth={0.2}

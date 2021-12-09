@@ -3,11 +3,11 @@ import { Point, Stroke, StrokeMap, StrokeUpdate } from "drawing/stroke/types"
 export type SerializedBoardState = BoardState & { version?: string }
 export interface BoardState {
     currentPageIndex: number
-    pageRank: string[]
+    pageRank: PageRank
     pageCollection: PageCollection
-    documentImages: string[]
-    documentSrc: URL | string | Uint8Array
-    pageSettings: PageSettings
+    pageMeta: PageMeta
+    documentImages: DocumentImages
+    documentSrc: DocumentSrc
     stage: BoardStage
     undoStack?: BoardAction[]
     redoStack?: BoardAction[]
@@ -19,7 +19,7 @@ export interface BoardState {
     triggerManualUpdate?(): void
 
     serialize?(): SerializedBoardState
-    deserialize?(parsed: SerializedBoardState): BoardState
+    deserialize?(parsed: SerializedBoardState): Promise<BoardState>
 }
 
 export type StageAttrs = {
@@ -30,6 +30,9 @@ export type StageAttrs = {
     scaleX: number
     scaleY: number
 }
+export type PageRank = string[]
+export type DocumentImages = string[]
+
 export interface BoardStage {
     attrs: StageAttrs
     keepCentered: boolean
@@ -37,6 +40,7 @@ export interface BoardStage {
     renderTrigger: boolean
 }
 
+export type DocumentSrc = URL | string | Uint8Array
 export interface BoardAction {
     handleFunc: (boardState: BoardState) => void
     undoHandleFunc: (boardState: BoardState) => void
@@ -50,11 +54,6 @@ export interface StrokeAction {
 }
 
 export type TransformStrokes = Stroke[]
-
-export interface PageSettings {
-    background: PageBackgroundStyle
-    size: PageSize
-}
 
 export interface Page {
     pageId: string
@@ -72,11 +71,12 @@ export interface PageSize {
     width: number
     height: number
 }
-export interface PageMeta extends PageSize {
+export interface PageMeta {
+    size: PageSize
     background: {
         style: PageBackgroundStyle
-        attachURL: URL | string
-        documentPageNum: number
+        attachURL?: URL | string
+        documentPageNum?: number
     }
 }
 

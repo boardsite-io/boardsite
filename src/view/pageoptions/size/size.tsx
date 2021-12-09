@@ -12,7 +12,7 @@ import {
 } from "./size.styled"
 
 const Size: React.FC = () => {
-    const size = useCustomSelector((state) => state.board.pageSettings.size)
+    const size = useCustomSelector((state) => state.board.pageMeta.size)
     return (
         <SizePresets>
             <SizePresetLabel htmlFor="a4-landscape">
@@ -30,9 +30,9 @@ const Size: React.FC = () => {
                     type="button"
                     id="a4-portrait"
                     $active={size === pageSize.a4portrait}
-                    onClick={() =>
+                    onClick={() => {
                         store.dispatch(SET_PAGE_SIZE(pageSize.a4portrait))
-                    }
+                    }}
                 />
             </SizePresetLabel>
             <SizePresetLabel htmlFor="square">
@@ -40,9 +40,9 @@ const Size: React.FC = () => {
                     type="button"
                     id="square"
                     $active={size === pageSize.square}
-                    onClick={() =>
+                    onClick={() => {
                         store.dispatch(SET_PAGE_SIZE(pageSize.square))
-                    }
+                    }}
                 />
             </SizePresetLabel>
         </SizePresets>

@@ -1,7 +1,7 @@
 import React from "react"
 import { HashRouter, Routes, Route } from "react-router-dom"
 import isElectron from "is-electron"
-import Whiteboard from "../view/whiteboard"
+import Whiteboard from "view/whiteboard"
 
 export default isElectron() ? (
     <HashRouter>

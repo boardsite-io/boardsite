@@ -9,7 +9,23 @@ import * as types from "konva/lib/Layer"
 import { Shape } from "board/stroke/shape"
 import { LineCap, LineJoin } from "konva/lib/Shape"
 import { backgroundStyle, PIXEL_RATIO } from "consts"
+import { SET_PDF } from "redux/board/board"
+import { DocumentSrc } from "redux/board/board.types"
 import { pageBackground } from "../page"
+import { sourceToImageData } from "./document"
+
+export async function handleLoadFromSource(
+    fileOriginSrc: DocumentSrc
+): Promise<void> {
+    const documentImages = await sourceToImageData(fileOriginSrc)
+
+    store.dispatch(
+        SET_PDF({
+            documentImages,
+            documentSrc: fileOriginSrc,
+        })
+    )
+}
 
 export async function pagesToDataURL(
     drawBackground?: boolean
@@ -20,9 +36,10 @@ export async function pagesToDataURL(
         const strokeIds = Object.keys(
             store.getState().board.pageCollection[pageId].strokes
         )
-        const { meta } = store.getState().board.pageCollection[pageId]
-        const { style } = meta.background
-        const { height, width } = meta
+        const { background, size } =
+            store.getState().board.pageCollection[pageId].meta
+        const { style } = background
+        const { height, width } = size
 
         const tmp = document.createElement("div")
 
@@ -124,18 +141,18 @@ export async function toPDF(
     const { pageRank, pageCollection } = store.getState().board
 
     pageImages.forEach((pageData, i) => {
-        const { width, height, background } = pageCollection[pageRank[i]].meta
+        const { size, background } = pageCollection[pageRank[i]].meta
         const { style, documentPageNum } = background
         const page =
-            style === backgroundStyle.DOC
+            style === backgroundStyle.DOC && documentPageNum !== undefined
                 ? pdf.addPage(pdfPages[documentPageNum])
                 : pdf.addPage()
-        page.setSize(width, height)
+        page.setSize(size.width, size.height)
         page.drawImage(pageData, {
             x: 0,
             y: 0,
-            width,
-            height,
+            width: size.width,
+            height: size.height,
         })
     })
 

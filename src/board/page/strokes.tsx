@@ -7,7 +7,7 @@ import { LAYER_CACHE_PXL } from "consts"
 import { StrokeShape } from "board/stroke/strokeShape"
 import { PageProps } from "./index.types"
 
-const Strokes = memo<PageProps>(({ pageId, pageSize }) => {
+const Strokes = memo<PageProps>(({ pageId, pageInfo }) => {
     const ref = useRef<GroupType>(null)
 
     // pageId might not be valid anymore, exit then
@@ -20,17 +20,15 @@ const Strokes = memo<PageProps>(({ pageId, pageSize }) => {
 
     useEffect(() => {
         ref.current?.parent?.clearCache()
-        // delay caching a bit to redraw updated strokes
-        setTimeout(
-            () => ref.current?.parent?.cache({ pixelRatio: LAYER_CACHE_PXL }),
-            100
-        )
+        setTimeout(() => {
+            ref.current?.parent?.cache({ pixelRatio: LAYER_CACHE_PXL })
+        }, 100)
     }, [trigger])
 
     return (
         <Group
             ref={ref}
-            {...pageSize}
+            {...pageInfo}
             globalCompositeOperation="source-atop"
             listening={false}>
             {Object.keys(

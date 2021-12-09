@@ -7,7 +7,7 @@ import { Backgrounds, Blank, Checkered, Ruled } from "./background.styled"
 
 const PageBackgrounds: React.FC = () => {
     const background = useCustomSelector(
-        (state) => state.board.pageSettings.background
+        (state) => state.board.pageMeta.background.style
     )
 
     return (

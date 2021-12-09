@@ -1,5 +1,5 @@
 import { DEFAULT_PAGE_GAP } from "consts"
-import { JUMP_TO_NEXT_PAGE, JUMP_TO_PREV_PAGE } from "redux/board/board"
+import { NEXT_PAGE, PREV_PAGE } from "redux/board/board"
 import { BoardState, StageAttrs } from "redux/board/board.types"
 import store from "redux/store"
 import { getViewCenterY } from "./helpers"
@@ -14,7 +14,7 @@ export const detectPageChange = (
     const currPageId = pageRank[state.currentPageIndex]
     if (!currPageId) return false
 
-    const currPageHeight = pageCollection[currPageId]?.meta.height
+    const currPageHeight = pageCollection[currPageId]?.meta.size.height
     if (!currPageHeight) return false
 
     // Go to next page
@@ -23,7 +23,7 @@ export const detectPageChange = (
         if (currentPageIndex < pageRank.length - 1) {
             attrs.y += (currPageHeight + DEFAULT_PAGE_GAP) * attrs.scaleY
 
-            store.dispatch(JUMP_TO_NEXT_PAGE(false))
+            store.dispatch(NEXT_PAGE({ attrs }))
             return true
         }
     }
@@ -32,12 +32,13 @@ export const detectPageChange = (
         // Check if first page
         if (currentPageIndex > 0) {
             const targetPageId = pageRank[state.currentPageIndex - 1]
-            const targetPageHeight = pageCollection[targetPageId]?.meta.height
+            const targetPageHeight =
+                pageCollection[targetPageId]?.meta.size.height
             if (!targetPageHeight) return false
 
             attrs.y -= (targetPageHeight + DEFAULT_PAGE_GAP) * attrs.scaleY
 
-            store.dispatch(JUMP_TO_PREV_PAGE(false))
+            store.dispatch(PREV_PAGE({ attrs }))
             return true
         }
     }

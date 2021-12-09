@@ -12,7 +12,7 @@ export type RootState = {
     menu: MenuState
 }
 
-export interface SerializableState {
-    serialize?(): object
-    deserialize?(parsed: object): object
+export interface SerializableState<T extends object, U extends object> {
+    serialize?(): T
+    deserialize?(parsed: object): U
 }

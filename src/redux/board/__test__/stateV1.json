@@ -29,17 +29,21 @@
                     "attachURL": "",
                     "documentPageNum": 0
                 },
-                "width": 620,
-                "height": 877
+                "size": {
+                    "width": 620,
+                    "height": 877
+                }
             }
         }
     },
-    "documentImages": [],
-    "documentSrc": "",
-    "pageSettings": {
-        "background": "blank",
+    "pageMeta": {
+        "background": {
+            "style": "blank"
+        },
         "size": { "width": 620, "height": 877 }
     },
+    "documentImages": [],
+    "documentSrc": "",
     "stage": {
         "keepCentered": false,
         "hideNavBar": false,

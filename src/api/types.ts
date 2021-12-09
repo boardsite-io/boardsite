@@ -1,4 +1,4 @@
-import { PageMeta } from "redux/board/board.types"
+import { PageMeta, PageRank } from "redux/board/board.types"
 
 // api
 export const API_URL = process.env.REACT_APP_B_API_URL as string
@@ -29,7 +29,7 @@ export interface ResponsePostSession {
 }
 
 export interface ResponsePageSync {
-    pageRank: string[]
+    pageRank: PageRank
     meta: {
         [pid: string]: PageMeta
     }

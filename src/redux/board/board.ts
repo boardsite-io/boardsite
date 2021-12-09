@@ -48,11 +48,11 @@ const boardSlice = createSlice({
 
         SET_PAGE_BACKGROUND: (state, action) => {
             const style = action.payload
-            state.pageSettings.background = style
+            state.pageMeta.background.style = style
         },
 
         SET_PAGE_SIZE: (state, action) => {
-            state.pageSettings.size = action.payload
+            state.pageMeta.size = action.payload
             state.triggerManualUpdate?.()
         },
 
@@ -80,12 +80,14 @@ const boardSlice = createSlice({
         DELETE_PAGES: (state, action) => {
             const pageIds: string[] = action.payload
             pageIds.forEach((pid) => {
+                const { documentPageNum } =
+                    state.pageCollection[pid].meta.background
+
+                state.documentImages.splice(documentPageNum as number, 1)
+
                 state.pageRank.splice(state.pageRank.indexOf(pid), 1)
-                state.documentImages.splice(
-                    state.pageCollection[pid].meta.background.documentPageNum,
-                    1
-                )
                 delete state.pageCollection[pid]
+
                 state.triggerManualUpdate?.()
             })
         },
@@ -133,10 +135,12 @@ const boardSlice = createSlice({
                 addOrUpdateStrokes(boardState, ...strokes)
                 sessionHandler?.()
             }
+
             const undoHandler = (boardState: BoardState) => {
                 deleteStrokes(boardState, ...strokes)
                 sessionUndoHandler?.()
             }
+
             addAction(
                 handler,
                 undoHandler,
@@ -157,10 +161,12 @@ const boardSlice = createSlice({
                 deleteStrokes(boardState, ...strokes)
                 sessionHandler?.()
             }
+
             const undoHandler = (boardState: BoardState) => {
                 addOrUpdateStrokes(boardState, ...strokes)
                 sessionUndoHandler?.()
             }
+
             addAction(
                 handler,
                 undoHandler,
@@ -193,10 +199,12 @@ const boardSlice = createSlice({
                 addOrUpdateStrokes(boardState, ...strokesCopy)
                 sessionHandler?.(...strokesCopy)
             }
+
             const undoHandler = (boardState: BoardState) => {
                 addOrUpdateStrokes(boardState, ...updatesCopy)
                 sessionUndoHandler?.(...updatesCopy)
             }
+
             addAction(
                 handler,
                 undoHandler,
@@ -224,36 +232,56 @@ const boardSlice = createSlice({
             state.triggerManualUpdate?.()
         },
 
-        JUMP_TO_NEXT_PAGE: (state, action: PayloadAction<boolean>) => {
+        NEXT_PAGE: (state, action: PayloadAction<{ attrs: StageAttrs }>) => {
             if (state.currentPageIndex < state.pageRank.length - 1) {
                 state.currentPageIndex += 1
 
-                if (action.payload) {
-                    initialView(state)
-                    state.stage.renderTrigger = !state.stage.renderTrigger
-                }
+                assign(
+                    state.stage.attrs,
+                    pick(action.payload.attrs, keys(state.stage.attrs))
+                )
+
+                state.stage.renderTrigger = !state.stage.renderTrigger
             }
         },
-        JUMP_TO_PREV_PAGE: (state, action: PayloadAction<boolean>) => {
+
+        PREV_PAGE: (state, action: PayloadAction<{ attrs: StageAttrs }>) => {
             if (state.currentPageIndex > 0) {
                 state.currentPageIndex -= 1
 
-                if (action.payload) {
-                    initialView(state)
-                    state.stage.renderTrigger = !state.stage.renderTrigger
-                }
+                assign(
+                    state.stage.attrs,
+                    pick(action.payload.attrs, keys(state.stage.attrs))
+                )
+
+                state.stage.renderTrigger = !state.stage.renderTrigger
             }
         },
+
+        JUMP_TO_NEXT_PAGE: (state) => {
+            if (state.currentPageIndex < state.pageRank.length - 1) {
+                state.currentPageIndex += 1
+                initialView(state)
+            }
+        },
+
+        JUMP_TO_PREV_PAGE: (state) => {
+            if (state.currentPageIndex > 0) {
+                state.currentPageIndex -= 1
+                initialView(state)
+            }
+        },
+
         JUMP_TO_FIRST_PAGE: (state) => {
             state.currentPageIndex = 0
             initialView(state)
-            state.stage.renderTrigger = !state.stage.renderTrigger
         },
+
         JUMP_TO_LAST_PAGE: (state) => {
             state.currentPageIndex = state.pageRank.length - 1
             initialView(state)
-            state.stage.renderTrigger = !state.stage.renderTrigger
         },
+
         JUMP_PAGE_WITH_INDEX: (state, action) => {
             const targetIndex = action.payload
             if (targetIndex <= state.pageRank.length - 1 && targetIndex >= 0) {
@@ -265,41 +293,50 @@ const boardSlice = createSlice({
         TOGGLE_SHOULD_CENTER: (state) => {
             state.stage.keepCentered = !state.stage.keepCentered
         },
+
         TOGGLE_HIDE_NAVBAR: (state) => {
             state.stage.hideNavBar = !state.stage.hideNavBar
         },
+
         RESET_VIEW: (state) => {
             resetView(state as BoardState)
             state.stage.renderTrigger = !state.stage.renderTrigger
         },
+
         CENTER_VIEW: (state) => {
             centerView(state as BoardState)
             state.stage.renderTrigger = !state.stage.renderTrigger
         },
+
         SET_STAGE_ATTRS: (state, action: PayloadAction<StageAttrs>) => {
             assign(
                 state.stage.attrs,
                 pick(action.payload, keys(state.stage.attrs))
             )
         },
+
         ON_WINDOW_RESIZE: (state) => {
             state.stage.attrs.width = window.innerWidth
             state.stage.attrs.height = window.innerHeight
             centerView(state as BoardState)
             state.stage.renderTrigger = !state.stage.renderTrigger
         },
+
         FIT_WIDTH_TO_PAGE: (state) => {
             fitToPage(state as BoardState)
             state.stage.renderTrigger = !state.stage.renderTrigger
         },
+
         ZOOM_IN_CENTER: (state) => {
             zoomCenter(state, true)
             state.stage.renderTrigger = !state.stage.renderTrigger
         },
+
         ZOOM_OUT_CENTER: (state) => {
             zoomCenter(state, false)
             state.stage.renderTrigger = !state.stage.renderTrigger
         },
+
         TRIGGER_BOARD_RERENDER: (state) => {
             state.triggerManualUpdate?.()
         },
@@ -326,8 +363,10 @@ export const {
     CLEAR_TRANSFORM,
     SET_PAGE_BACKGROUND,
     SET_PAGE_SIZE,
-    JUMP_TO_NEXT_PAGE,
+    PREV_PAGE,
+    NEXT_PAGE,
     JUMP_TO_PREV_PAGE,
+    JUMP_TO_NEXT_PAGE,
     JUMP_TO_FIRST_PAGE,
     JUMP_TO_LAST_PAGE,
     JUMP_PAGE_WITH_INDEX,

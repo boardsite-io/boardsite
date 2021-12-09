@@ -1,10 +1,10 @@
 import { LIVESTROKE_SEGMENT_SIZE } from "consts"
 import { LiveStroke } from "drawing/stroke/types"
 import React, { memo, useCallback } from "react"
-import { StrokeShape } from "./strokeShape"
+import { StrokeShape } from "../stroke/strokeShape"
 
 interface LiveStrokeShapeProps {
-    liveStroke: () => LiveStroke
+    liveStroke: LiveStroke
     liveStrokeTrigger: number
 }
 
@@ -15,12 +15,12 @@ export const LiveStrokeShape = memo<LiveStrokeShapeProps>(
             () =>
                 new Array<number[]>(
                     Math.ceil(
-                        liveStroke().points.length / LIVESTROKE_SEGMENT_SIZE
+                        liveStroke.points.length / LIVESTROKE_SEGMENT_SIZE
                     )
                 )
                     .fill([])
                     .map((seg, i) =>
-                        liveStroke().points.slice(
+                        liveStroke.points.slice(
                             LIVESTROKE_SEGMENT_SIZE * i,
                             LIVESTROKE_SEGMENT_SIZE * (i + 1) + 2
                         )
@@ -32,7 +32,7 @@ export const LiveStrokeShape = memo<LiveStrokeShapeProps>(
             <>
                 {getSegments().map((subPts: number[], i: number) => {
                     const strokeSegment = {
-                        ...liveStroke(),
+                        ...liveStroke,
                         points: subPts.slice(),
                     } as LiveStroke
                     // we can use the array index as key here

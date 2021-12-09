@@ -20,6 +20,7 @@ import { PageCollection } from "redux/board/board.types"
 import { BoardPage } from "drawing/page"
 import store from "redux/store"
 import { isConnectedState } from "redux/session/helpers"
+import { handleLoadFromSource } from "drawing/pdf/io"
 import {
     postPages,
     putPages,
@@ -142,9 +143,16 @@ function syncPages({ pageRank, meta }: ResponsePageSync) {
     store.dispatch(
         SET_PAGERANK({ pageRank, pageCollection: newPageCollection })
     )
-    Object.keys(meta).forEach((pageId) =>
+
+    let isLoaded = false
+    Object.keys(meta).forEach((pageId) => {
         store.dispatch(SET_PAGEMETA({ pageId, meta: meta[pageId] }))
-    )
+        const { attachURL } = meta[pageId].background
+        if (!isLoaded && attachURL) {
+            handleLoadFromSource(attachURL)
+            isLoaded = true
+        }
+    })
 }
 
 function updatePageMeta({ pageId, meta, clear }: ResponsePageUpdate) {
@@ -183,6 +191,7 @@ export async function joinSession(
     store.dispatch(CLEAR_DOCS()) // clear documents which may be overwritten by session
     store.dispatch(DELETE_ALL_PAGES())
     const { pageRank, meta } = await getPages(sessionId)
+
     syncPages({ pageRank, meta })
 
     // fetch data from each page
