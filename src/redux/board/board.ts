@@ -126,8 +126,13 @@ const boardSlice = createSlice({
 
         // Add strokes to collection
         ADD_STROKES: (state, action: PayloadAction<StrokeAction>) => {
-            const { strokes, isRedoable, sessionHandler, sessionUndoHandler } =
-                action.payload
+            const {
+                strokes,
+                isRedoable,
+                sessionHandler,
+                sessionUndoHandler,
+                isUpdate,
+            } = action.payload
 
             strokes.sort((a, b) => ((a.id ?? "") > (b.id ?? "") ? 1 : -1))
 
@@ -136,9 +141,17 @@ const boardSlice = createSlice({
                 sessionHandler?.()
             }
 
-            const undoHandler = (boardState: BoardState) => {
+            let undoHandler = (boardState: BoardState) => {
                 deleteStrokes(boardState, ...strokes)
                 sessionUndoHandler?.()
+            }
+
+            if (isUpdate) {
+                const addUpdateStartPoint = state.undoStack?.pop()?.handleFunc
+
+                if (addUpdateStartPoint) {
+                    undoHandler = addUpdateStartPoint
+                }
             }
 
             addAction(
@@ -175,15 +188,6 @@ const boardSlice = createSlice({
                 isRedoable
             )
 
-            state.triggerManualUpdate?.()
-        },
-
-        // removes strokes in order to correctly display move transformer
-        UPDATE_DELETE_STROKES(state, action: PayloadAction<StrokeAction>) {
-            const strokes = action.payload.strokes as Stroke[]
-            // make copy to save the old stroke position
-            state.strokeUpdates = strokes.map((s) => s.serializeUpdate())
-            deleteStrokes(state, ...strokes)
             state.triggerManualUpdate?.()
         },
 
@@ -354,7 +358,6 @@ export const {
     MOVE_SHAPES_TO_DRAG_LAYER,
     ADD_STROKES,
     ERASE_STROKES,
-    UPDATE_DELETE_STROKES,
     UPDATE_STROKES,
     SET_PDF,
     UNDO_ACTION,

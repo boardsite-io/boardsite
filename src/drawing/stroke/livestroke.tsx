@@ -183,11 +183,11 @@ export class BoardLiveStroke implements LiveStroke {
         switch (stroke.type) {
             case ToolType.Eraser: {
                 const { erasedStrokes } = store.getState().drawing
-                const s = Object.keys(erasedStrokes).map(
+                const strokes = Object.keys(erasedStrokes).map(
                     (id) => erasedStrokes[id]
                 )
-                if (s.length > 0) {
-                    handleDeleteStrokes(...s)
+                if (strokes.length > 0) {
+                    handleDeleteStrokes(...strokes)
                 }
                 store.dispatch(CLEAR_ERASED_STROKES())
                 break
@@ -208,7 +208,7 @@ export class BoardLiveStroke implements LiveStroke {
                 break
             }
             default:
-                handleAddStrokes(stroke)
+                handleAddStrokes(false, stroke)
         }
     }
 }

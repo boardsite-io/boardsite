@@ -48,6 +48,7 @@ export interface BoardAction {
 
 export interface StrokeAction {
     strokes: Stroke[] | StrokeUpdate[]
+    isUpdate?: boolean
     isRedoable?: boolean
     sessionHandler?: (...updates: Stroke[] | StrokeUpdate[]) => void
     sessionUndoHandler?: (...updates: Stroke[] | StrokeUpdate[]) => void
