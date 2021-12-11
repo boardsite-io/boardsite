@@ -11,7 +11,7 @@ import { LineCap, LineJoin } from "konva/lib/Shape"
 import { backgroundStyle, PIXEL_RATIO } from "consts"
 import { SET_PDF } from "redux/board/board"
 import { DocumentSrc } from "redux/board/board.types"
-import { pageBackground } from "../page"
+import { pageBackground } from "drawing/page/backgrounds"
 import { sourceToImageData } from "./document"
 
 export async function handleLoadFromSource(
