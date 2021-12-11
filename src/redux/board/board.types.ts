@@ -61,12 +61,13 @@ export interface StrokeAction {
 
 export type TransformStrokes = Stroke[]
 
+export type PageId = string
 export interface Page {
-    pageId: string
+    pageId: PageId
     strokes: StrokeMap
     meta: PageMeta
 
-    setID: (pageId: string) => Page
+    setID: (pageId: PageId) => Page
     clear: () => void
     updateMeta: (meta: PageMeta) => Page
 }
@@ -87,3 +88,40 @@ export interface PageMeta {
 }
 
 export type PageBackgroundStyle = "blank" | "checkered" | "ruled" | "doc"
+
+/* ------- Reducer Action Types ------- */
+export type LoadBoardState = BoardState
+export type SyncAllPages = {
+    pageRank: PageRank
+    pageCollection: PageCollection
+}
+export type SetPageRank = {
+    pageRank: PageRank
+    pageCollection: PageCollection
+}
+export type SetPageMeta = {
+    pageId: PageId
+    meta: PageMeta
+}
+export type SetPageBackground = PageBackgroundStyle
+export type SetPageSize = PageSize
+export type AddPage = {
+    page: Page
+    index: number
+}
+export type ClearPage = PageId
+export type DeletePages = PageId[]
+export type MoveShapesToDragLayer = {
+    strokes: Stroke[]
+    pagePosition?: Point
+}
+export type AddStrokes = StrokeAction
+export type EraseStrokes = StrokeAction
+export type SetPdf = {
+    documentImages: DocumentImages
+    documentSrc: DocumentSrc
+}
+export type NextPage = { attrs: StageAttrs }
+export type PrevPage = { attrs: StageAttrs }
+export type JumpToPageWithIndex = number
+export type SetStageAttrs = StageAttrs
