@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { pick, keys, assign, cloneDeep } from "lodash"
-import { Point, Stroke } from "drawing/stroke/types"
+import { Point, Stroke } from "drawing/stroke/stroke.types"
 import {
     centerView,
     fitToPage,

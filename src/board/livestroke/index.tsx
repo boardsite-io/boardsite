@@ -6,7 +6,7 @@ import store from "redux/store"
 import { Stage } from "konva/lib/Stage"
 import { KonvaEventObject } from "konva/lib/Node"
 import { Vector2d } from "konva/lib/types"
-import { Stroke, ToolType } from "drawing/stroke/types"
+import { Stroke, ToolType } from "drawing/stroke/stroke.types"
 import { useCustomSelector } from "hooks"
 import { PageProps } from "board/page/index.types"
 

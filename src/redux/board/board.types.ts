@@ -1,4 +1,9 @@
-import { Point, Stroke, StrokeMap, StrokeUpdate } from "drawing/stroke/types"
+import {
+    Point,
+    Stroke,
+    StrokeMap,
+    StrokeUpdate,
+} from "drawing/stroke/stroke.types"
 
 export type SerializedBoardState = BoardState & { version?: string }
 export interface BoardState {

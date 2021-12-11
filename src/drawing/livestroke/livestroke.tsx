@@ -16,7 +16,13 @@ import {
     matchStrokeCollision,
 } from "../stroke/hitbox"
 import { BoardStroke } from "../stroke/stroke"
-import { Point, Stroke, StrokeMap, Tool, ToolType } from "../stroke/types"
+import {
+    Point,
+    Stroke,
+    StrokeMap,
+    Tool,
+    ToolType,
+} from "../stroke/stroke.types"
 import { LiveStroke } from "./livestroke.types"
 
 export class BoardLiveStroke implements LiveStroke {

@@ -1,4 +1,4 @@
-import { Point } from "drawing/stroke/types"
+import { Point } from "drawing/stroke/stroke.types"
 import { StageAttrs } from "redux/board/board.types"
 
 // variables for multitouch zoom

@@ -3,7 +3,7 @@ import { backgroundStyle, pageSize } from "consts"
 import { Context } from "konva/lib/Context"
 import { Shape, ShapeConfig } from "konva/lib/Shape"
 import { Page, PageMeta } from "redux/board/board.types"
-import { StrokeMap } from "./stroke/types"
+import { StrokeMap } from "./stroke/stroke.types"
 
 export class BoardPage implements Page {
     constructor(page?: Page) {

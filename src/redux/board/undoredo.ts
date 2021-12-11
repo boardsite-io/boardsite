@@ -1,5 +1,5 @@
 import { BoardStroke } from "drawing/stroke/stroke"
-import { Stroke, StrokeUpdate } from "drawing/stroke/types"
+import { Stroke, StrokeUpdate } from "drawing/stroke/stroke.types"
 import { BoardState, BoardAction } from "./board.types"
 
 export function undoAction(state: BoardState): void {

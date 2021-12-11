@@ -1,5 +1,5 @@
 import { getStrokePoints, StrokeOptions } from "perfect-freehand"
-import { Point } from "./types"
+import { Point } from "./stroke.types"
 
 export const perfectDrawing = (points: number[]): number[] => {
     const formattedPoints = new Array(points.length / 2)
