@@ -15,15 +15,9 @@ import {
     getSelectionPolygon,
     matchStrokeCollision,
 } from "../stroke/hitbox"
-import { BoardStroke } from "../stroke/stroke"
-import {
-    Point,
-    Stroke,
-    StrokeMap,
-    Tool,
-    ToolType,
-} from "../stroke/stroke.types"
-import { LiveStroke } from "./livestroke.types"
+import { BoardStroke } from "../stroke"
+import { Point, Stroke, StrokeMap, Tool, ToolType } from "../stroke/index.types"
+import { LiveStroke } from "./index.types"
 
 export class BoardLiveStroke implements LiveStroke {
     type: ToolType

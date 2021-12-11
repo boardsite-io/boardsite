@@ -1,8 +1,8 @@
-import { LiveStroke } from "drawing/livestroke/livestroke.types"
+import { LiveStroke } from "drawing/livestroke/index.types"
 import { assign, cloneDeep, pick } from "lodash"
 import { Polygon } from "sat"
 import { getHitboxPolygon } from "./hitbox"
-import { Scale, Point, Stroke, ToolType, StrokeUpdate } from "./stroke.types"
+import { Scale, Point, Stroke, ToolType, StrokeUpdate } from "./index.types"
 
 export class BoardStroke implements Stroke {
     type: ToolType

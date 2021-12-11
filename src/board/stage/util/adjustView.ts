@@ -1,4 +1,4 @@
-import { Point } from "drawing/stroke/stroke.types"
+import { Point } from "drawing/stroke/index.types"
 import {
     DEFAULT_STAGE_Y,
     ZOOM_IN_WHEEL_SCALE,

@@ -4,7 +4,7 @@ import {
     Stroke,
     StrokeMap,
     Tool,
-} from "drawing/stroke/stroke.types"
+} from "drawing/stroke/index.types"
 
 export interface LiveStroke extends BaseStroke {
     setTool(tool: Tool): LiveStroke

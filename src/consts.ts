@@ -1,4 +1,4 @@
-import { Tool, ToolType } from "drawing/stroke/stroke.types"
+import { Tool, ToolType } from "drawing/stroke/index.types"
 import { PageBackgroundStyle } from "redux/board/board.types"
 
 /**

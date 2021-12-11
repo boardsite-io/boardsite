@@ -1,4 +1,4 @@
-import { StrokeMap, Tool, ToolType } from "drawing/stroke/stroke.types"
+import { StrokeMap, Tool, ToolType } from "drawing/stroke/index.types"
 import { createSlice } from "@reduxjs/toolkit"
 import { newState } from "./state"
 

@@ -6,7 +6,7 @@ import {
     DEFAULT_TOOL,
     DEFAULT_WIDTH,
 } from "consts"
-import { StrokeMap, Tool } from "drawing/stroke/stroke.types"
+import { StrokeMap, Tool } from "drawing/stroke/index.types"
 import { pick, keys, assign, cloneDeep } from "lodash"
 
 // version of the board state reducer to allow backward compatibility for stored data

@@ -3,7 +3,7 @@ import {
     Stroke,
     StrokeMap,
     StrokeUpdate,
-} from "drawing/stroke/stroke.types"
+} from "drawing/stroke/index.types"
 
 export type SerializedBoardState = BoardState & { version?: string }
 export interface BoardState {

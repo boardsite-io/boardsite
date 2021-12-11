@@ -1,5 +1,5 @@
 import { cloneDeep } from "lodash"
-import { Stroke, Tool } from "drawing/stroke/stroke.types"
+import { Stroke, Tool } from "drawing/stroke/index.types"
 import {
     CLEAR_PAGE,
     DELETE_PAGES,

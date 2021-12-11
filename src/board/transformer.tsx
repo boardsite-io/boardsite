@@ -18,7 +18,7 @@ import store from "redux/store"
 import { TransformStrokes } from "redux/board/board.types"
 import { cloneDeep } from "lodash"
 import { handleAddStrokes, handleDeleteStrokes } from "../drawing/handlers"
-import { Stroke } from "../drawing/stroke/stroke.types"
+import { Stroke } from "../drawing/stroke/index.types"
 import { StrokeShape } from "./stroke/strokeShape"
 
 const StrokeTransformer = memo(() => {

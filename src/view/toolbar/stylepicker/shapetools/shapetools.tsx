@@ -7,7 +7,7 @@ import {
     PenIcon,
     SquareIcon,
 } from "components"
-import { ToolType } from "drawing/stroke/stroke.types"
+import { ToolType } from "drawing/stroke/index.types"
 import { handleSetTool } from "drawing/handlers"
 import { StyledShapeTools } from "./shapetools.styled"
 

@@ -1,7 +1,7 @@
 import { JUMP_TO_NEXT_PAGE, JUMP_TO_PREV_PAGE } from "redux/board/board"
 import store from "redux/store"
 import { handleSetTool, handleRedo, handleUndo } from "drawing/handlers"
-import { ToolType } from "drawing/stroke/stroke.types"
+import { ToolType } from "drawing/stroke/index.types"
 import { saveWorkspace } from "redux/workspace"
 import { useEffect } from "react"
 

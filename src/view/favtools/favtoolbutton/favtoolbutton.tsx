@@ -1,4 +1,4 @@
-import { Tool } from "drawing/stroke/stroke.types"
+import { Tool } from "drawing/stroke/index.types"
 import { IconButton, MinusIcon, PlusIcon, Popup } from "components"
 import React, { useState } from "react"
 import { REPLACE_FAV_TOOL, REMOVE_FAV_TOOL } from "redux/drawing/drawing"

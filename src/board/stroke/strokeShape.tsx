@@ -1,8 +1,8 @@
 import React, { memo, useState } from "react"
 import { ERASED_OPACITY, MOVE_OPACITY } from "consts"
 import { useCustomSelector } from "hooks"
-import { Stroke } from "drawing/stroke/stroke.types"
-import { LiveStroke } from "drawing/livestroke/livestroke.types"
+import { Stroke } from "drawing/stroke/index.types"
+import { LiveStroke } from "drawing/livestroke/index.types"
 import { LineCap, LineJoin } from "konva/lib/Shape"
 import { Shape } from "./shape"
 

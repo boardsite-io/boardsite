@@ -2,7 +2,7 @@ import React from "react"
 import { useCustomSelector } from "hooks"
 import { EraserIcon, IconButton, PanIcon, SelectIcon } from "components"
 import { handleSetTool } from "drawing/handlers"
-import { ToolType } from "drawing/stroke/stroke.types"
+import { ToolType } from "drawing/stroke/index.types"
 import PenTool from "../pentool/pentool"
 
 const ToolRing: React.FC = () => {
