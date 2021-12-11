@@ -1,6 +1,6 @@
 import React, { memo, useState } from "react"
 import { Rect } from "react-konva"
-import { BoardLiveStroke } from "drawing/stroke/livestroke"
+import { BoardLiveStroke } from "drawing/livestroke/livestroke"
 import { LiveStrokeShape } from "board/livestroke/livestroke"
 import store from "redux/store"
 import { Stage } from "konva/lib/Stage"

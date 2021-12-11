@@ -7,8 +7,9 @@ import {
     SEL_STROKE,
     SEL_STROKE_ENABLED,
 } from "consts"
-import { LiveStroke, Point, Stroke, ToolType } from "drawing/stroke/types"
+import { Point, Stroke, ToolType } from "drawing/stroke/types"
 import { LineConfig } from "konva/lib/shapes/Line"
+import { LiveStroke } from "drawing/livestroke/livestroke.types"
 
 interface StrokeShapeProps {
     stroke: Stroke | LiveStroke
