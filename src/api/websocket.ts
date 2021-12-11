@@ -1,4 +1,4 @@
-import { Stroke, StrokeUpdate, ToolType } from "drawing/stroke/types"
+import { Stroke, StrokeUpdate, ToolType } from "drawing/stroke/index.types"
 import {
     ADD_STROKES,
     CLEAR_PAGE,

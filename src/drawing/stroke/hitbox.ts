@@ -1,5 +1,5 @@
 import { Vector, Polygon, Box, testPolygonPolygon } from "sat"
-import { Scale, StrokeMap } from "./types"
+import { Scale, StrokeMap } from "./index.types"
 
 export function getHitboxPolygon(
     [x1, y1, x2, y2]: number[],

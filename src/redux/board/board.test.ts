@@ -1,6 +1,6 @@
 import { BoardPage } from "drawing/page"
-import { BoardStroke } from "drawing/stroke/stroke"
-import { Stroke, ToolType } from "drawing/stroke/types"
+import { BoardStroke } from "drawing/stroke"
+import { Stroke, ToolType } from "drawing/stroke/index.types"
 import {
     DEFAULT_HIDE_NAVBAR,
     DEFAULT_KEEP_CENTERED,

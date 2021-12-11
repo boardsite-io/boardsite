@@ -1,5 +1,5 @@
 import { LIVESTROKE_SEGMENT_SIZE } from "consts"
-import { LiveStroke } from "drawing/stroke/types"
+import { LiveStroke } from "drawing/livestroke/index.types"
 import React, { memo, useCallback } from "react"
 import { StrokeShape } from "../stroke/strokeShape"
 

@@ -4,7 +4,7 @@ import * as types from "konva/lib/shapes/Image"
 import { backgroundStyle, LAYER_CACHE_PXL } from "consts"
 import { useCustomSelector } from "hooks"
 import store from "redux/store"
-import { pageBackground } from "drawing/page"
+import { pageBackground } from "drawing/page/backgrounds"
 import { PageProps } from "./index.types"
 import PageBoundary from "./boundary"
 

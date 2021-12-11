@@ -8,7 +8,7 @@ import {
     PlusIcon,
     SquareIcon,
 } from "components"
-import { ToolType } from "drawing/stroke/types"
+import { ToolType } from "drawing/stroke/index.types"
 import store from "redux/store"
 import { useCustomSelector } from "hooks"
 import { ADD_FAV_TOOL } from "redux/drawing/drawing"
