@@ -8,10 +8,6 @@ export type Hitbox = {
     v4: Point
 }
 
-export interface StrokeHitbox {
-    [id: string]: Hitbox[]
-}
-
 export type Point = {
     x: number
     y: number
@@ -77,8 +73,6 @@ export interface Stroke extends BaseStroke {
     calculateHitbox: () => void
 }
 
-export interface StrokeMap {
-    [id: string]: Stroke
-}
-
+export type StrokeMap = Record<string, Stroke>
+export type StrokeHitbox = Record<string, Hitbox[]>
 export type StrokeShape = Stroke & ShapeConfig
