@@ -1,14 +1,8 @@
+import { LiveStroke } from "drawing/livestroke/index.types"
 import { assign, cloneDeep, pick } from "lodash"
 import { Polygon } from "sat"
 import { getHitboxPolygon } from "./hitbox"
-import {
-    LiveStroke,
-    Scale,
-    Point,
-    Stroke,
-    ToolType,
-    StrokeUpdate,
-} from "./types"
+import { Scale, Point, Stroke, ToolType, StrokeUpdate } from "./index.types"
 
 export class BoardStroke implements Stroke {
     type: ToolType
@@ -42,8 +36,10 @@ export class BoardStroke implements Stroke {
         this.type = stroke.type
         this.style = { ...stroke.style }
         this.points = [...stroke.points]
-        if ((stroke as Stroke).hitboxes?.length) {
-            this.hitboxes = (stroke as Stroke).hitboxes ?? []
+
+        // Check if hitboxes need to be calculated
+        if (stroke.hitboxes?.length) {
+            this.hitboxes = stroke.hitboxes
         } else {
             this.calculateHitbox()
         }

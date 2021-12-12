@@ -1,5 +1,5 @@
 import { PageCollection } from "redux/board/board.types"
-import { Stroke, StrokeUpdate, ToolType } from "drawing/stroke/types"
+import { Stroke, StrokeUpdate, ToolType } from "drawing/stroke/index.types"
 import { Util } from "konva/lib/Util"
 import {
     adjectives,

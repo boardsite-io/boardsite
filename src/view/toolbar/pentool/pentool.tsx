@@ -1,4 +1,4 @@
-import { ToolType } from "drawing/stroke/types"
+import { ToolType } from "drawing/stroke/index.types"
 import {
     CircleIcon,
     IconButton,

@@ -9,14 +9,15 @@ import { handleAddStrokes, handleDeleteStrokes } from "drawing/handlers"
 import { MOVE_SHAPES_TO_DRAG_LAYER } from "redux/board/board"
 import { CLEAR_ERASED_STROKES, SET_ERASED_STROKES } from "redux/drawing/drawing"
 import store from "redux/store"
-import { perfectDrawing, simplifyRDP } from "./simplify"
+import { perfectDrawing, simplifyRDP } from "../stroke/simplify"
 import {
     getHitboxPolygon,
     getSelectionPolygon,
     matchStrokeCollision,
-} from "./hitbox"
-import { BoardStroke } from "./stroke"
-import { LiveStroke, Point, Stroke, StrokeMap, Tool, ToolType } from "./types"
+} from "../stroke/hitbox"
+import { BoardStroke } from "../stroke"
+import { Point, Stroke, StrokeMap, Tool, ToolType } from "../stroke/index.types"
+import { LiveStroke } from "./index.types"
 
 export class BoardLiveStroke implements LiveStroke {
     type: ToolType

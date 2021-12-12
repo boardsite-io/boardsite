@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { pick, keys, assign, cloneDeep } from "lodash"
-import { Point, Stroke } from "drawing/stroke/types"
+import { pick, keys, assign } from "lodash"
 import {
     centerView,
     fitToPage,
@@ -16,75 +15,96 @@ import {
     addOrUpdateStrokes,
 } from "./undoredo"
 import { newState } from "./state"
-import { BoardState, Page, StageAttrs, StrokeAction } from "./board.types"
+import {
+    AddPage,
+    AddStrokes,
+    BoardState,
+    ClearPage,
+    DeletePages,
+    EraseStrokes,
+    JumpToPageWithIndex,
+    LoadBoardState,
+    MoveShapesToDragLayer,
+    NextPage,
+    PrevPage,
+    SetPageBackground,
+    SetPageMeta,
+    SetPageRank,
+    SetPageSize,
+    SetPdf,
+    SetStageAttrs,
+    SyncAllPages,
+} from "./board.types"
 
 const boardSlice = createSlice({
     name: "board",
     initialState: newState(),
     reducers: {
-        LOAD_BOARD_STATE: (state, action) => {
+        LOAD_BOARD_STATE: (state, action: PayloadAction<LoadBoardState>) => {
             assign(state, pick(action.payload, keys(state)))
         },
 
-        SYNC_ALL_PAGES: (state, action) => {
+        SYNC_ALL_PAGES: (state, action: PayloadAction<SyncAllPages>) => {
             const { pageRank, pageCollection } = action.payload
             state.pageRank = pageRank
             state.pageCollection = pageCollection
             state.triggerManualUpdate?.()
         },
 
-        SET_PAGERANK: (state, action) => {
+        SET_PAGERANK: (state, action: PayloadAction<SetPageRank>) => {
             const { pageRank, pageCollection } = action.payload
             state.pageRank = pageRank
             state.pageCollection = pageCollection
             state.triggerManualUpdate?.()
         },
 
-        SET_PAGEMETA: (state, action) => {
+        SET_PAGEMETA: (state, action: PayloadAction<SetPageMeta>) => {
             const { pageId, meta } = action.payload
             state.pageCollection[pageId]?.updateMeta(meta)
             state.triggerManualUpdate?.()
         },
 
-        SET_PAGE_BACKGROUND: (state, action) => {
+        SET_PAGE_BACKGROUND: (
+            state,
+            action: PayloadAction<SetPageBackground>
+        ) => {
             const style = action.payload
             state.pageMeta.background.style = style
         },
 
-        SET_PAGE_SIZE: (state, action) => {
+        SET_PAGE_SIZE: (state, action: PayloadAction<SetPageSize>) => {
             state.pageMeta.size = action.payload
             state.triggerManualUpdate?.()
         },
 
-        ADD_PAGE: (state, action) => {
-            const { page, index } = action.payload as {
-                page: Page
-                index: number
-            }
+        ADD_PAGE: (state, action: PayloadAction<AddPage>) => {
+            const { page, index } = action.payload
             state.pageCollection[page.pageId] = page
+
             if (index >= 0) {
                 state.pageRank.splice(index, 0, page.pageId)
             } else {
                 state.pageRank.push(page.pageId)
             }
+
             state.triggerManualUpdate?.()
             initialView(state)
         },
 
-        CLEAR_PAGE: (state, action) => {
+        CLEAR_PAGE: (state, action: PayloadAction<ClearPage>) => {
             const pageId = action.payload
             state.pageCollection[pageId]?.clear()
             state.triggerManualUpdate?.()
         },
 
-        DELETE_PAGES: (state, action) => {
-            const pageIds: string[] = action.payload
+        DELETE_PAGES: (state, action: PayloadAction<DeletePages>) => {
+            const pageIds = action.payload
+
             pageIds.forEach((pid) => {
                 const { documentPageNum } =
                     state.pageCollection[pid].meta.background
 
                 state.documentImages.splice(documentPageNum as number, 1)
-
                 state.pageRank.splice(state.pageRank.indexOf(pid), 1)
                 delete state.pageCollection[pid]
 
@@ -112,20 +132,19 @@ const boardSlice = createSlice({
         // sets the currently selected strokes
         MOVE_SHAPES_TO_DRAG_LAYER: (
             state,
-            action: PayloadAction<{
-                strokes: Stroke[]
-                pagePosition?: Point
-            }>
+            action: PayloadAction<MoveShapesToDragLayer>
         ) => {
             const { strokes, pagePosition } = action.payload
+
             if (pagePosition) {
                 state.transformPagePosition = pagePosition
             }
+
             state.transformStrokes = strokes
         },
 
         // Add strokes to collection
-        ADD_STROKES: (state, action: PayloadAction<StrokeAction>) => {
+        ADD_STROKES: (state, action: PayloadAction<AddStrokes>) => {
             const {
                 strokes,
                 isRedoable,
@@ -166,7 +185,7 @@ const boardSlice = createSlice({
         },
 
         // Erase strokes from collection
-        ERASE_STROKES(state, action) {
+        ERASE_STROKES(state, action: PayloadAction<EraseStrokes>) {
             const { strokes, isRedoable, sessionHandler, sessionUndoHandler } =
                 action.payload
 
@@ -191,36 +210,7 @@ const boardSlice = createSlice({
             state.triggerManualUpdate?.()
         },
 
-        // Update stroke position after dragging
-        UPDATE_STROKES(state, action: PayloadAction<StrokeAction>) {
-            const { strokes, isRedoable, sessionHandler, sessionUndoHandler } =
-                action.payload
-            const updatesCopy = cloneDeep(state.strokeUpdates)
-
-            const handler = (boardState: BoardState) => {
-                // copy to not mutate the reference
-                const strokesCopy = cloneDeep(strokes)
-                addOrUpdateStrokes(boardState, ...strokesCopy)
-                sessionHandler?.(...strokesCopy)
-            }
-
-            const undoHandler = (boardState: BoardState) => {
-                addOrUpdateStrokes(boardState, ...updatesCopy)
-                sessionUndoHandler?.(...updatesCopy)
-            }
-
-            addAction(
-                handler,
-                undoHandler,
-                state as BoardState,
-                state.undoStack,
-                isRedoable
-            )
-
-            state.triggerManualUpdate?.()
-        },
-
-        SET_PDF: (state, action) => {
+        SET_PDF: (state, action: PayloadAction<SetPdf>) => {
             const { documentImages, documentSrc } = action.payload
             state.documentImages = documentImages
             state.documentSrc = documentSrc
@@ -236,7 +226,7 @@ const boardSlice = createSlice({
             state.triggerManualUpdate?.()
         },
 
-        NEXT_PAGE: (state, action: PayloadAction<{ attrs: StageAttrs }>) => {
+        NEXT_PAGE: (state, action: PayloadAction<NextPage>) => {
             if (state.currentPageIndex < state.pageRank.length - 1) {
                 state.currentPageIndex += 1
 
@@ -249,7 +239,7 @@ const boardSlice = createSlice({
             }
         },
 
-        PREV_PAGE: (state, action: PayloadAction<{ attrs: StageAttrs }>) => {
+        PREV_PAGE: (state, action: PayloadAction<PrevPage>) => {
             if (state.currentPageIndex > 0) {
                 state.currentPageIndex -= 1
 
@@ -286,8 +276,12 @@ const boardSlice = createSlice({
             initialView(state)
         },
 
-        JUMP_PAGE_WITH_INDEX: (state, action) => {
+        JUMP_TO_PAGE_WITH_INDEX: (
+            state,
+            action: PayloadAction<JumpToPageWithIndex>
+        ) => {
             const targetIndex = action.payload
+
             if (targetIndex <= state.pageRank.length - 1 && targetIndex >= 0) {
                 state.currentPageIndex = targetIndex
             }
@@ -303,16 +297,16 @@ const boardSlice = createSlice({
         },
 
         RESET_VIEW: (state) => {
-            resetView(state as BoardState)
+            resetView(state)
             state.stage.renderTrigger = !state.stage.renderTrigger
         },
 
         CENTER_VIEW: (state) => {
-            centerView(state as BoardState)
+            centerView(state)
             state.stage.renderTrigger = !state.stage.renderTrigger
         },
 
-        SET_STAGE_ATTRS: (state, action: PayloadAction<StageAttrs>) => {
+        SET_STAGE_ATTRS: (state, action: PayloadAction<SetStageAttrs>) => {
             assign(
                 state.stage.attrs,
                 pick(action.payload, keys(state.stage.attrs))
@@ -358,7 +352,6 @@ export const {
     MOVE_SHAPES_TO_DRAG_LAYER,
     ADD_STROKES,
     ERASE_STROKES,
-    UPDATE_STROKES,
     SET_PDF,
     UNDO_ACTION,
     REDO_ACTION,
@@ -372,7 +365,7 @@ export const {
     JUMP_TO_NEXT_PAGE,
     JUMP_TO_FIRST_PAGE,
     JUMP_TO_LAST_PAGE,
-    JUMP_PAGE_WITH_INDEX,
+    JUMP_TO_PAGE_WITH_INDEX,
     TOGGLE_SHOULD_CENTER,
     TOGGLE_HIDE_NAVBAR,
     CENTER_VIEW,

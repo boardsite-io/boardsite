@@ -8,7 +8,7 @@ import {
     pageSize,
     backgroundStyle,
 } from "consts"
-import { BoardStroke } from "drawing/stroke/stroke"
+import { BoardStroke } from "drawing/stroke"
 import { BoardPage } from "drawing/page"
 import { sourceToImageData } from "drawing/pdf/document"
 import { pick, keys, assign, cloneDeep } from "lodash"

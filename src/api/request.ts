@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, Method } from "axios"
-import { Stroke } from "drawing/stroke/types"
+import { Stroke } from "drawing/stroke/index.types"
 import { Page } from "redux/board/board.types"
 import {
     ResponsePageSync,

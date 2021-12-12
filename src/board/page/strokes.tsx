@@ -25,24 +25,19 @@ const Strokes = memo<PageProps>(({ pageId, pageInfo }) => {
         }, 100)
     }, [trigger])
 
+    const pageStrokes = store.getState().board.pageCollection[pageId]?.strokes
+
     return (
         <Group
             ref={ref}
             {...pageInfo}
             globalCompositeOperation="source-atop"
             listening={false}>
-            {Object.keys(
-                store.getState().board.pageCollection[pageId]?.strokes
-            ).map((id) => (
-                <StrokeShape
-                    key={id}
-                    stroke={
-                        store.getState().board.pageCollection[pageId]?.strokes[
-                            id
-                        ]
-                    }
-                />
-            ))}
+            {pageStrokes
+                ? Object.keys(pageStrokes).map((id) => (
+                      <StrokeShape key={id} stroke={pageStrokes[id]} />
+                  ))
+                : null}
         </Group>
     )
 })

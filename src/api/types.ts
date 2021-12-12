@@ -1,5 +1,5 @@
 import { BoardPage } from "drawing/page"
-import { Stroke, StrokeUpdate } from "drawing/stroke/types"
+import { Stroke, StrokeUpdate } from "drawing/stroke/index.types"
 import { PageMeta, PageRank } from "redux/board/board.types"
 
 // api
