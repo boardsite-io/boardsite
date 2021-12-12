@@ -1,8 +1,8 @@
-import { disconnect } from "api/websocket"
+import { currentSession } from "api/session"
 import { Button, DialogContent } from "components"
 import React from "react"
 import { useNavigate } from "react-router-dom"
-import { useCustomDispatch, useCustomSelector } from "hooks"
+import { useCustomDispatch } from "hooks"
 import { CLOSE_SESSION_DIALOG } from "redux/session/session"
 import {
     UserAlias,
@@ -12,14 +12,11 @@ import {
 } from "./onlinedialogcontent.styled"
 
 const OnlineDialogContent: React.FC = () => {
-    const connectedUsers = useCustomSelector(
-        (state) => state.session.connectedUsers
-    )
-
     const dispatch = useCustomDispatch()
     const navigate = useNavigate()
+
     const handleLeave = () => {
-        disconnect()
+        currentSession().disconnect()
         dispatch(CLOSE_SESSION_DIALOG())
         navigate("/")
     }
@@ -27,8 +24,8 @@ const OnlineDialogContent: React.FC = () => {
     return (
         <DialogContent>
             <UserList>
-                {Object.keys(connectedUsers).map((userId) => {
-                    const { alias, color, id } = connectedUsers[userId]
+                {Object.values(currentSession().users ?? {}).map((user) => {
+                    const { alias, color, id } = user
                     return (
                         <UserInfo key={id}>
                             <UserColor $color={color} />

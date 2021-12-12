@@ -1,14 +1,11 @@
 import React from "react"
+import Konva from "konva"
 import { useNavigate } from "react-router-dom"
 import { useCustomDispatch, useCustomSelector } from "hooks"
 import store from "redux/store"
-import {
-    SET_SESSION_DIALOG,
-    CLOSE_SESSION_DIALOG,
-    SET_USER_ALIAS,
-    SET_USER_COLOR,
-} from "redux/session/session"
-import { getSessionPath, joinSession, newSession } from "api/websocket"
+import { SET_SESSION_DIALOG, CLOSE_SESSION_DIALOG } from "redux/session/session"
+import { Session } from "api/types"
+import { BoardSession, currentSession } from "api/session"
 import { Button, DialogContent, TextField } from "components"
 import { UserColorButton, UserSelection } from "./offlinedialogcontent.styled"
 
@@ -16,20 +13,23 @@ const OfflineDialogContent: React.FC = () => {
     const sDiagStatus = useCustomSelector(
         (state) => state.session.sessionDialog
     )
-    const userAlias = useCustomSelector((state) => state.session.user.alias)
-    const userColor = useCustomSelector((state) => state.session.user.color)
 
     const dispatch = useCustomDispatch()
     const navigate = useNavigate()
+
+    const getSession = React.useCallback<() => Session>(
+        () => currentSession(),
+        []
+    )
 
     /**
      * Handle the create session button click in the session dialog
      */
     const handleCreate = async () => {
         try {
-            const sessionId = await newSession()
+            const sessionId = await getSession().create()
+            await handleJoin(sessionId)
             dispatch(SET_SESSION_DIALOG({ sidInput: sessionId }))
-            await handleJoin()
         } catch (error) {
             // console.log("error")
         }
@@ -38,11 +38,12 @@ const OfflineDialogContent: React.FC = () => {
     /**
      * Handle the join session button click in the session dialog
      */
-    const handleJoin = async () => {
+    const handleJoin = async (sessionId: string) => {
         try {
-            await joinSession()
-            const { sidInput } = store.getState().session.sessionDialog
-            navigate(getSessionPath(sidInput))
+            const path = BoardSession.path(sessionId)
+            await getSession().createSocket(path.split("/").pop() ?? "")
+            await getSession().join()
+            navigate(path)
             dispatch(CLOSE_SESSION_DIALOG())
         } catch (error) {
             dispatch(
@@ -64,11 +65,11 @@ const OfflineDialogContent: React.FC = () => {
     }
 
     const handleAliasChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(SET_USER_ALIAS(e.target.value))
+        getSession().updateUser({ alias: e.target.value })
     }
 
     const newRandomColor = () => {
-        dispatch(SET_USER_COLOR())
+        getSession().updateUser({ color: Konva.Util.getRandomColor() })
     }
 
     return (
@@ -76,11 +77,11 @@ const OfflineDialogContent: React.FC = () => {
             <UserSelection>
                 <UserColorButton
                     type="button"
-                    $color={userColor}
+                    $color={getSession().user.color}
                     onClick={newRandomColor}
                 />
                 <TextField
-                    value={userAlias}
+                    value={getSession().user.alias}
                     label="Choose alias"
                     onChange={handleAliasChange}
                     maxLength={20}
@@ -90,7 +91,12 @@ const OfflineDialogContent: React.FC = () => {
             {!sDiagStatus.joinOnly && (
                 <Button onClick={handleCreate}>Create Session</Button>
             )}
-            <Button onClick={handleJoin}>Join Session</Button>
+            <Button
+                onClick={() =>
+                    handleJoin(store.getState().session.sessionDialog.sidInput)
+                }>
+                Join Session
+            </Button>
             {!sDiagStatus.joinOnly && (
                 <TextField
                     label="Insert ID"

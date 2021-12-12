@@ -11,10 +11,9 @@ import {
     Switch,
     TextField,
 } from "components"
-import { SET_API_URL } from "redux/session/session"
 import { TOGGLE_HIDE_NAVBAR, TOGGLE_SHOULD_CENTER } from "redux/board/board"
 import { TOGGLE_DIRECTDRAW } from "redux/drawing/drawing"
-import { isConnected } from "api/websocket"
+import { currentSession, isConnected } from "api/session"
 import { useCustomSelector } from "hooks"
 import { API_URL } from "api/types"
 import isDev from "consts"
@@ -36,8 +35,7 @@ const Settings: React.FC = () => {
     const handleURLChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setURL(event.target.value)
         try {
-            const u = new URL(event.target.value)
-            store.dispatch(SET_API_URL(u))
+            currentSession().setAPIURL(new URL(event.target.value))
             setValidURL(true)
         } catch {
             setValidURL(false)

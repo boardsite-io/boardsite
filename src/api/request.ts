@@ -1,167 +1,134 @@
-import axios, { AxiosRequestConfig } from "axios"
+import axios, { AxiosInstance, Method } from "axios"
 import { Stroke } from "drawing/stroke/index.types"
 import { Page } from "redux/board/board.types"
-import { User } from "redux/session/session.types"
-import store from "redux/store"
 import {
     ResponsePageSync,
     ResponsePostSession,
     ResponsePostAttachment,
+    User,
 } from "./types"
 
-const apiRequest = axios.create({
-    transformRequest: [(data) => JSON.stringify(data) ?? ""], // for routes we dont need message type
-    transformResponse: [
-        (data) => {
-            try {
-                return JSON.parse(data)
-            } catch {
-                return data
-            }
-        },
-    ],
-    headers: {
-        // prettier-ignore
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-    },
-    timeout: 3000,
-})
+export class Request {
+    baseURL: string
+    sessionId?: string
 
-const fileRequest = axios.create({
-    transformResponse: [
-        (data) => {
-            try {
-                return JSON.parse(data)
-            } catch {
-                return {}
-            }
-        },
-    ],
-    headers: {
+    timeout = 3000
+    headers: Record<string, string> = {
         // prettier-ignore
         "Accept": "application/json",
         "Content-Type": "multipart/form-data",
-    },
-    timeout: 3000,
-})
+    }
 
-const pdfRequest = axios.create({
-    headers: {
-        // prettier-ignore
-        "Accept": "application/pdf",
-    },
-    timeout: 3000,
-})
+    transformResponse = (data: string) => {
+        try {
+            return JSON.parse(data)
+        } catch {
+            return data
+        }
+    }
 
-/**
- * Send data request to API.
- */
-export async function sendRequest<T>(
-    url: string,
-    method: string,
-    data?: unknown,
-    config?: AxiosRequestConfig
-): Promise<T> {
-    const baseURL = store.getState().session.apiURL.toString()
-    const response = await apiRequest({
-        url: `${baseURL}b/${url}`,
-        method,
-        data,
-        ...config,
-    } as AxiosRequestConfig)
-    return response.data
-}
+    jsonRequest: AxiosInstance
+    fileRequest: AxiosInstance
+    pdfRequest: AxiosInstance
 
-export function postSession(): Promise<ResponsePostSession> {
-    return sendRequest("create", "post")
-}
+    constructor(baseURL: string, sessionId?: string) {
+        this.baseURL = `${baseURL}b`
+        this.sessionId = sessionId
+        this.jsonRequest = axios.create({
+            baseURL: this.baseURL.toString(),
+            headers: this.headers,
+            transformRequest: [(data) => JSON.stringify(data) ?? ""], // for routes we dont need message type
+            transformResponse: [this.transformResponse],
+            timeout: this.timeout,
+        })
+        this.fileRequest = axios.create({
+            baseURL: this.baseURL.toString(),
+            headers: this.headers,
+            transformResponse: [this.transformResponse],
+            timeout: this.timeout,
+        })
+        this.pdfRequest = axios.create({
+            baseURL: this.baseURL.toString(),
+            headers: {
+                // prettier-ignore
+                "Accept": "application/pdf",
+            },
+            timeout: this.timeout,
+            responseType: "arraybuffer",
+        })
+    }
 
-export function getUsers(sessionId: string): Promise<{ [uid: string]: User }> {
-    return sendRequest(`${sessionId}/users`, "get")
-}
+    async jsonSend<T>(method: Method, url: string, data?: unknown): Promise<T> {
+        const resp = await this.jsonRequest.request({
+            method,
+            url,
+            data,
+        })
+        return resp.data
+    }
 
-export function postUser(sessionId: string, data: User): Promise<User> {
-    return sendRequest(`${sessionId}/users`, "post", data)
-}
+    postSession(): Promise<ResponsePostSession> {
+        return this.jsonSend("POST", "/create")
+    }
 
-export function getPages(sessionId: string): Promise<ResponsePageSync> {
-    return sendRequest(`${sessionId}/pages`, "get")
-}
+    getUsers(): Promise<Record<string, User>> {
+        return this.jsonSend("GET", `${this.sessionId}/users`)
+    }
 
-export function getStrokes(
-    sessionId: string,
-    pageId: string
-): Promise<Stroke[]> {
-    return sendRequest(`${sessionId}/pages/${pageId}`, "get")
-}
+    postUser(data: Partial<User>): Promise<User> {
+        return this.jsonSend("POST", `${this.sessionId}/users`, data)
+    }
 
-export function postPages(
-    sessionId: string,
-    pages: Page[],
-    pageIndex: number[]
-): Promise<void> {
-    return sendRequest(`${sessionId}/pages`, "post", {
-        pageId: pages.map((page) => page.pageId),
-        index: pageIndex,
-        meta: pages.reduce(
-            (obj, page) => ({ ...obj, [page.pageId]: page.meta }),
-            {}
-        ),
-    })
-}
+    getPages(): Promise<ResponsePageSync> {
+        return this.jsonSend("GET", `${this.sessionId}/pages`)
+    }
 
-export function putPages(
-    sessionId: string,
-    pages: Page[],
-    clear: boolean
-): Promise<void> {
-    return sendRequest(`${sessionId}/pages`, "put", {
-        pageId: pages.map((page) => page.pageId),
-        meta: pages.reduce(
-            (obj, page) => ({ ...obj, [page.pageId]: page.meta }),
-            {}
-        ),
-        clear,
-    })
-}
+    getStrokes(pageId: string): Promise<Stroke[]> {
+        return this.jsonSend("GET", `${this.sessionId}/pages/${pageId}`)
+    }
 
-export function deletePages(
-    sessionId: string,
-    pageIds: string[]
-): Promise<void> {
-    return sendRequest(`${sessionId}/pages`, "delete", {
-        pageId: pageIds,
-    })
-}
+    postPages(pages: Page[], pageIndex: number[]): Promise<void> {
+        return this.jsonSend("POST", `${this.sessionId}/pages`, {
+            pageId: pages.map((page) => page.pageId),
+            index: pageIndex,
+            meta: pages.reduce(
+                (obj, page) => ({ ...obj, [page.pageId]: page.meta }),
+                {}
+            ),
+        })
+    }
 
-export async function postAttachment(
-    sessionId: string,
-    file: File
-): Promise<ResponsePostAttachment> {
-    const formData = new FormData()
-    formData.append("file", file)
+    putPages(pages: Page[], clear: boolean): Promise<void> {
+        return this.jsonSend("PUT", `${this.sessionId}/pages`, {
+            pageId: pages.map((page) => page.pageId),
+            meta: pages.reduce(
+                (obj, page) => ({ ...obj, [page.pageId]: page.meta }),
+                {}
+            ),
+            clear,
+        })
+    }
 
-    const baseURL = store.getState().session.apiURL.toString()
-    const response = await fileRequest({
-        url: `${baseURL}b/${sessionId}/attachments`,
-        method: "POST",
-        data: formData,
-    } as AxiosRequestConfig)
+    deletePages(pageIds: string[]): Promise<void> {
+        return this.jsonSend("DELETE", `${this.sessionId}/pages`, {
+            pageId: pageIds,
+        })
+    }
 
-    return response.data
-}
+    async postAttachment(file: File): Promise<ResponsePostAttachment> {
+        const formData = new FormData()
+        formData.append("file", file)
+        const response = await this.fileRequest.post(
+            `${this.sessionId}/attachments`,
+            formData
+        )
+        return response.data
+    }
 
-export async function getAttachment(
-    sessionId: string,
-    attachId: string
-): Promise<unknown> {
-    const baseURL = store.getState().session.apiURL.toString()
-    const response = await pdfRequest({
-        url: `${baseURL}b/${sessionId}/attachments/${attachId}`,
-        method: "GET",
-        responseType: "arraybuffer",
-    } as AxiosRequestConfig)
-
-    return Buffer.from(response.data, "binary").toString("base64")
+    async getAttachment(attachId: string): Promise<unknown> {
+        const response = await this.pdfRequest.get(
+            `${this.sessionId}/attachments/${attachId}`
+        )
+        return Buffer.from(response.data, "binary").toString("base64")
+    }
 }

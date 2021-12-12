@@ -13,16 +13,7 @@ import {
     CLEAR_TRANSFORM,
     JUMP_TO_NEXT_PAGE,
 } from "redux/board/board"
-import {
-    addPagesSession,
-    updatePagesSession,
-    deletePagesSession,
-    isConnected,
-    sendStrokes,
-    eraseStrokes,
-    getUserId,
-    getSocket,
-} from "api/websocket"
+import { currentSession, isConnected } from "api/session"
 import { backgroundStyle } from "consts"
 import store from "redux/store"
 import { SET_TOOL } from "redux/drawing/drawing"
@@ -41,7 +32,7 @@ export function handleAddPageOver(): void {
     const page = createPage()
     const index = store.getState().board.currentPageIndex
     if (isConnected()) {
-        addPagesSession([page], [index])
+        currentSession().addPages([page], [index])
     } else {
         store.dispatch(ADD_PAGE({ page, index }))
     }
@@ -51,7 +42,7 @@ export function handleAddPageUnder(): void {
     const page = createPage()
     const index = store.getState().board.currentPageIndex + 1
     if (isConnected()) {
-        addPagesSession([page], [index])
+        currentSession().addPages([page], [index])
     } else {
         store.dispatch(ADD_PAGE({ page, index }))
     }
@@ -60,7 +51,7 @@ export function handleAddPageUnder(): void {
 
 export function handleClearPage(): void {
     if (isConnected()) {
-        updatePagesSession(true, getCurrentPage())
+        currentSession().updatePages(true, getCurrentPage())
     } else {
         store.dispatch(CLEAR_PAGE(getCurrentPageId()))
     }
@@ -72,7 +63,7 @@ export function handleDeleteCurrentPage(): void {
 
 export function handleDeletePages(...pageIds: string[]): void {
     if (isConnected()) {
-        deletePagesSession(...pageIds)
+        currentSession().deletePages(...pageIds)
     } else {
         store.dispatch(DELETE_PAGES([getCurrentPageId()]))
     }
@@ -80,7 +71,7 @@ export function handleDeletePages(...pageIds: string[]): void {
 
 export function handleDeleteAllPages(): void {
     if (isConnected()) {
-        deletePagesSession(...store.getState().board.pageRank)
+        currentSession().deletePages(...store.getState().board.pageRank)
     } else {
         store.dispatch(DELETE_ALL_PAGES())
     }
@@ -97,10 +88,9 @@ export function handleAddStrokes(
     }
 
     if (isConnected()) {
-        const ws = getSocket()
-        const userId = getUserId()
-        payload.sessionHandler = () => sendStrokes(ws, userId, ...strokes)
-        payload.sessionUndoHandler = () => sendStrokes(ws, userId, ...strokes)
+        const session = currentSession()
+        payload.sessionHandler = () => session.sendStrokes(...strokes)
+        payload.sessionUndoHandler = () => session.eraseStrokes(...strokes)
     }
 
     store.dispatch(ADD_STROKES(payload))
@@ -113,10 +103,9 @@ export function handleDeleteStrokes(...strokes: Stroke[]): void {
     }
 
     if (isConnected()) {
-        const ws = getSocket()
-        const userId = getUserId()
-        payload.sessionHandler = () => eraseStrokes(ws, userId, ...strokes)
-        payload.sessionUndoHandler = () => sendStrokes(ws, userId, ...strokes)
+        const session = currentSession()
+        payload.sessionHandler = () => session.eraseStrokes(...strokes)
+        payload.sessionUndoHandler = () => session.sendStrokes(...strokes)
     }
 
     store.dispatch(ERASE_STROKES(payload))
@@ -148,7 +137,7 @@ export function handleChangePageBackground(): void {
     newMeta.background.style = store.getState().board.pageMeta.background.style
 
     if (isConnected()) {
-        updatePagesSession(false, currentPage.updateMeta(newMeta))
+        currentSession().updatePages(false, currentPage.updateMeta(newMeta))
     } else {
         store.dispatch(
             SET_PAGEMETA({ pageId: currentPage.pageId, meta: newMeta })

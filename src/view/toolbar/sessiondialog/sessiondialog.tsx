@@ -10,7 +10,7 @@ import {
     IconButton,
 } from "components"
 import { SET_SESSION_DIALOG, CLOSE_SESSION_DIALOG } from "redux/session/session"
-import { isConnected } from "api/websocket"
+import { isConnected } from "api/session"
 import OfflineDialogContent from "./offlinedialogcontent/offlinedialogcontent"
 import OnlineDialogContent from "./onlinedialogcontent/onlinedialogcontent"
 

@@ -5,7 +5,7 @@ import { handleAddPageUnder } from "drawing/handlers"
 import BoardStage from "board/stage"
 import { SET_SESSION_DIALOG } from "redux/session/session"
 import { useCustomDispatch, useKeyboardShortcuts } from "hooks"
-import { isConnected, pingSession } from "api/websocket"
+import { isConnected, currentSession } from "api/session"
 import { WhiteboardStyled } from "./whiteboard.styled"
 import SessionInfo from "./sessioninfo/sessioninfo"
 import Toolbar from "./toolbar/toolbar"
@@ -24,7 +24,13 @@ const Whiteboard: React.FC = () => {
 
     const checkSessionStatus = useCallback(async () => {
         try {
-            await pingSession(sid as string)
+            if (!sid) {
+                throw new Error()
+            }
+
+            await currentSession()
+                .setID(sid as string)
+                .ping()
             // Session exists
             dispatch(
                 SET_SESSION_DIALOG({
