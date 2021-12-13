@@ -173,13 +173,14 @@ const boardSlice = createSlice({
                 }
             }
 
-            addAction(
+            addAction({
                 handler,
                 undoHandler,
-                state as BoardState,
-                state.undoStack,
-                isRedoable
-            )
+                stack: state.undoStack,
+                isRedoable,
+                state,
+                isNew: true,
+            })
 
             state.triggerManualUpdate?.()
         },
@@ -199,13 +200,14 @@ const boardSlice = createSlice({
                 sessionUndoHandler?.()
             }
 
-            addAction(
+            addAction({
                 handler,
                 undoHandler,
-                state as BoardState,
-                state.undoStack,
-                isRedoable
-            )
+                stack: state.undoStack,
+                isRedoable,
+                state,
+                isNew: true,
+            })
 
             state.triggerManualUpdate?.()
         },
