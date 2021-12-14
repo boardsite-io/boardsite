@@ -59,6 +59,15 @@ export interface StrokeAction {
     sessionUndoHandler?: (...updates: Stroke[] | StrokeUpdate[]) => void
 }
 
+export interface ActionConfig {
+    handler: (boardState: BoardState) => void
+    undoHandler: (boardState: BoardState) => void
+    state: BoardState
+    stack?: BoardAction[]
+    isRedoable?: boolean
+    isNew?: boolean
+}
+
 export type TransformStrokes = Stroke[]
 
 export type PageId = string

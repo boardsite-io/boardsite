@@ -1,49 +1,47 @@
 import { BoardStroke } from "drawing/stroke"
 import { Stroke, StrokeUpdate } from "drawing/stroke/index.types"
-import { BoardState, BoardAction } from "./board.types"
+import { BoardState, ActionConfig } from "./board.types"
 
 export function undoAction(state: BoardState): void {
     const action = state.undoStack?.pop()
     if (action) {
-        addAction(
-            action.handleFunc,
-            action.undoHandleFunc,
+        addAction({
+            handler: action.handleFunc,
+            undoHandler: action.undoHandleFunc,
+            stack: state.redoStack,
+            isRedoable: true,
             state,
-            state.redoStack,
-            true
-        )
+        })
     }
 }
 
 export function redoAction(state: BoardState): void {
     const action = state.redoStack?.pop()
     if (action) {
-        addAction(
-            action.handleFunc,
-            action.undoHandleFunc,
+        addAction({
+            handler: action.handleFunc,
+            undoHandler: action.undoHandleFunc,
+            stack: state.undoStack,
+            isRedoable: true,
             state,
-            state.undoStack,
-            true
-        )
+        })
     }
 }
 
-export function addAction(
-    handler: (boardState: BoardState) => void,
-    undoHandler: (boardState: BoardState) => void,
-    state: BoardState,
-    stack?: BoardAction[],
-    isRedoable?: boolean
-): void {
-    if (isRedoable) {
-        stack = stack ?? []
-        stack?.push({
-            handleFunc: undoHandler,
-            undoHandleFunc: handler,
+export function addAction(cfg: ActionConfig): void {
+    if (cfg.isRedoable) {
+        cfg.stack = cfg.stack ?? []
+        cfg.stack?.push({
+            handleFunc: cfg.undoHandler,
+            undoHandleFunc: cfg.handler,
         })
+
+        if (cfg.isNew) {
+            cfg.state.redoStack = []
+        }
     }
 
-    handler(state)
+    cfg.handler(cfg.state)
 }
 
 export function deleteStrokes(
