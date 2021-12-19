@@ -24,7 +24,6 @@
         "pako": "^2.0.4",
         "pdf-lib": "^1.16.0",
         "pdfjs-dist": "^2.7.570",
-        "perfect-freehand": "^1.0.16",
         "react": "^17.0.1",
         "react-colorful": "^5.2.0",
         "react-dom": "^17.0.1",

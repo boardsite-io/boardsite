@@ -1,43 +1,25 @@
-import { getStrokePoints, StrokeOptions } from "perfect-freehand"
 import { Point } from "./index.types"
 
 export const perfectDrawing = (points: number[]): number[] => {
-    const formattedPoints = new Array(points.length / 2)
-        .fill(undefined)
-        .map((_, i) => [points[2 * i], points[2 * i + 1]])
+    const streamline = 0.25
+    const t = 0.15 + (1 - streamline) * 0.85
 
-    const options: StrokeOptions = {
-        // The base size (diameter) of the stroke.
-        size: 0, // 1 + styles.strokeWidth * 1.5,
-        // The effect of pressure on the stroke's size.
-        thinning: 0,
-        // How much to soften the stroke's edges.
-        smoothing: 0,
-        // How much to streamline the stroke.
-        streamline: 0.25,
-        // Whether to simulate pressure based on velocity.
-        simulatePressure: false,
-        // An easing function to apply to each point's pressure.
-        // easing: (t) => t,
-        // Tapering options for the start of the line.
-        // start: {
-        //     cap: true,
-        //     taper: 0,
-        //     easing: (t) => t,
-        // },
-        // Tapering options for the end of the line.
-        // end: {
-        //     cap: true,
-        //     taper: 0,
-        //     easing: (t) => t,
-        // },
-        // Whether the stroke is complete.
-        last: false,
+    let prev = [points[0], points[1]]
+    for (let i = 2; i < points.length; i += 2) {
+        prev = linearInterp(prev, [points[i], points[i + 1]], t)
+        points.splice(i, 2, ...prev)
     }
+    return points
+}
 
-    return getStrokePoints(formattedPoints, options)
-        .map((strokePoint) => strokePoint.point)
-        .flat()
+export function linearInterp<T extends number[], U extends Point>(
+    a: T | U,
+    b: T | U,
+    t: number
+): T {
+    const a1 = Array.isArray(a) ? (a as T) : [a.x, a.y]
+    const b1 = Array.isArray(b) ? (b as T) : [b.x, b.y]
+    return a1.map((_, i) => a1[i] + (b1[i] - a1[i]) * t) as T
 }
 
 /**
