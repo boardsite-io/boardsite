@@ -35,6 +35,7 @@ import {
     SetStageAttrs,
     SyncAllPages,
 } from "./board.types"
+import { clearTransform } from "./helpers"
 
 const boardSlice = createSlice({
     name: "board",
@@ -125,8 +126,7 @@ const boardSlice = createSlice({
         },
 
         CLEAR_TRANSFORM: (state) => {
-            state.transformStrokes = []
-            state.strokeUpdates = []
+            clearTransform(state)
         },
 
         // sets the currently selected strokes
@@ -237,6 +237,8 @@ const boardSlice = createSlice({
                     pick(action.payload.attrs, keys(state.stage.attrs))
                 )
 
+                clearTransform(state)
+
                 state.stage.renderTrigger = !state.stage.renderTrigger
             }
         },
@@ -249,6 +251,8 @@ const boardSlice = createSlice({
                     state.stage.attrs,
                     pick(action.payload.attrs, keys(state.stage.attrs))
                 )
+
+                clearTransform(state)
 
                 state.stage.renderTrigger = !state.stage.renderTrigger
             }
