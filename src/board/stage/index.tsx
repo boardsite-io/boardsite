@@ -3,7 +3,6 @@ import { ReactReduxContext } from "react-redux"
 import { Stage } from "react-konva"
 import { Stage as StageType } from "konva/lib/Stage"
 import {
-    pageSize,
     STAGE_RESIZE_DEBOUNCE,
     STAGE_UPDATE_DEBOUNCE,
     ZOOM_IN_WHEEL_SCALE,
@@ -14,14 +13,15 @@ import store from "redux/store"
 import { useCustomSelector } from "hooks"
 import { debounce } from "lodash"
 import { ToolType } from "drawing/stroke/index.types"
-import { Vector2d } from "konva/lib/types"
 import { KonvaEventObject } from "konva/lib/Node"
 import { StageAttrs } from "redux/board/board.types"
+import { Vector2d } from "konva/lib/types"
 import { zoomTo } from "./util/adjustView"
 import { multiTouchEnd, multiTouchMove } from "./util/multiTouch"
 import Content from "./content"
 import { detectPageChange } from "./util/detectPageChange"
 import { UpdateStage } from "./updateStage"
+import { applyBoundsX, applyBoundsY } from "./util/bounds"
 
 const resizeStage = debounce(
     () => store.dispatch(ON_WINDOW_RESIZE()),
@@ -35,6 +35,7 @@ const updateRedux = debounce(
 
 const BoardStage: React.FC = memo(() => {
     useEffect(() => window.addEventListener("resize", resizeStage), [])
+
     const stageRef = useRef<StageType>(null)
 
     const isPanMode = useCustomSelector(
@@ -44,44 +45,38 @@ const BoardStage: React.FC = memo(() => {
     const updateStageAttrs = useCallback(
         (newAttrs: StageAttrs) => {
             // Copy to prevent mutating stage.getAttrs() directly
-            const attrsCopy = { ...newAttrs }
+            const newAttrsCopy = { ...newAttrs }
 
             const stage = stageRef.current
             if (!stage) return
 
+            const boardState = store.getState().board
+
             // Check if page index should change
-            const isDetected = detectPageChange(
-                store.getState().board,
-                attrsCopy
-            )
+            const isDetected = detectPageChange(boardState, newAttrsCopy)
 
             if (!isDetected) {
+                // Apply bounds before using new stage attributes
+                const boundedAttrs = {
+                    ...newAttrsCopy,
+                    x: applyBoundsX({
+                        boardState,
+                        stageAttrs: newAttrsCopy,
+                        xCandidate: newAttrsCopy.x,
+                    }),
+                    y: applyBoundsY({
+                        boardState,
+                        stageAttrs: newAttrsCopy,
+                        yCandidate: newAttrsCopy.y,
+                    }),
+                }
+
                 // Update internal state
-                stage.setAttrs(attrsCopy)
+                stage.setAttrs(boundedAttrs)
 
                 // Synchronise the redux state with the internal state
-                updateRedux(attrsCopy)
+                updateRedux(boundedAttrs)
             }
-        },
-        [stageRef]
-    )
-
-    /**
-     *
-     * @param {object} pos current position of drag event on stage, e.g. {x: 12, y: 34}
-     */
-    const dragBound = useCallback(
-        (pos: Vector2d) => {
-            const stage = stageRef.current
-
-            if (stage && store.getState().board.stage.keepCentered) {
-                const x = stage.getAttr("width") / 2
-                if (x >= 0) {
-                    return { x, y: pos.y }
-                }
-            }
-
-            return pos
         },
         [stageRef]
     )
@@ -101,25 +96,14 @@ const BoardStage: React.FC = memo(() => {
                 const zoomPoint = stage.getPointerPosition()
                 if (!zoomPoint) return
 
-                const {
-                    currentPageIndex,
-                    pageCollection,
-                    stage: { keepCentered },
-                } = store.getState().board
-
-                const pageWidth =
-                    pageCollection[currentPageIndex]?.meta.size.width ??
-                    pageSize.a4landscape.width
-
                 const newAttrs = zoomTo({
+                    boardState: store.getState().board,
                     stageAttrs: stage.getAttrs(),
                     zoomPoint,
                     zoomScale:
                         e.evt.deltaY < 0
                             ? ZOOM_IN_WHEEL_SCALE
                             : ZOOM_OUT_WHEEL_SCALE,
-                    keepCentered,
-                    pageWidth,
                 })
 
                 updateStageAttrs(newAttrs)
@@ -134,23 +118,44 @@ const BoardStage: React.FC = memo(() => {
                 updateStageAttrs(newAttrs)
             }
         },
-        [isPanMode]
+        [stageRef, isPanMode]
     )
 
-    /**
-     * Handles updating the states after stage drag events
-     * @param {event} e
-     */
-    const onDragEnd = useCallback((e: KonvaEventObject<DragEvent>) => {
-        if (e.target.attrs.className === "stage") {
+    const dragBoundFunc = useCallback(
+        (pos: Vector2d) => {
+            const stage = stageRef.current
+            if (!stage) return pos
+
+            const boardState = store.getState().board
+            const stageAttrs = stage.getAttrs()
+
+            return {
+                x: applyBoundsX({
+                    boardState,
+                    stageAttrs,
+                    xCandidate: pos.x,
+                }),
+                y: applyBoundsY({
+                    boardState,
+                    stageAttrs,
+                    yCandidate: pos.y,
+                }),
+            }
+        },
+        [stageRef]
+    )
+
+    const onDragEnd = useCallback(
+        (e: KonvaEventObject<DragEvent>) => {
+            e.evt.preventDefault()
             const stage = stageRef.current
             if (!stage) return
 
             const newAttrs = stage.getAttrs()
-
             updateStageAttrs(newAttrs)
-        }
-    }, [])
+        },
+        [stageRef]
+    )
 
     const onTouchMove = useCallback(
         (e: KonvaEventObject<TouchEvent>) => {
@@ -170,8 +175,9 @@ const BoardStage: React.FC = memo(() => {
                     x: touch2.clientX,
                     y: touch2.clientY,
                 }
+                const stageAttrs = stage.getAttrs()
                 const newAttrs = multiTouchMove({
-                    attrs: stage.getAttrs(),
+                    stageAttrs,
                     p1,
                     p2,
                 })
@@ -212,7 +218,7 @@ const BoardStage: React.FC = memo(() => {
                         perfectDrawEnabled={false}
                         preventDefault
                         draggable={isPanMode}
-                        dragBoundFunc={dragBound}
+                        dragBoundFunc={dragBoundFunc}
                         // onDragStart={onDragStart}
                         // onDragMove={onDragMove}
                         onDragEnd={onDragEnd}

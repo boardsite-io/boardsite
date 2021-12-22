@@ -7,22 +7,21 @@ import {
     ZOOM_SCALE_MIN,
 } from "consts"
 import { BoardState, StageAttrs } from "redux/board/board.types"
-import { getCurrentPageWidth } from "./helpers"
+import { getCenterX, getCenterY, getCurrentPageWidth } from "./helpers"
+import { applyBoundsX, applyBoundsY } from "./bounds"
 
 interface ZoomToProps {
+    boardState: BoardState
     stageAttrs: StageAttrs
     zoomPoint: Point
     zoomScale: number
-    keepCentered: boolean
-    pageWidth: number
 }
 
 export const zoomTo = ({
+    boardState,
     stageAttrs,
     zoomPoint,
     zoomScale,
-    keepCentered,
-    pageWidth,
 }: ZoomToProps): StageAttrs => {
     const mousePointTo = {
         x: (zoomPoint.x - stageAttrs.x) / stageAttrs.scaleX,
@@ -31,19 +30,32 @@ export const zoomTo = ({
 
     // Calculate new stage scale and apply bounds if necessary
     let newScale = zoomScale * stageAttrs.scaleX
-    if (newScale > ZOOM_SCALE_MAX) newScale = ZOOM_SCALE_MAX
-    if (newScale < ZOOM_SCALE_MIN) newScale = ZOOM_SCALE_MIN
+
+    if (newScale > ZOOM_SCALE_MAX) {
+        newScale = ZOOM_SCALE_MAX
+    } else if (newScale < ZOOM_SCALE_MIN) {
+        newScale = ZOOM_SCALE_MIN
+    }
 
     // if zoomed out then center, else zoom to mouse coords
-    const newStageX = (window.innerWidth - pageWidth * newScale) / 2
+    const shouldCenter =
+        boardState.stage.keepCentered &&
+        window.innerWidth > getCurrentPageWidth(boardState) * newScale
 
     return {
         ...stageAttrs,
-        x:
-            keepCentered && newStageX >= 0
-                ? newStageX
+        x: applyBoundsX({
+            boardState,
+            stageAttrs,
+            xCandidate: shouldCenter
+                ? getCenterX()
                 : zoomPoint.x - mousePointTo.x * newScale,
-        y: zoomPoint.y - mousePointTo.y * newScale,
+        }),
+        y: applyBoundsY({
+            boardState,
+            stageAttrs,
+            yCandidate: zoomPoint.y - mousePointTo.y * newScale,
+        }),
         scaleX: newScale,
         scaleY: newScale,
     }
@@ -51,45 +63,61 @@ export const zoomTo = ({
 
 export const zoomCenter = (state: BoardState, isZoomingIn: boolean): void => {
     const centerOfScreen = {
-        x: state.stage.attrs.width / 2,
-        y: state.stage.attrs.height / 2,
+        x: getCenterX(),
+        y: getCenterY(),
     }
     state.stage.attrs = zoomTo({
+        boardState: state,
         stageAttrs: state.stage.attrs,
         zoomPoint: centerOfScreen,
         zoomScale: isZoomingIn ? ZOOM_IN_WHEEL_SCALE : ZOOM_OUT_WHEEL_SCALE,
-        keepCentered: state.stage.keepCentered,
-        pageWidth:
-            state.pageCollection[state.currentPageIndex]?.meta.size.width,
     })
 }
 
 export const initialView = (state: BoardState): void => {
-    state.stage.attrs.scaleX = 1
-    state.stage.attrs.scaleY = 1
-    state.stage.attrs.y = DEFAULT_STAGE_Y
-    centerView(state)
+    state.stage.attrs = {
+        ...state.stage.attrs,
+        scaleX: 1,
+        scaleY: 1,
+        x: getCenterX(),
+        y: DEFAULT_STAGE_Y,
+    }
     state.stage.renderTrigger = !state.stage.renderTrigger
 }
+
+interface GetScaledYProps {
+    y: number
+    oldScale: number
+    newScale: number
+}
+
+const getScaledY = ({ y, oldScale, newScale }: GetScaledYProps): number =>
+    window.innerHeight / 2 -
+    ((window.innerHeight / 2 - y) / oldScale) * newScale
 
 export const resetView = (state: BoardState): void => {
     const oldScale = state.stage.attrs.scaleX
     const newScale = 1
-    const { height, y } = state.stage.attrs
-    state.stage.attrs.scaleX = newScale
-    state.stage.attrs.scaleY = newScale
-    state.stage.attrs.x = 0
-    state.stage.attrs.y = height / 2 - ((height / 2 - y) / oldScale) * newScale
-    centerView(state as BoardState)
+
+    state.stage.attrs = {
+        ...state.stage.attrs,
+        scaleX: newScale,
+        scaleY: newScale,
+        x: getCenterX(),
+        y: getScaledY({
+            y: state.stage.attrs.y,
+            oldScale,
+            newScale,
+        }),
+    }
+    state.stage.renderTrigger = !state.stage.renderTrigger
 }
 
 export const centerView = (state: BoardState): void => {
     const pageWidth = getCurrentPageWidth(state)
-    if (!pageWidth) return
 
-    if (state.stage.attrs.width >= pageWidth * state.stage.attrs.scaleX) {
-        state.stage.attrs.x =
-            (state.stage.attrs.width / 2) * state.stage.attrs.scaleX
+    if (window.innerWidth >= pageWidth * state.stage.attrs.scaleX) {
+        state.stage.attrs.x = getCenterX()
     } else {
         fitToPage(state)
     }
@@ -97,16 +125,17 @@ export const centerView = (state: BoardState): void => {
 
 export const fitToPage = (state: BoardState): void => {
     const oldScale = state.stage.attrs.scaleX
-    const pageWidth = getCurrentPageWidth(state)
-    if (!pageWidth) {
-        return
+    const newScale = window.innerWidth / getCurrentPageWidth(state)
+
+    state.stage.attrs = {
+        ...state.stage.attrs,
+        scaleX: newScale,
+        scaleY: newScale,
+        x: getCenterX(),
+        y: getScaledY({
+            y: state.stage.attrs.y,
+            oldScale,
+            newScale,
+        }),
     }
-    const newScale = window.innerWidth / pageWidth
-    state.stage.attrs.scaleX = newScale
-    state.stage.attrs.scaleY = newScale
-    state.stage.attrs.x = state.stage.attrs.width / 2
-    state.stage.attrs.y =
-        state.stage.attrs.height / 2 -
-        ((state.stage.attrs.height / 2 - state.stage.attrs.y) / oldScale) *
-            newScale
 }

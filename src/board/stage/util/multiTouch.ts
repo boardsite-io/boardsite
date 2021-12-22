@@ -6,19 +6,19 @@ let lastCenter: Point | null = null
 let lastDist = 0
 
 interface MultiTouchMove {
-    attrs: StageAttrs
+    stageAttrs: StageAttrs
     p1: Point
     p2: Point
 }
 
 export const multiTouchMove = ({
-    attrs,
+    stageAttrs,
     p1,
     p2,
 }: MultiTouchMove): StageAttrs => {
     if (!lastCenter) {
         lastCenter = getCenter(p1, p2)
-        return attrs
+        return stageAttrs
     }
     const newCenter = getCenter(p1, p2)
     const dist = getDistance(p1, p2)
@@ -29,12 +29,12 @@ export const multiTouchMove = ({
 
     // local coordinates of center point
     const pointTo = {
-        x: (newCenter.x - attrs.x) / attrs.scaleX,
-        y: (newCenter.y - attrs.y) / attrs.scaleY,
+        x: (newCenter.x - stageAttrs.x) / stageAttrs.scaleX,
+        y: (newCenter.y - stageAttrs.y) / stageAttrs.scaleY,
     }
 
     // OPTION 1:
-    const scale = attrs.scaleX * (dist / lastDist)
+    const scale = stageAttrs.scaleX * (dist / lastDist)
 
     // calculate new position of the stage
     const dx = newCenter.x - lastCenter.x
@@ -48,7 +48,7 @@ export const multiTouchMove = ({
     lastCenter = newCenter
 
     return {
-        ...attrs,
+        ...stageAttrs,
         x: newCenter.x - pointTo.x * scale + dx,
         y: newCenter.y - pointTo.y * scale + dy,
         scaleX: scale,
