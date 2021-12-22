@@ -208,8 +208,9 @@ export class BoardLiveStroke implements LiveStroke {
                 )
                 break
             }
-            default:
+            default: {
                 handleAddStrokes(false, stroke)
+            }
         }
     }
 }

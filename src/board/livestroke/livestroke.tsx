@@ -25,8 +25,24 @@ export const LiveStrokeShape = memo<LiveStrokeShapeProps>(
                             LIVESTROKE_SEGMENT_SIZE * (i + 1) + 2
                         )
                     ),
-            []
+            [liveStroke]
         )
+
+        if (liveStroke.points.length === 0) {
+            return null
+        }
+
+        // Duplicate the first point for the shapes to render without warning
+        if (liveStroke.points.length === 2) {
+            return (
+                <StrokeShape
+                    stroke={{
+                        ...liveStroke,
+                        points: [...liveStroke.points, ...liveStroke.points],
+                    }}
+                />
+            )
+        }
 
         return (
             <>
