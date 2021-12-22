@@ -1,9 +1,8 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import { BrowserRouter as Router } from "react-router-dom"
 import { Provider } from "react-redux"
 import { Theme } from "theme.styled"
-import routes from "./board/route"
+import Router from "./router"
 import store from "./redux/store"
 
 // ========================================
@@ -11,7 +10,7 @@ import store from "./redux/store"
 ReactDOM.render(
     <Theme>
         <Provider store={store}>
-            <Router>{routes}</Router>
+            <Router />
         </Provider>{" "}
     </Theme>,
     document.getElementById("root")
