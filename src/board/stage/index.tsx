@@ -23,6 +23,16 @@ import Content from "./content"
 import { detectPageChange } from "./util/detectPageChange"
 import { UpdateStage } from "./updateStage"
 
+const resizeStage = debounce(
+    () => store.dispatch(ON_WINDOW_RESIZE()),
+    STAGE_RESIZE_DEBOUNCE
+)
+
+const updateRedux = debounce(
+    (stageAttrs: StageAttrs) => store.dispatch(SET_STAGE_ATTRS(stageAttrs)),
+    STAGE_UPDATE_DEBOUNCE
+)
+
 const BoardStage: React.FC = memo(() => {
     useEffect(() => window.addEventListener("resize", resizeStage), [])
     const stageRef = useRef<StageType>(null)
@@ -30,20 +40,6 @@ const BoardStage: React.FC = memo(() => {
     const isPanMode = useCustomSelector(
         (state) => state.drawing.tool.type === ToolType.Pan
     )
-
-    const onResize = useCallback(() => {
-        store.dispatch(ON_WINDOW_RESIZE())
-    }, [])
-
-    const onUpdate = useCallback(
-        (stageAttrs: StageAttrs) => {
-            store.dispatch(SET_STAGE_ATTRS(stageAttrs))
-        },
-        [store]
-    )
-
-    const resizeStage = debounce(onResize, STAGE_RESIZE_DEBOUNCE)
-    const updateRedux = debounce(onUpdate, STAGE_UPDATE_DEBOUNCE)
 
     const updateStageAttrs = useCallback(
         (newAttrs: StageAttrs) => {
