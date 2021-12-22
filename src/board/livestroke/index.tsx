@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react"
+import React, { memo, useCallback, useState } from "react"
 import { Rect } from "react-konva"
 import { BoardLiveStroke } from "drawing/livestroke"
 import { LiveStrokeShape } from "board/livestroke/livestroke"
@@ -9,8 +9,9 @@ import { Vector2d } from "konva/lib/types"
 import { Stroke, ToolType } from "drawing/stroke/index.types"
 import { useCustomSelector } from "hooks"
 import { PageProps } from "board/page/index.types"
+import { isValidClick, isValidTouch } from "./helpers"
 
-let isMouseDown = false
+let isMouseOrTouchDown = false
 
 const LiveStroke = memo<PageProps>(({ layerRef, pageId, pageInfo }) => {
     const [liveStrokeTrigger, setLiveStrokeTrigger] = useState(0)
@@ -19,103 +20,125 @@ const LiveStroke = memo<PageProps>(({ layerRef, pageId, pageInfo }) => {
         (state) => state.drawing.tool.type === ToolType.Pan
     )
 
-    const getPointerPositionInStage = (e: KonvaEventObject<MouseEvent>) => {
-        const stage = e.target.getStage() as Stage
-        const position = stage.getPointerPosition()
-        const transform = stage.getAbsoluteTransform().copy().invert()
-        return transform.point(position as Vector2d)
-    }
+    const getPointerPositionInStage = useCallback(
+        (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
+            const stage = e.target.getStage() as Stage
+            const position = stage.getPointerPosition()
+            const transform = stage.getAbsoluteTransform().copy().invert()
+            return transform.point(position as Vector2d)
+        },
+        []
+    )
 
-    const onMouseDown = (e: KonvaEventObject<MouseEvent>) => {
-        if (e.evt.buttons === 2) {
-            return
-        }
-
-        const { type } = store.getState().drawing.tool
-        if (type === ToolType.Eraser || type === ToolType.Select) {
-            layerRef?.current?.clearCache()
-        }
-
-        isMouseDown = true
-        const pos = getPointerPositionInStage(e)
-
-        liveStroke.setTool(store.getState().drawing.tool).start(pos, pageId)
-        setLiveStrokeTrigger(0)
-    }
-
-    const onMouseMove = (e: KonvaEventObject<MouseEvent>) => {
-        if (
-            !isMouseDown ||
-            e.evt.buttons === 2 || // right mouse
-            e.evt.buttons === 3 // left+right mouse
-        ) {
-            if (!liveStroke.isReset()) {
-                // cancel stroke when right / left+right mouse is clicked
-                liveStroke.reset()
-                setLiveStrokeTrigger((prev) => prev + 1)
-            }
-            isMouseDown = false
-            return
-        }
-
-        const pos = getPointerPositionInStage(e)
-        liveStroke.move(pos, e.target.getPosition())
-        setLiveStrokeTrigger((prev) => prev + 1)
-    }
-
-    const onMouseUp = (e: KonvaEventObject<MouseEvent>) => {
-        if (!isMouseDown) {
-            return
-        } // Ignore reentering
-
-        // update last position
-        const pos = getPointerPositionInStage(e)
-        liveStroke.move(pos, e.target.getPosition())
-
-        // register finished stroke
-        const stroke = liveStroke.finalize(e.target.getPosition()) as Stroke
-        isMouseDown = false
-        setLiveStrokeTrigger((prev) => prev + 1)
-
-        BoardLiveStroke.register(stroke, e.target.getPosition())
-    }
-
-    const onTouchStart = (e: KonvaEventObject<TouchEvent>) => {
-        if (isValidTouch(e)) {
-            onMouseDown(e as unknown as KonvaEventObject<MouseEvent>)
-        }
-    }
-
-    const onTouchMove = (e: KonvaEventObject<TouchEvent>) => {
-        if (isValidTouch(e)) {
-            onMouseMove(e as unknown as KonvaEventObject<MouseEvent>)
-        } else {
+    // cancel stroke when right / left+right mouse
+    // is clicked or when touch is invalid
+    const resetLiveStroke = useCallback(() => {
+        if (!liveStroke.isReset()) {
             liveStroke.reset()
-            setLiveStrokeTrigger?.((prev) => prev + 1)
-            isMouseDown = false
+            setLiveStrokeTrigger((prev) => prev + 1)
         }
-    }
 
-    const onTouchEnd = (e: KonvaEventObject<TouchEvent>) => {
-        onMouseUp(e as unknown as KonvaEventObject<MouseEvent>)
-    }
+        isMouseOrTouchDown = false
+    }, [liveStroke, setLiveStrokeTrigger])
 
-    const isValidTouch = (e: KonvaEventObject<TouchEvent>) => {
-        e.evt.preventDefault()
-        const touch1 = e.evt.touches?.[0] as Touch & { touchType: string }
-        const touch2 = e.evt.touches?.[1] as Touch & { touchType: string }
-        if (touch1?.touchType === undefined) {
-            return false
-        }
-        if (
-            // exit if draw with finger is not set
-            !store.getState().drawing.directDraw &&
-            touch1.touchType === "direct"
-        ) {
-            return false
-        }
-        return !(touch1 && touch2) // double finger
-    }
+    const onStart = useCallback(
+        (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
+            isMouseOrTouchDown = true
+
+            const { type } = store.getState().drawing.tool
+            if (type === ToolType.Eraser || type === ToolType.Select) {
+                layerRef?.current?.clearCache()
+            }
+
+            const pos = getPointerPositionInStage(e)
+            liveStroke.setTool(store.getState().drawing.tool).start(pos, pageId)
+            setLiveStrokeTrigger(0)
+        },
+        [liveStroke, isMouseOrTouchDown]
+    )
+
+    const onMove = useCallback(
+        (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
+            const pos = getPointerPositionInStage(e)
+            liveStroke.move(pos, e.target.getPosition())
+            setLiveStrokeTrigger((prev) => prev + 1)
+        },
+        [liveStroke, isMouseOrTouchDown]
+    )
+
+    const onEnd = useCallback(
+        (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
+            // update last position
+            const pos = getPointerPositionInStage(e)
+            liveStroke.move(pos, e.target.getPosition())
+
+            // register finished stroke
+            const stroke = liveStroke.finalize(e.target.getPosition()) as Stroke
+            setLiveStrokeTrigger((prev) => prev + 1)
+            BoardLiveStroke.register(stroke, e.target.getPosition())
+
+            isMouseOrTouchDown = false
+        },
+        [liveStroke, isMouseOrTouchDown]
+    )
+
+    const onMouseDown = useCallback(
+        (e: KonvaEventObject<MouseEvent>) => {
+            if (isValidClick(e)) {
+                onStart(e)
+            }
+        },
+        [liveStroke, isMouseOrTouchDown]
+    )
+
+    const onTouchStart = useCallback(
+        (e: KonvaEventObject<TouchEvent>) => {
+            if (isValidTouch(e)) {
+                onStart(e)
+            }
+        },
+        [onStart]
+    )
+
+    const onMouseMove = useCallback(
+        (e: KonvaEventObject<MouseEvent>) => {
+            if (isMouseOrTouchDown && isValidClick(e)) {
+                onMove(e)
+            } else {
+                resetLiveStroke()
+            }
+        },
+        [onMove]
+    )
+
+    const onTouchMove = useCallback(
+        (e: KonvaEventObject<TouchEvent>) => {
+            if (isMouseOrTouchDown && isValidTouch(e)) {
+                onMove(e)
+            } else {
+                resetLiveStroke()
+            }
+        },
+        [liveStroke, onMove]
+    )
+
+    const onMouseUp = useCallback(
+        (e: KonvaEventObject<MouseEvent>) => {
+            if (isMouseOrTouchDown) {
+                onEnd(e)
+            }
+        },
+        [onEnd]
+    )
+
+    const onTouchEnd = useCallback(
+        (e: KonvaEventObject<TouchEvent>) => {
+            if (isMouseOrTouchDown) {
+                onEnd(e)
+            }
+        },
+        [onEnd]
+    )
 
     return (
         <>
