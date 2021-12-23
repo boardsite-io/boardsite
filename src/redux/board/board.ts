@@ -105,12 +105,20 @@ const boardSlice = createSlice({
                 const { documentPageNum } =
                     state.pageCollection[pid].meta.background
 
-                state.documentImages.splice(documentPageNum as number, 1)
+                if (documentPageNum) {
+                    state.documentImages.splice(documentPageNum, 1)
+                }
+
                 state.pageRank.splice(state.pageRank.indexOf(pid), 1)
                 delete state.pageCollection[pid]
-
                 state.triggerManualUpdate?.()
             })
+
+            // Set view to previous page after deletion
+            if (state.currentPageIndex > 0) {
+                state.currentPageIndex -= 1
+                initialView(state)
+            }
         },
 
         // Keep page meta settings
