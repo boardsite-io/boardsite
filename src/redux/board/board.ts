@@ -304,12 +304,6 @@ const boardSlice = createSlice({
 
         RESET_VIEW: (state) => {
             resetView(state)
-            state.stage.renderTrigger = !state.stage.renderTrigger
-        },
-
-        CENTER_VIEW: (state) => {
-            centerView(state)
-            state.stage.renderTrigger = !state.stage.renderTrigger
         },
 
         SET_STAGE_ATTRS: (state, action: PayloadAction<SetStageAttrs>) => {
@@ -322,12 +316,12 @@ const boardSlice = createSlice({
         ON_WINDOW_RESIZE: (state) => {
             state.stage.attrs.width = window.innerWidth
             state.stage.attrs.height = window.innerHeight
-            centerView(state as BoardState)
+            centerView(state)
             state.stage.renderTrigger = !state.stage.renderTrigger
         },
 
         FIT_WIDTH_TO_PAGE: (state) => {
-            fitToPage(state as BoardState)
+            fitToPage(state)
             state.stage.renderTrigger = !state.stage.renderTrigger
         },
 
@@ -374,7 +368,6 @@ export const {
     JUMP_TO_PAGE_WITH_INDEX,
     TOGGLE_SHOULD_CENTER,
     TOGGLE_HIDE_NAVBAR,
-    CENTER_VIEW,
     RESET_VIEW,
     ON_WINDOW_RESIZE,
     SET_STAGE_ATTRS,

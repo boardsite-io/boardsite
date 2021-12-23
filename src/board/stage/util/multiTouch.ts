@@ -1,64 +1,52 @@
 import { Point } from "drawing/stroke/index.types"
 import { StageAttrs } from "redux/board/board.types"
+import { zoomTo } from "./adjustView"
 
-// variables for multitouch zoom
-let lastCenter: Point | null = null
-let lastDist = 0
+let lastZoomPoint: Point | null = null
+let lastDistance = 0
 
 interface MultiTouchMove {
-    attrs: StageAttrs
+    stageAttrs: StageAttrs
     p1: Point
     p2: Point
 }
 
 export const multiTouchMove = ({
-    attrs,
+    stageAttrs,
     p1,
     p2,
 }: MultiTouchMove): StageAttrs => {
-    if (!lastCenter) {
-        lastCenter = getCenter(p1, p2)
-        return attrs
-    }
-    const newCenter = getCenter(p1, p2)
-    const dist = getDistance(p1, p2)
-
-    if (!lastDist) {
-        lastDist = dist
+    if (!lastZoomPoint) {
+        lastZoomPoint = getCenter(p1, p2)
+        return stageAttrs
     }
 
-    // local coordinates of center point
-    const pointTo = {
-        x: (newCenter.x - attrs.x) / attrs.scaleX,
-        y: (newCenter.y - attrs.y) / attrs.scaleY,
+    const distance = getDistance(p1, p2)
+
+    if (!lastDistance) {
+        lastDistance = distance
     }
 
-    // OPTION 1:
-    const scale = attrs.scaleX * (dist / lastDist)
+    const zoomPoint = getCenter(p1, p2)
+    const zoomScale = distance / lastDistance
+    const newStageAttrs = zoomTo({
+        stageAttrs,
+        zoomPoint,
+        zoomScale,
+    })
 
-    // calculate new position of the stage
-    const dx = newCenter.x - lastCenter.x
-    const dy = newCenter.y - lastCenter.y
+    newStageAttrs.x += zoomPoint.x - lastZoomPoint.x
+    newStageAttrs.y += zoomPoint.y - lastZoomPoint.y
 
-    // OPTION 2
-    // zoomToPointWithScale(state, pointTo, dist / lastDist)
+    lastDistance = distance
+    lastZoomPoint = zoomPoint
 
-    // update info
-    lastDist = dist
-    lastCenter = newCenter
-
-    return {
-        ...attrs,
-        x: newCenter.x - pointTo.x * scale + dx,
-        y: newCenter.y - pointTo.y * scale + dy,
-        scaleX: scale,
-        scaleY: scale,
-    }
+    return newStageAttrs
 }
 
 export const multiTouchEnd = (): void => {
-    lastDist = 0
-    lastCenter = null
+    lastDistance = 0
+    lastZoomPoint = null
 }
 
 /**

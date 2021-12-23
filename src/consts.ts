@@ -8,6 +8,15 @@ export default function isDev(): boolean {
     return !process.env.NODE_ENV || process.env.NODE_ENV === "development"
 }
 
+/* 
+    These constants define the distance of each respective scroll limit to the upper viewport 
+    border, e.g., a first page limit value of 0.3 means the upper border of the first 
+    page can at most be 30% of the viewport height away from the upper viewport border. 
+*/
+export const SCROLL_LIMIT_FIRST_PAGE = 0.25 // Calculated from upper border!
+export const SCROLL_LIMIT_LAST_PAGE = 0.75 // Calculated from upper border!
+export const SCROLL_LIMIT_HORIZONTAL = 0.5 // Calculated from side borders!
+
 export const STAGE_RESIZE_DEBOUNCE = 250 // debounce time in ms
 export const STAGE_UPDATE_DEBOUNCE = 250 // debounce time in ms
 export const PIXEL_RATIO = 4
