@@ -43,12 +43,19 @@ const BoardStage: React.FC = memo(() => {
     )
 
     const updateStageAttrs = useCallback(
-        (newAttrs: StageAttrs) => {
+        (newAttrs: StageAttrs | null): void => {
+            const stage = stageRef.current
+
+            if (!stage) {
+                return
+            }
+
+            if (newAttrs === null) {
+                newAttrs = stage.getAttrs() as StageAttrs
+            }
+
             // Copy to prevent mutating stage.getAttrs() directly
             const newAttrsCopy = { ...newAttrs }
-
-            const stage = stageRef.current
-            if (!stage) return
 
             const boardState = store.getState().board
 
@@ -92,13 +99,14 @@ const BoardStage: React.FC = memo(() => {
             const stage = stageRef.current
             if (!stage) return
 
+            const stageAttrs = stage.getAttrs()
+
             if (isPanMode || e.evt.ctrlKey) {
                 const zoomPoint = stage.getPointerPosition()
                 if (!zoomPoint) return
 
                 const newAttrs = zoomTo({
-                    boardState: store.getState().board,
-                    stageAttrs: stage.getAttrs(),
+                    stageAttrs,
                     zoomPoint,
                     zoomScale:
                         e.evt.deltaY < 0
@@ -108,7 +116,6 @@ const BoardStage: React.FC = memo(() => {
 
                 updateStageAttrs(newAttrs)
             } else {
-                const stageAttrs = stage.getAttrs()
                 const newAttrs = {
                     ...stageAttrs,
                     x: stageAttrs.x - e.evt.deltaX,
@@ -148,11 +155,7 @@ const BoardStage: React.FC = memo(() => {
     const onDragEnd = useCallback(
         (e: KonvaEventObject<DragEvent>) => {
             e.evt.preventDefault()
-            const stage = stageRef.current
-            if (!stage) return
-
-            const newAttrs = stage.getAttrs()
-            updateStageAttrs(newAttrs)
+            updateStageAttrs(null)
         },
         [stageRef]
     )
@@ -175,9 +178,9 @@ const BoardStage: React.FC = memo(() => {
                     x: touch2.clientX,
                     y: touch2.clientY,
                 }
-                const stageAttrs = stage.getAttrs()
+
                 const newAttrs = multiTouchMove({
-                    stageAttrs,
+                    stageAttrs: stage.getAttrs(),
                     p1,
                     p2,
                 })
@@ -191,11 +194,6 @@ const BoardStage: React.FC = memo(() => {
     const onTouchEnd = useCallback((e: KonvaEventObject<TouchEvent>) => {
         onTouchMove(e)
         multiTouchEnd()
-
-        const stage = stageRef.current
-        if (!stage) return
-        const newAttrs = stage.getAttrs()
-        updateStageAttrs(newAttrs)
     }, [])
 
     const { attrs } = store.getState().board.stage

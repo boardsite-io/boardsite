@@ -1,9 +1,9 @@
 import { Point } from "drawing/stroke/index.types"
 import { StageAttrs } from "redux/board/board.types"
+import { zoomTo } from "./adjustView"
 
-// variables for multitouch zoom
-let lastCenter: Point | null = null
-let lastDist = 0
+let lastZoomPoint: Point | null = null
+let lastDistance = 0
 
 interface MultiTouchMove {
     stageAttrs: StageAttrs
@@ -16,49 +16,37 @@ export const multiTouchMove = ({
     p1,
     p2,
 }: MultiTouchMove): StageAttrs => {
-    if (!lastCenter) {
-        lastCenter = getCenter(p1, p2)
+    if (!lastZoomPoint) {
+        lastZoomPoint = getCenter(p1, p2)
         return stageAttrs
     }
-    const newCenter = getCenter(p1, p2)
-    const dist = getDistance(p1, p2)
 
-    if (!lastDist) {
-        lastDist = dist
+    const distance = getDistance(p1, p2)
+
+    if (!lastDistance) {
+        lastDistance = distance
     }
 
-    // local coordinates of center point
-    const pointTo = {
-        x: (newCenter.x - stageAttrs.x) / stageAttrs.scaleX,
-        y: (newCenter.y - stageAttrs.y) / stageAttrs.scaleY,
-    }
+    const zoomPoint = getCenter(p1, p2)
+    const zoomScale = distance / lastDistance
+    const newStageAttrs = zoomTo({
+        stageAttrs,
+        zoomPoint,
+        zoomScale,
+    })
 
-    // OPTION 1:
-    const scale = stageAttrs.scaleX * (dist / lastDist)
+    newStageAttrs.x += zoomPoint.x - lastZoomPoint.x
+    newStageAttrs.y += zoomPoint.y - lastZoomPoint.y
 
-    // calculate new position of the stage
-    const dx = newCenter.x - lastCenter.x
-    const dy = newCenter.y - lastCenter.y
+    lastDistance = distance
+    lastZoomPoint = zoomPoint
 
-    // OPTION 2
-    // zoomToPointWithScale(state, pointTo, dist / lastDist)
-
-    // update info
-    lastDist = dist
-    lastCenter = newCenter
-
-    return {
-        ...stageAttrs,
-        x: newCenter.x - pointTo.x * scale + dx,
-        y: newCenter.y - pointTo.y * scale + dy,
-        scaleX: scale,
-        scaleY: scale,
-    }
+    return newStageAttrs
 }
 
 export const multiTouchEnd = (): void => {
-    lastDist = 0
-    lastCenter = null
+    lastDistance = 0
+    lastZoomPoint = null
 }
 
 /**

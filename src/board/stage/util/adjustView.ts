@@ -11,14 +11,12 @@ import { getCenterX, getCenterY, getCurrentPageWidth } from "./helpers"
 import { applyBoundsX, applyBoundsY } from "./bounds"
 
 interface ZoomToProps {
-    boardState: BoardState
     stageAttrs: StageAttrs
     zoomPoint: Point
     zoomScale: number
 }
 
 export const zoomTo = ({
-    boardState,
     stageAttrs,
     zoomPoint,
     zoomScale,
@@ -37,41 +35,43 @@ export const zoomTo = ({
         newScale = ZOOM_SCALE_MIN
     }
 
-    // if zoomed out then center, else zoom to mouse coords
-    const shouldCenter =
-        boardState.stage.keepCentered &&
-        window.innerWidth > getCurrentPageWidth(boardState) * newScale
-
     return {
         ...stageAttrs,
-        x: applyBoundsX({
-            boardState,
-            stageAttrs,
-            xCandidate: shouldCenter
-                ? getCenterX()
-                : zoomPoint.x - mousePointTo.x * newScale,
-        }),
-        y: applyBoundsY({
-            boardState,
-            stageAttrs,
-            yCandidate: zoomPoint.y - mousePointTo.y * newScale,
-        }),
+        x: zoomPoint.x - mousePointTo.x * newScale,
+        y: zoomPoint.y - mousePointTo.y * newScale,
         scaleX: newScale,
         scaleY: newScale,
     }
 }
 
-export const zoomCenter = (state: BoardState, isZoomingIn: boolean): void => {
+export const zoomCenter = (
+    boardState: BoardState,
+    isZoomingIn: boolean
+): void => {
     const centerOfScreen = {
         x: getCenterX(),
         y: getCenterY(),
     }
-    state.stage.attrs = zoomTo({
-        boardState: state,
-        stageAttrs: state.stage.attrs,
+    boardState.stage.attrs = zoomTo({
+        stageAttrs: boardState.stage.attrs,
         zoomPoint: centerOfScreen,
         zoomScale: isZoomingIn ? ZOOM_IN_WHEEL_SCALE : ZOOM_OUT_WHEEL_SCALE,
     })
+
+    // Apply bounds
+    boardState.stage.attrs = {
+        ...boardState.stage.attrs,
+        x: applyBoundsX({
+            boardState,
+            stageAttrs: boardState.stage.attrs,
+            xCandidate: boardState.stage.attrs.x,
+        }),
+        y: applyBoundsY({
+            boardState,
+            stageAttrs: boardState.stage.attrs,
+            yCandidate: boardState.stage.attrs.y,
+        }),
+    }
 }
 
 export const initialView = (state: BoardState): void => {
