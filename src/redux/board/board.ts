@@ -113,12 +113,11 @@ const boardSlice = createSlice({
             })
         },
 
-        // removes all pages but leaves the document
-        DELETE_ALL_PAGES: (state) => {
-            state.pageRank = []
-            state.triggerManualUpdate?.()
-            state.pageCollection = {}
-        },
+        // Keep page meta settings
+        DELETE_ALL_PAGES: (state) => ({
+            ...newState(),
+            pageMeta: state.pageMeta,
+        }),
 
         CLEAR_DOCS: (state) => {
             state.documentImages = []
