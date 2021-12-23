@@ -1,8 +1,9 @@
-import React from "react"
+import React, { useCallback } from "react"
 import { useCustomSelector } from "hooks"
 import store from "redux/store"
 import { pageSize } from "consts"
 import { SET_PAGE_SIZE } from "redux/board/board"
+import { PageSize } from "redux/board/board.types"
 import {
     A4Landscape,
     A4Portrait,
@@ -12,14 +13,22 @@ import {
 } from "./size.styled"
 
 const Size: React.FC = () => {
-    const size = useCustomSelector((state) => state.board.pageMeta.size)
+    const { width, height } = useCustomSelector(
+        (state) => state.board.pageMeta.size
+    )
+
+    const isMatch = useCallback(
+        (size: PageSize) => width === size.width && height === size.height,
+        [width, height]
+    )
+
     return (
         <SizePresets>
             <SizePresetLabel htmlFor="a4-landscape">
                 <A4Landscape
                     type="button"
                     id="a4-landscape"
-                    $active={size === pageSize.a4landscape}
+                    $active={isMatch(pageSize.a4landscape)}
                     onClick={() => {
                         store.dispatch(SET_PAGE_SIZE(pageSize.a4landscape))
                     }}
@@ -29,7 +38,7 @@ const Size: React.FC = () => {
                 <A4Portrait
                     type="button"
                     id="a4-portrait"
-                    $active={size === pageSize.a4portrait}
+                    $active={isMatch(pageSize.a4portrait)}
                     onClick={() => {
                         store.dispatch(SET_PAGE_SIZE(pageSize.a4portrait))
                     }}
@@ -39,7 +48,7 @@ const Size: React.FC = () => {
                 <Square
                     type="button"
                     id="square"
-                    $active={size === pageSize.square}
+                    $active={isMatch(pageSize.square)}
                     onClick={() => {
                         store.dispatch(SET_PAGE_SIZE(pageSize.square))
                     }}
