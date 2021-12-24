@@ -119,9 +119,12 @@ const boardSlice = createSlice({
                 state.currentPageIndex -= 1
                 initialView(state)
             }
+
+            // Make sure that transform is cleared when page is deleted
+            clearTransform(state)
         },
 
-        // Keep page meta settings
+        // Reset everything except page meta settings
         DELETE_ALL_PAGES: (state) => ({
             ...newState(),
             pageMeta: state.pageMeta,
