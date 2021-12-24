@@ -53,10 +53,20 @@ export class BoardLiveStroke implements LiveStroke {
         return this
     }
 
-    start({ x, y }: Point, pageId: string): BoardLiveStroke {
+    start(point: Point, pageId: string): BoardLiveStroke {
         this.reset()
         this.pageId = pageId
-        this.points = [x, y]
+        this.points = [point.x, point.y]
+
+        if (
+            this.type === ToolType.Circle ||
+            this.type === ToolType.Rectangle ||
+            this.type === ToolType.Select
+        ) {
+            this.x = point.x
+            this.y = point.y
+        }
+
         return this
     }
 

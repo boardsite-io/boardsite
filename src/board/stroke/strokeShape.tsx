@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react"
+import React, { memo, useCallback, useState } from "react"
 import { ERASED_OPACITY, MOVE_OPACITY } from "consts"
 import { useCustomSelector } from "hooks"
 import { Stroke } from "drawing/stroke/index.types"
@@ -23,10 +23,10 @@ export const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
     )
 
     // used to trigger a stroke redraw for positional updates
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const strokeSel = useCustomSelector((state) => {
+    useCustomSelector((state) => {
         const s =
             state.board.pageCollection[stroke.pageId]?.strokes[stroke.id ?? ""]
+
         return {
             x: s?.x,
             y: s?.y,
@@ -35,22 +35,25 @@ export const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
         }
     })
 
-    const getOpacity = (): number => {
+    const getOpacity = useCallback((): number => {
         if (isDragging) {
             return MOVE_OPACITY
         }
+
         if (erasedStrokes[stroke.id ?? ""]) {
             return ERASED_OPACITY
         }
-        return stroke.style.opacity
-    }
 
-    const onDragStart = () => {
+        return stroke.style.opacity
+    }, [isDragging])
+
+    const onDragStart = useCallback((): void => {
         setDragging(true)
-    }
-    const onDragEnd = () => {
+    }, [])
+
+    const onDragEnd = useCallback((): void => {
         setDragging(false)
-    }
+    }, [])
 
     const shapeProps = {
         name: stroke.pageId, // required to find via selector

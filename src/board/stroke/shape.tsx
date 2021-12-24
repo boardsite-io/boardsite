@@ -36,9 +36,10 @@ export const Shape = ({
         case ToolType.Pen: {
             return <Line tension={0.35} {...shapeProps} />
         }
-        case ToolType.Line:
+        case ToolType.Line: {
             return <Line {...shapeProps} />
-        case ToolType.Circle:
+        }
+        case ToolType.Circle: {
             return (
                 <Ellipse
                     {...shapeProps}
@@ -51,7 +52,8 @@ export const Shape = ({
                     fillEnabled={false} // Remove inner hitbox from empty circles
                 />
             )
-        case ToolType.Rectangle:
+        }
+        case ToolType.Rectangle: {
             return (
                 <Rect
                     {...shapeProps}
@@ -60,7 +62,8 @@ export const Shape = ({
                     fillEnabled
                 />
             )
-        case ToolType.Select:
+        }
+        case ToolType.Select: {
             return (
                 <Rect
                     {...shapeProps}
@@ -72,9 +75,11 @@ export const Shape = ({
                     fillEnabled={SEL_FILL_ENABLED}
                 />
             )
-        default:
+        }
+        default: {
             // eslint-disable-next-line react/jsx-no-useless-fragment
             return <></>
+        }
     }
 }
 
