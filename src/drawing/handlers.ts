@@ -17,7 +17,7 @@ import { currentSession, isConnected } from "api/session"
 import { backgroundStyle } from "consts"
 import store from "redux/store"
 import { SET_TOOL } from "redux/drawing/drawing"
-import { PageMeta, StrokeAction } from "redux/board/board.types"
+import { PageId, PageMeta, StrokeAction } from "redux/board/board.types"
 import { BoardPage } from "./page"
 
 const createPage = (): BoardPage =>
@@ -58,14 +58,14 @@ export function handleClearPage(): void {
 }
 
 export function handleDeleteCurrentPage(): void {
-    handleDeletePages(...getCurrentPageId())
+    handleDeletePages(getCurrentPageId())
 }
 
-export function handleDeletePages(...pageIds: string[]): void {
+export function handleDeletePages(...pageIds: PageId[]): void {
     if (isConnected()) {
         currentSession().deletePages(...pageIds)
     } else {
-        store.dispatch(DELETE_PAGES([getCurrentPageId()]))
+        store.dispatch(DELETE_PAGES(pageIds))
     }
 }
 

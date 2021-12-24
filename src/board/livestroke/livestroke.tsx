@@ -1,7 +1,7 @@
-import { LIVESTROKE_SEGMENT_SIZE } from "consts"
 import { LiveStroke } from "drawing/livestroke/index.types"
-import React, { memo, useCallback } from "react"
+import React, { memo } from "react"
 import { StrokeShape } from "../stroke/strokeShape"
+import { getSegments } from "./helpers"
 
 interface LiveStrokeShapeProps {
     liveStroke: LiveStroke
@@ -11,23 +11,6 @@ interface LiveStrokeShapeProps {
 export const LiveStrokeShape = memo<LiveStrokeShapeProps>(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     ({ liveStroke, liveStrokeTrigger }) => {
-        const getSegments = useCallback(
-            () =>
-                new Array<number[]>(
-                    Math.ceil(
-                        liveStroke.points.length / LIVESTROKE_SEGMENT_SIZE
-                    )
-                )
-                    .fill([])
-                    .map((seg, i) =>
-                        liveStroke.points.slice(
-                            LIVESTROKE_SEGMENT_SIZE * i,
-                            LIVESTROKE_SEGMENT_SIZE * (i + 1) + 2
-                        )
-                    ),
-            [liveStroke]
-        )
-
         if (liveStroke.points.length === 0) {
             return null
         }
@@ -46,7 +29,7 @@ export const LiveStrokeShape = memo<LiveStrokeShapeProps>(
 
         return (
             <>
-                {getSegments().map((subPts: number[], i: number) => {
+                {getSegments(liveStroke).map((subPts: number[], i: number) => {
                     const strokeSegment = {
                         ...liveStroke,
                         points: subPts.slice(),

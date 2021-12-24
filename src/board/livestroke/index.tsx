@@ -12,10 +12,10 @@ import { PageProps } from "board/page/index.types"
 import { isValidClick, isValidTouch } from "./helpers"
 
 let isMouseOrTouchDown = false
+const liveStroke = new BoardLiveStroke()
 
 const LiveStroke = memo<PageProps>(({ layerRef, pageId, pageInfo }) => {
     const [liveStrokeTrigger, setLiveStrokeTrigger] = useState(0)
-    const [liveStroke] = useState(new BoardLiveStroke())
     const isPanMode = useCustomSelector(
         (state) => state.drawing.tool.type === ToolType.Pan
     )
@@ -52,6 +52,7 @@ const LiveStroke = memo<PageProps>(({ layerRef, pageId, pageInfo }) => {
 
             const pos = getPointerPositionInStage(e)
             liveStroke.setTool(store.getState().drawing.tool).start(pos, pageId)
+
             setLiveStrokeTrigger(0)
         },
         [liveStroke, isMouseOrTouchDown]

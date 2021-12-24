@@ -105,20 +105,30 @@ const boardSlice = createSlice({
                 const { documentPageNum } =
                     state.pageCollection[pid].meta.background
 
-                state.documentImages.splice(documentPageNum as number, 1)
+                if (documentPageNum) {
+                    state.documentImages.splice(documentPageNum, 1)
+                }
+
                 state.pageRank.splice(state.pageRank.indexOf(pid), 1)
                 delete state.pageCollection[pid]
-
                 state.triggerManualUpdate?.()
             })
+
+            // Set view to previous page after deletion
+            if (state.currentPageIndex > 0) {
+                state.currentPageIndex -= 1
+                initialView(state)
+            }
+
+            // Make sure that transform is cleared when page is deleted
+            clearTransform(state)
         },
 
-        // removes all pages but leaves the document
-        DELETE_ALL_PAGES: (state) => {
-            state.pageRank = []
-            state.triggerManualUpdate?.()
-            state.pageCollection = {}
-        },
+        // Reset everything except page meta settings
+        DELETE_ALL_PAGES: (state) => ({
+            ...newState(),
+            pageMeta: state.pageMeta,
+        }),
 
         CLEAR_DOCS: (state) => {
             state.documentImages = []

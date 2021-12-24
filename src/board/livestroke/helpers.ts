@@ -1,3 +1,5 @@
+import { LIVESTROKE_SEGMENT_SIZE } from "consts"
+import { LiveStroke } from "drawing/livestroke/index.types"
 import { KonvaEventObject } from "konva/lib/Node"
 import store from "redux/store"
 
@@ -29,3 +31,15 @@ export const isValidTouch = (e: KonvaEventObject<TouchEvent>): boolean => {
 
     return !(touch1 && touch2) // double finger
 }
+
+export const getSegments = (liveStroke: LiveStroke): number[][] =>
+    new Array<number[]>(
+        Math.ceil(liveStroke.points.length / LIVESTROKE_SEGMENT_SIZE)
+    )
+        .fill([])
+        .map((_, i) =>
+            liveStroke.points.slice(
+                LIVESTROKE_SEGMENT_SIZE * i,
+                LIVESTROKE_SEGMENT_SIZE * (i + 1) + 2
+            )
+        )

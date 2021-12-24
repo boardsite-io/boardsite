@@ -30,7 +30,7 @@ const ViewNavigation: React.FC = () => {
         (state) => state.board.stage.hideNavBar
     )
 
-    return hideNavBar ? null : (
+    return !hideNavBar && pageRank.length > 0 ? (
         <ViewNavWrapper>
             <IconButton onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
                 <CgPushChevronUp id="icon" />
@@ -51,7 +51,7 @@ const ViewNavigation: React.FC = () => {
                 <CgPushChevronDown id="icon" />
             </IconButton>
         </ViewNavWrapper>
-    )
+    ) : null
 }
 
 export default ViewNavigation
