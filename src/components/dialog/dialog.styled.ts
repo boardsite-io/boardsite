@@ -5,6 +5,7 @@ interface DialogProps {
 }
 
 export const DialogBox = styled.div<DialogProps>`
+    z-index: 1000;
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -12,7 +13,6 @@ export const DialogBox = styled.div<DialogProps>`
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    z-index: 1000;
     width: min(90vw, 40rem);
     max-height: 80vh;
     border-radius: var(--button-border-radius);
