@@ -5,12 +5,20 @@ interface DialogProps {
     open: boolean
     onClose: MouseEventHandler<HTMLDivElement>
     children: ReactNode
+    className?: string
 }
 
-const Dialog: React.FC<DialogProps> = ({ open, onClose, children }) => (
+const Dialog: React.FC<DialogProps> = ({
+    className,
+    open,
+    onClose,
+    children,
+}) => (
     <>
         <DialogBackground open={open} onClick={onClose} />
-        <DialogBox open={open}>{children}</DialogBox>
+        <DialogBox className={className} open={open}>
+            {children}
+        </DialogBox>
     </>
 )
 
