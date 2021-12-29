@@ -6,7 +6,7 @@ interface DrawerBoxProps {
 }
 
 export const DrawerBox = styled.div<DrawerBoxProps>`
-    z-index: 1000;
+    z-index: 800;
     position: fixed;
     inset-block: 0;
     width: min(20rem, 80%);
@@ -55,7 +55,7 @@ interface DrawerBackgroundProps {
 }
 
 export const DrawerBackground = styled.div<DrawerBackgroundProps>`
-    z-index: 900;
+    z-index: 700;
     position: fixed;
     background: var(--color6);
     inset: 0;

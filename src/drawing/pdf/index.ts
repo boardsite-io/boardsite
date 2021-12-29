@@ -5,6 +5,8 @@ import { BoardPage } from "drawing/page"
 import { ADD_PAGE } from "redux/board/board"
 import { DocumentSrc, PageSize } from "redux/board/board.types"
 import store from "redux/store"
+import { END_LOADING, START_LOADING } from "redux/loading/loading"
+import { CLOSE_PAGE_ACTIONS } from "redux/menu/menu"
 import { getPDFfromForm } from "./document"
 import { handleLoadFromSource, toPDF } from "./io"
 
@@ -63,17 +65,25 @@ export async function handleAddDocumentPages(
 }
 
 export async function handleExportDocument(): Promise<void> {
-    // TODO filename
-    const filename = "board.pdf"
-    const { documentSrc } = store.getState().board
-    if (isConnected()) {
-        const [src] = await currentSession().getAttachment(
-            documentSrc as string
-        )
-        toPDF(filename, src as Uint8Array)
-    } else {
-        toPDF(filename, documentSrc as Uint8Array)
-    }
+    store.dispatch(START_LOADING("Exporting as PDF..."))
+
+    // Use small timeout to wait for loading animation render cycle
+    setTimeout(async () => {
+        const filename = "board.pdf" // TODO filename
+        const { documentSrc } = store.getState().board
+
+        if (isConnected()) {
+            const [src] = await currentSession().getAttachment(
+                documentSrc as string
+            )
+            toPDF(filename, src as Uint8Array)
+        } else {
+            toPDF(filename, documentSrc as Uint8Array)
+        }
+
+        store.dispatch(END_LOADING())
+        store.dispatch(CLOSE_PAGE_ACTIONS())
+    }, 50)
 }
 
 const getPageSize = (dataURL: string): PageSize => {
