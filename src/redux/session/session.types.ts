@@ -7,6 +7,7 @@ export interface WebControlState {
 
 export type SessionDialog = {
     open: boolean
+    showInitialOptions: boolean
     invalidSid: boolean
     joinOnly: boolean
     sidInput: string

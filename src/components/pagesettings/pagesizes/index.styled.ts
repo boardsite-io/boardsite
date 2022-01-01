@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components"
-import { active, inactive } from "../pageoptions.styled"
+import { active, inactive } from "../index.styled"
 
 export const SizePresets = styled.form`
     display: flex;
@@ -24,7 +24,6 @@ export const SizePresetLabel = styled.label`
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* gap: 0.5rem; */
     width: ${a4height};
 `
 

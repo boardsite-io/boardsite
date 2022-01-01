@@ -1,15 +1,10 @@
 import { currentSession } from "api/session"
-import { Button, DialogContent } from "components"
+import { Button } from "components"
 import React from "react"
 import { useNavigate } from "react-router-dom"
 import { useCustomDispatch } from "hooks"
-import { CLOSE_SESSION_DIALOG } from "redux/session/session"
-import {
-    UserAlias,
-    UserColor,
-    UserInfo,
-    UserList,
-} from "./onlinedialogcontent.styled"
+import { LEAVE_SESSION } from "redux/session/session"
+import { UserAlias, UserColor, UserInfo, UserList } from "./index.styled"
 
 const OnlineDialogContent: React.FC = () => {
     const dispatch = useCustomDispatch()
@@ -17,12 +12,12 @@ const OnlineDialogContent: React.FC = () => {
 
     const handleLeave = () => {
         currentSession().disconnect()
-        dispatch(CLOSE_SESSION_DIALOG())
+        dispatch(LEAVE_SESSION())
         navigate("/")
     }
 
     return (
-        <DialogContent>
+        <>
             <UserList>
                 {Object.values(currentSession().users ?? {}).map((user) => {
                     const { alias, color, id } = user
@@ -35,7 +30,7 @@ const OnlineDialogContent: React.FC = () => {
                 })}
             </UserList>
             <Button onClick={handleLeave}>Leave current session</Button>
-        </DialogContent>
+        </>
     )
 }
 

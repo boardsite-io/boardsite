@@ -7,7 +7,8 @@ import {
 
 const initState: WebControlState = {
     sessionDialog: {
-        open: false,
+        open: true,
+        showInitialOptions: true,
         invalidSid: false,
         joinOnly: false,
         sidInput: "",
@@ -30,7 +31,17 @@ const sessionSlice = createSlice({
         },
         CLOSE_SESSION_DIALOG: (state) => {
             state.sessionDialog = {
+                ...state.sessionDialog,
                 open: false,
+                invalidSid: false,
+                joinOnly: false,
+                sidInput: "",
+            }
+        },
+        LEAVE_SESSION: (state) => {
+            state.sessionDialog = {
+                showInitialOptions: true,
+                open: true,
                 invalidSid: false,
                 joinOnly: false,
                 sidInput: "",
@@ -39,6 +50,10 @@ const sessionSlice = createSlice({
     },
 })
 
-export const { CREATE_SESSION, SET_SESSION_DIALOG, CLOSE_SESSION_DIALOG } =
-    sessionSlice.actions
+export const {
+    LEAVE_SESSION,
+    CREATE_SESSION,
+    SET_SESSION_DIALOG,
+    CLOSE_SESSION_DIALOG,
+} = sessionSlice.actions
 export default sessionSlice.reducer

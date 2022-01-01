@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect } from "react"
-import { useParams } from "react-router-dom"
-import store from "redux/store"
-import { handleAddPageUnder } from "drawing/handlers"
+import { useNavigate, useParams } from "react-router-dom"
 import BoardStage from "board/stage"
 import { SET_SESSION_DIALOG } from "redux/session/session"
 import { useCustomDispatch, useKeyboardShortcuts } from "hooks"
@@ -16,21 +14,22 @@ import Settings from "./settings/settings"
 import About from "./about/about"
 import PageOptions from "./pageoptions/pageoptions"
 import PdfUpload from "./pdfupload/pdfupload"
+import Session from "./session"
 
 const Whiteboard: React.FC = () => {
     useKeyboardShortcuts()
     const { sid } = useParams()
     const dispatch = useCustomDispatch()
+    const navigate = useNavigate()
 
     const checkSessionStatus = useCallback(async () => {
         try {
-            if (!sid) {
+            if (sid === undefined) {
                 throw new Error()
             }
 
-            await currentSession()
-                .setID(sid as string)
-                .ping()
+            await currentSession().setID(sid).ping()
+
             // Session exists
             dispatch(
                 SET_SESSION_DIALOG({
@@ -49,16 +48,13 @@ const Whiteboard: React.FC = () => {
                     joinOnly: false,
                 })
             )
+            navigate("/") // Redirect to home route
         }
     }, [])
 
     useEffect(() => {
-        if (!isConnected()) {
-            if (sid !== undefined && sid.length > 0) {
-                checkSessionStatus()
-            } else if (store.getState().board.pageRank.length === 0) {
-                handleAddPageUnder() // Add default page if pageRank is empty
-            }
+        if (!isConnected() && sid !== undefined && sid.length > 0) {
+            checkSessionStatus()
         }
     }, [sid, dispatch])
 
@@ -74,6 +70,7 @@ const Whiteboard: React.FC = () => {
             <About />
             <PageOptions />
             <PdfUpload />
+            <Session />
         </WhiteboardStyled>
     )
 }

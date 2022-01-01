@@ -1,19 +1,20 @@
 import React from "react"
 import Konva from "konva"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useCustomDispatch, useCustomSelector } from "hooks"
 import store from "redux/store"
 import { SET_SESSION_DIALOG, CLOSE_SESSION_DIALOG } from "redux/session/session"
 import { Session } from "api/types"
 import { BoardSession, currentSession } from "api/session"
-import { Button, DialogContent, TextField } from "components"
-import { UserColorButton, UserSelection } from "./offlinedialogcontent.styled"
+import { Button, TextField } from "components"
+import { UserColorButton, UserSelection } from "./index.styled"
 
 const OfflineDialogContent: React.FC = () => {
     const sDiagStatus = useCustomSelector(
         (state) => state.session.sessionDialog
     )
 
+    const { sid } = useParams()
     const dispatch = useCustomDispatch()
     const navigate = useNavigate()
 
@@ -40,11 +41,11 @@ const OfflineDialogContent: React.FC = () => {
      */
     const handleJoin = async (sessionId: string) => {
         try {
+            dispatch(CLOSE_SESSION_DIALOG())
             const path = BoardSession.path(sessionId)
             await getSession().createSocket(path.split("/").pop() ?? "")
             await getSession().join()
             navigate(path)
-            dispatch(CLOSE_SESSION_DIALOG())
         } catch (error) {
             dispatch(
                 SET_SESSION_DIALOG({
@@ -73,7 +74,7 @@ const OfflineDialogContent: React.FC = () => {
     }
 
     return (
-        <DialogContent>
+        <>
             <UserSelection>
                 <UserColorButton
                     type="button"
@@ -88,7 +89,7 @@ const OfflineDialogContent: React.FC = () => {
                     align="left"
                 />
             </UserSelection>
-            {!sDiagStatus.joinOnly && (
+            {!sDiagStatus.joinOnly && !sid && (
                 <Button onClick={handleCreate}>Create Session</Button>
             )}
             <Button
@@ -97,7 +98,7 @@ const OfflineDialogContent: React.FC = () => {
                 }>
                 Join Session
             </Button>
-            {!sDiagStatus.joinOnly && (
+            {!sDiagStatus.joinOnly && !sid && (
                 <TextField
                     label="Insert ID"
                     value={sDiagStatus.sidInput}
@@ -109,7 +110,7 @@ const OfflineDialogContent: React.FC = () => {
                     }
                 />
             )}
-        </DialogContent>
+        </>
     )
 }
 

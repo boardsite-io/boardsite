@@ -352,6 +352,7 @@ const boardSlice = createSlice({
 })
 
 export const {
+    LOAD_BOARD_STATE,
     SYNC_ALL_PAGES,
     SET_PAGERANK,
     ADD_PAGE,

@@ -1,5 +1,5 @@
 import React from "react"
-import SessionDialog from "./sessiondialog/sessiondialog"
+import Session from "./session/session"
 import ViewOptions from "./viewoptions/viewoptions"
 import PageOptions from "./pageoptions/pageoptions"
 import { ToolbarGroup, ToolbarStyled } from "./toolbar.styled"
@@ -12,7 +12,7 @@ const Toolbar: React.FC = () => (
     <ToolbarStyled>
         <ToolbarGroup className="toolbar-general">
             <Settings />
-            <SessionDialog />
+            <Session />
         </ToolbarGroup>
         <ToolbarGroup className="toolbar-undo">
             <UndoRedo />
