@@ -45,7 +45,7 @@ export const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
         }
 
         return stroke.style.opacity
-    }, [isDragging])
+    }, [isDragging, erasedStrokes])
 
     const onDragStart = useCallback((): void => {
         setDragging(true)
