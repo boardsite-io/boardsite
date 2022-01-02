@@ -3,6 +3,7 @@ import { BoardStroke } from "drawing/stroke"
 import { LiveStroke } from "drawing/livestroke/index.types"
 import { Stroke, ToolType } from "drawing/stroke/index.types"
 import { PageMeta } from "redux/board/board.types"
+import { loadIndexedDB } from "redux/localstorage"
 import { BoardSession } from "./session"
 import { Request } from "./request"
 import { Message, StrokeDelete, User } from "./types"
@@ -40,6 +41,12 @@ const mockPageMeta: PageMeta = {
         style: backgroundStyle.BLANK,
     },
 }
+
+// TODO: Without the following for some reason fixCreateMockSession throws
+// "UnhandledPromiseRejectionWarning: Error: No available storage method found."
+;(async () => {
+    await loadIndexedDB("board")
+})()
 
 function createMockSession(): BoardSession {
     const session = new BoardSession("http://localhost")
