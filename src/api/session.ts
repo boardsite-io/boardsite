@@ -1,4 +1,4 @@
-import { PageCollection } from "redux/board/board.types"
+import { Page, PageCollection } from "redux/board/board.types"
 import { Stroke, StrokeUpdate, ToolType } from "drawing/stroke/index.types"
 import { Util } from "konva/lib/Util"
 import {
@@ -15,7 +15,7 @@ import { handleLoadFromSource } from "drawing/pdf/io"
 import {
     ADD_STROKES,
     CLEAR_DOCS,
-    CLEAR_PAGE,
+    CLEAR_PAGES,
     DELETE_ALL_PAGES,
     ERASE_STROKES,
     SET_PAGEMETA,
@@ -94,7 +94,7 @@ export class BoardSession implements Session {
         // fetch data from each page
         pageRank.forEach(async (pageId) => {
             const strokes = await this.request.getStrokes(pageId)
-            store.dispatch(ADD_STROKES({ strokes }))
+            store.dispatch(ADD_STROKES({ data: strokes }))
         })
     }
 
@@ -176,7 +176,10 @@ export class BoardSession implements Session {
         this.request.deletePages(pageIds)
     }
 
-    async updatePages(clear = false, ...pages: BoardPage[]): Promise<void> {
+    async updatePages(
+        clear = false,
+        ...pages: Pick<Page, "pageId" | "meta">[]
+    ): Promise<void> {
         this.request.putPages(pages, clear)
     }
 
@@ -244,12 +247,12 @@ export class BoardSession implements Session {
     static receiveStrokes(strokes: Stroke[]): void {
         const erasedStrokes = strokes.filter((s) => s.type === 0)
         if (erasedStrokes.length > 0) {
-            store.dispatch(ERASE_STROKES({ strokes: erasedStrokes }))
+            store.dispatch(ERASE_STROKES({ data: erasedStrokes }))
         }
 
         strokes = strokes.filter((s) => s.type !== 0)
         if (strokes.length > 0) {
-            store.dispatch(ADD_STROKES({ strokes }))
+            store.dispatch(ADD_STROKES({ data: strokes }))
         }
     }
 
@@ -274,7 +277,9 @@ export class BoardSession implements Session {
 
         let isLoaded = false
         Object.keys(meta).forEach((pageId) => {
-            store.dispatch(SET_PAGEMETA({ pageId, meta: meta[pageId] }))
+            store.dispatch(
+                SET_PAGEMETA({ data: [{ pageId, meta: meta[pageId] }] })
+            )
             const { attachURL } = meta[pageId].background
             if (!isLoaded && attachURL) {
                 handleLoadFromSource(attachURL)
@@ -285,10 +290,12 @@ export class BoardSession implements Session {
 
     static updatePageMeta({ pageId, meta, clear }: ResponsePageUpdate): void {
         if (clear) {
-            pageId.forEach((pid) => store.dispatch(CLEAR_PAGE(pid)))
+            store.dispatch(CLEAR_PAGES({ data: pageId }))
         }
         pageId.forEach((pid) =>
-            store.dispatch(SET_PAGEMETA({ pageId: pid, meta: meta[pid] }))
+            store.dispatch(
+                SET_PAGEMETA({ data: [{ pageId: pid, meta: meta[pid] }] })
+            )
         )
     }
 

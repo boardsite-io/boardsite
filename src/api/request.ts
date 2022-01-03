@@ -98,7 +98,10 @@ export class Request {
         })
     }
 
-    putPages(pages: Page[], clear: boolean): Promise<void> {
+    putPages(
+        pages: Pick<Page, "pageId" | "meta">[],
+        clear: boolean
+    ): Promise<void> {
         return this.jsonSend("PUT", `${this.sessionId}/pages`, {
             pageId: pages.map((page) => page.pageId),
             meta: pages.reduce(

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { pick, keys, assign } from "lodash"
+import { pick, keys, assign, cloneDeep } from "lodash"
 import {
     centerView,
     fitToPage,
@@ -7,25 +7,32 @@ import {
     resetView,
     zoomCenter,
 } from "board/stage/util/adjustView"
+import { Stroke } from "drawing/stroke/index.types"
 import {
     addAction,
     deleteStrokes,
     redoAction,
     undoAction,
     addOrUpdateStrokes,
+    addPages,
+    deletePages,
+    clearPages,
+    updatePages,
 } from "./undoredo"
 import { newState } from "./state"
 import {
-    AddPage,
+    AddPageData,
+    AddPages,
     AddStrokes,
     BoardState,
-    ClearPage,
+    ClearPages,
     DeletePages,
     EraseStrokes,
     JumpToPageWithIndex,
     LoadBoardState,
     MoveShapesToDragLayer,
     NextPage,
+    Page,
     PrevPage,
     SetPageBackground,
     SetPageMeta,
@@ -60,8 +67,43 @@ const boardSlice = createSlice({
         },
 
         SET_PAGEMETA: (state, action: PayloadAction<SetPageMeta>) => {
-            const { pageId, meta } = action.payload
-            state.pageCollection[pageId]?.updateMeta(meta)
+            const {
+                data: pageUpdates,
+                isRedoable,
+                sessionHandler,
+                sessionUndoHandler,
+            } = action.payload
+
+            // make a copy of old page meta
+            const pages = pageUpdates.map<Pick<Page, "pageId" | "meta">>(
+                (page) =>
+                    cloneDeep(
+                        pick(state.pageCollection[page.pageId], [
+                            "pageId",
+                            "meta",
+                        ])
+                    )
+            )
+
+            const handler = (boardState: BoardState) => {
+                updatePages(boardState, ...pageUpdates)
+                sessionHandler?.()
+            }
+
+            const undoHandler = (boardState: BoardState) => {
+                updatePages(boardState, ...pages)
+                sessionUndoHandler?.(...pages)
+            }
+
+            addAction({
+                handler,
+                undoHandler,
+                stack: state.undoStack,
+                isRedoable,
+                state,
+                isNew: true,
+            })
+
             state.triggerManualUpdate?.()
         },
 
@@ -78,40 +120,113 @@ const boardSlice = createSlice({
             state.triggerManualUpdate?.()
         },
 
-        ADD_PAGE: (state, action: PayloadAction<AddPage>) => {
-            const { page, index } = action.payload
-            state.pageCollection[page.pageId] = page
+        ADD_PAGES: (state, action: PayloadAction<AddPages>) => {
+            const {
+                data: addPageData,
+                isRedoable,
+                sessionHandler,
+                sessionUndoHandler,
+            } = action.payload
 
-            if (index >= 0) {
-                state.pageRank.splice(index, 0, page.pageId)
-            } else {
-                state.pageRank.push(page.pageId)
+            const handler = (boardState: BoardState) => {
+                addPages(boardState, ...addPageData)
+                sessionHandler?.()
             }
+
+            const undoHandler = (boardState: BoardState) => {
+                const pageIds = addPageData.map(({ page }) => page.pageId)
+                deletePages(boardState, ...pageIds)
+                sessionUndoHandler?.()
+            }
+
+            addAction({
+                handler,
+                undoHandler,
+                stack: state.undoStack,
+                isRedoable,
+                state,
+                isNew: true,
+            })
 
             state.triggerManualUpdate?.()
             initialView(state)
         },
 
-        CLEAR_PAGE: (state, action: PayloadAction<ClearPage>) => {
-            const pageId = action.payload
-            state.pageCollection[pageId]?.clear()
+        CLEAR_PAGES: (state, action: PayloadAction<ClearPages>) => {
+            const {
+                data: pageIds,
+                isRedoable,
+                sessionHandler,
+                sessionUndoHandler,
+            } = action.payload
+
+            // make a copy of cleared strokes
+            const strokes = pageIds
+                .map((pid) => cloneDeep(state.pageCollection[pid]))
+                .filter((page) => page !== undefined)
+                .reduce<Stroke[]>(
+                    (arr, page) => arr.concat(Object.values(page.strokes)),
+                    []
+                )
+
+            const handler = (boardState: BoardState) => {
+                clearPages(boardState, ...pageIds)
+                sessionHandler?.()
+            }
+
+            const undoHandler = (boardState: BoardState) => {
+                addOrUpdateStrokes(boardState, ...strokes)
+                sessionUndoHandler?.(...strokes)
+            }
+
+            addAction({
+                handler,
+                undoHandler,
+                stack: state.undoStack,
+                isRedoable,
+                state,
+                isNew: true,
+            })
+
             state.triggerManualUpdate?.()
         },
 
         DELETE_PAGES: (state, action: PayloadAction<DeletePages>) => {
-            const pageIds = action.payload
+            const {
+                data: pageIds,
+                isRedoable,
+                sessionHandler,
+                sessionUndoHandler,
+            } = action.payload
 
-            pageIds.forEach((pid) => {
-                const { documentPageNum } =
-                    state.pageCollection[pid].meta.background
+            const addPageData = pageIds
+                .map<AddPageData>((pid) => {
+                    const index = state.pageRank.indexOf(pid)
+                    const page = state.pageCollection[pid]
+                    return {
+                        page,
+                        index,
+                    }
+                })
+                .filter(({ page }) => page !== undefined)
 
-                if (documentPageNum) {
-                    state.documentImages.splice(documentPageNum, 1)
-                }
+            const handler = (boardState: BoardState) => {
+                deletePages(boardState, ...pageIds)
+                sessionHandler?.()
+            }
 
-                state.pageRank.splice(state.pageRank.indexOf(pid), 1)
-                delete state.pageCollection[pid]
-                state.triggerManualUpdate?.()
+            const undoHandler = (boardState: BoardState) => {
+                addPages(boardState, ...addPageData)
+                sessionUndoHandler?.(...addPageData)
+            }
+
+            addAction({
+                handler,
+                undoHandler,
+                stack: state.undoStack,
+                isRedoable,
+                state,
+                isNew: true,
             })
 
             // Set view to previous page after deletion
@@ -122,6 +237,8 @@ const boardSlice = createSlice({
 
             // Make sure that transform is cleared when page is deleted
             clearTransform(state)
+
+            state.triggerManualUpdate?.()
         },
 
         // Reset everything except page meta settings
@@ -156,7 +273,7 @@ const boardSlice = createSlice({
         // Add strokes to collection
         ADD_STROKES: (state, action: PayloadAction<AddStrokes>) => {
             const {
-                strokes,
+                data: strokes,
                 isRedoable,
                 sessionHandler,
                 sessionUndoHandler,
@@ -176,7 +293,7 @@ const boardSlice = createSlice({
             }
 
             if (isUpdate) {
-                const addUpdateStartPoint = state.undoStack?.pop()?.handleFunc
+                const addUpdateStartPoint = state.undoStack?.pop()?.handler
 
                 if (addUpdateStartPoint) {
                     undoHandler = addUpdateStartPoint
@@ -197,8 +314,12 @@ const boardSlice = createSlice({
 
         // Erase strokes from collection
         ERASE_STROKES(state, action: PayloadAction<EraseStrokes>) {
-            const { strokes, isRedoable, sessionHandler, sessionUndoHandler } =
-                action.payload
+            const {
+                data: strokes,
+                isRedoable,
+                sessionHandler,
+                sessionUndoHandler,
+            } = action.payload
 
             const handler = (boardState: BoardState) => {
                 deleteStrokes(boardState, ...strokes)
@@ -354,9 +475,9 @@ const boardSlice = createSlice({
 export const {
     SYNC_ALL_PAGES,
     SET_PAGERANK,
-    ADD_PAGE,
+    ADD_PAGES,
     SET_PAGEMETA,
-    CLEAR_PAGE,
+    CLEAR_PAGES,
     DELETE_PAGES,
     DELETE_ALL_PAGES,
     MOVE_SHAPES_TO_DRAG_LAYER,
