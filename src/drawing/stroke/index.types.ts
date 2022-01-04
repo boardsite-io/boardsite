@@ -18,7 +18,6 @@ export type Scale = {
     y: number
 }
 
-// eslint-disable-next-line no-shadow
 export enum ToolType {
     Eraser,
     Pen,

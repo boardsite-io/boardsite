@@ -1,73 +1,56 @@
-import {
-    Button,
-    Dialog,
-    DialogContent,
-    DialogOptions,
-    PageSettings,
-} from "components"
-import React from "react"
+import { Button, Dialog, DialogOptions } from "components"
+import React, { useEffect } from "react"
 import { useCustomSelector } from "hooks"
 import store from "redux/store"
-import { loadIndexedDB } from "redux/localstorage"
-import { LOAD_BOARD_STATE } from "redux/board/board"
-import { handleAddPageUnder } from "drawing/handlers"
-import { CLOSE_SESSION_DIALOG } from "redux/session/session"
-import { useParams } from "react-router-dom"
-import { isConnected } from "api/session"
-import OnlineDialogContent from "./onlinedialogcontent"
-import OfflineDialogContent from "./offlinedialogcontent"
+import { NavigateFunction, useNavigate, useParams } from "react-router-dom"
+import { currentSession, isConnected } from "api/session"
+import { SET_SESSION_DIALOG } from "redux/session/session"
+import { DialogState } from "redux/session/session.types"
+import ManageOnlineSession from "./manageOnlineSession"
+import CreateOnlineSession from "./createOnlineSession"
+import InitialSelection from "./initialSelection"
+import JoinOnly from "./joinOnly"
 
-let firstLoad = true
+const checkSessionStatus = async (sid: string, navigate: NavigateFunction) => {
+    try {
+        await currentSession().setID(sid).ping()
+
+        // Session exists
+        store.dispatch(SET_SESSION_DIALOG(DialogState.JoinOnly))
+    } catch (error) {
+        store.dispatch(SET_SESSION_DIALOG(DialogState.CreateOnlineSession))
+        // Session doesn't exist
+        navigate("/")
+    }
+}
+
+const contents = {
+    [DialogState.Closed]: null,
+    [DialogState.InitialSelection]: <InitialSelection firstLoad={false} />,
+    [DialogState.InitialSelectionFirstLoad]: <InitialSelection firstLoad />,
+    [DialogState.JoinOnly]: <JoinOnly />,
+    [DialogState.CreateOnlineSession]: <CreateOnlineSession />,
+    [DialogState.ManageOnlineSession]: <ManageOnlineSession />,
+}
 
 const Session: React.FC = () => {
-    const connectedToSession = isConnected()
-    const open = useCustomSelector((state) => state.session.sessionDialog.open)
-    const showInitialOptions = useCustomSelector(
-        (state) => state.session.sessionDialog.showInitialOptions
-    )
+    const navigate = useNavigate()
+    const dialogState = useCustomSelector((state) => state.session.dialogState)
     const { sid } = useParams()
 
-    const continuePreviousSession = async () => {
-        const state = await loadIndexedDB("board")
-
-        store.dispatch(LOAD_BOARD_STATE(state.board))
-        handleClose()
-    }
-
-    const createOfflineSession = () => {
-        handleAddPageUnder()
-        handleClose()
-    }
+    useEffect(() => {
+        if (sid && !isConnected()) {
+            checkSessionStatus(sid, navigate)
+        }
+    }, [sid])
 
     const handleClose = () => {
-        store.dispatch(CLOSE_SESSION_DIALOG())
-        firstLoad = false
+        store.dispatch(SET_SESSION_DIALOG(DialogState.Closed))
     }
 
     return (
-        <Dialog open={open} onClose={handleClose}>
-            <DialogContent>
-                {showInitialOptions && sid === undefined && (
-                    <>
-                        <h2>Local Session </h2>
-                        <PageSettings />
-                        <Button onClick={createOfflineSession}>
-                            Create offline session
-                        </Button>
-                        {firstLoad && (
-                            <Button onClick={continuePreviousSession}>
-                                Continue previous session
-                            </Button>
-                        )}
-                    </>
-                )}
-                <h2>Collaborative Session 👋🏻</h2>
-                {connectedToSession ? (
-                    <OnlineDialogContent />
-                ) : (
-                    <OfflineDialogContent />
-                )}
-            </DialogContent>
+        <Dialog open={dialogState !== DialogState.Closed} onClose={handleClose}>
+            {contents[dialogState]}
             <DialogOptions>
                 <Button onClick={handleClose}>Close</Button>
             </DialogOptions>
