@@ -7,12 +7,15 @@ import {
     PenIcon,
     PlusIcon,
     SquareIcon,
+    ToolTip,
+    Position,
 } from "components"
 import { ToolType } from "drawing/stroke/index.types"
 import store from "redux/store"
 import { useCustomSelector } from "hooks"
 import { ADD_FAV_TOOL } from "redux/drawing/drawing"
 import { RootState } from "redux/types"
+import { ToolTipText } from "language"
 import { FavToolsStyled } from "./favtools.styled"
 import FavToolButton from "./favtoolbutton/favtoolbutton"
 
@@ -49,14 +52,18 @@ const FavTools: React.FC = () => {
                 }
 
                 return (
-                    <FavToolButton tool={tool} index={i} key={nanoid()}>
+                    <FavToolButton key={nanoid()} tool={tool} index={i}>
                         {icon}
                     </FavToolButton>
                 )
             })}
-            <IconButton onClick={addFavTool}>
-                <PlusIcon />
-            </IconButton>
+            <ToolTip
+                text={ToolTipText.AddFavoriteTool}
+                position={Position.Right}>
+                <IconButton onClick={addFavTool}>
+                    <PlusIcon />
+                </IconButton>
+            </ToolTip>
         </FavToolsStyled>
     )
 }

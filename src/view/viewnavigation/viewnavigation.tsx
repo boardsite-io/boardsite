@@ -5,7 +5,7 @@ import {
     CgChevronDown,
     CgPushChevronDown,
 } from "react-icons/cg"
-import { IconButton } from "components"
+import { IconButton, ToolTip, Position } from "components"
 import {
     JUMP_TO_FIRST_PAGE,
     JUMP_TO_LAST_PAGE,
@@ -14,6 +14,7 @@ import {
 } from "redux/board/board"
 import store from "redux/store"
 import { useCustomSelector } from "hooks"
+import { ToolTipText } from "language"
 import {
     ViewNavWrapper,
     PageIndex,
@@ -32,24 +33,35 @@ const ViewNavigation: React.FC = () => {
 
     return !hideNavBar && pageRank.length > 0 ? (
         <ViewNavWrapper>
-            <IconButton onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
-                <CgPushChevronUp id="icon" />
-            </IconButton>
-            <IconButton onClick={() => store.dispatch(JUMP_TO_PREV_PAGE())}>
-                <CgChevronUp id="icon" />
-            </IconButton>
-            <IconButtonPageIndex
-                onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
-                <PageIndex>{currentPageIndex + 1}</PageIndex>
-                <PageIndexHr />
-                <PageIndex>{pageRank.length}</PageIndex>
-            </IconButtonPageIndex>
-            <IconButton onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE())}>
-                <CgChevronDown id="icon" />
-            </IconButton>
-            <IconButton onClick={() => store.dispatch(JUMP_TO_LAST_PAGE())}>
-                <CgPushChevronDown id="icon" />
-            </IconButton>
+            <ToolTip text={ToolTipText.FirstPage} position={Position.Left}>
+                <IconButton
+                    onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
+                    <CgPushChevronUp id="icon" />
+                </IconButton>
+            </ToolTip>
+            <ToolTip text={ToolTipText.PreviousPage} position={Position.Left}>
+                <IconButton onClick={() => store.dispatch(JUMP_TO_PREV_PAGE())}>
+                    <CgChevronUp id="icon" />
+                </IconButton>
+            </ToolTip>
+            <ToolTip text={ToolTipText.FirstPage} position={Position.Left}>
+                <IconButtonPageIndex
+                    onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
+                    <PageIndex>{currentPageIndex + 1}</PageIndex>
+                    <PageIndexHr />
+                    <PageIndex>{pageRank.length}</PageIndex>
+                </IconButtonPageIndex>
+            </ToolTip>
+            <ToolTip text={ToolTipText.NextPage} position={Position.Left}>
+                <IconButton onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE())}>
+                    <CgChevronDown id="icon" />
+                </IconButton>
+            </ToolTip>
+            <ToolTip text={ToolTipText.LastPage} position={Position.Left}>
+                <IconButton onClick={() => store.dispatch(JUMP_TO_LAST_PAGE())}>
+                    <CgPushChevronDown id="icon" />
+                </IconButton>
+            </ToolTip>
         </ViewNavWrapper>
     ) : null
 }

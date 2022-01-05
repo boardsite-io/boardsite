@@ -7,10 +7,13 @@ import {
     Popup,
     SquareIcon,
     IconProps,
+    ToolTip,
+    Position,
 } from "components"
 import React, { useState } from "react"
 import { useCustomSelector } from "hooks"
 import { handleSetTool } from "drawing/handlers"
+import { ToolTipText } from "language"
 import StylePicker from "../stylepicker/stylepicker"
 
 const PenTool: React.FC = () => {
@@ -43,19 +46,21 @@ const PenTool: React.FC = () => {
 
     return (
         <>
-            {isDrawingTool() ? (
-                <IconButton
-                    active
-                    onClick={() => setOpen(true)}
-                    style={{ background: colorSelector }}>
-                    <IconX />
-                </IconButton>
-            ) : (
-                <IconButton
-                    onClick={() => handleSetTool({ type: ToolType.Pen })}>
-                    <IconX />
-                </IconButton>
-            )}
+            <ToolTip position={Position.Bottom} text={ToolTipText.DrawingTool}>
+                {isDrawingTool() ? (
+                    <IconButton
+                        active
+                        onClick={() => setOpen(true)}
+                        style={{ background: colorSelector }}>
+                        <IconX />
+                    </IconButton>
+                ) : (
+                    <IconButton
+                        onClick={() => handleSetTool({ type: ToolType.Pen })}>
+                        <IconX />
+                    </IconButton>
+                )}
+            </ToolTip>
             <Popup open={open} onClose={() => setOpen(false)}>
                 <StylePicker />
             </Popup>

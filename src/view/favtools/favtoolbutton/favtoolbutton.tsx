@@ -1,9 +1,17 @@
 import { Tool } from "drawing/stroke/index.types"
-import { IconButton, MinusIcon, PlusIcon, Popup } from "components"
+import {
+    IconButton,
+    MinusIcon,
+    PlusIcon,
+    Popup,
+    Position,
+    ToolTip,
+} from "components"
 import React, { useState } from "react"
 import { REPLACE_FAV_TOOL, REMOVE_FAV_TOOL } from "redux/drawing/drawing"
 import store from "redux/store"
 import { handleSetTool } from "drawing/handlers"
+import { ToolTipText } from "language"
 import {
     FavToolOptions,
     FavToolWidth,
@@ -55,22 +63,32 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({
 
     return (
         <FavToolWrapper>
-            <IconButton
-                background={tool.style.color}
-                onMouseDown={startClick}
-                onMouseUp={endClick}
-                onTouchStart={startClick}
-                onTouchEnd={endClick}>
-                {children}
-            </IconButton>
+            <ToolTip text={ToolTipText.FavoriteTool} position={Position.Right}>
+                <IconButton
+                    background={tool.style.color}
+                    onMouseDown={startClick}
+                    onMouseUp={endClick}
+                    onTouchStart={startClick}
+                    onTouchEnd={endClick}>
+                    {children}
+                </IconButton>
+            </ToolTip>
             <Popup open={open} onClose={() => setOpen(false)}>
                 <FavToolOptions>
-                    <IconButton onClick={replaceTool}>
-                        <PlusIcon />
-                    </IconButton>
-                    <IconButton onClick={removeTool}>
-                        <MinusIcon />
-                    </IconButton>
+                    <ToolTip
+                        text={ToolTipText.ReplaceFavoriteTool}
+                        position={Position.BottomRight}>
+                        <IconButton onClick={replaceTool}>
+                            <PlusIcon />
+                        </IconButton>
+                    </ToolTip>
+                    <ToolTip
+                        text={ToolTipText.RemoveFavoriteTool}
+                        position={Position.Right}>
+                        <IconButton onClick={removeTool}>
+                            <MinusIcon />
+                        </IconButton>
+                    </ToolTip>
                 </FavToolOptions>
             </Popup>
             <FavToolWidth>{tool.style.width}</FavToolWidth>
