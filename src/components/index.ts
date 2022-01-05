@@ -7,6 +7,8 @@ export { default as TextField } from "./textfield/textfield"
 export { default as UserSelection } from "./userselection"
 export { default as NumberInput } from "./numberinput/numberinput"
 export { default as PageSettings } from "./pagesettings"
+export { default as ToolTip } from "./tooltip"
+export { Position } from "./tooltip/index.types" // Cleaner imports
 export { default as Dialog } from "./dialog/dialog"
 export { default as Drawer } from "./drawer/drawer"
 export { default as Divider } from "./divider/divider"

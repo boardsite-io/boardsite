@@ -3,8 +3,8 @@ import styled from "styled-components"
 
 export const ViewNavWrapper = styled.div`
     position: fixed;
-    top: 50%;
     right: 0;
+    top: 50%;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
@@ -14,7 +14,6 @@ export const ViewNavWrapper = styled.div`
     border-top-left-radius: var(--menubar-border-radius);
     border-bottom-left-radius: var(--menubar-border-radius);
     box-shadow: var(--box-shadow);
-    overflow: hidden;
     padding: var(--menu-padding);
 `
 export const PageIndex = styled.span`
