@@ -10,9 +10,9 @@ import {
     SizePresetLabel,
     SizePresets,
     Square,
-} from "./size.styled"
+} from "./index.styled"
 
-const Size: React.FC = () => {
+const PageSizes: React.FC = () => {
     const { width, height } = useCustomSelector(
         (state) => state.board.pageMeta.size
     )
@@ -57,4 +57,4 @@ const Size: React.FC = () => {
         </SizePresets>
     )
 }
-export default Size
+export default PageSizes

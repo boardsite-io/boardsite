@@ -81,7 +81,6 @@ export const pageSize = {
     square: { width: 877, height: 877 },
 }
 
-// eslint-disable-next-line no-shadow
 export enum Variant {
     Primary,
     Secondary,

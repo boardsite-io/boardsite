@@ -1,17 +1,19 @@
 import { Session } from "api/types"
 
 export interface WebControlState {
-    sessionDialog: SessionDialog
+    dialogState: DialogState
     session?: Session
 }
 
-export type SessionDialog = {
-    open: boolean
-    invalidSid: boolean
-    joinOnly: boolean
-    sidInput: string
+export enum DialogState {
+    Closed,
+    InitialSelectionFirstLoad,
+    InitialSelection,
+    CreateOnlineSession,
+    ManageOnlineSession,
+    JoinOnly,
 }
 
 /* ------- Reducer Action Types ------- */
-export type SetSessionDialog = Partial<SessionDialog>
+export type SetSessionDialog = DialogState
 export type CreateSession = Record<"session", Session>

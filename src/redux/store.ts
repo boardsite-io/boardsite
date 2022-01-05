@@ -1,12 +1,8 @@
-import { configureStore, Middleware, AnyAction } from "@reduxjs/toolkit"
-import {
-    loadIndexedDB,
-    loadLocalStorage,
-    saveIndexedDB,
-    saveLocalStore,
-} from "./localstorage"
+import { configureStore, Middleware } from "@reduxjs/toolkit"
+import { loadLocalStorage, saveIndexedDB, saveLocalStore } from "./localstorage"
 import rootReducer from "./reducer"
 import { isConnectedState } from "./session/helpers"
+import { DialogState } from "./session/session.types"
 import { RootState } from "./types"
 
 export const localStoreMiddleware: Middleware<unknown, RootState> =
@@ -14,8 +10,13 @@ export const localStoreMiddleware: Middleware<unknown, RootState> =
         const result = next(action)
         saveLocalStore(rootStore.getState(), "drawing")
 
-        // dont store board state in sessions
-        if (!isConnectedState(rootStore.getState().session)) {
+        // Don't store board state in sessions
+        const isOnline = isConnectedState(rootStore.getState().session)
+        // Prevent overwriting local data on initial load
+        const isSelecting =
+            rootStore.getState().session.dialogState !== DialogState.Closed
+
+        if (!isOnline && !isSelecting) {
             saveIndexedDB(rootStore.getState(), "board")
         }
 
@@ -27,16 +28,6 @@ const store = configureStore({
     middleware: [localStoreMiddleware],
     preloadedState: loadLocalStorage("drawing") as object,
 })
-
-// load the board state async
-;(async () => {
-    const state = await loadIndexedDB("board")
-
-    store.dispatch({
-        type: "board/LOAD_BOARD_STATE",
-        payload: state.board,
-    } as AnyAction)
-})()
 
 export type AppDispatch = typeof store.dispatch
 export default store

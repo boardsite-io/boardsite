@@ -1,17 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import {
     CreateSession,
+    DialogState,
     SetSessionDialog,
     WebControlState,
 } from "./session.types"
 
 const initState: WebControlState = {
-    sessionDialog: {
-        open: false,
-        invalidSid: false,
-        joinOnly: false,
-        sidInput: "",
-    },
+    dialogState: DialogState.InitialSelectionFirstLoad,
 }
 
 const sessionSlice = createSlice({
@@ -26,19 +22,10 @@ const sessionSlice = createSlice({
             state,
             action: PayloadAction<SetSessionDialog>
         ) => {
-            state.sessionDialog = { ...state.sessionDialog, ...action.payload }
-        },
-        CLOSE_SESSION_DIALOG: (state) => {
-            state.sessionDialog = {
-                open: false,
-                invalidSid: false,
-                joinOnly: false,
-                sidInput: "",
-            }
+            state.dialogState = action.payload
         },
     },
 })
 
-export const { CREATE_SESSION, SET_SESSION_DIALOG, CLOSE_SESSION_DIALOG } =
-    sessionSlice.actions
+export const { CREATE_SESSION, SET_SESSION_DIALOG } = sessionSlice.actions
 export default sessionSlice.reducer

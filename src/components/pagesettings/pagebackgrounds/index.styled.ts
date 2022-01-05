@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components"
-import { active, inactive } from "../pageoptions.styled"
+import { active, inactive } from "../index.styled"
 
 export const Backgrounds = styled.form`
     display: flex;

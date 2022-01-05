@@ -3,7 +3,7 @@ import { useCustomSelector } from "hooks"
 import store from "redux/store"
 import { SET_PAGE_BACKGROUND } from "redux/board/board"
 import { backgroundStyle } from "consts"
-import { Backgrounds, Blank, Checkered, Ruled } from "./background.styled"
+import { Backgrounds, Blank, Checkered, Ruled } from "./index.styled"
 
 const PageBackgrounds: React.FC = () => {
     const background = useCustomSelector(

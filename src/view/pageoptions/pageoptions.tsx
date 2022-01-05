@@ -5,6 +5,7 @@ import {
     Drawer,
     DrawerContent,
     DrawerTitle,
+    PageSettings,
 } from "components"
 import {
     BsFileMinus,
@@ -26,8 +27,6 @@ import {
 import { useCustomSelector } from "hooks"
 import store from "redux/store"
 import { CLOSE_PAGE_ACTIONS } from "redux/menu/menu"
-import Background from "./background/background"
-import Size from "./size/size"
 import PdfUpload from "./pdfupload/pdfupload"
 import PdfDownload from "./pdfdownload/pdfdownload"
 
@@ -46,7 +45,6 @@ const PageOptions: React.FC = () => {
                 Page Settings
             </DrawerTitle>
             <DrawerContent>
-                <Background />
                 <Button
                     withIcon
                     onClick={() => {
@@ -56,7 +54,7 @@ const PageOptions: React.FC = () => {
                     <BsFileArrowUp />
                     Apply to page
                 </Button>
-                <Size />
+                <PageSettings />
             </DrawerContent>
             <DrawerTitle>
                 <BsFileDiff />

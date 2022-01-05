@@ -1,11 +1,6 @@
-import React, { useCallback, useEffect } from "react"
-import { useParams } from "react-router-dom"
-import store from "redux/store"
-import { handleAddPageUnder } from "drawing/handlers"
+import React from "react"
 import BoardStage from "board/stage"
-import { SET_SESSION_DIALOG } from "redux/session/session"
-import { useCustomDispatch, useKeyboardShortcuts } from "hooks"
-import { isConnected, currentSession } from "api/session"
+import { useKeyboardShortcuts } from "hooks"
 import { WhiteboardStyled } from "./whiteboard.styled"
 import SessionInfo from "./sessioninfo/sessioninfo"
 import Toolbar from "./toolbar/toolbar"
@@ -16,51 +11,10 @@ import Settings from "./settings/settings"
 import About from "./about/about"
 import PageOptions from "./pageoptions/pageoptions"
 import PdfUpload from "./pdfupload/pdfupload"
+import Session from "./session"
 
 const Whiteboard: React.FC = () => {
     useKeyboardShortcuts()
-    const { sid } = useParams()
-    const dispatch = useCustomDispatch()
-
-    const checkSessionStatus = useCallback(async () => {
-        try {
-            if (!sid) {
-                throw new Error()
-            }
-
-            await currentSession()
-                .setID(sid as string)
-                .ping()
-            // Session exists
-            dispatch(
-                SET_SESSION_DIALOG({
-                    open: true,
-                    invalidSid: false,
-                    joinOnly: true,
-                    sidInput: sid,
-                })
-            )
-        } catch (error) {
-            // Session doesn't exist
-            dispatch(
-                SET_SESSION_DIALOG({
-                    open: true,
-                    invalidSid: true,
-                    joinOnly: false,
-                })
-            )
-        }
-    }, [])
-
-    useEffect(() => {
-        if (!isConnected()) {
-            if (sid !== undefined && sid.length > 0) {
-                checkSessionStatus()
-            } else if (store.getState().board.pageRank.length === 0) {
-                handleAddPageUnder() // Add default page if pageRank is empty
-            }
-        }
-    }, [sid, dispatch])
 
     return (
         <WhiteboardStyled>
@@ -74,6 +28,7 @@ const Whiteboard: React.FC = () => {
             <About />
             <PageOptions />
             <PdfUpload />
+            <Session />
         </WhiteboardStyled>
     )
 }
