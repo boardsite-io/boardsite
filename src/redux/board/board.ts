@@ -200,15 +200,11 @@ const boardSlice = createSlice({
             } = action.payload
 
             const addPageData = pageIds
-                .map<AddPageData>((pid) => {
-                    const index = state.pageRank.indexOf(pid)
-                    const page = state.pageCollection[pid]
-                    return {
-                        page,
-                        index,
-                    }
-                })
+                .map<AddPageData>((pid) => ({
+                    page: state.pageCollection[pid],
+                }))
                 .filter(({ page }) => page !== undefined)
+            const pageRank = [...state.pageRank]
 
             const handler = (boardState: BoardState) => {
                 deletePages(boardState, ...pageIds)
@@ -216,6 +212,8 @@ const boardSlice = createSlice({
             }
 
             const undoHandler = (boardState: BoardState) => {
+                // set pagerank manually as it was before deletion
+                boardState.pageRank = pageRank
                 addPages(boardState, ...addPageData)
                 sessionUndoHandler?.(...addPageData)
             }

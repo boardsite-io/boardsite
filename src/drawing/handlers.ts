@@ -112,11 +112,14 @@ export function handleDeletePages(
 
     if (isConnected()) {
         const session = currentSession()
+        const indices = pageIds.map((pid) =>
+            store.getState().board.pageRank.indexOf(pid)
+        )
         payload.sessionHandler = () => session.deletePages(...pageIds)
         payload.sessionUndoHandler = (...undos) => {
             const pages = undos.map(({ page }) => page)
-            const indices = undos.map(({ index }) => index)
-            session.addPages(pages, indices)
+            // TODO: send pagerank
+            session.addPages(pages, indices as number[])
             session.sendStrokes(
                 ...pages.reduce<Stroke[]>(
                     (arr, page) => arr.concat(Object.values(page.strokes)),

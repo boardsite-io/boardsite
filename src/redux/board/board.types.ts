@@ -117,7 +117,7 @@ export type SetPageBackground = PageBackgroundStyle
 export type SetPageSize = PageSize
 export type AddPageData = {
     page: Page
-    index: number
+    index?: number
 }
 export type AddPages = BoardAction<AddPageData[], void[]>
 export type ClearPages = BoardAction<PageId[], Stroke[]>
