@@ -1,6 +1,7 @@
 import { StrokeMap, Tool, ToolType } from "drawing/stroke/index.types"
 import { createSlice } from "@reduxjs/toolkit"
 import { newState } from "./state"
+import { isDrawType } from "./helpers"
 
 const drawingSlice = createSlice({
     name: "drawing",
@@ -44,6 +45,11 @@ const drawingSlice = createSlice({
             if (type !== undefined) {
                 state.tool.type = type
                 state.isDraggable = type === ToolType.Select
+
+                // Save latest draw type to enable resuming to that tool
+                if (isDrawType(type)) {
+                    state.tool.latestDrawType = type
+                }
             }
             if (style !== undefined) {
                 state.tool.style = { ...style }

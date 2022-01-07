@@ -28,7 +28,7 @@ const PenIcon: FC<IconProps> = (props) => <StyledPen {...props} />
 const SelectIcon: FC<IconProps> = (props) => <StyledSelect {...props} />
 const LineIcon: FC<IconProps> = (props) => <StyledLine {...props} />
 const CircleIcon: FC<IconProps> = (props) => <StyledCircle {...props} />
-const SquareIcon: FC<IconProps> = (props) => <StyledSquare {...props} />
+const RectangleIcon: FC<IconProps> = (props) => <StyledSquare {...props} />
 const PlusIcon: FC<IconProps> = (props) => <StyledPlus {...props} />
 const MinusIcon: FC<IconProps> = (props) => <StyledMinus {...props} />
 const ExpandIcon: FC<IconProps> = (props) => <StyledExpand {...props} />
@@ -47,7 +47,7 @@ export {
     SelectIcon,
     LineIcon,
     CircleIcon,
-    SquareIcon,
+    RectangleIcon,
     PlusIcon,
     MinusIcon,
     ExpandIcon,

@@ -11,14 +11,14 @@ import {
 import { handleSetTool } from "drawing/handlers"
 import { ToolType } from "drawing/stroke/index.types"
 import { ToolTipText } from "language"
-import PenTool from "../pentool/pentool"
+import ActiveTool from "../activeTool"
 
 const ToolRing: React.FC = () => {
     const typeSelector = useCustomSelector((state) => state.drawing.tool.type)
 
     return (
         <>
-            <PenTool />
+            <ActiveTool />
             <ToolTip position={Position.Bottom} text={ToolTipText.EraserTool}>
                 <IconButton
                     active={typeSelector === ToolType.Eraser}

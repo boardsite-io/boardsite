@@ -19,6 +19,7 @@ export const HoverTrigger = styled.div`
 `
 
 export const ToolTipBox = styled.div<ToolTipBoxProps>`
+    z-index: 10000;
     line-break: none;
     position: absolute;
     pointer-events: none;

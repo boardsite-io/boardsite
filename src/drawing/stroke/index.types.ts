@@ -22,7 +22,6 @@ export enum ToolType {
     Eraser,
     Pen,
     Line,
-    Triangle,
     Circle,
     Rectangle,
     Select,
@@ -36,6 +35,7 @@ export type ToolStyle = {
 }
 export interface Tool {
     type: ToolType
+    latestDrawType?: ToolType
     style: ToolStyle
 }
 

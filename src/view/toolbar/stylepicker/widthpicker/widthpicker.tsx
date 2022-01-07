@@ -4,6 +4,8 @@ import { useCustomSelector } from "hooks"
 import store from "redux/store"
 import { SET_WIDTH } from "redux/drawing/drawing"
 import { STROKE_WIDTH_PRESETS } from "consts"
+import { Position, ToolTip } from "components"
+import { ToolTipText } from "language"
 import { Preset, WidthPresetInnerDot, WidthPresets } from "./widthpicker.styled"
 
 const WidthPicker: React.FC = () => {
@@ -14,12 +16,16 @@ const WidthPicker: React.FC = () => {
     return (
         <WidthPresets>
             {STROKE_WIDTH_PRESETS.map((strokeWidth) => (
-                <Preset
+                <ToolTip
                     key={nanoid()}
-                    $active={widthSelector === strokeWidth}
-                    onClick={() => store.dispatch(SET_WIDTH(strokeWidth))}>
-                    <WidthPresetInnerDot $strokeWidth={strokeWidth} />
-                </Preset>
+                    position={Position.Left}
+                    text={ToolTipText.SelectWidth({ width: strokeWidth })}>
+                    <Preset
+                        $active={widthSelector === strokeWidth}
+                        onClick={() => store.dispatch(SET_WIDTH(strokeWidth))}>
+                        <WidthPresetInnerDot $strokeWidth={strokeWidth} />
+                    </Preset>
+                </ToolTip>
             ))}
         </WidthPresets>
     )

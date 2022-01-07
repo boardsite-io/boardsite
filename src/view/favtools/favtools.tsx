@@ -6,7 +6,7 @@ import {
     LineIcon,
     PenIcon,
     PlusIcon,
-    SquareIcon,
+    RectangleIcon,
     ToolTip,
     Position,
 } from "components"
@@ -41,7 +41,7 @@ const FavTools: React.FC = () => {
                         icon = <LineIcon />
                         break
                     case ToolType.Rectangle:
-                        icon = <SquareIcon />
+                        icon = <RectangleIcon />
                         break
                     case ToolType.Circle:
                         icon = <CircleIcon />

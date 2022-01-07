@@ -32,6 +32,7 @@ export const newState = (state?: DrawingState): DrawingState => ({
     directDraw: DEFAULT_DIRECTDRAW,
     tool: {
         type: DEFAULT_TOOL,
+        latestDrawType: DEFAULT_TOOL,
         style: {
             color: DEFAULT_COLOR,
             width: DEFAULT_WIDTH,

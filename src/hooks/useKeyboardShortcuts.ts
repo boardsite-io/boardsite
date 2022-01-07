@@ -28,24 +28,39 @@ const keyListener = (e: KeyboardEvent): void => {
             store.dispatch(JUMP_TO_NEXT_PAGE())
             break
         case "1":
-            handleSetTool({ type: ToolType.Pen })
+        case "a":
+            handleSetTool({
+                type:
+                    store.getState().drawing.tool.latestDrawType ??
+                    ToolType.Pen,
+            })
             break
         case "2":
+        case "e":
             handleSetTool({ type: ToolType.Eraser })
             break
         case "3":
+        case "s":
             handleSetTool({ type: ToolType.Select })
             break
         case "4":
+        case " ":
             handleSetTool({ type: ToolType.Pan })
             break
         case "5":
-            handleSetTool({ type: ToolType.Line })
+        case "p":
+            handleSetTool({ type: ToolType.Pen })
             break
         case "6":
-            handleSetTool({ type: ToolType.Rectangle })
+        case "l":
+            handleSetTool({ type: ToolType.Line })
             break
         case "7":
+        case "r":
+            handleSetTool({ type: ToolType.Rectangle })
+            break
+        case "8":
+        case "c":
             handleSetTool({ type: ToolType.Circle })
             break
         case "z": // Undo (Ctrl + Z)
@@ -58,8 +73,6 @@ const keyListener = (e: KeyboardEvent): void => {
                 handleRedo()
             }
             break
-        // case " ": // Spacebar - UNSET
-        //     break
         default:
             break
     }
