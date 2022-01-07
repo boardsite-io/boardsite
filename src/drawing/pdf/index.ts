@@ -2,7 +2,7 @@ import { currentSession, isConnected } from "api/session"
 import { backgroundStyle, PIXEL_RATIO } from "consts"
 import { handleDeleteAllPages } from "drawing/handlers"
 import { BoardPage } from "drawing/page"
-import { ADD_PAGES } from "redux/board/board"
+import { ADD_PAGES, CLEAR_UNDO_REDO } from "redux/board/board"
 import { DocumentSrc, PageSize } from "redux/board/board.types"
 import store from "redux/store"
 import { END_LOADING, START_LOADING } from "redux/loading/loading"
@@ -14,6 +14,8 @@ export const handleImportFile = async (file: File): Promise<void> => {
     const origin = await handleGetDocumentFile(file)
     await handleLoadFromSource(origin)
     await handleAddDocumentPages(origin)
+    // clear the stacks when importing documents
+    store.dispatch(CLEAR_UNDO_REDO())
 }
 
 export async function handleGetDocumentFile(

@@ -250,6 +250,11 @@ const boardSlice = createSlice({
             state.documentSrc = ""
         },
 
+        CLEAR_UNDO_REDO: (state) => {
+            state.undoStack = []
+            state.redoStack = []
+        },
+
         CLEAR_TRANSFORM: (state) => {
             clearTransform(state)
         },
@@ -485,6 +490,7 @@ export const {
     UNDO_ACTION,
     REDO_ACTION,
     CLEAR_DOCS,
+    CLEAR_UNDO_REDO,
     CLEAR_TRANSFORM,
     SET_PAGE_BACKGROUND,
     SET_PAGE_SIZE,

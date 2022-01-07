@@ -16,6 +16,7 @@ import {
     ADD_STROKES,
     CLEAR_DOCS,
     CLEAR_PAGES,
+    CLEAR_UNDO_REDO,
     DELETE_ALL_PAGES,
     ERASE_STROKES,
     SET_PAGEMETA,
@@ -257,10 +258,6 @@ export class BoardSession implements Session {
     }
 
     static syncPages({ pageRank, meta }: ResponsePageSync): void {
-        if (pageRank.length === 0) {
-            store.dispatch(DELETE_ALL_PAGES())
-            return
-        }
         const { pageCollection } = store.getState().board
         const newPageCollection: PageCollection = {}
         pageRank.forEach((pid: string) => {
@@ -282,6 +279,8 @@ export class BoardSession implements Session {
             )
             const { attachURL } = meta[pageId].background
             if (!isLoaded && attachURL) {
+                // clear the stacks documents have been imported
+                store.dispatch(CLEAR_UNDO_REDO())
                 handleLoadFromSource(attachURL)
                 isLoaded = true
             }
