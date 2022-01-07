@@ -1,5 +1,6 @@
 import React from "react"
-import { Button, DialogContent, DialogTitle, PageSettings } from "components"
+import { Button, DialogContent, DialogTitle } from "components"
+import PageSettings from "components/pagesettings"
 import { handleAddPageUnder } from "drawing/handlers"
 import store from "redux/store"
 import { DialogState } from "redux/session/session.types"
