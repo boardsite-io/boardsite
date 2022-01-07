@@ -4,10 +4,16 @@ export default {
     Session: "Open session menu",
     Undo: "Undo",
     Redo: "Redo",
-    DrawingTool: "Drawing Tool (1)",
-    EraserTool: "Eraser Tool (2)",
-    SelectionTool: "Selection Tool (3)",
-    PanningTool: "Panning Tool (4)",
+    // Tools
+    ActiveTool: "Active Tool (1, A)",
+    EraserTool: "Eraser Tool (2, E)",
+    SelectionTool: "Selection Tool (3, S)",
+    PanningTool: "Panning Tool (4, SPACE)",
+    PenTool: "Pen Tool (5, P)",
+    LineTool: "Line Tool (6, L)",
+    RectangleTool: "Rectangle Tool (7, R)",
+    CircleTool: "Circle Tool (8, C)",
+    SelectWidth: ({ width }: { width: number }): string => `Width ${width}px`,
     ZoomIn: "Zoom In",
     ZoomOut: "Zoom Out",
     PageSettings: "Open page settings",
@@ -23,4 +29,15 @@ export default {
     PreviousPage: "Go to previous page",
     NextPage: "Go to next page",
     LastPage: "Go to last page",
+    // Page Settings
+    Size: {
+        A4Landscape: "A4 landscape",
+        A4Portrait: "A4 portrait",
+        Square: "Square",
+    },
+    Background: {
+        Blank: "Blank page",
+        Checkered: "Checkered page",
+        Ruled: "Ruled page",
+    },
 }

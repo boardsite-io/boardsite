@@ -4,7 +4,7 @@ import { ReactComponent as Pen } from "./svgs/pen.svg"
 import { ReactComponent as Select } from "./svgs/select.svg"
 import { ReactComponent as Line } from "./svgs/line.svg"
 import { ReactComponent as Circle } from "./svgs/circle.svg"
-import { ReactComponent as Square } from "./svgs/square.svg"
+import { ReactComponent as Rectangle } from "./svgs/rectangle.svg"
 import { ReactComponent as Plus } from "./svgs/plus.svg"
 import { ReactComponent as Minus } from "./svgs/minus.svg"
 import { ReactComponent as Expand } from "./svgs/expand.svg"
@@ -36,7 +36,7 @@ export const StyledLine = styled(Line)`
 export const StyledCircle = styled(Circle)`
     ${iconStyles}
 `
-export const StyledSquare = styled(Square)`
+export const StyledSquare = styled(Rectangle)`
     ${iconStyles}
 `
 export const StyledPlus = styled(Plus)`

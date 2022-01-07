@@ -5,8 +5,8 @@ import {
     Drawer,
     DrawerContent,
     DrawerTitle,
-    PageSettings,
 } from "components"
+import PageSettings from "components/pagesettings"
 import {
     BsFileMinus,
     BsFileRuled,
