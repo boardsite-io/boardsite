@@ -110,6 +110,25 @@ describe("board reducer", () => {
         expect(state.redoStack?.length).toEqual(0)
     })
 
+    it("adds a page at the beginning", () => {
+        let state: BoardState = cloneDeep(initialState)
+        const page = new BoardPage().setID("mock-pid")
+        const index = 0
+        const payload: AddPages = {
+            data: [{ page, index }],
+        }
+
+        state = reducer(initialState, action.ADD_PAGES(payload))
+
+        expect(state.pageRank).toEqual([
+            page.pageId,
+            page1.pageId,
+            page2.pageId,
+            page3.pageId,
+        ])
+        expect(state.pageCollection[page.pageId]).toEqual(page)
+    })
+
     it("adds a page at the end", () => {
         let state: BoardState = cloneDeep(initialState)
         const page = new BoardPage().setID("mock-pid")

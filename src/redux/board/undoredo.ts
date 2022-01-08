@@ -85,7 +85,7 @@ export function addPages(
 ): void {
     addPageData.forEach(({ page, index }) => {
         state.pageCollection[page.pageId] = page
-        if (index) {
+        if (index !== undefined) {
             if (index >= 0) {
                 state.pageRank.splice(index, 0, page.pageId)
             } else {
