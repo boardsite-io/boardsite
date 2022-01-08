@@ -1,7 +1,7 @@
+import { FormattedMessage } from "language"
 import { IconButton, Popup, ToolTip, Position, ToolIcons } from "components"
 import React, { useState } from "react"
 import { handleSetTool } from "drawing/handlers"
-import { ToolTipText } from "language"
 import { isDrawType } from "redux/drawing/helpers"
 import store from "redux/store"
 import StylePicker from "../stylepicker/stylepicker"
@@ -16,7 +16,9 @@ const ActiveTool: React.FC = () => {
 
     return (
         <>
-            <ToolTip position={Position.Bottom} text={ToolTipText.ActiveTool}>
+            <ToolTip
+                position={Position.Bottom}
+                text={<FormattedMessage id="Tool.Active" />}>
                 <IconButton
                     active={isDraw}
                     onClick={() =>

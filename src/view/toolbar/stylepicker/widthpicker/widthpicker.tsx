@@ -1,3 +1,4 @@
+import { FormattedMessage } from "language"
 import React from "react"
 import { nanoid } from "@reduxjs/toolkit"
 import { useCustomSelector } from "hooks"
@@ -5,7 +6,6 @@ import store from "redux/store"
 import { SET_WIDTH } from "redux/drawing/drawing"
 import { STROKE_WIDTH_PRESETS } from "consts"
 import { Position, ToolTip } from "components"
-import { ToolTipText } from "language"
 import { Preset, WidthPresetInnerDot, WidthPresets } from "./widthpicker.styled"
 
 const WidthPicker: React.FC = () => {
@@ -19,7 +19,12 @@ const WidthPicker: React.FC = () => {
                 <ToolTip
                     key={nanoid()}
                     position={Position.Left}
-                    text={ToolTipText.SelectWidth({ width: strokeWidth })}>
+                    text={
+                        <FormattedMessage
+                            id="Tool.SelectWidth"
+                            values={{ width: strokeWidth }}
+                        />
+                    }>
                     <Preset
                         $active={widthSelector === strokeWidth}
                         onClick={() => store.dispatch(SET_WIDTH(strokeWidth))}>

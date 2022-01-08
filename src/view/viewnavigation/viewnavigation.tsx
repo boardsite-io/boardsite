@@ -1,20 +1,20 @@
+import { FormattedMessage } from "language"
 import React from "react"
-import {
-    CgPushChevronUp,
-    CgChevronUp,
-    CgChevronDown,
-    CgPushChevronDown,
-} from "react-icons/cg"
-import { IconButton, ToolTip, Position } from "components"
+import store from "redux/store"
 import {
     JUMP_TO_FIRST_PAGE,
     JUMP_TO_LAST_PAGE,
     JUMP_TO_NEXT_PAGE,
     JUMP_TO_PREV_PAGE,
 } from "redux/board/board"
-import store from "redux/store"
 import { useCustomSelector } from "hooks"
-import { ToolTipText } from "language"
+import { IconButton, ToolTip, Position } from "components"
+import {
+    CgPushChevronUp,
+    CgChevronUp,
+    CgChevronDown,
+    CgPushChevronDown,
+} from "react-icons/cg"
 import {
     ViewNavWrapper,
     PageIndex,
@@ -33,18 +33,24 @@ const ViewNavigation: React.FC = () => {
 
     return !hideNavBar && pageRank.length > 0 ? (
         <ViewNavWrapper>
-            <ToolTip text={ToolTipText.FirstPage} position={Position.Left}>
+            <ToolTip
+                text={<FormattedMessage id="Navigate.FirstPage" />}
+                position={Position.Left}>
                 <IconButton
                     onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
                     <CgPushChevronUp id="icon" />
                 </IconButton>
             </ToolTip>
-            <ToolTip text={ToolTipText.PreviousPage} position={Position.Left}>
+            <ToolTip
+                text={<FormattedMessage id="Navigate.PreviousPage" />}
+                position={Position.Left}>
                 <IconButton onClick={() => store.dispatch(JUMP_TO_PREV_PAGE())}>
                     <CgChevronUp id="icon" />
                 </IconButton>
             </ToolTip>
-            <ToolTip text={ToolTipText.FirstPage} position={Position.Left}>
+            <ToolTip
+                text={<FormattedMessage id="Navigate.FirstPage" />}
+                position={Position.Left}>
                 <IconButtonPageIndex
                     onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
                     <PageIndex>{currentPageIndex + 1}</PageIndex>
@@ -52,12 +58,16 @@ const ViewNavigation: React.FC = () => {
                     <PageIndex>{pageRank.length}</PageIndex>
                 </IconButtonPageIndex>
             </ToolTip>
-            <ToolTip text={ToolTipText.NextPage} position={Position.Left}>
+            <ToolTip
+                text={<FormattedMessage id="Navigate.NextPage" />}
+                position={Position.Left}>
                 <IconButton onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE())}>
                     <CgChevronDown id="icon" />
                 </IconButton>
             </ToolTip>
-            <ToolTip text={ToolTipText.LastPage} position={Position.Left}>
+            <ToolTip
+                text={<FormattedMessage id="Navigate.LastPage" />}
+                position={Position.Left}>
                 <IconButton onClick={() => store.dispatch(JUMP_TO_LAST_PAGE())}>
                     <CgPushChevronDown id="icon" />
                 </IconButton>

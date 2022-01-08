@@ -1,3 +1,4 @@
+import { FormattedMessage } from "language"
 import { nanoid } from "@reduxjs/toolkit"
 import React from "react"
 import { IconButton, PlusIcon, ToolTip, Position, ToolIcons } from "components"
@@ -5,7 +6,6 @@ import store from "redux/store"
 import { useCustomSelector } from "hooks"
 import { ADD_FAVORITE_TOOL } from "redux/drawing/drawing"
 import { RootState } from "redux/types"
-import { ToolTipText } from "language"
 import { FavToolsStyled } from "./index.styled"
 import FavToolButton from "./favtoolbutton/favtoolbutton"
 
@@ -31,7 +31,7 @@ const FavoriteTools: React.FC = () => {
                 )
             })}
             <ToolTip
-                text={ToolTipText.AddFavoriteTool}
+                text={<FormattedMessage id="Favorite.Add" />}
                 position={Position.Right}>
                 <IconButton onClick={addFavoriteTool}>
                     <PlusIcon />

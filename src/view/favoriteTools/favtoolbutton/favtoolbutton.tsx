@@ -1,3 +1,4 @@
+import { FormattedMessage } from "language"
 import { Tool } from "drawing/stroke/index.types"
 import {
     IconButton,
@@ -14,7 +15,6 @@ import {
 } from "redux/drawing/drawing"
 import store from "redux/store"
 import { handleSetTool } from "drawing/handlers"
-import { ToolTipText } from "language"
 import {
     FavToolOptions,
     FavToolWidth,
@@ -66,7 +66,9 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({
 
     return (
         <FavToolWrapper>
-            <ToolTip text={ToolTipText.FavoriteTool} position={Position.Right}>
+            <ToolTip
+                text={<FormattedMessage id="Favorite.Select" />}
+                position={Position.Right}>
                 <IconButton
                     background={tool.style.color}
                     onMouseDown={startClick}
@@ -79,14 +81,14 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({
             <Popup open={open} onClose={() => setOpen(false)}>
                 <FavToolOptions>
                     <ToolTip
-                        text={ToolTipText.ReplaceFavoriteTool}
+                        text={<FormattedMessage id="Favorite.Replace" />}
                         position={Position.BottomRight}>
                         <IconButton onClick={replaceTool}>
                             <PlusIcon />
                         </IconButton>
                     </ToolTip>
                     <ToolTip
-                        text={ToolTipText.RemoveFavoriteTool}
+                        text={<FormattedMessage id="Favorite.Remove" />}
                         position={Position.Right}>
                         <IconButton onClick={removeTool}>
                             <MinusIcon />

@@ -1,8 +1,8 @@
+import { FormattedMessage } from "language"
+import React from "react"
 import { IconButton, Position, RedoIcon, ToolTip, UndoIcon } from "components"
 import { handleRedo, handleUndo } from "drawing/handlers"
-import React from "react"
 import { useCustomSelector } from "hooks"
-import { ToolTipText } from "language"
 
 const UndoRedo: React.FC = () => {
     const disableUndoStack = useCustomSelector(
@@ -13,12 +13,16 @@ const UndoRedo: React.FC = () => {
     )
     return (
         <>
-            <ToolTip position={Position.Bottom} text={ToolTipText.Undo}>
+            <ToolTip
+                position={Position.Bottom}
+                text={<FormattedMessage id="ToolBar.Undo" />}>
                 <IconButton deactivated={disableUndoStack} onClick={handleUndo}>
                     <UndoIcon />
                 </IconButton>
             </ToolTip>
-            <ToolTip position={Position.Bottom} text={ToolTipText.Redo}>
+            <ToolTip
+                position={Position.Bottom}
+                text={<FormattedMessage id="ToolBar.Redo" />}>
                 <IconButton deactivated={disableRedoStack} onClick={handleRedo}>
                     <RedoIcon />
                 </IconButton>

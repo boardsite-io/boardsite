@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { ScreenSize } from "theme.styled"
+import { ScreenSize } from "app/theme"
 
 export const ExportOptions = styled.div`
     display: grid;
