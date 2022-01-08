@@ -21,13 +21,13 @@ export interface Session {
     isConnected(): boolean
     disconnect(): void
     send(type: MessageType, content: unknown): void
-    sendStrokes(...strokes: Stroke[] | StrokeUpdate[]): void
-    eraseStrokes(...strokes: { id: string; pageId: string }[]): void
+    sendStrokes(strokes: Stroke[] | StrokeUpdate[]): void
+    eraseStrokes(strokes: { id: string; pageId: string }[]): void
     addPages(pages: BoardPage[], pageIndex: number[]): Promise<void>
-    deletePages(...pageIds: string[]): Promise<void>
+    deletePages(pageIds: string[]): Promise<void>
     updatePages(
-        clear: boolean,
-        ...pages: Pick<Page, "pageId" | "meta">[]
+        pages: Pick<Page, "pageId" | "meta">[],
+        clear: boolean
     ): Promise<void>
     addAttachment(file: File): Promise<URL>
     getAttachment(attachId: string): Promise<[unknown, URL]>

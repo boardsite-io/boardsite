@@ -120,7 +120,7 @@ describe("session", () => {
                 userId: mockUser.id,
             })
         })
-        session.sendStrokes(...strokes)
+        session.sendStrokes(strokes)
     })
 
     it("sends strokes to be erased over the socket", () => {
@@ -133,7 +133,7 @@ describe("session", () => {
             expect(data.content[0]).toHaveProperty("userId", mockUser.id)
             expect(data.content[0]).toHaveProperty("type", ToolType.Eraser)
         })
-        session.eraseStrokes(...strokes)
+        session.eraseStrokes(strokes)
     })
 
     it("updates users on connect and disconnect", () => {

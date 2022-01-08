@@ -141,7 +141,7 @@ export class BoardSession implements Session {
         this.socket?.send(JSON.stringify(message))
     }
 
-    sendStrokes(...strokes: Stroke[] | StrokeUpdate[]): void {
+    sendStrokes(strokes: Stroke[] | StrokeUpdate[]): void {
         const strokesToSend = strokes
             .map((s) => {
                 if (s.id && s.pageId) {
@@ -157,7 +157,7 @@ export class BoardSession implements Session {
         this.send(messages.Stroke, strokesToSend)
     }
 
-    eraseStrokes(...strokes: StrokeDelete[]): void {
+    eraseStrokes(strokes: StrokeDelete[]): void {
         this.send(
             messages.Stroke,
             strokes.map((s) => ({
@@ -173,13 +173,13 @@ export class BoardSession implements Session {
         this.request.postPages(pages, pageIndex)
     }
 
-    async deletePages(...pageIds: string[]): Promise<void> {
+    async deletePages(pageIds: string[]): Promise<void> {
         this.request.deletePages(pageIds)
     }
 
     async updatePages(
-        clear = false,
-        ...pages: Pick<Page, "pageId" | "meta">[]
+        pages: Pick<Page, "pageId" | "meta">[],
+        clear = false
     ): Promise<void> {
         this.request.putPages(pages, clear)
     }

@@ -47,7 +47,7 @@ export function handleAddPageOver(): void {
     if (isConnected()) {
         const session = currentSession()
         payload.sessionHandler = () => session.addPages([page], [index])
-        payload.sessionUndoHandler = () => session.deletePages(page.pageId)
+        payload.sessionUndoHandler = () => session.deletePages([page.pageId])
     }
 
     store.dispatch(ADD_PAGES(payload))
@@ -64,7 +64,7 @@ export function handleAddPageUnder(): void {
     if (isConnected()) {
         const session = currentSession()
         payload.sessionHandler = () => session.addPages([page], [index])
-        payload.sessionUndoHandler = () => session.deletePages(page.pageId)
+        payload.sessionUndoHandler = () => session.deletePages([page.pageId])
     }
 
     store.dispatch(ADD_PAGES(payload))
@@ -72,10 +72,10 @@ export function handleAddPageUnder(): void {
 }
 
 export function handleClearPage(): void {
-    handleClearPages(getCurrentPageId())
+    handleClearPages([getCurrentPageId()])
 }
 
-export function handleClearPages(...pageIds: PageId[]): void {
+export function handleClearPages(pageIds: PageId[]): void {
     const payload: ClearPages = {
         data: pageIds,
         isRedoable: true,
@@ -87,10 +87,10 @@ export function handleClearPages(...pageIds: PageId[]): void {
             (pid) => store.getState().board.pageCollection[pid]
         )
         payload.sessionHandler = () => {
-            session.updatePages(true, ...pages)
+            session.updatePages(pages, true)
         }
         payload.sessionUndoHandler = (...undos) => {
-            session.sendStrokes(...undos)
+            session.sendStrokes(undos)
         }
     }
 
@@ -115,13 +115,13 @@ export function handleDeletePages(
         const indices = pageIds.map((pid) =>
             store.getState().board.pageRank.indexOf(pid)
         )
-        payload.sessionHandler = () => session.deletePages(...pageIds)
+        payload.sessionHandler = () => session.deletePages(pageIds)
         payload.sessionUndoHandler = (...undos) => {
             const pages = undos.map(({ page }) => page)
             // TODO: send pagerank
             session.addPages(pages, indices as number[])
             session.sendStrokes(
-                ...pages.reduce<Stroke[]>(
+                pages.reduce<Stroke[]>(
                     (arr, page) => arr.concat(Object.values(page.strokes)),
                     []
                 )
@@ -136,10 +136,7 @@ export function handleDeleteAllPages(isRedoable?: boolean): void {
     handleDeletePages(store.getState().board.pageRank, isRedoable)
 }
 
-export function handleAddStrokes(
-    isUpdate: boolean,
-    ...strokes: Stroke[]
-): void {
+export function handleAddStrokes(strokes: Stroke[], isUpdate: boolean): void {
     const payload: AddStrokes = {
         data: strokes,
         isUpdate,
@@ -148,14 +145,14 @@ export function handleAddStrokes(
 
     if (isConnected()) {
         const session = currentSession()
-        payload.sessionHandler = () => session.sendStrokes(...strokes)
-        payload.sessionUndoHandler = () => session.eraseStrokes(...strokes)
+        payload.sessionHandler = () => session.sendStrokes(strokes)
+        payload.sessionUndoHandler = () => session.eraseStrokes(strokes)
     }
 
     store.dispatch(ADD_STROKES(payload))
 }
 
-export function handleDeleteStrokes(...strokes: Stroke[]): void {
+export function handleDeleteStrokes(strokes: Stroke[]): void {
     const payload: EraseStrokes = {
         data: strokes,
         isRedoable: true,
@@ -163,8 +160,8 @@ export function handleDeleteStrokes(...strokes: Stroke[]): void {
 
     if (isConnected()) {
         const session = currentSession()
-        payload.sessionHandler = () => session.eraseStrokes(...strokes)
-        payload.sessionUndoHandler = () => session.sendStrokes(...strokes)
+        payload.sessionHandler = () => session.eraseStrokes(strokes)
+        payload.sessionUndoHandler = () => session.sendStrokes(strokes)
     }
 
     store.dispatch(ERASE_STROKES(payload))
@@ -207,9 +204,9 @@ export function handleChangePageBackground(): void {
 
     if (isConnected()) {
         const session = currentSession()
-        payload.sessionHandler = () => session.updatePages(false, pageUpdate)
+        payload.sessionHandler = () => session.updatePages([pageUpdate], false)
         payload.sessionUndoHandler = (...undos) =>
-            session.updatePages(false, ...undos)
+            session.updatePages(undos, false)
     }
 
     store.dispatch(SET_PAGEMETA(payload))
