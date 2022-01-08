@@ -5,6 +5,7 @@ import {
     Drawer,
     DrawerContent,
     DrawerTitle,
+    UploadIcon,
 } from "components"
 import PageSettings from "components/pagesettings"
 import {
@@ -26,31 +27,58 @@ import {
 } from "drawing/handlers"
 import { useCustomSelector } from "hooks"
 import store from "redux/store"
-import { CLOSE_PAGE_ACTIONS } from "redux/menu/menu"
-import PdfUpload from "./pdfupload/pdfupload"
-import PdfDownload from "./pdfdownload/pdfdownload"
+import {
+    CLOSE_PAGE_ACTIONS,
+    OPEN_EXPORT_MENU,
+    OPEN_IMPORT_MENU,
+} from "redux/menu/menu"
 
-const PageOptions: React.FC = () => {
+const onClickApplyToPage = () => {
+    handleChangePageBackground()
+    store.dispatch(CLOSE_PAGE_ACTIONS())
+}
+const onClickNewPageBefore = () => {
+    handleAddPageOver()
+    store.dispatch(CLOSE_PAGE_ACTIONS())
+}
+const onClickNewPageAfter = () => {
+    handleAddPageUnder()
+    store.dispatch(CLOSE_PAGE_ACTIONS())
+}
+const onClickDeletePage = () => {
+    handleDeleteCurrentPage()
+    store.dispatch(CLOSE_PAGE_ACTIONS())
+}
+const onClickClearPage = () => {
+    handleClearPage()
+    store.dispatch(CLOSE_PAGE_ACTIONS())
+}
+const onClickDeleteAllPages = () => {
+    handleDeleteAllPages(true)
+}
+const onClickImport = () => {
+    store.dispatch(OPEN_IMPORT_MENU())
+}
+const onClickExport = () => {
+    store.dispatch(OPEN_EXPORT_MENU())
+}
+const onClose = () => {
+    store.dispatch(CLOSE_PAGE_ACTIONS())
+}
+
+const PageMenu: React.FC = () => {
     const pageActionsOpen = useCustomSelector(
         (state) => state.menu.pageActionsOpen
     )
 
     return (
-        <Drawer
-            position="right"
-            open={pageActionsOpen}
-            onClose={() => store.dispatch(CLOSE_PAGE_ACTIONS())}>
+        <Drawer position="right" open={pageActionsOpen} onClose={onClose}>
             <DrawerTitle>
                 <BsGear />
                 Page Settings
             </DrawerTitle>
             <DrawerContent>
-                <Button
-                    withIcon
-                    onClick={() => {
-                        handleChangePageBackground()
-                        store.dispatch(CLOSE_PAGE_ACTIONS())
-                    }}>
+                <Button withIcon onClick={onClickApplyToPage}>
                     <BsFileArrowUp />
                     Apply to page
                 </Button>
@@ -61,57 +89,43 @@ const PageOptions: React.FC = () => {
                 Page Actions
             </DrawerTitle>
             <DrawerContent>
-                <Button
-                    withIcon
-                    onClick={() => {
-                        handleAddPageOver()
-                        store.dispatch(CLOSE_PAGE_ACTIONS())
-                    }}>
+                <Button withIcon onClick={onClickNewPageBefore}>
                     <BsFileArrowUp />
                     New page before
                 </Button>
-                <Button
-                    withIcon
-                    onClick={() => {
-                        handleAddPageUnder()
-                        store.dispatch(CLOSE_PAGE_ACTIONS())
-                    }}>
+                <Button withIcon onClick={onClickNewPageAfter}>
                     <BsFileArrowDown />
                     New page after
                 </Button>
-                <Button
-                    withIcon
-                    onClick={() => {
-                        handleDeleteCurrentPage()
-                        store.dispatch(CLOSE_PAGE_ACTIONS())
-                    }}>
+                <Button withIcon onClick={onClickDeletePage}>
                     <BsFileMinus />
                     Delete page
                 </Button>
-                <Button
-                    withIcon
-                    onClick={() => {
-                        handleClearPage()
-                        store.dispatch(CLOSE_PAGE_ACTIONS())
-                    }}>
+                <Button withIcon onClick={onClickClearPage}>
                     <BsFileRuled />
                     Clear page
                 </Button>
-                <Button withIcon onClick={() => handleDeleteAllPages(true)}>
+                <Button withIcon onClick={onClickDeleteAllPages}>
                     <BsTrash />
                     Delete all pages
                 </Button>
             </DrawerContent>
             <DrawerTitle>
                 <DownloadIcon />
-                Import / Export PDFs
+                Import / Export Menus
             </DrawerTitle>
             <DrawerContent>
-                <PdfUpload />
-                <PdfDownload />
+                <Button withIcon onClick={onClickImport}>
+                    <UploadIcon />
+                    Open import menu
+                </Button>
+                <Button withIcon onClick={onClickExport}>
+                    <DownloadIcon />
+                    Open export menu
+                </Button>
             </DrawerContent>
         </Drawer>
     )
 }
 
-export default PageOptions
+export default PageMenu

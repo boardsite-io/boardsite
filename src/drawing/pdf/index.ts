@@ -66,7 +66,7 @@ export async function handleAddDocumentPages(
     }
 }
 
-export async function handleExportDocument(): Promise<void> {
+export async function handleExportAsPdf(): Promise<void> {
     store.dispatch(START_LOADING("Exporting as PDF..."))
 
     // Use small timeout to wait for loading animation render cycle
