@@ -4,14 +4,15 @@ import { useKeyboardShortcuts } from "hooks"
 import { WhiteboardStyled } from "./whiteboard.styled"
 import SessionInfo from "./sessioninfo/sessioninfo"
 import Toolbar from "./toolbar/toolbar"
-import FavTools from "./favtools/favtools"
+import FavoriteTools from "./favoriteTools"
 import Loading from "./loading"
 import ViewNav from "./viewnavigation/viewnavigation"
 import Settings from "./settings/settings"
 import About from "./about/about"
-import PageOptions from "./pageoptions/pageoptions"
-import PdfUpload from "./pdfupload/pdfupload"
+import PageMenu from "./pageMenu"
 import Session from "./session"
+import ImportMenu from "./importMenu"
+import ExportMenu from "./exportMenu"
 
 const Whiteboard: React.FC = () => {
     useKeyboardShortcuts()
@@ -21,13 +22,14 @@ const Whiteboard: React.FC = () => {
             <BoardStage />
             <SessionInfo />
             <Toolbar />
-            <FavTools />
+            <FavoriteTools />
             <ViewNav />
             <Loading />
             <Settings />
             <About />
-            <PageOptions />
-            <PdfUpload />
+            <PageMenu />
+            <ImportMenu />
+            <ExportMenu />
             <Session />
         </WhiteboardStyled>
     )

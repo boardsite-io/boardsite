@@ -4,13 +4,15 @@ export interface MenuState {
     settingsOpen: boolean
     aboutOpen: boolean
     pageActionsOpen: boolean
-    pdfUploadOpen: boolean
+    importMenuOpen: boolean
+    exportMenuOpen: boolean
 }
 const initState: MenuState = {
     settingsOpen: false,
     aboutOpen: false,
     pageActionsOpen: false,
-    pdfUploadOpen: false,
+    importMenuOpen: false,
+    exportMenuOpen: false,
 }
 const loadingSlice = createSlice({
     name: "menu",
@@ -34,11 +36,17 @@ const loadingSlice = createSlice({
         CLOSE_PAGE_ACTIONS: (state) => {
             state.pageActionsOpen = false
         },
-        OPEN_PDF_UPLOAD: (state) => {
-            state.pdfUploadOpen = true
+        OPEN_IMPORT_MENU: (state) => {
+            state.importMenuOpen = true
         },
-        CLOSE_PDF_UPLOAD: (state) => {
-            state.pdfUploadOpen = false
+        CLOSE_IMPORT_MENU: (state) => {
+            state.importMenuOpen = false
+        },
+        OPEN_EXPORT_MENU: (state) => {
+            state.exportMenuOpen = true
+        },
+        CLOSE_EXPORT_MENU: (state) => {
+            state.exportMenuOpen = false
         },
     },
 })
@@ -50,8 +58,10 @@ export const {
     CLOSE_ABOUT,
     OPEN_PAGE_ACTIONS,
     CLOSE_PAGE_ACTIONS,
-    OPEN_PDF_UPLOAD,
-    CLOSE_PDF_UPLOAD,
+    OPEN_IMPORT_MENU,
+    CLOSE_IMPORT_MENU,
+    OPEN_EXPORT_MENU,
+    CLOSE_EXPORT_MENU,
 } = loadingSlice.actions
 
 export default loadingSlice.reducer

@@ -7,7 +7,7 @@ const drawingSlice = createSlice({
     name: "drawing",
     initialState: newState(),
     reducers: {
-        REPLACE_FAV_TOOL: (state, action) => {
+        REPLACE_FAVORITE_TOOL: (state, action) => {
             const index = action.payload as number
             const tool: Tool = {
                 type: state.tool.type,
@@ -19,14 +19,14 @@ const drawingSlice = createSlice({
                 tool.type !== ToolType.Eraser &&
                 tool.type !== ToolType.Select
             ) {
-                state.favTools[index] = tool
+                state.favoriteTools[index] = tool
             }
         },
-        REMOVE_FAV_TOOL: (state, action) => {
+        REMOVE_FAVORITE_TOOL: (state, action) => {
             const index = action.payload
-            state.favTools.splice(index, 1)
+            state.favoriteTools.splice(index, 1)
         },
-        ADD_FAV_TOOL: (state) => {
+        ADD_FAVORITE_TOOL: (state) => {
             const tool: Tool = {
                 type: state.tool.type,
                 style: { ...state.tool.style },
@@ -37,7 +37,7 @@ const drawingSlice = createSlice({
                 tool.type !== ToolType.Eraser &&
                 tool.type !== ToolType.Select
             ) {
-                state.favTools.push(tool)
+                state.favoriteTools.push(tool)
             }
         },
         SET_TOOL: (state, action) => {
@@ -79,9 +79,9 @@ const drawingSlice = createSlice({
 })
 
 export const {
-    REPLACE_FAV_TOOL,
-    REMOVE_FAV_TOOL,
-    ADD_FAV_TOOL,
+    REPLACE_FAVORITE_TOOL,
+    REMOVE_FAVORITE_TOOL,
+    ADD_FAVORITE_TOOL,
     SET_TOOL,
     SET_COLOR,
     SET_WIDTH,

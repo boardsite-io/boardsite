@@ -1,3 +1,4 @@
+import { ToolType } from "drawing/stroke/index.types"
 import React, { FC } from "react"
 import {
     StyledCircle,
@@ -59,4 +60,14 @@ export {
     RedoIcon,
     DownloadIcon,
     UploadIcon,
+}
+
+export const ToolIcons = {
+    [ToolType.Pen]: PenIcon,
+    [ToolType.Line]: LineIcon,
+    [ToolType.Rectangle]: RectangleIcon,
+    [ToolType.Circle]: CircleIcon,
+    [ToolType.Eraser]: EraserIcon,
+    [ToolType.Pan]: PanIcon,
+    [ToolType.Select]: SelectIcon,
 }

@@ -4,7 +4,7 @@ import { Position } from "./index.types"
 
 interface TooltipProps {
     children: ReactNode
-    text: string
+    text: JSX.Element
     position: Position
 }
 

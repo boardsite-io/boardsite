@@ -1,3 +1,4 @@
+import { FormattedMessage } from "language"
 import React from "react"
 import { useCustomSelector } from "hooks"
 import {
@@ -11,7 +12,6 @@ import {
 } from "components"
 import { ToolType } from "drawing/stroke/index.types"
 import { handleSetTool } from "drawing/handlers"
-import { ToolTipText } from "language"
 import { StyledShapeTools } from "./shapetools.styled"
 
 const ShapeTools: React.FC = () => {
@@ -21,7 +21,9 @@ const ShapeTools: React.FC = () => {
     )
     return (
         <StyledShapeTools>
-            <ToolTip position={Position.Right} text={ToolTipText.PenTool}>
+            <ToolTip
+                position={Position.Right}
+                text={<FormattedMessage id="Tool.Pen" />}>
                 <IconButton
                     active={typeSelector === ToolType.Pen}
                     onClick={() => {
@@ -35,7 +37,9 @@ const ShapeTools: React.FC = () => {
                     <PenIcon />
                 </IconButton>
             </ToolTip>
-            <ToolTip position={Position.Right} text={ToolTipText.LineTool}>
+            <ToolTip
+                position={Position.Right}
+                text={<FormattedMessage id="Tool.Line" />}>
                 <IconButton
                     active={typeSelector === ToolType.Line}
                     onClick={() => {
@@ -49,7 +53,9 @@ const ShapeTools: React.FC = () => {
                     <LineIcon />
                 </IconButton>
             </ToolTip>
-            <ToolTip position={Position.Right} text={ToolTipText.RectangleTool}>
+            <ToolTip
+                position={Position.Right}
+                text={<FormattedMessage id="Tool.Rectangle" />}>
                 <IconButton
                     active={typeSelector === ToolType.Rectangle}
                     onClick={() => {
@@ -63,7 +69,9 @@ const ShapeTools: React.FC = () => {
                     <RectangleIcon />
                 </IconButton>
             </ToolTip>
-            <ToolTip position={Position.Right} text={ToolTipText.CircleTool}>
+            <ToolTip
+                position={Position.Right}
+                text={<FormattedMessage id="Tool.Circle" />}>
                 <IconButton
                     active={typeSelector === ToolType.Circle}
                     onClick={() => {

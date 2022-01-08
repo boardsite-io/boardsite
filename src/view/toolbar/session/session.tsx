@@ -1,3 +1,4 @@
+import { FormattedMessage } from "language"
 import React from "react"
 import { BsPeople } from "react-icons/bs"
 import { IconButton, Position, ToolTip } from "components"
@@ -5,7 +6,6 @@ import { SET_SESSION_DIALOG } from "redux/session/session"
 import store from "redux/store"
 import { isConnected } from "api/session"
 import { DialogState } from "redux/session/session.types"
-import { ToolTipText } from "language"
 
 const handleClickOpen = () => {
     if (isConnected()) {
@@ -15,12 +15,16 @@ const handleClickOpen = () => {
     }
 }
 
-const Session: React.FC = () => (
-    <ToolTip position={Position.BottomRight} text={ToolTipText.Session}>
-        <IconButton onClick={handleClickOpen}>
-            <BsPeople id="icon" />
-        </IconButton>
-    </ToolTip>
-)
+const Session: React.FC = () => {
+    return (
+        <ToolTip
+            position={Position.BottomRight}
+            text={<FormattedMessage id="ToolBar.PageSettings" />}>
+            <IconButton onClick={handleClickOpen}>
+                <BsPeople id="icon" />
+            </IconButton>
+        </ToolTip>
+    )
+}
 
 export default Session

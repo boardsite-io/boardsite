@@ -1,10 +1,10 @@
+import { FormattedMessage } from "language"
 import React from "react"
 import { useCustomSelector } from "hooks"
 import store from "redux/store"
 import { SET_PAGE_BACKGROUND } from "redux/board/board"
 import { backgroundStyle } from "consts"
 import { Position, ToolTip } from "components"
-import { ToolTipText } from "language"
 import { Backgrounds, Blank, Checkered, Ruled } from "./index.styled"
 
 const PageBackgrounds: React.FC = () => {
@@ -16,7 +16,7 @@ const PageBackgrounds: React.FC = () => {
         <Backgrounds>
             <ToolTip
                 position={Position.Top}
-                text={ToolTipText.Background.Blank}>
+                text={<FormattedMessage id="PageBackground.Blank" />}>
                 <Blank
                     type="button"
                     $active={background === backgroundStyle.BLANK}
@@ -29,7 +29,7 @@ const PageBackgrounds: React.FC = () => {
             </ToolTip>
             <ToolTip
                 position={Position.Top}
-                text={ToolTipText.Background.Checkered}>
+                text={<FormattedMessage id="PageBackground.Checkered" />}>
                 <Checkered
                     type="button"
                     $active={background === backgroundStyle.CHECKERED}
@@ -42,7 +42,7 @@ const PageBackgrounds: React.FC = () => {
             </ToolTip>
             <ToolTip
                 position={Position.Top}
-                text={ToolTipText.Background.Ruled}>
+                text={<FormattedMessage id="PageBackground.Ruled" />}>
                 <Ruled
                     type="button"
                     $active={background === backgroundStyle.RULED}

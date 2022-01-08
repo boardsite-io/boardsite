@@ -1,3 +1,4 @@
+import { FormattedMessage } from "language"
 import React from "react"
 import { useCustomSelector } from "hooks"
 import {
@@ -10,7 +11,6 @@ import {
 } from "components"
 import { handleSetTool } from "drawing/handlers"
 import { ToolType } from "drawing/stroke/index.types"
-import { ToolTipText } from "language"
 import ActiveTool from "../activeTool"
 
 const ToolRing: React.FC = () => {
@@ -19,7 +19,9 @@ const ToolRing: React.FC = () => {
     return (
         <>
             <ActiveTool />
-            <ToolTip position={Position.Bottom} text={ToolTipText.EraserTool}>
+            <ToolTip
+                position={Position.Bottom}
+                text={<FormattedMessage id="Tool.Eraser" />}>
                 <IconButton
                     active={typeSelector === ToolType.Eraser}
                     onClick={() => handleSetTool({ type: ToolType.Eraser })}>
@@ -28,14 +30,16 @@ const ToolRing: React.FC = () => {
             </ToolTip>
             <ToolTip
                 position={Position.Bottom}
-                text={ToolTipText.SelectionTool}>
+                text={<FormattedMessage id="Tool.Selection" />}>
                 <IconButton
                     active={typeSelector === ToolType.Select}
                     onClick={() => handleSetTool({ type: ToolType.Select })}>
                     <SelectIcon />
                 </IconButton>
             </ToolTip>
-            <ToolTip position={Position.Bottom} text={ToolTipText.PanningTool}>
+            <ToolTip
+                position={Position.Bottom}
+                text={<FormattedMessage id="Tool.Panning" />}>
                 <IconButton
                     active={typeSelector === ToolType.Pan}
                     onClick={() => handleSetTool({ type: ToolType.Pan })}>

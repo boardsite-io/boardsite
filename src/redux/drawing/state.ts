@@ -18,7 +18,7 @@ export interface DrawingState {
     isDraggable: boolean
     directDraw: boolean
     tool: Tool
-    favTools: Tool[]
+    favoriteTools: Tool[]
     erasedStrokes: StrokeMap
 
     serialize?(): SerializedDrawingState
@@ -39,7 +39,7 @@ export const newState = (state?: DrawingState): DrawingState => ({
             opacity: 1,
         },
     },
-    favTools: DEFAULT_FAV_TOOLS,
+    favoriteTools: DEFAULT_FAV_TOOLS,
     erasedStrokes: {},
 
     serialize(): SerializedDrawingState {
