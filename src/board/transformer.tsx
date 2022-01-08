@@ -65,7 +65,7 @@ const CustomTransformer = memo<CustomTransformerProps>(
          */
         const onStart = useCallback(() => {
             // Remove transformStrokes from the contentLayer
-            handleDeleteStrokes(...cloneDeep(transformStrokes))
+            handleDeleteStrokes(cloneDeep(transformStrokes))
         }, [transformStrokes])
 
         /**
@@ -80,7 +80,7 @@ const CustomTransformer = memo<CustomTransformerProps>(
             })
 
             // Add transformStrokes back to the contentLayer
-            handleAddStrokes(true, ...cloneDeep(updatedStrokes))
+            handleAddStrokes(cloneDeep(updatedStrokes), true)
         }, [transformStrokes])
 
         return (

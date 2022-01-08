@@ -1,6 +1,6 @@
 import { BoardPage } from "drawing/page"
 import { Stroke, StrokeUpdate } from "drawing/stroke/index.types"
-import { PageMeta, PageRank } from "redux/board/board.types"
+import { Page, PageMeta, PageRank } from "redux/board/board.types"
 
 // api
 export const API_URL = process.env.REACT_APP_B_API_URL as string
@@ -21,11 +21,14 @@ export interface Session {
     isConnected(): boolean
     disconnect(): void
     send(type: MessageType, content: unknown): void
-    sendStrokes(...strokes: Stroke[] | StrokeUpdate[]): void
-    eraseStrokes(...strokes: { id: string; pageId: string }[]): void
+    sendStrokes(strokes: Stroke[] | StrokeUpdate[]): void
+    eraseStrokes(strokes: { id: string; pageId: string }[]): void
     addPages(pages: BoardPage[], pageIndex: number[]): Promise<void>
-    deletePages(...pageIds: string[]): Promise<void>
-    updatePages(clear: boolean, ...pages: BoardPage[]): Promise<void>
+    deletePages(pageIds: string[]): Promise<void>
+    updatePages(
+        pages: Pick<Page, "pageId" | "meta">[],
+        clear: boolean
+    ): Promise<void>
     addAttachment(file: File): Promise<URL>
     getAttachment(attachId: string): Promise<[unknown, URL]>
     attachURL(attachId: string): URL

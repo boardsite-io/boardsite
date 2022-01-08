@@ -14,8 +14,8 @@ export interface BoardState {
     documentImages: DocumentImages
     documentSrc: DocumentSrc
     stage: BoardStage
-    undoStack?: BoardAction[]
-    redoStack?: BoardAction[]
+    undoStack?: StackAction[]
+    redoStack?: StackAction[]
     strokeUpdates?: StrokeUpdate[]
     transformStrokes?: TransformStrokes
     transformPagePosition?: Point
@@ -46,24 +46,25 @@ export interface BoardStage {
 }
 
 export type DocumentSrc = URL | string | Uint8Array
-export interface BoardAction {
-    handleFunc: (boardState: BoardState) => void
-    undoHandleFunc: (boardState: BoardState) => void
+export interface StackAction {
+    handler: (boardState: BoardState) => void
+    undoHandler: (boardState: BoardState) => void
 }
 
-export interface StrokeAction {
-    strokes: Stroke[] | StrokeUpdate[]
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export interface BoardAction<T extends any[], U extends any[]> {
+    data: T
     isUpdate?: boolean
     isRedoable?: boolean
-    sessionHandler?: (...updates: Stroke[] | StrokeUpdate[]) => void
-    sessionUndoHandler?: (...updates: Stroke[] | StrokeUpdate[]) => void
+    sessionHandler?: (...redos: T) => void
+    sessionUndoHandler?: (...undos: U) => void
 }
 
 export interface ActionConfig {
     handler: (boardState: BoardState) => void
     undoHandler: (boardState: BoardState) => void
     state: BoardState
-    stack?: BoardAction[]
+    stack?: StackAction[]
     isRedoable?: boolean
     isNew?: boolean
 }
@@ -108,24 +109,25 @@ export type SetPageRank = {
     pageRank: PageRank
     pageCollection: PageCollection
 }
-export type SetPageMeta = {
-    pageId: PageId
-    meta: PageMeta
-}
+export type SetPageMeta = BoardAction<
+    Pick<Page, "pageId" | "meta">[],
+    Pick<Page, "pageId" | "meta">[]
+>
 export type SetPageBackground = PageBackgroundStyle
 export type SetPageSize = PageSize
-export type AddPage = {
+export type AddPageData = {
     page: Page
-    index: number
+    index?: number
 }
-export type ClearPage = PageId
-export type DeletePages = PageId[]
+export type AddPages = BoardAction<AddPageData[], void[]>
+export type ClearPages = BoardAction<PageId[], Stroke[]>
+export type DeletePages = BoardAction<PageId[], AddPageData[]>
 export type MoveShapesToDragLayer = {
     strokes: Stroke[]
     pagePosition?: Point
 }
-export type AddStrokes = StrokeAction
-export type EraseStrokes = StrokeAction
+export type AddStrokes = BoardAction<Stroke[], void[]>
+export type EraseStrokes = BoardAction<Stroke[], void[]>
 export type SetPdf = {
     documentImages: DocumentImages
     documentSrc: DocumentSrc

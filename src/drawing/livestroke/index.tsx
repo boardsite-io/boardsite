@@ -198,7 +198,7 @@ export class BoardLiveStroke implements LiveStroke {
                     (id) => erasedStrokes[id]
                 )
                 if (strokes.length > 0) {
-                    handleDeleteStrokes(...strokes)
+                    handleDeleteStrokes(strokes)
                 }
                 store.dispatch(CLEAR_ERASED_STROKES())
                 break
@@ -219,7 +219,7 @@ export class BoardLiveStroke implements LiveStroke {
                 break
             }
             default: {
-                handleAddStrokes(false, stroke)
+                handleAddStrokes([stroke], false)
             }
         }
     }

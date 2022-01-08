@@ -1,11 +1,10 @@
 import { cloneDeep } from "lodash"
 import { Stroke, Tool } from "drawing/stroke/index.types"
 import {
-    CLEAR_PAGE,
+    CLEAR_PAGES,
     DELETE_PAGES,
-    DELETE_ALL_PAGES,
     SET_PAGEMETA,
-    ADD_PAGE,
+    ADD_PAGES,
     ADD_STROKES,
     ERASE_STROKES,
     UNDO_ACTION,
@@ -17,7 +16,16 @@ import { currentSession, isConnected } from "api/session"
 import { backgroundStyle } from "consts"
 import store from "redux/store"
 import { SET_TOOL } from "redux/drawing/drawing"
-import { PageId, PageMeta, StrokeAction } from "redux/board/board.types"
+import {
+    PageMeta,
+    DeletePages,
+    AddPages,
+    AddStrokes,
+    EraseStrokes,
+    PageId,
+    ClearPages,
+    SetPageMeta,
+} from "redux/board/board.types"
 import { BoardPage } from "./page"
 
 const createPage = (): BoardPage =>
@@ -31,81 +39,129 @@ export function handleSetTool(tool: Partial<Tool>): void {
 export function handleAddPageOver(): void {
     const page = createPage()
     const index = store.getState().board.currentPageIndex
-    if (isConnected()) {
-        currentSession().addPages([page], [index])
-    } else {
-        store.dispatch(ADD_PAGE({ page, index }))
+    const payload: AddPages = {
+        data: [{ page, index }],
+        isRedoable: true,
     }
+
+    if (isConnected()) {
+        const session = currentSession()
+        payload.sessionHandler = () => session.addPages([page], [index])
+        payload.sessionUndoHandler = () => session.deletePages([page.pageId])
+    }
+
+    store.dispatch(ADD_PAGES(payload))
 }
 
 export function handleAddPageUnder(): void {
     const page = createPage()
     const index = store.getState().board.currentPageIndex + 1
-    if (isConnected()) {
-        currentSession().addPages([page], [index])
-    } else {
-        store.dispatch(ADD_PAGE({ page, index }))
+    const payload: AddPages = {
+        data: [{ page, index }],
+        isRedoable: true,
     }
+
+    if (isConnected()) {
+        const session = currentSession()
+        payload.sessionHandler = () => session.addPages([page], [index])
+        payload.sessionUndoHandler = () => session.deletePages([page.pageId])
+    }
+
+    store.dispatch(ADD_PAGES(payload))
     store.dispatch(JUMP_TO_NEXT_PAGE())
 }
 
 export function handleClearPage(): void {
-    if (isConnected()) {
-        currentSession().updatePages(true, getCurrentPage())
-    } else {
-        store.dispatch(CLEAR_PAGE(getCurrentPageId()))
+    handleClearPages([getCurrentPageId()])
+}
+
+export function handleClearPages(pageIds: PageId[]): void {
+    const payload: ClearPages = {
+        data: pageIds,
+        isRedoable: true,
     }
+
+    if (isConnected()) {
+        const session = currentSession()
+        const pages = pageIds.map(
+            (pid) => store.getState().board.pageCollection[pid]
+        )
+        payload.sessionHandler = () => {
+            session.updatePages(pages, true)
+        }
+        payload.sessionUndoHandler = (...undos) => {
+            session.sendStrokes(undos)
+        }
+    }
+
+    store.dispatch(CLEAR_PAGES(payload))
 }
 
 export function handleDeleteCurrentPage(): void {
-    handleDeletePages(getCurrentPageId())
+    handleDeletePages([getCurrentPageId()], true)
 }
 
-export function handleDeletePages(...pageIds: PageId[]): void {
-    if (isConnected()) {
-        currentSession().deletePages(...pageIds)
-    } else {
-        store.dispatch(DELETE_PAGES(pageIds))
-    }
-}
-
-export function handleDeleteAllPages(): void {
-    if (isConnected()) {
-        currentSession().deletePages(...store.getState().board.pageRank)
-    } else {
-        store.dispatch(DELETE_ALL_PAGES())
-    }
-}
-
-export function handleAddStrokes(
-    isUpdate: boolean,
-    ...strokes: Stroke[]
+export function handleDeletePages(
+    pageIds: PageId[],
+    isRedoable?: boolean
 ): void {
-    const payload: StrokeAction = {
-        strokes,
+    const payload: DeletePages = {
+        data: pageIds,
+        isRedoable,
+    }
+
+    if (isConnected()) {
+        const session = currentSession()
+        const indices = pageIds.map((pid) =>
+            store.getState().board.pageRank.indexOf(pid)
+        )
+        payload.sessionHandler = () => session.deletePages(pageIds)
+        payload.sessionUndoHandler = (...undos) => {
+            const pages = undos.map(({ page }) => page)
+            // TODO: send pagerank
+            session.addPages(pages, indices as number[])
+            session.sendStrokes(
+                pages.reduce<Stroke[]>(
+                    (arr, page) => arr.concat(Object.values(page.strokes)),
+                    []
+                )
+            )
+        }
+    }
+
+    store.dispatch(DELETE_PAGES(payload))
+}
+
+export function handleDeleteAllPages(isRedoable?: boolean): void {
+    handleDeletePages(store.getState().board.pageRank, isRedoable)
+}
+
+export function handleAddStrokes(strokes: Stroke[], isUpdate: boolean): void {
+    const payload: AddStrokes = {
+        data: strokes,
         isUpdate,
         isRedoable: true,
     }
 
     if (isConnected()) {
         const session = currentSession()
-        payload.sessionHandler = () => session.sendStrokes(...strokes)
-        payload.sessionUndoHandler = () => session.eraseStrokes(...strokes)
+        payload.sessionHandler = () => session.sendStrokes(strokes)
+        payload.sessionUndoHandler = () => session.eraseStrokes(strokes)
     }
 
     store.dispatch(ADD_STROKES(payload))
 }
 
-export function handleDeleteStrokes(...strokes: Stroke[]): void {
-    const payload: StrokeAction = {
-        strokes,
+export function handleDeleteStrokes(strokes: Stroke[]): void {
+    const payload: EraseStrokes = {
+        data: strokes,
         isRedoable: true,
     }
 
     if (isConnected()) {
         const session = currentSession()
-        payload.sessionHandler = () => session.eraseStrokes(...strokes)
-        payload.sessionUndoHandler = () => session.sendStrokes(...strokes)
+        payload.sessionHandler = () => session.eraseStrokes(strokes)
+        payload.sessionUndoHandler = () => session.sendStrokes(strokes)
     }
 
     store.dispatch(ERASE_STROKES(payload))
@@ -136,13 +192,24 @@ export function handleChangePageBackground(): void {
     const newMeta = cloneDeep<PageMeta>(currentPage.meta)
     newMeta.background.style = store.getState().board.pageMeta.background.style
 
-    if (isConnected()) {
-        currentSession().updatePages(false, currentPage.updateMeta(newMeta))
-    } else {
-        store.dispatch(
-            SET_PAGEMETA({ pageId: currentPage.pageId, meta: newMeta })
-        )
+    const pageUpdate = {
+        pageId: currentPage.pageId,
+        meta: newMeta,
     }
+
+    const payload: SetPageMeta = {
+        data: [pageUpdate],
+        isRedoable: true,
+    }
+
+    if (isConnected()) {
+        const session = currentSession()
+        payload.sessionHandler = () => session.updatePages([pageUpdate], false)
+        payload.sessionUndoHandler = (...undos) =>
+            session.updatePages(undos, false)
+    }
+
+    store.dispatch(SET_PAGEMETA(payload))
 }
 
 function getCurrentPageId() {

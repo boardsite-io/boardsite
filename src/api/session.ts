@@ -1,4 +1,4 @@
-import { PageCollection } from "redux/board/board.types"
+import { Page, PageCollection } from "redux/board/board.types"
 import { Stroke, StrokeUpdate, ToolType } from "drawing/stroke/index.types"
 import { Util } from "konva/lib/Util"
 import {
@@ -15,7 +15,8 @@ import { handleLoadFromSource } from "drawing/pdf/io"
 import {
     ADD_STROKES,
     CLEAR_DOCS,
-    CLEAR_PAGE,
+    CLEAR_PAGES,
+    CLEAR_UNDO_REDO,
     DELETE_ALL_PAGES,
     ERASE_STROKES,
     SET_PAGEMETA,
@@ -94,7 +95,7 @@ export class BoardSession implements Session {
         // fetch data from each page
         pageRank.forEach(async (pageId) => {
             const strokes = await this.request.getStrokes(pageId)
-            store.dispatch(ADD_STROKES({ strokes }))
+            store.dispatch(ADD_STROKES({ data: strokes }))
         })
     }
 
@@ -140,7 +141,7 @@ export class BoardSession implements Session {
         this.socket?.send(JSON.stringify(message))
     }
 
-    sendStrokes(...strokes: Stroke[] | StrokeUpdate[]): void {
+    sendStrokes(strokes: Stroke[] | StrokeUpdate[]): void {
         const strokesToSend = strokes
             .map((s) => {
                 if (s.id && s.pageId) {
@@ -156,7 +157,7 @@ export class BoardSession implements Session {
         this.send(messages.Stroke, strokesToSend)
     }
 
-    eraseStrokes(...strokes: StrokeDelete[]): void {
+    eraseStrokes(strokes: StrokeDelete[]): void {
         this.send(
             messages.Stroke,
             strokes.map((s) => ({
@@ -172,11 +173,14 @@ export class BoardSession implements Session {
         this.request.postPages(pages, pageIndex)
     }
 
-    async deletePages(...pageIds: string[]): Promise<void> {
+    async deletePages(pageIds: string[]): Promise<void> {
         this.request.deletePages(pageIds)
     }
 
-    async updatePages(clear = false, ...pages: BoardPage[]): Promise<void> {
+    async updatePages(
+        pages: Pick<Page, "pageId" | "meta">[],
+        clear = false
+    ): Promise<void> {
         this.request.putPages(pages, clear)
     }
 
@@ -244,20 +248,16 @@ export class BoardSession implements Session {
     static receiveStrokes(strokes: Stroke[]): void {
         const erasedStrokes = strokes.filter((s) => s.type === 0)
         if (erasedStrokes.length > 0) {
-            store.dispatch(ERASE_STROKES({ strokes: erasedStrokes }))
+            store.dispatch(ERASE_STROKES({ data: erasedStrokes }))
         }
 
         strokes = strokes.filter((s) => s.type !== 0)
         if (strokes.length > 0) {
-            store.dispatch(ADD_STROKES({ strokes }))
+            store.dispatch(ADD_STROKES({ data: strokes }))
         }
     }
 
     static syncPages({ pageRank, meta }: ResponsePageSync): void {
-        if (pageRank.length === 0) {
-            store.dispatch(DELETE_ALL_PAGES())
-            return
-        }
         const { pageCollection } = store.getState().board
         const newPageCollection: PageCollection = {}
         pageRank.forEach((pid: string) => {
@@ -274,9 +274,13 @@ export class BoardSession implements Session {
 
         let isLoaded = false
         Object.keys(meta).forEach((pageId) => {
-            store.dispatch(SET_PAGEMETA({ pageId, meta: meta[pageId] }))
+            store.dispatch(
+                SET_PAGEMETA({ data: [{ pageId, meta: meta[pageId] }] })
+            )
             const { attachURL } = meta[pageId].background
             if (!isLoaded && attachURL) {
+                // clear the stacks documents have been imported
+                store.dispatch(CLEAR_UNDO_REDO())
                 handleLoadFromSource(attachURL)
                 isLoaded = true
             }
@@ -285,10 +289,12 @@ export class BoardSession implements Session {
 
     static updatePageMeta({ pageId, meta, clear }: ResponsePageUpdate): void {
         if (clear) {
-            pageId.forEach((pid) => store.dispatch(CLEAR_PAGE(pid)))
+            store.dispatch(CLEAR_PAGES({ data: pageId }))
         }
         pageId.forEach((pid) =>
-            store.dispatch(SET_PAGEMETA({ pageId: pid, meta: meta[pid] }))
+            store.dispatch(
+                SET_PAGEMETA({ data: [{ pageId: pid, meta: meta[pid] }] })
+            )
         )
     }
 

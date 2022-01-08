@@ -97,7 +97,7 @@ const PageOptions: React.FC = () => {
                     <BsFileRuled />
                     Clear page
                 </Button>
-                <Button withIcon onClick={handleDeleteAllPages}>
+                <Button withIcon onClick={() => handleDeleteAllPages(true)}>
                     <BsTrash />
                     Delete all pages
                 </Button>
