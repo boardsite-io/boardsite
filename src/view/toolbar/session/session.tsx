@@ -19,7 +19,7 @@ const Session: React.FC = () => {
     return (
         <ToolTip
             position={Position.BottomRight}
-            text={<FormattedMessage id="ToolBar.PageSettings" />}>
+            text={<FormattedMessage id="ToolBar.Session" />}>
             <IconButton onClick={handleClickOpen}>
                 <BsPeople id="transitory-icon" />
             </IconButton>
