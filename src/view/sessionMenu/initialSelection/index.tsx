@@ -8,6 +8,7 @@ import { DialogState } from "redux/session/session.types"
 import { SET_SESSION_DIALOG } from "redux/session/session"
 import { LOAD_BOARD_STATE } from "redux/board/board"
 import { loadIndexedDB } from "redux/localstorage"
+import { BoardState } from "redux/board/board.types"
 
 const createOfflineSession = () => {
     handleAddPageUnder()
@@ -21,7 +22,7 @@ const createOnlineSession = () => {
 const continuePreviousSession = async () => {
     const state = await loadIndexedDB("board")
 
-    store.dispatch(LOAD_BOARD_STATE(state.board))
+    store.dispatch(LOAD_BOARD_STATE(state.board as BoardState))
     store.dispatch(SET_SESSION_DIALOG(DialogState.Closed))
 }
 

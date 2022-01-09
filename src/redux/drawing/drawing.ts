@@ -1,5 +1,6 @@
 import { StrokeMap, Tool, ToolType } from "drawing/stroke/index.types"
 import { createSlice } from "@reduxjs/toolkit"
+import { assign, pick, keys } from "lodash"
 import { newState } from "./state"
 import { isDrawType } from "./helpers"
 
@@ -7,6 +8,9 @@ const drawingSlice = createSlice({
     name: "drawing",
     initialState: newState(),
     reducers: {
+        LOAD: (state, action) => {
+            assign(state, pick(action.payload, keys(state)))
+        },
         REPLACE_FAVORITE_TOOL: (state, action) => {
             const index = action.payload as number
             const tool: Tool = {
@@ -79,6 +83,7 @@ const drawingSlice = createSlice({
 })
 
 export const {
+    LOAD,
     REPLACE_FAVORITE_TOOL,
     REMOVE_FAVORITE_TOOL,
     ADD_FAVORITE_TOOL,

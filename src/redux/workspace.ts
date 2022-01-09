@@ -1,12 +1,57 @@
-import download from "downloadjs"
-import { deflate } from "pako"
-import { BoardState } from "./board/board.types"
+import { deflate, inflate } from "pako"
+import { newState } from "./localstorage"
+import { States } from "./reducer"
+import {
+    FileHeader,
+    RootState,
+    SerializableStateRecord,
+    SerializableStates,
+} from "./types"
 
 const fileVersion = "1.0"
-const fileExt = ".boardio"
-const statesToSave = ["board"]
+const statesToSave: SerializableStates[] = ["board"]
+export const fileExt = ".boardio"
 
-const createFileHeader = (version: string, states: string[]): Uint8Array => {
+export function saveWorkspace(rootState: SerializableStateRecord): Uint8Array {
+    const header = createFileHeader(fileVersion, statesToSave)
+    const body = statesToSave.map((name) =>
+        deflate(JSON.stringify(rootState[name].serialize?.()))
+    )
+    return concatFileSegments(header, ...body)
+}
+
+/**
+ * Extracts states from a file. Only those in statesToSave are considered.
+ * @param file
+ * @returns
+ */
+export async function loadWorkspace(
+    file: Uint8Array
+): Promise<Partial<RootState>> {
+    try {
+        const segments = getFileSegments(file).map((seg) =>
+            JSON.parse(inflate(seg, { to: "string" }))
+        )
+        const states = verifyFileHeader(segments)
+
+        const state = {} as Record<States, object | undefined>
+        const res = states.map(async (name, i) => {
+            // skip unsupported states
+            if (name) {
+                state[name] = await newState(name)?.deserialize?.(
+                    segments[i + 1]
+                )
+            }
+        })
+        await Promise.all(res)
+
+        return state as Partial<RootState>
+    } catch (err) {
+        throw new Error(`loadWorkspace: ${err}`)
+    }
+}
+
+function createFileHeader(version: string, states: string[]): Uint8Array {
     const header = {
         version,
         states,
@@ -14,10 +59,35 @@ const createFileHeader = (version: string, states: string[]): Uint8Array => {
     return deflate(JSON.stringify(header))
 }
 
-const toUint32 = (x: number): Uint8Array => {
+function verifyFileHeader(segments: object[]): (SerializableStates | null)[] {
+    const { version, states } = segments[0] as FileHeader
+    switch (version) {
+        case fileVersion:
+            // latest version; no preprocessing required
+            break
+
+        default:
+            throw new Error(
+                `cannot read file, unknown or missing version ${version}`
+            )
+    }
+    return states.map((name) =>
+        statesToSave.indexOf(name) !== -1 ? name : null
+    )
+}
+
+function toUint32(x: number): Uint8Array {
     const buf = new ArrayBuffer(4)
     new DataView(buf).setUint32(0, x, true)
     return new Uint8Array(buf)
+}
+
+function fromUint32(data: Uint8Array): number {
+    let x = 0
+    for (let i = 0; i < 4; i++) {
+        x += data[i] << (i * 8)
+    }
+    return x
 }
 
 /**
@@ -25,7 +95,7 @@ const toUint32 = (x: number): Uint8Array => {
  * @param arrs
  * @returns
  */
-const concatFileSegments = (...segments: Uint8Array[]): Uint8Array => {
+function concatFileSegments(...segments: Uint8Array[]): Uint8Array {
     const totalLength =
         segments.reduce((l, cur) => l + cur.length, 0) + 4 * segments.length
     const buf = new Uint8Array(totalLength)
@@ -39,12 +109,15 @@ const concatFileSegments = (...segments: Uint8Array[]): Uint8Array => {
     return buf
 }
 
-export const saveWorkspace = (filename: string, state: BoardState): void => {
-    const s = state.serialize?.()
-    const header = createFileHeader(fileVersion, statesToSave)
-    const body = deflate(JSON.stringify(s))
-
-    const content = concatFileSegments(header, body)
-
-    download(content, `${filename}${fileExt}`)
+function getFileSegments(data: Uint8Array): Uint8Array[] {
+    let offset = 0
+    const result: Uint8Array[] = []
+    while (offset < data.length) {
+        const size = fromUint32(data.slice(offset, offset + 4))
+        offset += 4
+        const segment = data.slice(offset, offset + size)
+        offset += size
+        result.push(segment)
+    }
+    return result
 }

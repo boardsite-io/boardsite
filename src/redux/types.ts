@@ -12,7 +12,19 @@ export type RootState = {
     menu: MenuState
 }
 
+export type FileHeader = {
+    version: string
+    states: SerializableStates[]
+}
+
+export type SerializableStates = "board" | "drawing"
+
+export type SerializableStateRecord = Record<
+    SerializableStates,
+    SerializableState<object, object>
+>
+
 export interface SerializableState<T extends object, U extends object> {
     serialize?(): T
-    deserialize?(parsed: object): U
+    deserialize?(parsed: object): Promise<U>
 }
