@@ -1,5 +1,5 @@
 import { FormattedMessage } from "language"
-import React from "react"
+import React, { memo } from "react"
 import { nanoid } from "@reduxjs/toolkit"
 import { useCustomSelector } from "hooks"
 import store from "redux/store"
@@ -8,7 +8,7 @@ import { STROKE_WIDTH_PRESETS } from "consts"
 import { Position, ToolTip } from "components"
 import { Preset, WidthPresetInnerDot, WidthPresets } from "./widthpicker.styled"
 
-const WidthPicker: React.FC = () => {
+const WidthPicker: React.FC = memo(() => {
     const widthSelector = useCustomSelector(
         (state) => state.drawing.tool.style.width
     )
@@ -34,6 +34,6 @@ const WidthPicker: React.FC = () => {
             ))}
         </WidthPresets>
     )
-}
+})
 
 export default WidthPicker
