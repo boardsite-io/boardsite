@@ -11,7 +11,7 @@ const PageOptions: React.FC = () => {
             position={Position.BottomLeft}
             text={<FormattedMessage id="ToolBar.PageSettings" />}>
             <IconButton onClick={() => store.dispatch(OPEN_PAGE_ACTIONS())}>
-                <BsFileDiff />
+                <BsFileDiff id="transitory-icon" />
             </IconButton>
         </ToolTip>
     )

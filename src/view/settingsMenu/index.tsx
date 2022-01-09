@@ -48,7 +48,7 @@ const SettingsMenu: React.FC = () => {
             open={settingsOpen}
             onClose={() => store.dispatch(CLOSE_SETTINGS())}>
             <DrawerTitle>
-                <BsGear />
+                <BsGear id="transitory-icon" />
                 <FormattedMessage id="SettingsMenu.GeneralSettings.Title" />
             </DrawerTitle>
             <DrawerContent>
@@ -75,7 +75,7 @@ const SettingsMenu: React.FC = () => {
                 </Setting>
             </DrawerContent>
             <DrawerTitle>
-                <VscDebugDisconnect />
+                <VscDebugDisconnect id="transitory-icon" />
                 <FormattedMessage id="SettingsMenu.Connection.Title" />
             </DrawerTitle>
             <DrawerContent>
@@ -92,7 +92,7 @@ const SettingsMenu: React.FC = () => {
                 </Setting>
             </DrawerContent>
             <DrawerTitle>
-                <BsInfoCircle />
+                <BsInfoCircle id="transitory-icon" />
                 <FormattedMessage id="SettingsMenu.About.Title" />
             </DrawerTitle>
             <DrawerContent>
@@ -104,7 +104,7 @@ const SettingsMenu: React.FC = () => {
                             store.dispatch(CLOSE_SETTINGS())
                             store.dispatch(OPEN_ABOUT())
                         }}>
-                        <BsInfoCircle />
+                        <BsInfoCircle id="transitory-icon" />
                         <FormattedMessage id="SettingsMenu.About.Button" />
                     </Button>
                 </Setting>

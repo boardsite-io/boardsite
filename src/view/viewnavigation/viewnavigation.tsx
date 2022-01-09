@@ -38,14 +38,14 @@ const ViewNavigation: React.FC = () => {
                 position={Position.Left}>
                 <IconButton
                     onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
-                    <CgPushChevronUp id="icon" />
+                    <CgPushChevronUp id="transitory-icon" />
                 </IconButton>
             </ToolTip>
             <ToolTip
                 text={<FormattedMessage id="Navigate.PreviousPage" />}
                 position={Position.Left}>
                 <IconButton onClick={() => store.dispatch(JUMP_TO_PREV_PAGE())}>
-                    <CgChevronUp id="icon" />
+                    <CgChevronUp id="transitory-icon" />
                 </IconButton>
             </ToolTip>
             <ToolTip
@@ -62,14 +62,14 @@ const ViewNavigation: React.FC = () => {
                 text={<FormattedMessage id="Navigate.NextPage" />}
                 position={Position.Left}>
                 <IconButton onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE())}>
-                    <CgChevronDown id="icon" />
+                    <CgChevronDown id="transitory-icon" />
                 </IconButton>
             </ToolTip>
             <ToolTip
                 text={<FormattedMessage id="Navigate.LastPage" />}
                 position={Position.Left}>
                 <IconButton onClick={() => store.dispatch(JUMP_TO_LAST_PAGE())}>
-                    <CgPushChevronDown id="icon" />
+                    <CgPushChevronDown id="transitory-icon" />
                 </IconButton>
             </ToolTip>
         </ViewNavWrapper>

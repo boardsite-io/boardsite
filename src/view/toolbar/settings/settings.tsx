@@ -11,7 +11,7 @@ const Settings: React.FC = () => {
             position={Position.BottomRight}
             text={<FormattedMessage id="ToolBar.Settings" />}>
             <IconButton onClick={() => store.dispatch(OPEN_SETTINGS())}>
-                <BsGear id="icon" />
+                <BsGear id="transitory-icon" />
             </IconButton>
         </ToolTip>
     )
