@@ -1,21 +1,26 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { IntlMessageKeys } from "language"
+
+type LoadingInfo = {
+    messageId: IntlMessageKeys
+}
 
 export interface LoadingState {
     isLoading: boolean
-    message: string
+    loadingInfo: LoadingInfo
 }
 
 const initState: LoadingState = {
     isLoading: false,
-    message: "Loading...",
+    loadingInfo: { messageId: "Loading.ExportingPdf" },
 }
 
 const loadingSlice = createSlice({
     name: "loading",
     initialState: initState,
     reducers: {
-        START_LOADING: (state, action: { payload: string }) => {
-            state.message = action.payload
+        START_LOADING: (state, action: PayloadAction<LoadingInfo>) => {
+            state.loadingInfo = action.payload
             state.isLoading = true
         },
         END_LOADING: (state) => {

@@ -1,8 +1,9 @@
+import { FormattedMessage } from "language"
 import React, { useState } from "react"
+import store from "redux/store"
 import { BsGear, BsInfoCircle } from "react-icons/bs"
 import isElectron from "is-electron"
 import { VscDebugDisconnect } from "react-icons/vsc"
-import store from "redux/store"
 import {
     Button,
     Drawer,
@@ -18,9 +19,9 @@ import { useCustomSelector } from "hooks"
 import { API_URL } from "api/types"
 import isDev from "consts"
 import { CLOSE_SETTINGS, OPEN_ABOUT } from "redux/menu/menu"
-import { Setting } from "./settings.styled"
+import { Setting } from "./index.styled"
 
-const Settings: React.FC = () => {
+const SettingsMenu: React.FC = () => {
     const [url, setURL] = useState(API_URL)
     const [isValidURL, setValidURL] = useState(true)
     // const [isOpenAbout, setOpenAbout] = useState(false) // about dialog
@@ -48,25 +49,25 @@ const Settings: React.FC = () => {
             onClose={() => store.dispatch(CLOSE_SETTINGS())}>
             <DrawerTitle>
                 <BsGear />
-                General Settings
+                <FormattedMessage id="SettingsMenu.GeneralSettings.Title" />
             </DrawerTitle>
             <DrawerContent>
                 <Setting>
-                    Keep view centered
+                    <FormattedMessage id="SettingsMenu.GeneralSettings.KeepCentered" />
                     <Switch
                         enabled={keepCentered}
                         onClick={() => store.dispatch(TOGGLE_SHOULD_CENTER())}
                     />
                 </Setting>
                 <Setting>
-                    Hide navigation bar
+                    <FormattedMessage id="SettingsMenu.GeneralSettings.HideNavigationBar" />
                     <Switch
                         enabled={hideNavBar}
                         onClick={() => store.dispatch(TOGGLE_HIDE_NAVBAR())}
                     />
                 </Setting>
                 <Setting>
-                    Enable Direct Drawing
+                    <FormattedMessage id="SettingsMenu.GeneralSettings.EnableDirectDrawing" />
                     <Switch
                         enabled={directDraw}
                         onClick={() => store.dispatch(TOGGLE_DIRECTDRAW())}
@@ -75,7 +76,7 @@ const Settings: React.FC = () => {
             </DrawerContent>
             <DrawerTitle>
                 <VscDebugDisconnect />
-                Connection
+                <FormattedMessage id="SettingsMenu.Connection.Title" />
             </DrawerTitle>
             <DrawerContent>
                 <Setting>
@@ -92,7 +93,7 @@ const Settings: React.FC = () => {
             </DrawerContent>
             <DrawerTitle>
                 <BsInfoCircle />
-                About
+                <FormattedMessage id="SettingsMenu.About.Title" />
             </DrawerTitle>
             <DrawerContent>
                 <Setting>
@@ -104,7 +105,7 @@ const Settings: React.FC = () => {
                             store.dispatch(OPEN_ABOUT())
                         }}>
                         <BsInfoCircle />
-                        About boardsite.io
+                        <FormattedMessage id="SettingsMenu.About.Button" />
                     </Button>
                 </Setting>
             </DrawerContent>
@@ -112,4 +113,4 @@ const Settings: React.FC = () => {
     )
 }
 
-export default Settings
+export default SettingsMenu

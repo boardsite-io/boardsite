@@ -1,3 +1,4 @@
+import { FormattedMessage } from "language"
 import React from "react"
 import {
     Dialog,
@@ -36,20 +37,26 @@ const ExportMenu: React.FC = () => {
 
     return (
         <Dialog open={exportMenuOpen} onClose={handleClose}>
-            <DialogTitle>Export Options</DialogTitle>
+            <DialogTitle>
+                <FormattedMessage id="ExportMenu.Title" />
+            </DialogTitle>
             <DialogContent>
                 <ExportDescription>
-                    Please select your preferred export format. If you would
-                    like to be able to restore your session, please choose
-                    WORKSPACE.
+                    <FormattedMessage id="ExportMenu.Description" />
                 </ExportDescription>
                 <ExportOptions>
-                    <Button onClick={exportWorkspace}>Workspace</Button>
-                    <Button onClick={exportAsPdf}>Pdf</Button>
+                    <Button onClick={exportWorkspace}>
+                        <FormattedMessage id="ExportMenu.Button.Workspace" />
+                    </Button>
+                    <Button onClick={exportAsPdf}>
+                        <FormattedMessage id="ExportMenu.Button.Pdf" />
+                    </Button>
                 </ExportOptions>
             </DialogContent>
             <DialogOptions>
-                <Button onClick={handleClose}>Close</Button>
+                <Button onClick={handleClose}>
+                    <FormattedMessage id="ExportMenu.Close" />
+                </Button>
             </DialogOptions>
         </Dialog>
     )

@@ -1,6 +1,7 @@
+import { FormattedMessage } from "language"
 import React, { useState } from "react"
-import { useNavigate } from "react-router-dom"
 import store from "redux/store"
+import { useNavigate } from "react-router-dom"
 import { SET_SESSION_DIALOG } from "redux/session/session"
 import { BoardSession, currentSession } from "api/session"
 import {
@@ -11,6 +12,7 @@ import {
     UserSelection,
 } from "components"
 import { DialogState } from "redux/session/session.types"
+import { OnlineSessionOptions } from "./index.styled"
 
 const CreateOnlineSession: React.FC = () => {
     const [sidInput, setSidInput] = useState<string>("")
@@ -42,6 +44,7 @@ const CreateOnlineSession: React.FC = () => {
 
             navigate(path)
             store.dispatch(SET_SESSION_DIALOG(DialogState.Closed))
+            setIsValidInput(true)
         } catch (error) {
             setIsValidInput(false)
         }
@@ -55,24 +58,33 @@ const CreateOnlineSession: React.FC = () => {
         setSidInput(e.target.value)
     }
 
+    let helperText: JSX.Element | undefined
+
+    if (!isValidInput) {
+        helperText = (
+            <FormattedMessage id="SessionMenu.CreateOnline.InvalidSession" />
+        )
+    }
     return (
         <>
-            <DialogTitle>Collaborative Session 👋🏻</DialogTitle>
+            <DialogTitle>
+                <FormattedMessage id="SessionMenu.CreateOnline.Title" />
+            </DialogTitle>
             <DialogContent>
                 <UserSelection />
-                <Button onClick={handleCreate}>Create Session</Button>
-                <Button onClick={() => handleJoin(sidInput)}>
-                    Join Session
-                </Button>
+                <OnlineSessionOptions>
+                    <Button onClick={handleCreate}>
+                        <FormattedMessage id="SessionMenu.CreateOnline.CreateButton" />
+                    </Button>
+                    <Button onClick={() => handleJoin(sidInput)}>
+                        <FormattedMessage id="SessionMenu.CreateOnline.JoinButton" />
+                    </Button>
+                </OnlineSessionOptions>
                 <TextField
                     label="Insert ID"
                     value={sidInput}
                     onChange={handleTextFieldChange}
-                    helperText={
-                        isValidInput
-                            ? ""
-                            : "Looks like the session you're trying to join does not exist 🤖"
-                    }
+                    helperText={helperText}
                 />
             </DialogContent>
         </>
