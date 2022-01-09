@@ -1,7 +1,8 @@
+import { FormattedMessage } from "language"
 import React from "react"
+import store from "redux/store"
 import { useCustomSelector } from "hooks"
 import { END_LOADING } from "redux/loading/loading"
-import store from "redux/store"
 import {
     Cover,
     Frame,
@@ -29,7 +30,7 @@ const spinnerAnimations = ringDiameters.map((diameter, i) =>
 )
 
 const Loading: React.FC = () => {
-    const { isLoading, message } = useCustomSelector((state) => state.info)
+    const { isLoading, loadingInfo } = useCustomSelector((state) => state.info)
 
     // Abort loading animation on close
     const onClose = () => {
@@ -50,7 +51,9 @@ const Loading: React.FC = () => {
                     ))}
                     <Cover diameter={REM_START - NUM_RINGS * RING_THICKNESS} />
                 </Frame>
-                <Message>{message}</Message>
+                <Message>
+                    <FormattedMessage id={loadingInfo.messageId} />
+                </Message>
             </StyledDialogContent>
         </StyledDialog>
     )

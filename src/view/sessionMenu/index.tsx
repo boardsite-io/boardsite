@@ -1,7 +1,8 @@
-import { Button, Dialog, DialogOptions } from "components"
+import { FormattedMessage } from "language"
 import React, { useEffect } from "react"
-import { useCustomSelector } from "hooks"
 import store from "redux/store"
+import { Button, Dialog, DialogOptions } from "components"
+import { useCustomSelector } from "hooks"
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom"
 import { currentSession, isConnected } from "api/session"
 import { SET_SESSION_DIALOG } from "redux/session/session"
@@ -52,7 +53,9 @@ const Session: React.FC = () => {
         <Dialog open={dialogState !== DialogState.Closed} onClose={handleClose}>
             {contents[dialogState]}
             <DialogOptions>
-                <Button onClick={handleClose}>Close</Button>
+                <Button onClick={handleClose}>
+                    <FormattedMessage id="SessionMenu.Close" />
+                </Button>
             </DialogOptions>
         </Dialog>
     )

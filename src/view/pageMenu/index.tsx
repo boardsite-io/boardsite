@@ -1,4 +1,6 @@
+import { FormattedMessage } from "language"
 import React from "react"
+import store from "redux/store"
 import {
     Button,
     DownloadIcon,
@@ -26,7 +28,6 @@ import {
     handleChangePageBackground,
 } from "drawing/handlers"
 import { useCustomSelector } from "hooks"
-import store from "redux/store"
 import {
     CLOSE_PAGE_ACTIONS,
     OPEN_EXPORT_MENU,
@@ -75,53 +76,53 @@ const PageMenu: React.FC = () => {
         <Drawer position="right" open={pageActionsOpen} onClose={onClose}>
             <DrawerTitle>
                 <BsGear />
-                Page Settings
+                <FormattedMessage id="PageMenu.PageSettings.Title" />
             </DrawerTitle>
             <DrawerContent>
                 <Button withIcon onClick={onClickApplyToPage}>
                     <BsFileArrowUp />
-                    Apply to page
+                    <FormattedMessage id="PageMenu.PageSettings.ApplyToPage" />
                 </Button>
                 <PageSettings />
             </DrawerContent>
             <DrawerTitle>
                 <BsFileDiff />
-                Page Actions
+                <FormattedMessage id="PageMenu.PageActions.Title" />
             </DrawerTitle>
             <DrawerContent>
                 <Button withIcon onClick={onClickNewPageBefore}>
                     <BsFileArrowUp />
-                    New page before
+                    <FormattedMessage id="PageMenu.PageActions.NewBefore" />
                 </Button>
                 <Button withIcon onClick={onClickNewPageAfter}>
                     <BsFileArrowDown />
-                    New page after
+                    <FormattedMessage id="PageMenu.PageActions.NewAfter" />
                 </Button>
                 <Button withIcon onClick={onClickDeletePage}>
                     <BsFileMinus />
-                    Delete page
+                    <FormattedMessage id="PageMenu.PageActions.Delete" />
                 </Button>
                 <Button withIcon onClick={onClickClearPage}>
                     <BsFileRuled />
-                    Clear page
+                    <FormattedMessage id="PageMenu.PageActions.Clear" />
                 </Button>
                 <Button withIcon onClick={onClickDeleteAllPages}>
                     <BsTrash />
-                    Delete all pages
+                    <FormattedMessage id="PageMenu.PageActions.DeleteAll" />
                 </Button>
             </DrawerContent>
             <DrawerTitle>
                 <DownloadIcon />
-                Import / Export Menus
+                <FormattedMessage id="PageMenu.ImportExport.Title" />
             </DrawerTitle>
             <DrawerContent>
                 <Button withIcon onClick={onClickImport}>
                     <UploadIcon />
-                    Open import menu
+                    <FormattedMessage id="PageMenu.ImportExport.OpenImport" />
                 </Button>
                 <Button withIcon onClick={onClickExport}>
                     <DownloadIcon />
-                    Open export menu
+                    <FormattedMessage id="PageMenu.ImportExport.OpenExport" />
                 </Button>
             </DrawerContent>
         </Drawer>

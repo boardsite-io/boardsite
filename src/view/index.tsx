@@ -1,38 +1,38 @@
 import React from "react"
 import BoardStage from "board/stage"
 import { useKeyboardShortcuts } from "hooks"
-import { WhiteboardStyled } from "./whiteboard.styled"
+import { StyledView } from "./index.styled"
 import SessionInfo from "./sessioninfo/sessioninfo"
 import Toolbar from "./toolbar/toolbar"
 import FavoriteTools from "./favoriteTools"
 import Loading from "./loading"
 import ViewNav from "./viewnavigation/viewnavigation"
-import Settings from "./settings/settings"
-import About from "./about/about"
+import About from "./about"
 import PageMenu from "./pageMenu"
-import Session from "./session"
+import SettingsMenu from "./settingsMenu"
+import SessionMenu from "./sessionMenu"
 import ImportMenu from "./importMenu"
 import ExportMenu from "./exportMenu"
 
-const Whiteboard: React.FC = () => {
+const View: React.FC = () => {
     useKeyboardShortcuts()
 
     return (
-        <WhiteboardStyled>
+        <StyledView>
             <BoardStage />
             <SessionInfo />
             <Toolbar />
             <FavoriteTools />
             <ViewNav />
-            <Loading />
-            <Settings />
             <About />
             <PageMenu />
+            <SettingsMenu />
+            <SessionMenu />
             <ImportMenu />
             <ExportMenu />
-            <Session />
-        </WhiteboardStyled>
+            <Loading />
+        </StyledView>
     )
 }
 
-export default Whiteboard
+export default View

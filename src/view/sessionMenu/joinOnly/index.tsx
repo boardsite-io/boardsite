@@ -1,9 +1,10 @@
+import { FormattedMessage } from "language"
 import React, { useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
 import store from "redux/store"
+import { Button, DialogContent, DialogTitle, UserSelection } from "components"
+import { useNavigate, useParams } from "react-router-dom"
 import { SET_SESSION_DIALOG } from "redux/session/session"
 import { BoardSession, currentSession } from "api/session"
-import { Button, DialogContent, DialogTitle, UserSelection } from "components"
 import { DialogState } from "redux/session/session.types"
 
 const JoinOnly: React.FC = () => {
@@ -35,11 +36,19 @@ const JoinOnly: React.FC = () => {
 
     return (
         <>
-            <DialogTitle>Collaborative Session 👋🏻</DialogTitle>
+            <DialogTitle>
+                <FormattedMessage id="SessionMenu.JoinOnly.Title" />
+            </DialogTitle>
             <DialogContent>
                 <UserSelection />
-                <Button onClick={() => handleJoin(sid)}>Join Session</Button>
-                {!isValidSid && <p>Unable to join session!</p>}
+                <Button onClick={() => handleJoin(sid)}>
+                    <FormattedMessage id="SessionMenu.JoinOnly.JoinButton" />
+                </Button>
+                {!isValidSid && (
+                    <p>
+                        <FormattedMessage id="SessionMenu.JoinOnly.UnableToJoin" />
+                    </p>
+                )}
             </DialogContent>
         </>
     )

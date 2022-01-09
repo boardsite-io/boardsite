@@ -1,3 +1,4 @@
+import { FormattedMessage } from "language"
 import React, { useState } from "react"
 import {
     Dialog,
@@ -79,13 +80,15 @@ const PdfUpload: React.FC = () => {
                     $hovering={hovering}>
                     <UploadIcon />
                     <InfoText>
-                        {hovering
-                            ? "Release to upload"
-                            : "Click to browse files or drag and drop a PDF file here"}
+                        {hovering ? (
+                            <FormattedMessage id="ImportMenu.InfoText.Hovering" />
+                        ) : (
+                            <FormattedMessage id="ImportMenu.InfoText.NotHovering" />
+                        )}
                     </InfoText>
                     {invalidInput && (
                         <ErrorText>
-                            Invalid file type - please upload a valid PDF file
+                            <FormattedMessage id="ImportMenu.ErrorText" />
                         </ErrorText>
                     )}
                 </DropZone>
@@ -97,7 +100,9 @@ const PdfUpload: React.FC = () => {
                 />
             </DialogContent>
             <DialogOptions>
-                <Button onClick={handleClose}>Close</Button>
+                <Button onClick={handleClose}>
+                    <FormattedMessage id="ImportMenu.Close" />
+                </Button>
             </DialogOptions>
         </Dialog>
     )

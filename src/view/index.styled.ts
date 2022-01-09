@@ -1,6 +1,6 @@
 import styled from "styled-components"
 
-export const WhiteboardStyled = styled.div`
+export const StyledView = styled.div`
     position: fixed;
     inset: 0;
     background: var(--color0);

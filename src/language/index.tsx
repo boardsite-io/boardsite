@@ -14,7 +14,7 @@ import langEN from "./en.json"
 type FormatMessageArgs = Parameters<IntlFormatters["formatMessage"]>
 
 // Our new union type of all available message IDs.
-type IntlMessageKeys = keyof typeof langEN
+export type IntlMessageKeys = keyof typeof langEN
 
 // Extend the original FormattedMessage props.
 type FormattedMessageProps = ReactIntlFormattedMessageProps<

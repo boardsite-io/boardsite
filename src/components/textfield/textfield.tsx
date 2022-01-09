@@ -11,7 +11,7 @@ import {
 } from "./textfield.styled"
 
 interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
-    helperText?: string
+    helperText?: JSX.Element
     label?: string
     value: string
     align?: TextAlign
