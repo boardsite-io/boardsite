@@ -10,8 +10,8 @@ describe("board reducer state", () => {
         expect(got).toEqual(want)
     })
 
-    it("should deserialize an emtpy object and set the defaults", () => {
-        const got = newState().deserialize?.({
+    it("should deserialize an emtpy object and set the defaults", async () => {
+        const got = await newState().deserialize?.({
             version: drawingVersion,
         } as any)
         const want = newState()
@@ -20,20 +20,22 @@ describe("board reducer state", () => {
         )
     })
 
-    it("should deserialize the state version 1.0", () => {
-        const got = newState()
-            .deserialize?.(cloneDeep(stateV1) as any)
-            .serialize?.()
+    it("should deserialize the state version 1.0", async () => {
+        let got = await newState().deserialize?.(cloneDeep(stateV1) as any)
+        got = got?.serialize?.()
         const want = stateV1
         expect(JSON.stringify(got)).toBe(JSON.stringify(want))
     })
 
-    it("throws an error for unknown or missing version", () => {
-        expect(() => newState().deserialize?.({} as any)).toThrowError()
-        expect(() =>
+    it("throws an error for unknown or missing version", async () => {
+        await expect(newState().deserialize?.({} as any)).rejects.toThrow(
+            "cannot deserialize state, missing version"
+        )
+
+        await expect(
             newState().deserialize?.({
                 version: "0.1",
             } as any)
-        ).toThrowError()
+        ).rejects.toThrow("cannot deserialize state, unknown version 0.1")
     })
 })

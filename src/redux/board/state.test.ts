@@ -32,6 +32,6 @@ describe("board reducer state", () => {
             newState().deserialize?.({
                 version: "0.1",
             } as any)
-        ).rejects.toThrow("cannot deserialize state, unkown version 0.1")
+        ).rejects.toThrow("cannot deserialize state, unknown version 0.1")
     })
 })

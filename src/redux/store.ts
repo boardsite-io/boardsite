@@ -1,4 +1,4 @@
-import { configureStore, Middleware } from "@reduxjs/toolkit"
+import { configureStore, Middleware, AnyAction } from "@reduxjs/toolkit"
 import { loadLocalStorage, saveIndexedDB, saveLocalStore } from "./localstorage"
 import rootReducer from "./reducer"
 import { isConnectedState } from "./session/helpers"
@@ -26,8 +26,16 @@ export const localStoreMiddleware: Middleware<unknown, RootState> =
 const store = configureStore({
     reducer: rootReducer,
     middleware: [localStoreMiddleware],
-    preloadedState: loadLocalStorage("drawing") as object,
 })
+
+// load the drawing state async
+;(async () => {
+    const state = await loadLocalStorage("drawing")
+    store.dispatch({
+        type: "drawing/LOAD",
+        payload: state.drawing,
+    } as AnyAction)
+})()
 
 export type AppDispatch = typeof store.dispatch
 export default store
