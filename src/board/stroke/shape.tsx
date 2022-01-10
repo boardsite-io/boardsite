@@ -15,7 +15,7 @@ interface StrokeShapeProps {
     stroke: Stroke | LiveStroke
 }
 
-type CustomLineConfig = LineConfig & { points: number[] }
+export type CustomLineConfig = LineConfig & { points: number[] }
 
 interface StrokeShapeProps {
     stroke: Stroke | LiveStroke
