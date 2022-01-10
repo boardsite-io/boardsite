@@ -81,7 +81,9 @@ const CreateOnlineSession: React.FC = () => {
                     </Button>
                 </OnlineSessionOptions>
                 <TextField
-                    label="Insert ID"
+                    label={
+                        <FormattedMessage id="SessionMenu.CreateOnline.SessionIdInputLabel" />
+                    }
                     value={sidInput}
                     onChange={handleTextFieldChange}
                     helperText={helperText}

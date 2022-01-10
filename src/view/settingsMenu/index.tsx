@@ -81,7 +81,7 @@ const SettingsMenu: React.FC = () => {
             <DrawerContent>
                 <Setting>
                     <TextField
-                        label="API URL"
+                        label={<FormattedMessage id="ApiUrlLabel" />}
                         inputMode="url"
                         value={url.toString()}
                         onChange={handleURLChange}
