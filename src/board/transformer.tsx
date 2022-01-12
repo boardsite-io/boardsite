@@ -88,7 +88,8 @@ const CustomTransformer = memo<CustomTransformerProps>(
                 <Group
                     ref={groupRef}
                     x={transformPagePosition.x}
-                    y={transformPagePosition.y}>
+                    y={transformPagePosition.y}
+                >
                     {transformStrokes.map((stroke: Stroke) => (
                         <StrokeShape key={stroke.id} stroke={stroke} />
                     ))}

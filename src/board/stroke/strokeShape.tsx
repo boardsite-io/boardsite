@@ -4,7 +4,7 @@ import { useCustomSelector } from "hooks"
 import { Stroke } from "drawing/stroke/index.types"
 import { LiveStroke } from "drawing/livestroke/index.types"
 import { LineCap, LineJoin } from "konva/lib/Shape"
-import { Shape } from "./shape"
+import { CustomLineConfig, Shape } from "./shape"
 
 interface StrokeShapeProps {
     stroke: Stroke | LiveStroke
@@ -62,19 +62,20 @@ export const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
         y: stroke.y,
         scaleX: stroke.scaleX,
         scaleY: stroke.scaleY,
+        points: stroke.points, // external supplied points may overwrite stroke.points for e.g. livestroke
+        stroke: stroke.style.color,
+        strokeWidth: stroke.style.width,
+        fill: undefined,
         lineCap: "round" as LineCap,
         lineJoin: "round" as LineJoin,
-        stroke: stroke.style.color,
-        fill: undefined,
-        strokeWidth: stroke.style.width,
         opacity: getOpacity(),
-        listening: false,
-        draggable: false,
         onDragStart,
         onDragEnd,
-        shadowForStrokeEnabled: false, // for performance, see Konva docs
-        points: stroke.points, // external supplied points may overwrite stroke.points for e.g. livestroke
-    }
+        listening: false,
+        draggable: false,
+        shadowForStrokeEnabled: false, // https://konvajs.org/docs/performance/Optimize_Strokes.html
+        perfectDrawEnabled: false,
+    } as CustomLineConfig
 
     return <Shape stroke={stroke} shapeProps={shapeProps} />
 })

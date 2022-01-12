@@ -32,7 +32,8 @@ const FavoriteTools: React.FC = () => {
             })}
             <ToolTip
                 text={<FormattedMessage id="Favorite.Add" />}
-                position={Position.Right}>
+                position={Position.Right}
+            >
                 <IconButton onClick={addFavoriteTool}>
                     <PlusIcon />
                 </IconButton>

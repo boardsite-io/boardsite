@@ -1,10 +1,10 @@
 <svg stroke="white" stroke-linejoin="round" stroke-linecap="round" fill="none" xmlns="http://www.w3.org/2000/svg"
-    width="100" height="100" viewBox="0 0 100 100">
-    <path d="M5,65 
+        viewBox="0 0 100 100">
+        <path d="M5,65 
             L65,5 
             L95,35 
             L35,95 
             z" />
-    <path d="M25,45 
+        <path d="M25,45 
             L55,75" />
 </svg>
