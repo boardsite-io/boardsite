@@ -23,7 +23,8 @@ const ActiveTool: React.FC = memo(() => {
         <>
             <ToolTip
                 position={Position.Bottom}
-                text={<FormattedMessage id="Tool.Active" />}>
+                text={<FormattedMessage id="Tool.Active" />}
+            >
                 <IconButton
                     active={isDraw}
                     onClick={() =>
@@ -31,7 +32,8 @@ const ActiveTool: React.FC = memo(() => {
                             ? setOpen(true)
                             : handleSetTool({ type: latestDrawType })
                     }
-                    style={isDraw ? { background: style.color } : undefined}>
+                    style={isDraw ? { background: style.color } : undefined}
+                >
                     <ToolIcon />
                 </IconButton>
             </ToolTip>

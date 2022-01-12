@@ -29,9 +29,6 @@
             "last 1 safari version"
         ]
     },
-    "eslintConfig": {
-        "extends": "react-app"
-    },
     "dependencies": {
         "@babel/core": "7.12.3",
         "@babel/preset-env": "^7.16.7",

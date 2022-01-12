@@ -24,10 +24,12 @@ const WidthPicker: React.FC = memo(() => {
                             id="Tool.SelectWidth"
                             values={{ width: strokeWidth }}
                         />
-                    }>
+                    }
+                >
                     <Preset
                         $active={widthSelector === strokeWidth}
-                        onClick={() => store.dispatch(SET_WIDTH(strokeWidth))}>
+                        onClick={() => store.dispatch(SET_WIDTH(strokeWidth))}
+                    >
                         <WidthPresetInnerDot $strokeWidth={strokeWidth} />
                     </Preset>
                 </ToolTip>

@@ -46,7 +46,8 @@ const SettingsMenu: React.FC = () => {
     return (
         <Drawer
             open={settingsOpen}
-            onClose={() => store.dispatch(CLOSE_SETTINGS())}>
+            onClose={() => store.dispatch(CLOSE_SETTINGS())}
+        >
             <DrawerTitle>
                 <BsGear id="transitory-icon" />
                 <FormattedMessage id="SettingsMenu.GeneralSettings.Title" />
@@ -103,7 +104,8 @@ const SettingsMenu: React.FC = () => {
                         onClick={() => {
                             store.dispatch(CLOSE_SETTINGS())
                             store.dispatch(OPEN_ABOUT())
-                        }}>
+                        }}
+                    >
                         <BsInfoCircle id="transitory-icon" />
                         <FormattedMessage id="SettingsMenu.About.Button" />
                     </Button>
