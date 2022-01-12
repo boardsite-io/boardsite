@@ -13,5 +13,5 @@ const rootReducer = {
     session: sessionReducer,
 }
 
-export type States = keyof typeof rootReducer
+export type ReducerState = keyof typeof rootReducer
 export default combineReducers(rootReducer)

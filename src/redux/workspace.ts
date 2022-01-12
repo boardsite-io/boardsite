@@ -1,15 +1,15 @@
 import { deflate, inflate } from "pako"
 import { newState } from "./localstorage"
-import { States } from "./reducer"
+import { ReducerState } from "./reducer"
 import {
     FileHeader,
     RootState,
     SerializableStateRecord,
-    SerializableStates,
+    SerializableReducerState,
 } from "./types"
 
 const fileVersion = "1.0"
-const statesToSave: SerializableStates[] = ["board"]
+const statesToSave: SerializableReducerState[] = ["board"]
 export const fileExt = ".boardio"
 
 export function saveWorkspace(rootState: SerializableStateRecord): Uint8Array {
@@ -34,7 +34,7 @@ export async function loadWorkspace(
         )
         const states = verifyFileHeader(segments)
 
-        const state = {} as Record<States, object | undefined>
+        const state = {} as Record<ReducerState, object | undefined>
         const res = states.map(async (name, i) => {
             // skip unsupported states
             if (name) {
@@ -51,7 +51,10 @@ export async function loadWorkspace(
     }
 }
 
-function createFileHeader(version: string, states: string[]): Uint8Array {
+function createFileHeader(
+    version: string,
+    states: SerializableReducerState[]
+): Uint8Array {
     const header = {
         version,
         states,
@@ -59,7 +62,9 @@ function createFileHeader(version: string, states: string[]): Uint8Array {
     return deflate(JSON.stringify(header))
 }
 
-function verifyFileHeader(segments: object[]): (SerializableStates | null)[] {
+function verifyFileHeader(
+    segments: object[]
+): (SerializableReducerState | null)[] {
     const { version, states } = segments[0] as FileHeader
     switch (version) {
         case fileVersion:

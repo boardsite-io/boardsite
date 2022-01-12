@@ -1,7 +1,7 @@
 import localforage from "localforage"
 import * as boardState from "./board/state"
 import * as drawingState from "./drawing/state"
-import { States } from "./reducer"
+import { ReducerState } from "./reducer"
 import { RootState, SerializableState } from "./types"
 
 const debounceTime = 1000
@@ -15,7 +15,7 @@ localforage.config({
 
 export function saveLocalStore(
     rootState: Record<string, object>,
-    ...states: States[]
+    ...states: ReducerState[]
 ): void {
     states.forEach((name) => {
         debounce(name, () => {
@@ -29,8 +29,8 @@ export function saveLocalStore(
 }
 
 export function saveIndexedDB(
-    rootState: Record<States, object>,
-    ...states: States[]
+    rootState: Record<ReducerState, object>,
+    ...states: ReducerState[]
 ): void {
     states.forEach((name) => {
         debounce(name, () => {
@@ -41,9 +41,9 @@ export function saveIndexedDB(
 }
 
 export async function loadLocalStorage(
-    ...states: States[]
+    ...states: ReducerState[]
 ): Promise<Partial<RootState>> {
-    const state = {} as Record<States, object | undefined>
+    const state = {} as Record<ReducerState, object | undefined>
     const res = states.map(async (name) => {
         try {
             const val = localStorage.getItem(`${namespace}_${name}`)
@@ -63,9 +63,9 @@ export async function loadLocalStorage(
 }
 
 export async function loadIndexedDB(
-    ...states: States[]
+    ...states: ReducerState[]
 ): Promise<Partial<RootState>> {
-    const state = {} as Record<States, object | undefined>
+    const state = {} as Record<ReducerState, object | undefined>
     const res = states.map(async (name) => {
         try {
             const val = await localforage.getItem(`${namespace}_${name}`)
@@ -82,7 +82,7 @@ export async function loadIndexedDB(
     return state as RootState
 }
 
-function debounce(stateName: States, callback: () => void): void {
+function debounce(stateName: ReducerState, callback: () => void): void {
     if (debounceTimeout[stateName]) {
         clearTimeout(debounceTimeout[stateName])
     }
@@ -94,7 +94,7 @@ function debounce(stateName: States, callback: () => void): void {
 }
 
 export function newState(
-    stateName: States
+    stateName: ReducerState
 ): SerializableState<object, object> | undefined {
     switch (stateName) {
         case "board":

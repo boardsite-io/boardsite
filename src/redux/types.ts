@@ -14,13 +14,13 @@ export type RootState = {
 
 export type FileHeader = {
     version: string
-    states: SerializableStates[]
+    states: SerializableReducerState[]
 }
 
-export type SerializableStates = "board" | "drawing"
+export type SerializableReducerState = "board" | "drawing"
 
 export type SerializableStateRecord = Record<
-    SerializableStates,
+    SerializableReducerState,
     SerializableState<object, object>
 >
 
