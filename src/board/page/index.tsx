@@ -12,7 +12,7 @@ const PageLayer = memo<PageProps>((props) => {
     })
 
     return (
-        <Layer listening={false} ref={props.layerRef}>
+        <Layer ref={props.layerRef}>
             <Background {...props} />
             <Strokes {...props} />
         </Layer>

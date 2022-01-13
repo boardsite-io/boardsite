@@ -57,7 +57,6 @@
     "SessionMenu.CreateOnline.Title": "Collaborative Session 👋🏻",
     "SessionMenu.CreateOnline.CreateButton": "Create Session",
     "SessionMenu.CreateOnline.JoinButton": "Join Session",
-    "SessionMenu.CreateOnline.SessionIdInputLabel": "Insert Session ID",
     "SessionMenu.CreateOnline.InvalidSession": "Looks like the session you're trying to join does not exist 🤖",
     "SessionMenu.InitialSelection.Title": "Local Session",
     "SessionMenu.InitialSelection.CreateOffline": "Create offline session",
@@ -77,7 +76,5 @@
     "SettingsMenu.About.Title": "About",
     "SettingsMenu.About.Button": "About boardsite.io",
     "Loading.ExportingPdf": "Exporting as PDF...",
-    "Loading.ExportingWorkspace": "Exporting as PDF...",
-    "UserSelection.AliasInputLabel": "Choose alias",
-    "ApiUrlLabel": "API URL"
+    "Loading.ExportingWorkspace": "Exporting as PDF..."
 }

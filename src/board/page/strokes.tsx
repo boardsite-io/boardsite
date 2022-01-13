@@ -32,8 +32,7 @@ const Strokes = memo<PageProps>(({ pageId, pageInfo }) => {
             ref={ref}
             {...pageInfo}
             globalCompositeOperation="source-atop"
-            listening={false}
-        >
+            listening={false}>
             {pageStrokes
                 ? Object.keys(pageStrokes).map((id) => (
                       <StrokeShape key={id} stroke={pageStrokes[id]} />

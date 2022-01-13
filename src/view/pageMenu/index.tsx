@@ -75,39 +75,39 @@ const PageMenu: React.FC = () => {
     return (
         <Drawer position="right" open={pageActionsOpen} onClose={onClose}>
             <DrawerTitle>
-                <BsGear id="transitory-icon" />
+                <BsGear />
                 <FormattedMessage id="PageMenu.PageSettings.Title" />
             </DrawerTitle>
             <DrawerContent>
                 <Button withIcon onClick={onClickApplyToPage}>
-                    <BsFileArrowUp id="transitory-icon" />
+                    <BsFileArrowUp />
                     <FormattedMessage id="PageMenu.PageSettings.ApplyToPage" />
                 </Button>
                 <PageSettings />
             </DrawerContent>
             <DrawerTitle>
-                <BsFileDiff id="transitory-icon" />
+                <BsFileDiff />
                 <FormattedMessage id="PageMenu.PageActions.Title" />
             </DrawerTitle>
             <DrawerContent>
                 <Button withIcon onClick={onClickNewPageBefore}>
-                    <BsFileArrowUp id="transitory-icon" />
+                    <BsFileArrowUp />
                     <FormattedMessage id="PageMenu.PageActions.NewBefore" />
                 </Button>
                 <Button withIcon onClick={onClickNewPageAfter}>
-                    <BsFileArrowDown id="transitory-icon" />
+                    <BsFileArrowDown />
                     <FormattedMessage id="PageMenu.PageActions.NewAfter" />
                 </Button>
                 <Button withIcon onClick={onClickDeletePage}>
-                    <BsFileMinus id="transitory-icon" />
+                    <BsFileMinus />
                     <FormattedMessage id="PageMenu.PageActions.Delete" />
                 </Button>
                 <Button withIcon onClick={onClickClearPage}>
-                    <BsFileRuled id="transitory-icon" />
+                    <BsFileRuled />
                     <FormattedMessage id="PageMenu.PageActions.Clear" />
                 </Button>
                 <Button withIcon onClick={onClickDeleteAllPages}>
-                    <BsTrash id="transitory-icon" />
+                    <BsTrash />
                     <FormattedMessage id="PageMenu.PageActions.DeleteAll" />
                 </Button>
             </DrawerContent>

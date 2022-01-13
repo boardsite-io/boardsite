@@ -16,8 +16,7 @@ const PageBackgrounds: React.FC = () => {
         <Backgrounds>
             <ToolTip
                 position={Position.Top}
-                text={<FormattedMessage id="PageBackground.Blank" />}
-            >
+                text={<FormattedMessage id="PageBackground.Blank" />}>
                 <Blank
                     type="button"
                     $active={background === backgroundStyle.BLANK}
@@ -30,8 +29,7 @@ const PageBackgrounds: React.FC = () => {
             </ToolTip>
             <ToolTip
                 position={Position.Top}
-                text={<FormattedMessage id="PageBackground.Checkered" />}
-            >
+                text={<FormattedMessage id="PageBackground.Checkered" />}>
                 <Checkered
                     type="button"
                     $active={background === backgroundStyle.CHECKERED}
@@ -44,8 +42,7 @@ const PageBackgrounds: React.FC = () => {
             </ToolTip>
             <ToolTip
                 position={Position.Top}
-                text={<FormattedMessage id="PageBackground.Ruled" />}
-            >
+                text={<FormattedMessage id="PageBackground.Ruled" />}>
                 <Ruled
                     type="button"
                     $active={background === backgroundStyle.RULED}

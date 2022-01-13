@@ -12,7 +12,7 @@ import {
 
 interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
     helperText?: JSX.Element
-    label?: JSX.Element
+    label?: string
     value: string
     align?: TextAlign
     error?: boolean
@@ -20,7 +20,7 @@ interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 const TextField: React.FC<TextFieldProps> = ({
     helperText = "",
-    label,
+    label = "",
     value = "",
     align = "center" as TextAlign,
     error = false,

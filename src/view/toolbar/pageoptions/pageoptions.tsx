@@ -9,10 +9,9 @@ const PageOptions: React.FC = () => {
     return (
         <ToolTip
             position={Position.BottomLeft}
-            text={<FormattedMessage id="ToolBar.PageSettings" />}
-        >
+            text={<FormattedMessage id="ToolBar.PageSettings" />}>
             <IconButton onClick={() => store.dispatch(OPEN_PAGE_ACTIONS())}>
-                <BsFileDiff id="transitory-icon" />
+                <BsFileDiff />
             </IconButton>
         </ToolTip>
     )

@@ -223,8 +223,7 @@ const BoardStage: React.FC = memo(() => {
                         onContextMenu={(e) => e.evt.preventDefault()}
                         onTouchMove={isPanMode ? undefined : onTouchMove}
                         onTouchEnd={isPanMode ? undefined : onTouchEnd}
-                        onWheel={onWheel}
-                    >
+                        onWheel={onWheel}>
                         <ReactReduxContext.Provider value={value}>
                             <Content value={value} />
                         </ReactReduxContext.Provider>

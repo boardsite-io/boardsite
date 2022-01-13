@@ -9,10 +9,9 @@ const Settings: React.FC = () => {
     return (
         <ToolTip
             position={Position.BottomRight}
-            text={<FormattedMessage id="ToolBar.Settings" />}
-        >
+            text={<FormattedMessage id="ToolBar.Settings" />}>
             <IconButton onClick={() => store.dispatch(OPEN_SETTINGS())}>
-                <BsGear id="transitory-icon" />
+                <BsGear id="icon" />
             </IconButton>
         </ToolTip>
     )

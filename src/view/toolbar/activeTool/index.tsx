@@ -1,17 +1,12 @@
 import { FormattedMessage } from "language"
 import { IconButton, Popup, ToolTip, Position, ToolIcons } from "components"
-import React, { memo, useState } from "react"
+import React, { useState } from "react"
 import { handleSetTool } from "drawing/handlers"
 import { isDrawType } from "redux/drawing/helpers"
 import store from "redux/store"
-import { useCustomSelector } from "hooks"
 import StylePicker from "../stylepicker/stylepicker"
 
-const ActiveTool: React.FC = memo(() => {
-    // Rerender on color or type change
-    useCustomSelector((state) => state.drawing.tool.type)
-    useCustomSelector((state) => state.drawing.tool.style.color)
-
+const ActiveTool: React.FC = () => {
     const [open, setOpen] = useState(false)
     const { style, type, latestDrawType } = store.getState().drawing.tool
     const isDraw = isDrawType(type)
@@ -23,8 +18,7 @@ const ActiveTool: React.FC = memo(() => {
         <>
             <ToolTip
                 position={Position.Bottom}
-                text={<FormattedMessage id="Tool.Active" />}
-            >
+                text={<FormattedMessage id="Tool.Active" />}>
                 <IconButton
                     active={isDraw}
                     onClick={() =>
@@ -32,8 +26,7 @@ const ActiveTool: React.FC = memo(() => {
                             ? setOpen(true)
                             : handleSetTool({ type: latestDrawType })
                     }
-                    style={isDraw ? { background: style.color } : undefined}
-                >
+                    style={isDraw ? { background: style.color } : undefined}>
                     <ToolIcon />
                 </IconButton>
             </ToolTip>
@@ -42,6 +35,6 @@ const ActiveTool: React.FC = memo(() => {
             </Popup>
         </>
     )
-})
+}
 
 export default ActiveTool

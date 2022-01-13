@@ -63,10 +63,6 @@ export const Theme = styled.div`
         font-weight: inherit;
     }
 
-    svg:not(#transitory-icon) {
-        stroke-width: var(--icon-stroke-width);
-    }
-
     /* Scrollbar Styling .. TODO: check if div:: is a good approach */
     --padding-hack: 0.2rem;
     --scrollbar-width: 0.6rem;

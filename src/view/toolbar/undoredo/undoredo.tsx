@@ -15,16 +15,14 @@ const UndoRedo: React.FC = () => {
         <>
             <ToolTip
                 position={Position.Bottom}
-                text={<FormattedMessage id="ToolBar.Undo" />}
-            >
+                text={<FormattedMessage id="ToolBar.Undo" />}>
                 <IconButton deactivated={disableUndoStack} onClick={handleUndo}>
                     <UndoIcon />
                 </IconButton>
             </ToolTip>
             <ToolTip
                 position={Position.Bottom}
-                text={<FormattedMessage id="ToolBar.Redo" />}
-            >
+                text={<FormattedMessage id="ToolBar.Redo" />}>
                 <IconButton deactivated={disableRedoStack} onClick={handleRedo}>
                     <RedoIcon />
                 </IconButton>

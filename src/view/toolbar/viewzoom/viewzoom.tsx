@@ -15,16 +15,14 @@ const ViewZoom: React.FC = () => {
         <>
             <ToolTip
                 position={Position.Bottom}
-                text={<FormattedMessage id="ToolBar.ZoomIn" />}
-            >
+                text={<FormattedMessage id="ToolBar.ZoomIn" />}>
                 <IconButton onClick={() => store.dispatch(ZOOM_IN_CENTER())}>
                     <ZoomInIcon />
                 </IconButton>
             </ToolTip>
             <ToolTip
                 position={Position.Bottom}
-                text={<FormattedMessage id="ToolBar.ZoomOut" />}
-            >
+                text={<FormattedMessage id="ToolBar.ZoomOut" />}>
                 <IconButton onClick={() => store.dispatch(ZOOM_OUT_CENTER())}>
                     <ZoomOutIcon />
                 </IconButton>

@@ -1,21 +1,46 @@
 import { ToolType } from "drawing/stroke/index.types"
-import EraserIcon from "./svgs/eraser.svg"
-import PenIcon from "./svgs/pen.svg"
-import SelectIcon from "./svgs/select.svg"
-import LineIcon from "./svgs/line.svg"
-import CircleIcon from "./svgs/circle.svg"
-import RectangleIcon from "./svgs/rectangle.svg"
-import PlusIcon from "./svgs/plus.svg"
-import MinusIcon from "./svgs/minus.svg"
-import ExpandIcon from "./svgs/expand.svg"
-import ShrinkIcon from "./svgs/shrink.svg"
-import PanIcon from "./svgs/pan.svg"
-import ZoomInIcon from "./svgs/zoomin.svg"
-import ZoomOutIcon from "./svgs/zoomout.svg"
-import UndoIcon from "./svgs/undo.svg"
-import RedoIcon from "./svgs/redo.svg"
-import DownloadIcon from "./svgs/download.svg"
-import UploadIcon from "./svgs/upload.svg"
+import React, { FC } from "react"
+import {
+    StyledCircle,
+    StyledDownload,
+    StyledEraser,
+    StyledExpand,
+    StyledLine,
+    StyledMinus,
+    StyledPan,
+    StyledPen,
+    StyledPlus,
+    StyledRedo,
+    StyledSelect,
+    StyledShrink,
+    StyledSquare,
+    StyledUndo,
+    StyledUpload,
+    StyledZoomIn,
+    StyledZoomOut,
+} from "./index.styled"
+
+export interface IconProps {
+    stroke?: string
+    id?: string
+}
+const EraserIcon: FC<IconProps> = (props) => <StyledEraser {...props} />
+const PenIcon: FC<IconProps> = (props) => <StyledPen {...props} />
+const SelectIcon: FC<IconProps> = (props) => <StyledSelect {...props} />
+const LineIcon: FC<IconProps> = (props) => <StyledLine {...props} />
+const CircleIcon: FC<IconProps> = (props) => <StyledCircle {...props} />
+const RectangleIcon: FC<IconProps> = (props) => <StyledSquare {...props} />
+const PlusIcon: FC<IconProps> = (props) => <StyledPlus {...props} />
+const MinusIcon: FC<IconProps> = (props) => <StyledMinus {...props} />
+const ExpandIcon: FC<IconProps> = (props) => <StyledExpand {...props} />
+const ShrinkIcon: FC<IconProps> = (props) => <StyledShrink {...props} />
+const PanIcon: FC<IconProps> = (props) => <StyledPan {...props} />
+const ZoomInIcon: FC<IconProps> = (props) => <StyledZoomIn {...props} />
+const ZoomOutIcon: FC<IconProps> = (props) => <StyledZoomOut {...props} />
+const UndoIcon: FC<IconProps> = (props) => <StyledUndo {...props} />
+const RedoIcon: FC<IconProps> = (props) => <StyledRedo {...props} />
+const DownloadIcon: FC<IconProps> = (props) => <StyledDownload {...props} />
+const UploadIcon: FC<IconProps> = (props) => <StyledUpload {...props} />
 
 export {
     EraserIcon,

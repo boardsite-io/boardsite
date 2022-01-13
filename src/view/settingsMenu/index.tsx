@@ -46,10 +46,9 @@ const SettingsMenu: React.FC = () => {
     return (
         <Drawer
             open={settingsOpen}
-            onClose={() => store.dispatch(CLOSE_SETTINGS())}
-        >
+            onClose={() => store.dispatch(CLOSE_SETTINGS())}>
             <DrawerTitle>
-                <BsGear id="transitory-icon" />
+                <BsGear />
                 <FormattedMessage id="SettingsMenu.GeneralSettings.Title" />
             </DrawerTitle>
             <DrawerContent>
@@ -76,13 +75,13 @@ const SettingsMenu: React.FC = () => {
                 </Setting>
             </DrawerContent>
             <DrawerTitle>
-                <VscDebugDisconnect id="transitory-icon" />
+                <VscDebugDisconnect />
                 <FormattedMessage id="SettingsMenu.Connection.Title" />
             </DrawerTitle>
             <DrawerContent>
                 <Setting>
                     <TextField
-                        label={<FormattedMessage id="ApiUrlLabel" />}
+                        label="API URL"
                         inputMode="url"
                         value={url.toString()}
                         onChange={handleURLChange}
@@ -93,7 +92,7 @@ const SettingsMenu: React.FC = () => {
                 </Setting>
             </DrawerContent>
             <DrawerTitle>
-                <BsInfoCircle id="transitory-icon" />
+                <BsInfoCircle />
                 <FormattedMessage id="SettingsMenu.About.Title" />
             </DrawerTitle>
             <DrawerContent>
@@ -104,9 +103,8 @@ const SettingsMenu: React.FC = () => {
                         onClick={() => {
                             store.dispatch(CLOSE_SETTINGS())
                             store.dispatch(OPEN_ABOUT())
-                        }}
-                    >
-                        <BsInfoCircle id="transitory-icon" />
+                        }}>
+                        <BsInfoCircle />
                         <FormattedMessage id="SettingsMenu.About.Button" />
                     </Button>
                 </Setting>
