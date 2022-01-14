@@ -16,9 +16,9 @@ import { TOGGLE_HIDE_NAVBAR, TOGGLE_SHOULD_CENTER } from "redux/board/board"
 import { TOGGLE_DIRECTDRAW } from "redux/drawing/drawing"
 import { currentSession, isConnected } from "api/session"
 import { useCustomSelector } from "hooks"
-import { API_URL } from "api/types"
 import isDev from "consts"
 import { CLOSE_SETTINGS, OPEN_ABOUT } from "redux/menu/menu"
+import { API_URL } from "api/request"
 import { Setting } from "./index.styled"
 
 const SettingsMenu: React.FC = () => {

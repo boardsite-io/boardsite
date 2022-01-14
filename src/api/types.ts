@@ -2,9 +2,6 @@ import { BoardPage } from "drawing/page"
 import { Stroke, StrokeUpdate } from "drawing/stroke/index.types"
 import { Page, PageMeta, PageRank } from "redux/board/board.types"
 
-// api
-export const API_URL = process.env.REACT_APP_B_API_URL as string
-
 export interface Session {
     id?: string
     apiURL: URL

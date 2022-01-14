@@ -23,7 +23,6 @@ import {
     SET_PAGERANK,
 } from "redux/board/board"
 import {
-    API_URL,
     ConnectedUsers,
     Message,
     messages,
@@ -34,7 +33,7 @@ import {
     StrokeDelete,
     User,
 } from "./types"
-import { Request } from "./request"
+import { API_URL, Request } from "./request"
 
 export class BoardSession implements Session {
     id?: string
@@ -75,8 +74,6 @@ export class BoardSession implements Session {
         const { sessionId } = await this.request.postSession()
         this.setID(sessionId)
         store.dispatch(DELETE_ALL_PAGES())
-        // create a pageid which will be added when joining
-        await this.request.postPages([new BoardPage()], [0])
         return sessionId
     }
 
@@ -91,6 +88,11 @@ export class BoardSession implements Session {
         store.dispatch(DELETE_ALL_PAGES())
         const { pageRank, meta } = await this.request.getPages()
         BoardSession.syncPages({ pageRank, meta })
+
+        if (pageRank.length === 0) {
+            // create a page if there are none yet
+            await this.request.postPages([new BoardPage()], [0])
+        }
 
         // fetch data from each page
         pageRank.forEach(async (pageId) => {
