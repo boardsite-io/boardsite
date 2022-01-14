@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, Method } from "axios"
+import axios, { AxiosInstance, AxiosRequestHeaders, Method } from "axios"
 import { Stroke } from "drawing/stroke/index.types"
 import { Page } from "redux/board/board.types"
 import {
@@ -8,16 +8,16 @@ import {
     User,
 } from "./types"
 
+// api
+export const API_URL = process.env.REACT_APP_B_API_URL as string
+export const HeaderUserId = "Boardsite-User-Id"
+
 export class Request {
     baseURL: string
     sessionId?: string
+    userId?: string
 
     timeout = 3000
-    headers: Record<string, string> = {
-        // prettier-ignore
-        "Accept": "application/json",
-        "Content-Type": "multipart/form-data",
-    }
 
     jsonRequest: AxiosInstance
     fileRequest: AxiosInstance
@@ -36,33 +36,48 @@ export class Request {
         }
         this.jsonRequest = axios.create({
             baseURL: this.baseURL.toString(),
-            headers: this.headers,
             transformRequest: [(data) => JSON.stringify(data) ?? ""], // for routes we dont need message type
             transformResponse: [this.transformResponse],
             timeout: this.timeout,
         })
         this.fileRequest = axios.create({
             baseURL: this.baseURL.toString(),
-            headers: this.headers,
             transformResponse: [this.transformResponse],
             timeout: this.timeout,
         })
         this.pdfRequest = axios.create({
             baseURL: this.baseURL.toString(),
             headers: {
-                // prettier-ignore
-                "Accept": "application/pdf",
+                Accept: "application/pdf",
             },
             timeout: this.timeout,
             responseType: "arraybuffer",
         })
     }
 
-    async jsonSend<T>(method: Method, url: string, data?: unknown): Promise<T> {
+    getHeaders(useUserValidation?: boolean): AxiosRequestHeaders {
+        const headers: AxiosRequestHeaders = {
+            // prettier-ignore
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        }
+        if (useUserValidation) {
+            headers[HeaderUserId] = this.userId ?? ""
+        }
+        return headers
+    }
+
+    async jsonSend<T>(
+        method: Method,
+        url: string,
+        useUserValidation?: boolean,
+        data?: unknown
+    ): Promise<T> {
         const resp = await this.jsonRequest.request({
             method,
             url,
             data,
+            headers: this.getHeaders(useUserValidation),
         })
         return resp.data
     }
@@ -71,24 +86,31 @@ export class Request {
         return this.jsonSend("POST", "/create")
     }
 
-    getUsers(): Promise<Record<string, User>> {
-        return this.jsonSend("GET", `${this.sessionId}/users`)
+    async postUser(data: Partial<User>): Promise<User> {
+        const user: User = await this.jsonSend(
+            "POST",
+            `${this.sessionId}/users`,
+            false,
+            data
+        )
+        this.userId = user.id
+        return user
     }
 
-    postUser(data: Partial<User>): Promise<User> {
-        return this.jsonSend("POST", `${this.sessionId}/users`, data)
+    getUsers(): Promise<Record<string, User>> {
+        return this.jsonSend("GET", `${this.sessionId}/users`, true)
     }
 
     getPages(): Promise<ResponsePageSync> {
-        return this.jsonSend("GET", `${this.sessionId}/pages`)
+        return this.jsonSend("GET", `${this.sessionId}/pages`, true)
     }
 
     getStrokes(pageId: string): Promise<Stroke[]> {
-        return this.jsonSend("GET", `${this.sessionId}/pages/${pageId}`)
+        return this.jsonSend("GET", `${this.sessionId}/pages/${pageId}`, true)
     }
 
     postPages(pages: Page[], pageIndex: number[]): Promise<void> {
-        return this.jsonSend("POST", `${this.sessionId}/pages`, {
+        return this.jsonSend("POST", `${this.sessionId}/pages`, true, {
             pageId: pages.map((page) => page.pageId),
             index: pageIndex,
             meta: pages.reduce(
@@ -102,7 +124,7 @@ export class Request {
         pages: Pick<Page, "pageId" | "meta">[],
         clear: boolean
     ): Promise<void> {
-        return this.jsonSend("PUT", `${this.sessionId}/pages`, {
+        return this.jsonSend("PUT", `${this.sessionId}/pages`, true, {
             pageId: pages.map((page) => page.pageId),
             meta: pages.reduce(
                 (obj, page) => ({ ...obj, [page.pageId]: page.meta }),
@@ -113,7 +135,7 @@ export class Request {
     }
 
     deletePages(pageIds: string[]): Promise<void> {
-        return this.jsonSend("DELETE", `${this.sessionId}/pages`, {
+        return this.jsonSend("DELETE", `${this.sessionId}/pages`, true, {
             pageId: pageIds,
         })
     }
@@ -121,16 +143,23 @@ export class Request {
     async postAttachment(file: File): Promise<ResponsePostAttachment> {
         const formData = new FormData()
         formData.append("file", file)
+        const headers = this.getHeaders(true)
+        headers["Content-Type"] = "multipart/form-data"
         const response = await this.fileRequest.post(
             `${this.sessionId}/attachments`,
-            formData
+            formData,
+            { headers }
         )
         return response.data
     }
 
     async getAttachment(attachId: string): Promise<unknown> {
+        const headers = this.getHeaders(true)
+        // eslint-disable-next-line dot-notation
+        headers["Accept"] = "application/pdf"
         const response = await this.pdfRequest.get(
-            `${this.sessionId}/attachments/${attachId}`
+            `${this.sessionId}/attachments/${attachId}`,
+            { headers }
         )
         return Buffer.from(response.data, "binary").toString("base64")
     }
