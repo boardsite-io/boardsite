@@ -77,7 +77,8 @@ const PdfUpload: React.FC = () => {
                     onDrop={onDrop}
                     onDragOver={onDragOver}
                     onDragLeave={onDragLeave}
-                    $hovering={hovering}>
+                    $hovering={hovering}
+                >
                     <UploadIcon />
                     <InfoText>
                         {hovering ? (

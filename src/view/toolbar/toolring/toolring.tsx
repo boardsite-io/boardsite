@@ -21,28 +21,34 @@ const ToolRing: React.FC = () => {
             <ActiveTool />
             <ToolTip
                 position={Position.Bottom}
-                text={<FormattedMessage id="Tool.Eraser" />}>
+                text={<FormattedMessage id="Tool.Eraser" />}
+            >
                 <IconButton
                     active={typeSelector === ToolType.Eraser}
-                    onClick={() => handleSetTool({ type: ToolType.Eraser })}>
+                    onClick={() => handleSetTool({ type: ToolType.Eraser })}
+                >
                     <EraserIcon />
                 </IconButton>
             </ToolTip>
             <ToolTip
                 position={Position.Bottom}
-                text={<FormattedMessage id="Tool.Selection" />}>
+                text={<FormattedMessage id="Tool.Selection" />}
+            >
                 <IconButton
                     active={typeSelector === ToolType.Select}
-                    onClick={() => handleSetTool({ type: ToolType.Select })}>
+                    onClick={() => handleSetTool({ type: ToolType.Select })}
+                >
                     <SelectIcon />
                 </IconButton>
             </ToolTip>
             <ToolTip
                 position={Position.Bottom}
-                text={<FormattedMessage id="Tool.Panning" />}>
+                text={<FormattedMessage id="Tool.Panning" />}
+            >
                 <IconButton
                     active={typeSelector === ToolType.Pan}
-                    onClick={() => handleSetTool({ type: ToolType.Pan })}>
+                    onClick={() => handleSetTool({ type: ToolType.Pan })}
+                >
                     <PanIcon />
                 </IconButton>
             </ToolTip>

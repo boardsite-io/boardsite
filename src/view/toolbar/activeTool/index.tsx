@@ -18,7 +18,8 @@ const ActiveTool: React.FC = () => {
         <>
             <ToolTip
                 position={Position.Bottom}
-                text={<FormattedMessage id="Tool.Active" />}>
+                text={<FormattedMessage id="Tool.Active" />}
+            >
                 <IconButton
                     active={isDraw}
                     onClick={() =>
@@ -26,7 +27,8 @@ const ActiveTool: React.FC = () => {
                             ? setOpen(true)
                             : handleSetTool({ type: latestDrawType })
                     }
-                    style={isDraw ? { background: style.color } : undefined}>
+                    style={isDraw ? { background: style.color } : undefined}
+                >
                     <ToolIcon />
                 </IconButton>
             </ToolTip>
