@@ -19,21 +19,21 @@ export class Request {
         "Content-Type": "multipart/form-data",
     }
 
-    transformResponse = (data: string) => {
-        try {
-            return JSON.parse(data)
-        } catch {
-            return data
-        }
-    }
-
     jsonRequest: AxiosInstance
     fileRequest: AxiosInstance
     pdfRequest: AxiosInstance
+    transformResponse: (data: string) => string
 
     constructor(baseURL: string, sessionId?: string) {
         this.baseURL = `${baseURL}b`
         this.sessionId = sessionId
+        this.transformResponse = (data) => {
+            try {
+                return JSON.parse(data)
+            } catch {
+                return data
+            }
+        }
         this.jsonRequest = axios.create({
             baseURL: this.baseURL.toString(),
             headers: this.headers,

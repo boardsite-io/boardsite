@@ -68,13 +68,15 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({
         <FavToolWrapper>
             <ToolTip
                 text={<FormattedMessage id="Favorite.Select" />}
-                position={Position.Right}>
+                position={Position.Right}
+            >
                 <IconButton
                     background={tool.style.color}
                     onMouseDown={startClick}
                     onMouseUp={endClick}
                     onTouchStart={startClick}
-                    onTouchEnd={endClick}>
+                    onTouchEnd={endClick}
+                >
                     {children}
                 </IconButton>
             </ToolTip>
@@ -82,14 +84,16 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({
                 <FavToolOptions>
                     <ToolTip
                         text={<FormattedMessage id="Favorite.Replace" />}
-                        position={Position.BottomRight}>
+                        position={Position.BottomRight}
+                    >
                         <IconButton onClick={replaceTool}>
                             <PlusIcon />
                         </IconButton>
                     </ToolTip>
                     <ToolTip
                         text={<FormattedMessage id="Favorite.Remove" />}
-                        position={Position.Right}>
+                        position={Position.Right}
+                    >
                         <IconButton onClick={removeTool}>
                             <MinusIcon />
                         </IconButton>

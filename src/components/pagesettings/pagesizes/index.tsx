@@ -28,7 +28,8 @@ const PageSizes: React.FC = () => {
         <SizePresets>
             <ToolTip
                 position={Position.Bottom}
-                text={<FormattedMessage id="PageSize.A4Landscape" />}>
+                text={<FormattedMessage id="PageSize.A4Landscape" />}
+            >
                 <SizePresetLabel htmlFor="a4-landscape">
                     <A4Landscape
                         type="button"
@@ -42,7 +43,8 @@ const PageSizes: React.FC = () => {
             </ToolTip>
             <ToolTip
                 position={Position.Bottom}
-                text={<FormattedMessage id="PageSize.A4Portrait" />}>
+                text={<FormattedMessage id="PageSize.A4Portrait" />}
+            >
                 <SizePresetLabel htmlFor="a4-portrait">
                     <A4Portrait
                         type="button"
@@ -56,7 +58,8 @@ const PageSizes: React.FC = () => {
             </ToolTip>
             <ToolTip
                 position={Position.Bottom}
-                text={<FormattedMessage id="PageSize.Square" />}>
+                text={<FormattedMessage id="PageSize.Square" />}
+            >
                 <SizePresetLabel htmlFor="square">
                     <Square
                         type="button"

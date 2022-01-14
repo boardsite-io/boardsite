@@ -35,24 +35,29 @@ const ViewNavigation: React.FC = () => {
         <ViewNavWrapper>
             <ToolTip
                 text={<FormattedMessage id="Navigate.FirstPage" />}
-                position={Position.Left}>
+                position={Position.Left}
+            >
                 <IconButton
-                    onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
-                    <CgPushChevronUp id="icon" />
+                    onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}
+                >
+                    <CgPushChevronUp id="transitory-icon" />
                 </IconButton>
             </ToolTip>
             <ToolTip
                 text={<FormattedMessage id="Navigate.PreviousPage" />}
-                position={Position.Left}>
+                position={Position.Left}
+            >
                 <IconButton onClick={() => store.dispatch(JUMP_TO_PREV_PAGE())}>
-                    <CgChevronUp id="icon" />
+                    <CgChevronUp id="transitory-icon" />
                 </IconButton>
             </ToolTip>
             <ToolTip
                 text={<FormattedMessage id="Navigate.FirstPage" />}
-                position={Position.Left}>
+                position={Position.Left}
+            >
                 <IconButtonPageIndex
-                    onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}>
+                    onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}
+                >
                     <PageIndex>{currentPageIndex + 1}</PageIndex>
                     <PageIndexHr />
                     <PageIndex>{pageRank.length}</PageIndex>
@@ -60,16 +65,18 @@ const ViewNavigation: React.FC = () => {
             </ToolTip>
             <ToolTip
                 text={<FormattedMessage id="Navigate.NextPage" />}
-                position={Position.Left}>
+                position={Position.Left}
+            >
                 <IconButton onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE())}>
-                    <CgChevronDown id="icon" />
+                    <CgChevronDown id="transitory-icon" />
                 </IconButton>
             </ToolTip>
             <ToolTip
                 text={<FormattedMessage id="Navigate.LastPage" />}
-                position={Position.Left}>
+                position={Position.Left}
+            >
                 <IconButton onClick={() => store.dispatch(JUMP_TO_LAST_PAGE())}>
-                    <CgPushChevronDown id="icon" />
+                    <CgPushChevronDown id="transitory-icon" />
                 </IconButton>
             </ToolTip>
         </ViewNavWrapper>
