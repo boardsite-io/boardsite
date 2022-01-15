@@ -1,5 +1,8 @@
 import { FormattedMessage } from "language"
-import React, { useState } from "react"
+import React, { useCallback, useState } from "react"
+import store from "redux/store"
+import { fileExtWorkspace, handleImportWorkspaceFile } from "redux/workspace"
+import { CLOSE_PAGE_ACTIONS, CLOSE_IMPORT_MENU } from "redux/menu/menu"
 import {
     Dialog,
     DialogContent,
@@ -8,9 +11,9 @@ import {
     UploadIcon,
 } from "components"
 import { useCustomSelector } from "hooks"
-import store from "redux/store"
-import { CLOSE_PAGE_ACTIONS, CLOSE_IMPORT_MENU } from "redux/menu/menu"
-import { handleImportFile } from "drawing/pdf"
+import { handleImportPdfFile } from "drawing/pdf"
+import { LOAD_BOARD_STATE } from "redux/board/board"
+import { BoardState } from "redux/board/board.types"
 import { DropZone, ErrorText, InfoText, InvisibleInput } from "./index.styled"
 
 const PdfUpload: React.FC = () => {
@@ -26,21 +29,41 @@ const PdfUpload: React.FC = () => {
     const [hovering, setHovering] = useState<boolean>(false)
     const [invalidInput, setInvalidInput] = useState<boolean>(false)
 
-    const isValidFormat = (file: File) => file.type === "application/pdf"
+    const processFile = useCallback(
+        async (file: File): Promise<void> => {
+            try {
+                if (file.type === "application/pdf") {
+                    await handleImportPdfFile(file)
+                    setInvalidInput(false)
+                    handleClose()
+                    return
+                }
 
-    const processFile = async (file: File) => {
-        try {
-            if (!isValidFormat(file)) {
+                if (file.name.endsWith(fileExtWorkspace)) {
+                    const partialRootState = await handleImportWorkspaceFile(
+                        file
+                    )
+                    if (partialRootState.board) {
+                        store.dispatch(
+                            LOAD_BOARD_STATE(
+                                partialRootState.board as BoardState
+                            )
+                        )
+                        setInvalidInput(false)
+                        handleClose()
+                        return
+                    }
+
+                    throw new Error("no board state found in file")
+                }
+
                 throw new Error("invalid file type")
+            } catch {
+                setInvalidInput(true)
             }
-
-            await handleImportFile(file)
-            setInvalidInput(false)
-            handleClose()
-        } catch {
-            setInvalidInput(true)
-        }
-    }
+        },
+        [setInvalidInput]
+    )
 
     const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault() // Prevent file from being opened
@@ -95,7 +118,7 @@ const PdfUpload: React.FC = () => {
                 </DropZone>
                 <InvisibleInput
                     type="file"
-                    accept="application/pdf"
+                    accept={`application/pdf, ${fileExtWorkspace}`}
                     id="selectedFile"
                     onInput={onInput}
                 />

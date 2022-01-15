@@ -10,7 +10,7 @@ import {
 
 const fileVersion = "1.0"
 const statesToSave: SerializableReducerState[] = ["board"]
-export const fileExt = ".boardio"
+export const fileExtWorkspace = ".boardio"
 
 export function saveWorkspace(rootState: SerializableStateRecord): Uint8Array {
     const header = createFileHeader(fileVersion, statesToSave)
@@ -26,15 +26,15 @@ export function saveWorkspace(rootState: SerializableStateRecord): Uint8Array {
  * @returns
  */
 export async function loadWorkspace(
-    file: Uint8Array
+    readFile: Uint8Array
 ): Promise<Partial<RootState>> {
     try {
-        const segments = getFileSegments(file).map((seg) =>
+        const segments = getFileSegments(readFile).map((seg) =>
             JSON.parse(inflate(seg, { to: "string" }))
         )
         const states = verifyFileHeader(segments)
-
         const state = {} as Record<ReducerState, object | undefined>
+
         const res = states.map(async (name, i) => {
             // skip unsupported states
             if (name) {
@@ -50,6 +50,30 @@ export async function loadWorkspace(
         throw new Error(`loadWorkspace: ${err}`)
     }
 }
+
+/**
+ * Handles importing workspace files
+ * @param file File from file input field
+ */
+export const handleImportWorkspaceFile = async (
+    file: File
+): Promise<Partial<RootState>> => {
+    const readFile = await readFileAsUint8Array(file)
+    const partialRootState = loadWorkspace(readFile)
+    return partialRootState
+}
+
+export const readFileAsUint8Array = async (file: File): Promise<Uint8Array> =>
+    new Promise((resolve, reject) => {
+        const fileReader = new FileReader()
+        fileReader.onloadend = () => {
+            resolve(new Uint8Array(fileReader.result as ArrayBuffer))
+        }
+        fileReader.onerror = (err) => {
+            reject(err)
+        }
+        fileReader.readAsArrayBuffer(file)
+    })
 
 function createFileHeader(
     version: string,
