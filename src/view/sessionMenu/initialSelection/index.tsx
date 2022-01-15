@@ -9,6 +9,7 @@ import { SET_SESSION_DIALOG } from "redux/session/session"
 import { LOAD_BOARD_STATE } from "redux/board/board"
 import { loadIndexedDB } from "redux/localstorage"
 import { BoardState } from "redux/board/board.types"
+import { OPEN_IMPORT_MENU } from "redux/menu/menu"
 
 const createOfflineSession = () => {
     handleAddPageUnder()
@@ -23,6 +24,11 @@ const continuePreviousSession = async () => {
     const state = await loadIndexedDB("board")
 
     store.dispatch(LOAD_BOARD_STATE(state.board as BoardState))
+    store.dispatch(SET_SESSION_DIALOG(DialogState.Closed))
+}
+
+const onClickImport = () => {
+    store.dispatch(OPEN_IMPORT_MENU())
     store.dispatch(SET_SESSION_DIALOG(DialogState.Closed))
 }
 
@@ -43,6 +49,9 @@ const InitialSelection: React.FC<InitialSelectionProps> = ({ firstLoad }) => {
                 </Button>
                 <Button onClick={createOnlineSession}>
                     <FormattedMessage id="SessionMenu.InitialSelection.CreateOnline" />
+                </Button>
+                <Button onClick={onClickImport}>
+                    <FormattedMessage id="SessionMenu.InitialSelection.ImportFile" />
                 </Button>
                 {firstLoad && (
                     <Button onClick={continuePreviousSession}>

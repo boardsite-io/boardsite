@@ -1,5 +1,7 @@
 import styled, { css } from "styled-components"
 
+export const SELECTION_SIZE = "4rem"
+
 export const active = css`
     box-shadow: 0 0 0 2px var(--color3), inset 0 0 0 2px var(--color3);
 `

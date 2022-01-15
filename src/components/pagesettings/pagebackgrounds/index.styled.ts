@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components"
-import { active, inactive } from "../index.styled"
+import { active, inactive, SELECTION_SIZE } from "../index.styled"
 
 export const Backgrounds = styled.form`
     display: flex;
@@ -11,8 +11,8 @@ const sharedStyle = css<props>`
     border: none;
     background: white;
     /* remove a pixel for pixel perfect symmetry */
-    height: calc(5rem - 1px);
-    width: calc(5rem - 1px);
+    height: calc(${SELECTION_SIZE} - 1px);
+    width: calc(${SELECTION_SIZE} - 1px);
     border-radius: var(--button-border-radius);
     ${({ $active }) => ($active ? active : inactive)};
     &:hover {

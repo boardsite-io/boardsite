@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components"
-import { active, inactive } from "../index.styled"
+import { active, inactive, SELECTION_SIZE } from "../index.styled"
 
 export const SizePresets = styled.form`
     display: flex;
@@ -17,7 +17,7 @@ const sharedStyle = css<props>`
 `
 
 // Define size relatively to A4 page height
-const a4height = "5rem"
+const a4height = SELECTION_SIZE
 const a4width = `calc(${a4height} / 1.4142)`
 
 export const SizePresetLabel = styled.label`
@@ -44,6 +44,6 @@ export const A4Portrait = styled.button<props>`
 `
 export const Square = styled.button<props>`
     ${sharedStyle}
-    height: 5rem;
-    width: 5rem;
+    height: ${a4height};
+    width: ${a4height};
 `
