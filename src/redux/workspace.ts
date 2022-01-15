@@ -10,7 +10,6 @@ import {
 
 const fileVersion = "1.0"
 const statesToSave: SerializableReducerState[] = ["board"]
-export const fileExtWorkspace = ".boardio"
 
 export function saveWorkspace(rootState: SerializableStateRecord): Uint8Array {
     const header = createFileHeader(fileVersion, statesToSave)

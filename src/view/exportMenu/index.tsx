@@ -11,8 +11,9 @@ import { useCustomSelector } from "hooks"
 import store from "redux/store"
 import { CLOSE_PAGE_ACTIONS, CLOSE_EXPORT_MENU } from "redux/menu/menu"
 import { handleExportAsPdf } from "drawing/pdf"
-import { fileExtWorkspace, saveWorkspace } from "redux/workspace"
+import { saveWorkspace } from "redux/workspace"
 import download from "downloadjs"
+import { FILE_EXTENSION_WORKSPACE } from "consts"
 import { ExportDescription, ExportOptions } from "./index.styled"
 
 const handleClose = () => {
@@ -26,7 +27,7 @@ const exportAsPdf = () => {
 }
 
 const exportWorkspace = () => {
-    const fileName = `TODO${fileExtWorkspace}`
+    const fileName = `TODO${FILE_EXTENSION_WORKSPACE}`
     const file = saveWorkspace(store.getState())
     download(file, fileName)
     handleClose()

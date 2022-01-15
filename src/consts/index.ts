@@ -17,6 +17,7 @@ export const SCROLL_LIMIT_FIRST_PAGE = 0.25 // Calculated from upper border!
 export const SCROLL_LIMIT_LAST_PAGE = 0.75 // Calculated from upper border!
 export const SCROLL_LIMIT_HORIZONTAL = 0.5 // Calculated from side borders!
 
+export const FILE_EXTENSION_WORKSPACE = ".boardio"
 export const STAGE_RESIZE_DEBOUNCE = 250 // debounce time in ms
 export const STAGE_UPDATE_DEBOUNCE = 250 // debounce time in ms
 export const PIXEL_RATIO = 4

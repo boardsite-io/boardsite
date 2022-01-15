@@ -1,7 +1,7 @@
 import { FormattedMessage } from "language"
 import React, { useCallback, useState } from "react"
 import store from "redux/store"
-import { fileExtWorkspace, handleImportWorkspaceFile } from "redux/workspace"
+import { handleImportWorkspaceFile } from "redux/workspace"
 import { CLOSE_PAGE_ACTIONS, CLOSE_IMPORT_MENU } from "redux/menu/menu"
 import {
     Dialog,
@@ -11,6 +11,7 @@ import {
     UploadIcon,
 } from "components"
 import { useCustomSelector } from "hooks"
+import { FILE_EXTENSION_WORKSPACE } from "consts"
 import { handleImportPdfFile } from "drawing/pdf"
 import { LOAD_BOARD_STATE } from "redux/board/board"
 import { BoardState } from "redux/board/board.types"
@@ -39,7 +40,7 @@ const PdfUpload: React.FC = () => {
                     return
                 }
 
-                if (file.name.endsWith(fileExtWorkspace)) {
+                if (file.name.endsWith(FILE_EXTENSION_WORKSPACE)) {
                     const partialRootState = await handleImportWorkspaceFile(
                         file
                     )
@@ -118,7 +119,7 @@ const PdfUpload: React.FC = () => {
                 </DropZone>
                 <InvisibleInput
                     type="file"
-                    accept={`application/pdf, ${fileExtWorkspace}`}
+                    accept={`application/pdf, ${FILE_EXTENSION_WORKSPACE}`}
                     id="selectedFile"
                     onInput={onInput}
                 />
