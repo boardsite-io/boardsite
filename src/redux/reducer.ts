@@ -5,10 +5,13 @@ import infoReducer from "./loading/loading"
 import menuReducer from "./menu/menu"
 import sessionReducer from "./session/session"
 
-export default combineReducers({
+const rootReducer = {
     board: boardReducer,
     drawing: drawingReducer,
     info: infoReducer,
     menu: menuReducer,
     session: sessionReducer,
-})
+}
+
+export type ReducerState = keyof typeof rootReducer
+export default combineReducers(rootReducer)

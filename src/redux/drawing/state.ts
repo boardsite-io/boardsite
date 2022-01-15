@@ -22,7 +22,7 @@ export interface DrawingState {
     erasedStrokes: StrokeMap
 
     serialize?(): SerializedDrawingState
-    deserialize?(parsed: SerializedDrawingState): DrawingState
+    deserialize?(parsed: SerializedDrawingState): Promise<DrawingState>
 }
 
 export type SerializedDrawingState = DrawingState & { version?: string }
@@ -52,7 +52,7 @@ export const newState = (state?: DrawingState): DrawingState => ({
         return { version: drawingVersion, ...stateCopy }
     },
 
-    deserialize(parsed: SerializedDrawingState): DrawingState {
+    async deserialize(parsed: SerializedDrawingState): Promise<DrawingState> {
         const { version } = parsed // avoid side-effects
         if (!version) {
             throw new Error("cannot deserialize state, missing version")
@@ -65,7 +65,7 @@ export const newState = (state?: DrawingState): DrawingState => ({
 
             default:
                 throw new Error(
-                    `cannot deserialize state, unkown version ${version}`
+                    `cannot deserialize state, unknown version ${version}`
                 )
         }
 

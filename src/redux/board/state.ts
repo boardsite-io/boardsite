@@ -102,7 +102,7 @@ export const newState = (state?: BoardState): BoardState => ({
 
             default:
                 throw new Error(
-                    `cannot deserialize state, unkown version ${version}`
+                    `cannot deserialize state, unknown version ${version}`
                 )
         }
 
