@@ -17,79 +17,78 @@ import { LOAD_BOARD_STATE } from "redux/board/board"
 import { BoardState } from "redux/board/board.types"
 import { DropZone, ErrorText, InfoText, InvisibleInput } from "./index.styled"
 
-const PdfUpload: React.FC = () => {
+const ImportMenu: React.FC = () => {
     const pdfUploadOpen = useCustomSelector(
         (state) => state.menu.importMenuOpen
     )
 
-    const handleClose = () => {
-        store.dispatch(CLOSE_IMPORT_MENU())
-        store.dispatch(CLOSE_PAGE_ACTIONS())
-    }
-
     const [hovering, setHovering] = useState<boolean>(false)
     const [invalidInput, setInvalidInput] = useState<boolean>(false)
 
-    const processFile = useCallback(
-        async (file: File): Promise<void> => {
-            try {
-                if (file.type === "application/pdf") {
-                    await handleImportPdfFile(file)
+    const handleClose = useCallback(() => {
+        store.dispatch(CLOSE_IMPORT_MENU())
+        store.dispatch(CLOSE_PAGE_ACTIONS())
+    }, [])
+
+    const processFile = useCallback(async (file: File): Promise<void> => {
+        try {
+            if (file.type === "application/pdf") {
+                await handleImportPdfFile(file)
+                setInvalidInput(false)
+                handleClose()
+                return
+            }
+
+            if (file.name.endsWith(FILE_EXTENSION_WORKSPACE)) {
+                const partialRootState = await handleImportWorkspaceFile(file)
+                if (partialRootState.board) {
+                    store.dispatch(
+                        LOAD_BOARD_STATE(partialRootState.board as BoardState)
+                    )
                     setInvalidInput(false)
                     handleClose()
                     return
                 }
 
-                if (file.name.endsWith(FILE_EXTENSION_WORKSPACE)) {
-                    const partialRootState = await handleImportWorkspaceFile(
-                        file
-                    )
-                    if (partialRootState.board) {
-                        store.dispatch(
-                            LOAD_BOARD_STATE(
-                                partialRootState.board as BoardState
-                            )
-                        )
-                        setInvalidInput(false)
-                        handleClose()
-                        return
-                    }
-
-                    throw new Error("no board state found in file")
-                }
-
-                throw new Error("invalid file type")
-            } catch {
-                setInvalidInput(true)
+                throw new Error("no board state found in file")
             }
-        },
-        [setInvalidInput]
-    )
 
-    const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+            throw new Error("invalid file type")
+        } catch {
+            setInvalidInput(true)
+        }
+    }, [])
+
+    const onDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault() // Prevent file from being opened
         setHovering(true)
-    }
+    }, [])
 
-    const onDragLeave = () => {
+    const onDragLeave = useCallback(() => {
         setHovering(false)
-    }
+    }, [])
 
-    const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
-        e.preventDefault() // Prevent file from being opened
-        setHovering(false)
-        const file = e.dataTransfer.items[0].getAsFile()
-        if (file) {
-            processFile(file)
-        }
-    }
+    const onDrop = useCallback(
+        (e: React.DragEvent<HTMLDivElement>) => {
+            e.preventDefault() // Prevent file from being opened
+            setHovering(false)
+            const file = e.dataTransfer.items[0].getAsFile()
+            if (file) {
+                processFile(file)
+            }
+        },
+        [processFile]
+    )
 
-    const onInput = (e: React.SyntheticEvent) => {
-        const file = (e.target as HTMLInputElement).files?.[0]
-        if (file) {
-            processFile(file)
-        }
-    }
+    const onInput = useCallback(
+        (e: React.SyntheticEvent) => {
+            const file = (e.target as HTMLInputElement).files?.[0]
+            if (file) {
+                processFile(file)
+            }
+        },
+        [processFile]
+    )
 
     return (
         <Dialog open={pdfUploadOpen} onClose={handleClose}>
@@ -133,4 +132,4 @@ const PdfUpload: React.FC = () => {
     )
 }
 
-export default PdfUpload
+export default ImportMenu

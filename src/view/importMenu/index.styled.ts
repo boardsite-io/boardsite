@@ -1,27 +1,5 @@
-import styled, { css, keyframes } from "styled-components"
+import styled, { css } from "styled-components"
 
-const fileHoverKeyFrame = keyframes`
-    0%{
-        background-position-x:0%;
-	}
-	100% {
-        background-position-x:1000000%;
-	}
-    `
-const fileHoverAnimation = css`
-    animation: ${fileHoverKeyFrame} 80000s infinite linear forwards;
-    background-image: repeating-linear-gradient(
-        -45deg,
-        #88bb8855,
-        #22bb3333 10px,
-        #88bb8855 20px,
-        #00000000 20px,
-        #00000000 40px
-    );
-    background-size: 56px 56px; /* This is unique for this background, need to find a pattern and develop a formula */
-    background-position-x: 0%;
-    background-repeat: repeat;
-`
 interface Props {
     $hovering: boolean
 }
@@ -31,7 +9,6 @@ export const DropZone = styled.div<Props>`
     flex-direction: column;
     min-height: 12rem;
     border-radius: 0.4rem;
-    border-style: ${({ $hovering }) => ($hovering ? "solid" : "dashed")};
     border-width: 1px;
     text-align: center;
     align-items: center;
@@ -45,7 +22,15 @@ export const DropZone = styled.div<Props>`
         width: 4rem;
         pointer-events: none;
     }
-    ${({ $hovering }) => ($hovering ? fileHoverAnimation : null)};
+    border-style: dashed;
+
+    transition: all 500ms;
+    ${({ $hovering }) =>
+        $hovering
+            ? css`
+                  background: #00ff0022;
+              `
+            : css``};
 `
 
 const textStyle = css`
