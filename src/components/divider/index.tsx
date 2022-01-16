@@ -1,5 +1,5 @@
 import React from "react"
-import { StyledDivider } from "./divider.styled"
+import { StyledDivider } from "./index.styled"
 
 interface DrawerProps {
     color?: "primary" | "secondary"

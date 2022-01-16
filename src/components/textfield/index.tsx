@@ -8,7 +8,7 @@ import {
     OuterWrap,
     StyledInput,
     TextAlign,
-} from "./textfield.styled"
+} from "./index.styled"
 
 interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
     helperText?: JSX.Element

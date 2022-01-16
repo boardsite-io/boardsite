@@ -3,7 +3,7 @@ import Konva from "konva"
 import { currentSession } from "api/session"
 import { ColorButton, Selection } from "./index.styled"
 // Dont import from components to prevent dependency cycle
-import TextField from "../textfield/textfield"
+import TextField from "../textfield"
 
 const UserSelection: React.FC = () => {
     const handleAliasChange = (e: React.ChangeEvent<HTMLInputElement>) => {
