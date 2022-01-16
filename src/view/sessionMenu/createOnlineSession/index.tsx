@@ -58,6 +58,11 @@ const CreateOnlineSession: React.FC = () => {
         setSidInput(e.target.value)
     }
 
+    const onSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        handleJoin(sidInput)
+    }
+
     let helperText: JSX.Element | undefined
 
     if (!isValidInput) {
@@ -71,23 +76,25 @@ const CreateOnlineSession: React.FC = () => {
                 <FormattedMessage id="SessionMenu.CreateOnline.Title" />
             </DialogTitle>
             <DialogContent>
-                <UserSelection />
-                <OnlineSessionOptions>
-                    <Button onClick={handleCreate}>
-                        <FormattedMessage id="SessionMenu.CreateOnline.CreateButton" />
-                    </Button>
-                    <Button onClick={() => handleJoin(sidInput)}>
-                        <FormattedMessage id="SessionMenu.CreateOnline.JoinButton" />
-                    </Button>
-                </OnlineSessionOptions>
-                <TextField
-                    label={
-                        <FormattedMessage id="SessionMenu.CreateOnline.TextFieldLabel.SessionId" />
-                    }
-                    value={sidInput}
-                    onChange={handleTextFieldChange}
-                    helperText={helperText}
-                />
+                <form onSubmit={onSubmit}>
+                    <UserSelection />
+                    <OnlineSessionOptions>
+                        <Button onClick={handleCreate}>
+                            <FormattedMessage id="SessionMenu.CreateOnline.CreateButton" />
+                        </Button>
+                        <Button type="submit">
+                            <FormattedMessage id="SessionMenu.CreateOnline.JoinButton" />
+                        </Button>
+                    </OnlineSessionOptions>
+                    <TextField
+                        label={
+                            <FormattedMessage id="SessionMenu.CreateOnline.TextFieldLabel.SessionId" />
+                        }
+                        value={sidInput}
+                        onChange={handleTextFieldChange}
+                        helperText={helperText}
+                    />
+                </form>
             </DialogContent>
         </>
     )
