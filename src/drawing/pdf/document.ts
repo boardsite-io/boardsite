@@ -10,18 +10,6 @@ const pdfjsWorker: any = require("pdfjs-dist/legacy/build/pdf.worker.entry")
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
-export const getPDFfromForm = async (file: File): Promise<Uint8Array> =>
-    new Promise((resolve, reject) => {
-        const fileReader = new FileReader()
-        fileReader.onloadend = () => {
-            resolve(new Uint8Array(fileReader.result as ArrayBuffer))
-        }
-        fileReader.onerror = (err) => {
-            reject(err)
-        }
-        fileReader.readAsArrayBuffer(file)
-    })
-
 /**
  * Loads a pdf document from data/url and converts it to image data and cache it to redux
  *

@@ -81,7 +81,7 @@ const PageMenu: React.FC = () => {
             <DrawerContent>
                 <Button withIcon onClick={onClickApplyToPage}>
                     <BsFileArrowUp id="transitory-icon" />
-                    <FormattedMessage id="PageMenu.PageSettings.ApplyToPage" />
+                    <FormattedMessage id="PageMenu.PageSettings.SetPageBackground" />
                 </Button>
                 <PageSettings />
             </DrawerContent>

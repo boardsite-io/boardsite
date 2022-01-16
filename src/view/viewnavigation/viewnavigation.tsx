@@ -31,7 +31,11 @@ const ViewNavigation: React.FC = () => {
         (state) => state.board.stage.hideNavBar
     )
 
-    return !hideNavBar && pageRank.length > 0 ? (
+    if (hideNavBar || pageRank.length === 0) {
+        return null
+    }
+
+    return (
         <ViewNavWrapper>
             <ToolTip
                 text={<FormattedMessage id="Navigate.FirstPage" />}
@@ -80,7 +84,7 @@ const ViewNavigation: React.FC = () => {
                 </IconButton>
             </ToolTip>
         </ViewNavWrapper>
-    ) : null
+    )
 }
 
 export default ViewNavigation

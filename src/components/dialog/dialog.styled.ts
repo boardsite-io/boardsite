@@ -57,7 +57,7 @@ export const DialogContent = styled.div`
 `
 
 export const DialogTitle = styled.h2`
-    margin: 1.3rem 1rem;
+    margin: 1rem 1rem 0.5rem;
 `
 
 export const DialogOptions = styled.div`

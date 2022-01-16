@@ -1,34 +1,60 @@
 import { currentSession, isConnected } from "api/session"
-import { backgroundStyle, PIXEL_RATIO } from "consts"
+import { backgroundStyle, FILE_EXTENSION_WORKSPACE, PIXEL_RATIO } from "consts"
 import { handleDeleteAllPages } from "drawing/handlers"
 import { BoardPage } from "drawing/page"
-import { ADD_PAGES, CLEAR_UNDO_REDO } from "redux/board/board"
-import { DocumentSrc, PageSize } from "redux/board/board.types"
+import {
+    ADD_PAGES,
+    CLEAR_UNDO_REDO,
+    JUMP_TO_FIRST_PAGE,
+    LOAD_BOARD_STATE,
+} from "redux/board/board"
+import { BoardState, DocumentSrc, PageSize } from "redux/board/board.types"
 import store from "redux/store"
 import { END_LOADING, START_LOADING } from "redux/loading/loading"
 import { CLOSE_PAGE_ACTIONS } from "redux/menu/menu"
-import { getPDFfromForm } from "./document"
+import {
+    handleImportWorkspaceFile,
+    readFileAsUint8Array,
+} from "redux/workspace"
 import { handleLoadFromSource, toPDF } from "./io"
 
-export const handleImportFile = async (file: File): Promise<void> => {
-    const origin = await handleGetDocumentFile(file)
+export const handleProcessFileImport = async (file: File) => {
+    if (file.type === "application/pdf") {
+        await handleImportPdfFile(file)
+        return
+    }
+
+    if (file.name.endsWith(FILE_EXTENSION_WORKSPACE)) {
+        const partialRootState = await handleImportWorkspaceFile(file)
+        if (partialRootState.board) {
+            store.dispatch(
+                LOAD_BOARD_STATE(partialRootState.board as BoardState)
+            )
+            return
+        }
+
+        throw new Error("no board state found in file")
+    }
+
+    throw new Error("invalid file type")
+}
+
+export const handleImportPdfFile = async (file: File): Promise<void> => {
+    const origin = await getPdfFileSource(file)
     await handleLoadFromSource(origin)
-    await handleAddDocumentPages(origin)
+    await handleAddPdfPages(origin)
     // clear the stacks when importing documents
     store.dispatch(CLEAR_UNDO_REDO())
 }
 
-export async function handleGetDocumentFile(
-    file: File
-): Promise<URL | Uint8Array> {
-    return isConnected()
+const getPdfFileSource = async (file: File): Promise<URL | Uint8Array> =>
+    isConnected()
         ? currentSession().addAttachment(file)
-        : getPDFfromForm(file)
-}
+        : readFileAsUint8Array(file)
 
-export async function handleAddDocumentPages(
+export const handleAddPdfPages = async (
     fileOriginSrc: DocumentSrc
-): Promise<void> {
+): Promise<void> => {
     const { documentImages } = store.getState().board
 
     handleDeleteAllPages()
@@ -44,6 +70,7 @@ export async function handleAddDocumentPages(
                 size: getPageSize(img),
             })
         )
+
         currentSession().addPages(
             pages,
             pages.map(() => -1)
@@ -59,11 +86,11 @@ export async function handleAddDocumentPages(
             })
         )
 
-        // TODO: ADD_PAGES reducer
         pages.forEach((page) => {
             store.dispatch(ADD_PAGES({ data: [{ page, index: -1 }] }))
         }) // append subsequent pages at the end
     }
+    store.dispatch(JUMP_TO_FIRST_PAGE())
 }
 
 export async function handleExportAsPdf(): Promise<void> {

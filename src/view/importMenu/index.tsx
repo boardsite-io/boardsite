@@ -1,5 +1,7 @@
 import { FormattedMessage } from "language"
-import React, { useState } from "react"
+import React, { useCallback, useState } from "react"
+import store from "redux/store"
+import { CLOSE_PAGE_ACTIONS, CLOSE_IMPORT_MENU } from "redux/menu/menu"
 import {
     Dialog,
     DialogContent,
@@ -8,64 +10,64 @@ import {
     UploadIcon,
 } from "components"
 import { useCustomSelector } from "hooks"
-import store from "redux/store"
-import { CLOSE_PAGE_ACTIONS, CLOSE_IMPORT_MENU } from "redux/menu/menu"
-import { handleImportFile } from "drawing/pdf"
+import { FILE_EXTENSION_WORKSPACE } from "consts"
+import { handleProcessFileImport } from "drawing/pdf"
 import { DropZone, ErrorText, InfoText, InvisibleInput } from "./index.styled"
 
-const PdfUpload: React.FC = () => {
+const ImportMenu: React.FC = () => {
     const pdfUploadOpen = useCustomSelector(
         (state) => state.menu.importMenuOpen
     )
 
-    const handleClose = () => {
-        store.dispatch(CLOSE_IMPORT_MENU())
-        store.dispatch(CLOSE_PAGE_ACTIONS())
-    }
-
     const [hovering, setHovering] = useState<boolean>(false)
     const [invalidInput, setInvalidInput] = useState<boolean>(false)
 
-    const isValidFormat = (file: File) => file.type === "application/pdf"
+    const handleClose = useCallback(() => {
+        store.dispatch(CLOSE_IMPORT_MENU())
+        store.dispatch(CLOSE_PAGE_ACTIONS())
+    }, [])
 
-    const processFile = async (file: File) => {
+    const processFile = useCallback(async (file: File): Promise<void> => {
         try {
-            if (!isValidFormat(file)) {
-                throw new Error("invalid file type")
-            }
+            await handleProcessFileImport(file)
 
-            await handleImportFile(file)
             setInvalidInput(false)
             handleClose()
         } catch {
             setInvalidInput(true)
         }
-    }
+    }, [])
 
-    const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    const onDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault() // Prevent file from being opened
         setHovering(true)
-    }
+    }, [])
 
-    const onDragLeave = () => {
+    const onDragLeave = useCallback(() => {
         setHovering(false)
-    }
+    }, [])
 
-    const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
-        e.preventDefault() // Prevent file from being opened
-        setHovering(false)
-        const file = e.dataTransfer.items[0].getAsFile()
-        if (file) {
-            processFile(file)
-        }
-    }
+    const onDrop = useCallback(
+        (e: React.DragEvent<HTMLDivElement>) => {
+            e.preventDefault() // Prevent file from being opened
+            setHovering(false)
+            const file = e.dataTransfer.items[0].getAsFile()
+            if (file) {
+                processFile(file)
+            }
+        },
+        [processFile]
+    )
 
-    const onInput = (e: React.SyntheticEvent) => {
-        const file = (e.target as HTMLInputElement).files?.[0]
-        if (file) {
-            processFile(file)
-        }
-    }
+    const onInput = useCallback(
+        (e: React.SyntheticEvent) => {
+            const file = (e.target as HTMLInputElement).files?.[0]
+            if (file) {
+                processFile(file)
+            }
+        },
+        [processFile]
+    )
 
     return (
         <Dialog open={pdfUploadOpen} onClose={handleClose}>
@@ -95,7 +97,7 @@ const PdfUpload: React.FC = () => {
                 </DropZone>
                 <InvisibleInput
                     type="file"
-                    accept="application/pdf"
+                    accept={`application/pdf, ${FILE_EXTENSION_WORKSPACE}`}
                     id="selectedFile"
                     onInput={onInput}
                 />
@@ -109,4 +111,4 @@ const PdfUpload: React.FC = () => {
     )
 }
 
-export default PdfUpload
+export default ImportMenu
