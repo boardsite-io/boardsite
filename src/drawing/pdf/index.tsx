@@ -25,6 +25,11 @@ export const handleProcessFileImport = async (file: File) => {
     }
 
     if (file.name.endsWith(FILE_EXTENSION_WORKSPACE)) {
+        if (isConnected()) {
+            throw new Error(
+                "importing workspaces in online session is not available yet"
+            )
+        }
         const partialRootState = await handleImportWorkspaceFile(file)
         if (partialRootState.board) {
             store.dispatch(
