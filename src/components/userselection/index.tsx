@@ -1,18 +1,22 @@
 import { FormattedMessage } from "language"
-import React from "react"
+import React, { useState } from "react"
 import Konva from "konva"
+import { MAX_ALIAS_LENGTH } from "consts"
 import { currentSession } from "api/session"
 import { ColorButton, Selection } from "./index.styled"
 // Dont import from components to prevent dependency cycle
 import TextField from "../textfield"
 
 const UserSelection: React.FC = () => {
+    const [, triggerRender] = useState<boolean>(true)
     const handleAliasChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         currentSession().updateUser({ alias: e.target.value })
+        triggerRender((x) => !x)
     }
 
     const newRandomColor = () => {
         currentSession().updateUser({ color: Konva.Util.getRandomColor() })
+        triggerRender((x) => !x)
     }
 
     return (
@@ -28,7 +32,7 @@ const UserSelection: React.FC = () => {
                     <FormattedMessage id="UserSelection.TextFieldLabel.ChooseAlias" />
                 }
                 onChange={handleAliasChange}
-                maxLength={20}
+                maxLength={MAX_ALIAS_LENGTH}
                 align="left"
             />
         </Selection>
