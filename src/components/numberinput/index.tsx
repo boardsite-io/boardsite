@@ -1,5 +1,5 @@
 import React from "react"
-import { Input, Label } from "./numberinput.styled"
+import { Input, Label } from "./index.styled"
 
 interface ButtonProps extends React.InputHTMLAttributes<HTMLInputElement> {
     label: string

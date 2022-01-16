@@ -1,6 +1,6 @@
 import { Variant } from "consts"
 import React from "react"
-import { StyledButton } from "./button.styled"
+import { StyledButton } from "./index.styled"
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: Variant

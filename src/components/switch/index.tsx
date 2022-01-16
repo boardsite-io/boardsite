@@ -1,5 +1,5 @@
 import React from "react"
-import { StyledSwitch, SwitchRail, SwitchThumb } from "./switch.styled"
+import { StyledSwitch, SwitchRail, SwitchThumb } from "./index.styled"
 
 interface SwitchProps extends React.HtmlHTMLAttributes<HTMLDivElement> {
     enabled: boolean

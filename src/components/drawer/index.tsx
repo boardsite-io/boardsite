@@ -1,5 +1,5 @@
 import React, { MouseEventHandler, ReactNode } from "react"
-import { DrawerBox, DrawerBackground } from "./drawer.styled"
+import { DrawerBox, DrawerBackground } from "./index.styled"
 
 interface DrawerProps {
     position?: "left" | "right"

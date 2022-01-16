@@ -1,5 +1,5 @@
 import React, { MouseEventHandler, ReactNode } from "react"
-import { PopupCover, PopupWrap } from "./popup.styled"
+import { PopupCover, PopupWrap } from "./index.styled"
 
 interface PopupProps {
     open: boolean

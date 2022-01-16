@@ -1,19 +1,19 @@
-export * from "./icons/index"
-export { default as IconButton } from "./iconbutton/iconbutton"
-export { default as Button } from "./button/button"
-export { default as Popup } from "./popup/popup"
-export { default as Switch } from "./switch/switch"
-export { default as TextField } from "./textfield/textfield"
+export * from "./icons"
+export { default as IconButton } from "./iconbutton"
+export { default as Button } from "./button"
+export { default as Popup } from "./popup"
+export { default as Switch } from "./switch"
+export { default as TextField } from "./textfield"
 export { default as UserSelection } from "./userselection"
-export { default as NumberInput } from "./numberinput/numberinput"
+export { default as NumberInput } from "./numberinput"
 export { default as ToolTip } from "./tooltip"
 export { Position } from "./tooltip/index.types" // Cleaner imports
-export { default as Dialog } from "./dialog/dialog"
-export { default as Drawer } from "./drawer/drawer"
-export { default as Divider } from "./divider/divider"
+export { default as Dialog } from "./dialog"
+export { default as Drawer } from "./drawer"
+export { default as Divider } from "./divider"
 export {
     DialogTitle,
     DialogContent,
     DialogOptions,
-} from "./dialog/dialog.styled"
-export { DrawerTitle, DrawerContent } from "./drawer/drawer.styled"
+} from "./dialog/index.styled"
+export { DrawerTitle, DrawerContent } from "./drawer/index.styled"

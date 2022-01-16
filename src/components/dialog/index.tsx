@@ -1,5 +1,5 @@
 import React, { MouseEventHandler, ReactNode } from "react"
-import { DialogBox, DialogBackground } from "./dialog.styled"
+import { DialogBox, DialogBackground } from "./index.styled"
 
 interface DialogProps {
     open: boolean

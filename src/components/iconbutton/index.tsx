@@ -1,5 +1,5 @@
 import React from "react"
-import { StyledIconButton } from "./iconbutton.styled"
+import { StyledIconButton } from "./index.styled"
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     deactivated?: boolean
