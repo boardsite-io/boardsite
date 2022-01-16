@@ -15,7 +15,6 @@ export const StyledIconButton = styled.button<Props>`
     width: var(--icon-button-size);
     margin: 0.1rem;
     padding: 0;
-    outline: none;
     border: none;
     border-radius: var(--button-border-radius);
     ${({ $background }) =>

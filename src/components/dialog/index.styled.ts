@@ -50,9 +50,9 @@ export const DialogContent = styled.div`
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    overflow-y: auto;
+    overflow: auto;
     gap: 1rem;
-    margin: 1.5rem;
+    padding: 1.5rem;
     text-align: justify;
 `
 

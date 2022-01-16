@@ -15,10 +15,11 @@ interface PresetProps {
     $active: boolean
 }
 
-export const Preset = styled.div<PresetProps>`
+export const Preset = styled.button<PresetProps>`
     display: flex;
     justify-content: center;
     align-items: center;
+    border: none;
     border-radius: 50%;
     height: var(--icon-button-size);
     width: var(--icon-button-size);
@@ -33,6 +34,7 @@ const activePreset = css`
     }
 `
 const inActivePreset = css`
+    background: transparent;
     div {
         background: var(--color1);
     }
