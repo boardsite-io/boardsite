@@ -48,7 +48,7 @@ const InitialSelection: React.FC<InitialSelectionProps> = ({ firstLoad }) => {
                     <FormattedMessage id="SessionMenu.InitialSelection.CreateOffline" />
                 </Button>
                 <Button onClick={createOnlineSession}>
-                    <FormattedMessage id="SessionMenu.InitialSelection.CreateOnline" />
+                    <FormattedMessage id="SessionMenu.InitialSelection.OnlineSessionMenu" />
                 </Button>
                 <Button onClick={onClickImport}>
                     <FormattedMessage id="SessionMenu.InitialSelection.ImportFile" />

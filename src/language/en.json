@@ -61,7 +61,7 @@
     "SessionMenu.CreateOnline.InvalidSession": "Looks like the session you're trying to join does not exist 🤖",
     "SessionMenu.InitialSelection.Title": "Create Session",
     "SessionMenu.InitialSelection.CreateOffline": "Create offline session",
-    "SessionMenu.InitialSelection.CreateOnline": "Create online session",
+    "SessionMenu.InitialSelection.OnlineSessionMenu": "Online session menu",
     "SessionMenu.InitialSelection.ImportFile": "Import file",
     "SessionMenu.InitialSelection.Continue": "Continue previous session",
     "SessionMenu.JoinOnly.Title": "Collaborative Session 👋🏻",
