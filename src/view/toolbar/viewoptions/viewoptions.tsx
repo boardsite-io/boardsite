@@ -1,5 +1,5 @@
 import { FormattedMessage } from "language"
-import React from "react"
+import React, { memo } from "react"
 import store from "redux/store"
 import {
     ExpandIcon,
@@ -10,7 +10,7 @@ import {
 } from "components"
 import { FIT_WIDTH_TO_PAGE, RESET_VIEW } from "redux/board/board"
 
-const ViewOptions: React.FC = () => {
+const ViewOptions: React.FC = memo(() => {
     return (
         <>
             <ToolTip
@@ -31,6 +31,6 @@ const ViewOptions: React.FC = () => {
             </ToolTip>
         </>
     )
-}
+})
 
 export default ViewOptions

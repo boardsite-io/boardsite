@@ -1,10 +1,10 @@
 import { FormattedMessage } from "language"
-import React from "react"
+import React, { memo } from "react"
 import { IconButton, Position, RedoIcon, ToolTip, UndoIcon } from "components"
 import { handleRedo, handleUndo } from "drawing/handlers"
 import { useCustomSelector } from "hooks"
 
-const UndoRedo: React.FC = () => {
+const UndoRedo: React.FC = memo(() => {
     const disableUndoStack = useCustomSelector(
         (state) => state.board.undoStack?.length === 0
     )
@@ -31,6 +31,6 @@ const UndoRedo: React.FC = () => {
             </ToolTip>
         </>
     )
-}
+})
 
 export default UndoRedo

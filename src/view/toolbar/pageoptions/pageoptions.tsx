@@ -1,11 +1,11 @@
 import { FormattedMessage } from "language"
-import React from "react"
+import React, { memo } from "react"
 import store from "redux/store"
 import { OPEN_PAGE_ACTIONS } from "redux/menu/menu"
 import { IconButton, Position, ToolTip } from "components"
 import { BsFileDiff } from "react-icons/bs"
 
-const PageOptions: React.FC = () => {
+const PageOptions: React.FC = memo(() => {
     return (
         <ToolTip
             position={Position.BottomLeft}
@@ -16,6 +16,6 @@ const PageOptions: React.FC = () => {
             </IconButton>
         </ToolTip>
     )
-}
+})
 
 export default PageOptions

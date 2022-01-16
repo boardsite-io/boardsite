@@ -1,5 +1,5 @@
 import { FormattedMessage } from "language"
-import React from "react"
+import React, { memo } from "react"
 import store from "redux/store"
 import {
     IconButton,
@@ -10,7 +10,7 @@ import {
 } from "components"
 import { ZOOM_IN_CENTER, ZOOM_OUT_CENTER } from "redux/board/board"
 
-const ViewZoom: React.FC = () => {
+const ViewZoom: React.FC = memo(() => {
     return (
         <>
             <ToolTip
@@ -31,6 +31,6 @@ const ViewZoom: React.FC = () => {
             </ToolTip>
         </>
     )
-}
+})
 
 export default ViewZoom

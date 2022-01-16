@@ -1,5 +1,5 @@
 import { FormattedMessage } from "language"
-import React from "react"
+import React, { memo } from "react"
 import { useCustomSelector } from "hooks"
 import {
     CircleIcon,
@@ -14,7 +14,7 @@ import { ToolType } from "drawing/stroke/index.types"
 import { handleSetTool } from "drawing/handlers"
 import { StyledShapeTools } from "./shapetools.styled"
 
-const ShapeTools: React.FC = () => {
+const ShapeTools: React.FC = memo(() => {
     const typeSelector = useCustomSelector((state) => state.drawing.tool.type)
     const colorSelector = useCustomSelector(
         (state) => state.drawing.tool.style.color
@@ -95,6 +95,6 @@ const ShapeTools: React.FC = () => {
             </ToolTip>
         </StyledShapeTools>
     )
-}
+})
 
 export default ShapeTools

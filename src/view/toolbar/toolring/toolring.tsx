@@ -1,5 +1,5 @@
 import { FormattedMessage } from "language"
-import React from "react"
+import React, { memo } from "react"
 import { useCustomSelector } from "hooks"
 import {
     EraserIcon,
@@ -13,7 +13,7 @@ import { handleSetTool } from "drawing/handlers"
 import { ToolType } from "drawing/stroke/index.types"
 import ActiveTool from "../activeTool"
 
-const ToolRing: React.FC = () => {
+const ToolRing: React.FC = memo(() => {
     const typeSelector = useCustomSelector((state) => state.drawing.tool.type)
 
     return (
@@ -54,6 +54,6 @@ const ToolRing: React.FC = () => {
             </ToolTip>
         </>
     )
-}
+})
 
 export default ToolRing

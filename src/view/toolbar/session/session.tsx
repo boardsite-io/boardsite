@@ -1,5 +1,5 @@
 import { FormattedMessage } from "language"
-import React from "react"
+import React, { memo } from "react"
 import { BsPeople } from "react-icons/bs"
 import { IconButton, Position, ToolTip } from "components"
 import { SET_SESSION_DIALOG } from "redux/session/session"
@@ -15,7 +15,7 @@ const handleClickOpen = () => {
     }
 }
 
-const Session: React.FC = () => {
+const Session: React.FC = memo(() => {
     return (
         <ToolTip
             position={Position.BottomRight}
@@ -26,6 +26,6 @@ const Session: React.FC = () => {
             </IconButton>
         </ToolTip>
     )
-}
+})
 
 export default Session

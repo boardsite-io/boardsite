@@ -1,4 +1,4 @@
-import React from "react"
+import React, { memo } from "react"
 import Session from "./session/session"
 import ViewOptions from "./viewoptions/viewoptions"
 import PageOptions from "./pageoptions/pageoptions"
@@ -8,7 +8,7 @@ import UndoRedo from "./undoredo/undoredo"
 import ToolRing from "./toolring/toolring"
 import ViewZoom from "./viewzoom/viewzoom"
 
-const Toolbar: React.FC = () => (
+const Toolbar: React.FC = memo(() => (
     <ToolbarStyled>
         <ToolbarGroup className="toolbar-general">
             <Settings />
@@ -28,5 +28,5 @@ const Toolbar: React.FC = () => (
             <ViewOptions />
         </ToolbarGroup>
     </ToolbarStyled>
-)
+))
 export default Toolbar
