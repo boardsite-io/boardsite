@@ -1,26 +1,23 @@
 import { currentSession, isConnected } from "api/session"
 import { backgroundStyle, FILE_EXTENSION_WORKSPACE, PIXEL_RATIO } from "consts"
 import { handleDeleteAllPages } from "drawing/handlers"
+import { readFileAsUint8Array } from "drawing/io"
 import { BoardPage } from "drawing/page"
 import {
+    ADD_ATTACHMENTS,
     ADD_PAGES,
     CLEAR_UNDO_REDO,
     JUMP_TO_FIRST_PAGE,
     LOAD_BOARD_STATE,
 } from "redux/board/board"
-import { BoardState, PageSize } from "redux/board/board.types"
+import { Attachment, BoardState, PageSize } from "redux/board/board.types"
 import store from "redux/store"
-import { END_LOADING, START_LOADING } from "redux/loading/loading"
-import { CLOSE_PAGE_ACTIONS } from "redux/menu/menu"
-import {
-    handleImportWorkspaceFile,
-    readFileAsUint8Array,
-} from "redux/workspace"
-import { handleLoadFromSource, toPDF } from "./io"
+import { handleImportWorkspaceFile } from "redux/workspace"
+import { PDFAttachment } from "./pdf"
 
 export const handleProcessFileImport = async (file: File) => {
     if (file.type === "application/pdf") {
-        await handleImportPdfFile(file)
+        await importPdfFile(file)
         return
     }
 
@@ -44,30 +41,28 @@ export const handleProcessFileImport = async (file: File) => {
     throw new Error("invalid file type")
 }
 
-export const handleImportPdfFile = async (file: File): Promise<void> => {
-    let attachId: string | undefined
-    if (isConnected()) {
-        attachId = await currentSession().addAttachment(file)
-    }
-    const data = await readFileAsUint8Array(file)
+const importPdfFile = async (file: File): Promise<void> => {
+    const blob = await readFileAsUint8Array(file)
+    const pdf = await new PDFAttachment(blob).render()
 
-    await handleLoadFromSource(data)
-    await handleAddPdfPages(attachId)
-    // clear the stacks when importing documents
-    store.dispatch(CLEAR_UNDO_REDO())
+    if (isConnected()) {
+        const attachId = await currentSession().addAttachment(file)
+        pdf.setId(attachId)
+    }
+
+    store.dispatch(ADD_ATTACHMENTS([pdf]))
+    await addRenderedPdf(pdf)
 }
 
-async function handleAddPdfPages(attachId?: string): Promise<void> {
-    const { documentImages } = store.getState().board
-
+const addRenderedPdf = async (attachment: Attachment): Promise<void> => {
     handleDeleteAllPages()
 
     if (isConnected()) {
-        const pages = documentImages.map((img, i) =>
+        const pages = attachment.renderedData.map((img, i) =>
             new BoardPage().updateMeta({
                 background: {
                     style: backgroundStyle.DOC,
-                    attachId,
+                    attachId: attachment.id,
                     documentPageNum: i,
                 },
                 size: getPageSize(img),
@@ -79,10 +74,11 @@ async function handleAddPdfPages(attachId?: string): Promise<void> {
             pages.map(() => -1)
         )
     } else {
-        const pages = documentImages.map((img, i) =>
+        const pages = attachment.renderedData.map((img, i) =>
             new BoardPage().updateMeta({
                 background: {
                     style: backgroundStyle.DOC,
+                    attachId: attachment.id,
                     documentPageNum: i,
                 },
                 size: getPageSize(img),
@@ -93,29 +89,10 @@ async function handleAddPdfPages(attachId?: string): Promise<void> {
             store.dispatch(ADD_PAGES({ data: [{ page, index: -1 }] }))
         }) // append subsequent pages at the end
     }
+
     store.dispatch(JUMP_TO_FIRST_PAGE())
-}
-
-export async function handleExportAsPdf(): Promise<void> {
-    store.dispatch(START_LOADING({ messageId: "Loading.ExportingPdf" }))
-
-    // Use small timeout to wait for loading animation render cycle
-    setTimeout(async () => {
-        const filename = "board.pdf" // TODO filename
-        const { documentSrc } = store.getState().board
-
-        if (isConnected()) {
-            const data = await currentSession().getAttachment(
-                documentSrc as string
-            )
-            toPDF(filename, data as Uint8Array)
-        } else {
-            toPDF(filename, documentSrc as Uint8Array)
-        }
-
-        store.dispatch(END_LOADING())
-        store.dispatch(CLOSE_PAGE_ACTIONS())
-    }, 50)
+    // clear the stacks when importing pdfs
+    store.dispatch(CLEAR_UNDO_REDO())
 }
 
 const getPageSize = (dataURL: string): PageSize => {

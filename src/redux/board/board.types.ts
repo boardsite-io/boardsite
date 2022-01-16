@@ -11,8 +11,7 @@ export interface BoardState {
     pageRank: PageRank
     pageCollection: PageCollection
     pageMeta: PageMeta
-    documentImages: DocumentImages
-    documentSrc: DocumentSrc
+    attachments: Attachments
     stage: BoardStage
     undoStack?: StackAction[]
     redoStack?: StackAction[]
@@ -44,6 +43,26 @@ export interface BoardStage {
     hideNavBar: boolean
     renderTrigger: boolean
 }
+
+export type AttachId = string
+
+export enum AttachType {
+    PDF,
+    PNG,
+}
+export interface Attachment {
+    id: AttachId
+    type: AttachType
+    renderedData: DocumentImages
+    cachedBlob: Uint8Array
+
+    setId(attachId: AttachId): Attachment
+    render(): Promise<Attachment>
+    serialize(): void
+    deserialize(): Promise<Attachment>
+}
+
+export type Attachments = Record<AttachId, Attachment>
 
 export type DocumentSrc = string | Uint8Array
 export interface StackAction {
@@ -128,10 +147,9 @@ export type MoveShapesToDragLayer = {
 }
 export type AddStrokes = BoardAction<Stroke[], void[]>
 export type EraseStrokes = BoardAction<Stroke[], void[]>
-export type SetPdf = {
-    documentImages: DocumentImages
-    documentSrc: DocumentSrc
-}
+
+export type AddAttachments = Attachment[]
+export type DeleteAttachments = AttachId[]
 export type NextPage = { attrs: StageAttrs }
 export type PrevPage = { attrs: StageAttrs }
 export type JumpToPageWithIndex = number

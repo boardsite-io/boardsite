@@ -21,11 +21,13 @@ import {
 } from "./undoredo"
 import { newState } from "./state"
 import {
+    AddAttachments,
     AddPageData,
     AddPages,
     AddStrokes,
     BoardState,
     ClearPages,
+    DeleteAttachments,
     DeletePages,
     EraseStrokes,
     JumpToPageWithIndex,
@@ -38,7 +40,6 @@ import {
     SetPageMeta,
     SetPageRank,
     SetPageSize,
-    SetPdf,
     SetStageAttrs,
     SyncAllPages,
 } from "./board.types"
@@ -245,11 +246,6 @@ const boardSlice = createSlice({
             pageMeta: state.pageMeta,
         }),
 
-        CLEAR_DOCS: (state) => {
-            state.documentImages = []
-            state.documentSrc = ""
-        },
-
         CLEAR_UNDO_REDO: (state) => {
             state.undoStack = []
             state.redoStack = []
@@ -346,10 +342,25 @@ const boardSlice = createSlice({
             state.triggerManualUpdate?.()
         },
 
-        SET_PDF: (state, action: PayloadAction<SetPdf>) => {
-            const { documentImages, documentSrc } = action.payload
-            state.documentImages = documentImages
-            state.documentSrc = documentSrc
+        ADD_ATTACHMENTS: (state, action: PayloadAction<AddAttachments>) => {
+            const attachments = action.payload
+            attachments.forEach((attachment) => {
+                state.attachments[attachment.id] = attachment
+            })
+        },
+
+        DELETE_ATTACHMENTS: (
+            state,
+            action: PayloadAction<DeleteAttachments>
+        ) => {
+            const attachIds = action.payload
+            attachIds.forEach((attachId) => {
+                delete state.attachments[attachId]
+            })
+        },
+
+        CLEAR_ATTACHMENTS: (state) => {
+            state.attachments = {}
         },
 
         UNDO_ACTION: (state) => {
@@ -487,10 +498,11 @@ export const {
     MOVE_SHAPES_TO_DRAG_LAYER,
     ADD_STROKES,
     ERASE_STROKES,
-    SET_PDF,
+    ADD_ATTACHMENTS,
+    DELETE_ATTACHMENTS,
+    CLEAR_ATTACHMENTS,
     UNDO_ACTION,
     REDO_ACTION,
-    CLEAR_DOCS,
     CLEAR_UNDO_REDO,
     CLEAR_TRANSFORM,
     SET_PAGE_BACKGROUND,

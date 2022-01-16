@@ -18,9 +18,10 @@ const Background = memo<PageProps>(({ pageId, pageInfo }) => {
     const style = useCustomSelector(
         (state) => state.board.pageCollection[pageId].meta.background.style
     )
-    const documentImages = useCustomSelector(
-        (state) => state.board.documentImages
-    )
+    const documentImages = useCustomSelector((state) => {
+        const { attachId } = state.board.pageCollection[pageId].meta.background
+        return state.board.attachments[attachId ?? ""]?.renderedData
+    })
     const imageRef = useRef<types.Image>(null)
 
     useEffect(() => {

@@ -10,8 +10,8 @@ import {
 } from "consts"
 import { BoardStroke } from "drawing/stroke"
 import { BoardPage } from "drawing/page"
-import { sourceToImageData } from "drawing/pdf/document"
 import { pick, keys, assign, cloneDeep } from "lodash"
+import { newAttachment } from "drawing/attachment/utils"
 import { BoardState, SerializedBoardState } from "./board.types"
 
 // version of the board state reducer to allow backward compatibility for stored data
@@ -27,8 +27,7 @@ export const newState = (state?: BoardState): BoardState => ({
         background: { style: backgroundStyle.BLANK },
         size: pageSize.a4landscape,
     },
-    documentImages: [],
-    documentSrc: "",
+    attachments: {},
     stage: {
         keepCentered: DEFAULT_KEEP_CENTERED,
         hideNavBar: DEFAULT_HIDE_NAVBAR,
@@ -58,7 +57,9 @@ export const newState = (state?: BoardState): BoardState => ({
         const stateCopy = cloneDeep<BoardState>(this)
 
         // dont pollute the serialized object with image data
-        stateCopy.documentImages = []
+        Object.values(stateCopy.attachments).forEach((attachment) =>
+            attachment.serialize()
+        )
 
         Object.keys(stateCopy.pageCollection).forEach((pageId) => {
             const { strokes } = stateCopy.pageCollection[pageId]
@@ -124,10 +125,15 @@ export const newState = (state?: BoardState): BoardState => ({
         this.stage.attrs.height = window.innerHeight
         this.stage.attrs.width = window.innerWidth
 
-        const src = this.documentSrc
-        if (src && typeof src !== "string") {
-            this.documentImages = await sourceToImageData(src)
-        }
+        // reload attachments
+        await Promise.all(
+            Object.keys(this.attachments).map(async (attachId) => {
+                const attachment = await newAttachment(
+                    this.attachments[attachId]
+                ).render()
+                this.attachments[attachId] = attachment
+            })
+        )
 
         return this
     },

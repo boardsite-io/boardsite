@@ -1,4 +1,9 @@
-import { Page, PageCollection } from "redux/board/board.types"
+import {
+    AttachId,
+    AttachType,
+    Page,
+    PageCollection,
+} from "redux/board/board.types"
 import { Stroke, StrokeUpdate, ToolType } from "drawing/stroke/index.types"
 import { Util } from "konva/lib/Util"
 import {
@@ -11,17 +16,17 @@ import store from "redux/store"
 import { assign } from "lodash"
 import { BoardPage } from "drawing/page"
 import { CREATE_SESSION } from "redux/session/session"
-import { handleLoadFromSource } from "drawing/pdf/io"
 import {
+    ADD_ATTACHMENTS,
     ADD_STROKES,
-    CLEAR_DOCS,
+    CLEAR_ATTACHMENTS,
     CLEAR_PAGES,
-    CLEAR_UNDO_REDO,
     DELETE_ALL_PAGES,
     ERASE_STROKES,
     SET_PAGEMETA,
     SET_PAGERANK,
 } from "redux/board/board"
+import { newAttachment } from "drawing/attachment/utils"
 import {
     ConnectedUsers,
     Message,
@@ -84,7 +89,7 @@ export class BoardSession implements Session {
         this.users = await this.request.getUsers()
 
         // set the pages according to api
-        store.dispatch(CLEAR_DOCS()) // clear documents which may be overwritten by session
+        store.dispatch(CLEAR_ATTACHMENTS()) // clear documents which may be overwritten by session
         store.dispatch(DELETE_ALL_PAGES())
         const { pageRank, meta } = await this.request.getPages()
         BoardSession.syncPages({ pageRank, meta })
@@ -130,7 +135,7 @@ export class BoardSession implements Session {
     disconnect(): void {
         this.socket?.close()
         this.users = {}
-        store.dispatch(CLEAR_DOCS())
+        store.dispatch(CLEAR_ATTACHMENTS())
         store.dispatch(DELETE_ALL_PAGES())
     }
 
@@ -276,21 +281,15 @@ export class BoardSession implements Session {
             SET_PAGERANK({ pageRank, pageCollection: newPageCollection })
         )
 
-        let isLoaded = false
         const pageIds = Object.keys(meta)
         for (let i = 0; i < pageIds.length; i++) {
             const pageId = pageIds[i]
             store.dispatch(
                 SET_PAGEMETA({ data: [{ pageId, meta: meta[pageId] }] })
             )
+            // if the background is based on an attachment load it
             const { attachId } = meta[pageId].background
-            if (!isLoaded && attachId) {
-                // clear the stacks documents have been imported
-                store.dispatch(CLEAR_UNDO_REDO())
-                const file = await currentSession().getAttachment(attachId)
-                handleLoadFromSource(file)
-                isLoaded = true
-            }
+            await loadAttachment(AttachType.PDF, attachId)
         }
     }
 
@@ -327,4 +326,24 @@ export const currentSession = (): Session => {
 export const isConnected = (): boolean => {
     const { session } = store.getState().session
     return session !== undefined && session.isConnected()
+}
+
+// loads an attachment into the cache
+const loadAttachment = async (
+    type: AttachType,
+    id?: AttachId
+): Promise<void> => {
+    if (!id || id.length === 0) {
+        return
+    }
+    if (store.getState().board.attachments[id]) {
+        return
+    }
+    const blob = await currentSession().getAttachment(id)
+    const attachment = await newAttachment({
+        type,
+        id,
+        cachedBlob: blob,
+    }).render()
+    store.dispatch(ADD_ATTACHMENTS([attachment]))
 }
