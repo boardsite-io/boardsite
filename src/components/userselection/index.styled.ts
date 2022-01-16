@@ -10,7 +10,6 @@ export const ColorButton = styled.button`
     width: 1.5rem;
     border-radius: 100%;
     border: none;
-    outline: none;
     &:hover {
         cursor: pointer;
     }
