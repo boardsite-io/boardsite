@@ -57,6 +57,7 @@
     "SessionMenu.CreateOnline.Title": "Collaborative Session 👋🏻",
     "SessionMenu.CreateOnline.CreateButton": "Create Session",
     "SessionMenu.CreateOnline.JoinButton": "Join Session",
+    "SessionMenu.CreateOnline.TextFieldLabel.SessionId": "Insert Session ID",
     "SessionMenu.CreateOnline.InvalidSession": "Looks like the session you're trying to join does not exist 🤖",
     "SessionMenu.InitialSelection.Title": "Create Session",
     "SessionMenu.InitialSelection.CreateOffline": "Create offline session",
@@ -73,8 +74,10 @@
     "SettingsMenu.GeneralSettings.HideNavigationBar": "Hide navigation bar",
     "SettingsMenu.GeneralSettings.EnableDirectDrawing": "Enable Direct Drawing",
     "SettingsMenu.Connection.Title": "Connection",
+    "SettingsMenu.Connection.TextFieldLabel.ApiUrl": "API URL",
     "SettingsMenu.About.Title": "About",
     "SettingsMenu.About.Button": "About boardsite.io",
     "Loading.ExportingPdf": "Exporting as PDF...",
-    "Loading.ExportingWorkspace": "Exporting as PDF..."
+    "Loading.ExportingWorkspace": "Exporting workspace...",
+    "UserSelection.TextFieldLabel.ChooseAlias": "Choose alias"
 }

@@ -1,3 +1,4 @@
+import { FormattedMessage } from "language"
 import React from "react"
 import Konva from "konva"
 import { currentSession } from "api/session"
@@ -23,7 +24,9 @@ const UserSelection: React.FC = () => {
             />
             <TextField
                 value={currentSession().user.alias}
-                label="Choose alias"
+                label={
+                    <FormattedMessage id="UserSelection.TextFieldLabel.ChooseAlias" />
+                }
                 onChange={handleAliasChange}
                 maxLength={20}
                 align="left"
