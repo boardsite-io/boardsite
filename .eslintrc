@@ -24,6 +24,7 @@
         "no-empty": 0, // allow empty catch blocks
         "no-plusplus": 0, // i++
         "no-bitwise": 0, // shifting
+        "no-await-in-loop": 0,
         "react/jsx-props-no-spreading": 0, // spreading props sometimes makes things easier and more fun :)
         "react/prop-types": 0,
         "react/jsx-filename-extension": [

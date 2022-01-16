@@ -3,7 +3,7 @@ import { DOC_SCALE } from "consts"
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf"
 // import pdfjsWorker from "pdfjs-dist/es5/build/pdf.worker.entry"
 import { RenderParameters } from "pdfjs-dist/types/src/display/api"
-import { DocumentImages, DocumentSrc } from "redux/board/board.types"
+import { DocumentImages } from "redux/board/board.types"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const pdfjsWorker: any = require("pdfjs-dist/legacy/build/pdf.worker.entry")
@@ -21,13 +21,8 @@ pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
  * @param fileData
  */
 export async function sourceToImageData(
-    fileSrc: DocumentSrc
+    fileSrc: Uint8Array
 ): Promise<DocumentImages> {
-    // also support strings as URL
-    if (typeof fileSrc === "string") {
-        fileSrc = new URL(fileSrc as string)
-    }
-
     const pdf = await pdfjs.getDocument(fileSrc).promise
 
     // process all pages by drawing them in

@@ -47,9 +47,6 @@ export class Request {
         })
         this.pdfRequest = axios.create({
             baseURL: this.baseURL.toString(),
-            headers: {
-                Accept: "application/pdf",
-            },
             timeout: this.timeout,
             responseType: "arraybuffer",
         })
@@ -153,14 +150,13 @@ export class Request {
         return response.data
     }
 
-    async getAttachment(attachId: string): Promise<unknown> {
+    async getAttachment(attachId: string): Promise<Uint8Array> {
         const headers = this.getHeaders(true)
-        // eslint-disable-next-line dot-notation
-        headers["Accept"] = "application/pdf"
+        headers.Accept = "application/pdf"
         const response = await this.pdfRequest.get(
             `${this.sessionId}/attachments/${attachId}`,
             { headers }
         )
-        return Buffer.from(response.data, "binary").toString("base64")
+        return response.data
     }
 }

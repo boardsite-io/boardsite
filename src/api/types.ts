@@ -26,8 +26,8 @@ export interface Session {
         pages: Pick<Page, "pageId" | "meta">[],
         clear: boolean
     ): Promise<void>
-    addAttachment(file: File): Promise<URL>
-    getAttachment(attachId: string): Promise<[unknown, URL]>
+    addAttachment(file: File): Promise<string>
+    getAttachment(attachId: string): Promise<Uint8Array>
     attachURL(attachId: string): URL
     ping(): Promise<ResponsePageSync>
 }
