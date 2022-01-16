@@ -1,7 +1,6 @@
 import { FormattedMessage } from "language"
 import React, { useCallback, useState } from "react"
 import store from "redux/store"
-import { handleImportWorkspaceFile } from "redux/workspace"
 import { CLOSE_PAGE_ACTIONS, CLOSE_IMPORT_MENU } from "redux/menu/menu"
 import {
     Dialog,
@@ -12,9 +11,7 @@ import {
 } from "components"
 import { useCustomSelector } from "hooks"
 import { FILE_EXTENSION_WORKSPACE } from "consts"
-import { handleImportPdfFile } from "drawing/pdf"
-import { LOAD_BOARD_STATE } from "redux/board/board"
-import { BoardState } from "redux/board/board.types"
+import { handleProcessFileImport } from "drawing/pdf"
 import { DropZone, ErrorText, InfoText, InvisibleInput } from "./index.styled"
 
 const ImportMenu: React.FC = () => {
@@ -32,28 +29,10 @@ const ImportMenu: React.FC = () => {
 
     const processFile = useCallback(async (file: File): Promise<void> => {
         try {
-            if (file.type === "application/pdf") {
-                await handleImportPdfFile(file)
-                setInvalidInput(false)
-                handleClose()
-                return
-            }
+            await handleProcessFileImport(file)
 
-            if (file.name.endsWith(FILE_EXTENSION_WORKSPACE)) {
-                const partialRootState = await handleImportWorkspaceFile(file)
-                if (partialRootState.board) {
-                    store.dispatch(
-                        LOAD_BOARD_STATE(partialRootState.board as BoardState)
-                    )
-                    setInvalidInput(false)
-                    handleClose()
-                    return
-                }
-
-                throw new Error("no board state found in file")
-            }
-
-            throw new Error("invalid file type")
+            setInvalidInput(false)
+            handleClose()
         } catch {
             setInvalidInput(true)
         }
