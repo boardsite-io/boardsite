@@ -10,19 +10,16 @@ import { Shape } from "board/stroke/shape"
 import { LineCap, LineJoin } from "konva/lib/Shape"
 import { backgroundStyle, PIXEL_RATIO } from "consts"
 import { SET_PDF } from "redux/board/board"
-import { DocumentSrc } from "redux/board/board.types"
 import { pageBackground } from "drawing/page/backgrounds"
 import { sourceToImageData } from "./document"
 
-export async function handleLoadFromSource(
-    fileOriginSrc: DocumentSrc
-): Promise<void> {
-    const documentImages = await sourceToImageData(fileOriginSrc)
+export async function handleLoadFromSource(file: Uint8Array): Promise<void> {
+    const documentImages = await sourceToImageData(file)
 
     store.dispatch(
         SET_PDF({
             documentImages,
-            documentSrc: fileOriginSrc,
+            documentSrc: file,
         })
     )
 }

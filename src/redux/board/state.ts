@@ -125,7 +125,7 @@ export const newState = (state?: BoardState): BoardState => ({
         this.stage.attrs.width = window.innerWidth
 
         const src = this.documentSrc
-        if (src) {
+        if (src && typeof src !== "string") {
             this.documentImages = await sourceToImageData(src)
         }
 

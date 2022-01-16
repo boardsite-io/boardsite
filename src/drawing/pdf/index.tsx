@@ -8,7 +8,7 @@ import {
     JUMP_TO_FIRST_PAGE,
     LOAD_BOARD_STATE,
 } from "redux/board/board"
-import { BoardState, DocumentSrc, PageSize } from "redux/board/board.types"
+import { BoardState, PageSize } from "redux/board/board.types"
 import store from "redux/store"
 import { END_LOADING, START_LOADING } from "redux/loading/loading"
 import { CLOSE_PAGE_ACTIONS } from "redux/menu/menu"
@@ -40,21 +40,19 @@ export const handleProcessFileImport = async (file: File) => {
 }
 
 export const handleImportPdfFile = async (file: File): Promise<void> => {
-    const origin = await getPdfFileSource(file)
-    await handleLoadFromSource(origin)
-    await handleAddPdfPages(origin)
+    let attachId: string | undefined
+    if (isConnected()) {
+        attachId = await currentSession().addAttachment(file)
+    }
+    const data = await readFileAsUint8Array(file)
+
+    await handleLoadFromSource(data)
+    await handleAddPdfPages(attachId)
     // clear the stacks when importing documents
     store.dispatch(CLEAR_UNDO_REDO())
 }
 
-const getPdfFileSource = async (file: File): Promise<URL | Uint8Array> =>
-    isConnected()
-        ? currentSession().addAttachment(file)
-        : readFileAsUint8Array(file)
-
-export const handleAddPdfPages = async (
-    fileOriginSrc: DocumentSrc
-): Promise<void> => {
+async function handleAddPdfPages(attachId?: string): Promise<void> {
     const { documentImages } = store.getState().board
 
     handleDeleteAllPages()
@@ -64,7 +62,7 @@ export const handleAddPdfPages = async (
             new BoardPage().updateMeta({
                 background: {
                     style: backgroundStyle.DOC,
-                    attachURL: fileOriginSrc as URL,
+                    attachId,
                     documentPageNum: i,
                 },
                 size: getPageSize(img),
@@ -102,10 +100,10 @@ export async function handleExportAsPdf(): Promise<void> {
         const { documentSrc } = store.getState().board
 
         if (isConnected()) {
-            const [src] = await currentSession().getAttachment(
+            const data = await currentSession().getAttachment(
                 documentSrc as string
             )
-            toPDF(filename, src as Uint8Array)
+            toPDF(filename, data as Uint8Array)
         } else {
             toPDF(filename, documentSrc as Uint8Array)
         }

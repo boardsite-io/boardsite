@@ -186,14 +186,13 @@ export class BoardSession implements Session {
         this.request.putPages(pages, clear)
     }
 
-    async addAttachment(file: File): Promise<URL> {
+    async addAttachment(file: File): Promise<string> {
         const { attachId } = await this.request.postAttachment(file)
-        return this.attachURL(attachId)
+        return attachId
     }
 
-    async getAttachment(attachId: string): Promise<[unknown, URL]> {
-        const attachData = await this.request.getAttachment(attachId)
-        return [attachData, this.attachURL(attachId)]
+    getAttachment(attachId: string): Promise<Uint8Array> {
+        return this.request.getAttachment(attachId)
     }
 
     attachURL(attachId: string): URL {
@@ -259,7 +258,10 @@ export class BoardSession implements Session {
         }
     }
 
-    static syncPages({ pageRank, meta }: ResponsePageSync): void {
+    static async syncPages({
+        pageRank,
+        meta,
+    }: ResponsePageSync): Promise<void> {
         const { pageCollection } = store.getState().board
         const newPageCollection: PageCollection = {}
         pageRank.forEach((pid: string) => {
@@ -275,18 +277,21 @@ export class BoardSession implements Session {
         )
 
         let isLoaded = false
-        Object.keys(meta).forEach((pageId) => {
+        const pageIds = Object.keys(meta)
+        for (let i = 0; i < pageIds.length; i++) {
+            const pageId = pageIds[i]
             store.dispatch(
                 SET_PAGEMETA({ data: [{ pageId, meta: meta[pageId] }] })
             )
-            const { attachURL } = meta[pageId].background
-            if (!isLoaded && attachURL) {
+            const { attachId } = meta[pageId].background
+            if (!isLoaded && attachId) {
                 // clear the stacks documents have been imported
                 store.dispatch(CLEAR_UNDO_REDO())
-                handleLoadFromSource(attachURL)
+                const file = await currentSession().getAttachment(attachId)
+                handleLoadFromSource(file)
                 isLoaded = true
             }
-        })
+        }
     }
 
     static updatePageMeta({ pageId, meta, clear }: ResponsePageUpdate): void {

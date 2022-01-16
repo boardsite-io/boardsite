@@ -45,7 +45,7 @@ export interface BoardStage {
     renderTrigger: boolean
 }
 
-export type DocumentSrc = URL | string | Uint8Array
+export type DocumentSrc = string | Uint8Array
 export interface StackAction {
     handler: (boardState: BoardState) => void
     undoHandler: (boardState: BoardState) => void
@@ -92,7 +92,7 @@ export interface PageMeta {
     size: PageSize
     background: {
         style: PageBackgroundStyle
-        attachURL?: URL | string
+        attachId?: string
         documentPageNum?: number
     }
 }
