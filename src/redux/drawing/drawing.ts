@@ -36,16 +36,13 @@ const drawingSlice = createSlice({
                 style: { ...state.tool.style },
             }
 
-            // validate tool candidate
-            if (
-                tool.type !== ToolType.Eraser &&
-                tool.type !== ToolType.Select
-            ) {
+            if (isDrawType(tool.type)) {
                 state.favoriteTools.push(tool)
             }
         },
         SET_TOOL: (state, action) => {
             const { type, style } = action.payload
+
             if (type !== undefined) {
                 state.tool.type = type
                 state.isDraggable = type === ToolType.Select
