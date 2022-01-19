@@ -92,7 +92,7 @@ export class BoardSession implements Session {
         store.dispatch(CLEAR_ATTACHMENTS()) // clear documents which may be overwritten by session
         store.dispatch(DELETE_ALL_PAGES())
         const { pageRank, meta } = await this.request.getPages()
-        BoardSession.syncPages({ pageRank, meta })
+        await BoardSession.syncPages({ pageRank, meta })
 
         if (pageRank.length === 0) {
             // create a page if there are none yet
@@ -100,10 +100,12 @@ export class BoardSession implements Session {
         }
 
         // fetch data from each page
-        pageRank.forEach(async (pageId) => {
-            const strokes = await this.request.getStrokes(pageId)
-            store.dispatch(ADD_STROKES({ data: strokes }))
-        })
+        Promise.all(
+            pageRank.map(async (pageId) => {
+                const strokes = await this.request.getStrokes(pageId)
+                store.dispatch(ADD_STROKES({ data: strokes }))
+            })
+        )
     }
 
     async createSocket(sessionId: string): Promise<void> {
@@ -269,28 +271,25 @@ export class BoardSession implements Session {
     }: ResponsePageSync): Promise<void> {
         const { pageCollection } = store.getState().board
         const newPageCollection: PageCollection = {}
-        pageRank.forEach((pid: string) => {
+        for (let i = 0; i < pageRank.length; i++) {
+            const pid = pageRank[i]
             if (Object.prototype.hasOwnProperty.call(pageCollection, pid)) {
                 newPageCollection[pid] = pageCollection[pid]
             } else {
                 newPageCollection[pid] = new BoardPage().setID(pid)
             }
-        })
+            if (meta[pid]) {
+                newPageCollection[pid].updateMeta(meta[pid])
+            }
+
+            // if the background is based on an attachment load it
+            const { attachId } = meta[pid].background
+            await loadAttachment(AttachType.PDF, attachId)
+        }
 
         store.dispatch(
             SET_PAGERANK({ pageRank, pageCollection: newPageCollection })
         )
-
-        const pageIds = Object.keys(meta)
-        for (let i = 0; i < pageIds.length; i++) {
-            const pageId = pageIds[i]
-            store.dispatch(
-                SET_PAGEMETA({ data: [{ pageId, meta: meta[pageId] }] })
-            )
-            // if the background is based on an attachment load it
-            const { attachId } = meta[pageId].background
-            await loadAttachment(AttachType.PDF, attachId)
-        }
     }
 
     static updatePageMeta({ pageId, meta, clear }: ResponsePageUpdate): void {
