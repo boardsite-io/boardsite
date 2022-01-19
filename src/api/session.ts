@@ -284,7 +284,9 @@ export class BoardSession implements Session {
 
             // if the background is based on an attachment load it
             const { attachId } = meta[pid].background
-            await loadAttachment(AttachType.PDF, attachId)
+            if (attachId) {
+                await loadAttachment(AttachType.PDF, attachId)
+            }
         }
 
         store.dispatch(
@@ -330,12 +332,10 @@ export const isConnected = (): boolean => {
 // loads an attachment into the cache
 const loadAttachment = async (
     type: AttachType,
-    id?: AttachId
+    id: AttachId
 ): Promise<void> => {
-    if (!id || id.length === 0) {
-        return
-    }
     if (store.getState().board.attachments[id]) {
+        // already loaded
         return
     }
     const blob = await currentSession().getAttachment(id)

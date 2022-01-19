@@ -74,20 +74,19 @@ const addRenderedPdf = async (attachment: Attachment): Promise<void> => {
             pages.map(() => -1)
         )
     } else {
-        const pages = attachment.renderedData.map((img, i) =>
-            new BoardPage().updateMeta({
+        const addPageData = attachment.renderedData.map((img, i) => ({
+            page: new BoardPage().updateMeta({
                 background: {
                     style: backgroundStyle.DOC,
                     attachId: attachment.id,
                     documentPageNum: i,
                 },
                 size: getPageSize(img),
-            })
-        )
+            }),
+            index: -1, // append subsequent pages at the end
+        }))
 
-        pages.forEach((page) => {
-            store.dispatch(ADD_PAGES({ data: [{ page, index: -1 }] }))
-        }) // append subsequent pages at the end
+        store.dispatch(ADD_PAGES({ data: addPageData }))
     }
 
     store.dispatch(JUMP_TO_FIRST_PAGE())
