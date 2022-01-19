@@ -60,8 +60,7 @@ const initialState = {
         [page2.pageId]: page2,
         [page3.pageId]: page3,
     },
-    documentImages: [],
-    documentSrc: "",
+    attachments: {},
     pageMeta: {
         background: { style: backgroundStyle.BLANK },
         size: {

@@ -42,8 +42,7 @@
         },
         "size": { "width": 620, "height": 877 }
     },
-    "documentImages": [],
-    "documentSrc": "",
+    "attachments": {},
     "stage": {
         "keepCentered": false,
         "hideNavBar": false,

@@ -68,6 +68,8 @@ const ELEMENTS_PER_POINT = 2
 export const LIVESTROKE_SEGMENT_SIZE = 420 * ELEMENTS_PER_POINT
 export const DOC_SCALE = 4 // scale factor for imported documents
 
+export const PDF_EXPORT_PIXEL_RATIO = 6
+
 type BackgroundStyle = Record<string, PageBackgroundStyle>
 
 export const backgroundStyle: BackgroundStyle = {

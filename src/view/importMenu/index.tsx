@@ -11,7 +11,7 @@ import {
 } from "components"
 import { useCustomSelector } from "hooks"
 import { FILE_EXTENSION_WORKSPACE } from "consts"
-import { handleProcessFileImport } from "drawing/pdf"
+import { handleProcessFileImport } from "drawing/attachment"
 import { DropZone, ErrorText, InfoText, InvisibleInput } from "./index.styled"
 
 const ImportMenu: React.FC = () => {

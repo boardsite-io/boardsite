@@ -1,3 +1,4 @@
+import { readFileAsUint8Array } from "drawing/io"
 import { deflate, inflate } from "pako"
 import { newState } from "./localstorage"
 import { ReducerState } from "./reducer"
@@ -61,18 +62,6 @@ export const handleImportWorkspaceFile = async (
     const partialRootState = loadWorkspace(readFile)
     return partialRootState
 }
-
-export const readFileAsUint8Array = async (file: File): Promise<Uint8Array> =>
-    new Promise((resolve, reject) => {
-        const fileReader = new FileReader()
-        fileReader.onloadend = () => {
-            resolve(new Uint8Array(fileReader.result as ArrayBuffer))
-        }
-        fileReader.onerror = (err) => {
-            reject(err)
-        }
-        fileReader.readAsArrayBuffer(file)
-    })
 
 function createFileHeader(
     version: string,
