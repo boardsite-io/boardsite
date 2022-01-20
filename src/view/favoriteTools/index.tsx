@@ -6,6 +6,7 @@ import store from "redux/store"
 import { useCustomSelector } from "hooks"
 import { ADD_FAVORITE_TOOL } from "redux/drawing/drawing"
 import { RootState } from "redux/types"
+import { MAX_FAVORITE_TOOLS } from "consts"
 import { FavToolsStyled } from "./index.styled"
 import FavToolButton from "./favtoolbutton/favtoolbutton"
 
@@ -30,14 +31,16 @@ const FavoriteTools: React.FC = () => {
                     </FavToolButton>
                 )
             })}
-            <ToolTip
-                text={<FormattedMessage id="Favorite.Add" />}
-                position={Position.Right}
-            >
-                <IconButton onClick={addFavoriteTool}>
-                    <PlusIcon />
-                </IconButton>
-            </ToolTip>
+            {favoriteTools.length < MAX_FAVORITE_TOOLS && (
+                <ToolTip
+                    text={<FormattedMessage id="Favorite.Add" />}
+                    position={Position.Right}
+                >
+                    <IconButton onClick={addFavoriteTool}>
+                        <PlusIcon />
+                    </IconButton>
+                </ToolTip>
+            )}
         </FavToolsStyled>
     )
 }
