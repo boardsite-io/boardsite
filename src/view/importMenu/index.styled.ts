@@ -33,19 +33,18 @@ export const DropZone = styled.div<Props>`
             : css``};
 `
 
-const textStyle = css`
-    max-width: 12rem;
+export const InfoText = styled.h4`
     margin: 0.2rem 1rem;
     pointer-events: none;
 `
 
-export const InfoText = styled.h4`
-    ${textStyle}
+export const SupportedTypesText = styled.h4`
+    margin: 0;
 `
 
 export const ErrorText = styled.p`
     color: red;
-    ${textStyle}
+    margin: 0;
 `
 
 export const InvisibleInput = styled.input`

@@ -62,3 +62,7 @@ export const translations = {
 
 // Default to EN for now
 export const locale = Locales.EN // navigator.language.split(/[-_]/)[0] // language without region code
+
+export const intlTags = {
+    code: (msg: string) => <code>{msg}</code>,
+}

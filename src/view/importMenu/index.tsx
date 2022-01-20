@@ -1,4 +1,4 @@
-import { FormattedMessage } from "language"
+import { FormattedMessage, IntlMessageKeys, intlTags } from "language"
 import React, { useCallback, useState } from "react"
 import store from "redux/store"
 import { CLOSE_PAGE_ACTIONS, CLOSE_IMPORT_MENU } from "redux/menu/menu"
@@ -12,7 +12,13 @@ import {
 import { useCustomSelector } from "hooks"
 import { FILE_EXTENSION_WORKSPACE } from "consts"
 import { handleProcessFileImport } from "drawing/attachment"
-import { DropZone, ErrorText, InfoText, InvisibleInput } from "./index.styled"
+import {
+    DropZone,
+    ErrorText,
+    InfoText,
+    InvisibleInput,
+    SupportedTypesText,
+} from "./index.styled"
 
 const ImportMenu: React.FC = () => {
     const pdfUploadOpen = useCustomSelector(
@@ -20,21 +26,32 @@ const ImportMenu: React.FC = () => {
     )
 
     const [hovering, setHovering] = useState<boolean>(false)
-    const [invalidInput, setInvalidInput] = useState<boolean>(false)
+    const [importError, setImportError] = useState<IntlMessageKeys | undefined>(
+        undefined
+    )
 
     const handleClose = useCallback(() => {
         store.dispatch(CLOSE_IMPORT_MENU())
         store.dispatch(CLOSE_PAGE_ACTIONS())
+
+        // Wait for closing animation and then clear the error message
+        setTimeout(() => {
+            setImportError(undefined)
+        }, 500)
     }, [])
 
     const processFile = useCallback(async (file: File): Promise<void> => {
         try {
-            await handleProcessFileImport(file)
+            const message = await handleProcessFileImport(file)
 
-            setInvalidInput(false)
-            handleClose()
-        } catch {
-            setInvalidInput(true)
+            if (message) {
+                setImportError(message)
+            } else {
+                handleClose()
+            }
+        } catch (err) {
+            // Default to InvalidFileType error message
+            setImportError("ImportMenu.Error.InvalidFileType")
         }
     }, [])
 
@@ -83,17 +100,14 @@ const ImportMenu: React.FC = () => {
                 >
                     <UploadIcon />
                     <InfoText>
-                        {hovering ? (
-                            <FormattedMessage id="ImportMenu.InfoText.Hovering" />
-                        ) : (
-                            <FormattedMessage id="ImportMenu.InfoText.NotHovering" />
-                        )}
+                        <FormattedMessage
+                            id={
+                                hovering
+                                    ? "ImportMenu.InfoText.Hovering"
+                                    : "ImportMenu.InfoText.NotHovering"
+                            }
+                        />
                     </InfoText>
-                    {invalidInput && (
-                        <ErrorText>
-                            <FormattedMessage id="ImportMenu.ErrorText" />
-                        </ErrorText>
-                    )}
                 </DropZone>
                 <InvisibleInput
                     type="file"
@@ -101,6 +115,17 @@ const ImportMenu: React.FC = () => {
                     id="selectedFile"
                     onInput={onInput}
                 />
+                {importError && (
+                    <ErrorText>
+                        <FormattedMessage id={importError} />
+                    </ErrorText>
+                )}
+                <SupportedTypesText>
+                    <FormattedMessage
+                        id="ImportMenu.SupportedTypes"
+                        values={intlTags}
+                    />
+                </SupportedTypesText>
             </DialogContent>
             <DialogOptions>
                 <Button onClick={handleClose}>

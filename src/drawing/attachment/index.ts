@@ -3,6 +3,7 @@ import { backgroundStyle, FILE_EXTENSION_WORKSPACE, PIXEL_RATIO } from "consts"
 import { handleDeleteAllPages } from "drawing/handlers"
 import { readFileAsUint8Array } from "drawing/io"
 import { BoardPage } from "drawing/page"
+import { IntlMessageKeys } from "language"
 import {
     ADD_ATTACHMENTS,
     ADD_PAGES,
@@ -15,30 +16,30 @@ import store from "redux/store"
 import { handleImportWorkspaceFile } from "redux/workspace"
 import { PDFAttachment } from "./pdf"
 
-export const handleProcessFileImport = async (file: File) => {
+export const handleProcessFileImport = async (
+    file: File
+): Promise<IntlMessageKeys | undefined> => {
     if (file.type === "application/pdf") {
         await importPdfFile(file)
-        return
+        return undefined
     }
 
     if (file.name.endsWith(FILE_EXTENSION_WORKSPACE)) {
         if (isConnected()) {
-            throw new Error(
-                "importing workspaces in online session is not available yet"
-            )
+            return "ImportMenu.Error.NoWorkspaceInSession"
         }
         const partialRootState = await handleImportWorkspaceFile(file)
         if (partialRootState.board) {
             store.dispatch(
                 LOAD_BOARD_STATE(partialRootState.board as BoardState)
             )
-            return
+            return undefined
         }
 
-        throw new Error("no board state found in file")
+        return "ImportMenu.Error.NoBoardStateFound"
     }
 
-    throw new Error("invalid file type")
+    return "ImportMenu.Error.InvalidFileType"
 }
 
 const importPdfFile = async (file: File): Promise<void> => {
