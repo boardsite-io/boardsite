@@ -5,7 +5,7 @@ import {
     UserAlias,
     UserColor,
     UserInfo,
-} from "./sessioninfo.styled"
+} from "./index.styled"
 
 const SessionInfo: React.FC = () => {
     const userInfo = useCustomSelector((state) => state.session.session?.users)

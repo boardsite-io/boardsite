@@ -11,7 +11,7 @@ import { LineCap, LineJoin } from "konva/lib/Shape"
 import { backgroundStyle, PDF_EXPORT_PIXEL_RATIO } from "consts"
 import { pageBackground } from "drawing/page/backgrounds"
 import { END_LOADING, START_LOADING } from "redux/loading/loading"
-import { CLOSE_PAGE_ACTIONS } from "redux/menu/menu"
+import { CLOSE_GENERAL_MENU } from "redux/menu/menu"
 import { AttachId, PageMeta } from "redux/board/board.types"
 
 export async function handleExportAsPdf(): Promise<void> {
@@ -24,7 +24,7 @@ export async function handleExportAsPdf(): Promise<void> {
         await toPDF(filename)
 
         store.dispatch(END_LOADING())
-        store.dispatch(CLOSE_PAGE_ACTIONS())
+        store.dispatch(CLOSE_GENERAL_MENU())
     }, 50)
 }
 

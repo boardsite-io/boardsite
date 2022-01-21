@@ -9,7 +9,7 @@ import {
 } from "components"
 import { useCustomSelector } from "hooks"
 import store from "redux/store"
-import { CLOSE_PAGE_ACTIONS, CLOSE_EXPORT_MENU } from "redux/menu/menu"
+import { CLOSE_GENERAL_MENU, CLOSE_EXPORT_MENU } from "redux/menu/menu"
 import { handleExportAsPdf } from "drawing/io"
 import { saveWorkspace } from "redux/workspace"
 import download from "downloadjs"
@@ -18,7 +18,7 @@ import { ExportDescription, ExportOptions } from "./index.styled"
 
 const handleClose = () => {
     store.dispatch(CLOSE_EXPORT_MENU())
-    store.dispatch(CLOSE_PAGE_ACTIONS())
+    store.dispatch(CLOSE_GENERAL_MENU())
 }
 
 const exportAsPdf = () => {

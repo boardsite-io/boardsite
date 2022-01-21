@@ -16,6 +16,8 @@ import UndoIcon from "./svgs/undo.svg"
 import RedoIcon from "./svgs/redo.svg"
 import DownloadIcon from "./svgs/download.svg"
 import UploadIcon from "./svgs/upload.svg"
+import MenuIcon from "./svgs/menu.svg"
+import ExpandableIcon from "./svgs/expandable.svg"
 
 export {
     EraserIcon,
@@ -35,6 +37,8 @@ export {
     RedoIcon,
     DownloadIcon,
     UploadIcon,
+    MenuIcon,
+    ExpandableIcon,
 }
 
 export const ToolIcons = {

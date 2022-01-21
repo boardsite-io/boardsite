@@ -20,7 +20,7 @@ import {
     PageIndex,
     PageIndexHr,
     IconButtonPageIndex,
-} from "./viewnavigation.styled"
+} from "./index.styled"
 
 const ViewNavigation: React.FC = () => {
     const pageRank = useCustomSelector((state) => state.board.pageRank)

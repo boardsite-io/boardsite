@@ -14,24 +14,8 @@ export const ToolbarStyled = styled.div`
     background: var(--color2);
     box-shadow: var(--menubar-box-shadow);
 
-    /* Move undo/redo below toolbar for very small screens */
-    @media (max-width: ${ScreenSize.Xs}) {
-        .toolbar-undo {
-            background: var(--color2);
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            top: 3rem;
-            left: 0;
-            border-top-right-radius: var(--menubar-border-radius);
-            border-bottom-right-radius: var(--menubar-border-radius);
-            box-shadow: var(--menubar-box-shadow);
-            padding: var(--menu-padding);
-        }
-    }
-
     /* blend out zoom buttons for small screens */
-    @media (max-width: ${ScreenSize.Sm}) {
+    @media (max-width: ${ScreenSize.Xs}) {
         .toolbar-zoom {
             display: none;
         }
