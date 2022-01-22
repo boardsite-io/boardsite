@@ -8,6 +8,7 @@ interface MenuItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     isMainMenu?: boolean
     icon?: JSX.Element
     expandMenu?: GeneralMenuState
+    warning?: boolean
 }
 
 const MenuItem: React.FC<MenuItemProps> = ({
@@ -15,6 +16,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
     text,
     icon,
     expandMenu,
+    warning = false,
     ...restProps
 }) => {
     if (expandMenu) {
@@ -25,6 +27,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
             <ItemWrap>
                 <ItemButton
                     {...restProps}
+                    $warning={warning}
                     onClick={expandSubMenu}
                     onMouseEnter={expandSubMenu}
                 >
@@ -44,7 +47,11 @@ const MenuItem: React.FC<MenuItemProps> = ({
     }
     return (
         <ItemWrap>
-            <ItemButton {...restProps} onMouseEnter={closeSubMenu}>
+            <ItemButton
+                {...restProps}
+                $warning={warning}
+                onMouseEnter={closeSubMenu}
+            >
                 {text}
                 {icon}
             </ItemButton>

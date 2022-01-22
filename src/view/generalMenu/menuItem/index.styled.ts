@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 
 export const ItemWrap = styled.li`
     display: flex;
@@ -12,7 +12,7 @@ export const ItemWrap = styled.li`
     }
 `
 
-export const ItemButton = styled.button`
+export const ItemButton = styled.button<{ $warning: boolean }>`
     gap: 0.5rem;
     border: none;
     border-radius: var(--menubar-border-radius);
@@ -29,4 +29,11 @@ export const ItemButton = styled.button`
     &:hover {
         filter: brightness(80%);
     }
+
+    ${({ $warning }) =>
+        $warning
+            ? css`
+                  color: var(--colorWarning);
+              `
+            : css``};
 `

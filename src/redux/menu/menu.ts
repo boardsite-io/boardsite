@@ -5,13 +5,14 @@ export enum GeneralMenuState {
     File,
     Edit,
     Page,
+    PageStyle,
+    PageSize,
     View,
 }
 
 export interface MenuState {
     generalMenuOpen: boolean
     generalMenuState: GeneralMenuState
-    pageSettingsOpen: boolean
     settingsOpen: boolean
     aboutOpen: boolean
     importMenuOpen: boolean
@@ -20,7 +21,6 @@ export interface MenuState {
 const initState: MenuState = {
     generalMenuOpen: false,
     generalMenuState: GeneralMenuState.Default,
-    pageSettingsOpen: false,
     settingsOpen: false,
     aboutOpen: false,
     importMenuOpen: false,
@@ -40,12 +40,6 @@ const loadingSlice = createSlice({
         },
         SET_GENERAL_MENU: (state, action: PayloadAction<GeneralMenuState>) => {
             state.generalMenuState = action.payload
-        },
-        OPEN_PAGE_SETTINGS: (state) => {
-            state.pageSettingsOpen = true
-        },
-        CLOSE_PAGE_SETTINGS: (state) => {
-            state.pageSettingsOpen = false
         },
         OPEN_SETTINGS: (state) => {
             state.settingsOpen = true
@@ -78,8 +72,6 @@ export const {
     SET_GENERAL_MENU,
     OPEN_GENERAL_MENU,
     CLOSE_GENERAL_MENU,
-    OPEN_PAGE_SETTINGS,
-    CLOSE_PAGE_SETTINGS,
     OPEN_SETTINGS,
     CLOSE_SETTINGS,
     OPEN_ABOUT,

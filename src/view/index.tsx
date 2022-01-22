@@ -13,7 +13,6 @@ import SessionMenu from "./sessionMenu"
 import ImportMenu from "./importMenu"
 import ExportMenu from "./exportMenu"
 import GeneralMenu from "./generalMenu"
-import PageOptions from "./pageOptions"
 
 const View: React.FC = () => {
     useKeyboardShortcuts()
@@ -29,7 +28,6 @@ const View: React.FC = () => {
             <GeneralMenu />
             <SettingsMenu />
             <SessionMenu />
-            <PageOptions />
             <ImportMenu />
             <ExportMenu />
             <Loading />

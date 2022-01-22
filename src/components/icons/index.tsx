@@ -23,6 +23,7 @@ import PageBelowIcon from "./svgs/pagebelow.svg"
 import PageClearIcon from "./svgs/pageclear.svg"
 import PageDeleteIcon from "./svgs/pagedelete.svg"
 import PageDeleteAllIcon from "./svgs/pagedeleteall.svg"
+import TickIcon from "./svgs/tick.svg"
 
 export {
     EraserIcon,
@@ -49,6 +50,7 @@ export {
     PageClearIcon,
     PageDeleteIcon,
     PageDeleteAllIcon,
+    TickIcon,
 }
 
 export const ToolIcons = {
