@@ -32,6 +32,8 @@ import FileMenu from "./fileMenu"
 import ViewMenu from "./viewMenu"
 import PageMenu from "./pageMenu"
 import EditMenu from "./editMenu"
+import PageStyleMenu from "./pageStyleMenu"
+import PageSizeMenu from "./pageSizeMenu"
 
 const onClickBackground = () => {
     store.dispatch(CLOSE_GENERAL_MENU())
@@ -137,6 +139,18 @@ const GeneralMenu: React.FC = memo(() => {
                     {...cssTransitionProps}
                 >
                     <PageMenu />
+                </CSSTransition>
+                <CSSTransition
+                    in={menuState === GeneralMenuState.PageSize}
+                    {...cssTransitionProps}
+                >
+                    <PageSizeMenu />
+                </CSSTransition>
+                <CSSTransition
+                    in={menuState === GeneralMenuState.PageStyle}
+                    {...cssTransitionProps}
+                >
+                    <PageStyleMenu />
                 </CSSTransition>
                 <CSSTransition
                     in={menuState === GeneralMenuState.View}

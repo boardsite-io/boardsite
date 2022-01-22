@@ -29,6 +29,7 @@ export const Theme = styled.div`
     --color6: #000000aa;
     --color7: #00ff00;
     --color8: #263238; /* Blue Grey 900 */
+    --colorWarning: red;
 
     --icon-button-size: 2rem;
     --icon-stroke-width: 8;

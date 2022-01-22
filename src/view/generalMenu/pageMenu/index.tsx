@@ -1,4 +1,5 @@
 import {
+    Divider,
     PageAboveIcon,
     PageBelowIcon,
     PageClearIcon,
@@ -14,8 +15,11 @@ import {
 } from "drawing/handlers"
 import { FormattedMessage } from "language"
 import React from "react"
-import { BsGear } from "react-icons/bs"
-import { CLOSE_GENERAL_MENU, OPEN_PAGE_SETTINGS } from "redux/menu/menu"
+import {
+    CLOSE_GENERAL_MENU,
+    GeneralMenuState,
+    SET_GENERAL_MENU,
+} from "redux/menu/menu"
 import store from "redux/store"
 import { SubMenu } from "../index.styled"
 import MenuItem from "../menuItem"
@@ -39,9 +43,11 @@ const onClickClearPage = () => {
 const onClickDeleteAllPages = () => {
     handleDeleteAllPages(true)
 }
-const onClickPageSettings = () => {
-    store.dispatch(OPEN_PAGE_SETTINGS())
-    store.dispatch(CLOSE_GENERAL_MENU())
+const onClickPageStyle = () => {
+    store.dispatch(SET_GENERAL_MENU(GeneralMenuState.PageStyle))
+}
+const onClickPageSize = () => {
+    store.dispatch(SET_GENERAL_MENU(GeneralMenuState.PageSize))
 }
 
 const PageMenu = () => {
@@ -67,15 +73,21 @@ const PageMenu = () => {
                 icon={<PageDeleteIcon />}
                 onClick={onClickDeletePage}
             />
+            <Divider />
             <MenuItem
+                warning
                 text={<FormattedMessage id="GeneralMenu.Page.DeleteAll" />}
                 icon={<PageDeleteAllIcon />}
                 onClick={onClickDeleteAllPages}
             />
+            <Divider />
             <MenuItem
-                text={<FormattedMessage id="GeneralMenu.Page.Settings" />}
-                icon={<BsGear id="transitory-icon" />}
-                onClick={onClickPageSettings}
+                text={<FormattedMessage id="GeneralMenu.Page.PageStyle" />}
+                onClick={onClickPageStyle}
+            />
+            <MenuItem
+                text={<FormattedMessage id="GeneralMenu.Page.PageSize" />}
+                onClick={onClickPageSize}
             />
         </SubMenu>
     )
