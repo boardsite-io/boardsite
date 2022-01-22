@@ -26,8 +26,8 @@ const exportAsPdf = () => {
     handleClose()
 }
 
-const exportWorkspace = () => {
-    const fileName = `TODO${FILE_EXTENSION_WORKSPACE}`
+export const exportWorkspace = (workspaceName: string) => {
+    const fileName = `${workspaceName}${FILE_EXTENSION_WORKSPACE}`
     const file = saveWorkspace(store.getState())
     download(file, fileName)
     handleClose()
@@ -48,7 +48,7 @@ const ExportMenu: React.FC = () => {
                     <FormattedMessage id="ExportMenu.Description" />
                 </ExportDescription>
                 <ExportOptions>
-                    <Button onClick={exportWorkspace}>
+                    <Button onClick={() => exportWorkspace("workspace")}>
                         <FormattedMessage id="ExportMenu.Button.Workspace" />
                     </Button>
                     <Button onClick={exportAsPdf}>

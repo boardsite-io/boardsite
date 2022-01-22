@@ -1,5 +1,9 @@
 {
     "GeneralMenu.File": "File",
+    "GeneralMenu.File.New": "New",
+    "GeneralMenu.File.Open": "Open...",
+    "GeneralMenu.File.Save": "Save",
+    "GeneralMenu.File.SaveAs": "Save As...",
     "GeneralMenu.File.Import": "Import File",
     "GeneralMenu.File.Export": "Export File",
     "GeneralMenu.Edit": "Edit",
