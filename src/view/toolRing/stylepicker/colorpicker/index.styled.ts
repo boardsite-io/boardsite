@@ -2,6 +2,8 @@ import styled from "styled-components"
 import { HexColorPicker } from "react-colorful"
 
 export const CustomColorPicker = styled(HexColorPicker)`
+    flex-grow: 1;
+
     .react-colorful__saturation-pointer,
     .react-colorful__alpha-pointer,
     .react-colorful__hue-pointer {

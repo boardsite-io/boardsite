@@ -2,7 +2,7 @@ import React, { memo } from "react"
 import { useCustomSelector } from "hooks"
 import { SET_COLOR } from "redux/drawing/drawing"
 import store from "redux/store"
-import { CustomColorPicker } from "./colorpicker.styled"
+import { CustomColorPicker } from "./index.styled"
 
 const handleChange = (newColor: string | undefined) => {
     store.dispatch(SET_COLOR(newColor))

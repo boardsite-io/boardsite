@@ -12,7 +12,7 @@ import {
 } from "components"
 import { ToolType } from "drawing/stroke/index.types"
 import { handleSetTool } from "drawing/handlers"
-import { StyledShapeTools } from "./shapetools.styled"
+import { StyledShapeTools } from "./index.styled"
 
 const ShapeTools: React.FC = memo(() => {
     const typeSelector = useCustomSelector((state) => state.drawing.tool.type)

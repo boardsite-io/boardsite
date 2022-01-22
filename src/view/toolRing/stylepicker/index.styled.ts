@@ -11,16 +11,15 @@ export const StyledStylePicker = styled.div`
     padding: 0.5rem;
     background: var(--color2);
     border-radius: var(--menubar-border-radius);
-    min-height: min-content;
-    height: 70%;
+    height: fit-content;
     max-height: 20rem;
     min-width: 20rem;
-    width: 75%;
+    width: 70vw;
     max-width: 40rem;
     box-shadow: var(--box-shadow);
 
-    .react-colorful {
+    /* .react-colorful {
         width: 100%;
         height: 100%;
-    }
+    } */
 `

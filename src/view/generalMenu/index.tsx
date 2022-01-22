@@ -1,13 +1,21 @@
 import { FormattedMessage } from "language"
 import React, { memo } from "react"
 import store from "redux/store"
-import { Divider, ExpandableIcon } from "components"
+import {
+    Divider,
+    ExpandableIcon,
+    IconButton,
+    MenuIcon,
+    Position,
+    ToolTip,
+} from "components"
 import { BsGear, BsPeople } from "react-icons/bs"
 import { useCustomSelector } from "hooks"
 import { CSSTransition } from "react-transition-group"
 import {
     CLOSE_GENERAL_MENU,
     GeneralMenuState,
+    OPEN_GENERAL_MENU,
     OPEN_SETTINGS,
 } from "redux/menu/menu"
 import { SET_SESSION_DIALOG } from "redux/session/session"
@@ -17,6 +25,7 @@ import {
     GeneralMenuDropdown,
     GeneralMenuBackground,
     MainMenu,
+    GeneralMenuButton,
 } from "./index.styled"
 import MenuItem from "./menuItem"
 import FileMenu from "./fileMenu"
@@ -52,6 +61,18 @@ const GeneralMenu: React.FC = memo(() => {
 
     return (
         <>
+            <GeneralMenuButton>
+                <ToolTip
+                    position={Position.BottomRight}
+                    text={<FormattedMessage id="ToolBar.GeneralMenu" />}
+                >
+                    <IconButton
+                        onClick={() => store.dispatch(OPEN_GENERAL_MENU())}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                </ToolTip>
+            </GeneralMenuButton>
             <GeneralMenuBackground
                 open={menuOpen}
                 onClick={onClickBackground}

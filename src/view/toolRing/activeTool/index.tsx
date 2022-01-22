@@ -5,7 +5,7 @@ import { handleSetTool } from "drawing/handlers"
 import { useCustomSelector } from "hooks"
 import { isDrawType } from "redux/drawing/helpers"
 import store from "redux/store"
-import StylePicker from "../stylepicker/stylepicker"
+import StylePicker from "../stylepicker"
 
 const ActiveTool: React.FC = memo(() => {
     // Rerender on color or type change

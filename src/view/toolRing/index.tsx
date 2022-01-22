@@ -11,13 +11,14 @@ import {
 } from "components"
 import { handleSetTool } from "drawing/handlers"
 import { ToolType } from "drawing/stroke/index.types"
-import ActiveTool from "../activeTool"
+import ActiveTool from "./activeTool"
+import { ToolRingWrap } from "./index.styled"
 
 const ToolRing: React.FC = memo(() => {
     const typeSelector = useCustomSelector((state) => state.drawing.tool.type)
 
     return (
-        <>
+        <ToolRingWrap>
             <ActiveTool />
             <ToolTip
                 position={Position.Bottom}
@@ -52,7 +53,7 @@ const ToolRing: React.FC = memo(() => {
                     <PanIcon />
                 </IconButton>
             </ToolTip>
-        </>
+        </ToolRingWrap>
     )
 })
 

@@ -6,7 +6,7 @@ import store from "redux/store"
 import { SET_WIDTH } from "redux/drawing/drawing"
 import { STROKE_WIDTH_PRESETS } from "consts"
 import { Position, ToolTip } from "components"
-import { Preset, WidthPresetInnerDot, WidthPresets } from "./widthpicker.styled"
+import { Preset, WidthPresetInnerDot, WidthPresets } from "./index.styled"
 
 const WidthPicker: React.FC = memo(() => {
     const widthSelector = useCustomSelector(

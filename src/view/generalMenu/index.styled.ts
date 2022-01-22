@@ -1,5 +1,19 @@
 import styled, { css } from "styled-components"
 
+export const GeneralMenuButton = styled.div`
+    z-index: 100;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 0;
+    background: var(--color2);
+    border-bottom-right-radius: var(--menubar-border-radius);
+    box-shadow: var(--menubar-box-shadow);
+    padding: var(--menu-padding);
+`
+
 interface GeneralMenuProps {
     open: boolean
 }

@@ -3,7 +3,7 @@ import BoardStage from "board/stage"
 import { useKeyboardShortcuts } from "hooks"
 import { StyledView } from "./index.styled"
 import SessionInfo from "./sessioninfo"
-import Toolbar from "./toolbar"
+import ToolRing from "./toolRing"
 import FavoriteTools from "./favoriteTools"
 import Loading from "./loading"
 import ViewNavigation from "./viewnavigation"
@@ -22,7 +22,7 @@ const View: React.FC = () => {
         <StyledView>
             <BoardStage />
             <SessionInfo />
-            <Toolbar />
+            <ToolRing />
             <FavoriteTools />
             <ViewNavigation />
             <About />
