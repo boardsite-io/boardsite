@@ -1,7 +1,7 @@
 import styled from "styled-components"
 
 export enum ScreenSize {
-    Xs = "40rem",
+    Xs = "30rem",
     Sm = "50rem",
     Md = "60rem",
     Lg = "80rem",

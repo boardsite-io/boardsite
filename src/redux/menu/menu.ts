@@ -1,16 +1,28 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+
+export enum GeneralMenuState {
+    Default,
+    File,
+    Edit,
+    Page,
+    View,
+}
 
 export interface MenuState {
+    generalMenuOpen: boolean
+    generalMenuState: GeneralMenuState
+    pageSettingsOpen: boolean
     settingsOpen: boolean
     aboutOpen: boolean
-    pageActionsOpen: boolean
     importMenuOpen: boolean
     exportMenuOpen: boolean
 }
 const initState: MenuState = {
+    generalMenuOpen: false,
+    generalMenuState: GeneralMenuState.Default,
+    pageSettingsOpen: false,
     settingsOpen: false,
     aboutOpen: false,
-    pageActionsOpen: false,
     importMenuOpen: false,
     exportMenuOpen: false,
 }
@@ -18,6 +30,23 @@ const loadingSlice = createSlice({
     name: "menu",
     initialState: initState,
     reducers: {
+        OPEN_GENERAL_MENU: (state) => {
+            state.generalMenuState = GeneralMenuState.Default
+            state.generalMenuOpen = true
+        },
+        CLOSE_GENERAL_MENU: (state) => {
+            state.generalMenuState = GeneralMenuState.Default
+            state.generalMenuOpen = false
+        },
+        SET_GENERAL_MENU: (state, action: PayloadAction<GeneralMenuState>) => {
+            state.generalMenuState = action.payload
+        },
+        OPEN_PAGE_SETTINGS: (state) => {
+            state.pageSettingsOpen = true
+        },
+        CLOSE_PAGE_SETTINGS: (state) => {
+            state.pageSettingsOpen = false
+        },
         OPEN_SETTINGS: (state) => {
             state.settingsOpen = true
         },
@@ -29,12 +58,6 @@ const loadingSlice = createSlice({
         },
         CLOSE_ABOUT: (state) => {
             state.aboutOpen = false
-        },
-        OPEN_PAGE_ACTIONS: (state) => {
-            state.pageActionsOpen = true
-        },
-        CLOSE_PAGE_ACTIONS: (state) => {
-            state.pageActionsOpen = false
         },
         OPEN_IMPORT_MENU: (state) => {
             state.importMenuOpen = true
@@ -52,12 +75,15 @@ const loadingSlice = createSlice({
 })
 
 export const {
+    SET_GENERAL_MENU,
+    OPEN_GENERAL_MENU,
+    CLOSE_GENERAL_MENU,
+    OPEN_PAGE_SETTINGS,
+    CLOSE_PAGE_SETTINGS,
     OPEN_SETTINGS,
     CLOSE_SETTINGS,
     OPEN_ABOUT,
     CLOSE_ABOUT,
-    OPEN_PAGE_ACTIONS,
-    CLOSE_PAGE_ACTIONS,
     OPEN_IMPORT_MENU,
     CLOSE_IMPORT_MENU,
     OPEN_EXPORT_MENU,

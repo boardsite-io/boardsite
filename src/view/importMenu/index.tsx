@@ -1,7 +1,7 @@
 import { FormattedMessage, IntlMessageKeys, intlTags } from "language"
 import React, { useCallback, useState } from "react"
 import store from "redux/store"
-import { CLOSE_PAGE_ACTIONS, CLOSE_IMPORT_MENU } from "redux/menu/menu"
+import { CLOSE_GENERAL_MENU, CLOSE_IMPORT_MENU } from "redux/menu/menu"
 import {
     Dialog,
     DialogContent,
@@ -32,7 +32,7 @@ const ImportMenu: React.FC = () => {
 
     const handleClose = useCallback(() => {
         store.dispatch(CLOSE_IMPORT_MENU())
-        store.dispatch(CLOSE_PAGE_ACTIONS())
+        store.dispatch(CLOSE_GENERAL_MENU())
 
         // Wait for closing animation and then clear the error message
         setTimeout(() => {
