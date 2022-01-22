@@ -1,4 +1,11 @@
 import {
+    PageAboveIcon,
+    PageBelowIcon,
+    PageClearIcon,
+    PageDeleteAllIcon,
+    PageDeleteIcon,
+} from "components"
+import {
     handleAddPageOver,
     handleAddPageUnder,
     handleClearPage,
@@ -7,14 +14,7 @@ import {
 } from "drawing/handlers"
 import { FormattedMessage } from "language"
 import React from "react"
-import {
-    BsFileArrowDown,
-    BsFileArrowUp,
-    BsFileMinus,
-    BsFileRuled,
-    BsGear,
-    BsTrash,
-} from "react-icons/bs"
+import { BsGear } from "react-icons/bs"
 import { CLOSE_GENERAL_MENU, OPEN_PAGE_SETTINGS } from "redux/menu/menu"
 import store from "redux/store"
 import { SubMenu } from "../index.styled"
@@ -49,27 +49,27 @@ const PageMenu = () => {
         <SubMenu>
             <MenuItem
                 text={<FormattedMessage id="GeneralMenu.Page.NewBefore" />}
-                icon={<BsFileArrowUp id="transitory-icon" />}
+                icon={<PageAboveIcon />}
                 onClick={onClickNewPageBefore}
             />
             <MenuItem
                 text={<FormattedMessage id="GeneralMenu.Page.NewAfter" />}
-                icon={<BsFileArrowDown id="transitory-icon" />}
+                icon={<PageBelowIcon />}
                 onClick={onClickNewPageAfter}
             />
             <MenuItem
                 text={<FormattedMessage id="GeneralMenu.Page.Clear" />}
-                icon={<BsFileRuled id="transitory-icon" />}
+                icon={<PageClearIcon />}
                 onClick={onClickClearPage}
             />
             <MenuItem
                 text={<FormattedMessage id="GeneralMenu.Page.Delete" />}
-                icon={<BsFileMinus id="transitory-icon" />}
+                icon={<PageDeleteIcon />}
                 onClick={onClickDeletePage}
             />
             <MenuItem
                 text={<FormattedMessage id="GeneralMenu.Page.DeleteAll" />}
-                icon={<BsTrash id="transitory-icon" />}
+                icon={<PageDeleteAllIcon />}
                 onClick={onClickDeleteAllPages}
             />
             <MenuItem
