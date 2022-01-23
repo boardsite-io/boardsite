@@ -1,5 +1,6 @@
 export * from "./icons"
 export { default as IconButton } from "./iconbutton"
+export { default as ToolButton } from "./toolbutton"
 export { default as Button } from "./button"
 export { default as Popup } from "./popup"
 export { default as Switch } from "./switch"

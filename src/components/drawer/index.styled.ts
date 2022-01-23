@@ -12,7 +12,7 @@ export const DrawerBox = styled.div<DrawerBoxProps>`
     width: min(20rem, 80%);
     display: flex;
     flex-direction: column;
-    background: var(--color5);
+    background: var(--cMenuBackground);
     padding: 0.5rem;
     box-shadow: var(--box-shadow);
     overflow-y: auto;
@@ -57,7 +57,7 @@ interface DrawerBackgroundProps {
 export const DrawerBackground = styled.div<DrawerBackgroundProps>`
     z-index: 700;
     position: fixed;
-    background: var(--color6);
+    background: var(--cDialogBackground);
     inset: 0;
     transition: 250ms ease-in-out;
     ${({ open }) =>

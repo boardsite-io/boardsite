@@ -11,7 +11,7 @@ export const StyledDivider = styled.hr<StyledDividerProps>`
                   background: #00000022;
               `
             : css`
-                  background: var(--color1);
+                  background: var(--cMenuItems);
               `};
     outline: none;
     border: none;

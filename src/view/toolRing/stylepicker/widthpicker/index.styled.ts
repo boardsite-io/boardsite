@@ -5,10 +5,9 @@ export const WidthPresets = styled.div`
     justify-content: space-between;
     align-items: center;
     column-gap: var(--button-gap);
-    padding: var(--style-picker-padding);
     grid-template-columns: repeat(2, 1fr);
     border-radius: var(--menubar-border-radius);
-    background: var(--color2);
+    background: var(--cMenuBackground);
 `
 
 interface PresetProps {
@@ -20,29 +19,22 @@ export const Preset = styled.button<PresetProps>`
     justify-content: center;
     align-items: center;
     border: none;
-    border-radius: 50%;
+    border-radius: var(--menubar-border-radius);
+    div {
+        background: var(--cMenuItems);
+    }
     height: var(--icon-button-size);
     width: var(--icon-button-size);
     transition: all ease-in-out 250ms;
     ${({ $active }) => ($active ? activePreset : inActivePreset)};
 `
 const activePreset = css`
-    background: var(--color8);
-    box-shadow: var(--button-active-box-shadow);
-    div {
-        background: var(--color1);
-    }
+    background: var(--cActiveTool);
 `
 const inActivePreset = css`
     background: transparent;
-    div {
-        background: var(--color1);
-    }
     &:hover {
         cursor: pointer;
-        div {
-            box-shadow: var(--button-hover-box-shadow);
-        }
     }
 `
 

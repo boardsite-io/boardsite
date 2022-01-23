@@ -3,7 +3,6 @@ import { BoardStroke } from "drawing/stroke"
 import { Stroke, ToolType } from "drawing/stroke/index.types"
 import { cloneDeep } from "lodash"
 import {
-    DEFAULT_HIDE_NAVBAR,
     DEFAULT_KEEP_CENTERED,
     DEFAULT_STAGE_SCALE,
     DEFAULT_STAGE_X,
@@ -70,7 +69,6 @@ const initialState = {
     },
     stage: {
         keepCentered: DEFAULT_KEEP_CENTERED,
-        hideNavBar: DEFAULT_HIDE_NAVBAR,
         attrs: {
             width: window.innerWidth,
             height: window.innerHeight,

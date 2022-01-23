@@ -3,7 +3,7 @@ import {
     PageAboveIcon,
     PageBelowIcon,
     PageClearIcon,
-    PageDeleteAllIcon,
+    // PageDeleteAllIcon,
     PageDeleteIcon,
 } from "components"
 import {
@@ -77,7 +77,7 @@ const PageMenu = () => {
             <MenuItem
                 warning
                 text={<FormattedMessage id="GeneralMenu.Page.DeleteAll" />}
-                icon={<PageDeleteAllIcon />}
+                // icon={<PageDeleteAllIcon />}
                 onClick={onClickDeleteAllPages}
             />
             <Divider />

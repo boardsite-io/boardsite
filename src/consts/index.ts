@@ -39,7 +39,6 @@ export const DEFAULT_STAGE_Y = 60
 export const DEFAULT_STAGE_SCALE = 1
 export const DEFAULT_ISDRAGGABLE = false
 export const DEFAULT_KEEP_CENTERED = false
-export const DEFAULT_HIDE_NAVBAR = false
 export const DRAG_SHADOW_BLUR = 4
 
 // select props

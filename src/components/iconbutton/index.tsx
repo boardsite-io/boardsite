@@ -1,25 +1,27 @@
 import React from "react"
 import { StyledIconButton } from "./index.styled"
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface IconButtonProps
+    extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     deactivated?: boolean
     active?: boolean
-    background?: string
+    icon: JSX.Element
 }
 
-const IconButton: React.FC<ButtonProps> = ({
+const IconButton: React.FC<IconButtonProps> = ({
     deactivated,
     active,
-    background,
+    icon,
     ...props
 }) => (
     <StyledIconButton
         type="button"
         $deactivated={deactivated}
         $active={active}
-        $background={background}
         {...props}
-    />
+    >
+        {icon}
+    </StyledIconButton>
 )
 
 export default IconButton

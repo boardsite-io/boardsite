@@ -35,17 +35,17 @@ export const SwitchThumb = styled.div<StyledSwitchProps>`
 `
 const enabledSwitchThumb = css`
     left: 100%;
-    background: var(--color3);
+    background: var(--cDetails);
 `
 const disabledSwitchThumb = css`
     left: 0;
-    background: var(--color3);
+    background: var(--cDetails);
 `
 
 export const SwitchRail = styled.div<StyledSwitchProps>`
     border-radius: calc(0.5 * var(--railHeight));
     height: var(--railHeight);
-    background: var(--color4);
+    background: var(--cDetails2);
     position: absolute;
     width: 100%;
     top: 50%;
@@ -59,7 +59,7 @@ export const SwitchRail = styled.div<StyledSwitchProps>`
         left: 0;
         height: var(--railHeight);
         border-radius: calc(0.5 * var(--railHeight));
-        background: var(--color3);
+        background: var(--cDetails);
         ${({ $enabled }) =>
             $enabled ? enabledSwitchRail : disabledSwitchRail};
     }

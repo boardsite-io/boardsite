@@ -8,7 +8,7 @@ export const GeneralMenuButton = styled.div`
     justify-content: center;
     top: 0;
     left: 0;
-    background: var(--color2);
+    background: var(--cMenuBackground);
     border-bottom-right-radius: var(--menubar-border-radius);
     box-shadow: var(--menubar-box-shadow);
     padding: var(--menu-padding);
@@ -58,7 +58,8 @@ const menuStyles = css`
     padding: 0;
     overflow: hidden;
     box-shadow: var(--box-shadow);
-    background: var(--color1);
+    background: var(--cMenuBackground);
+
     width: max-content;
     height: max-content;
 `

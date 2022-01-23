@@ -58,9 +58,9 @@ export const InputBar = styled.div`
             return "red"
         }
         if ($hasFocus) {
-            return "var(--color3)"
+            return "var(--cDetails)"
         }
-        return "var(--color4)"
+        return "var(--cDetails2)"
     }};
 `
 

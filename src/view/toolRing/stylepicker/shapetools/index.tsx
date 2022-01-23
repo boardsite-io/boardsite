@@ -16,9 +16,6 @@ import { StyledShapeTools } from "./index.styled"
 
 const ShapeTools: React.FC = memo(() => {
     const typeSelector = useCustomSelector((state) => state.drawing.tool.type)
-    const colorSelector = useCustomSelector(
-        (state) => state.drawing.tool.style.color
-    )
     return (
         <StyledShapeTools>
             <ToolTip
@@ -26,72 +23,48 @@ const ShapeTools: React.FC = memo(() => {
                 text={<FormattedMessage id="Tool.Pen" />}
             >
                 <IconButton
+                    icon={<PenIcon />}
                     active={typeSelector === ToolType.Pen}
                     onClick={() => {
                         handleSetTool({ type: ToolType.Pen })
                     }}
-                    style={
-                        typeSelector === ToolType.Pen
-                            ? { background: colorSelector }
-                            : undefined
-                    }
-                >
-                    <PenIcon />
-                </IconButton>
+                />
             </ToolTip>
             <ToolTip
                 position={Position.Right}
                 text={<FormattedMessage id="Tool.Line" />}
             >
                 <IconButton
+                    icon={<LineIcon />}
                     active={typeSelector === ToolType.Line}
                     onClick={() => {
                         handleSetTool({ type: ToolType.Line })
                     }}
-                    style={
-                        typeSelector === ToolType.Line
-                            ? { background: colorSelector }
-                            : undefined
-                    }
-                >
-                    <LineIcon />
-                </IconButton>
+                />
             </ToolTip>
             <ToolTip
                 position={Position.Right}
                 text={<FormattedMessage id="Tool.Rectangle" />}
             >
                 <IconButton
+                    icon={<RectangleIcon />}
                     active={typeSelector === ToolType.Rectangle}
                     onClick={() => {
                         handleSetTool({ type: ToolType.Rectangle })
                     }}
-                    style={
-                        typeSelector === ToolType.Rectangle
-                            ? { background: colorSelector }
-                            : undefined
-                    }
-                >
-                    <RectangleIcon />
-                </IconButton>
+                />
             </ToolTip>
             <ToolTip
                 position={Position.Right}
                 text={<FormattedMessage id="Tool.Circle" />}
             >
                 <IconButton
+                    icon={<CircleIcon />}
                     active={typeSelector === ToolType.Circle}
                     onClick={() => {
                         handleSetTool({ type: ToolType.Circle })
                     }}
-                    style={
-                        typeSelector === ToolType.Circle
-                            ? { background: colorSelector }
-                            : undefined
-                    }
-                >
-                    <CircleIcon />
-                </IconButton>
+                />
             </ToolTip>
         </StyledShapeTools>
     )

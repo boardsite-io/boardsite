@@ -17,7 +17,7 @@ export const DropZone = styled.div<Props>`
         cursor: pointer;
     }
     svg {
-        stroke: var(--color3);
+        stroke: var(--cDetails);
         height: 4rem;
         width: 4rem;
         pointer-events: none;
