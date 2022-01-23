@@ -27,7 +27,7 @@ export const StyledButton = styled.button<Props>`
 `
 
 const primaryStyle = css`
-    color: var(--cMenuItems);
+    color: var(--cMenuBackground);
     background: var(--cDetails);
     box-shadow: var(--box-shadow);
     &:hover {
