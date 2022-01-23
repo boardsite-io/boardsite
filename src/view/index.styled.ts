@@ -1,6 +1,6 @@
 import styled from "styled-components"
 
-export const StyledView = styled.div`
+export const ViewWrap = styled.div`
     position: fixed;
     inset: 0;
     background: var(--cBackground);

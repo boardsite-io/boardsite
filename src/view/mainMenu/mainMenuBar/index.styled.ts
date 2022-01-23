@@ -1,7 +1,8 @@
 import styled, { css } from "styled-components"
+import { zIndexMenu } from "../index.styled"
 
-export const GeneralMenuButton = styled.div`
-    z-index: 100;
+export const MainMenuBarWrap = styled.div`
+    ${zIndexMenu};
     position: fixed;
     display: flex;
     align-items: center;
@@ -14,11 +15,11 @@ export const GeneralMenuButton = styled.div`
     padding: var(--menu-padding);
 `
 
-interface GeneralMenuProps {
+interface MainMenuProps {
     open: boolean
 }
 
-export const GeneralMenuDropdown = styled.div<GeneralMenuProps>`
+export const MainMenuDropdown = styled.div<MainMenuProps>`
     z-index: 1000;
     position: fixed;
     display: flex;
@@ -39,7 +40,7 @@ export const GeneralMenuDropdown = styled.div<GeneralMenuProps>`
               `};
 `
 
-export const GeneralMenuBackground = styled.div<GeneralMenuProps>`
+export const MainMenuBackground = styled.div<MainMenuProps>`
     z-index: 900;
     position: fixed;
     inset: 0;
@@ -63,12 +64,12 @@ const menuStyles = css`
     width: max-content;
     height: max-content;
 `
-export const MainMenu = styled.ul`
+export const MainMenuWrap = styled.ul`
     ${menuStyles};
     border-radius: 0 var(--menubar-border-radius) var(--menubar-border-radius) 0;
 `
 
-export const SubMenu = styled.ul`
+export const SubMenuWrap = styled.ul`
     ${menuStyles};
     z-index: -1; /* make transition animation go below */
     border-radius: var(--menubar-border-radius);
@@ -92,8 +93,4 @@ export const SubMenu = styled.ul`
     &.menu-exit-active {
         transform: translateX(-300%);
     }
-`
-
-export const Divider = styled.hr`
-    width: 100%;
 `

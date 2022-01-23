@@ -1,11 +1,10 @@
 import { FormattedMessage } from "language"
 import React, { useState } from "react"
 import store from "redux/store"
-import { BsGear, BsInfoCircle } from "react-icons/bs"
+import { BsGear } from "react-icons/bs"
 import isElectron from "is-electron"
 import { VscDebugDisconnect } from "react-icons/vsc"
 import {
-    Button,
     Drawer,
     DrawerContent,
     DrawerTitle,
@@ -17,7 +16,7 @@ import { TOGGLE_DIRECTDRAW } from "redux/drawing/drawing"
 import { currentSession, isConnected } from "api/session"
 import { useCustomSelector } from "hooks"
 import isDev from "consts"
-import { CLOSE_SETTINGS, OPEN_ABOUT } from "redux/menu/menu"
+import { CLOSE_SETTINGS } from "redux/menu/menu"
 import { API_URL } from "api/request"
 import { Setting } from "./index.styled"
 
@@ -85,25 +84,6 @@ const SettingsMenu: React.FC = () => {
                         disabled={isConnected() || (!isDev() && !isElectron())}
                         align="left"
                     />
-                </Setting>
-            </DrawerContent>
-            <DrawerTitle>
-                <BsInfoCircle id="transitory-icon" />
-                <FormattedMessage id="SettingsMenu.About.Title" />
-            </DrawerTitle>
-            <DrawerContent>
-                <Setting>
-                    <Button
-                        withIcon
-                        fullWidth
-                        onClick={() => {
-                            store.dispatch(CLOSE_SETTINGS())
-                            store.dispatch(OPEN_ABOUT())
-                        }}
-                    >
-                        <BsInfoCircle id="transitory-icon" />
-                        <FormattedMessage id="SettingsMenu.About.Button" />
-                    </Button>
                 </Setting>
             </DrawerContent>
         </Drawer>

@@ -3,7 +3,7 @@ import React from "react"
 import { RedoIcon, UndoIcon } from "components"
 import { handleRedo, handleUndo } from "drawing/handlers"
 import { useCustomSelector } from "hooks"
-import { SubMenu } from "../index.styled"
+import { SubMenuWrap } from "../index.styled"
 import MenuItem from "../menuItem"
 
 const EditMenu = () => {
@@ -15,20 +15,20 @@ const EditMenu = () => {
     )
 
     return (
-        <SubMenu>
+        <SubMenuWrap>
             <MenuItem
                 disabled={disableUndoStack}
-                text={<FormattedMessage id="GeneralMenu.Edit.Undo" />}
+                text={<FormattedMessage id="Menu.General.Edit.Undo" />}
                 icon={<UndoIcon />}
                 onClick={handleUndo}
             />
             <MenuItem
                 disabled={disableRedoStack}
-                text={<FormattedMessage id="GeneralMenu.Edit.Redo" />}
+                text={<FormattedMessage id="Menu.General.Edit.Redo" />}
                 icon={<RedoIcon />}
                 onClick={handleRedo}
             />
-        </SubMenu>
+        </SubMenuWrap>
     )
 }
 

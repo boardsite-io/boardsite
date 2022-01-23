@@ -14,9 +14,9 @@ export const Theme = styled.div`
     // Global background
     --cBackground: linear-gradient(#888888, #696969);
     // Menu backgrounds
-    --cMenuBackground: white;
+    --cMenuBackground: #f5f5f5;
     // Menu items
-    --cMenuItems: black;
+    --cMenuItems: #121212;
     // Active tool background
     --cActiveTool: #d9d7f1;
     // Small details, borders, rails
@@ -24,6 +24,8 @@ export const Theme = styled.div`
     --cDetails2: #37474f;
     // Dialog background
     --cDialogBackground: #000000aa;
+
+    --main-menu-hover-filter: brightness(80%);
 
     --box-shadow: 0 1px 6px #00000033, 0 1px 4px #00000033;
 
