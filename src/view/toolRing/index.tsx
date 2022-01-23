@@ -25,33 +25,30 @@ const ToolRing: React.FC = memo(() => {
                 text={<FormattedMessage id="Tool.Eraser" />}
             >
                 <IconButton
+                    icon={<EraserIcon />}
                     active={typeSelector === ToolType.Eraser}
                     onClick={() => handleSetTool({ type: ToolType.Eraser })}
-                >
-                    <EraserIcon />
-                </IconButton>
+                />
             </ToolTip>
             <ToolTip
                 position={Position.Bottom}
                 text={<FormattedMessage id="Tool.Selection" />}
             >
                 <IconButton
+                    icon={<SelectIcon />}
                     active={typeSelector === ToolType.Select}
                     onClick={() => handleSetTool({ type: ToolType.Select })}
-                >
-                    <SelectIcon />
-                </IconButton>
+                />
             </ToolTip>
             <ToolTip
                 position={Position.Bottom}
                 text={<FormattedMessage id="Tool.Panning" />}
             >
                 <IconButton
+                    icon={<PanIcon />}
                     active={typeSelector === ToolType.Pan}
                     onClick={() => handleSetTool({ type: ToolType.Pan })}
-                >
-                    <PanIcon />
-                </IconButton>
+                />
             </ToolTip>
         </ToolRingWrap>
     )

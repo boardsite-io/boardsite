@@ -27,21 +27,21 @@ export const StyledButton = styled.button<Props>`
 `
 
 const primaryStyle = css`
-    color: var(--color1);
-    background: var(--color3);
+    color: var(--cMenuItems);
+    background: var(--cDetails);
     box-shadow: var(--box-shadow);
     &:hover {
-        background: var(--color4);
+        background: var(--cDetails2);
     }
 `
 
 const secondaryStyle = css`
-    color: var(--color2);
-    background: var(--color1);
+    color: var(--cMenuBackground);
+    background: var(--cMenuItems);
     box-shadow: var(--box-shadow);
     &:hover {
-        color: var(--color1);
-        background: var(--color2);
+        color: var(--cMenuItems);
+        background: var(--cMenuBackground);
     }
 `
 

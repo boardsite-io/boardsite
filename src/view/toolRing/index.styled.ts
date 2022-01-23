@@ -10,7 +10,7 @@ export const ToolRingWrap = styled.div`
     justify-content: space-between;
     gap: var(--button-gap);
     padding: var(--menu-padding);
-    background: var(--color2);
+    background: var(--cMenuBackground);
     border-bottom-left-radius: var(--menubar-border-radius);
     border-bottom-right-radius: var(--menubar-border-radius);
     box-shadow: var(--menubar-box-shadow);

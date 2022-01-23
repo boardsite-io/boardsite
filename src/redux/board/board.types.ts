@@ -40,7 +40,6 @@ export type DocumentImages = string[]
 export interface BoardStage {
     attrs: StageAttrs
     keepCentered: boolean
-    hideNavBar: boolean
     renderTrigger: boolean
 }
 

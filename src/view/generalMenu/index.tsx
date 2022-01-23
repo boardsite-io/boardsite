@@ -69,10 +69,9 @@ const GeneralMenu: React.FC = memo(() => {
                     text={<FormattedMessage id="ToolBar.GeneralMenu" />}
                 >
                     <IconButton
+                        icon={<MenuIcon />}
                         onClick={() => store.dispatch(OPEN_GENERAL_MENU())}
-                    >
-                        <MenuIcon />
-                    </IconButton>
+                    />
                 </ToolTip>
             </GeneralMenuButton>
             <GeneralMenuBackground

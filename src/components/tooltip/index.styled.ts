@@ -23,8 +23,8 @@ export const ToolTipBox = styled.div<ToolTipBoxProps>`
     line-break: none;
     position: absolute;
     pointer-events: none;
-    color: var(--color1);
-    background: var(--color2);
+    color: var(--cMenuItems);
+    background: var(--cMenuBackground);
     box-shadow: var(--box-shadow);
     padding: 0.4rem 0.6rem;
     border-radius: var(--menubar-border-radius);

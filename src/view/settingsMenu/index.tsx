@@ -12,7 +12,7 @@ import {
     Switch,
     TextField,
 } from "components"
-import { TOGGLE_HIDE_NAVBAR, TOGGLE_SHOULD_CENTER } from "redux/board/board"
+import { TOGGLE_SHOULD_CENTER } from "redux/board/board"
 import { TOGGLE_DIRECTDRAW } from "redux/drawing/drawing"
 import { currentSession, isConnected } from "api/session"
 import { useCustomSelector } from "hooks"
@@ -27,8 +27,8 @@ const SettingsMenu: React.FC = () => {
     // const [isOpenAbout, setOpenAbout] = useState(false) // about dialog
 
     const settingsOpen = useCustomSelector((state) => state.menu.settingsOpen)
-    const { keepCentered, hideNavBar } = useCustomSelector(
-        (state) => state.board.stage
+    const keepCentered = useCustomSelector(
+        (state) => state.board.stage.keepCentered
     )
     const { directDraw } = useCustomSelector((state) => state.drawing)
     // const apiURL = useAppSelector((state) => state.webControl.apiURL)
@@ -58,13 +58,6 @@ const SettingsMenu: React.FC = () => {
                     <Switch
                         enabled={keepCentered}
                         onClick={() => store.dispatch(TOGGLE_SHOULD_CENTER())}
-                    />
-                </Setting>
-                <Setting>
-                    <FormattedMessage id="SettingsMenu.GeneralSettings.HideNavigationBar" />
-                    <Switch
-                        enabled={hideNavBar}
-                        onClick={() => store.dispatch(TOGGLE_HIDE_NAVBAR())}
                     />
                 </Setting>
                 <Setting>

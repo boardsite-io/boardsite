@@ -9,7 +9,7 @@ export const DialogBox = styled.div<DialogProps>`
     display: flex;
     flex-direction: column;
     position: fixed;
-    background: var(--color5);
+    background: var(--cMenuBackground);
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -32,7 +32,7 @@ export const DialogBox = styled.div<DialogProps>`
 export const DialogBackground = styled.div<DialogProps>`
     z-index: 900;
     position: fixed;
-    background: var(--color6);
+    background: var(--cDialogBackground);
     inset: 0;
     transition: 250ms ease-in-out;
     ${({ open }) =>

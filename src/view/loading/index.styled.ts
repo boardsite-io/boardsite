@@ -35,13 +35,13 @@ interface RingProps {
 
 // Loading ring
 export const Ring = styled.div<RingProps>`
-    background: var(--color3);
+    background: var(--cDetails);
     ${({ diameter }) => getSettingsFor(`${diameter}rem`)};
 `
 
 // Most inner circle
 export const Cover = styled.div<RingProps>`
-    background: var(--color4);
+    background: var(--cDetails2);
     ${({ diameter }) => getSettingsFor(`${diameter}rem`)};
 `
 
@@ -54,7 +54,7 @@ interface SpinnerProps {
 
 // Spinner animation for each ring
 export const Spinner = styled.div<SpinnerProps>`
-    background: var(--color4);
+    background: var(--cDetails2);
 
     width: 50%;
     height: 100%;

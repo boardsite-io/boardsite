@@ -443,10 +443,6 @@ const boardSlice = createSlice({
             state.stage.keepCentered = !state.stage.keepCentered
         },
 
-        TOGGLE_HIDE_NAVBAR: (state) => {
-            state.stage.hideNavBar = !state.stage.hideNavBar
-        },
-
         RESET_VIEW: (state) => {
             resetView(state)
         },
@@ -515,7 +511,6 @@ export const {
     JUMP_TO_LAST_PAGE,
     JUMP_TO_PAGE_WITH_INDEX,
     TOGGLE_SHOULD_CENTER,
-    TOGGLE_HIDE_NAVBAR,
     RESET_VIEW,
     ON_WINDOW_RESIZE,
     SET_STAGE_ATTRS,

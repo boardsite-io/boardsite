@@ -9,35 +9,35 @@ export enum ScreenSize {
 }
 
 export const Theme = styled.div`
-    /* Color Overview
-        0: Global Background 
-        1: Icon Stroke Color
-        2: NavBar, FavTools, ViewNav
-        3: Buttons, SliderThumb, SliderRailActive
-        4: Details, SliderRailInactive, Borders
-        5: Background of Dialog, Drawer, ...
-        6: Transparent background behind Dialog, Drawer, ...
-        7: Active Tools 
-        8: Active Tools Background 
-    */
-    --color0: linear-gradient(#888888, #696969);
-    --color1: white;
-    --color2: #00000088;
-    --color3: #00796b;
-    --color4: #37474f;
-    --color5: white;
-    --color6: #000000aa;
-    --color7: #00ff00;
-    --color8: #263238; /* Blue Grey 900 */
-    --colorWarning: red;
+    // Warning text
+    --cWarning: red;
+    // Global background
+    --cBackground: linear-gradient(#888888, #696969);
+    // Menu backgrounds
+    --cMenuBackground: white;
+    // Menu items
+    --cMenuItems: black;
+    // Active tool background
+    --cActiveTool: #d9d7f1;
+    // Small details, borders, rails
+    --cDetails: #00796b;
+    --cDetails2: #37474f;
+    // Dialog background
+    --cDialogBackground: #000000aa;
+
+    --box-shadow: 0 1px 6px #00000033, 0 1px 4px #00000033;
 
     --icon-button-size: 2rem;
-    --icon-stroke-width: 8;
+    --icon-stroke-width: 6;
+
+    svg:not(#transitory-icon) {
+        stroke: var(--cMenuItems);
+        stroke-width: var(--icon-stroke-width);
+    }
 
     --style-picker-hue-width: 1.2rem;
     --style-picker-hue-height: 2rem;
-    --style-picker-pointer-border: 2px solid var(--color1);
-    --style-picker-padding: var(--menu-padding) var(--button-gap);
+    --style-picker-pointer-border: 2px solid var(--cMenuBackground);
 
     --menu-padding: 0.2rem;
     --menubar-box-shadow: 0px 0px 2px 0px #00000088;
@@ -46,10 +46,6 @@ export const Theme = styled.div`
     --button-gap: 0.4rem;
     --button-border-radius: 0.35rem;
     --button-hover-transform: scale(1.2, 1.2);
-    --button-hover-box-shadow: 0 0 1rem 0 var(--color7);
-    --button-active-box-shadow: inset 0 0 0.5rem 0 var(--color7),
-        0 0 0.5rem 0 var(--color7);
-    --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 
     font-family: "Lato", sans-serif;
     font-size: 1rem;
@@ -62,10 +58,6 @@ export const Theme = styled.div`
         font-family: inherit;
         font-size: inherit;
         font-weight: inherit;
-    }
-
-    svg:not(#transitory-icon) {
-        stroke-width: var(--icon-stroke-width);
     }
 
     /* Scrollbar Styling .. TODO: check if div:: is a good approach */

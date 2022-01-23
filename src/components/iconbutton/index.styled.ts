@@ -3,7 +3,6 @@ import styled, { css } from "styled-components"
 interface Props {
     $deactivated?: boolean
     $active?: boolean
-    $background?: string
 }
 
 export const StyledIconButton = styled.button<Props>`
@@ -17,11 +16,10 @@ export const StyledIconButton = styled.button<Props>`
     padding: 0;
     border: none;
     border-radius: var(--button-border-radius);
-    ${({ $background }) =>
-        $background ? withBackground($background) : noBackground};
+    background: var(--cMenuBackground);
 
     /* color for non custom svgs */
-    color: var(--color1);
+    color: var(--cMenuItems);
     svg {
         transition: all 100ms ease-in-out;
         height: 80%;
@@ -32,21 +30,8 @@ export const StyledIconButton = styled.button<Props>`
     ${({ $deactivated }) => ($deactivated ? deactivated : null)};
 `
 
-const noBackground = css`
-    background: none;
-    box-shadow: none;
-`
-const withBackground = ($background: string) => css`
-    background: ${$background};
-    box-shadow: var(--box-shadow);
-`
-
 const active = css`
-    background: var(--color8);
-    box-shadow: inset 0 0 0.1rem 0 var(--color7), 0 0 0.5rem 0 var(--color7);
-    svg {
-        stroke: var(--color7);
-    }
+    background: var(--cActiveTool);
 `
 const inactive = css`
     &:hover {
@@ -58,6 +43,6 @@ const inactive = css`
 const deactivated = css`
     cursor: not-allowed;
     svg {
-        stroke: var(--color2);
+        stroke: var(--cMenuBackground);
     }
 `

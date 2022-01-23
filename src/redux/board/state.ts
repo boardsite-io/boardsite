@@ -4,7 +4,6 @@ import {
     DEFAULT_STAGE_Y,
     DEFAULT_STAGE_SCALE,
     DEFAULT_KEEP_CENTERED,
-    DEFAULT_HIDE_NAVBAR,
     pageSize,
     backgroundStyle,
 } from "consts"
@@ -30,7 +29,6 @@ export const newState = (state?: BoardState): BoardState => ({
     attachments: {},
     stage: {
         keepCentered: DEFAULT_KEEP_CENTERED,
-        hideNavBar: DEFAULT_HIDE_NAVBAR,
         attrs: {
             width: window.innerWidth,
             height: window.innerHeight,

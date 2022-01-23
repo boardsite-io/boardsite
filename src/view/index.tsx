@@ -6,7 +6,6 @@ import SessionInfo from "./sessioninfo"
 import ToolRing from "./toolRing"
 import FavoriteTools from "./favoriteTools"
 import Loading from "./loading"
-import ViewNavigation from "./viewnavigation"
 import About from "./about"
 import SettingsMenu from "./settingsMenu"
 import SessionMenu from "./sessionMenu"
@@ -23,7 +22,6 @@ const View: React.FC = () => {
             <SessionInfo />
             <ToolRing />
             <FavoriteTools />
-            <ViewNavigation />
             <About />
             <GeneralMenu />
             <SettingsMenu />

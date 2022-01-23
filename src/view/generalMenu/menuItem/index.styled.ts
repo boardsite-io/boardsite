@@ -24,8 +24,9 @@ export const ItemButton = styled.button<{ $warning: boolean }>`
     margin: 0.1rem;
 
     transition: all 200ms ease;
+    color: var(--cMenuItems);
+    background: var(--cMenuBackground);
 
-    background: var(--color1);
     &:hover {
         filter: brightness(80%);
     }
@@ -33,7 +34,7 @@ export const ItemButton = styled.button<{ $warning: boolean }>`
     ${({ $warning }) =>
         $warning
             ? css`
-                  color: var(--colorWarning);
+                  color: var(--cWarning);
               `
             : css``};
 `
