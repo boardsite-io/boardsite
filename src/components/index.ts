@@ -11,10 +11,11 @@ export { default as ToolTip } from "./tooltip"
 export { Position } from "./tooltip/index.types" // Cleaner imports
 export { default as Dialog } from "./dialog"
 export { default as Drawer } from "./drawer"
-export { default as Divider } from "./divider"
 export {
     DialogTitle,
     DialogContent,
     DialogOptions,
 } from "./dialog/index.styled"
 export { DrawerTitle, DrawerContent } from "./drawer/index.styled"
+export { HorizontalRule } from "./horizontalRule/index.styled"
+export { VerticalRule } from "./verticalRule/index.styled"

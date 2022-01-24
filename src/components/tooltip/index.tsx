@@ -6,15 +6,23 @@ interface TooltipProps {
     children: ReactNode
     text: JSX.Element
     position: Position
+    deactivate?: boolean
 }
 
-const ToolTip: React.FC<TooltipProps> = ({ children, text, position }) => (
+const ToolTip: React.FC<TooltipProps> = ({
+    children,
+    text,
+    position,
+    deactivate = false,
+}) => (
     <Wrapper>
         <HoverTrigger>
             {children}
-            <ToolTipBox position={position} id="tooltip">
-                <ToolTipText>{text}</ToolTipText>
-            </ToolTipBox>
+            {!deactivate && (
+                <ToolTipBox position={position} id="tooltip">
+                    <ToolTipText>{text}</ToolTipText>
+                </ToolTipBox>
+            )}
         </HoverTrigger>
     </Wrapper>
 )

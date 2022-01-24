@@ -1,4 +1,4 @@
-import { Divider, DownloadIcon, UploadIcon } from "components"
+import { DownloadIcon, HorizontalRule, UploadIcon } from "components"
 import { FILE_EXTENSION_WORKSPACE } from "consts"
 import { handleProcessFileImport } from "drawing/attachment"
 import { handleAddPageUnder, handleDeleteAllPages } from "drawing/handlers"
@@ -11,8 +11,8 @@ import {
 } from "redux/menu/menu"
 import store from "redux/store"
 import { exportWorkspace } from "view/exportMenu"
-import { SubMenuWrap } from "../index.styled"
-import MenuItem from "../menuItem"
+import { SubMenuWrap } from "../../index.styled"
+import MenuItem from "../../menuItem"
 import { InvisibleInput } from "./index.styled"
 
 const onClickNew = () => {
@@ -64,7 +64,7 @@ const FileMenu = () => {
                 text={<FormattedMessage id="Menu.General.File.SaveAs" />}
                 onClick={() => exportWorkspace("CUSTOMISABLE_NAME")}
             /> */}
-            <Divider />
+            <HorizontalRule />
             <MenuItem
                 text={<FormattedMessage id="Menu.General.File.Import" />}
                 icon={<UploadIcon />}

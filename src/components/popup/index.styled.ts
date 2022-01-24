@@ -1,11 +1,7 @@
 import styled from "styled-components"
 
-export const PopupWrap = styled.div`
-    position: fixed;
-    z-index: 10;
-`
-
 export const PopupCover = styled.div`
+    z-index: var(--zIndexPopupBG);
     position: fixed;
     top: -100vh;
     left: -100vw;

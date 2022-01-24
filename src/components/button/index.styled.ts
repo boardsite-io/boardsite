@@ -1,10 +1,7 @@
-import { Variant } from "consts"
 import styled, { css } from "styled-components"
 
 interface Props {
-    $variant: Variant
     $withIcon: boolean
-    $fullWidth: boolean
 }
 
 export const StyledButton = styled.button<Props>`
@@ -16,32 +13,18 @@ export const StyledButton = styled.button<Props>`
     &:hover {
         cursor: pointer;
     }
-    width: ${({ $fullWidth }) => ($fullWidth ? "100%" : "auto")};
-    ${({ $variant }) =>
-        $variant === Variant.Primary ? primaryStyle : secondaryStyle};
+    color: var(--cPrimary);
+    background: var(--cDetails);
+    box-shadow: var(--box-shadow);
+
+    &:hover {
+        background: var(--cDetails2);
+    }
+
     ${({ $withIcon }) => ($withIcon ? iconStyle : noIconStyle)};
     svg {
         height: 1rem;
         width: 1rem;
-    }
-`
-
-const primaryStyle = css`
-    color: var(--cMenuBackground);
-    background: var(--cDetails);
-    box-shadow: var(--box-shadow);
-    &:hover {
-        background: var(--cDetails2);
-    }
-`
-
-const secondaryStyle = css`
-    color: var(--cMenuBackground);
-    background: var(--cMenuItems);
-    box-shadow: var(--box-shadow);
-    &:hover {
-        color: var(--cMenuItems);
-        background: var(--cMenuBackground);
     }
 `
 

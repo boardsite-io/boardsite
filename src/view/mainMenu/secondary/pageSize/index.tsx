@@ -5,22 +5,18 @@ import { pageSize } from "consts"
 import { useCustomSelector } from "hooks"
 import { SET_PAGE_SIZE } from "redux/board/board"
 import { PageSize } from "redux/board/board.types"
-import { MainSubMenuState, SET_MAIN_SUB_MENU } from "redux/menu/menu"
 import store from "redux/store"
-import { SubMenuWrap } from "../index.styled"
-import MenuItem from "../menuItem"
+import { SubMenuWrap } from "../../index.styled"
+import MenuItem from "../../menuItem"
 
 const onClickA4landscape = () => {
     store.dispatch(SET_PAGE_SIZE(pageSize.a4landscape))
-    store.dispatch(SET_MAIN_SUB_MENU(MainSubMenuState.Page))
 }
 const onClickA4portrait = () => {
     store.dispatch(SET_PAGE_SIZE(pageSize.a4portrait))
-    store.dispatch(SET_MAIN_SUB_MENU(MainSubMenuState.Page))
 }
 const onClickSquare = () => {
     store.dispatch(SET_PAGE_SIZE(pageSize.square))
-    store.dispatch(SET_MAIN_SUB_MENU(MainSubMenuState.Page))
 }
 
 const PageSizeMenu = () => {
@@ -35,21 +31,17 @@ const PageSizeMenu = () => {
     return (
         <SubMenuWrap>
             <MenuItem
-                text={
-                    <FormattedMessage id="Menu.General.PageSize.A4Landscape" />
-                }
+                text={<FormattedMessage id="Menu.Page.Size.A4Landscape" />}
                 icon={isMatch(pageSize.a4landscape) ? <TickIcon /> : undefined}
                 onClick={onClickA4landscape}
             />
             <MenuItem
-                text={
-                    <FormattedMessage id="Menu.General.PageSize.A4Portrait" />
-                }
+                text={<FormattedMessage id="Menu.Page.Size.A4Portrait" />}
                 icon={isMatch(pageSize.a4portrait) ? <TickIcon /> : undefined}
                 onClick={onClickA4portrait}
             />
             <MenuItem
-                text={<FormattedMessage id="Menu.General.PageSize.Square" />}
+                text={<FormattedMessage id="Menu.Page.Size.Square" />}
                 icon={isMatch(pageSize.square) ? <TickIcon /> : undefined}
                 onClick={onClickSquare}
             />

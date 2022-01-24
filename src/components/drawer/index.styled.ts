@@ -6,13 +6,13 @@ interface DrawerBoxProps {
 }
 
 export const DrawerBox = styled.div<DrawerBoxProps>`
-    z-index: 800;
+    z-index: var(--zIndexDrawer);
     position: fixed;
     inset-block: 0;
     width: min(20rem, 80%);
     display: flex;
     flex-direction: column;
-    background: var(--cMenuBackground);
+    background: var(--cPrimary);
     padding: 0.5rem;
     box-shadow: var(--box-shadow);
     overflow-y: auto;
@@ -55,7 +55,7 @@ interface DrawerBackgroundProps {
 }
 
 export const DrawerBackground = styled.div<DrawerBackgroundProps>`
-    z-index: 700;
+    z-index: var(--zIndexDrawerBG);
     position: fixed;
     background: var(--cDialogBackground);
     inset: 0;

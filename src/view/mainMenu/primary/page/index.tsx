@@ -1,5 +1,6 @@
 import {
-    Divider,
+    ExpandableIcon,
+    HorizontalRule,
     PageAboveIcon,
     PageBelowIcon,
     PageClearIcon,
@@ -15,14 +16,10 @@ import {
 } from "drawing/handlers"
 import { FormattedMessage } from "language"
 import React from "react"
-import {
-    CLOSE_MAIN_MENU,
-    MainSubMenuState,
-    SET_MAIN_SUB_MENU,
-} from "redux/menu/menu"
+import { CLOSE_MAIN_MENU, MainSubMenuState } from "redux/menu/menu"
 import store from "redux/store"
-import { SubMenuWrap } from "../index.styled"
-import MenuItem from "../menuItem"
+import { MainMenuWrap } from "../../index.styled"
+import MenuItem from "../../menuItem"
 
 const onClickNewPageBefore = () => {
     handleAddPageOver()
@@ -43,53 +40,56 @@ const onClickClearPage = () => {
 const onClickDeleteAllPages = () => {
     handleDeleteAllPages(true)
 }
-const onClickPageStyle = () => {
-    store.dispatch(SET_MAIN_SUB_MENU(MainSubMenuState.PageStyle))
-}
-const onClickPageSize = () => {
-    store.dispatch(SET_MAIN_SUB_MENU(MainSubMenuState.PageSize))
-}
 
 const PageMenu = () => {
     return (
-        <SubMenuWrap>
+        <MainMenuWrap>
             <MenuItem
-                text={<FormattedMessage id="Menu.General.Page.NewBefore" />}
+                isMainMenu
+                text={<FormattedMessage id="Menu.Page.Style" />}
+                icon={<ExpandableIcon />}
+                expandMenu={MainSubMenuState.PageStyle}
+            />
+            <MenuItem
+                isMainMenu
+                text={<FormattedMessage id="Menu.Page.Size" />}
+                icon={<ExpandableIcon />}
+                expandMenu={MainSubMenuState.PageSize}
+            />
+            <HorizontalRule />
+            <MenuItem
+                isMainMenu
+                text={<FormattedMessage id="Menu.Page.NewBefore" />}
                 icon={<PageAboveIcon />}
                 onClick={onClickNewPageBefore}
             />
             <MenuItem
-                text={<FormattedMessage id="Menu.General.Page.NewAfter" />}
+                isMainMenu
+                text={<FormattedMessage id="Menu.Page.NewAfter" />}
                 icon={<PageBelowIcon />}
                 onClick={onClickNewPageAfter}
             />
             <MenuItem
-                text={<FormattedMessage id="Menu.General.Page.Clear" />}
+                isMainMenu
+                text={<FormattedMessage id="Menu.Page.Clear" />}
                 icon={<PageClearIcon />}
                 onClick={onClickClearPage}
             />
             <MenuItem
-                text={<FormattedMessage id="Menu.General.Page.Delete" />}
+                isMainMenu
+                text={<FormattedMessage id="Menu.Page.Delete" />}
                 icon={<PageDeleteIcon />}
                 onClick={onClickDeletePage}
             />
-            <Divider />
+            <HorizontalRule />
             <MenuItem
+                isMainMenu
                 warning
-                text={<FormattedMessage id="Menu.General.Page.DeleteAll" />}
+                text={<FormattedMessage id="Menu.Page.DeleteAll" />}
                 // icon={<PageDeleteAllIcon />}
                 onClick={onClickDeleteAllPages}
             />
-            <Divider />
-            <MenuItem
-                text={<FormattedMessage id="Menu.General.Page.PageStyle" />}
-                onClick={onClickPageStyle}
-            />
-            <MenuItem
-                text={<FormattedMessage id="Menu.General.Page.PageSize" />}
-                onClick={onClickPageSize}
-            />
-        </SubMenuWrap>
+        </MainMenuWrap>
     )
 }
 export default PageMenu

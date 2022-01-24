@@ -4,10 +4,10 @@ export const WidthPresets = styled.div`
     display: grid;
     justify-content: space-between;
     align-items: center;
-    column-gap: var(--button-gap);
+    column-gap: var(--toolbar-gap);
     grid-template-columns: repeat(2, 1fr);
     border-radius: var(--border-radius);
-    background: var(--cMenuBackground);
+    background: var(--cPrimary);
 `
 
 interface PresetProps {
@@ -21,7 +21,7 @@ export const Preset = styled.button<PresetProps>`
     border: none;
     border-radius: var(--border-radius);
     div {
-        background: var(--cMenuItems);
+        background: var(--cSecondary);
     }
     height: var(--icon-button-size);
     width: var(--icon-button-size);
@@ -29,7 +29,7 @@ export const Preset = styled.button<PresetProps>`
     ${({ $active }) => ($active ? activePreset : inActivePreset)};
 `
 const activePreset = css`
-    background: var(--cActiveTool);
+    background: var(--cSelected);
 `
 const inActivePreset = css`
     background: transparent;

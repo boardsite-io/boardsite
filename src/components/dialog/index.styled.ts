@@ -9,13 +9,13 @@ export const DialogBox = styled.div<DialogProps>`
     display: flex;
     flex-direction: column;
     position: fixed;
-    background: var(--cMenuBackground);
+    background: var(--cPrimary);
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     width: min(90vw, 40rem);
     max-height: 80vh;
-    border-radius: var(--button-border-radius);
+    border-radius: var(--toolbar-border-radius);
     box-shadow: var(--box-shadow);
     transition: 250ms ease-in-out;
     ${({ open }) =>
@@ -30,7 +30,7 @@ export const DialogBox = styled.div<DialogProps>`
 `
 
 export const DialogBackground = styled.div<DialogProps>`
-    z-index: 900;
+    z-index: var(--zIndexDialogBG);
     position: fixed;
     background: var(--cDialogBackground);
     inset: 0;

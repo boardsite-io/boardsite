@@ -3,8 +3,8 @@ import React from "react"
 import { RedoIcon, UndoIcon } from "components"
 import { handleRedo, handleUndo } from "drawing/handlers"
 import { useCustomSelector } from "hooks"
-import { SubMenuWrap } from "../index.styled"
-import MenuItem from "../menuItem"
+import { SubMenuWrap } from "../../index.styled"
+import MenuItem from "../../menuItem"
 
 const EditMenu = () => {
     const disableUndoStack = useCustomSelector(

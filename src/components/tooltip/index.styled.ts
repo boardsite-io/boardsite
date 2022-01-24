@@ -19,12 +19,12 @@ export const HoverTrigger = styled.div`
 `
 
 export const ToolTipBox = styled.div<ToolTipBoxProps>`
-    z-index: 10000;
+    z-index: var(--zIndexToolTip);
     line-break: none;
     position: absolute;
     pointer-events: none;
-    color: var(--cMenuItems);
-    background: var(--cMenuBackground);
+    color: var(--cSecondary);
+    background: var(--cPrimary);
     box-shadow: var(--box-shadow);
     padding: 0.4rem 0.6rem;
     border-radius: var(--border-radius);
