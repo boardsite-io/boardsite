@@ -6,7 +6,7 @@ export const WidthPresets = styled.div`
     align-items: center;
     column-gap: var(--button-gap);
     grid-template-columns: repeat(2, 1fr);
-    border-radius: var(--menubar-border-radius);
+    border-radius: var(--border-radius);
     background: var(--cMenuBackground);
 `
 
@@ -19,7 +19,7 @@ export const Preset = styled.button<PresetProps>`
     justify-content: center;
     align-items: center;
     border: none;
-    border-radius: var(--menubar-border-radius);
+    border-radius: var(--border-radius);
     div {
         background: var(--cMenuItems);
     }

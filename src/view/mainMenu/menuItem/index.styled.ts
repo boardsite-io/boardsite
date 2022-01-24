@@ -15,7 +15,7 @@ export const ItemWrap = styled.li`
 export const ItemButton = styled.button<{ $warning: boolean }>`
     gap: 0.5rem;
     border: none;
-    border-radius: var(--menubar-border-radius);
+    border-radius: var(--border-radius);
     width: 100%;
     display: flex;
     align-items: center;

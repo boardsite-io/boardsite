@@ -27,7 +27,7 @@ export const ToolTipBox = styled.div<ToolTipBoxProps>`
     background: var(--cMenuBackground);
     box-shadow: var(--box-shadow);
     padding: 0.4rem 0.6rem;
-    border-radius: var(--menubar-border-radius);
+    border-radius: var(--border-radius);
     ${(props) => getPosition(props)}
 `
 

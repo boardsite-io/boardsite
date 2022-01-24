@@ -12,6 +12,6 @@ export const StyledStylePicker = styled.div`
     min-width: 20rem;
     max-width: 30rem;
     background: var(--cMenuBackground);
-    border-radius: var(--menubar-border-radius);
-    box-shadow: var(--box-shadow);
+    border-radius: var(--border-radius);
+    box-shadow: var(--toolbar-box-shadow);
 `

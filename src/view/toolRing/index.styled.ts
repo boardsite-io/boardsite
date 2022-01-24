@@ -1,17 +1,17 @@
 import styled from "styled-components"
 
 export const ToolRingWrap = styled.div`
-    z-index: 100;
     position: fixed;
-    top: 0;
+    top: var(--toolbar-margin);
     left: 50%;
     transform: translateX(-50%);
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
-    gap: var(--button-gap);
-    padding: var(--menu-padding);
+    z-index: var(--zIndexToolRing);
     background: var(--cMenuBackground);
-    border-bottom-left-radius: var(--menubar-border-radius);
-    border-bottom-right-radius: var(--menubar-border-radius);
-    box-shadow: var(--menubar-box-shadow);
+    gap: var(--button-gap);
+    padding: var(--toolbar-padding);
+    border-radius: var(--toolbar-border-radius);
+    box-shadow: var(--toolbar-box-shadow);
 `

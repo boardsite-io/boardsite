@@ -1,22 +1,16 @@
 import styled, { css } from "styled-components"
 
-export const zIndexMenu = css`
-    z-index: 1000;
-`
-const zIndexMenuBG = css`
-    z-index: 900;
-`
 interface MainMenuProps {
     open: boolean
 }
 
 export const MainMenuDropdown = styled.div<MainMenuProps>`
-    ${zIndexMenu}
-    position: fixed;
+    z-index: var(--zIndexMainMenu);
+    position: absolute;
     display: flex;
     flex-direction: column;
-    left: 0;
-    top: 2.8rem;
+    left: var(--toolbar-margin);
+    top: 3rem;
     height: fit-content;
     width: fit-content;
 
@@ -32,7 +26,7 @@ export const MainMenuDropdown = styled.div<MainMenuProps>`
 `
 
 export const MainMenuBackground = styled.div<MainMenuProps>`
-    ${zIndexMenuBG}
+    z-index: var(--zIndexMainMenuBG);
     position: fixed;
     inset: 0;
     ${({ open }) =>
@@ -49,24 +43,25 @@ const menuStyles = css`
     margin: 0;
     padding: 0;
     overflow: hidden;
-    box-shadow: var(--box-shadow);
+    box-shadow: var(--toolbar-box-shadow);
     background: var(--cMenuBackground);
+    border-radius: var(--toolbar-border-radius);
 
     width: max-content;
     height: max-content;
 `
+
 export const MainMenuWrap = styled.ul`
     ${menuStyles};
-    border-radius: 0 var(--menubar-border-radius) var(--menubar-border-radius) 0;
 `
 
 export const SubMenuWrap = styled.ul`
     ${menuStyles};
     z-index: -1; /* make transition animation go below */
-    border-radius: var(--menubar-border-radius);
     position: absolute;
     top: 0;
-    left: calc(100% + 0.2rem);
+    left: 100%;
+    margin-left: 0.2rem;
     transition: all 300ms ease;
 
     &.menu-enter {
