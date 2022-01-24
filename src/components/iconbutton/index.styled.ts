@@ -12,14 +12,14 @@ export const StyledIconButton = styled.button<Props>`
     justify-content: center;
     height: var(--icon-button-size);
     width: var(--icon-button-size);
-    margin: 0.1rem;
-    padding: 0;
+    margin: var(--icon-button-margin);
+    padding: var(--icon-button-padding);
     border: none;
     border-radius: var(--button-border-radius);
-    background: var(--cMenuBackground);
+    background: var(--cPrimary);
 
     /* color for non custom svgs */
-    color: var(--cMenuItems);
+    color: var(--cSecondary);
     svg {
         transition: all 100ms ease-in-out;
         height: 80%;
@@ -31,7 +31,7 @@ export const StyledIconButton = styled.button<Props>`
 `
 
 const active = css`
-    background: var(--cActiveTool);
+    background: var(--cSelected);
 `
 const inactive = css`
     &:hover {
@@ -43,6 +43,6 @@ const inactive = css`
 const deactivated = css`
     cursor: not-allowed;
     svg {
-        stroke: var(--cMenuBackground);
+        stroke: var(--cPrimary);
     }
 `

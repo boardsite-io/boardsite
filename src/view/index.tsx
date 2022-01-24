@@ -7,7 +7,6 @@ import ToolRing from "./toolRing"
 import FavoriteTools from "./favoriteTools"
 import Loading from "./loading"
 import About from "./about"
-import SettingsMenu from "./settingsMenu"
 import SessionMenu from "./sessionMenu"
 import ImportMenu from "./importMenu"
 import ExportMenu from "./exportMenu"
@@ -24,7 +23,6 @@ const View: React.FC = () => {
             <FavoriteTools />
             <About />
             <MainMenu />
-            <SettingsMenu />
             <SessionMenu />
             <ImportMenu />
             <ExportMenu />

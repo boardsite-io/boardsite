@@ -12,7 +12,6 @@ export const MainMenuDropdown = styled.div<MainMenuProps>`
     left: var(--toolbar-margin);
     top: 3rem;
     height: fit-content;
-    width: fit-content;
 
     ${({ open }) =>
         open
@@ -25,26 +24,16 @@ export const MainMenuDropdown = styled.div<MainMenuProps>`
               `};
 `
 
-export const MainMenuBackground = styled.div<MainMenuProps>`
-    z-index: var(--zIndexMainMenuBG);
-    position: fixed;
-    inset: 0;
-    ${({ open }) =>
-        open
-            ? css``
-            : css`
-                  pointer-events: none;
-              `};
-`
-
 const menuStyles = css`
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
     margin: 0;
     padding: 0;
     overflow: hidden;
     box-shadow: var(--toolbar-box-shadow);
-    background: var(--cMenuBackground);
+    background: var(--cPrimary);
     border-radius: var(--toolbar-border-radius);
 
     width: max-content;
@@ -55,13 +44,13 @@ export const MainMenuWrap = styled.ul`
     ${menuStyles};
 `
 
-export const SubMenuWrap = styled.ul`
+export const SubMenuWrap = styled.ul<{ level?: number }>`
     ${menuStyles};
     z-index: -1; /* make transition animation go below */
     position: absolute;
     top: 0;
     left: 100%;
-    margin-left: 0.2rem;
+    margin-left: var(--toolbar-margin);
     transition: all 300ms ease;
 
     &.menu-enter {
@@ -79,4 +68,11 @@ export const SubMenuWrap = styled.ul`
     &.menu-exit-active {
         transform: translateX(-300%);
     }
+
+    ${({ level }) =>
+        level
+            ? css`
+                  margin-top: calc(${level} * 1.75rem);
+              `
+            : null}
 `

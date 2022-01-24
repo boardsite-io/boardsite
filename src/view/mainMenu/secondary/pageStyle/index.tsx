@@ -1,14 +1,13 @@
 import React from "react"
-import { Divider, TickIcon } from "components"
+import { HorizontalRule, TickIcon } from "components"
 import { backgroundStyle } from "consts"
 import { useCustomSelector } from "hooks"
 import { FormattedMessage } from "language"
 import { SET_PAGE_BACKGROUND } from "redux/board/board"
 import store from "redux/store"
-import { MainSubMenuState, SET_MAIN_SUB_MENU } from "redux/menu/menu"
 import { handleChangePageBackground } from "drawing/handlers"
-import { SubMenuWrap } from "../index.styled"
-import MenuItem from "../menuItem"
+import { SubMenuWrap } from "../../index.styled"
+import MenuItem from "../../menuItem"
 
 const onClickBlank = () => {
     store.dispatch(SET_PAGE_BACKGROUND(backgroundStyle.BLANK))
@@ -22,10 +21,6 @@ const onClickRuled = () => {
 const onClickApply = () => {
     handleChangePageBackground()
 }
-const onClickPrevious = () => {
-    store.dispatch(SET_MAIN_SUB_MENU(MainSubMenuState.Page))
-}
-
 const PageStyleMenu = () => {
     const style = useCustomSelector(
         (state) => state.board.pageMeta.background.style
@@ -34,16 +29,14 @@ const PageStyleMenu = () => {
     return (
         <SubMenuWrap>
             <MenuItem
-                text={<FormattedMessage id="Menu.General.PageStyle.Blank" />}
+                text={<FormattedMessage id="Menu.Page.Style.Blank" />}
                 icon={
                     style === backgroundStyle.BLANK ? <TickIcon /> : undefined
                 }
                 onClick={onClickBlank}
             />
             <MenuItem
-                text={
-                    <FormattedMessage id="Menu.General.PageStyle.Checkered" />
-                }
+                text={<FormattedMessage id="Menu.Page.Style.Checkered" />}
                 icon={
                     style === backgroundStyle.CHECKERED ? (
                         <TickIcon />
@@ -52,21 +45,16 @@ const PageStyleMenu = () => {
                 onClick={onClickCheckered}
             />
             <MenuItem
-                text={<FormattedMessage id="Menu.General.PageStyle.Ruled" />}
+                text={<FormattedMessage id="Menu.Page.Style.Ruled" />}
                 icon={
                     style === backgroundStyle.RULED ? <TickIcon /> : undefined
                 }
                 onClick={onClickRuled}
             />
-            <Divider />
+            <HorizontalRule />
             <MenuItem
-                text={<FormattedMessage id="Menu.General.PageStyle.Apply" />}
+                text={<FormattedMessage id="Menu.Page.Style.Apply" />}
                 onClick={onClickApply}
-            />
-            <Divider />
-            <MenuItem
-                text={<FormattedMessage id="Menu.General.PageStyle.Previous" />}
-                onClick={onClickPrevious}
             />
         </SubMenuWrap>
     )

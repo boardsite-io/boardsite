@@ -10,11 +10,11 @@ export const ToolInfo = styled.div<{ $toolColor: string }>`
     position: absolute;
     text-align: center;
     bottom: -0.2rem;
-    right: -0.1rem;
+    right: 0;
     padding: 0 0.3rem;
-    color: var(--cMenuBackground);
+    color: var(--cPrimary);
     border-radius: var(--button-border-radius);
-    filter: opacity(80%);
+    filter: opacity(75%);
     ${({ $toolColor }) =>
         css`
             background: ${$toolColor};

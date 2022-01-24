@@ -1,24 +1,15 @@
 import { isConnected } from "api/session"
-import { Divider, ExpandableIcon } from "components"
+import { HorizontalRule, ExpandableIcon } from "components"
 import { FormattedMessage } from "language"
 import React from "react"
-import { BsGear, BsInfoCircle, BsPeople } from "react-icons/bs"
-import {
-    CLOSE_MAIN_MENU,
-    MainSubMenuState,
-    OPEN_ABOUT,
-    OPEN_SETTINGS,
-} from "redux/menu/menu"
+import { BsInfoCircle, BsPeople } from "react-icons/bs"
+import { CLOSE_MAIN_MENU, MainSubMenuState, OPEN_ABOUT } from "redux/menu/menu"
 import { SET_SESSION_DIALOG } from "redux/session/session"
 import { DialogState } from "redux/session/session.types"
 import store from "redux/store"
-import { MainMenuWrap } from "../index.styled"
-import MenuItem from "../menuItem"
+import { MainMenuWrap } from "../../index.styled"
+import MenuItem from "../../menuItem"
 
-const onClickSettings = () => {
-    store.dispatch(OPEN_SETTINGS())
-    store.dispatch(CLOSE_MAIN_MENU())
-}
 const onClickOnlineSession = () => {
     if (isConnected()) {
         store.dispatch(SET_SESSION_DIALOG(DialogState.ManageOnlineSession))
@@ -47,25 +38,19 @@ const GeneralMenu = () => {
                 icon={<ExpandableIcon />}
                 expandMenu={MainSubMenuState.Edit}
             />
-            <MenuItem
-                isMainMenu
-                text={<FormattedMessage id="Menu.General.Page" />}
-                icon={<ExpandableIcon />}
-                expandMenu={MainSubMenuState.Page}
-            />
-            <Divider />
+            <HorizontalRule />
             <MenuItem
                 isMainMenu
                 text={<FormattedMessage id="Menu.General.OnlineSession" />}
                 icon={<BsPeople id="transitory-icon" />}
                 onClick={onClickOnlineSession}
             />
-            <Divider />
+            <HorizontalRule />
             <MenuItem
                 isMainMenu
                 text={<FormattedMessage id="Menu.General.Settings" />}
-                icon={<BsGear id="transitory-icon" />}
-                onClick={onClickSettings}
+                icon={<ExpandableIcon />}
+                expandMenu={MainSubMenuState.Settings}
             />
             <MenuItem
                 isMainMenu

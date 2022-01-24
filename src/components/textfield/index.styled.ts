@@ -70,13 +70,13 @@ interface InputProps {
 }
 
 export const StyledInput = styled.input`
+    background: transparent;
     position: absolute;
     padding: 0;
     bottom: 1rem;
     height: 2rem;
     width: 100%;
     text-align: ${({ $textAlign }: InputProps) => $textAlign};
-    font-size: 1rem;
     outline: none;
     border: none;
     &:hover {
