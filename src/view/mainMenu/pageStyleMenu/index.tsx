@@ -5,9 +5,9 @@ import { useCustomSelector } from "hooks"
 import { FormattedMessage } from "language"
 import { SET_PAGE_BACKGROUND } from "redux/board/board"
 import store from "redux/store"
-import { GeneralMenuState, SET_GENERAL_MENU } from "redux/menu/menu"
+import { MainSubMenuState, SET_MAIN_SUB_MENU } from "redux/menu/menu"
 import { handleChangePageBackground } from "drawing/handlers"
-import { SubMenu } from "../index.styled"
+import { SubMenuWrap } from "../index.styled"
 import MenuItem from "../menuItem"
 
 const onClickBlank = () => {
@@ -23,7 +23,7 @@ const onClickApply = () => {
     handleChangePageBackground()
 }
 const onClickPrevious = () => {
-    store.dispatch(SET_GENERAL_MENU(GeneralMenuState.Page))
+    store.dispatch(SET_MAIN_SUB_MENU(MainSubMenuState.Page))
 }
 
 const PageStyleMenu = () => {
@@ -32,16 +32,18 @@ const PageStyleMenu = () => {
     )
 
     return (
-        <SubMenu>
+        <SubMenuWrap>
             <MenuItem
-                text={<FormattedMessage id="GeneralMenu.PageStyle.Blank" />}
+                text={<FormattedMessage id="Menu.General.PageStyle.Blank" />}
                 icon={
                     style === backgroundStyle.BLANK ? <TickIcon /> : undefined
                 }
                 onClick={onClickBlank}
             />
             <MenuItem
-                text={<FormattedMessage id="GeneralMenu.PageStyle.Checkered" />}
+                text={
+                    <FormattedMessage id="Menu.General.PageStyle.Checkered" />
+                }
                 icon={
                     style === backgroundStyle.CHECKERED ? (
                         <TickIcon />
@@ -50,7 +52,7 @@ const PageStyleMenu = () => {
                 onClick={onClickCheckered}
             />
             <MenuItem
-                text={<FormattedMessage id="GeneralMenu.PageStyle.Ruled" />}
+                text={<FormattedMessage id="Menu.General.PageStyle.Ruled" />}
                 icon={
                     style === backgroundStyle.RULED ? <TickIcon /> : undefined
                 }
@@ -58,15 +60,15 @@ const PageStyleMenu = () => {
             />
             <Divider />
             <MenuItem
-                text={<FormattedMessage id="GeneralMenu.PageStyle.Apply" />}
+                text={<FormattedMessage id="Menu.General.PageStyle.Apply" />}
                 onClick={onClickApply}
             />
             <Divider />
             <MenuItem
-                text={<FormattedMessage id="GeneralMenu.PageStyle.Previous" />}
+                text={<FormattedMessage id="Menu.General.PageStyle.Previous" />}
                 onClick={onClickPrevious}
             />
-        </SubMenu>
+        </SubMenuWrap>
     )
 }
 export default PageStyleMenu

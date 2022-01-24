@@ -1,5 +1,5 @@
 import React from "react"
-import { GeneralMenuState, SET_GENERAL_MENU } from "redux/menu/menu"
+import { MainSubMenuState, SET_MAIN_SUB_MENU } from "redux/menu/menu"
 import store from "redux/store"
 import { ItemWrap, ItemButton } from "./index.styled"
 
@@ -7,7 +7,7 @@ interface MenuItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     text: JSX.Element
     isMainMenu?: boolean
     icon?: JSX.Element
-    expandMenu?: GeneralMenuState
+    expandMenu?: MainSubMenuState
     warning?: boolean
 }
 
@@ -21,7 +21,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
 }) => {
     if (expandMenu) {
         const expandSubMenu = () => {
-            store.dispatch(SET_GENERAL_MENU(expandMenu))
+            store.dispatch(SET_MAIN_SUB_MENU(expandMenu))
         }
         return (
             <ItemWrap>
@@ -39,10 +39,10 @@ const MenuItem: React.FC<MenuItemProps> = ({
     }
     const closeSubMenu = () => {
         const subMenuOpen =
-            store.getState().menu.generalMenuState !== GeneralMenuState.Default
+            store.getState().menu.mainSubMenuState !== MainSubMenuState.Closed
 
         if (isMainMenu && subMenuOpen) {
-            store.dispatch(SET_GENERAL_MENU(GeneralMenuState.Default))
+            store.dispatch(SET_MAIN_SUB_MENU(MainSubMenuState.Closed))
         }
     }
     return (

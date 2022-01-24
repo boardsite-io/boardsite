@@ -1,26 +1,31 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-export enum GeneralMenuState {
-    Default,
+export enum MainMenuState {
+    Closed,
+    General,
+    View,
+}
+
+export enum MainSubMenuState {
+    Closed,
     File,
     Edit,
     Page,
     PageStyle,
     PageSize,
-    View,
 }
 
 export interface MenuState {
-    generalMenuOpen: boolean
-    generalMenuState: GeneralMenuState
+    mainMenuState: MainMenuState
+    mainSubMenuState: MainSubMenuState
     settingsOpen: boolean
     aboutOpen: boolean
     importMenuOpen: boolean
     exportMenuOpen: boolean
 }
 const initState: MenuState = {
-    generalMenuOpen: false,
-    generalMenuState: GeneralMenuState.Default,
+    mainMenuState: MainMenuState.Closed,
+    mainSubMenuState: MainSubMenuState.Closed,
     settingsOpen: false,
     aboutOpen: false,
     importMenuOpen: false,
@@ -30,16 +35,15 @@ const loadingSlice = createSlice({
     name: "menu",
     initialState: initState,
     reducers: {
-        OPEN_GENERAL_MENU: (state) => {
-            state.generalMenuState = GeneralMenuState.Default
-            state.generalMenuOpen = true
+        CLOSE_MAIN_MENU: (state) => {
+            state.mainMenuState = MainMenuState.Closed
+            state.mainSubMenuState = MainSubMenuState.Closed
         },
-        CLOSE_GENERAL_MENU: (state) => {
-            state.generalMenuState = GeneralMenuState.Default
-            state.generalMenuOpen = false
+        SET_MAIN_MENU: (state, action: PayloadAction<MainMenuState>) => {
+            state.mainMenuState = action.payload
         },
-        SET_GENERAL_MENU: (state, action: PayloadAction<GeneralMenuState>) => {
-            state.generalMenuState = action.payload
+        SET_MAIN_SUB_MENU: (state, action: PayloadAction<MainSubMenuState>) => {
+            state.mainSubMenuState = action.payload
         },
         OPEN_SETTINGS: (state) => {
             state.settingsOpen = true
@@ -69,9 +73,9 @@ const loadingSlice = createSlice({
 })
 
 export const {
-    SET_GENERAL_MENU,
-    OPEN_GENERAL_MENU,
-    CLOSE_GENERAL_MENU,
+    SET_MAIN_MENU,
+    SET_MAIN_SUB_MENU,
+    CLOSE_MAIN_MENU,
     OPEN_SETTINGS,
     CLOSE_SETTINGS,
     OPEN_ABOUT,

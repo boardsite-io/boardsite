@@ -1,30 +1,16 @@
 import styled, { css } from "styled-components"
 
-export const GeneralMenuButton = styled.div`
-    z-index: 100;
-    position: fixed;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    top: 0;
-    left: 0;
-    background: var(--cMenuBackground);
-    border-bottom-right-radius: var(--menubar-border-radius);
-    box-shadow: var(--menubar-box-shadow);
-    padding: var(--menu-padding);
-`
-
-interface GeneralMenuProps {
+interface MainMenuProps {
     open: boolean
 }
 
-export const GeneralMenuDropdown = styled.div<GeneralMenuProps>`
-    z-index: 1000;
-    position: fixed;
+export const MainMenuDropdown = styled.div<MainMenuProps>`
+    z-index: var(--zIndexMainMenu);
+    position: absolute;
     display: flex;
     flex-direction: column;
-    left: 0;
-    top: 2.8rem;
+    left: var(--toolbar-margin);
+    top: 3rem;
     height: fit-content;
     width: fit-content;
 
@@ -39,8 +25,8 @@ export const GeneralMenuDropdown = styled.div<GeneralMenuProps>`
               `};
 `
 
-export const GeneralMenuBackground = styled.div<GeneralMenuProps>`
-    z-index: 900;
+export const MainMenuBackground = styled.div<MainMenuProps>`
+    z-index: var(--zIndexMainMenuBG);
     position: fixed;
     inset: 0;
     ${({ open }) =>
@@ -57,24 +43,25 @@ const menuStyles = css`
     margin: 0;
     padding: 0;
     overflow: hidden;
-    box-shadow: var(--box-shadow);
+    box-shadow: var(--toolbar-box-shadow);
     background: var(--cMenuBackground);
+    border-radius: var(--toolbar-border-radius);
 
     width: max-content;
     height: max-content;
 `
-export const MainMenu = styled.ul`
+
+export const MainMenuWrap = styled.ul`
     ${menuStyles};
-    border-radius: 0 var(--menubar-border-radius) var(--menubar-border-radius) 0;
 `
 
-export const SubMenu = styled.ul`
+export const SubMenuWrap = styled.ul`
     ${menuStyles};
     z-index: -1; /* make transition animation go below */
-    border-radius: var(--menubar-border-radius);
     position: absolute;
     top: 0;
-    left: calc(100% + 0.2rem);
+    left: 100%;
+    margin-left: 0.2rem;
     transition: all 300ms ease;
 
     &.menu-enter {
@@ -92,8 +79,4 @@ export const SubMenu = styled.ul`
     &.menu-exit-active {
         transform: translateX(-300%);
     }
-`
-
-export const Divider = styled.hr`
-    width: 100%;
 `

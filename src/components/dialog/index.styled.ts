@@ -5,7 +5,7 @@ interface DialogProps {
 }
 
 export const DialogBox = styled.div<DialogProps>`
-    z-index: 1000;
+    z-index: var(--zIndexDialog);
     display: flex;
     flex-direction: column;
     position: fixed;

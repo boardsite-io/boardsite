@@ -61,7 +61,7 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({ icon, tool, index }) => {
         <FavToolWrapper>
             <ToolTip
                 text={<FormattedMessage id="Favorite.Select" />}
-                position={Position.Right}
+                position={Position.Top}
             >
                 <ToolButton
                     icon={icon}
@@ -77,13 +77,13 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({ icon, tool, index }) => {
                 <FavToolOptions>
                     <ToolTip
                         text={<FormattedMessage id="Favorite.Replace" />}
-                        position={Position.BottomRight}
+                        position={Position.Top}
                     >
                         <IconButton icon={<PlusIcon />} onClick={replaceTool} />
                     </ToolTip>
                     <ToolTip
                         text={<FormattedMessage id="Favorite.Remove" />}
-                        position={Position.Right}
+                        position={Position.Top}
                     >
                         <IconButton icon={<MinusIcon />} onClick={removeTool} />
                     </ToolTip>

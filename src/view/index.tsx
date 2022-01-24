@@ -1,7 +1,7 @@
 import React from "react"
 import BoardStage from "board/stage"
 import { useKeyboardShortcuts } from "hooks"
-import { StyledView } from "./index.styled"
+import { ViewWrap } from "./index.styled"
 import SessionInfo from "./sessioninfo"
 import ToolRing from "./toolRing"
 import FavoriteTools from "./favoriteTools"
@@ -11,25 +11,25 @@ import SettingsMenu from "./settingsMenu"
 import SessionMenu from "./sessionMenu"
 import ImportMenu from "./importMenu"
 import ExportMenu from "./exportMenu"
-import GeneralMenu from "./generalMenu"
+import MainMenu from "./mainMenu"
 
 const View: React.FC = () => {
     useKeyboardShortcuts()
 
     return (
-        <StyledView>
+        <ViewWrap>
             <BoardStage />
             <SessionInfo />
             <ToolRing />
             <FavoriteTools />
             <About />
-            <GeneralMenu />
+            <MainMenu />
             <SettingsMenu />
             <SessionMenu />
             <ImportMenu />
             <ExportMenu />
             <Loading />
-        </StyledView>
+        </ViewWrap>
     )
 }
 

@@ -5,7 +5,7 @@ export const SessionInfoWrapper = styled.div`
     left: 10px;
     top: 90px;
     overflow: hidden;
-    border-radius: var(--menubar-border-radius);
+    border-radius: var(--border-radius);
     max-height: 500px;
     pointer-events: none;
     display: grid;

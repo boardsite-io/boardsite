@@ -25,8 +25,7 @@ export const CustomColorPicker = styled(HexColorPicker)`
 
     .react-colorful__hue {
         height: var(--style-picker-hue-height);
-        border-radius: 0 0 var(--menubar-border-radius)
-            var(--menubar-border-radius);
+        border-radius: 0 0 var(--border-radius) var(--border-radius);
         &:active {
             /* override component style */
             height: var(--style-picker-hue-height);

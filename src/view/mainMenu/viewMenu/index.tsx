@@ -1,4 +1,10 @@
-import { ExpandIcon, ShrinkIcon, ZoomInIcon, ZoomOutIcon } from "components"
+import {
+    Divider,
+    ExpandIcon,
+    ShrinkIcon,
+    ZoomInIcon,
+    ZoomOutIcon,
+} from "components"
 import { FormattedMessage } from "language"
 import React from "react"
 import {
@@ -12,50 +18,50 @@ import {
     ZOOM_OUT_CENTER,
 } from "redux/board/board"
 import store from "redux/store"
-import { SubMenu } from "../index.styled"
+import { MainMenuWrap } from "../index.styled"
 import MenuItem from "../menuItem"
 
 const ViewMenu = () => {
     return (
-        <SubMenu>
+        <MainMenuWrap>
             <MenuItem
-                text={<FormattedMessage id="GeneralMenu.View.ResetView" />}
+                text={<FormattedMessage id="Menu.View.ResetView" />}
                 icon={<ShrinkIcon />}
                 onClick={() => store.dispatch(RESET_VIEW())}
             />
             <MenuItem
-                text={<FormattedMessage id="GeneralMenu.View.MaximizeView" />}
+                text={<FormattedMessage id="Menu.View.MaximizeView" />}
                 icon={<ExpandIcon />}
                 onClick={() => store.dispatch(FIT_WIDTH_TO_PAGE())}
             />
             <MenuItem
-                text={<FormattedMessage id="GeneralMenu.View.ZoomIn" />}
+                text={<FormattedMessage id="Menu.View.ZoomIn" />}
                 icon={<ZoomInIcon />}
                 onClick={() => store.dispatch(ZOOM_IN_CENTER())}
             />
             <MenuItem
-                text={<FormattedMessage id="GeneralMenu.View.ZoomOut" />}
+                text={<FormattedMessage id="Menu.View.ZoomOut" />}
                 icon={<ZoomOutIcon />}
                 onClick={() => store.dispatch(ZOOM_OUT_CENTER())}
             />
-
+            <Divider />
             <MenuItem
-                text={<FormattedMessage id="GeneralMenu.View.FirstPage" />}
+                text={<FormattedMessage id="Menu.View.FirstPage" />}
                 onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}
             />
             <MenuItem
-                text={<FormattedMessage id="GeneralMenu.View.PreviousPage" />}
+                text={<FormattedMessage id="Menu.View.PreviousPage" />}
                 onClick={() => store.dispatch(JUMP_TO_PREV_PAGE())}
             />
             <MenuItem
-                text={<FormattedMessage id="GeneralMenu.View.NextPage" />}
+                text={<FormattedMessage id="Menu.View.NextPage" />}
                 onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE())}
             />
             <MenuItem
-                text={<FormattedMessage id="GeneralMenu.View.LastPage" />}
+                text={<FormattedMessage id="Menu.View.LastPage" />}
                 onClick={() => store.dispatch(JUMP_TO_LAST_PAGE())}
             />
-        </SubMenu>
+        </MainMenuWrap>
     )
 }
 export default ViewMenu

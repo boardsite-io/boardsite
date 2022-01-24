@@ -5,12 +5,13 @@ export const FavToolWrapper = styled.div`
 `
 
 export const FavToolOptions = styled.div`
-    position: absolute;
-    bottom: 0;
-    left: 3rem;
+    position: fixed;
+    bottom: 3.1rem;
+    left: 50%;
+    transform: translateX(-50%);
     display: grid;
     grid-auto-flow: column;
-    border-radius: var(--menubar-border-radius);
+    border-radius: var(--border-radius);
     background-color: var(--cMenuBackground);
-    box-shadow: var(--menubar-box-shadow);
+    box-shadow: var(--toolbar-box-shadow);
 `
