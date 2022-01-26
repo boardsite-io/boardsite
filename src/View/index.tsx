@@ -1,6 +1,6 @@
 import React from "react"
-import BoardStage from "board/stage"
 import { useKeyboardShortcuts } from "hooks"
+import BoardStage from "./BoardStage"
 import { ViewWrap } from "./index.styled"
 import SessionInfo from "./SessionInfo"
 import ToolRing from "./ToolRing"

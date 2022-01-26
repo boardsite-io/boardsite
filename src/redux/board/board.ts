@@ -6,7 +6,7 @@ import {
     initialView,
     resetView,
     zoomCenter,
-} from "board/stage/util/adjustView"
+} from "View/BoardStage/util/adjustView"
 import { Stroke } from "drawing/stroke/index.types"
 import {
     addAction,

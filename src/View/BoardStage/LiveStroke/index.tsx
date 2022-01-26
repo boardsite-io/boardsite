@@ -1,15 +1,15 @@
 import React, { memo, useCallback, useState } from "react"
 import { Rect } from "react-konva"
 import { BoardLiveStroke } from "drawing/livestroke"
-import { LiveStrokeShape } from "board/livestroke/livestroke"
 import store from "redux/store"
 import { Stage } from "konva/lib/Stage"
 import { KonvaEventObject } from "konva/lib/Node"
 import { Vector2d } from "konva/lib/types"
 import { Stroke, ToolType } from "drawing/stroke/index.types"
 import { useCustomSelector } from "hooks"
-import { PageProps } from "board/page/index.types"
 import { isValidClick, isValidTouch } from "./helpers"
+import { PageProps } from "../Page/index.types"
+import { LiveStrokeShape } from "./livestroke"
 
 let isMouseOrTouchDown = false
 const liveStroke = new BoardLiveStroke()

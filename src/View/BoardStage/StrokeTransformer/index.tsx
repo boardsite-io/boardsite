@@ -17,9 +17,12 @@ import { Group as GroupType } from "konva/lib/Group"
 import store from "redux/store"
 import { TransformStrokes } from "redux/board/board.types"
 import { cloneDeep } from "lodash"
-import { handleAddStrokes, handleDeleteStrokes } from "../drawing/handlers"
-import { Stroke } from "../drawing/stroke/index.types"
-import { StrokeShape } from "./stroke/strokeShape"
+import {
+    handleAddStrokes,
+    handleDeleteStrokes,
+} from "../../../drawing/handlers"
+import { Stroke } from "../../../drawing/stroke/index.types"
+import StrokeShape from "../StrokeShape"
 
 const StrokeTransformer = memo(() => {
     const transformStrokes = useCustomSelector(
@@ -27,6 +30,8 @@ const StrokeTransformer = memo(() => {
     )
     return <CustomTransformer transformStrokes={transformStrokes} />
 })
+
+export default StrokeTransformer
 
 interface CustomTransformerProps {
     transformStrokes: TransformStrokes | undefined
@@ -116,5 +121,3 @@ const CustomTransformer = memo<CustomTransformerProps>(
         )
     }
 )
-
-export default StrokeTransformer

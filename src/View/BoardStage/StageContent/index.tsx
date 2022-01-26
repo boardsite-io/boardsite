@@ -7,13 +7,13 @@ import { useCustomSelector } from "hooks"
 import { Layer } from "react-konva"
 import type { Layer as LayerType } from "konva/lib/Layer"
 import store from "redux/store"
-import LiveStroke from "board/livestroke"
-import StrokeTransformer from "board/transformer"
-import PageLayer from "board/page"
-import { PageInfo } from "board/page/index.types"
+import { PageInfo } from "../Page/index.types"
+import PageLayer from "../Page"
+import LiveStroke from "../LiveStroke"
+import StrokeTransformer from "../StrokeTransformer"
 
 // all pages and content are in this component
-const Content = memo<{ value: ReactReduxContextValue }>(() => {
+const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
     // Only rerender on page change
     const pageIdSelector = createSelector(
         (state: RootState) => state.board.currentPageIndex,
@@ -94,4 +94,4 @@ const Content = memo<{ value: ReactReduxContextValue }>(() => {
     )
 })
 
-export default Content
+export default StageContent
