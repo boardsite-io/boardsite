@@ -5,7 +5,7 @@ import { MAX_ALIAS_LENGTH } from "consts"
 import { currentSession } from "api/session"
 import { ColorButton, Selection } from "./index.styled"
 // Dont import from components to prevent dependency cycle
-import TextField from "../textfield"
+import TextField from "../TextField"
 
 const UserSelection: React.FC = () => {
     const [, triggerRender] = useState<boolean>(true)

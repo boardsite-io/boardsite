@@ -1,13 +1,13 @@
 import React from "react"
 import { PageSettingsInnerWrap, PageSettingsWrap } from "./index.styled"
-import PageBackgrounds from "./pagebackgrounds"
-import PageSizes from "./pagesizes"
+import PageBackground from "./PageBackground"
+import PageSize from "./PageSize"
 
 const PageSettings: React.FC = () => (
     <PageSettingsWrap>
         <PageSettingsInnerWrap>
-            <PageSizes />
-            <PageBackgrounds />
+            <PageSize />
+            <PageBackground />
         </PageSettingsInnerWrap>
     </PageSettingsWrap>
 )

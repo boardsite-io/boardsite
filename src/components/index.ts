@@ -1,21 +1,21 @@
 export * from "./icons"
-export { default as IconButton } from "./iconbutton"
-export { default as ToolButton } from "./toolbutton"
-export { default as Button } from "./button"
-export { default as Popup } from "./popup"
-export { default as Switch } from "./switch"
-export { default as TextField } from "./textfield"
-export { default as UserSelection } from "./userselection"
-export { default as NumberInput } from "./numberinput"
-export { default as ToolTip } from "./tooltip"
-export { Position } from "./tooltip/index.types" // Cleaner imports
-export { default as Dialog } from "./dialog"
-export { default as Drawer } from "./drawer"
+export { default as IconButton } from "./IconButton"
+export { default as ToolButton } from "./ToolButton"
+export { default as Button } from "./Button"
+export { default as Popup } from "./Popup"
+export { default as Switch } from "./Switch"
+export { default as TextField } from "./TextField"
+export { default as UserSelection } from "./UserSelection"
+export { default as NumberInput } from "./NumberInput"
+export { default as ToolTip } from "./ToolTip"
+export { Position } from "./ToolTip/index.types" // Cleaner imports
+export { default as Dialog } from "./Dialog"
+export { default as Drawer } from "./Drawer"
 export {
     DialogTitle,
     DialogContent,
     DialogOptions,
-} from "./dialog/index.styled"
-export { DrawerTitle, DrawerContent } from "./drawer/index.styled"
-export { HorizontalRule } from "./horizontalRule/index.styled"
-export { VerticalRule } from "./verticalRule/index.styled"
+} from "./Dialog/index.styled"
+export { DrawerTitle, DrawerContent } from "./Drawer/index.styled"
+export { HorizontalRule } from "./HorizontalRule/index.styled"
+export { VerticalRule } from "./VerticalRule/index.styled"

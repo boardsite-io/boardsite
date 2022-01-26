@@ -1,5 +1,5 @@
 import React from "react"
-import IconButton, { IconButtonProps } from "../iconbutton"
+import IconButton, { IconButtonProps } from "../IconButton"
 import { ToolInfo, ToolButtonWrap } from "./index.styled"
 
 interface ToolButtonProps extends IconButtonProps {
