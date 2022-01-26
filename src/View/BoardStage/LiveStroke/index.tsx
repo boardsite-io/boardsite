@@ -9,7 +9,7 @@ import { Stroke, ToolType } from "drawing/stroke/index.types"
 import { useCustomSelector } from "hooks"
 import { isValidClick, isValidTouch } from "./helpers"
 import { PageProps } from "../Page/index.types"
-import { LiveStrokeShape } from "./livestroke"
+import { LiveStrokeShape } from "./LiveStrokeShape"
 
 let isMouseOrTouchDown = false
 const liveStroke = new BoardLiveStroke()

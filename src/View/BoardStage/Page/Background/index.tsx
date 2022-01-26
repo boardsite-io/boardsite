@@ -5,8 +5,8 @@ import { backgroundStyle, LAYER_CACHE_PXL } from "consts"
 import { useCustomSelector } from "hooks"
 import store from "redux/store"
 import { pageBackground } from "drawing/page/backgrounds"
-import { PageProps } from "./index.types"
-import PageBoundary from "./boundary"
+import { PageProps } from "../index.types"
+import PageBoundary from "../Boundary"
 
 const Background = memo<PageProps>(({ pageId, pageInfo }) => {
     // pageId might not be valid anymore, exit then

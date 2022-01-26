@@ -1,7 +1,7 @@
 import { LiveStroke } from "drawing/livestroke/index.types"
 import React, { memo } from "react"
-import StrokeShape from "../StrokeShape"
-import { getSegments } from "./helpers"
+import StrokeShape from "../../StrokeShape"
+import { getSegments } from "../helpers"
 
 interface LiveStrokeShapeProps {
     liveStroke: LiveStroke

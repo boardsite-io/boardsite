@@ -2,7 +2,7 @@ import { Rect } from "react-konva"
 import React, { useEffect, useRef } from "react"
 import * as types from "konva/lib/shapes/Rect"
 import { LAYER_CACHE_PXL } from "consts"
-import { PageProps } from "./index.types"
+import { PageProps } from "../index.types"
 
 const PageBoundary: React.FC<PageProps> = ({ pageInfo }) => {
     const ref = useRef<types.Rect>(null)
