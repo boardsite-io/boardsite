@@ -29,7 +29,7 @@ const PageSizeMenu = () => {
     )
 
     return (
-        <SubMenuWrap>
+        <SubMenuWrap level={4}>
             <MenuItem
                 text={<FormattedMessage id="Menu.Page.Size.A4Landscape" />}
                 icon={isMatch(pageSize.a4landscape) ? <TickIcon /> : undefined}

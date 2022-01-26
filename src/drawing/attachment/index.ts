@@ -1,7 +1,7 @@
 import { currentSession, isConnected } from "api/session"
 import { backgroundStyle, FILE_EXTENSION_WORKSPACE, PIXEL_RATIO } from "consts"
 import { handleDeleteAllPages } from "drawing/handlers"
-import { readFileAsUint8Array } from "drawing/io"
+import { readFileAsUint8Array } from "drawing/io/helpers"
 import { BoardPage } from "drawing/page"
 import { IntlMessageKeys } from "language"
 import {

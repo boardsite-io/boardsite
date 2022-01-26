@@ -21,15 +21,11 @@ export interface MenuState {
     mainMenuState: MainMenuState
     mainSubMenuState: MainSubMenuState
     aboutOpen: boolean
-    importMenuOpen: boolean
-    exportMenuOpen: boolean
 }
 const initState: MenuState = {
     mainMenuState: MainMenuState.Closed,
     mainSubMenuState: MainSubMenuState.Closed,
     aboutOpen: false,
-    importMenuOpen: false,
-    exportMenuOpen: false,
 }
 const loadingSlice = createSlice({
     name: "menu",
@@ -51,18 +47,6 @@ const loadingSlice = createSlice({
         CLOSE_ABOUT: (state) => {
             state.aboutOpen = false
         },
-        OPEN_IMPORT_MENU: (state) => {
-            state.importMenuOpen = true
-        },
-        CLOSE_IMPORT_MENU: (state) => {
-            state.importMenuOpen = false
-        },
-        OPEN_EXPORT_MENU: (state) => {
-            state.exportMenuOpen = true
-        },
-        CLOSE_EXPORT_MENU: (state) => {
-            state.exportMenuOpen = false
-        },
     },
 })
 
@@ -72,10 +56,6 @@ export const {
     CLOSE_MAIN_MENU,
     OPEN_ABOUT,
     CLOSE_ABOUT,
-    OPEN_IMPORT_MENU,
-    CLOSE_IMPORT_MENU,
-    OPEN_EXPORT_MENU,
-    CLOSE_EXPORT_MENU,
 } = loadingSlice.actions
 
 export default loadingSlice.reducer

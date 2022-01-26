@@ -27,7 +27,7 @@ const PageStyleMenu = () => {
     )
 
     return (
-        <SubMenuWrap>
+        <SubMenuWrap level={3}>
             <MenuItem
                 text={<FormattedMessage id="Menu.Page.Style.Blank" />}
                 icon={

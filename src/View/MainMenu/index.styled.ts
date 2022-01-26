@@ -72,7 +72,7 @@ export const SubMenuWrap = styled.ul<{ level?: number }>`
     ${({ level }) =>
         level
             ? css`
-                  margin-top: calc(${level} * 1.75rem);
+                  margin-top: calc(${level - 1} * 2.3rem);
               `
             : null}
 `
