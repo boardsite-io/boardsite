@@ -60,7 +60,7 @@ export const Theme = styled.div`
     --cPrimary: #f5f5f5; // Menu backgrounds
     --cSecondary: #121212; // Menu items
     --cSelected: #d9d7f1; // Selected tool background
-    --cBackground: linear-gradient(#888888, #696969); // Global background
+    --cBackground: #bcaaa4; // Global background
     --cWarning: red; // Warning text
     --cDetails: #00796b; // Small details, borders, rails
     --cDetails2: #37474f; // Small details, borders, rails
