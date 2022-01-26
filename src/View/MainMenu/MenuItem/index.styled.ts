@@ -27,7 +27,12 @@ export const ItemButton = styled.button<{ $warning: boolean }>`
     background: var(--cPrimary);
 
     &:hover {
-        filter: brightness(80%);
+        filter: var(--main-menu-hover-filter);
+    }
+
+    &:disabled {
+        cursor: no-drop;
+        color: var(--cRule);
     }
 
     ${({ $warning }) =>
