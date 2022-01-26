@@ -1,42 +1,38 @@
-import { DownloadIcon, HorizontalRule, UploadIcon } from "components"
-import { FILE_EXTENSION_WORKSPACE } from "consts"
-import { handleProcessFileImport } from "drawing/attachment"
-import { handleAddPageUnder, handleDeleteAllPages } from "drawing/handlers"
 import { FormattedMessage } from "language"
 import React from "react"
+import { HorizontalRule } from "components"
+import { handleAddPageUnder, handleDeleteAllPages } from "drawing/handlers"
 import {
-    CLOSE_MAIN_MENU,
-    OPEN_EXPORT_MENU,
-    OPEN_IMPORT_MENU,
-} from "redux/menu/menu"
+    handleExportPdf,
+    handleExportWorkspace,
+    handleImportPdf,
+    handleImportWorkspace,
+} from "drawing/io"
+import { CLOSE_MAIN_MENU } from "redux/menu/menu"
 import store from "redux/store"
-import { exportWorkspace } from "View/ExportMenu"
 import { SubMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
-import { InvisibleInput } from "./index.styled"
 
 const onClickNew = () => {
     handleDeleteAllPages()
     handleAddPageUnder()
     store.dispatch(CLOSE_MAIN_MENU())
 }
-const onClickImport = () => {
-    store.dispatch(OPEN_IMPORT_MENU())
-    store.dispatch(CLOSE_MAIN_MENU())
-}
-const onClickExport = () => {
-    store.dispatch(OPEN_EXPORT_MENU())
-    store.dispatch(CLOSE_MAIN_MENU())
-}
-const onInput = async (e: React.SyntheticEvent) => {
-    const file = (e.target as HTMLInputElement).files?.[0]
-    if (file) {
-        const errorMessage = await handleProcessFileImport(file)
 
-        if (errorMessage === undefined) {
-            store.dispatch(CLOSE_MAIN_MENU())
-        }
-    }
+const onClickOpen = async () => {
+    handleImportWorkspace()
+}
+
+const onClickSave = () => {
+    handleExportWorkspace()
+}
+
+const onClickImportPdf = async () => {
+    handleImportPdf()
+}
+
+const onClickExportPdf = () => {
+    handleExportPdf()
 }
 
 const FileMenu = () => {
@@ -48,32 +44,20 @@ const FileMenu = () => {
             />
             <MenuItem
                 text={<FormattedMessage id="Menu.General.File.Open" />}
-                onClick={() => document.getElementById("selectedFile")?.click()}
-            />
-            <InvisibleInput
-                type="file"
-                accept={`${FILE_EXTENSION_WORKSPACE}`}
-                id="selectedFile"
-                onInput={onInput}
+                onClick={onClickOpen}
             />
             <MenuItem
                 text={<FormattedMessage id="Menu.General.File.Save" />}
-                onClick={() => exportWorkspace("workspace")}
+                onClick={onClickSave}
             />
-            {/* <MenuItem
-                text={<FormattedMessage id="Menu.General.File.SaveAs" />}
-                onClick={() => exportWorkspace("CUSTOMISABLE_NAME")}
-            /> */}
             <HorizontalRule />
             <MenuItem
-                text={<FormattedMessage id="Menu.General.File.Import" />}
-                icon={<UploadIcon />}
-                onClick={onClickImport}
+                text={<FormattedMessage id="Menu.General.File.ImportPdf" />}
+                onClick={onClickImportPdf}
             />
             <MenuItem
-                text={<FormattedMessage id="Menu.General.File.Export" />}
-                icon={<DownloadIcon />}
-                onClick={onClickExport}
+                text={<FormattedMessage id="Menu.General.File.ExportPdf" />}
+                onClick={onClickExportPdf}
             />
         </SubMenuWrap>
     )

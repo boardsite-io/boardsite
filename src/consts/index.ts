@@ -17,9 +17,17 @@ export const SCROLL_LIMIT_FIRST_PAGE = 0.25 // Calculated from upper border!
 export const SCROLL_LIMIT_LAST_PAGE = 0.75 // Calculated from upper border!
 export const SCROLL_LIMIT_HORIZONTAL = 0.5 // Calculated from side borders!
 
+export const MIME_TYPE_WORKSPACE = "application/boardio"
+export const MIME_TYPE_PDF = "application/pdf"
+export const FILE_EXTENSION_WORKSPACE = ".boardio"
+export const FILE_EXTENSION_PDF = ".pdf"
+export const FILE_DESCRIPTION_WORKSPACE = "Workspace file"
+export const FILE_DESCRIPTION_PDF = "PDF file"
+export const FILE_NAME_PDF = "file"
+export const FILE_NAME_WORKSPACE = "workspace"
+
 export const MAX_FAVORITE_TOOLS = 5
 export const MAX_ALIAS_LENGTH = 30
-export const FILE_EXTENSION_WORKSPACE = ".boardio"
 export const STAGE_RESIZE_DEBOUNCE = 250 // debounce time in ms
 export const STAGE_UPDATE_DEBOUNCE = 100 // debounce time in ms
 export const PIXEL_RATIO = 4

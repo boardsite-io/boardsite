@@ -1,4 +1,4 @@
-import { readFileAsUint8Array } from "drawing/io"
+import { readFileAsUint8Array } from "drawing/io/helpers"
 import { deflate, inflate } from "pako"
 import { newState } from "./localstorage"
 import { ReducerState } from "./reducer"

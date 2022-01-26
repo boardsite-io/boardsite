@@ -8,8 +8,6 @@ import FavoriteTools from "./FavoriteTools"
 import Loading from "./Loading"
 import About from "./About"
 import SessionMenu from "./SessionMenu"
-import ImportMenu from "./ImportMenu"
-import ExportMenu from "./ExportMenu"
 import MainMenu from "./MainMenu"
 
 const View: React.FC = () => {
@@ -24,8 +22,6 @@ const View: React.FC = () => {
             <About />
             <MainMenu />
             <SessionMenu />
-            <ImportMenu />
-            <ExportMenu />
             <Loading />
         </ViewWrap>
     )

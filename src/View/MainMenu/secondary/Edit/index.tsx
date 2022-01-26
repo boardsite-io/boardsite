@@ -15,7 +15,7 @@ const EditMenu = () => {
     )
 
     return (
-        <SubMenuWrap>
+        <SubMenuWrap level={2}>
             <MenuItem
                 disabled={disableUndoStack}
                 text={<FormattedMessage id="Menu.General.Edit.Undo" />}

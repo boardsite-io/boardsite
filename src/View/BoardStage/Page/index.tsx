@@ -12,7 +12,7 @@ const PageLayer = memo<PageProps>(({ pageId, pageInfo, layerRef }) => {
     })
 
     return (
-        <Layer ref={layerRef} width={pageInfo.width} height={pageInfo.height}>
+        <Layer ref={layerRef}>
             <Background pageId={pageId} pageInfo={pageInfo} />
             <Strokes pageId={pageId} pageInfo={pageInfo} />
         </Layer>

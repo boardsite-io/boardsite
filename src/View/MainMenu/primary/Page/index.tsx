@@ -3,9 +3,9 @@ import {
     HorizontalRule,
     PageAboveIcon,
     PageBelowIcon,
-    PageClearIcon,
+    // PageClearIcon,
+    // PageDeleteIcon,
     // PageDeleteAllIcon,
-    PageDeleteIcon,
 } from "components"
 import {
     handleAddPageOver,
@@ -46,6 +46,19 @@ const PageMenu = () => {
         <MainMenuWrap>
             <MenuItem
                 isMainMenu
+                text={<FormattedMessage id="Menu.Page.NewBefore" />}
+                icon={<PageAboveIcon />}
+                onClick={onClickNewPageBefore}
+            />
+            <MenuItem
+                isMainMenu
+                text={<FormattedMessage id="Menu.Page.NewAfter" />}
+                icon={<PageBelowIcon />}
+                onClick={onClickNewPageAfter}
+            />
+            <HorizontalRule />
+            <MenuItem
+                isMainMenu
                 text={<FormattedMessage id="Menu.Page.Style" />}
                 icon={<ExpandableIcon />}
                 expandMenu={MainSubMenuState.PageStyle}
@@ -59,29 +72,16 @@ const PageMenu = () => {
             <HorizontalRule />
             <MenuItem
                 isMainMenu
-                text={<FormattedMessage id="Menu.Page.NewBefore" />}
-                icon={<PageAboveIcon />}
-                onClick={onClickNewPageBefore}
-            />
-            <MenuItem
-                isMainMenu
-                text={<FormattedMessage id="Menu.Page.NewAfter" />}
-                icon={<PageBelowIcon />}
-                onClick={onClickNewPageAfter}
-            />
-            <MenuItem
-                isMainMenu
                 text={<FormattedMessage id="Menu.Page.Clear" />}
-                icon={<PageClearIcon />}
+                // icon={<PageClearIcon />}
                 onClick={onClickClearPage}
             />
             <MenuItem
                 isMainMenu
                 text={<FormattedMessage id="Menu.Page.Delete" />}
-                icon={<PageDeleteIcon />}
+                // icon={<PageDeleteIcon />}
                 onClick={onClickDeletePage}
             />
-            <HorizontalRule />
             <MenuItem
                 isMainMenu
                 warning

@@ -5,7 +5,7 @@ interface Props {
 }
 
 export const StyledButton = styled.button<Props>`
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     padding: 0.5rem 1.5rem;
     border-width: 0;
     border-radius: var(--button-border-radius);
