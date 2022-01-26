@@ -1,4 +1,4 @@
-import { ScreenSize } from "app/theme"
+import { ScreenSize } from "App/theme"
 import styled from "styled-components"
 
 export const ToolRingWrap = styled.div`
