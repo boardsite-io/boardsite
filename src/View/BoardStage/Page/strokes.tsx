@@ -4,8 +4,8 @@ import store from "redux/store"
 import { Group as GroupType } from "konva/lib/Group"
 import { useCustomSelector } from "hooks"
 import { LAYER_CACHE_PXL } from "consts"
-import { StrokeShape } from "board/stroke/strokeShape"
 import { PageProps } from "./index.types"
+import StrokeShape from "../StrokeShape"
 
 const Strokes = memo<PageProps>(({ pageId, pageInfo }) => {
     const ref = useRef<GroupType>(null)

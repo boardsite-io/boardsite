@@ -23,10 +23,7 @@ interface StrokeShapeProps {
 }
 
 // Use LineConfig since it requires points prop
-export const Shape = ({
-    stroke,
-    shapeProps,
-}: StrokeShapeProps): JSX.Element => {
+const Shape = ({ stroke, shapeProps }: StrokeShapeProps): JSX.Element => {
     switch (stroke.type) {
         case ToolType.Eraser: {
             shapeProps.strokeWidth = ERASER_WIDTH
@@ -83,10 +80,12 @@ export const Shape = ({
     }
 }
 
+export default Shape
+
 /**
  * Function to draw circles at stroke points.
  */
-export function debugStrokePoints(
+export function getDebugStrokePoints(
     points: number[],
     width: number
 ): JSX.Element {

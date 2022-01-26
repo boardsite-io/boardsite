@@ -18,9 +18,9 @@ import { StageAttrs } from "redux/board/board.types"
 import { Vector2d } from "konva/lib/types"
 import { zoomTo } from "./util/adjustView"
 import { multiTouchEnd, multiTouchMove } from "./util/multiTouch"
-import Content from "./content"
+import StageContent from "./StageContent"
 import { detectPageChange } from "./util/detectPageChange"
-import { UpdateStage } from "./updateStage"
+import { UpdateStage } from "./StageContent/updateStage"
 import { applyBoundsX, applyBoundsY } from "./util/bounds"
 
 const resizeStage = debounce(
@@ -226,7 +226,7 @@ const BoardStage: React.FC = memo(() => {
                         onWheel={onWheel}
                     >
                         <ReactReduxContext.Provider value={value}>
-                            <Content value={value} />
+                            <StageContent value={value} />
                         </ReactReduxContext.Provider>
                     </Stage>
                 )}

@@ -4,7 +4,7 @@ import { useCustomSelector } from "hooks"
 import { Stroke } from "drawing/stroke/index.types"
 import { LiveStroke } from "drawing/livestroke/index.types"
 import { LineCap, LineJoin } from "konva/lib/Shape"
-import { Shape } from "./shape"
+import Shape from "../Shape"
 
 interface StrokeShapeProps {
     stroke: Stroke | LiveStroke
@@ -16,7 +16,7 @@ interface StrokeShapeProps {
  * referencing an object will result in unwanted rerenders, since we just compare
  * the object references.
  */
-export const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
+const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
     const [isDragging, setDragging] = useState(false)
     const erasedStrokes = useCustomSelector(
         (state) => state.drawing.erasedStrokes
@@ -78,3 +78,5 @@ export const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
 
     return <Shape stroke={stroke} shapeProps={shapeProps} />
 })
+
+export default StrokeShape
