@@ -7,7 +7,7 @@ import { backgroundStyle } from "consts"
 import { Position, ToolTip } from "components"
 import { Backgrounds, Blank, Checkered, Ruled } from "./index.styled"
 
-const PageBackground: React.FC = () => {
+const Background: React.FC = () => {
     const background = useCustomSelector(
         (state) => state.board.pageMeta.background.style
     )
@@ -60,4 +60,4 @@ const PageBackground: React.FC = () => {
     )
 }
 
-export default PageBackground
+export default Background
