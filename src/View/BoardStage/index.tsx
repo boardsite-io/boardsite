@@ -20,7 +20,7 @@ import { zoomTo } from "./util/adjustView"
 import { multiTouchEnd, multiTouchMove } from "./util/multiTouch"
 import StageContent from "./StageContent"
 import { detectPageChange } from "./util/detectPageChange"
-import { UpdateStage } from "./StageContent/updateStage"
+import StageUpdate from "./StageUpdate"
 import { applyBoundsX, applyBoundsY } from "./util/bounds"
 
 const resizeStage = debounce(
@@ -200,7 +200,7 @@ const BoardStage: React.FC = memo(() => {
 
     return (
         <div className="wrap">
-            <UpdateStage stageRef={stageRef} />
+            <StageUpdate stageRef={stageRef} />
             <ReactReduxContext.Consumer>
                 {(value) => (
                     <Stage
