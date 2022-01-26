@@ -1,6 +1,6 @@
 import React from "react"
 import { Route, Routes as RouterRoutes, Navigate } from "react-router-dom"
-import View from "view"
+import View from "View"
 
 const Routes = (): JSX.Element => (
     <RouterRoutes>
