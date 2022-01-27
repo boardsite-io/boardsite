@@ -25,7 +25,6 @@ const ViewMenu = () => {
             <MenuItem
                 isMainMenu
                 text={<FormattedMessage id="Menu.View.GoTo" />}
-                icon={<ExpandableIcon />}
                 expandMenu={MainSubMenuState.GoTo}
             />
             <HorizontalRule />

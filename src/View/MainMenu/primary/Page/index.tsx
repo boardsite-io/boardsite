@@ -60,13 +60,11 @@ const PageMenu = () => {
             <MenuItem
                 isMainMenu
                 text={<FormattedMessage id="Menu.Page.Style" />}
-                icon={<ExpandableIcon />}
                 expandMenu={MainSubMenuState.PageStyle}
             />
             <MenuItem
                 isMainMenu
                 text={<FormattedMessage id="Menu.Page.Size" />}
-                icon={<ExpandableIcon />}
                 expandMenu={MainSubMenuState.PageSize}
             />
             <HorizontalRule />

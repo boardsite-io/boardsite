@@ -29,13 +29,11 @@ const GeneralMenu = () => {
             <MenuItem
                 isMainMenu
                 text={<FormattedMessage id="Menu.General.File" />}
-                icon={<ExpandableIcon />}
                 expandMenu={MainSubMenuState.File}
             />
             <MenuItem
                 isMainMenu
                 text={<FormattedMessage id="Menu.General.Edit" />}
-                icon={<ExpandableIcon />}
                 expandMenu={MainSubMenuState.Edit}
             />
             <HorizontalRule />
@@ -49,7 +47,6 @@ const GeneralMenu = () => {
             <MenuItem
                 isMainMenu
                 text={<FormattedMessage id="Menu.General.Settings" />}
-                icon={<ExpandableIcon />}
                 expandMenu={MainSubMenuState.Settings}
             />
             <MenuItem
