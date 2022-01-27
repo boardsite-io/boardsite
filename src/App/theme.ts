@@ -66,11 +66,24 @@ export const Theme = styled.div`
     input,
     button,
     select,
-    textarea {
+    textarea,
+    ul,
+    li {
         font-family: inherit;
         font-size: inherit;
         font-weight: inherit;
     }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: inherit;
+        font-weight: 600;
+    }
+
     font-family: "Lato", sans-serif;
     font-size: 1rem;
     font-weight: 900;

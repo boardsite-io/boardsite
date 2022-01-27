@@ -3,7 +3,6 @@ import {
     ShrinkIcon,
     ZoomInIcon,
     ZoomOutIcon,
-    ExpandableIcon,
     HorizontalRule,
 } from "components"
 import { FormattedMessage } from "language"

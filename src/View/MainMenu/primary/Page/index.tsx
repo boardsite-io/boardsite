@@ -1,5 +1,4 @@
 import {
-    ExpandableIcon,
     HorizontalRule,
     PageAboveIcon,
     PageBelowIcon,

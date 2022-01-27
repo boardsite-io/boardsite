@@ -10,6 +10,7 @@ import About from "./About"
 import SessionMenu from "./SessionMenu"
 import MainMenu from "./MainMenu"
 import Notification from "./Notification"
+import Shortcuts from "./Shortcuts"
 
 const View: React.FC = () => {
     useKeyboardShortcuts()
@@ -23,6 +24,7 @@ const View: React.FC = () => {
             <About />
             <MainMenu />
             <SessionMenu />
+            <Shortcuts />
             <Loading />
             <Notification />
         </ViewWrap>
