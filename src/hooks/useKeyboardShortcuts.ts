@@ -3,6 +3,7 @@ import store from "redux/store"
 import { handleSetTool, handleRedo, handleUndo } from "drawing/handlers"
 import { ToolType } from "drawing/stroke/index.types"
 import { useEffect } from "react"
+import { MainMenuState } from "redux/menu/menu"
 
 export const useKeyboardShortcuts = (): void => {
     useEffect(() => {
@@ -13,7 +14,19 @@ export const useKeyboardShortcuts = (): void => {
     }, [])
 }
 
+// Check if any menu is open
+const isInMenu = (): boolean => {
+    const { aboutOpen, mainMenuState, shortcutsOpen } = store.getState().menu
+
+    return aboutOpen || mainMenuState !== MainMenuState.Closed || shortcutsOpen
+}
+
 const keyListener = (e: KeyboardEvent): void => {
+    // Avoid triggering shortcuts while in menus
+    if (isInMenu()) {
+        return
+    }
+
     switch (e.key) {
         case "ArrowUp":
             store.dispatch(JUMP_TO_PREV_PAGE())
