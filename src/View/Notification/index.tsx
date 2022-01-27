@@ -1,4 +1,4 @@
-import { FormattedMessage, IntlMessageKeys } from "language"
+import { FormattedMessage, IntlMessageId } from "language"
 import React, { Fragment } from "react"
 import { useCustomSelector } from "hooks"
 import { HorizontalRule } from "components"
@@ -7,7 +7,7 @@ import { NOTIFICATION_TRANSITION } from "consts"
 import { nanoid } from "@reduxjs/toolkit"
 import { Message, NotificationWrap } from "./index.styled"
 
-let lastNonEmptyState: IntlMessageKeys[] = []
+let lastNonEmptyState: IntlMessageId[] = []
 
 const Notification: React.FC = () => {
     const notifications = useCustomSelector(

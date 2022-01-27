@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { IntlMessageKeys } from "language"
+import { IntlMessageId } from "language"
 
 type LoadingInfo = {
-    messageId: IntlMessageKeys
+    messageId: IntlMessageId
 }
 
 export interface LoadingState {

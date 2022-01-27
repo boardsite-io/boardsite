@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { IntlMessageKeys } from "language"
+import { IntlMessageId } from "language"
 
 export interface NotificationState {
-    notifications: IntlMessageKeys[]
+    notifications: IntlMessageId[]
 }
 
 const initState: NotificationState = {
@@ -13,7 +13,7 @@ const notificationSlice = createSlice({
     name: "notification",
     initialState: initState,
     reducers: {
-        ADD_NOTIFICATION: (state, action: PayloadAction<IntlMessageKeys>) => {
+        ADD_NOTIFICATION: (state, action: PayloadAction<IntlMessageId>) => {
             // Unshift to put latest notifications on top of the list
             state.notifications.unshift(action.payload)
         },

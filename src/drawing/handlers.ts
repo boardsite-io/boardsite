@@ -27,7 +27,7 @@ import {
     SetPageMeta,
 } from "redux/board/board.types"
 import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from "redux/notification"
-import { IntlMessageKeys } from "language"
+import { IntlMessageId } from "language"
 import { BoardPage } from "./page"
 
 const createPage = (): BoardPage =>
@@ -226,7 +226,7 @@ function getCurrentPage() {
     ]
 }
 
-export const handleNotification = (id: IntlMessageKeys) => {
+export const handleNotification = (id: IntlMessageId) => {
     store.dispatch(ADD_NOTIFICATION(id))
 
     setTimeout(() => {
