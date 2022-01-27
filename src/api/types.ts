@@ -1,6 +1,6 @@
 import { BoardPage } from "drawing/page"
 import { Stroke, StrokeUpdate } from "drawing/stroke/index.types"
-import { Page, PageMeta, PageRank } from "redux/board/index.types"
+import { Page, PageId, PageRank } from "redux/board/index.types"
 
 export interface Session {
     id?: string
@@ -29,7 +29,7 @@ export interface Session {
     addAttachment(file: File): Promise<string>
     getAttachment(attachId: string): Promise<Uint8Array>
     attachURL(attachId: string): URL
-    ping(): Promise<ResponsePageSync>
+    ping(): Promise<void>
 }
 
 export type User = {
@@ -69,15 +69,12 @@ export interface ResponsePostSession {
     sessionId: string
 }
 
-export interface ResponsePageSync {
+export interface PageSync {
     pageRank: PageRank
-    meta: Record<string, PageMeta>
-}
-
-export interface ResponsePageUpdate {
-    pageId: string[]
-    clear: boolean
-    meta: Record<string, PageMeta>
+    pages: Record<
+        PageId,
+        Pick<Page, "pageId" | "meta"> & { strokes?: Stroke[] }
+    >
 }
 
 export interface ResponsePostAttachment {

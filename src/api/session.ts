@@ -3,6 +3,8 @@ import {
     AttachType,
     Page,
     PageCollection,
+    PageId,
+    PageMeta,
 } from "redux/board/index.types"
 import { Stroke, StrokeUpdate, ToolType } from "drawing/stroke/index.types"
 import { Util } from "konva/lib/Util"
@@ -12,7 +14,7 @@ import {
     colors,
     uniqueNamesGenerator,
 } from "unique-names-generator"
-import store from "redux/store"
+import store, { ReduxStore } from "redux/store"
 import { assign } from "lodash"
 import { BoardPage } from "drawing/page"
 import { CREATE_SESSION } from "redux/session"
@@ -20,10 +22,8 @@ import {
     ADD_ATTACHMENTS,
     ADD_STROKES,
     CLEAR_ATTACHMENTS,
-    CLEAR_PAGES,
     DELETE_ALL_PAGES,
     ERASE_STROKES,
-    SET_PAGEMETA,
     SYNC_PAGES,
 } from "redux/board"
 import { newAttachment } from "drawing/attachment/utils"
@@ -32,8 +32,7 @@ import {
     Message,
     messages,
     MessageType,
-    ResponsePageSync,
-    ResponsePageUpdate,
+    PageSync,
     Session,
     StrokeDelete,
     User,
@@ -47,8 +46,10 @@ export class BoardSession implements Session {
     request: Request
     socket?: WebSocket
     users?: ConnectedUsers
+    reduxStore: ReduxStore
 
-    constructor(url?: string) {
+    constructor(url?: string, reduxStore?: ReduxStore) {
+        this.reduxStore = reduxStore ?? store
         this.apiURL = new URL(url ?? API_URL)
         this.request = new Request(this.apiURL.toString())
         this.user = {
@@ -78,34 +79,8 @@ export class BoardSession implements Session {
     async create(): Promise<string> {
         const { sessionId } = await this.request.postSession()
         this.setID(sessionId)
-        store.dispatch(DELETE_ALL_PAGES())
+        this.reduxStore.dispatch(DELETE_ALL_PAGES())
         return sessionId
-    }
-
-    async join(): Promise<void> {
-        if (!isConnected) {
-            throw new Error("no open websocket")
-        }
-        this.users = await this.request.getUsers()
-
-        // set the pages according to api
-        store.dispatch(CLEAR_ATTACHMENTS()) // clear documents which may be overwritten by session
-        store.dispatch(DELETE_ALL_PAGES())
-        const { pageRank, meta } = await this.request.getPages()
-        await BoardSession.syncPages({ pageRank, meta })
-
-        if (pageRank.length === 0) {
-            // create a page if there are none yet
-            await this.request.postPages([new BoardPage()], [0])
-        }
-
-        // fetch data from each page
-        Promise.all(
-            pageRank.map(async (pageId) => {
-                const strokes = await this.request.getStrokes(pageId)
-                store.dispatch(ADD_STROKES({ data: strokes }))
-            })
-        )
     }
 
     async createSocket(sessionId: string): Promise<void> {
@@ -126,6 +101,25 @@ export class BoardSession implements Session {
         })
     }
 
+    async join(): Promise<void> {
+        if (!isConnected) {
+            throw new Error("no open websocket")
+        }
+        this.users = await this.request.getUsers()
+
+        // set the pages according to api
+        this.reduxStore.dispatch(CLEAR_ATTACHMENTS()) // clear documents which may be overwritten by session
+        this.reduxStore.dispatch(DELETE_ALL_PAGES())
+
+        const sync = await this.request.getPagesSync()
+        await this.syncPages(sync)
+
+        if (this.reduxStore.getState().board.pageRank.length === 0) {
+            // create a page if there are none yet
+            await this.request.postPages([new BoardPage()], [0])
+        }
+    }
+
     isConnected(): boolean {
         return (
             this.id !== "" &&
@@ -137,8 +131,8 @@ export class BoardSession implements Session {
     disconnect(): void {
         this.socket?.close()
         this.users = {}
-        store.dispatch(CLEAR_ATTACHMENTS())
-        store.dispatch(DELETE_ALL_PAGES())
+        this.reduxStore.dispatch(CLEAR_ATTACHMENTS())
+        this.reduxStore.dispatch(DELETE_ALL_PAGES())
     }
 
     send(type: MessageType, content: unknown): void {
@@ -178,19 +172,28 @@ export class BoardSession implements Session {
         )
     }
 
-    async addPages(pages: BoardPage[], pageIndex: number[]): Promise<void> {
-        this.request.postPages(pages, pageIndex)
+    addPages(pages: BoardPage[], pageIndex: number[]): Promise<void> {
+        return this.request.postPages(pages, pageIndex)
     }
 
-    async deletePages(pageIds: string[]): Promise<void> {
-        this.request.deletePages(pageIds)
+    deletePages(pageIds: string[]): Promise<void> {
+        return this.request.deletePages(pageIds)
     }
 
-    async updatePages(
+    updatePages(
         pages: Pick<Page, "pageId" | "meta">[],
         clear = false
     ): Promise<void> {
-        this.request.putPages(pages, clear)
+        if (clear) {
+            return this.request.clearPages(pages.map((page) => page.pageId))
+        }
+
+        return this.request.updatePagesMeta(
+            pages.reduce<Record<PageId, PageMeta>>(
+                (pages, page) => ({ ...pages, [page.pageId]: page.meta }),
+                {}
+            )
+        )
     }
 
     async addAttachment(file: File): Promise<string> {
@@ -209,8 +212,8 @@ export class BoardSession implements Session {
         )
     }
 
-    ping(): Promise<ResponsePageSync> {
-        return this.request.getPages()
+    async ping(): Promise<void> {
+        await this.request.getPageRank()
     }
 
     userConnect(user: User): void {
@@ -227,17 +230,11 @@ export class BoardSession implements Session {
     receive(message: Message<unknown>): void {
         switch (message.type) {
             case messages.Stroke:
-                BoardSession.receiveStrokes(message.content as Stroke[])
+                this.receiveStrokes(message.content as Stroke[])
                 break
 
             case messages.PageSync:
-                BoardSession.syncPages(message.content as ResponsePageSync)
-                break
-
-            case messages.PageUpdate:
-                BoardSession.updatePageMeta(
-                    message.content as ResponsePageUpdate
-                )
+                this.syncPages(message.content as PageSync)
                 break
 
             case messages.UserConnected:
@@ -253,23 +250,20 @@ export class BoardSession implements Session {
         }
     }
 
-    static receiveStrokes(strokes: Stroke[]): void {
+    receiveStrokes(strokes: Stroke[]): void {
         const erasedStrokes = strokes.filter((s) => s.type === 0)
         if (erasedStrokes.length > 0) {
-            store.dispatch(ERASE_STROKES({ data: erasedStrokes }))
+            this.reduxStore.dispatch(ERASE_STROKES({ data: erasedStrokes }))
         }
 
         strokes = strokes.filter((s) => s.type !== 0)
         if (strokes.length > 0) {
-            store.dispatch(ADD_STROKES({ data: strokes }))
+            this.reduxStore.dispatch(ADD_STROKES({ data: strokes }))
         }
     }
 
-    static async syncPages({
-        pageRank,
-        meta,
-    }: ResponsePageSync): Promise<void> {
-        const { pageCollection } = store.getState().board
+    async syncPages({ pageRank, pages }: PageSync): Promise<void> {
+        const { pageCollection } = this.reduxStore.getState().board
         const newPageCollection: PageCollection = {}
         for (let i = 0; i < pageRank.length; i++) {
             const pid = pageRank[i]
@@ -278,31 +272,48 @@ export class BoardSession implements Session {
             } else {
                 newPageCollection[pid] = new BoardPage().setID(pid)
             }
-            if (meta[pid]) {
-                newPageCollection[pid].updateMeta(meta[pid])
+
+            // stroke update to sync
+            const strokes = pages[pid]?.strokes
+            if (strokes !== undefined) {
+                if (strokes.length === 0) {
+                    // page clear
+                    newPageCollection[pid].strokes = {}
+                } else {
+                    newPageCollection[pid].addStrokes(strokes)
+                }
             }
 
-            // if the background is based on an attachment load it
-            const { attachId } = meta[pid].background
-            if (attachId) {
-                await loadAttachment(AttachType.PDF, attachId)
+            // page meta update to sync
+            if (pages[pid]?.meta) {
+                newPageCollection[pid].updateMeta(pages[pid].meta)
+
+                // if the background is based on an attachment load it
+                const { attachId } = pages[pid].meta.background
+                if (attachId) {
+                    await this.loadAttachment(AttachType.PDF, attachId)
+                }
             }
         }
 
-        store.dispatch(
+        this.reduxStore.dispatch(
             SYNC_PAGES({ pageRank, pageCollection: newPageCollection })
         )
     }
 
-    static updatePageMeta({ pageId, meta, clear }: ResponsePageUpdate): void {
-        if (clear) {
-            store.dispatch(CLEAR_PAGES({ data: pageId }))
+    // loads an attachment into the cache
+    async loadAttachment(type: AttachType, id: AttachId): Promise<void> {
+        if (this.reduxStore.getState().board.attachments[id]) {
+            // already loaded
+            return
         }
-        pageId.forEach((pid) =>
-            store.dispatch(
-                SET_PAGEMETA({ data: [{ pageId: pid, meta: meta[pid] }] })
-            )
-        )
+        const blob = await currentSession().getAttachment(id)
+        const attachment = await newAttachment({
+            type,
+            id,
+            cachedBlob: blob,
+        }).render()
+        this.reduxStore.dispatch(ADD_ATTACHMENTS([attachment]))
     }
 
     static path(sessionURL: string): string {
@@ -327,22 +338,4 @@ export const currentSession = (): Session => {
 export const isConnected = (): boolean => {
     const { session } = store.getState().session
     return session !== undefined && session.isConnected()
-}
-
-// loads an attachment into the cache
-const loadAttachment = async (
-    type: AttachType,
-    id: AttachId
-): Promise<void> => {
-    if (store.getState().board.attachments[id]) {
-        // already loaded
-        return
-    }
-    const blob = await currentSession().getAttachment(id)
-    const attachment = await newAttachment({
-        type,
-        id,
-        cachedBlob: blob,
-    }).render()
-    store.dispatch(ADD_ATTACHMENTS([attachment]))
 }

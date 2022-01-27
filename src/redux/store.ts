@@ -37,5 +37,6 @@ const store = configureStore({
     } as AnyAction)
 })()
 
+export type ReduxStore = typeof store
 export type AppDispatch = typeof store.dispatch
 export default store

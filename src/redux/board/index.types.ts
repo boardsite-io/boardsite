@@ -100,6 +100,7 @@ export interface Page {
     setID: (pageId: PageId) => Page
     clear: () => void
     updateMeta: (meta: PageMeta) => Page
+    addStrokes: (strokes: Stroke[]) => Page
 }
 
 export type PageCollection = Record<string, Page>
