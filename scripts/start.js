@@ -127,11 +127,12 @@ checkBrowsers(paths.appPath, isInteractive)
                 )
             }
 
-            console.log(chalk.cyan("Starting the development server...\n"))
+            console.log(chalk.greenBright("Launching BoardSite.io 🚀\n"))
+
             openBrowser(urls.localUrlForBrowser)
         })
-        ;["SIGINT", "SIGTERM"].forEach(function (sig) {
-            process.on(sig, function () {
+        ;["SIGINT", "SIGTERM"].forEach((sig) => {
+            process.on(sig, () => {
                 devServer.close()
                 process.exit()
             })
@@ -139,7 +140,7 @@ checkBrowsers(paths.appPath, isInteractive)
 
         if (process.env.CI !== "true") {
             // Gracefully exit when stdin ends
-            process.stdin.on("end", function () {
+            process.stdin.on("end", () => {
                 devServer.close()
                 process.exit()
             })
