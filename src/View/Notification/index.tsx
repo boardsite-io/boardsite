@@ -31,7 +31,7 @@ const Notification: React.FC = () => {
                     return (
                         <Fragment key={id + nanoid()}>
                             {i > 0 && <HorizontalRule />}
-                            <Message key={id + nanoid()}>
+                            <Message>
                                 <FormattedMessage id={id} />
                             </Message>
                         </Fragment>
