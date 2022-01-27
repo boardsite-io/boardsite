@@ -14,13 +14,13 @@ import langEN from "./en.json"
 type FormatMessageArgs = Parameters<IntlFormatters["formatMessage"]>
 
 // Our new union type of all available message IDs.
-export type IntlMessageKeys = keyof typeof langEN
+export type IntlMessageId = keyof typeof langEN
 
 // Extend the original FormattedMessage props.
 type FormattedMessageProps = ReactIntlFormattedMessageProps<
     Record<string, ReactNode>
 > & {
-    id?: IntlMessageKeys
+    id?: IntlMessageId
 }
 
 export const FormattedMessage: React.FC<FormattedMessageProps> = ({
@@ -37,7 +37,7 @@ export const useIntl = (): object => {
     // Re-write the formatMessage function but with a strongly-typed id.
     const typedFormatMessage = (
         descriptor: FormatMessageArgs[0] & {
-            id?: IntlMessageKeys
+            id?: IntlMessageId
         },
         values?: FormatMessageArgs[1],
         options?: FormatMessageArgs[2]

@@ -1,7 +1,7 @@
 import { FormattedMessage } from "language"
 import { Popup, ToolTip, Position, ToolIcons, ToolButton } from "components"
 import React, { memo, useState } from "react"
-import { handleSetTool } from "drawing/handlers"
+import { handleNotification, handleSetTool } from "drawing/handlers"
 import { useCustomSelector } from "hooks"
 import { isDrawType } from "redux/drawing/helpers"
 import store from "redux/store"
@@ -23,8 +23,15 @@ const ActiveTool: React.FC = memo(() => {
     const ToolIcon = latestDrawType
         ? ToolIcons[latestDrawType]
         : ToolIcons[toolType]
-    const onClick = () =>
-        isDraw ? setOpen(true) : handleSetTool({ type: latestDrawType })
+
+    const onClick = () => {
+        if (isDraw) {
+            setOpen(true)
+        } else {
+            handleSetTool({ type: latestDrawType })
+            handleNotification("Tool.Active.Notification")
+        }
+    }
 
     return (
         <>

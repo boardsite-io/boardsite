@@ -9,10 +9,28 @@ export enum ScreenSize {
 }
 
 export const Theme = styled.div`
+    /* --- Color --- */
+    --cPrimary: #f5f5f5; // Menu backgrounds
+    --cSecondary: #121212; // Menu items
+    --cSelected: #d9d7f1; // Selected tool background
+    --cBackground: #bcaaa4; // Global background
+    --cWarning: red; // Warning text
+    --cDetails: #00796b; // Small details, borders, rails
+    --cDetails2: #37474f; // Small details, borders, rails
+    --cDialogBackground: #000000aa; // Dialog background
+    --cRule: #00000022; // Horizontal and vertical rule
+
+    svg:not(#transitory-icon) {
+        stroke: var(--cSecondary);
+        stroke-width: var(--icon-stroke-width);
+    }
+
     /* --- General --- */
     --border-radius: 0.5rem;
+    --box-shadow: 0 1px 6px #00000033, 0 1px 4px #00000033;
 
     /* --- Stacking Context --- */
+    --zIndexNotifications: 999;
     --zIndexToolTip: 99;
     --zIndexDrawer: 81;
     --zIndexDrawerBG: 80;
@@ -33,6 +51,7 @@ export const Theme = styled.div`
     --main-menu-button-gap: 0.5rem;
     --main-menu-button-padding: 0.4rem 0.6rem;
     --main-menu-button-margin: 0.1rem;
+    --main-menu-hover-filter: brightness(80%);
 
     --button-border-radius: 0.35rem;
     --button-hover-transform: scale(1.2, 1.2);
@@ -56,25 +75,7 @@ export const Theme = styled.div`
     font-size: 1rem;
     font-weight: 900;
 
-    /* --- Color --- */
-    --cPrimary: #f5f5f5; // Menu backgrounds
-    --cSecondary: #121212; // Menu items
-    --cSelected: #d9d7f1; // Selected tool background
-    --cBackground: #bcaaa4; // Global background
-    --cWarning: red; // Warning text
-    --cDetails: #00796b; // Small details, borders, rails
-    --cDetails2: #37474f; // Small details, borders, rails
-    --cDialogBackground: #000000aa; // Dialog background
-    --cRule: #00000022; // Horizontal and vertical rule
-
-    --main-menu-hover-filter: brightness(80%);
-    --box-shadow: 0 1px 6px #00000033, 0 1px 4px #00000033;
-
-    svg:not(#transitory-icon) {
-        stroke: var(--cSecondary);
-        stroke-width: var(--icon-stroke-width);
-    }
-
+    /* --- Style Picker --- */
     --style-picker-hue-width: 1.2rem;
     --style-picker-hue-height: 2rem;
     --style-picker-pointer-border: 2px solid var(--cPrimary);

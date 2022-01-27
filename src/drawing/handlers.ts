@@ -13,7 +13,7 @@ import {
     JUMP_TO_NEXT_PAGE,
 } from "redux/board/board"
 import { currentSession, isConnected } from "api/session"
-import { backgroundStyle } from "consts"
+import { backgroundStyle, NOTIFICATION_DURATION } from "consts"
 import store from "redux/store"
 import { SET_TOOL } from "redux/drawing/drawing"
 import {
@@ -26,6 +26,8 @@ import {
     ClearPages,
     SetPageMeta,
 } from "redux/board/board.types"
+import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from "redux/notification"
+import { IntlMessageId } from "language"
 import { BoardPage } from "./page"
 
 const createPage = (): BoardPage =>
@@ -222,4 +224,12 @@ function getCurrentPage() {
     return store.getState().board.pageCollection[
         store.getState().board.pageRank[store.getState().board.currentPageIndex]
     ]
+}
+
+export const handleNotification = (id: IntlMessageId) => {
+    store.dispatch(ADD_NOTIFICATION(id))
+
+    setTimeout(() => {
+        store.dispatch(REMOVE_NOTIFICATION())
+    }, NOTIFICATION_DURATION)
 }

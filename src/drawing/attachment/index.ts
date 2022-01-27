@@ -3,7 +3,7 @@ import { backgroundStyle, FILE_EXTENSION_WORKSPACE, PIXEL_RATIO } from "consts"
 import { handleDeleteAllPages } from "drawing/handlers"
 import { readFileAsUint8Array } from "drawing/io/helpers"
 import { BoardPage } from "drawing/page"
-import { IntlMessageKeys } from "language"
+import { IntlMessageId } from "language"
 import {
     ADD_ATTACHMENTS,
     ADD_PAGES,
@@ -18,7 +18,7 @@ import { PDFAttachment } from "./pdf"
 
 export const handleProcessFileImport = async (
     file: File
-): Promise<IntlMessageKeys | undefined> => {
+): Promise<IntlMessageId | undefined> => {
     if (file.type === "application/pdf") {
         await importPdfFile(file)
         return undefined

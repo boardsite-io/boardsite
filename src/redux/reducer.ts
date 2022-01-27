@@ -4,6 +4,7 @@ import drawingReducer from "./drawing/drawing"
 import infoReducer from "./loading/loading"
 import menuReducer from "./menu/menu"
 import sessionReducer from "./session/session"
+import notificationReducer from "./notification"
 
 const rootReducer = {
     board: boardReducer,
@@ -11,6 +12,7 @@ const rootReducer = {
     info: infoReducer,
     menu: menuReducer,
     session: sessionReducer,
+    notification: notificationReducer,
 }
 
 export type ReducerState = keyof typeof rootReducer
