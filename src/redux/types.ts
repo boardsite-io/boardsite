@@ -3,6 +3,7 @@ import { DrawingState } from "./drawing/state"
 import { WebControlState } from "./session/session.types"
 import { LoadingState } from "./loading/loading"
 import { MenuState } from "./menu/menu"
+import { NotificationState } from "./notification"
 
 export type RootState = {
     board: BoardState
@@ -10,6 +11,7 @@ export type RootState = {
     session: WebControlState
     info: LoadingState
     menu: MenuState
+    notification: NotificationState
 }
 
 export type FileHeader = {

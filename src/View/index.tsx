@@ -9,6 +9,7 @@ import Loading from "./Loading"
 import About from "./About"
 import SessionMenu from "./SessionMenu"
 import MainMenu from "./MainMenu"
+import Notification from "./Notification"
 
 const View: React.FC = () => {
     useKeyboardShortcuts()
@@ -23,6 +24,7 @@ const View: React.FC = () => {
             <MainMenu />
             <SessionMenu />
             <Loading />
+            <Notification />
         </ViewWrap>
     )
 }
