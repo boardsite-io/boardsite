@@ -1,3 +1,4 @@
+import { ExpandableIcon } from "components"
 import React from "react"
 import { MainSubMenuState, SET_MAIN_SUB_MENU } from "redux/menu/menu"
 import store from "redux/store"
@@ -5,16 +6,16 @@ import { ItemWrap, ItemButton } from "./index.styled"
 
 interface MenuItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     text: JSX.Element
-    isMainMenu?: boolean
     icon?: JSX.Element
+    isMainMenu?: boolean
     expandMenu?: MainSubMenuState
     warning?: boolean
 }
 
 const MenuItem: React.FC<MenuItemProps> = ({
-    isMainMenu,
     text,
     icon,
+    isMainMenu,
     expandMenu,
     warning = false,
     ...restProps
@@ -32,7 +33,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
                     onMouseEnter={expandSubMenu}
                 >
                     {text}
-                    {icon}
+                    <ExpandableIcon />
                 </ItemButton>
             </ItemWrap>
         )

@@ -1,12 +1,18 @@
 import { isConnected } from "api/session"
-import { HorizontalRule, ExpandableIcon } from "components"
+import { HorizontalRule } from "components"
 import { FormattedMessage } from "language"
 import React from "react"
 import { BsInfoCircle, BsPeople } from "react-icons/bs"
-import { CLOSE_MAIN_MENU, MainSubMenuState, OPEN_ABOUT } from "redux/menu/menu"
+import {
+    CLOSE_MAIN_MENU,
+    MainSubMenuState,
+    OPEN_ABOUT,
+    OPEN_SHORTCUTS,
+} from "redux/menu/menu"
 import { SET_SESSION_DIALOG } from "redux/session/session"
 import { DialogState } from "redux/session/session.types"
 import store from "redux/store"
+import { isMobile } from "react-device-detect"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 
@@ -22,6 +28,10 @@ const onClickAbout = () => {
     store.dispatch(OPEN_ABOUT())
     store.dispatch(CLOSE_MAIN_MENU())
 }
+const onClickShortcuts = () => {
+    store.dispatch(OPEN_SHORTCUTS())
+    store.dispatch(CLOSE_MAIN_MENU())
+}
 
 const GeneralMenu = () => {
     return (
@@ -29,13 +39,11 @@ const GeneralMenu = () => {
             <MenuItem
                 isMainMenu
                 text={<FormattedMessage id="Menu.General.File" />}
-                icon={<ExpandableIcon />}
                 expandMenu={MainSubMenuState.File}
             />
             <MenuItem
                 isMainMenu
                 text={<FormattedMessage id="Menu.General.Edit" />}
-                icon={<ExpandableIcon />}
                 expandMenu={MainSubMenuState.Edit}
             />
             <HorizontalRule />
@@ -49,7 +57,6 @@ const GeneralMenu = () => {
             <MenuItem
                 isMainMenu
                 text={<FormattedMessage id="Menu.General.Settings" />}
-                icon={<ExpandableIcon />}
                 expandMenu={MainSubMenuState.Settings}
             />
             <MenuItem
@@ -58,6 +65,13 @@ const GeneralMenu = () => {
                 icon={<BsInfoCircle id="transitory-icon" />}
                 onClick={onClickAbout}
             />
+            {!isMobile && (
+                <MenuItem
+                    isMainMenu
+                    text={<FormattedMessage id="Menu.General.Shortcuts" />}
+                    onClick={onClickShortcuts}
+                />
+            )}
         </MainMenuWrap>
     )
 }

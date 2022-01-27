@@ -71,7 +71,7 @@ export const DrawerBackground = styled.div<DrawerBackgroundProps>`
               `};
 `
 
-export const DrawerTitle = styled.h3`
+export const DrawerTitle = styled.h1`
     display: flex;
     align-items: center;
     gap: 1rem;

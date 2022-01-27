@@ -3,7 +3,6 @@ import {
     ShrinkIcon,
     ZoomInIcon,
     ZoomOutIcon,
-    ExpandableIcon,
     HorizontalRule,
 } from "components"
 import { FormattedMessage } from "language"
@@ -25,7 +24,6 @@ const ViewMenu = () => {
             <MenuItem
                 isMainMenu
                 text={<FormattedMessage id="Menu.View.GoTo" />}
-                icon={<ExpandableIcon />}
                 expandMenu={MainSubMenuState.GoTo}
             />
             <HorizontalRule />

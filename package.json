@@ -59,6 +59,7 @@
         "react": "^17.0.1",
         "react-app-polyfill": "^3.0.0",
         "react-colorful": "^5.2.0",
+        "react-device-detect": "^2.1.2",
         "react-dom": "^17.0.1",
         "react-icons": "^4.2.0",
         "react-intl": "^5.24.1",

@@ -6,6 +6,7 @@ interface DrawerProps {
     open: boolean
     onClose: MouseEventHandler<HTMLDivElement>
     children: ReactNode
+    className?: string
 }
 
 const Drawer: React.FC<DrawerProps> = ({
@@ -13,10 +14,11 @@ const Drawer: React.FC<DrawerProps> = ({
     open,
     onClose,
     children,
+    className,
 }) => (
     <>
         <DrawerBackground open={open} onClick={onClose} />
-        <DrawerBox open={open} position={position}>
+        <DrawerBox className={className} open={open} position={position}>
             {children}
         </DrawerBox>
     </>

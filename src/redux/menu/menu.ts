@@ -21,11 +21,13 @@ export interface MenuState {
     mainMenuState: MainMenuState
     mainSubMenuState: MainSubMenuState
     aboutOpen: boolean
+    shortcutsOpen: boolean
 }
 const initState: MenuState = {
     mainMenuState: MainMenuState.Closed,
     mainSubMenuState: MainSubMenuState.Closed,
     aboutOpen: false,
+    shortcutsOpen: false,
 }
 const loadingSlice = createSlice({
     name: "menu",
@@ -47,6 +49,12 @@ const loadingSlice = createSlice({
         CLOSE_ABOUT: (state) => {
             state.aboutOpen = false
         },
+        OPEN_SHORTCUTS: (state) => {
+            state.shortcutsOpen = true
+        },
+        CLOSE_SHORTCUTS: (state) => {
+            state.shortcutsOpen = false
+        },
     },
 })
 
@@ -56,6 +64,8 @@ export const {
     CLOSE_MAIN_MENU,
     OPEN_ABOUT,
     CLOSE_ABOUT,
+    OPEN_SHORTCUTS,
+    CLOSE_SHORTCUTS,
 } = loadingSlice.actions
 
 export default loadingSlice.reducer
