@@ -22,12 +22,36 @@ const Shortcuts = () => {
             </DrawerTitle>
             <ShortcutList>
                 <Shortcut
+                    titleId="Shortcuts.File.New"
+                    keysId="Shortcuts.File.New.Keys"
+                />
+                <Shortcut
+                    titleId="Shortcuts.File.Open"
+                    keysId="Shortcuts.File.Open.Keys"
+                />
+                <Shortcut
+                    titleId="Shortcuts.File.Save"
+                    keysId="Shortcuts.File.Save.Keys"
+                />
+                <Shortcut
                     titleId="Shortcuts.Undo"
                     keysId="Shortcuts.Undo.Keys"
                 />
                 <Shortcut
                     titleId="Shortcuts.Redo"
                     keysId="Shortcuts.Redo.Keys"
+                />
+                <Shortcut
+                    titleId="Shortcuts.Page.AddOver"
+                    keysId="Shortcuts.Page.AddOver.Keys"
+                />
+                <Shortcut
+                    titleId="Shortcuts.Page.AddUnder"
+                    keysId="Shortcuts.Page.AddUnder.Keys"
+                />
+                <Shortcut
+                    titleId="Shortcuts.Page.DeleteCurrent"
+                    keysId="Shortcuts.Page.DeleteCurrent.Keys"
                 />
                 <Shortcut
                     titleId="Shortcuts.Tool.Active"
@@ -60,6 +84,14 @@ const Shortcuts = () => {
                 <Shortcut
                     titleId="Shortcuts.Tool.Circle"
                     keysId="Shortcuts.Tool.Circle.Keys"
+                />
+                <Shortcut
+                    titleId="Shortcuts.FirstPage"
+                    keysId="Shortcuts.FirstPage.Keys"
+                />
+                <Shortcut
+                    titleId="Shortcuts.LastPage"
+                    keysId="Shortcuts.LastPage.Keys"
                 />
                 <Shortcut
                     titleId="Shortcuts.PreviousPage"
