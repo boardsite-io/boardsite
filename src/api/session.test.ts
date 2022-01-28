@@ -57,8 +57,16 @@ const mockPageMeta: PageMeta = {
 
 function createMockSession(): BoardSession {
     mockStore.getState.mockReset()
-    mockStore.getState.mockReturnValue(store.getState())
     mockStore.dispatch.mockReset()
+    // default state
+    const pageRank = ["pageId"]
+    const page = new BoardPage().setID("pageId")
+    const pageCollection: PageCollection = { [page.pageId]: page }
+    mockStore.getState.mockReturnValue({
+        ...store.getState(),
+        board: { ...store.getState().board, pageCollection, pageRank },
+    })
+
     const session = new BoardSession(
         "http://localhost",
         mockStore as unknown as ReduxStore
@@ -77,9 +85,9 @@ function createMockSocket<T>(fn: (data: Message<T[]>) => void): WebSocket {
     } as WebSocket
 }
 
-beforeEach(() => requestMock.mockClear())
-
 describe("session", () => {
+    beforeEach(() => requestMock.mockClear())
+
     it("creates a new session", async () => {
         requestMock.prototype.postSession.mockResolvedValue({
             sessionId: mockSessionId,
@@ -97,6 +105,23 @@ describe("session", () => {
             [newUser.id ?? ""]: newUser,
         })
         requestMock.prototype.getPagesSync.mockResolvedValue({
+            pageRank: [],
+            pages: {},
+        })
+        const session = createMockSession()
+
+        await session.join(false)
+
+        expect(session.users).toEqual({
+            [mockUser.id ?? ""]: mockUser,
+            [newUser.id ?? ""]: newUser,
+        })
+        expect(requestMock.prototype.getUsers).toHaveBeenCalledTimes(1)
+        expect(requestMock.prototype.getPagesSync).toHaveBeenCalledTimes(1)
+    })
+
+    it("joins a session and synchronizes with online content", async () => {
+        const sync: PageSync = {
             pageRank: ["pageId1", "pageId2"],
             pages: {
                 pageId1: {
@@ -110,19 +135,30 @@ describe("session", () => {
                     strokes: [],
                 },
             },
-        })
+        }
+        requestMock.prototype.getPagesSync.mockResolvedValue(sync)
         const session = createMockSession()
-        session.socket = createMockSocket(() => undefined)
 
-        await session.join()
+        await session.join(false)
 
-        expect(session.id).toEqual(mockSessionId)
-        expect(session.users).toEqual({
-            [mockUser.id ?? ""]: mockUser,
-            [newUser.id ?? ""]: newUser,
+        expect(mockStore.dispatch).toHaveBeenCalledWith({
+            payload: {
+                pageRank: sync.pageRank,
+                pageCollection: {
+                    pageId1: {
+                        pageId: "pageId1",
+                        meta: mockPageMeta,
+                        strokes: {},
+                    },
+                    pageId2: {
+                        pageId: "pageId2",
+                        meta: mockPageMeta,
+                        strokes: {},
+                    },
+                },
+            },
+            type: "board/SET_PAGERANK",
         })
-        expect(requestMock.prototype.getUsers).toHaveBeenCalledTimes(1)
-        expect(requestMock.prototype.getPagesSync).toHaveBeenCalledTimes(1)
     })
 
     it("is connected if socket is open and sessionId is set", () => {

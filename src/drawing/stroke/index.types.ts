@@ -59,11 +59,13 @@ export interface StrokeUpdate {
     scaleY?: number
 }
 
-export interface Stroke extends BaseStroke {
+export interface SerializedStroke extends BaseStroke {
     id: string
     scaleX: number
     scaleY: number
+}
 
+export interface Stroke extends SerializedStroke {
     serialize: () => Stroke
     serializeUpdate(): StrokeUpdate
     update: (strokeUpdate: Stroke | StrokeUpdate) => Stroke

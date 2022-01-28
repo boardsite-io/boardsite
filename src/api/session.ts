@@ -33,6 +33,7 @@ import {
     messages,
     MessageType,
     PageSync,
+    SerializedPage,
     Session,
     StrokeDelete,
     User,
@@ -79,7 +80,6 @@ export class BoardSession implements Session {
     async create(): Promise<string> {
         const { sessionId } = await this.request.postSession()
         this.setID(sessionId)
-        this.reduxStore.dispatch(DELETE_ALL_PAGES())
         return sessionId
     }
 
@@ -101,7 +101,7 @@ export class BoardSession implements Session {
         })
     }
 
-    async join(): Promise<void> {
+    async join(copyOffline?: boolean): Promise<void> {
         if (!isConnected) {
             throw new Error("no open websocket")
         }
@@ -109,10 +109,17 @@ export class BoardSession implements Session {
 
         // set the pages according to api
         this.reduxStore.dispatch(CLEAR_ATTACHMENTS()) // clear documents which may be overwritten by session
-        this.reduxStore.dispatch(DELETE_ALL_PAGES())
 
-        const sync = await this.request.getPagesSync()
-        await this.syncPages(sync)
+        if (copyOffline) {
+            // create an online session from the current offline
+            const { pageRank, pageCollection } =
+                this.reduxStore.getState().board
+            await this.synchronize(pageRank, pageCollection)
+        } else {
+            // synchronize with the online content
+            const sync = await this.request.getPagesSync()
+            await this.syncPages(sync)
+        }
 
         if (this.reduxStore.getState().board.pageRank.length === 0) {
             // create a page if there are none yet
@@ -133,6 +140,34 @@ export class BoardSession implements Session {
         this.users = {}
         this.reduxStore.dispatch(CLEAR_ATTACHMENTS())
         this.reduxStore.dispatch(DELETE_ALL_PAGES())
+    }
+
+    synchronize(
+        pageRank: PageId[],
+        pageCollection: PageCollection
+    ): Promise<void> {
+        const pages = Object.values(pageCollection).reduce<
+            Record<PageId, SerializedPage>
+        >(
+            (pages, page) => ({
+                ...pages,
+                [page.pageId]: {
+                    pageId: page.pageId,
+                    meta: page.meta,
+                    strokes: Object.values(page.strokes).map((s) =>
+                        s.serialize()
+                    ),
+                },
+            }),
+            {}
+        )
+
+        const sync: PageSync = {
+            pageRank,
+            pages,
+        }
+
+        return this.request.postPagesSync(sync)
     }
 
     send(type: MessageType, content: unknown): void {

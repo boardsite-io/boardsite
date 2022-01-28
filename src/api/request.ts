@@ -152,7 +152,7 @@ export class Request {
         return this.jsonSend("GET", `${this.sessionId}/pages/sync`, true)
     }
 
-    postPagesSync(sync: PageSync): Promise<PageSync> {
+    postPagesSync(sync: PageSync): Promise<void> {
         return this.jsonSend("POST", `${this.sessionId}/pages/sync`, true, sync)
     }
 

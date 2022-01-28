@@ -1,6 +1,16 @@
 import { BoardPage } from "drawing/page"
-import { Stroke, StrokeUpdate } from "drawing/stroke/index.types"
-import { Page, PageId, PageRank } from "redux/board/index.types"
+import {
+    SerializedStroke,
+    Stroke,
+    StrokeUpdate,
+} from "drawing/stroke/index.types"
+import {
+    Page,
+    PageCollection,
+    PageId,
+    PageMeta,
+    PageRank,
+} from "redux/board/index.types"
 
 export interface Session {
     id?: string
@@ -13,10 +23,14 @@ export interface Session {
     setAPIURL(url: URL): void
     setID(sessionId: string): Session
     create(): Promise<string>
-    join(): Promise<void>
+    join(copyOffline?: boolean): Promise<void>
     createSocket(sessionId: string): Promise<void>
     isConnected(): boolean
     disconnect(): void
+    synchronize(
+        pageRank: PageId[],
+        pageCollection: PageCollection
+    ): Promise<void>
     send(type: MessageType, content: unknown): void
     sendStrokes(strokes: Stroke[] | StrokeUpdate[]): void
     eraseStrokes(strokes: { id: string; pageId: string }[]): void
@@ -69,12 +83,15 @@ export interface ResponsePostSession {
     sessionId: string
 }
 
+export type SerializedPage = {
+    pageId: PageId
+    meta: PageMeta
+    strokes?: SerializedStroke[]
+}
+
 export interface PageSync {
     pageRank: PageRank
-    pages: Record<
-        PageId,
-        Pick<Page, "pageId" | "meta"> & { strokes?: Stroke[] }
-    >
+    pages: Record<PageId, SerializedPage>
 }
 
 export interface ResponsePostAttachment {

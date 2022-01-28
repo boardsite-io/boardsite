@@ -2,7 +2,7 @@ import { nanoid } from "@reduxjs/toolkit"
 import { backgroundStyle, pageSize } from "consts"
 import { BoardStroke } from "drawing/stroke"
 import { Page, PageMeta } from "redux/board/index.types"
-import { Stroke, StrokeMap } from "../stroke/index.types"
+import { SerializedStroke, Stroke, StrokeMap } from "../stroke/index.types"
 
 export class BoardPage implements Page {
     constructor(page?: Page) {
@@ -40,7 +40,7 @@ export class BoardPage implements Page {
         return this
     }
 
-    addStrokes(strokes: Stroke[]): BoardPage {
+    addStrokes(strokes: (Stroke | SerializedStroke)[]): BoardPage {
         strokes.forEach((stroke) => {
             this.strokes[stroke.id] = new BoardStroke(stroke)
         })
