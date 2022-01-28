@@ -134,7 +134,7 @@
     "SessionMenu.InitialSelection.Continue": "Continue Previous Session",
     "SessionMenu.JoinOnly.Title": "Collaborative Session 👋🏻",
     "SessionMenu.JoinOnly.JoinButton": "Join Session",
-    "SessionMenu.JoinOnly.UnableToJoin": "Unable to join session!",
+    "SessionMenu.JoinOnly.UnableToJoin.Notification": "Unable to join session!",
     "SessionMenu.ManageOnline.Title": "Session Information",
     "SessionMenu.ManageOnline.LeaveButton": "Leave current session",
     "Loading.ExportingPdf": "Exporting as PDF...",
