@@ -20,7 +20,9 @@ export interface BoardState {
     transformPagePosition?: Point
     renderTrigger?: number
 
-    triggerManualUpdate?(): void
+    clearTransform?(): void
+    triggerStageRender?(): void
+    triggerStrokesRender?(): void
 
     serialize?(): SerializedBoardState
     deserialize?(parsed: SerializedBoardState): Promise<BoardState>
