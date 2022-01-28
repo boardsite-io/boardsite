@@ -119,11 +119,7 @@ export type PageBackgroundStyle = "blank" | "checkered" | "ruled" | "doc"
 
 /* ------- Reducer Action Types ------- */
 export type LoadBoardState = BoardState
-export type SyncAllPages = {
-    pageRank: PageRank
-    pageCollection: PageCollection
-}
-export type SetPageRank = {
+export type SyncPages = {
     pageRank: PageRank
     pageCollection: PageCollection
 }

@@ -38,10 +38,9 @@ import {
     PrevPage,
     SetPageBackground,
     SetPageMeta,
-    SetPageRank,
+    SyncPages,
     SetPageSize,
     SetStageAttrs,
-    SyncAllPages,
 } from "./board.types"
 import { clearTransform } from "./helpers"
 
@@ -53,14 +52,7 @@ const boardSlice = createSlice({
             assign(state, pick(action.payload, keys(state)))
         },
 
-        SYNC_ALL_PAGES: (state, action: PayloadAction<SyncAllPages>) => {
-            const { pageRank, pageCollection } = action.payload
-            state.pageRank = pageRank
-            state.pageCollection = pageCollection
-            state.triggerManualUpdate?.()
-        },
-
-        SET_PAGERANK: (state, action: PayloadAction<SetPageRank>) => {
+        SYNC_PAGES: (state, action: PayloadAction<SyncPages>) => {
             const { pageRank, pageCollection } = action.payload
             state.pageRank = pageRank
             state.pageCollection = pageCollection
@@ -484,8 +476,7 @@ const boardSlice = createSlice({
 
 export const {
     LOAD_BOARD_STATE,
-    SYNC_ALL_PAGES,
-    SET_PAGERANK,
+    SYNC_PAGES,
     ADD_PAGES,
     SET_PAGEMETA,
     CLEAR_PAGES,
