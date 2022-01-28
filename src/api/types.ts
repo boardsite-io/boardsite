@@ -43,7 +43,6 @@ export interface Session {
     addAttachment(file: File): Promise<string>
     getAttachment(attachId: string): Promise<Uint8Array>
     attachURL(attachId: string): URL
-    ping(): Promise<void>
 }
 
 export type User = {

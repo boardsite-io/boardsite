@@ -157,7 +157,7 @@ describe("session", () => {
                     },
                 },
             },
-            type: "board/SET_PAGERANK",
+            type: "board/SYNC_PAGES",
         })
     })
 
@@ -243,7 +243,7 @@ describe("session", () => {
                 pageRank: wantPageRank,
                 pageCollection: wantPageCollection,
             },
-            type: "board/SET_PAGERANK",
+            type: "board/SYNC_PAGES",
         })
     })
 
@@ -278,7 +278,7 @@ describe("session", () => {
                 pageRank: wantPageRank,
                 pageCollection: wantPageCollection,
             },
-            type: "board/SET_PAGERANK",
+            type: "board/SYNC_PAGES",
         })
     })
 
@@ -315,7 +315,7 @@ describe("session", () => {
                 pageRank: wantPageRank,
                 pageCollection: wantPageCollection,
             },
-            type: "board/SET_PAGERANK",
+            type: "board/SYNC_PAGES",
         })
     })
 })

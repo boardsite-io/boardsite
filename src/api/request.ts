@@ -9,12 +9,14 @@ import {
 
 // api
 export const API_URL = process.env.REACT_APP_B_API_URL as string
-export const HeaderUserId = "Boardsite-User-Id"
 
-const PageUpdateQueryKey = "update"
-const PageUpdateQueryParamClear = "clear"
-const PageUpdateQueryParamDelete = "delete"
-const PageUpdateQueryParamMeta = "meta"
+const HEADER_USER_ID = "Boardsite-User-Id"
+
+enum PageQueryParam {
+    clear = "clear",
+    delete = "delete",
+    meta = "meta",
+}
 
 export class Request {
     baseURL: string
@@ -63,7 +65,7 @@ export class Request {
             "Content-Type": "application/json",
         }
         if (useUserValidation) {
-            headers[HeaderUserId] = this.userId ?? ""
+            headers[HEADER_USER_ID] = this.userId ?? ""
         }
         return headers
     }
@@ -124,7 +126,7 @@ export class Request {
     updatePagesMeta(meta: Record<PageId, PageMeta>): Promise<void> {
         return this.jsonSend(
             "PUT",
-            `${this.sessionId}/pages?${PageUpdateQueryKey}=${PageUpdateQueryParamMeta}`,
+            `${this.sessionId}/pages?update=${PageQueryParam.meta}`,
             true,
             { meta }
         )
@@ -133,7 +135,7 @@ export class Request {
     clearPages(pageIds: string[]): Promise<void> {
         return this.jsonSend(
             "PUT",
-            `${this.sessionId}/pages?${PageUpdateQueryKey}=${PageUpdateQueryParamClear}`,
+            `${this.sessionId}/pages?update=${PageQueryParam.clear}`,
             true,
             { pageId: pageIds }
         )
@@ -142,7 +144,7 @@ export class Request {
     deletePages(pageIds: string[]): Promise<void> {
         return this.jsonSend(
             "PUT",
-            `${this.sessionId}/pages?${PageUpdateQueryKey}=${PageUpdateQueryParamDelete}`,
+            `${this.sessionId}/pages?update=${PageQueryParam.delete}`,
             true,
             { pageId: pageIds }
         )

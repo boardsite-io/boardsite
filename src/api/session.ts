@@ -273,10 +273,6 @@ export class BoardSession implements Session {
         )
     }
 
-    async ping(): Promise<void> {
-        await this.request.getPageRank()
-    }
-
     userConnect(user: User): void {
         this.users = {
             ...this.users,
