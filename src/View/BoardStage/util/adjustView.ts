@@ -82,7 +82,7 @@ export const initialView = (state: BoardState): void => {
         x: getCenterX(),
         y: DEFAULT_STAGE_Y,
     }
-    state.stage.renderTrigger = !state.stage.renderTrigger
+    state.triggerStageRender?.()
 }
 
 interface GetScaledYProps {
@@ -110,7 +110,7 @@ export const resetView = (state: BoardState): void => {
             newScale,
         }),
     }
-    state.stage.renderTrigger = !state.stage.renderTrigger
+    state.triggerStageRender?.()
 }
 
 export const centerView = (state: BoardState): void => {

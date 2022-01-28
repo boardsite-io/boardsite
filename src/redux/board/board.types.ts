@@ -20,7 +20,9 @@ export interface BoardState {
     transformPagePosition?: Point
     renderTrigger?: number
 
-    triggerManualUpdate?(): void
+    clearTransform?(): void
+    triggerStageRender?(): void
+    triggerStrokesRender?(): void
 
     serialize?(): SerializedBoardState
     deserialize?(parsed: SerializedBoardState): Promise<BoardState>
@@ -119,11 +121,7 @@ export type PageBackgroundStyle = "blank" | "checkered" | "ruled" | "doc"
 
 /* ------- Reducer Action Types ------- */
 export type LoadBoardState = BoardState
-export type SyncAllPages = {
-    pageRank: PageRank
-    pageCollection: PageCollection
-}
-export type SetPageRank = {
+export type SyncPages = {
     pageRank: PageRank
     pageCollection: PageCollection
 }

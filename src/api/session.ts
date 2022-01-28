@@ -24,7 +24,7 @@ import {
     DELETE_ALL_PAGES,
     ERASE_STROKES,
     SET_PAGEMETA,
-    SET_PAGERANK,
+    SYNC_PAGES,
 } from "redux/board/board"
 import { newAttachment } from "drawing/attachment/utils"
 import {
@@ -290,7 +290,7 @@ export class BoardSession implements Session {
         }
 
         store.dispatch(
-            SET_PAGERANK({ pageRank, pageCollection: newPageCollection })
+            SYNC_PAGES({ pageRank, pageCollection: newPageCollection })
         )
     }
 

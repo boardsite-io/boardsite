@@ -38,12 +38,10 @@ import {
     PrevPage,
     SetPageBackground,
     SetPageMeta,
-    SetPageRank,
+    SyncPages,
     SetPageSize,
     SetStageAttrs,
-    SyncAllPages,
 } from "./board.types"
-import { clearTransform } from "./helpers"
 
 const boardSlice = createSlice({
     name: "board",
@@ -53,18 +51,18 @@ const boardSlice = createSlice({
             assign(state, pick(action.payload, keys(state)))
         },
 
-        SYNC_ALL_PAGES: (state, action: PayloadAction<SyncAllPages>) => {
+        SYNC_PAGES: (state, action: PayloadAction<SyncPages>) => {
             const { pageRank, pageCollection } = action.payload
             state.pageRank = pageRank
             state.pageCollection = pageCollection
-            state.triggerManualUpdate?.()
-        },
 
-        SET_PAGERANK: (state, action: PayloadAction<SetPageRank>) => {
-            const { pageRank, pageCollection } = action.payload
-            state.pageRank = pageRank
-            state.pageCollection = pageCollection
-            state.triggerManualUpdate?.()
+            // Adjust view if necessary
+            if (state.currentPageIndex > pageRank.length - 1) {
+                state.currentPageIndex = pageRank.length - 1
+                initialView(state)
+            }
+
+            state.triggerStrokesRender?.()
         },
 
         SET_PAGEMETA: (state, action: PayloadAction<SetPageMeta>) => {
@@ -105,7 +103,7 @@ const boardSlice = createSlice({
                 isNew: true,
             })
 
-            state.triggerManualUpdate?.()
+            state.triggerStrokesRender?.()
         },
 
         SET_PAGE_BACKGROUND: (
@@ -118,7 +116,7 @@ const boardSlice = createSlice({
 
         SET_PAGE_SIZE: (state, action: PayloadAction<SetPageSize>) => {
             state.pageMeta.size = action.payload
-            state.triggerManualUpdate?.()
+            state.triggerStrokesRender?.()
         },
 
         ADD_PAGES: (state, action: PayloadAction<AddPages>) => {
@@ -149,7 +147,7 @@ const boardSlice = createSlice({
                 isNew: true,
             })
 
-            state.triggerManualUpdate?.()
+            state.triggerStrokesRender?.()
             initialView(state)
         },
 
@@ -189,7 +187,7 @@ const boardSlice = createSlice({
                 isNew: true,
             })
 
-            state.triggerManualUpdate?.()
+            state.triggerStrokesRender?.()
         },
 
         DELETE_PAGES: (state, action: PayloadAction<DeletePages>) => {
@@ -235,9 +233,8 @@ const boardSlice = createSlice({
             }
 
             // Make sure that transform is cleared when page is deleted
-            clearTransform(state)
-
-            state.triggerManualUpdate?.()
+            state.clearTransform?.()
+            state.triggerStrokesRender?.()
         },
 
         // Reset everything except page meta settings
@@ -252,7 +249,7 @@ const boardSlice = createSlice({
         },
 
         CLEAR_TRANSFORM: (state) => {
-            clearTransform(state)
+            state.clearTransform?.()
         },
 
         // sets the currently selected strokes
@@ -308,7 +305,7 @@ const boardSlice = createSlice({
                 isNew: true,
             })
 
-            state.triggerManualUpdate?.()
+            state.triggerStrokesRender?.()
         },
 
         // Erase strokes from collection
@@ -339,7 +336,7 @@ const boardSlice = createSlice({
                 isNew: true,
             })
 
-            state.triggerManualUpdate?.()
+            state.triggerStrokesRender?.()
         },
 
         ADD_ATTACHMENTS: (state, action: PayloadAction<AddAttachments>) => {
@@ -365,12 +362,12 @@ const boardSlice = createSlice({
 
         UNDO_ACTION: (state) => {
             undoAction(state as BoardState)
-            state.triggerManualUpdate?.()
+            state.triggerStrokesRender?.()
         },
 
         REDO_ACTION: (state) => {
             redoAction(state as BoardState)
-            state.triggerManualUpdate?.()
+            state.triggerStrokesRender?.()
         },
 
         NEXT_PAGE: (state, action: PayloadAction<NextPage>) => {
@@ -382,9 +379,8 @@ const boardSlice = createSlice({
                     pick(action.payload.attrs, keys(state.stage.attrs))
                 )
 
-                clearTransform(state)
-
-                state.stage.renderTrigger = !state.stage.renderTrigger
+                state.clearTransform?.()
+                state.triggerStageRender?.()
             }
         },
 
@@ -397,9 +393,8 @@ const boardSlice = createSlice({
                     pick(action.payload.attrs, keys(state.stage.attrs))
                 )
 
-                clearTransform(state)
-
-                state.stage.renderTrigger = !state.stage.renderTrigger
+                state.clearTransform?.()
+                state.triggerStageRender?.()
             }
         },
 
@@ -436,7 +431,7 @@ const boardSlice = createSlice({
             if (targetIndex <= state.pageRank.length - 1 && targetIndex >= 0) {
                 state.currentPageIndex = targetIndex
             }
-            state.stage.renderTrigger = !state.stage.renderTrigger
+            state.triggerStageRender?.()
         },
 
         TOGGLE_SHOULD_CENTER: (state) => {
@@ -458,34 +453,33 @@ const boardSlice = createSlice({
             state.stage.attrs.width = window.innerWidth
             state.stage.attrs.height = window.innerHeight
             centerView(state)
-            state.stage.renderTrigger = !state.stage.renderTrigger
+            state.triggerStageRender?.()
         },
 
         FIT_WIDTH_TO_PAGE: (state) => {
             fitToPage(state)
-            state.stage.renderTrigger = !state.stage.renderTrigger
+            state.triggerStageRender?.()
         },
 
         ZOOM_IN_CENTER: (state) => {
             zoomCenter(state, true)
-            state.stage.renderTrigger = !state.stage.renderTrigger
+            state.triggerStageRender?.()
         },
 
         ZOOM_OUT_CENTER: (state) => {
             zoomCenter(state, false)
-            state.stage.renderTrigger = !state.stage.renderTrigger
+            state.triggerStageRender?.()
         },
 
         TRIGGER_BOARD_RERENDER: (state) => {
-            state.triggerManualUpdate?.()
+            state.triggerStrokesRender?.()
         },
     },
 })
 
 export const {
     LOAD_BOARD_STATE,
-    SYNC_ALL_PAGES,
-    SET_PAGERANK,
+    SYNC_PAGES,
     ADD_PAGES,
     SET_PAGEMETA,
     CLEAR_PAGES,

@@ -46,7 +46,16 @@ export const newState = (state?: BoardState): BoardState => ({
     transformPagePosition: undefined,
     renderTrigger: 0,
 
-    triggerManualUpdate(): void {
+    clearTransform(): void {
+        this.transformStrokes = []
+        this.strokeUpdates = []
+    },
+
+    triggerStageRender(): void {
+        this.stage.renderTrigger = !this.stage.renderTrigger
+    },
+
+    triggerStrokesRender(): void {
         this.renderTrigger = (this.renderTrigger ?? 0) + 1
     },
 
@@ -66,7 +75,9 @@ export const newState = (state?: BoardState): BoardState => ({
             })
         })
 
-        delete stateCopy.triggerManualUpdate
+        delete stateCopy.clearTransform
+        delete stateCopy.triggerStageRender
+        delete stateCopy.triggerStrokesRender
         delete stateCopy.serialize
         delete stateCopy.deserialize
 
