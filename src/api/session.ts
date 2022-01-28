@@ -107,15 +107,14 @@ export class BoardSession implements Session {
         }
         this.users = await this.request.getUsers()
 
-        // set the pages according to api
-        this.reduxStore.dispatch(CLEAR_ATTACHMENTS()) // clear documents which may be overwritten by session
-
         if (copyOffline) {
             // create an online session from the current offline
             const { pageRank, pageCollection } =
                 this.reduxStore.getState().board
             await this.synchronize(pageRank, pageCollection)
         } else {
+            // clear documents which may be overwritten by session
+            this.reduxStore.dispatch(CLEAR_ATTACHMENTS())
             // synchronize with the online content
             const sync = await this.request.getPagesSync()
             await this.syncPages(sync)
@@ -142,7 +141,7 @@ export class BoardSession implements Session {
         this.reduxStore.dispatch(DELETE_ALL_PAGES())
     }
 
-    synchronize(
+    async synchronize(
         pageRank: PageId[],
         pageCollection: PageCollection
     ): Promise<void> {
@@ -162,11 +161,38 @@ export class BoardSession implements Session {
             {}
         )
 
+        // attachments that need to be uploaded
+        // defines a mapping from old (local) attachId
+        // to new (shared) attachId
+        const mapping = new Map<string, string>()
+        Object.values(pageCollection)
+            .map((page) => page.meta.background.attachId)
+            .filter((attachId) => attachId)
+            .forEach((attachId) => {
+                mapping.set(attachId as string, "")
+            })
+
+        await Promise.all(
+            new Array(...mapping.keys()).map(async (id) => {
+                const { cachedBlob } = store.getState().board.attachments[id]
+                const file = new File([cachedBlob], id)
+                const { attachId } = await this.request.postAttachment(file)
+                mapping.set(id, attachId)
+            })
+        )
+
+        Object.values(pages).forEach((page) => {
+            const { attachId } = page.meta.background
+            page.meta.background.attachId = mapping.get(attachId ?? "")
+        })
+
+        this.reduxStore.dispatch(DELETE_ALL_PAGES())
+        this.reduxStore.dispatch(CLEAR_ATTACHMENTS())
+
         const sync: PageSync = {
             pageRank,
             pages,
         }
-
         return this.request.postPagesSync(sync)
     }
 
