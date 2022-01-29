@@ -30,9 +30,9 @@ export const useKeyboardShortcuts = (): void => {
 
 // Check if any menu is open
 const isInMenu = (): boolean => {
-    const { aboutOpen, mainMenuState, shortcutsOpen } = store.getState().menu
+    const { mainMenuState, shortcutsOpen } = store.getState().menu
 
-    return aboutOpen || mainMenuState !== MainMenuState.Closed || shortcutsOpen
+    return mainMenuState !== MainMenuState.Closed || shortcutsOpen
 }
 
 const keyListener = (e: KeyboardEvent): void => {

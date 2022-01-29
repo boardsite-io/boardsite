@@ -18,6 +18,5 @@ export enum MainSubMenuState {
 export interface MenuState {
     mainMenuState: MainMenuState
     mainSubMenuState: MainSubMenuState
-    aboutOpen: boolean
     shortcutsOpen: boolean
 }
