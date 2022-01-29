@@ -5,7 +5,7 @@ export const FavToolsStyled = styled.div`
     left: 50%;
     transform: translateX(-50%);
     bottom: 0;
-    margin-bottom: var(--toolbar-margin);
+    margin-bottom: var(--toolbar-margin-favorite);
     display: flex;
     flex-direction: row;
     justify-content: space-between;

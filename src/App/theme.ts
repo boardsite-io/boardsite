@@ -45,6 +45,7 @@ export const Theme = styled.div`
     --toolbar-gap: 0;
     --toolbar-padding: 0;
     --toolbar-margin: 0.2rem;
+    --toolbar-margin-favorite: 1rem;
     --toolbar-box-shadow: 0px 0px 2px 0px #00000088;
     --toolbar-border-radius: 0.5rem;
 
