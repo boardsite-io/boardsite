@@ -1,16 +1,22 @@
-import { isConnected } from "api/session"
-import { HorizontalRule } from "components"
-import { FormattedMessage } from "language"
 import React from "react"
-import { BsInfoCircle, BsPeople } from "react-icons/bs"
-import { CLOSE_MAIN_MENU, OPEN_ABOUT, OPEN_SHORTCUTS } from "redux/menu"
+import { FormattedMessage } from "language"
+import { HorizontalRule } from "components"
+import { isConnected } from "api/session"
+import { BsPeople } from "react-icons/bs"
+import { CLOSE_MAIN_MENU, OPEN_SHORTCUTS } from "redux/menu"
 import { MainSubMenuState } from "redux/menu/index.types"
 import { SET_SESSION_DIALOG } from "redux/session"
 import { DialogState } from "redux/session/index.types"
 import store from "redux/store"
+import { FaGithub } from "react-icons/fa"
 import { isMobile } from "react-device-detect"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
+
+export const openInNewTab = (url: string): void => {
+    const newWindow = window.open(url, "_blank", "noopener,noreferrer")
+    if (newWindow) newWindow.opener = null
+}
 
 const onClickOnlineSession = () => {
     if (isConnected()) {
@@ -20,9 +26,8 @@ const onClickOnlineSession = () => {
     }
     store.dispatch(CLOSE_MAIN_MENU())
 }
-const onClickAbout = () => {
-    store.dispatch(OPEN_ABOUT())
-    store.dispatch(CLOSE_MAIN_MENU())
+const onClickGithub = () => {
+    openInNewTab("https://github.com/boardsite-io/boardsite")
 }
 const onClickShortcuts = () => {
     store.dispatch(OPEN_SHORTCUTS())
@@ -57,9 +62,9 @@ const GeneralMenu = () => {
             />
             <MenuItem
                 isMainMenu
-                text={<FormattedMessage id="Menu.General.About" />}
-                icon={<BsInfoCircle id="transitory-icon" />}
-                onClick={onClickAbout}
+                text={<FormattedMessage id="Menu.General.Github" />}
+                icon={<FaGithub id="transitory-icon" />}
+                onClick={onClickGithub}
             />
             {!isMobile && (
                 <MenuItem

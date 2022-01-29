@@ -4,7 +4,6 @@ import { MainMenuState, MainSubMenuState, MenuState } from "./index.types"
 const initState: MenuState = {
     mainMenuState: MainMenuState.Closed,
     mainSubMenuState: MainSubMenuState.Closed,
-    aboutOpen: false,
     shortcutsOpen: false,
 }
 const loadingSlice = createSlice({
@@ -21,12 +20,6 @@ const loadingSlice = createSlice({
         SET_MAIN_SUB_MENU: (state, action: PayloadAction<MainSubMenuState>) => {
             state.mainSubMenuState = action.payload
         },
-        OPEN_ABOUT: (state) => {
-            state.aboutOpen = true
-        },
-        CLOSE_ABOUT: (state) => {
-            state.aboutOpen = false
-        },
         OPEN_SHORTCUTS: (state) => {
             state.shortcutsOpen = true
         },
@@ -40,8 +33,6 @@ export const {
     SET_MAIN_MENU,
     SET_MAIN_SUB_MENU,
     CLOSE_MAIN_MENU,
-    OPEN_ABOUT,
-    CLOSE_ABOUT,
     OPEN_SHORTCUTS,
     CLOSE_SHORTCUTS,
 } = loadingSlice.actions
