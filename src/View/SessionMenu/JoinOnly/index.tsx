@@ -3,9 +3,9 @@ import React from "react"
 import store from "redux/store"
 import { Button, DialogContent, DialogTitle, UserSelection } from "components"
 import { useNavigate, useParams } from "react-router-dom"
-import { SET_SESSION_DIALOG } from "redux/session/session"
+import { SET_SESSION_DIALOG } from "redux/session"
 import { BoardSession, currentSession } from "api/session"
-import { DialogState } from "redux/session/session.types"
+import { DialogState } from "redux/session/index.types"
 import { handleNotification } from "drawing/handlers"
 
 const JoinOnly: React.FC = () => {

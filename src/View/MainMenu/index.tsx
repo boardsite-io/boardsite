@@ -2,11 +2,7 @@ import React, { memo } from "react"
 import store from "redux/store"
 import { useCustomSelector } from "hooks"
 import { CSSTransition } from "react-transition-group"
-import {
-    CLOSE_MAIN_MENU,
-    MainMenuState,
-    MainSubMenuState,
-} from "redux/menu/menu"
+import { CLOSE_MAIN_MENU, MainMenuState, MainSubMenuState } from "redux/menu"
 import { Popup } from "components"
 import { MainMenuDropdown } from "./index.styled"
 import FileMenu from "./secondary/File"

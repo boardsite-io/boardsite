@@ -8,9 +8,9 @@ import {
     MainSubMenuState,
     OPEN_ABOUT,
     OPEN_SHORTCUTS,
-} from "redux/menu/menu"
-import { SET_SESSION_DIALOG } from "redux/session/session"
-import { DialogState } from "redux/session/session.types"
+} from "redux/menu"
+import { SET_SESSION_DIALOG } from "redux/session"
+import { DialogState } from "redux/session/index.types"
 import store from "redux/store"
 import { isMobile } from "react-device-detect"
 import { MainMenuWrap } from "../../index.styled"

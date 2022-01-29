@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestHeaders, Method } from "axios"
 import { Stroke } from "drawing/stroke/index.types"
-import { Page } from "redux/board/board.types"
+import { Page } from "redux/board/index.types"
 import {
     ResponsePageSync,
     ResponsePostSession,

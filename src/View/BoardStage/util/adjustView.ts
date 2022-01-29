@@ -6,7 +6,7 @@ import {
     ZOOM_SCALE_MAX,
     ZOOM_SCALE_MIN,
 } from "consts"
-import { BoardState, StageAttrs } from "redux/board/board.types"
+import { BoardState, StageAttrs } from "redux/board/index.types"
 import { getCenterX, getCenterY, getCurrentPageWidth } from "./helpers"
 import { applyBoundsX, applyBoundsY } from "./bounds"
 

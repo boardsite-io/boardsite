@@ -15,7 +15,7 @@ import {
 } from "konva/lib/shapes/Transformer"
 import { Group as GroupType } from "konva/lib/Group"
 import store from "redux/store"
-import { TransformStrokes } from "redux/board/board.types"
+import { TransformStrokes } from "redux/board/index.types"
 import { cloneDeep } from "lodash"
 import {
     handleAddStrokes,

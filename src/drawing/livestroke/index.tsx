@@ -6,8 +6,8 @@ import {
     ERASER_WIDTH,
 } from "consts"
 import { handleAddStrokes, handleDeleteStrokes } from "drawing/handlers"
-import { MOVE_SHAPES_TO_DRAG_LAYER } from "redux/board/board"
-import { CLEAR_ERASED_STROKES, SET_ERASED_STROKES } from "redux/drawing/drawing"
+import { MOVE_SHAPES_TO_DRAG_LAYER } from "redux/board"
+import { CLEAR_ERASED_STROKES, SET_ERASED_STROKES } from "redux/drawing"
 import store from "redux/store"
 import { perfectDrawing, simplifyRDP } from "../stroke/simplify"
 import {

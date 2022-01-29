@@ -4,7 +4,7 @@ import {
     DialogState,
     SetSessionDialog,
     WebControlState,
-} from "./session.types"
+} from "./index.types"
 
 const initState: WebControlState = {
     dialogState: DialogState.InitialSelectionFirstLoad,

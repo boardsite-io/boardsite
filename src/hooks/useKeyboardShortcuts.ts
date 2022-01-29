@@ -3,7 +3,7 @@ import {
     JUMP_TO_LAST_PAGE,
     JUMP_TO_NEXT_PAGE,
     JUMP_TO_PREV_PAGE,
-} from "redux/board/board"
+} from "redux/board"
 import store from "redux/store"
 import {
     handleSetTool,
@@ -16,7 +16,7 @@ import {
 } from "drawing/handlers"
 import { ToolType } from "drawing/stroke/index.types"
 import { useEffect } from "react"
-import { MainMenuState } from "redux/menu/menu"
+import { MainMenuState } from "redux/menu"
 import { handleExportWorkspace, handleImportWorkspace } from "drawing/io"
 
 export const useKeyboardShortcuts = (): void => {

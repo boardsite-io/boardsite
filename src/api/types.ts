@@ -1,6 +1,6 @@
 import { BoardPage } from "drawing/page"
 import { Stroke, StrokeUpdate } from "drawing/stroke/index.types"
-import { Page, PageMeta, PageRank } from "redux/board/board.types"
+import { Page, PageMeta, PageRank } from "redux/board/index.types"
 
 export interface Session {
     id?: string

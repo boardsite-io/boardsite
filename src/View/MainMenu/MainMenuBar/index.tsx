@@ -13,7 +13,7 @@ import {
     MainMenuState,
     SET_MAIN_SUB_MENU,
     MainSubMenuState,
-} from "redux/menu/menu"
+} from "redux/menu"
 import { useCustomSelector } from "hooks"
 import { MainMenuBarWrap } from "./index.styled"
 import ViewButton from "./ViewButton"

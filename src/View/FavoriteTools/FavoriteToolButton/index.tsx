@@ -10,10 +10,7 @@ import {
     ToolTip,
 } from "components"
 import React, { useState } from "react"
-import {
-    REPLACE_FAVORITE_TOOL,
-    REMOVE_FAVORITE_TOOL,
-} from "redux/drawing/drawing"
+import { REPLACE_FAVORITE_TOOL, REMOVE_FAVORITE_TOOL } from "redux/drawing"
 import store from "redux/store"
 import { handleSetTool } from "drawing/handlers"
 import { FavToolOptions, FavToolWrapper } from "./index.styled"

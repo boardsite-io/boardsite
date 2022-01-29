@@ -11,7 +11,7 @@ import { BoardStroke } from "drawing/stroke"
 import { BoardPage } from "drawing/page"
 import { pick, keys, assign, cloneDeep } from "lodash"
 import { newAttachment } from "drawing/attachment/utils"
-import { BoardState, SerializedBoardState } from "./board.types"
+import { BoardState, SerializedBoardState } from "./index.types"
 
 // version of the board state reducer to allow backward compatibility for stored data
 //

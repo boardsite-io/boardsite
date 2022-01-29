@@ -1,6 +1,6 @@
 import { DEFAULT_PAGE_GAP } from "consts"
-import { NEXT_PAGE, PREV_PAGE } from "redux/board/board"
-import { BoardState, StageAttrs } from "redux/board/board.types"
+import { NEXT_PAGE, PREV_PAGE } from "redux/board"
+import { BoardState, StageAttrs } from "redux/board/index.types"
 import store from "redux/store"
 import { getViewCenterY } from "./helpers"
 

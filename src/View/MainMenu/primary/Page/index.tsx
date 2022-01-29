@@ -15,7 +15,7 @@ import {
 } from "drawing/handlers"
 import { FormattedMessage } from "language"
 import React from "react"
-import { CLOSE_MAIN_MENU, MainSubMenuState } from "redux/menu/menu"
+import { CLOSE_MAIN_MENU, MainSubMenuState } from "redux/menu"
 import store from "redux/store"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"

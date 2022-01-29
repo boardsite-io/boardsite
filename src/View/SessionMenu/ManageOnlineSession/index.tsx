@@ -4,8 +4,8 @@ import store from "redux/store"
 import { currentSession } from "api/session"
 import { Button, DialogContent, DialogTitle } from "components"
 import { useNavigate } from "react-router-dom"
-import { SET_SESSION_DIALOG } from "redux/session/session"
-import { DialogState } from "redux/session/session.types"
+import { SET_SESSION_DIALOG } from "redux/session"
+import { DialogState } from "redux/session/index.types"
 import { UserAlias, UserColor, UserInfo, UserList } from "./index.styled"
 
 const ManageOnlineSession: React.FC = () => {

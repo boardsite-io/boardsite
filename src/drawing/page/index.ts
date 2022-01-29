@@ -1,6 +1,6 @@
 import { nanoid } from "@reduxjs/toolkit"
 import { backgroundStyle, pageSize } from "consts"
-import { Page, PageMeta } from "redux/board/board.types"
+import { Page, PageMeta } from "redux/board/index.types"
 import { StrokeMap } from "../stroke/index.types"
 
 export class BoardPage implements Page {

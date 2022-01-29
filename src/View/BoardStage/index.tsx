@@ -8,13 +8,13 @@ import {
     ZOOM_IN_WHEEL_SCALE,
     ZOOM_OUT_WHEEL_SCALE,
 } from "consts"
-import { ON_WINDOW_RESIZE, SET_STAGE_ATTRS } from "redux/board/board"
+import { ON_WINDOW_RESIZE, SET_STAGE_ATTRS } from "redux/board"
 import store from "redux/store"
 import { useCustomSelector } from "hooks"
 import { debounce } from "lodash"
 import { ToolType } from "drawing/stroke/index.types"
 import { KonvaEventObject } from "konva/lib/Node"
-import { StageAttrs } from "redux/board/board.types"
+import { StageAttrs } from "redux/board/index.types"
 import { Vector2d } from "konva/lib/types"
 import { zoomTo } from "./util/adjustView"
 import { multiTouchEnd, multiTouchMove } from "./util/multiTouch"

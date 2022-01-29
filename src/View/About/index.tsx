@@ -8,7 +8,7 @@ import {
 } from "components"
 import React, { memo } from "react"
 import { useCustomSelector } from "hooks"
-import { CLOSE_ABOUT } from "redux/menu/menu"
+import { CLOSE_ABOUT } from "redux/menu"
 import store from "redux/store"
 
 const strong = (chunks: string) => <strong>{chunks}</strong>

@@ -41,7 +41,7 @@ import {
     SyncPages,
     SetPageSize,
     SetStageAttrs,
-} from "./board.types"
+} from "./index.types"
 
 const boardSlice = createSlice({
     name: "board",

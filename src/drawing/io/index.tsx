@@ -1,6 +1,6 @@
 import store from "redux/store"
-import { END_LOADING, START_LOADING } from "redux/loading/loading"
-import { CLOSE_MAIN_MENU } from "redux/menu/menu"
+import { END_LOADING, START_LOADING } from "redux/loading"
+import { CLOSE_MAIN_MENU } from "redux/menu"
 import {
     FILE_DESCRIPTION_PDF,
     FILE_DESCRIPTION_WORKSPACE,

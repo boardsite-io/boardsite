@@ -1,5 +1,5 @@
 import { pageSize } from "consts"
-import { BoardState, StageAttrs } from "redux/board/board.types"
+import { BoardState, StageAttrs } from "redux/board/index.types"
 
 export const getViewCenterY = (attrs: StageAttrs): number =>
     (attrs.height / 2 - attrs.y) / attrs.scaleY
