@@ -3,12 +3,8 @@ import { HorizontalRule } from "components"
 import { FormattedMessage } from "language"
 import React from "react"
 import { BsInfoCircle, BsPeople } from "react-icons/bs"
-import {
-    CLOSE_MAIN_MENU,
-    MainSubMenuState,
-    OPEN_ABOUT,
-    OPEN_SHORTCUTS,
-} from "redux/menu"
+import { CLOSE_MAIN_MENU, OPEN_ABOUT, OPEN_SHORTCUTS } from "redux/menu"
+import { MainSubMenuState } from "redux/menu/index.types"
 import { SET_SESSION_DIALOG } from "redux/session"
 import { DialogState } from "redux/session/index.types"
 import store from "redux/store"

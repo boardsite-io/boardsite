@@ -8,12 +8,8 @@ import {
     ToolTip,
     VerticalRule,
 } from "components"
-import {
-    SET_MAIN_MENU,
-    MainMenuState,
-    SET_MAIN_SUB_MENU,
-    MainSubMenuState,
-} from "redux/menu"
+import { SET_MAIN_MENU, SET_MAIN_SUB_MENU } from "redux/menu"
+import { MainMenuState, MainSubMenuState } from "redux/menu/index.types"
 import { useCustomSelector } from "hooks"
 import { MainMenuBarWrap } from "./index.styled"
 import ViewButton from "./ViewButton"

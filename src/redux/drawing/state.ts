@@ -6,26 +6,13 @@ import {
     DEFAULT_TOOL,
     DEFAULT_WIDTH,
 } from "consts"
-import { StrokeMap, Tool } from "drawing/stroke/index.types"
 import { pick, keys, assign, cloneDeep } from "lodash"
+import { DrawingState, SerializedDrawingState } from "./index.types"
 
 // version of the board state reducer to allow backward compatibility for stored data
 //
 // [1.0] - 2021-10-22 - Added versioning
 export const drawingVersion = "1.0"
-
-export interface DrawingState {
-    isDraggable: boolean
-    directDraw: boolean
-    tool: Tool
-    favoriteTools: Tool[]
-    erasedStrokes: StrokeMap
-
-    serialize?(): SerializedDrawingState
-    deserialize?(parsed: SerializedDrawingState): Promise<DrawingState>
-}
-
-export type SerializedDrawingState = DrawingState & { version?: string }
 
 export const newState = (state?: DrawingState): DrawingState => ({
     isDraggable: DEFAULT_ISDRAGGABLE,

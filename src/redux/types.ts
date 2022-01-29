@@ -1,9 +1,9 @@
 import { BoardState } from "./board/index.types"
-import { DrawingState } from "./drawing/state"
 import { WebControlState } from "./session/index.types"
-import { LoadingState } from "./loading"
-import { MenuState } from "./menu"
-import { NotificationState } from "./notification"
+import { LoadingState } from "./loading/index.types"
+import { DrawingState } from "./drawing/index.types"
+import { NotificationState } from "./notification/index.types"
+import { MenuState } from "./menu/index.types"
 
 export type RootState = {
     board: BoardState
