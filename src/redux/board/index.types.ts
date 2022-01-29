@@ -147,7 +147,5 @@ export type EraseStrokes = BoardAction<Stroke[], void[]>
 
 export type AddAttachments = Attachment[]
 export type DeleteAttachments = AttachId[]
-export type NextPage = { attrs: StageAttrs }
-export type PrevPage = { attrs: StageAttrs }
 export type JumpToPageWithIndex = number
 export type SetStageAttrs = StageAttrs

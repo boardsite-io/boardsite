@@ -15,3 +15,20 @@ export const getCurrentPageWidth = (state: BoardState): number => {
 
 export const getCenterX = (): number => window.innerWidth / 2
 export const getCenterY = (): number => window.innerHeight / 2
+
+export const getPageHeight = (
+    state: BoardState,
+    indexOffset: number
+): number | undefined => {
+    const targetPageId = state.pageRank[state.currentPageIndex + indexOffset]
+
+    return state.pageCollection[targetPageId]?.meta?.size.height
+}
+
+export const onFirstPage = (state: BoardState): boolean => {
+    return state.currentPageIndex === 0
+}
+
+export const onLastPage = (state: BoardState): boolean => {
+    return state.currentPageIndex === state.pageRank.length - 1
+}
