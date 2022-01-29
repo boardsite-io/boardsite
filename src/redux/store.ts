@@ -2,7 +2,7 @@ import { configureStore, Middleware, AnyAction } from "@reduxjs/toolkit"
 import { loadLocalStorage, saveIndexedDB, saveLocalStore } from "./localstorage"
 import rootReducer from "./reducer"
 import { isConnectedState } from "./session/helpers"
-import { DialogState } from "./session/session.types"
+import { DialogState } from "./session/index.types"
 import { RootState } from "./types"
 
 export const localStoreMiddleware: Middleware<unknown, RootState> =

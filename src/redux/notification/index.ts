@@ -1,9 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IntlMessageId } from "language"
-
-export interface NotificationState {
-    notifications: IntlMessageId[]
-}
+import { NotificationState } from "./index.types"
 
 const initState: NotificationState = {
     notifications: [],

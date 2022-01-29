@@ -11,11 +11,11 @@ import {
     REDO_ACTION,
     CLEAR_TRANSFORM,
     JUMP_TO_NEXT_PAGE,
-} from "redux/board/board"
+} from "redux/board"
 import { currentSession, isConnected } from "api/session"
 import { backgroundStyle, NOTIFICATION_DURATION } from "consts"
 import store from "redux/store"
-import { SET_TOOL } from "redux/drawing/drawing"
+import { SET_TOOL } from "redux/drawing"
 import {
     PageMeta,
     DeletePages,
@@ -25,7 +25,7 @@ import {
     PageId,
     ClearPages,
     SetPageMeta,
-} from "redux/board/board.types"
+} from "redux/board/index.types"
 import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from "redux/notification"
 import { IntlMessageId } from "language"
 import { BoardPage } from "./page"

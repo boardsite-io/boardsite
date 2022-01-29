@@ -1,28 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { MainMenuState, MainSubMenuState, MenuState } from "./index.types"
 
-export enum MainMenuState {
-    Closed,
-    General,
-    View,
-    Page,
-}
-
-export enum MainSubMenuState {
-    Closed,
-    File,
-    Edit,
-    PageStyle,
-    PageSize,
-    GoTo,
-    Settings,
-}
-
-export interface MenuState {
-    mainMenuState: MainMenuState
-    mainSubMenuState: MainSubMenuState
-    aboutOpen: boolean
-    shortcutsOpen: boolean
-}
 const initState: MenuState = {
     mainMenuState: MainMenuState.Closed,
     mainSubMenuState: MainSubMenuState.Closed,

@@ -1,5 +1,5 @@
 import { Tool, ToolType } from "drawing/stroke/index.types"
-import { PageBackgroundStyle } from "redux/board/board.types"
+import { PageBackgroundStyle } from "redux/board/index.types"
 
 /**
  * Returns true if in development mode

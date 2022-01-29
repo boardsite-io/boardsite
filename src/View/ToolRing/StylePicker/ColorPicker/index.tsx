@@ -1,6 +1,6 @@
 import React, { memo } from "react"
 import { useCustomSelector } from "hooks"
-import { SET_COLOR } from "redux/drawing/drawing"
+import { SET_COLOR } from "redux/drawing"
 import store from "redux/store"
 import { CustomColorPicker } from "./index.styled"
 

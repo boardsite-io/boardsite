@@ -6,7 +6,7 @@ import {
     PageId,
     AddPageData,
     Page,
-} from "./board.types"
+} from "./index.types"
 
 export function undoAction(state: BoardState): void {
     const action = state.undoStack?.pop()

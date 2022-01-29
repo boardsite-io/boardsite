@@ -1,6 +1,7 @@
 import { ExpandableIcon } from "components"
 import React from "react"
-import { MainSubMenuState, SET_MAIN_SUB_MENU } from "redux/menu/menu"
+import { SET_MAIN_SUB_MENU } from "redux/menu"
+import { MainSubMenuState } from "redux/menu/index.types"
 import store from "redux/store"
 import { ItemWrap, ItemButton } from "./index.styled"
 

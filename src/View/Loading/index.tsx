@@ -2,7 +2,7 @@ import { FormattedMessage } from "language"
 import React from "react"
 import store from "redux/store"
 import { useCustomSelector } from "hooks"
-import { END_LOADING } from "redux/loading/loading"
+import { END_LOADING } from "redux/loading"
 import {
     Cover,
     Frame,

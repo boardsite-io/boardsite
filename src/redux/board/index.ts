@@ -6,7 +6,7 @@ import {
     initialView,
     resetView,
     zoomCenter,
-} from "View/BoardStage/util/adjustView"
+} from "drawing/stage"
 import { Stroke } from "drawing/stroke/index.types"
 import {
     addAction,
@@ -33,15 +33,13 @@ import {
     JumpToPageWithIndex,
     LoadBoardState,
     MoveShapesToDragLayer,
-    NextPage,
     Page,
-    PrevPage,
     SetPageBackground,
     SetPageMeta,
     SyncPages,
     SetPageSize,
     SetStageAttrs,
-} from "./board.types"
+} from "./index.types"
 
 const boardSlice = createSlice({
     name: "board",
@@ -370,32 +368,14 @@ const boardSlice = createSlice({
             state.triggerStrokesRender?.()
         },
 
-        NEXT_PAGE: (state, action: PayloadAction<NextPage>) => {
-            if (state.currentPageIndex < state.pageRank.length - 1) {
-                state.currentPageIndex += 1
-
-                assign(
-                    state.stage.attrs,
-                    pick(action.payload.attrs, keys(state.stage.attrs))
-                )
-
-                state.clearTransform?.()
-                state.triggerStageRender?.()
-            }
+        DECREMENT_PAGE_INDEX: (state) => {
+            state.currentPageIndex -= 1
+            state.clearTransform?.()
         },
 
-        PREV_PAGE: (state, action: PayloadAction<PrevPage>) => {
-            if (state.currentPageIndex > 0) {
-                state.currentPageIndex -= 1
-
-                assign(
-                    state.stage.attrs,
-                    pick(action.payload.attrs, keys(state.stage.attrs))
-                )
-
-                state.clearTransform?.()
-                state.triggerStageRender?.()
-            }
+        INCREMENT_PAGE_INDEX: (state) => {
+            state.currentPageIndex += 1
+            state.clearTransform?.()
         },
 
         JUMP_TO_NEXT_PAGE: (state) => {
@@ -497,8 +477,8 @@ export const {
     CLEAR_TRANSFORM,
     SET_PAGE_BACKGROUND,
     SET_PAGE_SIZE,
-    PREV_PAGE,
-    NEXT_PAGE,
+    DECREMENT_PAGE_INDEX,
+    INCREMENT_PAGE_INDEX,
     JUMP_TO_PREV_PAGE,
     JUMP_TO_NEXT_PAGE,
     JUMP_TO_FIRST_PAGE,

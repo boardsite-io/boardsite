@@ -3,7 +3,7 @@ import {
     AttachType,
     Page,
     PageCollection,
-} from "redux/board/board.types"
+} from "redux/board/index.types"
 import { Stroke, StrokeUpdate, ToolType } from "drawing/stroke/index.types"
 import { Util } from "konva/lib/Util"
 import {
@@ -15,7 +15,7 @@ import {
 import store from "redux/store"
 import { assign } from "lodash"
 import { BoardPage } from "drawing/page"
-import { CREATE_SESSION } from "redux/session/session"
+import { CREATE_SESSION } from "redux/session"
 import {
     ADD_ATTACHMENTS,
     ADD_STROKES,
@@ -25,7 +25,7 @@ import {
     ERASE_STROKES,
     SET_PAGEMETA,
     SYNC_PAGES,
-} from "redux/board/board"
+} from "redux/board"
 import { newAttachment } from "drawing/attachment/utils"
 import {
     ConnectedUsers,

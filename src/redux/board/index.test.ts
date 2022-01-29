@@ -11,8 +11,8 @@ import {
     STROKE_WIDTH_PRESETS,
     pageSize,
 } from "consts"
-import reducer from "./board"
-import * as action from "./board"
+import reducer from "."
+import * as action from "."
 import {
     AddPages,
     AddStrokes,
@@ -22,7 +22,7 @@ import {
     EraseStrokes,
     PageId,
     SetPageMeta,
-} from "./board.types"
+} from "./index.types"
 
 // Mock Strokes
 const getMockStroke = (pageId: PageId, i?: number) =>

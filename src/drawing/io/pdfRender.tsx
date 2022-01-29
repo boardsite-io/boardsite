@@ -9,7 +9,7 @@ import Shape from "View/BoardStage/Shape"
 import { LineCap, LineJoin } from "konva/lib/Shape"
 import { backgroundStyle, PDF_EXPORT_PIXEL_RATIO } from "consts"
 import { pageBackground } from "drawing/page/backgrounds"
-import { AttachId, PageMeta } from "redux/board/board.types"
+import { AttachId, PageMeta } from "redux/board/index.types"
 
 export const getPdfBytes = async (): Promise<Uint8Array> => {
     const { pageRank, pageCollection } = store.getState().board

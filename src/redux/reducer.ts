@@ -1,9 +1,9 @@
 import { combineReducers } from "@reduxjs/toolkit"
-import boardReducer from "./board/board"
-import drawingReducer from "./drawing/drawing"
-import infoReducer from "./loading/loading"
-import menuReducer from "./menu/menu"
-import sessionReducer from "./session/session"
+import boardReducer from "./board"
+import drawingReducer from "./drawing"
+import infoReducer from "./loading"
+import menuReducer from "./menu"
+import sessionReducer from "./session"
 import notificationReducer from "./notification"
 
 const rootReducer = {

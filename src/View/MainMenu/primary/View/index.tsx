@@ -12,8 +12,8 @@ import {
     RESET_VIEW,
     ZOOM_IN_CENTER,
     ZOOM_OUT_CENTER,
-} from "redux/board/board"
-import { MainSubMenuState } from "redux/menu/menu"
+} from "redux/board"
+import { MainSubMenuState } from "redux/menu/index.types"
 import store from "redux/store"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"

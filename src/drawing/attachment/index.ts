@@ -10,8 +10,8 @@ import {
     CLEAR_UNDO_REDO,
     JUMP_TO_FIRST_PAGE,
     LOAD_BOARD_STATE,
-} from "redux/board/board"
-import { Attachment, BoardState, PageSize } from "redux/board/board.types"
+} from "redux/board"
+import { Attachment, BoardState, PageSize } from "redux/board/index.types"
 import store from "redux/store"
 import { handleImportWorkspaceFile } from "redux/workspace"
 import { PDFAttachment } from "./pdf"

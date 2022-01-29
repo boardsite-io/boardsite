@@ -1,5 +1,5 @@
 import { Point } from "drawing/stroke/index.types"
-import { StageAttrs } from "redux/board/board.types"
+import { StageAttrs } from "redux/board/index.types"
 import { zoomTo } from "./adjustView"
 
 let lastZoomPoint: Point | null = null

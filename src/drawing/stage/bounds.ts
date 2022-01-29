@@ -4,8 +4,8 @@ import {
     SCROLL_LIMIT_HORIZONTAL,
     SCROLL_LIMIT_LAST_PAGE,
 } from "consts"
-import { BoardState, PageSize, StageAttrs } from "redux/board/board.types"
-import { getCenterX } from "./helpers"
+import { BoardState, PageSize, StageAttrs } from "redux/board/index.types"
+import { getCenterX, onFirstPage, onLastPage } from "./helpers"
 
 export const getCurrentPageSize = (boardState: BoardState): PageSize => {
     const pageId = boardState.pageRank[boardState.currentPageIndex]
@@ -13,12 +13,6 @@ export const getCurrentPageSize = (boardState: BoardState): PageSize => {
 
     return currentPageSize ?? pageSize.a4landscape
 }
-
-export const onFirstPage = (boardState: BoardState): boolean =>
-    boardState.currentPageIndex === 0
-
-export const onLastPage = (boardState: BoardState): boolean =>
-    boardState.currentPageIndex === boardState.pageRank.length - 1
 
 const getUpperBound = () => window.innerHeight * SCROLL_LIMIT_FIRST_PAGE
 

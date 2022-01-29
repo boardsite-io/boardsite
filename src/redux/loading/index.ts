@@ -1,14 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { IntlMessageId } from "language"
-
-type LoadingInfo = {
-    messageId: IntlMessageId
-}
-
-export interface LoadingState {
-    isLoading: boolean
-    loadingInfo: LoadingInfo
-}
+import { LoadingInfo, LoadingState } from "./index.types"
 
 const initState: LoadingState = {
     isLoading: false,

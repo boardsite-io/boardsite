@@ -5,7 +5,7 @@ import {
     JUMP_TO_LAST_PAGE,
     JUMP_TO_NEXT_PAGE,
     JUMP_TO_PREV_PAGE,
-} from "redux/board/board"
+} from "redux/board"
 import store from "redux/store"
 import { SubMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"

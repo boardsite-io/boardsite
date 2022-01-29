@@ -3,8 +3,8 @@ import React, { useCallback } from "react"
 import { useCustomSelector } from "hooks"
 import store from "redux/store"
 import { pageSize } from "consts"
-import { SET_PAGE_SIZE } from "redux/board/board"
-import { PageSize } from "redux/board/board.types"
+import { SET_PAGE_SIZE } from "redux/board"
+import { PageSize } from "redux/board/index.types"
 import { Position, ToolTip } from "components"
 import {
     A4Landscape,

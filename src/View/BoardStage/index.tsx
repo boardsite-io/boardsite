@@ -8,30 +8,40 @@ import {
     ZOOM_IN_WHEEL_SCALE,
     ZOOM_OUT_WHEEL_SCALE,
 } from "consts"
-import { ON_WINDOW_RESIZE, SET_STAGE_ATTRS } from "redux/board/board"
+import {
+    applyBoundsX,
+    applyBoundsY,
+    multiTouchEnd,
+    multiTouchMove,
+    zoomTo,
+    DetectionResult,
+    detectPageChange,
+    toNextPage,
+    toPreviousPage,
+} from "drawing/stage"
+import {
+    DECREMENT_PAGE_INDEX,
+    INCREMENT_PAGE_INDEX,
+    ON_WINDOW_RESIZE,
+    SET_STAGE_ATTRS,
+} from "redux/board"
 import store from "redux/store"
 import { useCustomSelector } from "hooks"
 import { debounce } from "lodash"
 import { ToolType } from "drawing/stroke/index.types"
 import { KonvaEventObject } from "konva/lib/Node"
-import { StageAttrs } from "redux/board/board.types"
+import { StageAttrs } from "redux/board/index.types"
 import { Vector2d } from "konva/lib/types"
-import { zoomTo } from "./util/adjustView"
-import { multiTouchEnd, multiTouchMove } from "./util/multiTouch"
 import StageContent from "./StageContent"
-import { detectPageChange } from "./util/detectPageChange"
 import StageUpdate from "./StageUpdate"
-import { applyBoundsX, applyBoundsY } from "./util/bounds"
 
-const resizeStage = debounce(
-    () => store.dispatch(ON_WINDOW_RESIZE()),
-    STAGE_RESIZE_DEBOUNCE
-)
+const resizeStage = debounce(() => {
+    store.dispatch(ON_WINDOW_RESIZE())
+}, STAGE_RESIZE_DEBOUNCE)
 
-const updateRedux = debounce(
-    (stageAttrs: StageAttrs) => store.dispatch(SET_STAGE_ATTRS(stageAttrs)),
-    STAGE_UPDATE_DEBOUNCE
-)
+const updateRedux = debounce((stageAttrs: StageAttrs) => {
+    store.dispatch(SET_STAGE_ATTRS(stageAttrs))
+}, STAGE_UPDATE_DEBOUNCE)
 
 const BoardStage: React.FC = memo(() => {
     useEffect(() => window.addEventListener("resize", resizeStage), [])
@@ -43,47 +53,52 @@ const BoardStage: React.FC = memo(() => {
     )
 
     const updateStageAttrs = useCallback(
-        (newAttrs: StageAttrs | null): void => {
+        (attrsUpdate: StageAttrs | null): void => {
             const stage = stageRef.current
 
             if (!stage) {
                 return
             }
 
-            if (newAttrs === null) {
-                newAttrs = stage.getAttrs() as StageAttrs
+            if (attrsUpdate === null) {
+                attrsUpdate = stage.getAttrs() as StageAttrs
             }
 
             // Copy to prevent mutating stage.getAttrs() directly
-            const newAttrsCopy = { ...newAttrs }
-
+            let newAttrs = { ...attrsUpdate }
             const boardState = store.getState().board
 
             // Check if page index should change
-            const isDetected = detectPageChange(boardState, newAttrsCopy)
+            const detectionResult = detectPageChange(boardState, newAttrs)
 
-            if (!isDetected) {
+            if (detectionResult === DetectionResult.Next) {
+                toNextPage(boardState, newAttrs)
+                store.dispatch(INCREMENT_PAGE_INDEX())
+            } else if (detectionResult === DetectionResult.Previous) {
+                toPreviousPage(boardState, newAttrs)
+                store.dispatch(DECREMENT_PAGE_INDEX())
+            } else {
                 // Apply bounds before using new stage attributes
-                const boundedAttrs = {
-                    ...newAttrsCopy,
+                newAttrs = {
+                    ...newAttrs,
                     x: applyBoundsX({
                         boardState,
-                        stageAttrs: newAttrsCopy,
-                        xCandidate: newAttrsCopy.x,
+                        stageAttrs: newAttrs,
+                        xCandidate: newAttrs.x,
                     }),
                     y: applyBoundsY({
                         boardState,
-                        stageAttrs: newAttrsCopy,
-                        yCandidate: newAttrsCopy.y,
+                        stageAttrs: newAttrs,
+                        yCandidate: newAttrs.y,
                     }),
                 }
-
-                // Update internal state
-                stage.setAttrs(boundedAttrs)
-
-                // Synchronise the redux state with the internal state
-                updateRedux(boundedAttrs)
             }
+
+            // Update internal state
+            stage.setAttrs(newAttrs)
+
+            // Synchronise the redux state with the internal state
+            updateRedux(newAttrs)
         },
         [stageRef]
     )

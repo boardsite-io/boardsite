@@ -5,7 +5,7 @@ import {
     Attachment,
     AttachType,
     DocumentImages,
-} from "redux/board/board.types"
+} from "redux/board/index.types"
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf"
 import { RenderParameters } from "pdfjs-dist/types/src/display/api"
 import { nanoid } from "@reduxjs/toolkit"
