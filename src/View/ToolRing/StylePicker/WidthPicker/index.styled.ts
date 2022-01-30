@@ -20,9 +20,6 @@ export const Preset = styled.button<PresetProps>`
     align-items: center;
     border: none;
     border-radius: var(--border-radius);
-    div {
-        background: var(--cSecondary);
-    }
     height: var(--icon-button-size);
     width: var(--icon-button-size);
     transition: all ease-in-out 250ms;
@@ -43,7 +40,13 @@ interface StrokeWidth {
 }
 
 export const WidthPresetInnerDot = styled.div<StrokeWidth>`
-    height: ${({ $strokeWidth }) => `${$strokeWidth}px`};
-    width: ${({ $strokeWidth }) => `${$strokeWidth}px`};
+    display: flex;
+    background: var(--cSecondary);
+    ${({ $strokeWidth }) =>
+        css`
+            height: ${$strokeWidth}px;
+            width: ${$strokeWidth}px;
+            min-width: ${$strokeWidth}px; /* Adjustment for mobile */
+        `};
     border-radius: 50%;
 `
