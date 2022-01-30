@@ -8,7 +8,7 @@ import { PageProps } from "../index.types"
 import StrokeShape from "../../StrokeShape"
 
 const Strokes = memo<PageProps>(({ pageId, pageInfo }) => {
-    const groupRef = useRef<GroupType>(null)
+    const ref = useRef<GroupType>(null)
 
     // pageId might not be valid anymore, exit then
     if (!store.getState().board.pageCollection[pageId]) {
@@ -19,29 +19,24 @@ const Strokes = memo<PageProps>(({ pageId, pageInfo }) => {
     const trigger = useCustomSelector((state) => state.board.renderTrigger)
 
     useEffect(() => {
-        const pageLayer = groupRef.current?.parent
-        if (pageLayer) {
-            pageLayer.clearCache()
-            pageLayer.cache({ pixelRatio: LAYER_CACHE_PXL })
-        }
+        ref.current?.parent?.clearCache()
+        setTimeout(() => {
+            ref.current?.parent?.cache({ pixelRatio: LAYER_CACHE_PXL })
+        }, 100)
     }, [trigger])
 
     const pageStrokes = store.getState().board.pageCollection[pageId]?.strokes
 
     return (
         <Group
-            ref={groupRef}
+            ref={ref}
             {...pageInfo}
             globalCompositeOperation="source-atop"
             listening={false}
         >
             {pageStrokes
                 ? Object.keys(pageStrokes).map((id) => (
-                      <StrokeShape
-                          key={id}
-                          stroke={pageStrokes[id]}
-                          groupRef={groupRef}
-                      />
+                      <StrokeShape key={id} stroke={pageStrokes[id]} />
                   ))
                 : null}
         </Group>

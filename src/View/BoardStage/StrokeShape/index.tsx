@@ -1,15 +1,13 @@
-import React, { memo, useCallback, useEffect, useState } from "react"
-import { ERASED_OPACITY, LAYER_CACHE_PXL, MOVE_OPACITY } from "consts"
+import React, { memo, useCallback, useState } from "react"
+import { ERASED_OPACITY, MOVE_OPACITY } from "consts"
 import { useCustomSelector } from "hooks"
 import { Stroke } from "drawing/stroke/index.types"
 import { LiveStroke } from "drawing/livestroke/index.types"
 import { LineCap, LineJoin } from "konva/lib/Shape"
-import { Group as GroupType } from "konva/lib/Group"
 import Shape from "../Shape"
 
 interface StrokeShapeProps {
     stroke: Stroke | LiveStroke
-    groupRef?: React.RefObject<GroupType>
 }
 
 /**
@@ -18,14 +16,14 @@ interface StrokeShapeProps {
  * referencing an object will result in unwanted rerenders, since we just compare
  * the object references.
  */
-const StrokeShape = memo<StrokeShapeProps>(({ stroke, groupRef }) => {
+const StrokeShape = memo<StrokeShapeProps>(({ stroke }) => {
     const [isDragging, setDragging] = useState(false)
     const erasedStrokes = useCustomSelector(
         (state) => state.drawing.erasedStrokes
     )
 
     // used to trigger a stroke redraw for positional updates
-    const propUpdate = useCustomSelector((state) => {
+    useCustomSelector((state) => {
         const s =
             state.board.pageCollection[stroke.pageId]?.strokes[stroke.id ?? ""]
 
@@ -36,14 +34,6 @@ const StrokeShape = memo<StrokeShapeProps>(({ stroke, groupRef }) => {
             scaleY: s?.scaleY,
         }
     })
-
-    useEffect(() => {
-        const pageLayer = groupRef?.current?.parent
-        if (pageLayer) {
-            pageLayer.clearCache()
-            pageLayer.cache({ pixelRatio: LAYER_CACHE_PXL })
-        }
-    }, [propUpdate])
 
     const getOpacity = useCallback((): number => {
         if (isDragging) {
