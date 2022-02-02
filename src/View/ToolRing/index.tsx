@@ -18,19 +18,25 @@ const ToolRing: React.FC = memo(() => {
     const typeSelector = useCustomSelector((state) => state.drawing.tool.type)
 
     const onClickEraser = useCallback(() => {
-        if (typeSelector === ToolType.Eraser) return
+        if (typeSelector === ToolType.Eraser) {
+            return
+        }
         handleSetTool({ type: ToolType.Eraser })
         handleNotification("Tool.Eraser.Notification")
     }, [typeSelector])
 
     const onClickSelect = useCallback(() => {
-        if (typeSelector === ToolType.Select) return
+        if (typeSelector === ToolType.Select) {
+            return
+        }
         handleSetTool({ type: ToolType.Select })
         handleNotification("Tool.Selection.Notification")
     }, [typeSelector])
 
     const onClickPan = useCallback(() => {
-        if (typeSelector === ToolType.Pan) return
+        if (typeSelector === ToolType.Pan) {
+            return
+        }
         handleSetTool({ type: ToolType.Pan })
         handleNotification("Tool.Panning.Notification")
     }, [typeSelector])

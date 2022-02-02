@@ -48,7 +48,9 @@ const RenderLayer: React.FC<RenderLayerProps> = ({
     renderLayerRef = React.useRef<LayerType>(null)
 
     const page = store.getState().board.pageCollection[pageId]
-    if (!page) return null
+    if (!page) {
+        return null
+    }
 
     const { background, size } = page.meta
 
@@ -66,7 +68,9 @@ const RenderLayer: React.FC<RenderLayerProps> = ({
                         }
                     />
                     {Object.values(page.strokes).map((stroke) => {
-                        if (!stroke) return null
+                        if (!stroke) {
+                            return null
+                        }
 
                         const pdfShapeProps = {
                             name: stroke.pageId,

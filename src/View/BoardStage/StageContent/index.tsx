@@ -73,7 +73,9 @@ const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
         [pageMetas]
     )
 
-    if (!pageMetas[1]) return null
+    if (!pageMetas[1]) {
+        return null
+    }
 
     return (
         <>

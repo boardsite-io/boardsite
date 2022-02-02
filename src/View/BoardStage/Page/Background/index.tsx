@@ -21,10 +21,14 @@ const Background = memo<PageProps>(({ pageId, pageInfo }) => {
     )
     const documentImages = useCustomSelector((state) => {
         const page = state.board.pageCollection[pageId]
-        if (!page) return undefined
+        if (!page) {
+            return undefined
+        }
 
         const { attachId } = page.meta.background
-        if (attachId === undefined) return undefined
+        if (attachId === undefined) {
+            return undefined
+        }
 
         return state.board.attachments[attachId]?.renderedData
     })
