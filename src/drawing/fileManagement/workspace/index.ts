@@ -1,4 +1,5 @@
 import { readFileAsUint8Array } from "drawing/fileManagement/helpers"
+import { handleNotification } from "drawing/handlers"
 import { deflate, inflate } from "pako"
 import { newState } from "redux/localstorage"
 import { ReducerState } from "redux/reducer"
@@ -47,7 +48,8 @@ export async function loadWorkspace(
 
         return state as Partial<RootState>
     } catch (err) {
-        throw new Error(`loadWorkspace: ${err}`)
+        handleNotification("ImportMenu.Error.CouldntLoadWorkspace")
+        return {}
     }
 }
 
