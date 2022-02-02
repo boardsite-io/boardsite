@@ -11,7 +11,7 @@ import { BoardStroke } from "drawing/stroke"
 import { BoardPage } from "drawing/page"
 import { pick, keys, assign, cloneDeep } from "lodash"
 import { newAttachment } from "drawing/attachment/utils"
-import { BoardState, SerializedBoardState } from "./index.types"
+import { BoardState, Page, SerializedBoardState } from "./index.types"
 
 // version of the board state reducer to allow backward compatibility for stored data
 //
@@ -69,7 +69,7 @@ export const newState = (state?: BoardState): BoardState => ({
         )
 
         Object.keys(stateCopy.pageCollection).forEach((pageId) => {
-            const { strokes } = stateCopy.pageCollection[pageId]
+            const { strokes } = stateCopy.pageCollection[pageId] as Page
             Object.keys(strokes).forEach((strokeId) => {
                 strokes[strokeId] = strokes[strokeId].serialize()
             })
@@ -123,7 +123,7 @@ export const newState = (state?: BoardState): BoardState => ({
         Object.keys(pageCollection).forEach((pageId) => {
             const page = pageCollection[pageId]
             pageCollection[pageId] = new BoardPage(page)
-            const { strokes } = pageCollection[pageId]
+            const { strokes } = pageCollection[pageId] as Page
             Object.keys(strokes).forEach((strokeId) => {
                 const stroke = strokes[strokeId]
                 strokes[strokeId] = new BoardStroke(stroke) // deserialize a new instance

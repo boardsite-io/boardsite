@@ -12,21 +12,19 @@ describe("workspace", () => {
             board: await newState().deserialize?.(cloneDeep<any>(boardState)),
         }
         const fileData = saveWorkspace(cloneDeep<any>(mockState))
-
         const { board } = await loadWorkspace(fileData)
 
         expect(board?.serialize?.()).toEqual(mockState.board?.serialize?.())
     })
 
-    it("throws an error for missing headers", async () => {
+    it("triggers the catch block for missing headers", async () => {
         const mockState: Partial<RootState> = {
             board: await newState().deserialize?.(cloneDeep<any>(boardState)),
         }
         const fileData = saveWorkspace(cloneDeep<any>(mockState))
+        const loadResult = await loadWorkspace(fileData.slice(48))
 
-        await expect(
-            loadWorkspace(fileData.slice(48))
-        ).rejects.not.toBeUndefined()
+        expect(loadResult).toEqual({})
     })
 })
 

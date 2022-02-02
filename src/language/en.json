@@ -121,6 +121,7 @@
     "ImportMenu.Error.InvalidFileType": "Invalid file type. Please choose a supported file type.",
     "ImportMenu.Error.NoWorkspaceInSession": "At the moment it is not possible to import workspaces in online sessions.",
     "ImportMenu.Error.NoBoardStateFound": "No board state found in file.",
+    "ImportMenu.Error.CouldntLoadWorkspace": "Load failed!",
     "ImportMenu.Close": "Close",
     "PageSettings.SetPageBackground": "Set page background",
     "SessionMenu.CreateOnline.Title": "Collaborative Session 👋🏻",

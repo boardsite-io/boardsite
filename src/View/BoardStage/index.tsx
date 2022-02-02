@@ -112,13 +112,17 @@ const BoardStage: React.FC = memo(() => {
             e.evt.preventDefault()
 
             const stage = stageRef.current
-            if (!stage) return
+            if (!stage) {
+                return
+            }
 
             const stageAttrs = stage.getAttrs()
 
             if (isPanMode || e.evt.ctrlKey) {
                 const zoomPoint = stage.getPointerPosition()
-                if (!zoomPoint) return
+                if (!zoomPoint) {
+                    return
+                }
 
                 const newAttrs = zoomTo({
                     stageAttrs,
@@ -146,7 +150,9 @@ const BoardStage: React.FC = memo(() => {
     const dragBoundFunc = useCallback(
         (pos: Vector2d) => {
             const stage = stageRef.current
-            if (!stage) return pos
+            if (!stage) {
+                return pos
+            }
 
             const boardState = store.getState().board
             const stageAttrs = stage.getAttrs()
@@ -179,7 +185,9 @@ const BoardStage: React.FC = memo(() => {
         (e: KonvaEventObject<TouchEvent>) => {
             e.evt.preventDefault()
             const stage = stageRef.current
-            if (!stage) return
+            if (!stage) {
+                return
+            }
 
             const touch1 = e.evt.touches[0]
             const touch2 = e.evt.touches[1]

@@ -7,6 +7,7 @@ import { useCustomSelector } from "hooks"
 import { Layer } from "react-konva"
 import type { Layer as LayerType } from "konva/lib/Layer"
 import store from "redux/store"
+import { PageMeta } from "redux/board/index.types"
 import { PageInfo } from "../Page/index.types"
 import PageLayer from "../Page"
 import LiveStroke from "../LiveStroke"
@@ -36,21 +37,34 @@ const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
 
     const getPageY = useCallback(
         (i: number) => {
-            if (i === 2) {
-                return pageMetas[1].size.height + DEFAULT_PAGE_GAP
+            const prevPageHeight = pageMetas[0] as PageMeta
+            const currPageHeight = pageMetas[1] as PageMeta
+
+            // Previous Page
+            if (!i) {
+                return -(prevPageHeight.size.height + DEFAULT_PAGE_GAP)
             }
-            return i ? 0 : -(pageMetas[0].size.height + DEFAULT_PAGE_GAP)
+            // Current Page
+            if (i === 1) {
+                return 0
+            }
+            // Last Page
+            return currPageHeight.size.height + DEFAULT_PAGE_GAP
         },
         [pageMetas]
     )
 
     const getPageInfo = useCallback(
-        (i: number): PageInfo => ({
-            height: pageMetas[i].size.height,
-            width: pageMetas[i].size.width,
-            x: -pageMetas[i].size.width / 2,
-            y: getPageY(i),
-        }),
+        (i: number): PageInfo => {
+            const pageMeta = pageMetas[i] as PageMeta
+
+            return {
+                height: pageMeta.size.height,
+                width: pageMeta.size.width,
+                x: -pageMeta.size.width / 2,
+                y: getPageY(i),
+            }
+        },
         [pageMetas, getPageY]
     )
 
@@ -59,7 +73,9 @@ const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
         [pageMetas]
     )
 
-    if (!pageMetas[1]) return null
+    if (!pageMetas[1]) {
+        return null
+    }
 
     return (
         <>

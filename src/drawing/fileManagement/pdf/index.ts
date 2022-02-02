@@ -109,19 +109,22 @@ export const renderAsPdf = async (): Promise<Uint8Array> => {
     }
 
     for (let i = 0; i < pageImages.length; i++) {
-        const { meta } = pageCollection[pageRank[i]]
-        const { size } = meta
-        const basePage = await getBasePage(meta)
+        const currentPage = pageCollection[pageRank[i]]
 
-        const page = pdf.addPage(basePage)
-        page.setSize(size.width, size.height)
-        if (pageImages[i]) {
-            page.drawImage(pageImages[i] as PDFImage, {
-                x: 0,
-                y: 0,
-                width: size.width,
-                height: size.height,
-            })
+        if (currentPage) {
+            const pageSize = currentPage.meta.size
+            const basePage = await getBasePage(currentPage.meta)
+
+            const page = pdf.addPage(basePage)
+            page.setSize(pageSize.width, pageSize.height)
+            if (pageImages[i]) {
+                page.drawImage(pageImages[i] as PDFImage, {
+                    x: 0,
+                    y: 0,
+                    width: pageSize.width,
+                    height: pageSize.height,
+                })
+            }
         }
     }
 

@@ -321,11 +321,13 @@ export class BoardSession implements Session {
 
     async syncPages({ pageRank, pages }: PageSync): Promise<void> {
         const { pageCollection } = this.reduxStore.getState().board
-        const newPageCollection: PageCollection = {}
+        const newPageCollection: Record<string, Page> = {}
         for (let i = 0; i < pageRank.length; i++) {
             const pid = pageRank[i]
-            if (Object.prototype.hasOwnProperty.call(pageCollection, pid)) {
-                newPageCollection[pid] = pageCollection[pid]
+            const localPageState = pageCollection[pid]
+
+            if (localPageState) {
+                newPageCollection[pid] = localPageState
             } else {
                 newPageCollection[pid] = new BoardPage().setID(pid)
             }
