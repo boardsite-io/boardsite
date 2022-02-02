@@ -7,6 +7,11 @@ import { loadIndexedDB } from "redux/localstorage"
 import { loadWorkspace, saveWorkspace } from "."
 
 describe("workspace", () => {
+    beforeAll(async () => {
+        // Load DB
+        await loadIndexedDB("board")
+    })
+
     it("is saved and loaded", async () => {
         const mockState: Partial<RootState> = {
             board: await newState().deserialize?.(cloneDeep<any>(boardState)),
@@ -27,8 +32,3 @@ describe("workspace", () => {
         expect(loadResult).toEqual({})
     })
 })
-
-// init db
-;(async () => {
-    await loadIndexedDB("board")
-})()

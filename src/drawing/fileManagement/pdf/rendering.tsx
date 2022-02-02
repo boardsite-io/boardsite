@@ -65,8 +65,7 @@ const RenderLayer: React.FC<RenderLayerProps> = ({
                                 : undefined
                         }
                     />
-                    {Object.keys(page.strokes).map((id) => {
-                        const stroke = page.strokes[id]
+                    {Object.values(page.strokes).map((stroke) => {
                         if (!stroke) return null
 
                         const pdfShapeProps = {
@@ -92,7 +91,7 @@ const RenderLayer: React.FC<RenderLayerProps> = ({
 
                         return (
                             <Shape
-                                key={id}
+                                key={stroke.id}
                                 stroke={stroke}
                                 shapeProps={pdfShapeProps}
                             />
