@@ -111,10 +111,7 @@ export class BoardSession implements Session {
             // create an online session from the current offline
             const { pageRank, pageCollection } =
                 this.reduxStore.getState().board
-            await this.synchronize(
-                pageRank,
-                pageCollection as Record<PageId, Page>
-            )
+            await this.synchronize(pageRank, pageCollection)
         } else {
             // clear documents which may be overwritten by session
             this.reduxStore.dispatch(CLEAR_ATTACHMENTS())
@@ -146,7 +143,7 @@ export class BoardSession implements Session {
 
     async synchronize(
         pageRank: PageId[],
-        pageCollection: Record<PageId, Page>
+        pageCollection: PageCollection
     ): Promise<void> {
         const pages = Object.values(pageCollection).reduce<
             Record<PageId, SerializedPage>
