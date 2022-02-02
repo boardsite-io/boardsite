@@ -2,7 +2,14 @@ import { LiveStroke } from "drawing/livestroke/index.types"
 import { assign, cloneDeep, pick } from "lodash"
 import { Polygon } from "sat"
 import { getHitboxPolygon } from "./hitbox"
-import { Scale, Point, Stroke, ToolType, StrokeUpdate } from "./index.types"
+import {
+    Scale,
+    Point,
+    Stroke,
+    ToolType,
+    StrokeUpdate,
+    SerializedStroke,
+} from "./index.types"
 
 export class BoardStroke implements Stroke {
     type: ToolType
@@ -26,7 +33,7 @@ export class BoardStroke implements Stroke {
     /**
      * Create a new stroke from another Stroke instance
      */
-    constructor(stroke: Stroke | LiveStroke) {
+    constructor(stroke: Stroke | LiveStroke | SerializedStroke) {
         this.id = stroke.id ?? createUniqueId()
         this.pageId = stroke.pageId
         this.x = stroke.x

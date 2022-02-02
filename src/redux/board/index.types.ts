@@ -1,5 +1,6 @@
 import {
     Point,
+    SerializedStroke,
     Stroke,
     StrokeMap,
     StrokeUpdate,
@@ -100,6 +101,7 @@ export interface Page {
     setID: (pageId: PageId) => Page
     clear: () => void
     updateMeta: (meta: PageMeta) => Page
+    addStrokes: (strokes: (Stroke | SerializedStroke)[]) => Page
 }
 
 export type PageCollection = Record<string, Page>

@@ -1,8 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestHeaders, Method } from "axios"
-import { Stroke } from "drawing/stroke/index.types"
-import { Page } from "redux/board/index.types"
+import { Page, PageId, PageMeta } from "redux/board/index.types"
 import {
-    ResponsePageSync,
+    PageSync,
     ResponsePostSession,
     ResponsePostAttachment,
     User,
@@ -10,7 +9,14 @@ import {
 
 // api
 export const API_URL = process.env.REACT_APP_B_API_URL as string
-export const HeaderUserId = "Boardsite-User-Id"
+
+const HEADER_USER_ID = "Boardsite-User-Id"
+
+enum PageQueryParam {
+    clear = "clear",
+    delete = "delete",
+    meta = "meta",
+}
 
 export class Request {
     baseURL: string
@@ -59,7 +65,7 @@ export class Request {
             "Content-Type": "application/json",
         }
         if (useUserValidation) {
-            headers[HeaderUserId] = this.userId ?? ""
+            headers[HEADER_USER_ID] = this.userId ?? ""
         }
         return headers
     }
@@ -98,11 +104,11 @@ export class Request {
         return this.jsonSend("GET", `${this.sessionId}/users`, true)
     }
 
-    getPages(): Promise<ResponsePageSync> {
+    getPageRank(): Promise<PageId[]> {
         return this.jsonSend("GET", `${this.sessionId}/pages`, true)
     }
 
-    getStrokes(pageId: string): Promise<Stroke[]> {
+    getPage(pageId: string): Promise<Page> {
         return this.jsonSend("GET", `${this.sessionId}/pages/${pageId}`, true)
     }
 
@@ -117,24 +123,39 @@ export class Request {
         })
     }
 
-    putPages(
-        pages: Pick<Page, "pageId" | "meta">[],
-        clear: boolean
-    ): Promise<void> {
-        return this.jsonSend("PUT", `${this.sessionId}/pages`, true, {
-            pageId: pages.map((page) => page.pageId),
-            meta: pages.reduce(
-                (obj, page) => ({ ...obj, [page.pageId]: page.meta }),
-                {}
-            ),
-            clear,
-        })
+    updatePagesMeta(meta: Record<PageId, PageMeta>): Promise<void> {
+        return this.jsonSend(
+            "PUT",
+            `${this.sessionId}/pages?update=${PageQueryParam.meta}`,
+            true,
+            { meta }
+        )
+    }
+
+    clearPages(pageIds: string[]): Promise<void> {
+        return this.jsonSend(
+            "PUT",
+            `${this.sessionId}/pages?update=${PageQueryParam.clear}`,
+            true,
+            { pageId: pageIds }
+        )
     }
 
     deletePages(pageIds: string[]): Promise<void> {
-        return this.jsonSend("DELETE", `${this.sessionId}/pages`, true, {
-            pageId: pageIds,
-        })
+        return this.jsonSend(
+            "PUT",
+            `${this.sessionId}/pages?update=${PageQueryParam.delete}`,
+            true,
+            { pageId: pageIds }
+        )
+    }
+
+    getPagesSync(): Promise<PageSync> {
+        return this.jsonSend("GET", `${this.sessionId}/pages/sync`, true)
+    }
+
+    postPagesSync(sync: PageSync): Promise<void> {
+        return this.jsonSend("POST", `${this.sessionId}/pages/sync`, true, sync)
     }
 
     async postAttachment(file: File): Promise<ResponsePostAttachment> {

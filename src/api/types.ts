@@ -1,6 +1,16 @@
 import { BoardPage } from "drawing/page"
-import { Stroke, StrokeUpdate } from "drawing/stroke/index.types"
-import { Page, PageMeta, PageRank } from "redux/board/index.types"
+import {
+    SerializedStroke,
+    Stroke,
+    StrokeUpdate,
+} from "drawing/stroke/index.types"
+import {
+    Page,
+    PageCollection,
+    PageId,
+    PageMeta,
+    PageRank,
+} from "redux/board/index.types"
 
 export interface Session {
     id?: string
@@ -13,10 +23,14 @@ export interface Session {
     setAPIURL(url: URL): void
     setID(sessionId: string): Session
     create(): Promise<string>
-    join(): Promise<void>
+    join(copyOffline?: boolean): Promise<void>
     createSocket(sessionId: string): Promise<void>
     isConnected(): boolean
     disconnect(): void
+    synchronize(
+        pageRank: PageId[],
+        pageCollection: PageCollection
+    ): Promise<void>
     send(type: MessageType, content: unknown): void
     sendStrokes(strokes: Stroke[] | StrokeUpdate[]): void
     eraseStrokes(strokes: { id: string; pageId: string }[]): void
@@ -29,7 +43,6 @@ export interface Session {
     addAttachment(file: File): Promise<string>
     getAttachment(attachId: string): Promise<Uint8Array>
     attachURL(attachId: string): URL
-    ping(): Promise<ResponsePageSync>
 }
 
 export type User = {
@@ -69,15 +82,15 @@ export interface ResponsePostSession {
     sessionId: string
 }
 
-export interface ResponsePageSync {
-    pageRank: PageRank
-    meta: Record<string, PageMeta>
+export type SerializedPage = {
+    pageId: PageId
+    meta: PageMeta
+    strokes?: SerializedStroke[]
 }
 
-export interface ResponsePageUpdate {
-    pageId: string[]
-    clear: boolean
-    meta: Record<string, PageMeta>
+export interface PageSync {
+    pageRank: PageRank
+    pages: Record<PageId, SerializedPage>
 }
 
 export interface ResponsePostAttachment {
