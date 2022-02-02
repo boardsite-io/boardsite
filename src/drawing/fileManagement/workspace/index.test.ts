@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { cloneDeep } from "lodash"
-import { loadWorkspace, saveWorkspace } from "./workspace"
-import boardState from "./board/__test__/stateV1.json"
-import { newState } from "./board/state"
-import { RootState } from "./types"
-import { loadIndexedDB } from "./localstorage"
+import boardState from "redux/board/__test__/stateV1.json"
+import { newState } from "redux/board/state"
+import { RootState } from "redux/types"
+import { loadIndexedDB } from "redux/localstorage"
+import { loadWorkspace, saveWorkspace } from "."
 
 describe("workspace", () => {
     it("is saved and loaded", async () => {

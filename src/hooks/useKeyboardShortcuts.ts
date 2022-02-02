@@ -16,7 +16,10 @@ import {
 } from "drawing/handlers"
 import { ToolType } from "drawing/stroke/index.types"
 import { useEffect } from "react"
-import { handleExportWorkspace, handleImportWorkspace } from "drawing/io"
+import {
+    handleExportWorkspace,
+    handleImportWorkspace,
+} from "drawing/fileManagement"
 import { MainMenuState } from "redux/menu/index.types"
 
 export const useKeyboardShortcuts = (): void => {
