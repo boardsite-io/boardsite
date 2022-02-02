@@ -29,6 +29,7 @@ import {
 import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from "redux/notification"
 import { IntlMessageId } from "language"
 import { BoardPage } from "./page"
+import { getVerifiedPageIds, getVerifiedPages } from "./helpers"
 
 const createPage = (): BoardPage =>
     new BoardPage().updateMeta(store.getState().board.pageMeta)
@@ -78,18 +79,18 @@ export function handleClearPage(): void {
 }
 
 export function handleClearPages(pageIds: PageId[]): void {
+    const verifiedPageIds = getVerifiedPageIds(pageIds)
+    const verifiedPages = getVerifiedPages(pageIds)
+
     const payload: ClearPages = {
-        data: pageIds,
+        data: verifiedPageIds,
         isRedoable: true,
     }
 
     if (isConnected()) {
         const session = currentSession()
-        const pages = pageIds.map(
-            (pid) => store.getState().board.pageCollection[pid]
-        )
         payload.sessionHandler = () => {
-            session.updatePages(pages, true)
+            session.updatePages(verifiedPages, true)
         }
         payload.sessionUndoHandler = (...undos) => {
             session.sendStrokes(undos)

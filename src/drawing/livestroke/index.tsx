@@ -9,6 +9,7 @@ import { handleAddStrokes, handleDeleteStrokes } from "drawing/handlers"
 import { MOVE_SHAPES_TO_DRAG_LAYER } from "redux/board"
 import { CLEAR_ERASED_STROKES, SET_ERASED_STROKES } from "redux/drawing"
 import store from "redux/store"
+import { Page } from "redux/board/index.types"
 import { perfectDrawing, simplifyRDP } from "../stroke/simplify"
 import {
     getHitboxPolygon,
@@ -78,8 +79,11 @@ export class BoardLiveStroke implements LiveStroke {
     }
 
     moveEraser(pagePosition: Point): void {
-        const { strokes } = store.getState().board.pageCollection[this.pageId]
+        const { strokes } = store.getState().board.pageCollection[
+            this.pageId
+        ] as Page
         const selectedStrokes = this.selectLineCollision(strokes, pagePosition)
+
         if (Object.keys(selectedStrokes).length > 0) {
             store.dispatch(SET_ERASED_STROKES(selectedStrokes))
         }
@@ -204,8 +208,9 @@ export class BoardLiveStroke implements LiveStroke {
                 break
             }
             case ToolType.Select: {
-                const { strokes } =
-                    store.getState().board.pageCollection[stroke.pageId]
+                const { strokes } = store.getState().board.pageCollection[
+                    stroke.pageId
+                ] as Page
                 const selectedStrokes = matchStrokeCollision(
                     strokes,
                     getSelectionPolygon(stroke.points)

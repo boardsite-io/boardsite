@@ -104,7 +104,7 @@ export interface Page {
     addStrokes: (strokes: (Stroke | SerializedStroke)[]) => Page
 }
 
-export type PageCollection = Record<string, Page>
+export type PageCollection = Record<string, Page | undefined>
 
 export interface PageSize {
     width: number

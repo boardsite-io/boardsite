@@ -25,7 +25,7 @@ import {
 } from "./index.types"
 
 // Mock Strokes
-const getMockStroke = (pageId: PageId, i?: number) =>
+export const getMockStroke = (pageId: PageId, i?: number) =>
     new BoardStroke({
         id: `${pageId}${i ?? ""}`,
         pageId,
@@ -51,7 +51,7 @@ const [page1, page2, page3] = new Array(3).fill(null).map((_, i) => {
     return page
 })
 
-const initialState = {
+export const mockBoardState = {
     currentPageIndex: 0,
     pageRank: [page1.pageId, page2.pageId, page3.pageId],
     pageCollection: {
@@ -85,7 +85,7 @@ const initialState = {
 
 describe("board reducer", () => {
     it("correctly handles redoable and non-redoable actions", () => {
-        let state: BoardState = cloneDeep(initialState)
+        let state: BoardState = cloneDeep(mockBoardState)
         let i = 0
         const getPayload = (isRedoable?: boolean): AddStrokes => ({
             data: [getMockStroke(page1.pageId, i++)],
@@ -108,14 +108,14 @@ describe("board reducer", () => {
     })
 
     it("adds a page at the beginning", () => {
-        let state: BoardState = cloneDeep(initialState)
+        let state: BoardState = cloneDeep(mockBoardState)
         const page = new BoardPage().setID("mock-pid")
         const index = 0
         const payload: AddPages = {
             data: [{ page, index }],
         }
 
-        state = reducer(initialState, action.ADD_PAGES(payload))
+        state = reducer(mockBoardState, action.ADD_PAGES(payload))
 
         expect(state.pageRank).toEqual([
             page.pageId,
@@ -127,14 +127,14 @@ describe("board reducer", () => {
     })
 
     it("adds a page at the end", () => {
-        let state: BoardState = cloneDeep(initialState)
+        let state: BoardState = cloneDeep(mockBoardState)
         const page = new BoardPage().setID("mock-pid")
         const index = -1
         const payload: AddPages = {
             data: [{ page, index }],
         }
 
-        state = reducer(initialState, action.ADD_PAGES(payload))
+        state = reducer(mockBoardState, action.ADD_PAGES(payload))
 
         expect(state.pageRank).toEqual([
             page1.pageId,
@@ -146,14 +146,14 @@ describe("board reducer", () => {
     })
 
     it("adds a page in the middle", () => {
-        let state: BoardState = cloneDeep(initialState)
+        let state: BoardState = cloneDeep(mockBoardState)
         const page = new BoardPage().setID("mock-pid")
         const index = 1
         const payload: AddPages = {
             data: [{ page, index }],
         }
 
-        state = reducer(initialState, action.ADD_PAGES(payload))
+        state = reducer(mockBoardState, action.ADD_PAGES(payload))
 
         expect(state.pageRank).toEqual([
             page1.pageId,
@@ -165,14 +165,14 @@ describe("board reducer", () => {
     })
 
     it("adds a page with an index that exceeds the valid range", () => {
-        let state: BoardState = cloneDeep(initialState)
+        let state: BoardState = cloneDeep(mockBoardState)
         const page = new BoardPage().setID("mock-pid")
         const index = 1337
         const payload: AddPages = {
             data: [{ page, index }],
         }
 
-        state = reducer(initialState, action.ADD_PAGES(payload))
+        state = reducer(mockBoardState, action.ADD_PAGES(payload))
 
         expect(state.pageRank).toEqual([
             page1.pageId,
@@ -184,7 +184,7 @@ describe("board reducer", () => {
     })
 
     it("adds a page, undos and redos the action", () => {
-        let state: BoardState = cloneDeep(initialState)
+        let state: BoardState = cloneDeep(mockBoardState)
         const page = new BoardPage().setID("mock-pid")
         const stroke = getMockStroke(page.pageId)
         page.strokes[stroke.id] = stroke
@@ -213,38 +213,38 @@ describe("board reducer", () => {
             page3.pageId,
         ])
         expect(state.pageCollection[page.pageId]).toEqual(page)
-        expect(state.pageCollection[page.pageId].strokes[stroke.id]).toEqual(
+        expect(state.pageCollection[page.pageId]?.strokes[stroke.id]).toEqual(
             stroke
         )
     })
 
     it("clears all pages, undos and redos the action", () => {
-        let state: BoardState = cloneDeep(initialState)
+        let state: BoardState = cloneDeep(mockBoardState)
         const payload: ClearPages = {
-            data: initialState.pageRank,
+            data: mockBoardState.pageRank,
             isRedoable: true,
         }
 
         state = reducer(state, action.CLEAR_PAGES(payload))
-        initialState.pageRank.forEach((pid) => {
-            expect(state.pageCollection[pid].strokes).toEqual({})
+        mockBoardState.pageRank.forEach((pid) => {
+            expect(state.pageCollection[pid]?.strokes).toEqual({})
         })
 
         state = reducer(state, action.UNDO_ACTION())
-        initialState.pageRank.forEach((pid) => {
-            expect(state.pageCollection[pid].strokes[pid]).toEqual(
+        mockBoardState.pageRank.forEach((pid) => {
+            expect(state.pageCollection[pid]?.strokes[pid]).toEqual(
                 getMockStroke(pid)
             )
         })
 
         state = reducer(state, action.REDO_ACTION())
-        initialState.pageRank.forEach((pid) => {
-            expect(state.pageCollection[pid].strokes).toEqual({})
+        mockBoardState.pageRank.forEach((pid) => {
+            expect(state.pageCollection[pid]?.strokes).toEqual({})
         })
     })
 
     it("deletes a page, undos and redos the action", () => {
-        let state: BoardState = cloneDeep(initialState)
+        let state: BoardState = cloneDeep(mockBoardState)
         const payload: DeletePages = {
             data: [page1.pageId],
             isRedoable: true,
@@ -255,7 +255,7 @@ describe("board reducer", () => {
         expect(state.pageCollection[page1.pageId]).toBeUndefined()
 
         state = reducer(state, action.UNDO_ACTION())
-        expect(state.pageRank).toEqual(initialState.pageRank)
+        expect(state.pageRank).toEqual(mockBoardState.pageRank)
         expect(state.pageCollection[page1.pageId]).toEqual(page1)
 
         state = reducer(state, action.REDO_ACTION())
@@ -264,35 +264,35 @@ describe("board reducer", () => {
     })
 
     it("deletes all pages, undos and redos the action", () => {
-        let state: BoardState = cloneDeep(initialState)
+        let state: BoardState = cloneDeep(mockBoardState)
         const payload: DeletePages = {
-            data: initialState.pageRank,
+            data: mockBoardState.pageRank,
             isRedoable: true,
         }
 
         state = reducer(state, action.DELETE_PAGES(payload))
         expect(state.pageRank).toEqual([])
-        initialState.pageRank.forEach((pid) => {
+        mockBoardState.pageRank.forEach((pid) => {
             expect(state.pageCollection[pid]).toBeUndefined()
         })
 
         state = reducer(state, action.UNDO_ACTION())
-        expect(state.pageRank).toEqual(initialState.pageRank)
-        initialState.pageRank.forEach((pid) => {
+        expect(state.pageRank).toEqual(mockBoardState.pageRank)
+        mockBoardState.pageRank.forEach((pid) => {
             expect(state.pageCollection[pid]).toEqual(
-                initialState.pageCollection[pid]
+                mockBoardState.pageCollection[pid]
             )
         })
 
         state = reducer(state, action.REDO_ACTION())
         expect(state.pageRank).toEqual([])
-        initialState.pageRank.forEach((pid) => {
+        mockBoardState.pageRank.forEach((pid) => {
             expect(state.pageCollection[pid]).toBeUndefined()
         })
     })
 
     it("updates pages meta, undos and redos the action", () => {
-        let state: BoardState = cloneDeep(initialState)
+        let state: BoardState = cloneDeep(mockBoardState)
         const newMeta = cloneDeep(page1.meta)
         newMeta.size = pageSize.square
         newMeta.background.style = backgroundStyle.CHECKERED
@@ -306,17 +306,17 @@ describe("board reducer", () => {
         }
 
         state = reducer(state, action.SET_PAGEMETA(payload))
-        expect(state.pageCollection[page1.pageId].meta).toEqual(newMeta)
+        expect(state.pageCollection[page1.pageId]?.meta).toEqual(newMeta)
 
         state = reducer(state, action.UNDO_ACTION())
-        expect(state.pageCollection[page1.pageId].meta).toEqual(page1.meta)
+        expect(state.pageCollection[page1.pageId]?.meta).toEqual(page1.meta)
 
         state = reducer(state, action.REDO_ACTION())
-        expect(state.pageCollection[page1.pageId].meta).toEqual(newMeta)
+        expect(state.pageCollection[page1.pageId]?.meta).toEqual(newMeta)
     })
 
     it("adds a stroke, undos and redos the action", () => {
-        let state: BoardState = cloneDeep(initialState)
+        let state: BoardState = cloneDeep(mockBoardState)
         const stroke = getMockStroke(page1.pageId, 1)
         const payload: AddStrokes = {
             data: [stroke],
@@ -324,26 +324,26 @@ describe("board reducer", () => {
         }
 
         state = reducer(state, action.ADD_STROKES(payload))
-        expect(state.pageCollection[page1.pageId].strokes[stroke.id]).toEqual(
+        expect(state.pageCollection[page1.pageId]?.strokes[stroke.id]).toEqual(
             stroke
         )
 
         state = reducer(state, action.UNDO_ACTION())
         expect(
-            state.pageCollection[page1.pageId].strokes[stroke.id]
+            state.pageCollection[page1.pageId]?.strokes[stroke.id]
         ).toBeUndefined()
-        expect(state.pageCollection[page1.pageId].strokes).toEqual(
+        expect(state.pageCollection[page1.pageId]?.strokes).toEqual(
             page1.strokes
         )
 
         state = reducer(state, action.REDO_ACTION())
-        expect(state.pageCollection[page1.pageId].strokes[stroke.id]).toEqual(
+        expect(state.pageCollection[page1.pageId]?.strokes[stroke.id]).toEqual(
             stroke
         )
     })
 
     it("deletes a stroke, undos and redos the action", () => {
-        let state: BoardState = cloneDeep(initialState)
+        let state: BoardState = cloneDeep(mockBoardState)
         const stroke = getMockStroke(page1.pageId)
         const payload: EraseStrokes = {
             data: [stroke],
@@ -351,22 +351,22 @@ describe("board reducer", () => {
         }
 
         state = reducer(state, action.ERASE_STROKES(payload))
-        expect(state.pageCollection[page1.pageId].strokes).toEqual({})
+        expect(state.pageCollection[page1.pageId]?.strokes).toEqual({})
 
         state = reducer(state, action.UNDO_ACTION())
-        expect(state.pageCollection[page1.pageId].strokes[stroke.id]).toEqual(
+        expect(state.pageCollection[page1.pageId]?.strokes[stroke.id]).toEqual(
             stroke
         )
-        expect(state.pageCollection[page1.pageId].strokes).toEqual(
+        expect(state.pageCollection[page1.pageId]?.strokes).toEqual(
             page1.strokes
         )
 
         state = reducer(state, action.REDO_ACTION())
-        expect(state.pageCollection[page1.pageId].strokes).toEqual({})
+        expect(state.pageCollection[page1.pageId]?.strokes).toEqual({})
     })
 
     it("updates a stroke, undos and redos the action", () => {
-        let state: BoardState = cloneDeep(initialState)
+        let state: BoardState = cloneDeep(mockBoardState)
         const stroke = getMockStroke(page1.pageId)
         const update = getMockStroke(page1.pageId)
         update.x = 1234
@@ -384,17 +384,17 @@ describe("board reducer", () => {
         // update == delete + add
         state = reducer(state, action.ERASE_STROKES(payloadDelete))
         state = reducer(state, action.ADD_STROKES(payload))
-        expect(state.pageCollection[page1.pageId].strokes[stroke.id]).toEqual(
+        expect(state.pageCollection[page1.pageId]?.strokes[stroke.id]).toEqual(
             update
         )
 
         state = reducer(state, action.UNDO_ACTION())
-        expect(state.pageCollection[page1.pageId].strokes[stroke.id]).toEqual(
+        expect(state.pageCollection[page1.pageId]?.strokes[stroke.id]).toEqual(
             stroke
         )
 
         state = reducer(state, action.REDO_ACTION())
-        expect(state.pageCollection[page1.pageId].strokes[stroke.id]).toEqual(
+        expect(state.pageCollection[page1.pageId]?.strokes[stroke.id]).toEqual(
             update
         )
     })

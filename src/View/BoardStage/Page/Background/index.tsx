@@ -9,18 +9,24 @@ import { PageProps } from "../index.types"
 import PageBoundary from "../Boundary"
 
 const Background = memo<PageProps>(({ pageId, pageInfo }) => {
+    const page = store.getState().board.pageCollection[pageId]
     // pageId might not be valid anymore, exit then
-    if (!store.getState().board.pageCollection[pageId]) {
+    if (!page) {
         return null
     }
 
     // select style, selecting background doesnt trigger, bc it compares on the same reference
     const style = useCustomSelector(
-        (state) => state.board.pageCollection[pageId].meta.background.style
+        (state) => state.board.pageCollection[pageId]?.meta.background.style
     )
     const documentImages = useCustomSelector((state) => {
-        const { attachId } = state.board.pageCollection[pageId].meta.background
-        return state.board.attachments[attachId ?? ""]?.renderedData
+        const page = state.board.pageCollection[pageId]
+        if (!page) return undefined
+
+        const { attachId } = page.meta.background
+        if (attachId === undefined) return undefined
+
+        return state.board.attachments[attachId]?.renderedData
     })
     const imageRef = useRef<types.Image>(null)
 
@@ -31,15 +37,14 @@ const Background = memo<PageProps>(({ pageId, pageInfo }) => {
         })
     })
 
-    const { documentPageNum } =
-        store.getState().board.pageCollection[pageId].meta.background
+    const { documentPageNum } = page.meta.background
 
     let image: CanvasImageSource | undefined
 
     if (
         style === backgroundStyle.DOC &&
         documentPageNum !== undefined &&
-        !!documentImages[documentPageNum]
+        !!documentImages?.[documentPageNum]
     ) {
         image = new window.Image()
         image.src = documentImages[documentPageNum]
@@ -62,7 +67,7 @@ const Background = memo<PageProps>(({ pageId, pageInfo }) => {
                 ref={imageRef}
                 image={image}
                 sceneFunc={
-                    style !== backgroundStyle.DOC
+                    style && style !== backgroundStyle.DOC
                         ? pageBackground[style]
                         : undefined
                 }

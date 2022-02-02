@@ -47,35 +47,26 @@ const RenderLayer: React.FC<RenderLayerProps> = ({
 }) => {
     renderLayerRef = React.useRef<LayerType>(null)
 
-    const strokeIds = Object.keys(
-        store.getState().board.pageCollection[pageId].strokes
-    )
+    const page = store.getState().board.pageCollection[pageId]
+    if (!page) return null
 
-    // no strokes on this page
-    if (strokeIds.length === 0) {
-        return null
-    }
-
-    const { background, size } =
-        store.getState().board.pageCollection[pageId].meta
-    const { style } = background
-    const { height, width } = size
+    const { background, size } = page.meta
 
     return (
-        <Stage height={height} width={width}>
+        <Stage height={size.height} width={size.width}>
             <Provider store={store}>
                 <Layer ref={renderLayerRef}>
                     <Rect
-                        height={height}
-                        width={width}
+                        height={size.height}
+                        width={size.width}
                         sceneFunc={
-                            drawBackground ? pageBackground[style] : undefined
+                            drawBackground
+                                ? pageBackground[background.style]
+                                : undefined
                         }
                     />
-                    {strokeIds.map((id) => {
-                        const stroke =
-                            store.getState().board.pageCollection[pageId]
-                                ?.strokes[id]
+                    {Object.keys(page.strokes).map((id) => {
+                        const stroke = page.strokes[id]
                         if (!stroke) return null
 
                         const pdfShapeProps = {
@@ -102,11 +93,7 @@ const RenderLayer: React.FC<RenderLayerProps> = ({
                         return (
                             <Shape
                                 key={id}
-                                stroke={
-                                    store.getState().board.pageCollection[
-                                        pageId
-                                    ]?.strokes[id]
-                                }
+                                stroke={stroke}
                                 shapeProps={pdfShapeProps}
                             />
                         )

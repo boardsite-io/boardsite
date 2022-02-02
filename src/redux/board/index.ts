@@ -72,15 +72,11 @@ const boardSlice = createSlice({
             } = action.payload
 
             // make a copy of old page meta
-            const pages = pageUpdates.map<Pick<Page, "pageId" | "meta">>(
-                (page) =>
-                    cloneDeep(
-                        pick(state.pageCollection[page.pageId], [
-                            "pageId",
-                            "meta",
-                        ])
-                    )
-            )
+            const pages = pageUpdates.map((page) =>
+                cloneDeep(
+                    pick(state.pageCollection[page.pageId], ["pageId", "meta"])
+                )
+            ) as Page[]
 
             const handler = (boardState: BoardState) => {
                 updatePages(boardState, ...pageUpdates)
@@ -162,7 +158,8 @@ const boardSlice = createSlice({
                 .map((pid) => cloneDeep(state.pageCollection[pid]))
                 .filter((page) => page !== undefined)
                 .reduce<Stroke[]>(
-                    (arr, page) => arr.concat(Object.values(page.strokes)),
+                    (arr, page) =>
+                        arr.concat(Object.values((page as Page).strokes)),
                     []
                 )
 
@@ -198,7 +195,7 @@ const boardSlice = createSlice({
 
             const addPageData = pageIds
                 .map<AddPageData>((pid) => ({
-                    page: state.pageCollection[pid],
+                    page: state.pageCollection[pid] as Page,
                 }))
                 .filter(({ page }) => page !== undefined)
             const pageRank = [...state.pageRank]
