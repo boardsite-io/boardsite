@@ -1,13 +1,13 @@
-import { readFileAsUint8Array } from "drawing/io/helpers"
+import { readFileAsUint8Array } from "drawing/fileManagement/helpers"
 import { deflate, inflate } from "pako"
-import { newState } from "./localstorage"
-import { ReducerState } from "./reducer"
+import { newState } from "redux/localstorage"
+import { ReducerState } from "redux/reducer"
 import {
     FileHeader,
     RootState,
     SerializableStateRecord,
     SerializableReducerState,
-} from "./types"
+} from "redux/types"
 
 const fileVersion = "1.0"
 const statesToSave: SerializableReducerState[] = ["board"]

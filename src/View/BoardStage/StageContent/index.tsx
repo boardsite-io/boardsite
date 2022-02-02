@@ -25,7 +25,7 @@ const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
         ]
     )
     const pageRankSection = useCustomSelector(pageIdSelector)
-    const meta = pageRankSection.map(
+    const pageMetas = pageRankSection.map(
         (pageId) => store.getState().board.pageCollection[pageId]?.meta
     )
 
@@ -37,29 +37,29 @@ const StageContent = memo<{ value: ReactReduxContextValue }>(() => {
     const getPageY = useCallback(
         (i: number) => {
             if (i === 2) {
-                return meta[1].size.height + DEFAULT_PAGE_GAP
+                return pageMetas[1].size.height + DEFAULT_PAGE_GAP
             }
-            return i ? 0 : -(meta[0].size.height + DEFAULT_PAGE_GAP)
+            return i ? 0 : -(pageMetas[0].size.height + DEFAULT_PAGE_GAP)
         },
-        [meta]
+        [pageMetas]
     )
 
     const getPageInfo = useCallback(
         (i: number): PageInfo => ({
-            height: meta[i].size.height,
-            width: meta[i].size.width,
-            x: -meta[i].size.width / 2,
+            height: pageMetas[i].size.height,
+            width: pageMetas[i].size.width,
+            x: -pageMetas[i].size.width / 2,
             y: getPageY(i),
         }),
-        [meta, getPageY]
+        [pageMetas, getPageY]
     )
 
     const isValid = useCallback(
-        (i: number): boolean => !!meta[1] && !!meta[i],
-        [meta]
+        (i: number): boolean => !!pageMetas[1] && !!pageMetas[i],
+        [pageMetas]
     )
 
-    if (!meta[1]) return null
+    if (!pageMetas[1]) return null
 
     return (
         <>

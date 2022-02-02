@@ -224,9 +224,14 @@ const boardSlice = createSlice({
                 isNew: true,
             })
 
-            // Set view to previous page after deletion
-            if (state.currentPageIndex > 0) {
-                state.currentPageIndex -= 1
+            if (!state.pageRank.length) {
+                // All pages have been deleted so view and index can be reset
+                state.currentPageIndex = 0
+                initialView(state)
+            } else if (state.currentPageIndex > state.pageRank.length - 1) {
+                // Deletions have caused the current page index to exceed
+                // the page limit, therefore we move to the last page
+                state.currentPageIndex = state.pageRank.length - 1
                 initialView(state)
             }
 

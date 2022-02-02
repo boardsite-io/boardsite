@@ -7,7 +7,7 @@ import {
     handleExportWorkspace,
     handleImportPdf,
     handleImportWorkspace,
-} from "drawing/io"
+} from "drawing/fileManagement"
 import { CLOSE_MAIN_MENU } from "redux/menu"
 import store from "redux/store"
 import { SubMenuWrap } from "../../index.styled"
