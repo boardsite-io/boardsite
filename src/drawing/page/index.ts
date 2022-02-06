@@ -2,7 +2,11 @@ import { nanoid } from "@reduxjs/toolkit"
 import { backgroundStyle, pageSize } from "consts"
 import { BoardStroke } from "drawing/stroke"
 import { Page, PageMeta } from "redux/board/index.types"
-import { SerializedStroke, Stroke, StrokeMap } from "../stroke/index.types"
+import {
+    SerializedStroke,
+    Stroke,
+    StrokeCollection,
+} from "../stroke/index.types"
 
 export class BoardPage implements Page {
     constructor(page?: Page) {
@@ -23,7 +27,7 @@ export class BoardPage implements Page {
     }
 
     pageId: string
-    strokes: StrokeMap
+    strokes: StrokeCollection
     meta: PageMeta
 
     setID(pageId: string): BoardPage {

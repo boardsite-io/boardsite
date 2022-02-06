@@ -2,6 +2,7 @@ import styled from "styled-components"
 
 export const ViewWrap = styled.div`
     position: fixed;
+    display: flex;
     inset: 0;
     background: var(--cBackground);
     -webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */

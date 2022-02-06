@@ -2,7 +2,7 @@ import {
     BaseStroke,
     Point,
     Stroke,
-    StrokeMap,
+    StrokeCollection,
     Tool,
 } from "drawing/stroke/index.types"
 
@@ -15,5 +15,8 @@ export interface LiveStroke extends BaseStroke {
     processPoints(pagePosition: Point): void
     reset(): void
     isReset(): boolean
-    selectLineCollision(strokes: StrokeMap, pagePosition: Point): StrokeMap
+    selectLineCollision(
+        strokes: StrokeCollection,
+        pagePosition: Point
+    ): StrokeCollection
 }

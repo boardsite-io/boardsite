@@ -16,7 +16,7 @@ import { fileOpen, fileSave } from "browser-fs-access"
 import { LOAD_BOARD_STATE } from "redux/board"
 import { BoardState } from "redux/board/index.types"
 import { isConnected } from "api/session"
-import { renderAsPdf, handleImportPdfFile } from "./pdf"
+import { handleImportPdfFile, renderAsPdf } from "./pdf"
 import { handleImportWorkspaceFile, saveWorkspace } from "./workspace"
 
 export const handleProcessFileImport = async (
@@ -85,7 +85,6 @@ export const handleExportPdf = async (): Promise<void> => {
     store.dispatch(START_LOADING({ messageId: "Loading.ExportingPdf" }))
     const pdfBytes = await renderAsPdf()
     store.dispatch(END_LOADING())
-
     // Save to file system
     await fileSave(
         new Blob([pdfBytes], {
@@ -97,7 +96,6 @@ export const handleExportPdf = async (): Promise<void> => {
             extensions: [FILE_EXTENSION_PDF],
         }
     )
-
     store.dispatch(CLOSE_MAIN_MENU())
 }
 

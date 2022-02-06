@@ -3,7 +3,8 @@ import { active, inactive, SELECTION_SIZE } from "../index.styled"
 
 export const SizePresets = styled.form`
     display: flex;
-    justify-content: space-between;
+    gap: 2rem;
+    justify-content: center;
 `
 
 const sharedStyle = css<props>`
@@ -31,19 +32,14 @@ interface props {
     $active: boolean
 }
 
-export const A4Landscape = styled.button<props>`
+export const A4Portrait = styled.button<props>`
     ${sharedStyle}
     height: ${a4height};
     width: ${a4width};
 `
-export const A4Portrait = styled.button<props>`
+export const A4Landscape = styled.button<props>`
     ${sharedStyle};
     margin-top: calc((${a4height} - ${a4width}) / 2);
     height: ${a4width};
-    width: ${a4height};
-`
-export const Square = styled.button<props>`
-    ${sharedStyle}
-    height: ${a4height};
     width: ${a4height};
 `

@@ -1,10 +1,4 @@
-import {
-    DEFAULT_CURRENT_PAGE_INDEX,
-    DEFAULT_STAGE_X,
-    DEFAULT_STAGE_Y,
-    DEFAULT_STAGE_SCALE,
-    DEFAULT_KEEP_CENTERED,
-} from "consts"
+import { DEFAULT_CURRENT_PAGE_INDEX, DEFAULT_KEEP_CENTERED } from "consts"
 import { BoardStroke } from "drawing/stroke"
 import { BoardPage } from "drawing/page"
 import { pick, keys, assign, cloneDeep } from "lodash"
@@ -21,16 +15,8 @@ export const newState = (state?: BoardState): BoardState => ({
     pageRank: [],
     pageCollection: {},
     attachments: {},
-    stage: {
+    view: {
         keepCentered: DEFAULT_KEEP_CENTERED,
-        attrs: {
-            width: window.innerWidth,
-            height: window.innerHeight,
-            x: DEFAULT_STAGE_X,
-            y: DEFAULT_STAGE_Y,
-            scaleX: DEFAULT_STAGE_SCALE,
-            scaleY: DEFAULT_STAGE_SCALE,
-        },
         renderTrigger: false,
     },
     undoStack: [],
@@ -46,7 +32,7 @@ export const newState = (state?: BoardState): BoardState => ({
     },
 
     triggerStageRender(): void {
-        this.stage.renderTrigger = !this.stage.renderTrigger
+        this.view.renderTrigger = !this.view.renderTrigger
     },
 
     triggerStrokesRender(): void {
@@ -123,10 +109,6 @@ export const newState = (state?: BoardState): BoardState => ({
                 strokes[strokeId] = new BoardStroke(stroke) // deserialize a new instance
             })
         })
-
-        // Update stage dimensions for initial indexedDB data load on new window
-        this.stage.attrs.height = window.innerHeight
-        this.stage.attrs.width = window.innerWidth
 
         // reload attachments
         await Promise.all(

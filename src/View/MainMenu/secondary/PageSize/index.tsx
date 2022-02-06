@@ -15,9 +15,6 @@ const onClickA4landscape = () => {
 const onClickA4portrait = () => {
     store.dispatch(SET_PAGE_SIZE(pageSize.a4portrait))
 }
-const onClickSquare = () => {
-    store.dispatch(SET_PAGE_SIZE(pageSize.square))
-}
 
 const PageSizeMenu = () => {
     const { width, height } = useCustomSelector(
@@ -31,19 +28,14 @@ const PageSizeMenu = () => {
     return (
         <SubMenuWrap level={4}>
             <MenuItem
-                text={<FormattedMessage id="Menu.Page.Size.A4Landscape" />}
-                icon={isMatch(pageSize.a4landscape) ? <TickIcon /> : undefined}
-                onClick={onClickA4landscape}
-            />
-            <MenuItem
                 text={<FormattedMessage id="Menu.Page.Size.A4Portrait" />}
                 icon={isMatch(pageSize.a4portrait) ? <TickIcon /> : undefined}
                 onClick={onClickA4portrait}
             />
             <MenuItem
-                text={<FormattedMessage id="Menu.Page.Size.Square" />}
-                icon={isMatch(pageSize.square) ? <TickIcon /> : undefined}
-                onClick={onClickSquare}
+                text={<FormattedMessage id="Menu.Page.Size.A4Landscape" />}
+                icon={isMatch(pageSize.a4landscape) ? <TickIcon /> : undefined}
+                onClick={onClickA4landscape}
             />
         </SubMenuWrap>
     )

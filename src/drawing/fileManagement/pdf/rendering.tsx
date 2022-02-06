@@ -1,15 +1,10 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import { Provider } from "react-redux"
-import store from "redux/store"
-import { Layer, Stage, Rect } from "react-konva"
-import type { Layer as LayerType } from "konva/lib/Layer"
-import Shape from "View/BoardStage/Shape"
-import { LineCap, LineJoin } from "konva/lib/Shape"
-import { PDF_EXPORT_PIXEL_RATIO } from "consts"
-import { pageBackground } from "drawing/page/backgrounds"
-
-let renderLayerRef: React.Ref<LayerType> = null
+import { MAX_PIXEL_SCALE } from "consts"
+import { Page } from "redux/board/index.types"
+import { draw } from "View/Board/RenderNG/draw"
+import { Canvas } from "View/Board/RenderNG/Page/index.styled"
+import { drawBackground } from "View/Board/RenderNG/Page/Background/backgrounds"
 
 /**
  * Renders a page as image data.
@@ -17,92 +12,47 @@ let renderLayerRef: React.Ref<LayerType> = null
  * @returns image data urls
  */
 export const pageToDataURL = async (
-    pageId: string,
-    drawBackground?: boolean
+    page: Page
 ): Promise<string | undefined> => {
     const tmp = document.createElement("div")
+    const canvasRef = React.createRef<HTMLCanvasElement>()
 
-    ReactDOM.render(
-        <RenderLayer pageId={pageId} drawBackground={drawBackground} />,
-        tmp
-    )
-    const data = (
-        renderLayerRef as unknown as React.RefObject<LayerType>
-    )?.current?.toDataURL({
-        pixelRatio: PDF_EXPORT_PIXEL_RATIO,
-    })
+    ReactDOM.render(<Content canvasRef={canvasRef} page={page} />, tmp)
+
+    const ctx = canvasRef.current?.getContext("2d")
+
+    if (ctx) {
+        ctx.scale(MAX_PIXEL_SCALE, MAX_PIXEL_SCALE)
+
+        // Draw content layer
+        Object.values(page.strokes).forEach((stroke) => {
+            draw(ctx, stroke)
+        })
+
+        // Draw background layer
+        drawBackground(ctx, page.meta)
+    }
+    const data = canvasRef.current?.toDataURL("image/png", MAX_PIXEL_SCALE)
 
     tmp.remove()
     return data
 }
 
-interface RenderLayerProps {
-    pageId: string
-    drawBackground?: boolean
-}
-
-const RenderLayer: React.FC<RenderLayerProps> = ({
-    pageId,
-    drawBackground,
-}) => {
-    renderLayerRef = React.useRef<LayerType>(null)
-
-    const page = store.getState().board.pageCollection[pageId]
-    if (!page) {
-        return null
-    }
-
-    const { background, size } = page.meta
-
+const Content: React.FC<{
+    canvasRef: React.RefObject<HTMLCanvasElement>
+    page: Page
+}> = ({ canvasRef, page }) => {
     return (
-        <Stage height={size.height} width={size.width}>
-            <Provider store={store}>
-                <Layer ref={renderLayerRef}>
-                    <Rect
-                        height={size.height}
-                        width={size.width}
-                        sceneFunc={
-                            drawBackground
-                                ? pageBackground[background.style]
-                                : undefined
-                        }
-                    />
-                    {Object.values(page.strokes).map((stroke) => {
-                        if (!stroke) {
-                            return null
-                        }
-
-                        const pdfShapeProps = {
-                            name: stroke.pageId,
-                            id: stroke.id,
-                            x: stroke.x,
-                            y: stroke.y,
-                            scaleX: stroke.scaleX,
-                            scaleY: stroke.scaleY,
-                            lineCap: "round" as LineCap,
-                            lineJoin: "round" as LineJoin,
-                            stroke: stroke.style.color,
-                            fill: undefined,
-                            strokeWidth: stroke.style.width,
-                            opacity: stroke.style.opacity,
-                            listening: false,
-                            draggable: false,
-                            onDragStart: undefined,
-                            onDragEnd: undefined,
-                            shadowForStrokeEnabled: false,
-                            points: stroke.points,
-                        }
-
-                        return (
-                            <Shape
-                                key={stroke.id}
-                                stroke={stroke}
-                                shapeProps={pdfShapeProps}
-                            />
-                        )
-                    })}
-                </Layer>
-            </Provider>
-        </Stage>
+        <Canvas
+            ref={canvasRef}
+            style={{
+                width: page.meta.size.width,
+                height: page.meta.size.height,
+                left: 0,
+                top: 0,
+            }}
+            width={page.meta.size.width * MAX_PIXEL_SCALE}
+            height={page.meta.size.height * MAX_PIXEL_SCALE}
+        />
     )
 }

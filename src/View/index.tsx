@@ -1,6 +1,6 @@
 import React from "react"
 import { useKeyboardShortcuts } from "hooks"
-import BoardStage from "./BoardStage"
+import Board from "./Board"
 import { ViewWrap } from "./index.styled"
 import SessionInfo from "./SessionInfo"
 import ToolRing from "./ToolRing"
@@ -16,7 +16,7 @@ const View: React.FC = () => {
 
     return (
         <ViewWrap>
-            <BoardStage />
+            <Board />
             <SessionInfo />
             <ToolRing />
             <FavoriteTools />

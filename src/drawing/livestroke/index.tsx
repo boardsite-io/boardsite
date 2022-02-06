@@ -10,14 +10,21 @@ import { MOVE_SHAPES_TO_DRAG_LAYER } from "redux/board"
 import { CLEAR_ERASED_STROKES, SET_ERASED_STROKES } from "redux/drawing"
 import store from "redux/store"
 import { Page } from "redux/board/index.types"
-import { perfectDrawing, simplifyRDP } from "../stroke/simplify"
+import { viewState } from "state/view"
+import { simplifyRDP } from "../stroke/simplify"
 import {
     getHitboxPolygon,
     getSelectionPolygon,
     matchStrokeCollision,
 } from "../stroke/hitbox"
 import { BoardStroke } from "../stroke"
-import { Point, Stroke, StrokeMap, Tool, ToolType } from "../stroke/index.types"
+import {
+    Point,
+    Stroke,
+    StrokeCollection,
+    Tool,
+    ToolType,
+} from "../stroke/index.types"
 import { LiveStroke } from "./index.types"
 
 export class BoardLiveStroke implements LiveStroke {
@@ -59,30 +66,19 @@ export class BoardLiveStroke implements LiveStroke {
         this.pageId = pageId
         this.points = [point.x, point.y]
 
-        if (
-            this.type === ToolType.Circle ||
-            this.type === ToolType.Rectangle ||
-            this.type === ToolType.Select
-        ) {
-            this.x = point.x
-            this.y = point.y
-        }
-
         return this
     }
 
-    move(point: Point, pagePosition: Point): void {
+    move(point: Point): void {
         this.addPoint(point)
         if (this.type === ToolType.Eraser) {
-            this.moveEraser(pagePosition)
+            this.moveEraser()
         }
     }
 
-    moveEraser(pagePosition: Point): void {
-        const { strokes } = store.getState().board.pageCollection[
-            this.pageId
-        ] as Page
-        const selectedStrokes = this.selectLineCollision(strokes, pagePosition)
+    moveEraser(): void {
+        const { strokes } = store.getState().board.pageCollection[this.pageId]
+        const selectedStrokes = this.selectLineCollision(strokes)
 
         if (Object.keys(selectedStrokes).length > 0) {
             store.dispatch(SET_ERASED_STROKES(selectedStrokes))
@@ -93,65 +89,49 @@ export class BoardLiveStroke implements LiveStroke {
         switch (this.type) {
             case ToolType.Pen:
             case ToolType.Eraser: {
-                const segmentSize = 8
                 this.points.push(point.x, point.y)
-                const last = this.points.splice(-segmentSize, segmentSize)
-                this.points = this.points.concat(perfectDrawing(last))
-                return
-            }
-            case ToolType.Circle:
-                this.x = this.points[0] + (point.x - this.points[0]) / 2
-                this.y = this.points[1] + (point.y - this.points[1]) / 2
                 break
+            }
+            case ToolType.Line:
+            case ToolType.Circle:
             case ToolType.Rectangle:
             case ToolType.Select:
-                this.x = this.points[0]
-                this.y = this.points[1]
+                this.points[2] = point.x
+                this.points[3] = point.y
                 break
             default:
                 break
         }
-
-        // only start & end point required for non continuous
-        this.points = [this.points[0], this.points[1], point.x, point.y]
     }
 
     /**
      * Convert livestroke into the normal stroke format
      */
-    finalize(pagePosition: Point): Stroke {
-        this.processPoints(pagePosition)
+    finalize(): Stroke {
+        this.processPoints()
         const stroke = new BoardStroke(this)
         this.reset()
         return stroke
     }
 
-    processPoints(pagePosition: Point): void {
-        const { x: pageX, y: pageY } = pagePosition
-        const stageScale = store.getState().board.stage.attrs.scaleX
+    processPoints(): void {
+        const { scale } = viewState.getTransformState()
 
         switch (this.type) {
             case ToolType.Pen: {
                 const epsilon = 0.25
                 const sections = 3
+                // this.points = perfectDrawing(this.points)
                 this.points = simplifyRDP(
                     this.points,
-                    epsilon / stageScale,
+                    epsilon / scale,
                     sections
                 )
                 break
             }
-            case ToolType.Rectangle:
-            case ToolType.Circle:
-                this.x -= pageX
-                this.y -= pageY
-                break
             default:
                 break
         }
-
-        // compensate page offset in stage
-        this.points = subPageOffset(this.points, pagePosition)
     }
 
     /**
@@ -171,9 +151,9 @@ export class BoardLiveStroke implements LiveStroke {
     }
 
     private numUpdates = 0
-    selectLineCollision(strokes: StrokeMap, pagePosition: Point): StrokeMap {
+    selectLineCollision(strokes: StrokeCollection): StrokeCollection {
         const target = 5
-        const res: StrokeMap = {}
+        const res: StrokeCollection = {}
         this.numUpdates += 1
         if (this.numUpdates === target) {
             const p = this.points
@@ -184,10 +164,7 @@ export class BoardLiveStroke implements LiveStroke {
                 .concat(p.slice(p.length - 2))
 
             this.numUpdates = 0
-            const selectionPolygon = getHitboxPolygon(
-                subPageOffset(line, pagePosition), // compensate page offset in stage
-                ERASER_WIDTH
-            )
+            const selectionPolygon = getHitboxPolygon(line, ERASER_WIDTH)
 
             return matchStrokeCollision(strokes, selectionPolygon)
         }
@@ -229,9 +206,3 @@ export class BoardLiveStroke implements LiveStroke {
         }
     }
 }
-
-const subPageOffset = (points: number[], pagePosition: Point): number[] =>
-    points.map((p, i) => {
-        const pt = i % 2 ? p - pagePosition.y : p - pagePosition.x
-        return Math.round(pt * 100) / 100 // round to a reasonable precision
-    })

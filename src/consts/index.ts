@@ -1,5 +1,6 @@
 import { Tool, ToolType } from "drawing/stroke/index.types"
 import { PageBackgroundStyle } from "redux/board/index.types"
+import { TransformState } from "state/view/ViewState/index.types"
 
 /**
  * Returns true if in development mode
@@ -9,13 +10,15 @@ export default function isDev(): boolean {
 }
 
 /* 
-    These constants define the distance of each respective scroll limit to the upper viewport 
-    border, e.g., a first page limit value of 0.3 means the upper border of the first 
-    page can at most be 30% of the viewport height away from the upper viewport border. 
+These constants define the distance of each respective scroll limit to the upper viewport 
+border, e.g., a first page limit value of 0.3 means the upper border of the first 
+page can at most be 30% of the viewport height away from the upper viewport border. 
 */
 export const SCROLL_LIMIT_FIRST_PAGE = 0.25 // Calculated from upper border!
 export const SCROLL_LIMIT_LAST_PAGE = 0.75 // Calculated from upper border!
 export const SCROLL_LIMIT_HORIZONTAL = 0.5 // Calculated from side borders!
+export const MAX_PIXEL_SCALE = 4
+export const DEVICE_PIXEL_RATIO = window.devicePixelRatio || 1
 
 export const MIME_TYPE_WORKSPACE = "application/boardio"
 export const MIME_TYPE_PDF = "application/pdf"
@@ -30,23 +33,26 @@ export const NOTIFICATION_TRANSITION = 300 // in ms
 export const NOTIFICATION_DURATION = 1000
 export const MAX_FAVORITE_TOOLS = 5
 export const MAX_ALIAS_LENGTH = 30
-export const STAGE_RESIZE_DEBOUNCE = 250 // debounce time in ms
-export const STAGE_UPDATE_DEBOUNCE = 100 // debounce time in ms
-export const PIXEL_RATIO = 4
+export const TRANSFORM_PIXEL_SCALE_DEBOUNCE = 100 // debounce time in ms
 export const STROKE_WIDTH_PRESETS = [0.5, 1, 2, 3, 4, 5, 7, 10, 14, 20]
 export const DEFAULT_PAGE_GAP = 20
 export const DEFAULT_WIDTH = STROKE_WIDTH_PRESETS[3]
 export const DEFAULT_COLOR = "#000000"
-export const ZOOM_IN_WHEEL_SCALE = 1.1
-export const ZOOM_OUT_WHEEL_SCALE = 0.9
+export const ZOOM_IN_WHEEL_SCALE = 1.05
+export const ZOOM_OUT_WHEEL_SCALE = 0.95
 export const ZOOM_IN_BUTTON_SCALE = 1.1
 export const ZOOM_OUT_BUTTON_SCALE = 0.9
 export const ZOOM_SCALE_MAX = 5.0
 export const ZOOM_SCALE_MIN = 0.5
 export const DEFAULT_CURRENT_PAGE_INDEX = 0
-export const DEFAULT_STAGE_X = window.innerWidth / 2
-export const DEFAULT_STAGE_Y = 60
-export const DEFAULT_STAGE_SCALE = 1
+export const DEFAULT_VIEW_OFFSET_X = window.innerWidth / 2
+export const DEFAULT_VIEW_OFFSET_Y = 60
+export const DEFAULT_VIEW_SCALE = 1
+export const DEFAULT_VIEW_TRANSFORM: TransformState = {
+    xOffset: DEFAULT_VIEW_OFFSET_X,
+    yOffset: DEFAULT_VIEW_OFFSET_Y,
+    scale: DEFAULT_VIEW_SCALE,
+}
 export const DEFAULT_ISDRAGGABLE = false
 export const DEFAULT_KEEP_CENTERED = false
 export const DRAG_SHADOW_BLUR = 4
@@ -76,9 +82,11 @@ export const DEFAULT_DIRECTDRAW = true
 
 const ELEMENTS_PER_POINT = 2
 export const LIVESTROKE_SEGMENT_SIZE = 420 * ELEMENTS_PER_POINT
-export const DOC_SCALE = 4 // scale factor for imported documents
 
-export const PDF_EXPORT_PIXEL_RATIO = 6
+export const pageSize = {
+    a4portrait: { width: 620, height: 877 },
+    a4landscape: { width: 877, height: 620 },
+}
 
 type BackgroundStyle = Record<string, PageBackgroundStyle>
 
@@ -87,12 +95,6 @@ export const backgroundStyle: BackgroundStyle = {
     CHECKERED: "checkered",
     RULED: "ruled",
     DOC: "doc",
-}
-
-export const pageSize = {
-    a4landscape: { width: 620, height: 877 },
-    a4portrait: { width: 877, height: 620 },
-    square: { width: 877, height: 877 },
 }
 
 export enum Variant {

@@ -1,8 +1,8 @@
 import { FormattedMessage } from "language"
 import React, { useState } from "react"
-import Konva from "konva"
 import { MAX_ALIAS_LENGTH } from "consts"
 import { currentSession } from "api/session"
+import { getRandomColor } from "helpers"
 import { ColorButton, Selection } from "./index.styled"
 // Dont import from components to prevent dependency cycle
 import TextField from "../TextField"
@@ -15,7 +15,7 @@ const UserSelection: React.FC = () => {
     }
 
     const newRandomColor = () => {
-        currentSession().updateUser({ color: Konva.Util.getRandomColor() })
+        currentSession().updateUser({ color: getRandomColor() })
         triggerRender((x) => !x)
     }
 

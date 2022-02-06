@@ -4,9 +4,9 @@ import { Stroke, ToolType } from "drawing/stroke/index.types"
 import { cloneDeep } from "lodash"
 import {
     DEFAULT_KEEP_CENTERED,
-    DEFAULT_STAGE_SCALE,
-    DEFAULT_STAGE_X,
-    DEFAULT_STAGE_Y,
+    DEFAULT_VIEW_SCALE,
+    DEFAULT_VIEW_OFFSET_X,
+    DEFAULT_VIEW_OFFSET_Y,
     backgroundStyle,
     STROKE_WIDTH_PRESETS,
     pageSize,
@@ -67,15 +67,12 @@ export const mockBoardState = {
             height: 10,
         },
     },
-    stage: {
+    view: {
         keepCentered: DEFAULT_KEEP_CENTERED,
-        attrs: {
-            width: window.innerWidth,
-            height: window.innerHeight,
-            x: DEFAULT_STAGE_X,
-            y: DEFAULT_STAGE_Y,
-            scaleX: DEFAULT_STAGE_SCALE,
-            scaleY: DEFAULT_STAGE_SCALE,
+        transform: {
+            xOffset: DEFAULT_VIEW_OFFSET_X,
+            yOffset: DEFAULT_VIEW_OFFSET_Y,
+            scale: DEFAULT_VIEW_SCALE,
         },
         renderTrigger: false,
     },
@@ -294,7 +291,7 @@ describe("board reducer", () => {
     it("updates pages meta, undos and redos the action", () => {
         let state: BoardState = cloneDeep(mockBoardState)
         const newMeta = cloneDeep(page1.meta)
-        newMeta.size = pageSize.square
+        newMeta.size = pageSize.a4portrait
         newMeta.background.style = backgroundStyle.CHECKERED
         const pageUpdate = {
             pageId: page1.pageId,

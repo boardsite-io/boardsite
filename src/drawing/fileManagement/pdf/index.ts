@@ -1,6 +1,6 @@
 import { PDFDocument, PDFImage, PDFPage } from "pdf-lib"
 import store from "redux/store"
-import { backgroundStyle } from "consts"
+import { backgroundStyle, MAX_PIXEL_SCALE } from "consts"
 import { currentSession, isConnected } from "api/session"
 import { handleDeleteAllPages } from "drawing/handlers"
 import { readFileAsUint8Array } from "drawing/fileManagement/helpers"
@@ -13,8 +13,8 @@ import {
 } from "redux/board"
 import { AttachId, Attachment, PageMeta } from "redux/board/index.types"
 import { PDFAttachment } from "drawing/attachment"
+import { handleResetView } from "state/view/interface"
 import { pageToDataURL } from "./rendering"
-import { getPageSize } from "./helpers"
 
 export const handleImportPdfFile = async (file: File): Promise<void> => {
     const blob = await readFileAsUint8Array(file)
@@ -33,35 +33,44 @@ const addRenderedPdf = async (attachment: Attachment): Promise<void> => {
     handleDeleteAllPages()
 
     if (isConnected()) {
-        const pages = attachment.renderedData.map((img, i) =>
-            new BoardPage().updateMeta({
+        const pages = attachment.renderedData.map((img, i) => {
+            return new BoardPage().updateMeta({
                 background: {
                     style: backgroundStyle.DOC,
                     attachId: attachment.id,
                     documentPageNum: i,
                 },
-                size: getPageSize(img),
+                size: {
+                    width: img.width / MAX_PIXEL_SCALE,
+                    height: img.height / MAX_PIXEL_SCALE,
+                },
             })
-        )
+        })
 
         currentSession().addPages(
             pages,
             pages.map(() => -1)
         )
     } else {
-        const addPageData = attachment.renderedData.map((img, i) => ({
-            page: new BoardPage().updateMeta({
-                background: {
-                    style: backgroundStyle.DOC,
-                    attachId: attachment.id,
-                    documentPageNum: i,
-                },
-                size: getPageSize(img),
-            }),
-            index: -1, // append subsequent pages at the end
-        }))
+        const addPageData = attachment.renderedData.map((img, i) => {
+            return {
+                page: new BoardPage().updateMeta({
+                    background: {
+                        style: backgroundStyle.DOC,
+                        attachId: attachment.id,
+                        documentPageNum: i,
+                    },
+                    size: {
+                        width: img.width / MAX_PIXEL_SCALE,
+                        height: img.height / MAX_PIXEL_SCALE,
+                    },
+                }),
+                index: -1, // append subsequent pages at the end
+            }
+        })
 
         store.dispatch(ADD_PAGES({ data: addPageData }))
+        handleResetView()
     }
 
     store.dispatch(JUMP_TO_FIRST_PAGE())
@@ -76,7 +85,8 @@ export const renderAsPdf = async (): Promise<Uint8Array> => {
 
     const pageImages = await Promise.all(
         pageRank.map(async (pageId) => {
-            const data = await pageToDataURL(pageId, true)
+            const page = pageCollection[pageId]
+            const data = await pageToDataURL(page)
             if (data && data.length !== 0) {
                 return pdf.embedPng(data)
             }
@@ -93,7 +103,7 @@ export const renderAsPdf = async (): Promise<Uint8Array> => {
         if (
             style === backgroundStyle.DOC &&
             documentPageNum !== undefined &&
-            attachId
+            attachId !== undefined
         ) {
             if (!pdfDocuments[attachId]) {
                 // if document is not loaded yet (loaded by pdf-lib)

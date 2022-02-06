@@ -19,5 +19,5 @@ export const PageSettingsInnerWrap = styled.div`
     flex-direction: column;
     gap: 1rem;
     width: 100%;
-    max-width: 20rem;
+    max-width: 16rem;
 `

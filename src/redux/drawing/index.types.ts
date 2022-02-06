@@ -1,4 +1,4 @@
-import { StrokeMap, Tool } from "drawing/stroke/index.types"
+import { StrokeCollection, Tool } from "drawing/stroke/index.types"
 import { PageBackgroundStyle, PageMeta, PageSize } from "../board/index.types"
 
 export interface DrawingState {
@@ -7,7 +7,7 @@ export interface DrawingState {
     tool: Tool
     pageMeta: PageMeta
     favoriteTools: Tool[]
-    erasedStrokes: StrokeMap
+    erasedStrokes: StrokeCollection
 
     serialize?(): SerializedDrawingState
     deserialize?(parsed: SerializedDrawingState): Promise<DrawingState>
