@@ -3,7 +3,7 @@ import { HorizontalRule, TickIcon } from "components"
 import { backgroundStyle } from "consts"
 import { useCustomSelector } from "hooks"
 import { FormattedMessage } from "language"
-import { SET_PAGE_BACKGROUND } from "redux/board"
+import { SET_PAGE_BACKGROUND } from "redux/drawing"
 import store from "redux/store"
 import { handleChangePageBackground } from "drawing/handlers"
 import { SubMenuWrap } from "../../index.styled"
@@ -23,7 +23,7 @@ const onClickApply = () => {
 }
 const PageStyleMenu = () => {
     const style = useCustomSelector(
-        (state) => state.board.pageMeta.background.style
+        (state) => state.drawing.pageMeta.background.style
     )
 
     return (

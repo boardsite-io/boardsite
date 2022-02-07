@@ -1,10 +1,12 @@
 import {
+    backgroundStyle,
     DEFAULT_COLOR,
     DEFAULT_DIRECTDRAW,
     DEFAULT_FAV_TOOLS,
     DEFAULT_ISDRAGGABLE,
     DEFAULT_TOOL,
     DEFAULT_WIDTH,
+    pageSize,
 } from "consts"
 import { pick, keys, assign, cloneDeep } from "lodash"
 import { DrawingState, SerializedDrawingState } from "./index.types"
@@ -25,6 +27,10 @@ export const newState = (state?: DrawingState): DrawingState => ({
             width: DEFAULT_WIDTH,
             opacity: 1,
         },
+    },
+    pageMeta: {
+        background: { style: backgroundStyle.BLANK },
+        size: pageSize.a4landscape,
     },
     favoriteTools: DEFAULT_FAV_TOOLS,
     erasedStrokes: {},

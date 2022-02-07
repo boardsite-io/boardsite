@@ -3,7 +3,7 @@ import { FormattedMessage } from "language"
 import { TickIcon } from "components"
 import { pageSize } from "consts"
 import { useCustomSelector } from "hooks"
-import { SET_PAGE_SIZE } from "redux/board"
+import { SET_PAGE_SIZE } from "redux/drawing"
 import { PageSize } from "redux/board/index.types"
 import store from "redux/store"
 import { SubMenuWrap } from "../../index.styled"
@@ -21,7 +21,7 @@ const onClickSquare = () => {
 
 const PageSizeMenu = () => {
     const { width, height } = useCustomSelector(
-        (state) => state.board.pageMeta.size
+        (state) => state.drawing.pageMeta.size
     )
     const isMatch = useCallback(
         (size: PageSize) => width === size.width && height === size.height,

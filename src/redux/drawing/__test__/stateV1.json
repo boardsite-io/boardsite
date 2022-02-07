@@ -6,6 +6,12 @@
         "type": 2,
         "style": { "color": "#0211a3", "width": 1.5, "opacity": 0.5 }
     },
+    "pageMeta": {
+        "background": {
+            "style": "blank"
+        },
+        "size": { "width": 620, "height": 877 }
+    },
     "favoriteTools": [
         {
             "type": 1,

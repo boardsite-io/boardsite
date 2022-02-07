@@ -34,10 +34,8 @@ import {
     LoadBoardState,
     MoveShapesToDragLayer,
     Page,
-    SetPageBackground,
     SetPageMeta,
     SyncPages,
-    SetPageSize,
     SetStageAttrs,
 } from "./index.types"
 
@@ -97,19 +95,6 @@ const boardSlice = createSlice({
                 isNew: true,
             })
 
-            state.triggerStrokesRender?.()
-        },
-
-        SET_PAGE_BACKGROUND: (
-            state,
-            action: PayloadAction<SetPageBackground>
-        ) => {
-            const style = action.payload
-            state.pageMeta.background.style = style
-        },
-
-        SET_PAGE_SIZE: (state, action: PayloadAction<SetPageSize>) => {
-            state.pageMeta.size = action.payload
             state.triggerStrokesRender?.()
         },
 
@@ -238,9 +223,8 @@ const boardSlice = createSlice({
         },
 
         // Reset everything except page meta settings
-        DELETE_ALL_PAGES: (state) => ({
+        DELETE_ALL_PAGES: () => ({
             ...newState(),
-            pageMeta: state.pageMeta,
         }),
 
         CLEAR_UNDO_REDO: (state) => {
@@ -477,8 +461,6 @@ export const {
     REDO_ACTION,
     CLEAR_UNDO_REDO,
     CLEAR_TRANSFORM,
-    SET_PAGE_BACKGROUND,
-    SET_PAGE_SIZE,
     DECREMENT_PAGE_INDEX,
     INCREMENT_PAGE_INDEX,
     JUMP_TO_PREV_PAGE,

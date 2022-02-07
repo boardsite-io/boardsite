@@ -4,8 +4,6 @@ import {
     DEFAULT_STAGE_Y,
     DEFAULT_STAGE_SCALE,
     DEFAULT_KEEP_CENTERED,
-    pageSize,
-    backgroundStyle,
 } from "consts"
 import { BoardStroke } from "drawing/stroke"
 import { BoardPage } from "drawing/page"
@@ -22,10 +20,6 @@ export const newState = (state?: BoardState): BoardState => ({
     currentPageIndex: DEFAULT_CURRENT_PAGE_INDEX,
     pageRank: [],
     pageCollection: {},
-    pageMeta: {
-        background: { style: backgroundStyle.BLANK },
-        size: pageSize.a4landscape,
-    },
     attachments: {},
     stage: {
         keepCentered: DEFAULT_KEEP_CENTERED,
