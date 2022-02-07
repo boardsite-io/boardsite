@@ -2,14 +2,14 @@ import { FormattedMessage } from "language"
 import React from "react"
 import { useCustomSelector } from "hooks"
 import store from "redux/store"
-import { SET_PAGE_BACKGROUND } from "redux/board"
+import { SET_PAGE_BACKGROUND } from "redux/drawing"
 import { backgroundStyle } from "consts"
 import { Position, ToolTip } from "components"
 import { Backgrounds, Blank, Checkered, Ruled } from "./index.styled"
 
 const Background: React.FC = () => {
     const background = useCustomSelector(
-        (state) => state.board.pageMeta.background.style
+        (state) => state.drawing.pageMeta.background.style
     )
 
     return (

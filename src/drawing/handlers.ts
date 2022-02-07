@@ -32,7 +32,7 @@ import { BoardPage } from "./page"
 import { getVerifiedPageIds, getVerifiedPages } from "./helpers"
 
 const createPage = (): BoardPage =>
-    new BoardPage().updateMeta(store.getState().board.pageMeta)
+    new BoardPage().updateMeta(store.getState().drawing.pageMeta)
 
 export function handleSetTool(tool: Partial<Tool>): void {
     store.dispatch(SET_TOOL(tool))
@@ -193,7 +193,8 @@ export function handleChangePageBackground(): void {
     }
 
     const newMeta = cloneDeep<PageMeta>(currentPage.meta)
-    newMeta.background.style = store.getState().board.pageMeta.background.style
+    newMeta.background.style =
+        store.getState().drawing.pageMeta.background.style
 
     const pageUpdate = {
         pageId: currentPage.pageId,

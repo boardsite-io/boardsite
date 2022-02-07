@@ -3,7 +3,7 @@ import React, { useCallback } from "react"
 import { useCustomSelector } from "hooks"
 import store from "redux/store"
 import { pageSize } from "consts"
-import { SET_PAGE_SIZE } from "redux/board"
+import { SET_PAGE_SIZE } from "redux/drawing"
 import { PageSize } from "redux/board/index.types"
 import { Position, ToolTip } from "components"
 import {
@@ -16,7 +16,7 @@ import {
 
 const Size: React.FC = () => {
     const { width, height } = useCustomSelector(
-        (state) => state.board.pageMeta.size
+        (state) => state.drawing.pageMeta.size
     )
 
     const isMatch = useCallback(

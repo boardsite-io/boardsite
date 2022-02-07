@@ -1,8 +1,9 @@
 import { StrokeMap, Tool, ToolType } from "drawing/stroke/index.types"
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { assign, pick, keys } from "lodash"
 import { newState } from "./state"
 import { isDrawType } from "./helpers"
+import { SetPageBackground, SetPageSize } from "./index.types"
 
 const drawingSlice = createSlice({
     name: "drawing",
@@ -76,6 +77,15 @@ const drawingSlice = createSlice({
         CLEAR_ERASED_STROKES: (state) => {
             state.erasedStrokes = {}
         },
+        SET_PAGE_BACKGROUND: (
+            state,
+            action: PayloadAction<SetPageBackground>
+        ) => {
+            state.pageMeta.background.style = action.payload
+        },
+        SET_PAGE_SIZE: (state, action: PayloadAction<SetPageSize>) => {
+            state.pageMeta.size = action.payload
+        },
     },
 })
 
@@ -90,5 +100,7 @@ export const {
     TOGGLE_DIRECTDRAW,
     SET_ERASED_STROKES,
     CLEAR_ERASED_STROKES,
+    SET_PAGE_BACKGROUND,
+    SET_PAGE_SIZE,
 } = drawingSlice.actions
 export default drawingSlice.reducer

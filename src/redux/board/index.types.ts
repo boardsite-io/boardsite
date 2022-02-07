@@ -11,7 +11,6 @@ export interface BoardState {
     currentPageIndex: number
     pageRank: PageRank
     pageCollection: PageCollection
-    pageMeta: PageMeta
     attachments: Attachments
     stage: BoardStage
     undoStack?: StackAction[]
@@ -131,8 +130,6 @@ export type SetPageMeta = BoardAction<
     Pick<Page, "pageId" | "meta">[],
     Pick<Page, "pageId" | "meta">[]
 >
-export type SetPageBackground = PageBackgroundStyle
-export type SetPageSize = PageSize
 export type AddPageData = {
     page: Page
     index?: number
