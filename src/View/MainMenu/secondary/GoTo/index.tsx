@@ -1,3 +1,4 @@
+import { HorizontalRule } from "components"
 import { FormattedMessage } from "language"
 import React from "react"
 import {
@@ -14,16 +15,17 @@ const GoToMenu = () => {
     return (
         <SubMenuWrap>
             <MenuItem
-                text={<FormattedMessage id="Menu.View.GoTo.FirstPage" />}
-                onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}
-            />
-            <MenuItem
                 text={<FormattedMessage id="Menu.View.GoTo.PreviousPage" />}
                 onClick={() => store.dispatch(JUMP_TO_PREV_PAGE())}
             />
             <MenuItem
                 text={<FormattedMessage id="Menu.View.GoTo.NextPage" />}
                 onClick={() => store.dispatch(JUMP_TO_NEXT_PAGE())}
+            />
+            <HorizontalRule />
+            <MenuItem
+                text={<FormattedMessage id="Menu.View.GoTo.FirstPage" />}
+                onClick={() => store.dispatch(JUMP_TO_FIRST_PAGE())}
             />
             <MenuItem
                 text={<FormattedMessage id="Menu.View.GoTo.LastPage" />}

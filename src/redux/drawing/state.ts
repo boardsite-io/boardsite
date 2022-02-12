@@ -30,7 +30,7 @@ export const newState = (state?: DrawingState): DrawingState => ({
     },
     pageMeta: {
         background: { style: backgroundStyle.BLANK },
-        size: pageSize.a4landscape,
+        size: pageSize.a4portrait,
     },
     favoriteTools: DEFAULT_FAV_TOOLS,
     erasedStrokes: {},

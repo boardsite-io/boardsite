@@ -1,4 +1,3 @@
-import { ShapeConfig } from "konva/lib/Shape"
 import { Polygon } from "sat"
 
 export type Hitbox = {
@@ -74,6 +73,5 @@ export interface Stroke extends SerializedStroke {
     calculateHitbox: () => void
 }
 
-export type StrokeMap = Record<string, Stroke>
+export type StrokeCollection = Record<string, Stroke>
 export type StrokeHitbox = Record<string, Hitbox[]>
-export type StrokeShape = Stroke & ShapeConfig

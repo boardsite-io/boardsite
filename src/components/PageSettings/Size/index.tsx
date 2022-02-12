@@ -11,7 +11,6 @@ import {
     A4Portrait,
     SizePresetLabel,
     SizePresets,
-    Square,
 } from "./index.styled"
 
 const Size: React.FC = () => {
@@ -26,21 +25,6 @@ const Size: React.FC = () => {
 
     return (
         <SizePresets>
-            <ToolTip
-                position={Position.Bottom}
-                text={<FormattedMessage id="PageSize.A4Landscape" />}
-            >
-                <SizePresetLabel htmlFor="a4-landscape">
-                    <A4Landscape
-                        type="button"
-                        id="a4-landscape"
-                        $active={isMatch(pageSize.a4landscape)}
-                        onClick={() => {
-                            store.dispatch(SET_PAGE_SIZE(pageSize.a4landscape))
-                        }}
-                    />
-                </SizePresetLabel>
-            </ToolTip>
             <ToolTip
                 position={Position.Bottom}
                 text={<FormattedMessage id="PageSize.A4Portrait" />}
@@ -58,15 +42,15 @@ const Size: React.FC = () => {
             </ToolTip>
             <ToolTip
                 position={Position.Bottom}
-                text={<FormattedMessage id="PageSize.Square" />}
+                text={<FormattedMessage id="PageSize.A4Landscape" />}
             >
-                <SizePresetLabel htmlFor="square">
-                    <Square
+                <SizePresetLabel htmlFor="a4-landscape">
+                    <A4Landscape
                         type="button"
-                        id="square"
-                        $active={isMatch(pageSize.square)}
+                        id="a4-landscape"
+                        $active={isMatch(pageSize.a4landscape)}
                         onClick={() => {
-                            store.dispatch(SET_PAGE_SIZE(pageSize.square))
+                            store.dispatch(SET_PAGE_SIZE(pageSize.a4landscape))
                         }}
                     />
                 </SizePresetLabel>

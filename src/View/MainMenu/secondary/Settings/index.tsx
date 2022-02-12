@@ -10,7 +10,7 @@ import MenuItem from "../../MenuItem"
 
 const SettingsMenu = () => {
     const keepCentered = useCustomSelector(
-        (state) => state.board.stage.keepCentered
+        (state) => state.board.view.keepCentered
     )
     const directDraw = useCustomSelector((state) => state.drawing.directDraw)
 

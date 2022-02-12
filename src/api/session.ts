@@ -7,7 +7,6 @@ import {
     PageMeta,
 } from "redux/board/index.types"
 import { Stroke, StrokeUpdate, ToolType } from "drawing/stroke/index.types"
-import { Util } from "konva/lib/Util"
 import {
     adjectives,
     animals,
@@ -27,6 +26,7 @@ import {
     SYNC_PAGES,
 } from "redux/board"
 import { newAttachment } from "drawing/attachment/utils"
+import { getRandomColor } from "helpers"
 import {
     ConnectedUsers,
     Message,
@@ -59,7 +59,7 @@ export class BoardSession implements Session {
                 separator: "",
                 style: "capital",
             }),
-            color: Util.getRandomColor(),
+            color: getRandomColor(),
         }
     }
 

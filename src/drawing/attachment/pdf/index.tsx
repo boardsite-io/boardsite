@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { DOC_SCALE } from "consts"
+import { MAX_PIXEL_SCALE } from "consts"
 import {
     AttachId,
     Attachment,
     AttachType,
-    DocumentImages,
+    RenderedData,
 } from "redux/board/index.types"
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf"
 import { RenderParameters } from "pdfjs-dist/types/src/display/api"
@@ -18,7 +18,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 export class PDFAttachment implements Attachment {
     id: AttachId
     type: AttachType
-    renderedData: DocumentImages
+    renderedData: RenderedData
     cachedBlob: Uint8Array
 
     constructor(dataBlob: Uint8Array) {
@@ -51,10 +51,12 @@ export class PDFAttachment implements Attachment {
             .fill(null)
             .map(async (_, i) => {
                 const page = await pdf.getPage(i + 1)
-                const viewport = page.getViewport({ scale: DOC_SCALE })
+                const viewport = page.getViewport({ scale: MAX_PIXEL_SCALE })
 
                 const canvas = document.createElement("canvas")
-                const canvasContext = canvas.getContext("2d")
+                const canvasContext = canvas.getContext(
+                    "2d"
+                ) as CanvasRenderingContext2D
 
                 canvas.height = viewport.height
                 canvas.width = viewport.width
@@ -65,10 +67,15 @@ export class PDFAttachment implements Attachment {
                     enableWebGL: true,
                 } as RenderParameters).promise
 
-                const imgSrc = canvas.toDataURL("image/png")
+                const imageData = canvasContext.getImageData(
+                    0,
+                    0,
+                    canvas.width,
+                    canvas.height
+                )
                 canvas.remove()
 
-                return imgSrc
+                return imageData
             })
 
         this.renderedData = await Promise.all(pages)

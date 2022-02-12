@@ -1,4 +1,4 @@
-import { StrokeMap, Tool, ToolType } from "drawing/stroke/index.types"
+import { StrokeCollection, Tool, ToolType } from "drawing/stroke/index.types"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { assign, pick, keys } from "lodash"
 import { newState } from "./state"
@@ -69,7 +69,7 @@ const drawingSlice = createSlice({
             state.directDraw = !state.directDraw
         },
         SET_ERASED_STROKES: (state, action) => {
-            const strokes: StrokeMap = action.payload
+            const strokes: StrokeCollection = action.payload
             Object.keys(strokes).forEach((id) => {
                 state.erasedStrokes[id] = strokes[id]
             })

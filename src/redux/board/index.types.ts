@@ -2,7 +2,7 @@ import {
     Point,
     SerializedStroke,
     Stroke,
-    StrokeMap,
+    StrokeCollection,
     StrokeUpdate,
 } from "drawing/stroke/index.types"
 
@@ -12,7 +12,7 @@ export interface BoardState {
     pageRank: PageRank
     pageCollection: PageCollection
     attachments: Attachments
-    stage: BoardStage
+    view: View
     undoStack?: StackAction[]
     redoStack?: StackAction[]
     strokeUpdates?: StrokeUpdate[]
@@ -28,19 +28,10 @@ export interface BoardState {
     deserialize?(parsed: SerializedBoardState): Promise<BoardState>
 }
 
-export type StageAttrs = {
-    width: number
-    height: number
-    x: number
-    y: number
-    scaleX: number
-    scaleY: number
-}
 export type PageRank = string[]
-export type DocumentImages = string[]
+export type RenderedData = ImageData[]
 
-export interface BoardStage {
-    attrs: StageAttrs
+export interface View {
     keepCentered: boolean
     renderTrigger: boolean
 }
@@ -54,7 +45,7 @@ export enum AttachType {
 export interface Attachment {
     id: AttachId
     type: AttachType
-    renderedData: DocumentImages
+    renderedData: RenderedData
     cachedBlob: Uint8Array
 
     setId(attachId: AttachId): Attachment
@@ -94,7 +85,7 @@ export type TransformStrokes = Stroke[]
 export type PageId = string
 export interface Page {
     pageId: PageId
-    strokes: StrokeMap
+    strokes: StrokeCollection
     meta: PageMeta
 
     setID: (pageId: PageId) => Page
@@ -111,11 +102,12 @@ export interface PageSize {
 }
 export interface PageMeta {
     size: PageSize
-    background: {
-        style: PageBackgroundStyle
-        attachId?: string
-        documentPageNum?: number
-    }
+    background: PageBackground
+}
+export interface PageBackground {
+    style: PageBackgroundStyle
+    attachId?: string
+    documentPageNum?: number
 }
 
 export type PageBackgroundStyle = "blank" | "checkered" | "ruled" | "doc"
@@ -147,4 +139,3 @@ export type EraseStrokes = BoardAction<Stroke[], void[]>
 export type AddAttachments = Attachment[]
 export type DeleteAttachments = AttachId[]
 export type JumpToPageWithIndex = number
-export type SetStageAttrs = StageAttrs

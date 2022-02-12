@@ -1,4 +1,4 @@
-export * from "./icons"
+export * from "./Svg"
 export { default as IconButton } from "./IconButton"
 export { default as ToolButton } from "./ToolButton"
 export { default as Button } from "./Button"

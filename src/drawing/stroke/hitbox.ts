@@ -1,5 +1,5 @@
 import { Vector, Polygon, Box, testPolygonPolygon } from "sat"
-import { Scale, StrokeMap } from "./index.types"
+import { Scale, StrokeCollection } from "./index.types"
 
 export function getHitboxPolygon(
     [x1, y1, x2, y2]: number[],
@@ -53,10 +53,10 @@ export function getSelectionPolygon([x1, y1, x2, y2]: number[]): Polygon {
  * segments and return a set of all collided stroke IDs.
  */
 export function matchStrokeCollision(
-    strokes: StrokeMap,
+    strokes: StrokeCollection,
     selectionPolygon: Polygon
-): StrokeMap {
-    const result: StrokeMap = {}
+): StrokeCollection {
+    const result: StrokeCollection = {}
     Object.keys(strokes).forEach((id) => {
         // test each hitbox segment
         for (let i = 0; i < (strokes[id].hitboxes ?? []).length; i += 1) {

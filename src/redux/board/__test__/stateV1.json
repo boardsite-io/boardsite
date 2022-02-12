@@ -1,81 +1,49 @@
 {
-  "version": "1.0",
-  "currentPageIndex": 0,
-  "pageRank": [
-    "jtWj1Y7e"
-  ],
-  "pageCollection": {
-    "jtWj1Y7e": {
-      "pageId": "jtWj1Y7e",
-      "strokes": {
-        "2vl2xtzkgldbsatk": {
-          "type": 1,
-          "style": {
-            "color": "#000000",
-            "width": 3,
-            "opacity": 1
-          },
-          "id": "2vl2xtzkgldbsatk",
-          "pageId": "jtWj1Y7e",
-          "x": 0,
-          "y": 0,
-          "scaleX": 1,
-          "scaleY": 1,
-          "points": [
-            196,
-            180,
-            196,
-            179.5,
-            196.94,
-            179.03,
-            197.47,
-            179.02,
-            197.73000000000002,
-            178.51,
-            199,
-            178,
-            202,
-            178,
-            211.5,
-            178,
-            214,
-            178,
-            214.5,
-            178.5,
-            215.69,
-            178.94,
-            217,
-            180,
-            217,
-            182
-          ]
+    "version": "1.0",
+    "currentPageIndex": 0,
+    "pageRank": ["jtWj1Y7e"],
+    "pageCollection": {
+        "jtWj1Y7e": {
+            "pageId": "jtWj1Y7e",
+            "strokes": {
+                "2vl2xtzkgldbsatk": {
+                    "type": 1,
+                    "style": {
+                        "color": "#000000",
+                        "width": 3,
+                        "opacity": 1
+                    },
+                    "id": "2vl2xtzkgldbsatk",
+                    "pageId": "jtWj1Y7e",
+                    "x": 0,
+                    "y": 0,
+                    "scaleX": 1,
+                    "scaleY": 1,
+                    "points": [
+                        196, 180, 196, 179.5, 196.94, 179.03, 197.47, 179.02,
+                        197.73000000000002, 178.51, 199, 178, 202, 178, 211.5,
+                        178, 214, 178, 214.5, 178.5, 215.69, 178.94, 217, 180,
+                        217, 182
+                    ]
+                }
+            },
+            "meta": {
+                "background": {
+                    "style": "blank",
+                    "attachId": "",
+                    "documentPageNum": 0
+                },
+                "size": {
+                    "width": 620,
+                    "height": 877
+                }
+            }
         }
-      },
-      "meta": {
-        "background": {
-          "style": "blank",
-          "attachId": "",
-          "documentPageNum": 0
-        },
-        "size": {
-          "width": 620,
-          "height": 877
-        }
-      }
-    }
-  },
-  "attachments": {},
-  "stage": {
-    "keepCentered": false,
-    "hideNavBar": false,
-    "attrs": {
-      "width": 620,
-      "height": 870,
-      "x": 527,
-      "y": 60,
-      "scaleX": 1,
-      "scaleY": 1
     },
-    "renderTrigger": "false"
-  }
+    "attachments": {},
+    "view": {
+        "keepCentered": false,
+        "hideNavBar": false,
+        "renderTrigger": "false"
+    }
 }

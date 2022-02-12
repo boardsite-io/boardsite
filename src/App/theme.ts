@@ -10,6 +10,7 @@ export enum ScreenSize {
 
 export const Theme = styled.div`
     /* --- Color --- */
+    --cPage: #f9fbff; // Page background
     --cPrimary: #f5f5f5; // Menu backgrounds
     --cSecondary: #121212; // Menu items
     --cSelected: #d9d7f1; // Selected tool background
@@ -28,6 +29,8 @@ export const Theme = styled.div`
     /* --- General --- */
     --border-radius: 0.5rem;
     --box-shadow: 0 1px 6px #00000033, 0 1px 4px #00000033;
+
+    --page-box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
 
     /* --- Stacking Context --- */
     --zIndexNotifications: 999;

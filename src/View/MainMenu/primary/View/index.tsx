@@ -1,3 +1,5 @@
+import React from "react"
+import { FormattedMessage } from "language"
 import {
     ExpandIcon,
     ShrinkIcon,
@@ -5,16 +7,12 @@ import {
     ZoomOutIcon,
     HorizontalRule,
 } from "components"
-import { FormattedMessage } from "language"
-import React from "react"
-import {
-    FIT_WIDTH_TO_PAGE,
-    RESET_VIEW,
-    ZOOM_IN_CENTER,
-    ZOOM_OUT_CENTER,
-} from "redux/board"
 import { MainSubMenuState } from "redux/menu/index.types"
-import store from "redux/store"
+import {
+    handleFitToPage,
+    handleResetViewScale,
+    handleZoomCenter,
+} from "state/view/interface"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 
@@ -31,25 +29,25 @@ const ViewMenu = () => {
                 isMainMenu
                 text={<FormattedMessage id="Menu.View.ResetView" />}
                 icon={<ShrinkIcon />}
-                onClick={() => store.dispatch(RESET_VIEW())}
+                onClick={() => handleResetViewScale()}
             />
             <MenuItem
                 isMainMenu
                 text={<FormattedMessage id="Menu.View.MaximizeView" />}
                 icon={<ExpandIcon />}
-                onClick={() => store.dispatch(FIT_WIDTH_TO_PAGE())}
+                onClick={() => handleFitToPage()}
             />
             <MenuItem
                 isMainMenu
                 text={<FormattedMessage id="Menu.View.ZoomIn" />}
                 icon={<ZoomInIcon />}
-                onClick={() => store.dispatch(ZOOM_IN_CENTER())}
+                onClick={() => handleZoomCenter(true)}
             />
             <MenuItem
                 isMainMenu
                 text={<FormattedMessage id="Menu.View.ZoomOut" />}
                 icon={<ZoomOutIcon />}
-                onClick={() => store.dispatch(ZOOM_OUT_CENTER())}
+                onClick={() => handleZoomCenter(false)}
             />
         </MainMenuWrap>
     )

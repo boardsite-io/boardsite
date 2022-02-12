@@ -1,12 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { pick, keys, assign, cloneDeep } from "lodash"
-import {
-    centerView,
-    fitToPage,
-    initialView,
-    resetView,
-    zoomCenter,
-} from "drawing/stage"
 import { Stroke } from "drawing/stroke/index.types"
 import {
     addAction,
@@ -36,7 +29,6 @@ import {
     Page,
     SetPageMeta,
     SyncPages,
-    SetStageAttrs,
 } from "./index.types"
 
 const boardSlice = createSlice({
@@ -55,7 +47,7 @@ const boardSlice = createSlice({
             // Adjust view if necessary
             if (state.currentPageIndex > pageRank.length - 1) {
                 state.currentPageIndex = pageRank.length - 1
-                initialView(state)
+                // initialView(state)
             }
 
             state.triggerStrokesRender?.()
@@ -127,7 +119,6 @@ const boardSlice = createSlice({
             })
 
             state.triggerStrokesRender?.()
-            initialView(state)
         },
 
         CLEAR_PAGES: (state, action: PayloadAction<ClearPages>) => {
@@ -209,12 +200,10 @@ const boardSlice = createSlice({
             if (!state.pageRank.length) {
                 // All pages have been deleted so view and index can be reset
                 state.currentPageIndex = 0
-                initialView(state)
             } else if (state.currentPageIndex > state.pageRank.length - 1) {
                 // Deletions have caused the current page index to exceed
                 // the page limit, therefore we move to the last page
                 state.currentPageIndex = state.pageRank.length - 1
-                initialView(state)
             }
 
             // Make sure that transform is cleared when page is deleted
@@ -367,25 +356,21 @@ const boardSlice = createSlice({
         JUMP_TO_NEXT_PAGE: (state) => {
             if (state.currentPageIndex < state.pageRank.length - 1) {
                 state.currentPageIndex += 1
-                initialView(state)
             }
         },
 
         JUMP_TO_PREV_PAGE: (state) => {
             if (state.currentPageIndex > 0) {
                 state.currentPageIndex -= 1
-                initialView(state)
             }
         },
 
         JUMP_TO_FIRST_PAGE: (state) => {
             state.currentPageIndex = 0
-            initialView(state)
         },
 
         JUMP_TO_LAST_PAGE: (state) => {
             state.currentPageIndex = state.pageRank.length - 1
-            initialView(state)
         },
 
         JUMP_TO_PAGE_WITH_INDEX: (
@@ -401,40 +386,7 @@ const boardSlice = createSlice({
         },
 
         TOGGLE_SHOULD_CENTER: (state) => {
-            state.stage.keepCentered = !state.stage.keepCentered
-        },
-
-        RESET_VIEW: (state) => {
-            resetView(state)
-        },
-
-        SET_STAGE_ATTRS: (state, action: PayloadAction<SetStageAttrs>) => {
-            assign(
-                state.stage.attrs,
-                pick(action.payload, keys(state.stage.attrs))
-            )
-        },
-
-        ON_WINDOW_RESIZE: (state) => {
-            state.stage.attrs.width = window.innerWidth
-            state.stage.attrs.height = window.innerHeight
-            centerView(state)
-            state.triggerStageRender?.()
-        },
-
-        FIT_WIDTH_TO_PAGE: (state) => {
-            fitToPage(state)
-            state.triggerStageRender?.()
-        },
-
-        ZOOM_IN_CENTER: (state) => {
-            zoomCenter(state, true)
-            state.triggerStageRender?.()
-        },
-
-        ZOOM_OUT_CENTER: (state) => {
-            zoomCenter(state, false)
-            state.triggerStageRender?.()
+            state.view.keepCentered = !state.view.keepCentered
         },
 
         TRIGGER_BOARD_RERENDER: (state) => {
@@ -469,12 +421,6 @@ export const {
     JUMP_TO_LAST_PAGE,
     JUMP_TO_PAGE_WITH_INDEX,
     TOGGLE_SHOULD_CENTER,
-    RESET_VIEW,
-    ON_WINDOW_RESIZE,
-    SET_STAGE_ATTRS,
-    FIT_WIDTH_TO_PAGE,
-    ZOOM_IN_CENTER,
-    ZOOM_OUT_CENTER,
     TRIGGER_BOARD_RERENDER,
 } = boardSlice.actions
 export default boardSlice.reducer

@@ -28,6 +28,7 @@ import {
 } from "redux/board/index.types"
 import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from "redux/notification"
 import { IntlMessageId } from "language"
+import { handleResetView } from "state/view/interface"
 import { BoardPage } from "./page"
 import { getVerifiedPageIds, getVerifiedPages } from "./helpers"
 
@@ -54,6 +55,7 @@ export function handleAddPageOver(): void {
     }
 
     store.dispatch(ADD_PAGES(payload))
+    handleResetView()
 }
 
 export function handleAddPageUnder(): void {
@@ -72,6 +74,7 @@ export function handleAddPageUnder(): void {
 
     store.dispatch(ADD_PAGES(payload))
     store.dispatch(JUMP_TO_NEXT_PAGE())
+    handleResetView()
 }
 
 export function handleClearPage(): void {
