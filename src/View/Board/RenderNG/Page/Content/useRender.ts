@@ -1,7 +1,7 @@
 import { StrokeCollection } from "drawing/stroke/index.types"
 import { useCustomSelector } from "hooks"
 import { useEffect } from "react"
-import { draw } from "../../draw"
+import { draw } from "drawing/drawShapes"
 
 export const useRender = (
     strokes: StrokeCollection,
@@ -16,6 +16,7 @@ export const useRender = (
 
         Object.values(strokes).forEach((stroke) => {
             draw(ctx, stroke)
+            // drawHitboxRects(ctx, stroke) // DEBUGGING
         })
     })
 }

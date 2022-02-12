@@ -226,16 +226,11 @@ const boardSlice = createSlice({
         },
 
         // sets the currently selected strokes
-        MOVE_SHAPES_TO_DRAG_LAYER: (
+        SET_TRANSFORM_STROKES: (
             state,
             action: PayloadAction<MoveShapesToDragLayer>
         ) => {
-            const { strokes, pagePosition } = action.payload
-
-            if (pagePosition) {
-                state.transformPagePosition = pagePosition
-            }
-
+            const strokes = action.payload
             state.transformStrokes = strokes
         },
 
@@ -403,7 +398,7 @@ export const {
     CLEAR_PAGES,
     DELETE_PAGES,
     DELETE_ALL_PAGES,
-    MOVE_SHAPES_TO_DRAG_LAYER,
+    SET_TRANSFORM_STROKES,
     ADD_STROKES,
     ERASE_STROKES,
     ADD_ATTACHMENTS,

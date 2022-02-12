@@ -108,8 +108,8 @@ export class BoardStroke implements Stroke {
                     const section = points.slice(i, i + 4)
                     for (let j = 0; j < 4; j += 2) {
                         // compensate for the scale and offset
-                        section[j] = section[j] * scaleX + x
-                        section[j + 1] = section[j + 1] * scaleY + y
+                        section[j] = (section[j] + x) * scaleX
+                        section[j + 1] = (section[j + 1] + y) * scaleY
                     }
                     this.hitboxes.push(
                         getHitboxPolygon(section, this.style.width, {

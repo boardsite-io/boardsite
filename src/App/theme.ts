@@ -8,6 +8,9 @@ export enum ScreenSize {
     Xl = "100rem",
 }
 
+export const SELECTION_FILL = "#00a2ff38"
+export const ERASER_STROKE = "#77110511"
+
 export const Theme = styled.div`
     /* --- Color --- */
     --cPage: #f9fbff; // Page background
@@ -43,6 +46,13 @@ export const Theme = styled.div`
     --zIndexToolRing: 60;
     --zIndexFavoriteTools: 60;
     --zIndexPopupBG: 10;
+
+    /* --- Selection Tool --- */
+    --sel-color: ${SELECTION_FILL};
+    --sel-handle-color: #00245366;
+    --sel-handle-size: 0.75rem;
+    --sel-handle-border: 1px solid var(--cDetails2);
+    --sel-handle-border-radius: 2px;
 
     /* --- Menu Design --- */
     --toolbar-gap: 0;

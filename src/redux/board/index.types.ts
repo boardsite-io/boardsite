@@ -129,10 +129,7 @@ export type AddPageData = {
 export type AddPages = BoardAction<AddPageData[], void[]>
 export type ClearPages = BoardAction<PageId[], Stroke[]>
 export type DeletePages = BoardAction<PageId[], AddPageData[]>
-export type MoveShapesToDragLayer = {
-    strokes: Stroke[]
-    pagePosition?: Point
-}
+export type MoveShapesToDragLayer = Stroke[]
 export type AddStrokes = BoardAction<Stroke[], void[]>
 export type EraseStrokes = BoardAction<Stroke[], void[]>
 
