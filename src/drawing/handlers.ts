@@ -26,9 +26,9 @@ import {
     ClearPages,
     SetPageMeta,
 } from "redux/board/index.types"
-import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from "redux/notification"
 import { IntlMessageId } from "language"
 import { handleResetView } from "state/view/interface"
+import { notification } from "state/notification"
 import { BoardPage } from "./page"
 import { getVerifiedPageIds, getVerifiedPages } from "./helpers"
 
@@ -232,9 +232,9 @@ function getCurrentPage() {
 }
 
 export const handleNotification = (id: IntlMessageId) => {
-    store.dispatch(ADD_NOTIFICATION(id))
+    notification.addNotification(id)
 
     setTimeout(() => {
-        store.dispatch(REMOVE_NOTIFICATION())
+        notification.removeNotification()
     }, NOTIFICATION_DURATION)
 }

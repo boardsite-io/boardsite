@@ -1,5 +1,5 @@
 import { DEFAULT_PAGE_GAP } from "consts"
-import { TransformState } from "state/view/ViewState/index.types"
+import { ViewTransform } from "state/view/state/index.types"
 import { getPageSize, getViewCenterY, onFirstPage, onLastPage } from "./helpers"
 
 export enum DetectionResult {
@@ -9,7 +9,7 @@ export enum DetectionResult {
 }
 
 export const detectPageChange = (
-    viewTransform: TransformState
+    viewTransform: ViewTransform
 ): DetectionResult => {
     const transformedCenterY = getViewCenterY(viewTransform)
     const prevPageBorder = -DEFAULT_PAGE_GAP / 2
@@ -29,9 +29,7 @@ export const detectPageChange = (
     return DetectionResult.Unchanged
 }
 
-export const toPreviousPage = (
-    viewTransform: TransformState
-): TransformState => {
+export const toPreviousPage = (viewTransform: ViewTransform): ViewTransform => {
     const prevPageHeight = getPageSize(-1).height
 
     if (prevPageHeight) {
@@ -44,7 +42,7 @@ export const toPreviousPage = (
     return viewTransform
 }
 
-export const toNextPage = (viewTransform: TransformState): TransformState => {
+export const toNextPage = (viewTransform: ViewTransform): ViewTransform => {
     const currPageHeight = getPageSize().height
 
     if (currPageHeight) {
