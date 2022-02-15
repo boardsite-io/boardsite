@@ -1,22 +1,50 @@
+/* eslint-disable prefer-destructuring */
+import { Bezier } from "bezier-js"
 import { Point } from "./index.types"
 
-export const perfectDrawing = (points: number[]): number[] => {
-    const streamline = 0.25
-    const t = 0.15 + (1 - streamline) * 0.85
+// take the last 5 points and interpolate
+const segmentSize = 10
+const streamline = 0.5
+const t = 0.15 + (1 - streamline) * 0.85
+const bezierPoints = [0.25, 0.5, 0.75]
 
-    let prev = [points[0], points[1]]
-    for (let i = 2; i < points.length; i += 2) {
-        prev = linearInterp(prev, [points[i], points[i + 1]], t)
-        points.splice(i, 2, ...prev)
+export const perfectDrawing = (points: number[], point: Point): number[] => {
+    points.push(point.x, point.y)
+
+    const index = Math.max(points.length - segmentSize, 0)
+
+    let cur = [points[index], points[index + 1]]
+    for (let i = index + 2; i < points.length; i += 2) {
+        cur = linearInterpolation(cur, [points[i], points[i + 1]], t)
+        points[i] = cur[0]
+        points[i + 1] = cur[1]
     }
+
+    if (points.length >= 6) {
+        const b = new Bezier(
+            points[points.length - 6],
+            points[points.length - 5],
+            points[points.length - 4],
+            points[points.length - 3],
+            points[points.length - 2],
+            points[points.length - 1]
+        )
+        const [, , lastx, lasty] = points.splice(-4)
+        for (let i = 0; i < bezierPoints.length; i++) {
+            const p = b.get(bezierPoints[i])
+            points.push(p.x, p.y)
+        }
+        points.push(lastx, lasty)
+    }
+
     return points
 }
 
-export function linearInterp<T extends number[], U extends Point>(
+const linearInterpolation = <T extends number[], U extends Point>(
     a: T | U,
     b: T | U,
     t: number
-): T {
+): T => {
     const a1 = Array.isArray(a) ? (a as T) : [a.x, a.y]
     const b1 = Array.isArray(b) ? (b as T) : [b.x, b.y]
     return a1.map((_, i) => a1[i] + (b1[i] - a1[i]) * t) as T
@@ -28,10 +56,7 @@ export function linearInterp<T extends number[], U extends Point>(
  * @param line
  * @returns Perpendicular distance
  */
-export function perpendicularDistance(
-    point: Point,
-    line: [Point, Point]
-): number {
+const perpendicularDistance = (point: Point, line: [Point, Point]): number => {
     const slope = (line[1].y - line[0].y) / (line[1].x - line[0].x)
     const intercept = line[0].y - slope * line[0].x
     return (
@@ -50,11 +75,11 @@ export function perpendicularDistance(
  * @param {number} sections
  */
 // eslint-disable-next-line import/prefer-default-export
-export function simplifyRDP(
+export const simplifyRDP = (
     points: number[],
     epsilon: number,
     sections: number
-): number[] {
+): number[] => {
     if (points.length <= 4) {
         return points
     }

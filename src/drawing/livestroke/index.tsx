@@ -11,7 +11,7 @@ import { CLEAR_ERASED_STROKES, SET_ERASED_STROKES } from "redux/drawing"
 import store from "redux/store"
 import { Page } from "redux/board/index.types"
 import { viewState } from "state/view"
-import { simplifyRDP } from "../stroke/simplify"
+import { perfectDrawing, simplifyRDP } from "../stroke/simplify"
 import {
     getHitboxPolygon,
     getSelectionPolygon,
@@ -87,9 +87,9 @@ export class BoardLiveStroke implements LiveStroke {
 
     addPoint(point: Point): void {
         switch (this.type) {
-            case ToolType.Pen:
-            case ToolType.Eraser: {
-                this.points.push(point.x, point.y)
+            case ToolType.Eraser:
+            case ToolType.Pen: {
+                this.points = perfectDrawing(this.points, point)
                 break
             }
             case ToolType.Line:

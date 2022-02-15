@@ -35,6 +35,7 @@
     "dependencies": {
         "@reduxjs/toolkit": "^1.5.0",
         "axios": "^0.24.0",
+        "bezier-js": "^6.1.0",
         "bfj": "^7.0.2",
         "browser-fs-access": "^0.24.0",
         "browserslist": "^4.18.1",
@@ -97,6 +98,7 @@
         "@testing-library/jest-dom": "^5.15.1",
         "@testing-library/react": "^12.1.2",
         "@testing-library/user-event": "^13.5.0",
+        "@types/bezier-js": "^4.1.0",
         "@types/downloadjs": "^1.4.2",
         "@types/jest": "^27.0.3",
         "@types/localforage": "^0.0.34",

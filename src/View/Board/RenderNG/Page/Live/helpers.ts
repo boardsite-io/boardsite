@@ -1,4 +1,3 @@
-import { LIVESTROKE_SEGMENT_SIZE } from "consts"
 import { LiveStroke } from "drawing/livestroke/index.types"
 import { Point } from "drawing/stroke/index.types"
 import React, { MouseEvent, TouchEvent } from "react"
@@ -80,15 +79,3 @@ export const isValidTouch = (e: TouchEvent<HTMLElement>): boolean => {
     // double finger => invalid
     return !(touch1 && touch2)
 }
-
-export const getSegments = (liveStroke: LiveStroke): number[][] =>
-    new Array<number[]>(
-        Math.ceil(liveStroke.points.length / LIVESTROKE_SEGMENT_SIZE)
-    )
-        .fill([])
-        .map((_, i) =>
-            liveStroke.points.slice(
-                LIVESTROKE_SEGMENT_SIZE * i,
-                LIVESTROKE_SEGMENT_SIZE * (i + 1) + 2
-            )
-        )
