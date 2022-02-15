@@ -4,7 +4,7 @@ import { useCustomSelector } from "hooks"
 import { MouseEvent, TouchEvent, useCallback, useEffect } from "react"
 import { CLEAR_TRANSFORM, SET_TRANSFORM_STROKES } from "redux/board"
 import store from "redux/store"
-import { draw } from "../../../../../drawing/drawShapes"
+import { draw } from "../../shapes"
 import { PageOffset } from "../index.types"
 import {
     getMousePosition,

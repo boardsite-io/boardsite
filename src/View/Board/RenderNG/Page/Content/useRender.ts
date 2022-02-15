@@ -1,7 +1,7 @@
 import { StrokeCollection } from "drawing/stroke/index.types"
 import { useCustomSelector } from "hooks"
 import { useEffect } from "react"
-import { draw } from "drawing/drawShapes"
+import { draw } from "View/Board/RenderNG/shapes"
 
 export const useRender = (
     strokes: StrokeCollection,

@@ -1,7 +1,7 @@
 import { ERASER_STROKE, SELECTION_FILL } from "App/theme"
 import { LiveStroke } from "drawing/livestroke/index.types"
 import { ToolType, Stroke } from "drawing/stroke/index.types"
-import { StrokeStyle } from "../../View/Board/RenderNG/index.types"
+import { StrokeStyle } from "../index.types"
 
 export const shiftPoints = (points: number[], x: number, y: number) =>
     points.map((p, i) => (i % 2 === 0 ? p + x : p + y))

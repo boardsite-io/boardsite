@@ -4,7 +4,7 @@ import { Point } from "drawing/stroke/index.types"
 import React, { MouseEvent, TouchEvent } from "react"
 import store from "redux/store"
 import { viewState } from "state/view"
-import { draw } from "drawing/drawShapes"
+import { draw } from "View/Board/RenderNG/shapes"
 import { PageOffset } from "../index.types"
 
 export const drawLiveStroke = (
