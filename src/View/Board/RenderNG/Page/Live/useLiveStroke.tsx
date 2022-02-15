@@ -11,13 +11,15 @@ import {
     isValidClick,
     isValidTouch,
 } from "./helpers"
+import { PageOffset } from "../index.types"
 
 let isMouseOrTouchDown = false
 const liveStroke = new BoardLiveStroke()
 
 export const useLiveStroke = (
     pageId: PageId,
-    canvasRef: React.RefObject<HTMLCanvasElement>
+    canvasRef: React.RefObject<HTMLCanvasElement>,
+    pageOffset: PageOffset
 ) => {
     const isPanMode = useCustomSelector(
         (state) => state.drawing.tool.type === ToolType.Pan
@@ -50,10 +52,7 @@ export const useLiveStroke = (
 
             // register finished stroke
             const stroke = liveStroke.finalize()
-            BoardLiveStroke.register(stroke, {
-                x: 0,
-                y: 0,
-            })
+            BoardLiveStroke.register(stroke)
             drawLiveStroke(liveStroke, canvasRef)
 
             isMouseOrTouchDown = false
@@ -74,42 +73,48 @@ export const useLiveStroke = (
 
     const onMouseDown = useCallback(
         (e: MouseEvent<HTMLCanvasElement>) => {
+            e.stopPropagation()
+            e.preventDefault()
+
             if (isValidClick(e)) {
-                const point = getMousePosition(e)
+                const point = getMousePosition(e, pageOffset)
                 startLiveStroke(point)
             }
         },
-        [isMouseOrTouchDown]
+        [pageOffset, isMouseOrTouchDown]
     )
 
     const onMouseMove = useCallback(
         (e: MouseEvent<HTMLCanvasElement>) => {
+            e.stopPropagation()
+            e.preventDefault()
+
             if (isMouseOrTouchDown && isValidClick(e)) {
-                const point = getMousePosition(e)
+                const point = getMousePosition(e, pageOffset)
                 moveLiveStroke(point)
             } else {
                 resetLiveStroke()
             }
         },
-        [moveLiveStroke]
+        [pageOffset, isMouseOrTouchDown, moveLiveStroke]
     )
 
     const onMouseUp = useCallback(
         (e: MouseEvent<HTMLCanvasElement>) => {
+            e.stopPropagation()
+            e.preventDefault()
+
             if (isMouseOrTouchDown) {
-                const point = getMousePosition(e)
+                const point = getMousePosition(e, pageOffset)
                 endLiveStroke(point)
             }
         },
-        [endLiveStroke]
+        [pageOffset, isMouseOrTouchDown, endLiveStroke]
     )
 
     const onMouseLeave = useCallback(
         (e: MouseEvent<HTMLCanvasElement>) => {
-            if (isMouseOrTouchDown) {
-                const point = getMousePosition(e)
-                endLiveStroke(point) // TODO: improve border behaviour
-            }
+            onMouseUp(e)
         },
         [onMouseUp]
     )
@@ -117,12 +122,13 @@ export const useLiveStroke = (
     const onTouchStart = useCallback(
         (e: TouchEvent<HTMLCanvasElement>) => {
             e.preventDefault()
-            const point = getTouchPosition(e)
+
+            const point = getTouchPosition(e, pageOffset)
             if (isValidTouch(e)) {
                 startLiveStroke(point)
             }
         },
-        [startLiveStroke]
+        [pageOffset, startLiveStroke]
     )
 
     const onTouchMove = useCallback(
@@ -130,13 +136,13 @@ export const useLiveStroke = (
             e.preventDefault()
 
             if (isMouseOrTouchDown && isValidTouch(e)) {
-                const point = getTouchPosition(e)
+                const point = getTouchPosition(e, pageOffset)
                 moveLiveStroke(point)
             } else {
                 resetLiveStroke()
             }
         },
-        [liveStroke, moveLiveStroke]
+        [pageOffset, isMouseOrTouchDown, liveStroke, moveLiveStroke]
     )
 
     const onTouchEnd = useCallback(
@@ -144,11 +150,18 @@ export const useLiveStroke = (
             e.preventDefault()
 
             if (isMouseOrTouchDown) {
-                const point = getTouchPosition(e)
+                const point = getTouchPosition(e, pageOffset)
                 endLiveStroke(point)
             }
         },
-        [endLiveStroke]
+        [pageOffset, isMouseOrTouchDown, endLiveStroke]
+    )
+
+    const onTouchCancel = useCallback(
+        (e: TouchEvent<HTMLCanvasElement>) => {
+            onTouchEnd(e)
+        },
+        [onTouchEnd]
     )
 
     if (isPanMode) {
@@ -164,5 +177,6 @@ export const useLiveStroke = (
         onTouchStart,
         onTouchMove,
         onTouchEnd,
+        onTouchCancel,
     }
 }

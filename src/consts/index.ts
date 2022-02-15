@@ -57,23 +57,10 @@ export const DEFAULT_ISDRAGGABLE = false
 export const DEFAULT_KEEP_CENTERED = false
 export const DRAG_SHADOW_BLUR = 4
 
-// select props
-export const SEL_STROKE_ENABLED = false
-export const SEL_STROKE = "#00ff00ff"
-export const SEL_FILL_ENABLED = true
-export const SEL_FILL = "#00a2ff38"
-
-// opacity of strokes when moved
-export const MOVE_OPACITY = 0.6
-export const ERASED_OPACITY = 0.4
-
 // transform props
 export const TR_BORDER_STROKE = "#00a2ff38"
 export const TR_BORDER_STROKE_WIDTH = 1
 export const TR_ANCHOR_FILL = "#00a2ff38"
-export const TR_ANCHOR_SIZE = 8
-export const TR_ANCHOR_STROKE = "#00000088"
-export const TR_ANCHOR_CORNER_RADIUS = 2
 
 export const ERASER_WIDTH = 3
 export const DEFAULT_TOOL = ToolType.Pen

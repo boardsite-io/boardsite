@@ -2,7 +2,7 @@ import React from "react"
 import ReactDOM from "react-dom"
 import { MAX_PIXEL_SCALE } from "consts"
 import { Page } from "redux/board/index.types"
-import { draw } from "View/Board/RenderNG/draw"
+import { draw } from "View/Board/RenderNG/shapes"
 import { Canvas } from "View/Board/RenderNG/Page/index.styled"
 import { drawBackground } from "View/Board/RenderNG/Page/Background/backgrounds"
 

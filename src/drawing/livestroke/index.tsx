@@ -6,7 +6,7 @@ import {
     ERASER_WIDTH,
 } from "consts"
 import { handleAddStrokes, handleDeleteStrokes } from "drawing/handlers"
-import { MOVE_SHAPES_TO_DRAG_LAYER } from "redux/board"
+import { SET_TRANSFORM_STROKES } from "redux/board"
 import { CLEAR_ERASED_STROKES, SET_ERASED_STROKES } from "redux/drawing"
 import store from "redux/store"
 import { Page } from "redux/board/index.types"
@@ -171,7 +171,7 @@ export class BoardLiveStroke implements LiveStroke {
         return res
     }
 
-    static async register(stroke: Stroke, pagePosition: Point): Promise<void> {
+    static async register(stroke: Stroke): Promise<void> {
         switch (stroke.type) {
             case ToolType.Eraser: {
                 const { erasedStrokes } = store.getState().drawing
@@ -193,10 +193,7 @@ export class BoardLiveStroke implements LiveStroke {
                     getSelectionPolygon(stroke.points)
                 )
                 store.dispatch(
-                    MOVE_SHAPES_TO_DRAG_LAYER({
-                        strokes: Object.values(selectedStrokes),
-                        pagePosition,
-                    })
+                    SET_TRANSFORM_STROKES(Object.values(selectedStrokes))
                 )
                 break
             }

@@ -3,6 +3,7 @@ import { Background } from "./Background"
 import { PageProps } from "./index.types"
 import { Content } from "./Content"
 import { Live } from "./Live"
+import { Transformer } from "./Transformer"
 
 const Page: React.FC<PageProps> = memo((props) => {
     return (
@@ -10,6 +11,7 @@ const Page: React.FC<PageProps> = memo((props) => {
             <Background {...props} />
             <Content {...props} />
             <Live {...props} />
+            <Transformer {...props} />
         </>
     )
 })
