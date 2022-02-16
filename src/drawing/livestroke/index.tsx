@@ -10,7 +10,7 @@ import { SET_TRANSFORM_STROKES } from "redux/board"
 import { CLEAR_ERASED_STROKES, SET_ERASED_STROKES } from "redux/drawing"
 import store from "redux/store"
 import { Page } from "redux/board/index.types"
-import { viewState } from "state/view"
+import { view } from "state/view"
 import { perfectDrawing, simplifyRDP } from "../stroke/simplify"
 import {
     getHitboxPolygon,
@@ -115,7 +115,7 @@ export class BoardLiveStroke implements LiveStroke {
     }
 
     processPoints(): void {
-        const { scale } = viewState.getTransformState()
+        const { scale } = view.getViewTransform()
 
         switch (this.type) {
             case ToolType.Pen: {

@@ -9,9 +9,9 @@ import {
 } from "consts"
 import { debounce } from "lodash"
 import { DECREMENT_PAGE_INDEX, INCREMENT_PAGE_INDEX } from "redux/board"
-import { TransformState } from "state/view/ViewState/index.types"
 import store from "redux/store"
-import { viewState } from "state/view"
+import { view } from "state/view"
+import { ViewTransform } from "./state/index.types"
 import {
     applyBounds,
     DetectionResult,
@@ -26,7 +26,7 @@ import {
     zoomTo,
 } from "./util"
 
-export const updateViewTransform = (newTransform: TransformState) => {
+export const updateViewTransform = (newTransform: ViewTransform) => {
     const detectionResult = detectPageChange(newTransform)
 
     if (detectionResult === DetectionResult.Next) {
@@ -38,21 +38,21 @@ export const updateViewTransform = (newTransform: TransformState) => {
     }
     newTransform = applyBounds(newTransform)
 
-    viewState.setViewState(newTransform)
+    view.setTransformState(newTransform)
     checkPixelScale(newTransform)
 }
 
 /**
  * Update pixelScale if needed
  */
-const checkPixelScale = debounce((newTransform: TransformState) => {
+const checkPixelScale = debounce((newTransform: ViewTransform) => {
     const pixelScale = Math.min(
         DEVICE_PIXEL_RATIO * Math.ceil(newTransform.scale),
         MAX_PIXEL_SCALE
     )
 
-    if (pixelScale !== viewState.getLayerState().pixelScale) {
-        viewState.setLayerState({
+    if (pixelScale !== view.getLayerConfig().pixelScale) {
+        view.setLayerConfig({
             pixelScale,
         })
     }
@@ -60,7 +60,7 @@ const checkPixelScale = debounce((newTransform: TransformState) => {
 
 export const handleZoomCenter = (isZoomingIn: boolean): void => {
     const newTransform = zoomTo({
-        viewTransform: viewState.getTransformState(),
+        viewTransform: view.getViewTransform(),
         zoomPoint: getCenterOfScreen(),
         zoomScale: isZoomingIn ? ZOOM_IN_WHEEL_SCALE : ZOOM_OUT_WHEEL_SCALE,
     })
@@ -88,7 +88,7 @@ export const handleResetViewScale = (): void => {
 
 export const handleFitToPage = (): void => {
     const newScale = window.innerWidth / getPageSize().width
-    const newTransform: TransformState = {
+    const newTransform: ViewTransform = {
         scale: newScale,
         xOffset: getCenterX() / newScale,
         yOffset: newOffsetY(newScale, getCenterY()),

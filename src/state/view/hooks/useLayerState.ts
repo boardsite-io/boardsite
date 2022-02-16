@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react"
 import { Page } from "redux/board/index.types"
 import { drawBackground } from "View/Board/RenderNG/Page/Background/backgrounds"
-import { viewState } from "./ViewState"
+import { view } from "../state"
 
 export const useLayerState = (
     canvasRef: React.RefObject<HTMLCanvasElement>,
@@ -11,10 +11,10 @@ export const useLayerState = (
     const reRender = useCallback(() => render({}), [])
 
     useEffect(() => {
-        viewState.subscribeLayer(reRender)
+        view.subscribe(reRender, "layerConfig")
 
         return () => {
-            viewState.unsubscribeLayer(reRender)
+            view.unsubscribe(reRender, "layerConfig")
         }
     }, [])
 
@@ -29,12 +29,12 @@ export const useLayerState = (
 
         if (!page) {
             ctx.setTransform(1, 0, 0, 1, 0, 0) // reset last transform
-            const { pixelScale } = viewState.getLayerState()
+            const { pixelScale } = view.getLayerConfig()
             ctx.scale(pixelScale, pixelScale)
         } else {
             if (page.meta.background.style !== "doc") {
                 ctx.setTransform(1, 0, 0, 1, 0, 0) // reset last transform
-                const { pixelScale } = viewState.getLayerState()
+                const { pixelScale } = view.getLayerConfig()
                 ctx.scale(pixelScale, pixelScale)
             }
 
@@ -42,5 +42,5 @@ export const useLayerState = (
         }
     })
 
-    return viewState.getLayerState()
+    return view.getLayerConfig()
 }

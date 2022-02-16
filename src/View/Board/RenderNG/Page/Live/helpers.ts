@@ -2,7 +2,7 @@ import { LiveStroke } from "drawing/livestroke/index.types"
 import { Point } from "drawing/stroke/index.types"
 import React, { MouseEvent, TouchEvent } from "react"
 import store from "redux/store"
-import { viewState } from "state/view"
+import { view } from "state/view"
 import { draw } from "View/Board/RenderNG/shapes"
 import { PageOffset } from "../index.types"
 
@@ -54,7 +54,7 @@ export const getMousePosition = (
 }
 
 const applyTransformTo = (point: Point, pageOffset: PageOffset): Point => {
-    const { scale, xOffset, yOffset } = viewState.getTransformState()
+    const { scale, xOffset, yOffset } = view.getViewTransform()
 
     return {
         x: point.x / scale - xOffset - pageOffset.left,

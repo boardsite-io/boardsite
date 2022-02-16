@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useRef } from "react"
 import { ZOOM_IN_WHEEL_SCALE, ZOOM_OUT_WHEEL_SCALE } from "consts"
 import { ToolType } from "drawing/stroke/index.types"
-import { TransformState } from "state/view/ViewState/index.types"
-import { viewState } from "state/view"
+import { view } from "state/view"
 import {
     isMenuOpen,
     multiTouchEnd,
@@ -11,6 +10,7 @@ import {
 } from "state/view/util"
 import { updateViewTransform } from "state/view/interface"
 import { useCustomSelector } from "hooks"
+import { ViewTransform } from "state/view/state/index.types"
 
 export const useViewControl = () => {
     const isPanMode = useCustomSelector(
@@ -37,7 +37,7 @@ export const useViewControl = () => {
     const panningUpdate = useCallback((e: React.MouseEvent) => {
         if (!isMouseDown.current) return
 
-        const { xOffset, yOffset, scale } = viewState.getTransformState()
+        const { xOffset, yOffset, scale } = view.getViewTransform()
 
         const newTransform = {
             scale,
@@ -105,7 +105,7 @@ export const useViewControl = () => {
                 }
 
                 const newTransform = multiTouchMove({
-                    viewTransform: viewState.getTransformState(),
+                    viewTransform: view.getViewTransform(),
                     p1,
                     p2,
                 })
@@ -136,7 +136,7 @@ export const useViewControl = () => {
     const onWheel: React.WheelEventHandler<HTMLDivElement> = useCallback(
         (e) => {
             const { clientX, clientY, deltaX, deltaY, ctrlKey } = e
-            const transform = viewState.getTransformState()
+            const transform = view.getViewTransform()
 
             if (isPanMode || ctrlKey) {
                 const newTransform = zoomTo({
@@ -148,7 +148,7 @@ export const useViewControl = () => {
 
                 updateViewTransform(newTransform)
             } else {
-                const newTransform: TransformState = {
+                const newTransform: ViewTransform = {
                     ...transform,
                     xOffset: transform.xOffset - deltaX / transform.scale,
                     yOffset: transform.yOffset - deltaY / transform.scale,

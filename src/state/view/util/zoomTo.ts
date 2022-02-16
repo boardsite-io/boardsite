@@ -1,9 +1,9 @@
 import { Point } from "drawing/stroke/index.types"
-import { TransformState } from "state/view/ViewState/index.types"
+import { ViewTransform } from "state/view/state/index.types"
 import { boundScale } from "./bounds"
 
 interface ZoomToProps {
-    viewTransform: TransformState
+    viewTransform: ViewTransform
     zoomPoint: Point
     zoomScale: number
 }
@@ -12,7 +12,7 @@ export const zoomTo = ({
     viewTransform,
     zoomPoint,
     zoomScale,
-}: ZoomToProps): TransformState => {
+}: ZoomToProps): ViewTransform => {
     const scale1 = viewTransform.scale
     const scale2 = boundScale(zoomScale * scale1)
 

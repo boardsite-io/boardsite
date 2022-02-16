@@ -1,6 +1,6 @@
 import { Tool, ToolType } from "drawing/stroke/index.types"
 import { PageBackgroundStyle } from "redux/board/index.types"
-import { TransformState } from "state/view/ViewState/index.types"
+import { ViewTransform } from "state/view/state/index.types"
 
 /**
  * Returns true if in development mode
@@ -48,7 +48,7 @@ export const DEFAULT_CURRENT_PAGE_INDEX = 0
 export const DEFAULT_VIEW_OFFSET_X = window.innerWidth / 2
 export const DEFAULT_VIEW_OFFSET_Y = 60
 export const DEFAULT_VIEW_SCALE = 1
-export const DEFAULT_VIEW_TRANSFORM: TransformState = {
+export const DEFAULT_VIEW_TRANSFORM: ViewTransform = {
     xOffset: DEFAULT_VIEW_OFFSET_X,
     yOffset: DEFAULT_VIEW_OFFSET_Y,
     scale: DEFAULT_VIEW_SCALE,

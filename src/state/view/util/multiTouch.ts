@@ -1,4 +1,4 @@
-import { TransformState } from "state/view/ViewState/index.types"
+import { ViewTransform } from "state/view/state/index.types"
 import { zoomTo } from "./zoomTo"
 
 type Point = { x: number; y: number }
@@ -7,7 +7,7 @@ let lastZoomPoint: Point | null = null
 let lastDistance = 0
 
 interface MultiTouchMove {
-    viewTransform: TransformState
+    viewTransform: ViewTransform
     p1: Point
     p2: Point
 }
@@ -16,7 +16,7 @@ export const multiTouchMove = ({
     viewTransform,
     p1,
     p2,
-}: MultiTouchMove): TransformState => {
+}: MultiTouchMove): ViewTransform => {
     if (!lastZoomPoint) {
         lastZoomPoint = getCenter(p1, p2)
         return viewTransform

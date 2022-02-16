@@ -5,7 +5,7 @@ import {
     ZOOM_SCALE_MAX,
     ZOOM_SCALE_MIN,
 } from "consts"
-import { TransformState } from "state/view/ViewState/index.types"
+import { ViewTransform } from "state/view/state/index.types"
 import store from "redux/store"
 import {
     getPageSize,
@@ -15,13 +15,13 @@ import {
     onLastPage,
 } from "./helpers"
 
-export const applyBounds = (viewTransform: TransformState): TransformState => ({
+export const applyBounds = (viewTransform: ViewTransform): ViewTransform => ({
     ...viewTransform,
     xOffset: applyBoundsX(viewTransform),
     yOffset: applyBoundsY(viewTransform),
 })
 
-export const applyBoundsX = (viewTransform: TransformState): number => {
+export const applyBoundsX = (viewTransform: ViewTransform): number => {
     const { keepCentered } = store.getState().board.view
 
     // Zoomed out with keepCentered setting on sticks to center
@@ -40,7 +40,7 @@ export const applyBoundsX = (viewTransform: TransformState): number => {
     return viewTransform.xOffset
 }
 
-export const applyBoundsY = (viewTransform: TransformState): number => {
+export const applyBoundsY = (viewTransform: ViewTransform): number => {
     if (onFirstPage()) {
         const upperBound = getUpperBound(viewTransform)
 
@@ -74,15 +74,15 @@ export const applyBoundsY = (viewTransform: TransformState): number => {
     return viewTransform.yOffset
 }
 
-const getUpperBound = (viewTransform: TransformState): number =>
+const getUpperBound = (viewTransform: ViewTransform): number =>
     (window.innerHeight * SCROLL_LIMIT_FIRST_PAGE) / viewTransform.scale
 
-const getLowerBound = (viewTransform: TransformState): number =>
+const getLowerBound = (viewTransform: ViewTransform): number =>
     (window.innerHeight * SCROLL_LIMIT_LAST_PAGE) / viewTransform.scale -
     getPageSize().height
 
 const getLeftRightBounds = (
-    viewTransform: TransformState,
+    viewTransform: ViewTransform,
     useStrictBounds: boolean
 ) => {
     const limit = useStrictBounds ? 1 : SCROLL_LIMIT_HORIZONTAL
