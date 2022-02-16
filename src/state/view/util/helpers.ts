@@ -2,11 +2,12 @@ import { pageSize } from "consts"
 import { Point } from "drawing/stroke/index.types"
 import { PageSize } from "redux/board/index.types"
 import { ViewTransform } from "state/view/state/index.types"
-import { MainMenuState } from "redux/menu/index.types"
 import { online } from "state/online"
+import { view } from "state/view"
+import { menu } from "state/menu"
+import { MainMenuState } from "state/menu/state/index.types"
 import { DialogState } from "state/online/state/index.types"
 import store from "redux/store"
-import { view } from "state/view"
 
 export const getCenterOfScreen = () => ({
     x: getCenterX(),
@@ -50,8 +51,8 @@ export const onLastPage = (): boolean =>
     store.getState().board.pageRank.length - 1
 
 export const isMenuOpen = () =>
-    store.getState().menu.mainMenuState !== MainMenuState.Closed ||
-    store.getState().menu.shortcutsOpen ||
+    menu.getState().mainMenuState !== MainMenuState.Closed ||
+    menu.getState().shortcutsOpen ||
     online.getState().dialogState !== DialogState.Closed
 
 export const isFullScreen = () => {

@@ -1,8 +1,7 @@
 import { ExpandableIcon } from "components"
 import React from "react"
-import { SET_MAIN_SUB_MENU } from "redux/menu"
-import { MainSubMenuState } from "redux/menu/index.types"
-import store from "redux/store"
+import { menu } from "state/menu"
+import { MainSubMenuState } from "state/menu/state/index.types"
 import { ItemWrap, ItemButton } from "./index.styled"
 
 interface MenuItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -23,7 +22,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
 }) => {
     if (expandMenu) {
         const expandSubMenu = () => {
-            store.dispatch(SET_MAIN_SUB_MENU(expandMenu))
+            menu.setMainSubMenu(expandMenu)
         }
         return (
             <ItemWrap>
@@ -41,10 +40,10 @@ const MenuItem: React.FC<MenuItemProps> = ({
     }
     const closeSubMenu = () => {
         const subMenuOpen =
-            store.getState().menu.mainSubMenuState !== MainSubMenuState.Closed
+            menu.getState().mainSubMenuState !== MainSubMenuState.Closed
 
         if (isMainMenu && subMenuOpen) {
-            store.dispatch(SET_MAIN_SUB_MENU(MainSubMenuState.Closed))
+            menu.setMainSubMenu(MainSubMenuState.Closed)
         }
     }
     return (

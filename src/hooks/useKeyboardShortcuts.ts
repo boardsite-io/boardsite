@@ -20,7 +20,7 @@ import {
     handleExportWorkspace,
     handleImportWorkspace,
 } from "drawing/fileManagement"
-import { MainMenuState } from "redux/menu/index.types"
+import { isMenuOpen } from "state/view/util"
 
 export const useKeyboardShortcuts = (): void => {
     useEffect(() => {
@@ -31,17 +31,10 @@ export const useKeyboardShortcuts = (): void => {
     }, [])
 }
 
-// Check if any menu is open
-const isInMenu = (): boolean => {
-    const { mainMenuState, shortcutsOpen } = store.getState().menu
-
-    return mainMenuState !== MainMenuState.Closed || shortcutsOpen
-}
-
 const keyListener = (e: KeyboardEvent): void => {
     // Avoid triggering shortcuts while in menus
     // Avoid repeat spam
-    if (isInMenu() || e.repeat) {
+    if (isMenuOpen() || e.repeat) {
         return
     }
 
