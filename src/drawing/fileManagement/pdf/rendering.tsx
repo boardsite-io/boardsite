@@ -30,7 +30,9 @@ export const pageToDataURL = async (
         })
 
         // Draw background layer
-        drawBackground(ctx, page.meta)
+        if (page.meta.background.style !== "doc") {
+            drawBackground(ctx, page.meta)
+        }
     }
     const data = canvasRef.current?.toDataURL("image/png", MAX_PIXEL_SCALE)
 
