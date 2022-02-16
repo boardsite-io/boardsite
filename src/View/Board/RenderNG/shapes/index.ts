@@ -2,6 +2,7 @@ import { ERASER_STROKE, SELECTION_FILL } from "App/theme"
 import { LiveStroke } from "drawing/livestroke/index.types"
 import { ToolType, Stroke } from "drawing/stroke/index.types"
 import { StrokeStyle } from "../index.types"
+import { ERASER_WIDTH } from "../../../../consts"
 
 export const shiftPoints = (points: number[], x: number, y: number) =>
     points.map((p, i) => (i % 2 === 0 ? p + x : p + y))
@@ -13,13 +14,13 @@ export const draw = (
     ctx.lineCap = "round"
     ctx.lineJoin = "round"
     ctx.lineWidth = stroke.style.width
-    ctx.fillStyle = stroke.style.color
-    ctx.strokeStyle = stroke.style.color
+    ctx.fillStyle = strokeStyleToRGBA(stroke.style)
+    ctx.strokeStyle = strokeStyleToRGBA(stroke.style)
 
     drawShape[stroke.type]?.(ctx, stroke)
 }
 
-export const drawPen = (
+const drawPen = (
     ctx: CanvasRenderingContext2D,
     stroke: Stroke | LiveStroke
 ) => {
@@ -45,15 +46,16 @@ export const drawPen = (
     }
 }
 
-export const drawEraser = (
+const drawEraser = (
     ctx: CanvasRenderingContext2D,
     stroke: Stroke | LiveStroke
 ) => {
     ctx.strokeStyle = ERASER_STROKE
+    ctx.lineWidth = ERASER_WIDTH
     drawPen(ctx, stroke)
 }
 
-export const drawLine = (
+const drawLine = (
     ctx: CanvasRenderingContext2D,
     stroke: Stroke | LiveStroke
 ) => {
@@ -64,7 +66,7 @@ export const drawLine = (
     ctx.stroke()
 }
 
-export const drawRect = (
+const drawRect = (
     ctx: CanvasRenderingContext2D,
     stroke: Stroke | LiveStroke
 ) => {
@@ -74,7 +76,7 @@ export const drawRect = (
     ctx.stroke()
 }
 
-export const drawCircle = (
+const drawCircle = (
     ctx: CanvasRenderingContext2D,
     stroke: Stroke | LiveStroke
 ) => {
@@ -86,7 +88,7 @@ export const drawCircle = (
     ctx.stroke()
 }
 
-export const drawSelect = (
+const drawSelect = (
     ctx: CanvasRenderingContext2D,
     stroke: Stroke | LiveStroke
 ) => {
@@ -107,7 +109,7 @@ const drawShape = {
     [ToolType.Pan]: undefined,
 }
 
-export const strokeStyleToRGBA = (style: StrokeStyle): string => {
+const strokeStyleToRGBA = (style: StrokeStyle): string => {
     const r = parseInt(style.color.slice(1, 3), 16)
     const g = parseInt(style.color.slice(3, 5), 16)
     const b = parseInt(style.color.slice(5, 7), 16)
