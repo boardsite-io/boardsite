@@ -1,8 +1,6 @@
 import { FormattedMessage } from "language"
 import React, { useState } from "react"
-import store from "redux/store"
 import { useNavigate } from "react-router-dom"
-import { SET_SESSION_DIALOG } from "redux/session"
 import { BoardSession, currentSession } from "api/session"
 import {
     Button,
@@ -11,7 +9,8 @@ import {
     TextField,
     UserSelection,
 } from "components"
-import { DialogState } from "redux/session/index.types"
+import { online } from "state/online"
+import { DialogState } from "state/online/state/index.types"
 import { OnlineSessionOptions } from "./index.styled"
 
 const CreateOnlineSession: React.FC = () => {
@@ -43,7 +42,7 @@ const CreateOnlineSession: React.FC = () => {
             await currentSession().join()
 
             navigate(path)
-            store.dispatch(SET_SESSION_DIALOG(DialogState.Closed))
+            online.setSessionDialog(DialogState.Closed)
             setIsValidInput(true)
         } catch (error) {
             setIsValidInput(false)

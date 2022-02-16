@@ -1,5 +1,5 @@
 import React from "react"
-import { useCustomSelector } from "hooks"
+import { online } from "state/online"
 import {
     SessionInfoWrapper,
     UserAlias,
@@ -8,7 +8,7 @@ import {
 } from "./index.styled"
 
 const SessionInfo: React.FC = () => {
-    const userInfo = useCustomSelector((state) => state.session.session?.users)
+    const userInfo = online.getState().session?.users
     return (
         <SessionInfoWrapper>
             {Object.values(userInfo ?? {}).map(({ alias, color, id }) => (

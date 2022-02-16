@@ -5,11 +5,11 @@ import { isConnected } from "api/session"
 import { BsPeople } from "react-icons/bs"
 import { CLOSE_MAIN_MENU, OPEN_SHORTCUTS } from "redux/menu"
 import { MainSubMenuState } from "redux/menu/index.types"
-import { SET_SESSION_DIALOG } from "redux/session"
-import { DialogState } from "redux/session/index.types"
 import store from "redux/store"
 import { FaGithub } from "react-icons/fa"
 import { isMobile } from "react-device-detect"
+import { online } from "state/online"
+import { DialogState } from "state/online/state/index.types"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 
@@ -20,9 +20,9 @@ export const openInNewTab = (url: string): void => {
 
 const onClickOnlineSession = () => {
     if (isConnected()) {
-        store.dispatch(SET_SESSION_DIALOG(DialogState.ManageOnlineSession))
+        online.setSessionDialog(DialogState.ManageOnlineSession)
     } else {
-        store.dispatch(SET_SESSION_DIALOG(DialogState.CreateOnlineSession))
+        online.setSessionDialog(DialogState.CreateOnlineSession)
     }
     store.dispatch(CLOSE_MAIN_MENU())
 }

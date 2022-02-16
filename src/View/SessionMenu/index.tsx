@@ -1,18 +1,16 @@
 import React from "react"
-import store from "redux/store"
 import { Dialog } from "components"
-import { useCustomSelector } from "hooks"
+import { online, useOnline } from "state/online"
 import { useParams } from "react-router-dom"
 import { isConnected } from "api/session"
-import { SET_SESSION_DIALOG } from "redux/session"
-import { DialogState } from "redux/session/index.types"
+import { DialogState } from "state/online/state/index.types"
 import ManageOnlineSession from "./ManageOnlineSession"
 import CreateOnlineSession from "./CreateOnlineSession"
 import InitialSelection from "./InitialSelection"
 import JoinOnly from "./JoinOnly"
 
 const handleClose = () => {
-    store.dispatch(SET_SESSION_DIALOG(DialogState.Closed))
+    online.setSessionDialog(DialogState.Closed)
 }
 
 const contents = {
@@ -25,7 +23,7 @@ const contents = {
 }
 
 const Session: React.FC = () => {
-    const dialogState = useCustomSelector((state) => state.session.dialogState)
+    const { dialogState } = useOnline()
     const { sid } = useParams()
     const contentType =
         sid && !isConnected() ? DialogState.JoinOnly : dialogState

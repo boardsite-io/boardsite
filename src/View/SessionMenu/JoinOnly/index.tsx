@@ -1,12 +1,11 @@
 import { FormattedMessage } from "language"
 import React from "react"
-import store from "redux/store"
 import { Button, DialogContent, DialogTitle, UserSelection } from "components"
 import { useNavigate, useParams } from "react-router-dom"
-import { SET_SESSION_DIALOG } from "redux/session"
 import { BoardSession, currentSession } from "api/session"
-import { DialogState } from "redux/session/index.types"
 import { handleNotification } from "drawing/handlers"
+import { online } from "state/online"
+import { DialogState } from "state/online/state/index.types"
 
 const JoinOnly: React.FC = () => {
     const { sid } = useParams()
@@ -21,7 +20,7 @@ const JoinOnly: React.FC = () => {
         }
 
         try {
-            store.dispatch(SET_SESSION_DIALOG(DialogState.Closed))
+            online.setSessionDialog(DialogState.Closed)
 
             const path = BoardSession.path(sid)
 
