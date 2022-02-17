@@ -8,6 +8,7 @@ import { isMobile } from "react-device-detect"
 import { online } from "state/online"
 import { DialogState } from "state/online/state/index.types"
 import { menu } from "state/menu"
+import { AUTH_URL } from "api/auth"
 import { MainSubMenuState } from "state/menu/state/index.types"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
@@ -25,9 +26,15 @@ const onClickOnlineSession = () => {
     }
     menu.closeMainMenu()
 }
+
 const onClickGithub = () => {
     openInNewTab("https://github.com/boardsite-io/boardsite")
 }
+
+const onClickSignIn = () => {
+    window.location.href = AUTH_URL
+}
+
 const onClickShortcuts = () => {
     menu.openShortcuts()
     menu.closeMainMenu()
@@ -72,6 +79,12 @@ const GeneralMenu = () => {
                     onClick={onClickShortcuts}
                 />
             )}
+            <HorizontalRule />
+            <MenuItem
+                isMainMenu
+                text={<FormattedMessage id="Menu.General.SignIn" />}
+                onClick={onClickSignIn}
+            />
         </MainMenuWrap>
     )
 }

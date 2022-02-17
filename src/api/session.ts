@@ -53,6 +53,11 @@ export class BoardSession implements Session {
         }
     }
 
+    setToken(token: string): Promise<boolean> {
+        this.request.token = token
+        return this.request.validateToken()
+    }
+
     updateUser(user: Partial<User>): void {
         assign(this.user, user)
     }

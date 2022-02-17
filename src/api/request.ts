@@ -22,6 +22,7 @@ export class Request {
     baseURL: string
     sessionId?: string
     userId?: string
+    token?: string
 
     timeout = 3000
 
@@ -66,6 +67,9 @@ export class Request {
         }
         if (useUserValidation) {
             headers[HEADER_USER_ID] = this.userId ?? ""
+        }
+        if (this.token) {
+            headers.Authorization = `Bearer ${this.token}`
         }
         return headers
     }
@@ -179,5 +183,14 @@ export class Request {
             { headers }
         )
         return response.data
+    }
+
+    async validateToken(): Promise<boolean> {
+        const resp = await this.jsonRequest.request({
+            method: "GET",
+            url: "github/oauth/validate",
+            headers: this.getHeaders(false),
+        })
+        return resp.status === 204
     }
 }

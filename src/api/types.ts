@@ -18,7 +18,9 @@ export interface Session {
     user: User
     socket?: WebSocket
     users?: ConnectedUsers
+    token?: string
 
+    setToken(token: string): Promise<boolean>
     updateUser(user: Partial<User>): void
     setAPIURL(url: URL): void
     setID(sessionId: string): Session

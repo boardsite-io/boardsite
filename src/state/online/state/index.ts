@@ -10,6 +10,7 @@ import { GlobalState, RenderTrigger } from "../../index.types"
 export class Online implements GlobalState<OnlineState, OnlineSubscribers> {
     state: OnlineState = {
         dialogState: DialogState.InitialSelectionFirstLoad,
+        isAuthorized: false,
     }
 
     subscribers: OnlineSubscribers = { session: [] }
@@ -30,6 +31,11 @@ export class Online implements GlobalState<OnlineState, OnlineSubscribers> {
     setSession(session: Session): void {
         this.state.session = session
         this.render("session")
+    }
+
+    setToken(token: string, isAuthorized?: boolean): void {
+        this.state.isAuthorized = isAuthorized ?? false
+        this.state.token = token
     }
 
     subscribe(subscription: OnlineSubscription, trigger: RenderTrigger) {
