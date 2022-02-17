@@ -1,10 +1,8 @@
 import React, { memo } from "react"
-import store from "redux/store"
-import { useCustomSelector } from "hooks"
 import { CSSTransition } from "react-transition-group"
-import { CLOSE_MAIN_MENU } from "redux/menu"
 import { Popup } from "components"
-import { MainMenuState, MainSubMenuState } from "redux/menu/index.types"
+import { menu, useMenu } from "state/menu"
+import { MainMenuState, MainSubMenuState } from "state/menu/state/index.types"
 import { MainMenuDropdown } from "./index.styled"
 import FileMenu from "./secondary/File"
 import ViewMenu from "./primary/View"
@@ -18,7 +16,7 @@ import GoToMenu from "./secondary/GoTo"
 import SettingsMenu from "./secondary/Settings"
 
 const onClickBackground = () => {
-    store.dispatch(CLOSE_MAIN_MENU())
+    menu.closeMainMenu()
 }
 
 const cssTransitionProps = {
@@ -28,10 +26,8 @@ const cssTransitionProps = {
 }
 
 const MainMenu: React.FC = memo(() => {
-    const mainMenuState = useCustomSelector((state) => state.menu.mainMenuState)
-    const mainSubMenuState = useCustomSelector(
-        (state) => state.menu.mainSubMenuState
-    )
+    const { mainMenuState } = useMenu("mainMenu")
+    const { mainSubMenuState } = useMenu("mainSubMenu")
 
     return (
         <>

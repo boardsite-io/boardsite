@@ -8,15 +8,14 @@ import {
     handleImportPdf,
     handleImportWorkspace,
 } from "drawing/fileManagement"
-import { CLOSE_MAIN_MENU } from "redux/menu"
-import store from "redux/store"
+import { menu } from "state/menu"
 import { SubMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 
 const onClickNew = () => {
     handleDeleteAllPages()
     handleAddPageUnder()
-    store.dispatch(CLOSE_MAIN_MENU())
+    menu.closeMainMenu()
 }
 
 const onClickOpen = async () => {

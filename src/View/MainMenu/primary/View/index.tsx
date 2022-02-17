@@ -7,12 +7,12 @@ import {
     ZoomOutIcon,
     HorizontalRule,
 } from "components"
-import { MainSubMenuState } from "redux/menu/index.types"
 import {
     handleFitToPage,
     handleResetViewScale,
     handleZoomCenter,
 } from "state/view/interface"
+import { MainSubMenuState } from "state/menu/state/index.types"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 

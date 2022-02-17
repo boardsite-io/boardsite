@@ -1,3 +1,4 @@
+import React from "react"
 import {
     HorizontalRule,
     PageAboveIcon,
@@ -14,28 +15,26 @@ import {
     handleDeleteCurrentPage,
 } from "drawing/handlers"
 import { FormattedMessage } from "language"
-import React from "react"
-import { CLOSE_MAIN_MENU } from "redux/menu"
-import { MainSubMenuState } from "redux/menu/index.types"
-import store from "redux/store"
+import { menu } from "state/menu"
+import { MainSubMenuState } from "state/menu/state/index.types"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 
 const onClickNewPageBefore = () => {
     handleAddPageOver()
-    store.dispatch(CLOSE_MAIN_MENU())
+    menu.closeMainMenu()
 }
 const onClickNewPageAfter = () => {
     handleAddPageUnder()
-    store.dispatch(CLOSE_MAIN_MENU())
+    menu.closeMainMenu()
 }
 const onClickDeletePage = () => {
     handleDeleteCurrentPage()
-    store.dispatch(CLOSE_MAIN_MENU())
+    menu.closeMainMenu()
 }
 const onClickClearPage = () => {
     handleClearPage()
-    store.dispatch(CLOSE_MAIN_MENU())
+    menu.closeMainMenu()
 }
 const onClickDeleteAllPages = () => {
     handleDeleteAllPages(true)

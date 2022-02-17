@@ -11,11 +11,11 @@ import {
     MIME_TYPE_WORKSPACE,
 } from "consts"
 import { END_LOADING, START_LOADING } from "redux/loading"
-import { CLOSE_MAIN_MENU } from "redux/menu"
 import { fileOpen, fileSave } from "browser-fs-access"
 import { LOAD_BOARD_STATE } from "redux/board"
 import { BoardState } from "redux/board/index.types"
 import { isConnected } from "api/session"
+import { menu } from "state/menu"
 import { handleImportPdfFile, renderAsPdf } from "./pdf"
 import { handleImportWorkspaceFile, saveWorkspace } from "./workspace"
 
@@ -59,7 +59,7 @@ export const handleImportPdf = async () => {
         const errorMessage = await handleProcessFileImport(file)
 
         if (errorMessage === undefined) {
-            store.dispatch(CLOSE_MAIN_MENU())
+            menu.closeMainMenu()
         }
     }
 }
@@ -76,7 +76,7 @@ export const handleImportWorkspace = async () => {
         const errorMessage = await handleProcessFileImport(file)
 
         if (errorMessage === undefined) {
-            store.dispatch(CLOSE_MAIN_MENU())
+            menu.closeMainMenu()
         }
     }
 }
@@ -96,7 +96,7 @@ export const handleExportPdf = async (): Promise<void> => {
             extensions: [FILE_EXTENSION_PDF],
         }
     )
-    store.dispatch(CLOSE_MAIN_MENU())
+    menu.closeMainMenu()
 }
 
 export const handleExportWorkspace = async () => {
@@ -113,6 +113,5 @@ export const handleExportWorkspace = async () => {
             extensions: [FILE_EXTENSION_WORKSPACE],
         }
     )
-
-    store.dispatch(CLOSE_MAIN_MENU())
+    menu.closeMainMenu()
 }

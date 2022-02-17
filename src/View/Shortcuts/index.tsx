@@ -1,21 +1,17 @@
 import { DrawerTitle } from "components"
-import { useCustomSelector } from "hooks"
 import { FormattedMessage } from "language"
 import React from "react"
-import { CLOSE_SHORTCUTS } from "redux/menu"
-import store from "redux/store"
+import { menu, useMenu } from "state/menu"
 import { ShortcutDrawer, ShortcutList } from "./index.styled"
 import Shortcut from "./Shortcut"
 
 const Shortcuts = () => {
-    const open = useCustomSelector((state) => state.menu.shortcutsOpen)
+    const { shortcutsOpen } = useMenu("shortcutsOpen")
 
     return (
         <ShortcutDrawer
-            open={open}
-            onClose={() => {
-                store.dispatch(CLOSE_SHORTCUTS())
-            }}
+            open={shortcutsOpen}
+            onClose={() => menu.closeShortcuts()}
         >
             <DrawerTitle>
                 <FormattedMessage id="Shortcuts.Title" />

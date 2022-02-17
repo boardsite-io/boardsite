@@ -1,3 +1,5 @@
+import { Subscribers } from "state/index.types"
+
 export enum MainMenuState {
     Closed,
     General,
@@ -20,3 +22,11 @@ export interface MenuState {
     mainSubMenuState: MainSubMenuState
     shortcutsOpen: boolean
 }
+
+export type MenuSubscribers = {
+    mainMenu: Subscribers
+    mainSubMenu: Subscribers
+    shortcutsOpen: Subscribers
+}
+
+export type MenuSubscription = keyof MenuSubscribers

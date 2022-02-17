@@ -1,6 +1,5 @@
 import { FormattedMessage } from "language"
-import React, { memo } from "react"
-import store from "redux/store"
+import React, { memo, useCallback } from "react"
 import {
     IconButton,
     MenuIcon,
@@ -8,42 +7,41 @@ import {
     ToolTip,
     VerticalRule,
 } from "components"
-import { SET_MAIN_MENU, SET_MAIN_SUB_MENU } from "redux/menu"
-import { MainMenuState, MainSubMenuState } from "redux/menu/index.types"
-import { useCustomSelector } from "hooks"
+import { MainMenuState, MainSubMenuState } from "state/menu/state/index.types"
+import { menu, useMenu } from "state/menu"
 import { MainMenuBarWrap } from "./index.styled"
 import ViewButton from "./ViewButton"
 import PageButton from "./PageButton"
 
 const onClickGeneral = () => {
-    store.dispatch(SET_MAIN_MENU(MainMenuState.General))
+    menu.setMainMenu(MainMenuState.General)
 }
 const onClickView = () => {
-    store.dispatch(SET_MAIN_MENU(MainMenuState.View))
+    menu.setMainMenu(MainMenuState.View)
 }
 const onClickPage = () => {
-    store.dispatch(SET_MAIN_MENU(MainMenuState.Page))
+    menu.setMainMenu(MainMenuState.Page)
 }
 
 const onEnter = (newState: MainMenuState, currentState: MainMenuState) => {
     if (currentState !== MainMenuState.Closed && currentState !== newState) {
-        store.dispatch(SET_MAIN_SUB_MENU(MainSubMenuState.Closed))
-        store.dispatch(SET_MAIN_MENU(newState))
+        menu.setMainSubMenu(MainSubMenuState.Closed)
+        menu.setMainMenu(newState)
     }
 }
 
 const MainMenuBar: React.FC = memo(() => {
-    const mainMenuState = useCustomSelector((state) => state.menu.mainMenuState)
+    const { mainMenuState } = useMenu("mainMenu")
 
-    const onMouseEnterGeneral = () => {
+    const onMouseEnterGeneral = useCallback(() => {
         onEnter(MainMenuState.General, mainMenuState)
-    }
-    const onMouseEnterView = () => {
+    }, [mainMenuState])
+    const onMouseEnterView = useCallback(() => {
         onEnter(MainMenuState.View, mainMenuState)
-    }
-    const onMouseEnterPage = () => {
+    }, [mainMenuState])
+    const onMouseEnterPage = useCallback(() => {
         onEnter(MainMenuState.Page, mainMenuState)
-    }
+    }, [mainMenuState])
 
     return (
         <MainMenuBarWrap>

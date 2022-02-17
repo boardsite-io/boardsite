@@ -3,13 +3,12 @@ import { FormattedMessage } from "language"
 import { HorizontalRule } from "components"
 import { isConnected } from "api/session"
 import { BsPeople } from "react-icons/bs"
-import { CLOSE_MAIN_MENU, OPEN_SHORTCUTS } from "redux/menu"
-import { MainSubMenuState } from "redux/menu/index.types"
-import store from "redux/store"
 import { FaGithub } from "react-icons/fa"
 import { isMobile } from "react-device-detect"
 import { online } from "state/online"
 import { DialogState } from "state/online/state/index.types"
+import { menu } from "state/menu"
+import { MainSubMenuState } from "state/menu/state/index.types"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 
@@ -24,14 +23,14 @@ const onClickOnlineSession = () => {
     } else {
         online.setSessionDialog(DialogState.CreateOnlineSession)
     }
-    store.dispatch(CLOSE_MAIN_MENU())
+    menu.closeMainMenu()
 }
 const onClickGithub = () => {
     openInNewTab("https://github.com/boardsite-io/boardsite")
 }
 const onClickShortcuts = () => {
-    store.dispatch(OPEN_SHORTCUTS())
-    store.dispatch(CLOSE_MAIN_MENU())
+    menu.openShortcuts()
+    menu.closeMainMenu()
 }
 
 const GeneralMenu = () => {
