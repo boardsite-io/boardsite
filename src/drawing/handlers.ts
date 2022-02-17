@@ -15,7 +15,6 @@ import {
 import { currentSession, isConnected } from "api/session"
 import { backgroundStyle, NOTIFICATION_DURATION } from "consts"
 import store from "redux/store"
-import { SET_TOOL } from "redux/drawing"
 import {
     PageMeta,
     DeletePages,
@@ -29,14 +28,15 @@ import {
 import { IntlMessageId } from "language"
 import { handleResetView } from "state/view/interface"
 import { notification } from "state/notification"
+import { drawing } from "state/drawing"
 import { BoardPage } from "./page"
 import { getVerifiedPageIds, getVerifiedPages } from "./helpers"
 
 const createPage = (): BoardPage =>
-    new BoardPage().updateMeta(store.getState().drawing.pageMeta)
+    new BoardPage().updateMeta(cloneDeep(drawing.getState().pageMeta))
 
 export function handleSetTool(tool: Partial<Tool>): void {
-    store.dispatch(SET_TOOL(tool))
+    drawing.setTool(tool)
     store.dispatch(CLEAR_TRANSFORM())
 }
 
@@ -196,8 +196,7 @@ export function handleChangePageBackground(): void {
     }
 
     const newMeta = cloneDeep<PageMeta>(currentPage.meta)
-    newMeta.background.style =
-        store.getState().drawing.pageMeta.background.style
+    newMeta.background.style = drawing.getState().pageMeta.background.style
 
     const pageUpdate = {
         pageId: currentPage.pageId,

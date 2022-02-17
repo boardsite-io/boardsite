@@ -1,6 +1,5 @@
 import { FormattedMessage } from "language"
 import React, { memo } from "react"
-import { useCustomSelector } from "hooks"
 import {
     CircleIcon,
     IconButton,
@@ -12,10 +11,12 @@ import {
 } from "components"
 import { ToolType } from "drawing/stroke/index.types"
 import { handleSetTool } from "drawing/handlers"
+import { useDrawing } from "state/drawing"
 import { StyledShapeTools } from "./index.styled"
 
 const ShapeTools: React.FC = memo(() => {
-    const typeSelector = useCustomSelector((state) => state.drawing.tool.type)
+    const { type } = useDrawing("toolType").tool
+
     return (
         <StyledShapeTools>
             <ToolTip
@@ -24,7 +25,7 @@ const ShapeTools: React.FC = memo(() => {
             >
                 <IconButton
                     icon={<PenIcon />}
-                    active={typeSelector === ToolType.Pen}
+                    active={type === ToolType.Pen}
                     onClick={() => {
                         handleSetTool({ type: ToolType.Pen })
                     }}
@@ -36,7 +37,7 @@ const ShapeTools: React.FC = memo(() => {
             >
                 <IconButton
                     icon={<LineIcon />}
-                    active={typeSelector === ToolType.Line}
+                    active={type === ToolType.Line}
                     onClick={() => {
                         handleSetTool({ type: ToolType.Line })
                     }}
@@ -48,7 +49,7 @@ const ShapeTools: React.FC = memo(() => {
             >
                 <IconButton
                     icon={<RectangleIcon />}
-                    active={typeSelector === ToolType.Rectangle}
+                    active={type === ToolType.Rectangle}
                     onClick={() => {
                         handleSetTool({ type: ToolType.Rectangle })
                     }}
@@ -60,7 +61,7 @@ const ShapeTools: React.FC = memo(() => {
             >
                 <IconButton
                     icon={<CircleIcon />}
-                    active={typeSelector === ToolType.Circle}
+                    active={type === ToolType.Circle}
                     onClick={() => {
                         handleSetTool({ type: ToolType.Circle })
                     }}

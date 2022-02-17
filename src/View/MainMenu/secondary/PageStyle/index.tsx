@@ -1,30 +1,26 @@
 import React from "react"
 import { HorizontalRule, TickIcon } from "components"
 import { backgroundStyle } from "consts"
-import { useCustomSelector } from "hooks"
 import { FormattedMessage } from "language"
-import { SET_PAGE_BACKGROUND } from "redux/drawing"
-import store from "redux/store"
+import { drawing, useDrawing } from "state/drawing"
 import { handleChangePageBackground } from "drawing/handlers"
 import { SubMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 
 const onClickBlank = () => {
-    store.dispatch(SET_PAGE_BACKGROUND(backgroundStyle.BLANK))
+    drawing.setPageBackground(backgroundStyle.BLANK)
 }
 const onClickCheckered = () => {
-    store.dispatch(SET_PAGE_BACKGROUND(backgroundStyle.CHECKERED))
+    drawing.setPageBackground(backgroundStyle.CHECKERED)
 }
 const onClickRuled = () => {
-    store.dispatch(SET_PAGE_BACKGROUND(backgroundStyle.RULED))
+    drawing.setPageBackground(backgroundStyle.RULED)
 }
 const onClickApply = () => {
     handleChangePageBackground()
 }
 const PageStyleMenu = () => {
-    const style = useCustomSelector(
-        (state) => state.drawing.pageMeta.background.style
-    )
+    const { style } = useDrawing("pageStyle").pageMeta.background
 
     return (
         <SubMenuWrap level={3}>

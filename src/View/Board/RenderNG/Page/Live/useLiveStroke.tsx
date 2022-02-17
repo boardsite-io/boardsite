@@ -1,9 +1,8 @@
 import { MouseEvent, TouchEvent, useCallback } from "react"
-import store from "redux/store"
 import { Point, ToolType } from "drawing/stroke/index.types"
-import { useCustomSelector } from "hooks"
 import { PageId } from "redux/board/index.types"
 import { BoardLiveStroke } from "drawing/livestroke"
+import { drawing, useDrawing } from "state/drawing"
 import {
     drawLiveStroke,
     getMousePosition,
@@ -21,17 +20,13 @@ export const useLiveStroke = (
     canvasRef: React.RefObject<HTMLCanvasElement>,
     pageOffset: PageOffset
 ) => {
-    const isPanMode = useCustomSelector(
-        (state) => state.drawing.tool.type === ToolType.Pan
-    )
+    const isPanMode = useDrawing("toolType").tool.type === ToolType.Pan
 
     const startLiveStroke = useCallback(
         (point: Point) => {
             isMouseOrTouchDown = true
 
-            liveStroke
-                .setTool(store.getState().drawing.tool)
-                .start(point, pageId)
+            liveStroke.setTool(drawing.getState().tool).start(point, pageId)
 
             drawLiveStroke(liveStroke, canvasRef)
         },

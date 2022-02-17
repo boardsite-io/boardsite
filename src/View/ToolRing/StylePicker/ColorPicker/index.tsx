@@ -1,15 +1,13 @@
 import React, { memo } from "react"
-import { useCustomSelector } from "hooks"
-import { SET_COLOR } from "redux/drawing"
-import store from "redux/store"
+import { drawing, useDrawing } from "state/drawing"
 import { CustomColorPicker } from "./index.styled"
 
-const handleChange = (newColor: string | undefined) => {
-    store.dispatch(SET_COLOR(newColor))
+const handleChange = (newColor: string) => {
+    drawing.setColor(newColor)
 }
 
 const ColorPicker: React.FC = memo(() => {
-    const color = useCustomSelector((state) => state.drawing.tool.style.color)
+    const { color } = useDrawing("toolStyle").tool.style
 
     return <CustomColorPicker color={color} onChange={handleChange} />
 })

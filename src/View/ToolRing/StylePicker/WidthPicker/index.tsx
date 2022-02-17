@@ -1,17 +1,13 @@
 import { FormattedMessage } from "language"
 import React, { memo } from "react"
 import { nanoid } from "@reduxjs/toolkit"
-import { useCustomSelector } from "hooks"
-import store from "redux/store"
-import { SET_WIDTH } from "redux/drawing"
+import { drawing, useDrawing } from "state/drawing"
 import { STROKE_WIDTH_PRESETS } from "consts"
 import { Position, ToolTip } from "components"
 import { Preset, WidthPresetInnerDot, WidthPresets } from "./index.styled"
 
 const WidthPicker: React.FC = memo(() => {
-    const widthSelector = useCustomSelector(
-        (state) => state.drawing.tool.style.width
-    )
+    const { width } = useDrawing("toolStyle").tool.style
 
     return (
         <WidthPresets>
@@ -27,8 +23,8 @@ const WidthPicker: React.FC = memo(() => {
                     }
                 >
                     <Preset
-                        $active={widthSelector === strokeWidth}
-                        onClick={() => store.dispatch(SET_WIDTH(strokeWidth))}
+                        $active={width === strokeWidth}
+                        onClick={() => drawing.setWidth(strokeWidth)}
                     >
                         <WidthPresetInnerDot $strokeWidth={strokeWidth} />
                     </Preset>

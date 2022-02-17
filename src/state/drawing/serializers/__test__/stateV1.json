@@ -1,6 +1,5 @@
 {
     "version": "1.0",
-    "isDraggable": false,
     "directDraw": false,
     "tool": {
         "type": 2,

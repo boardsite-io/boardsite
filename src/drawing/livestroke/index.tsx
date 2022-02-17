@@ -7,9 +7,9 @@ import {
 } from "consts"
 import { handleAddStrokes, handleDeleteStrokes } from "drawing/handlers"
 import { SET_TRANSFORM_STROKES } from "redux/board"
-import { CLEAR_ERASED_STROKES, SET_ERASED_STROKES } from "redux/drawing"
 import store from "redux/store"
 import { Page } from "redux/board/index.types"
+import { drawing } from "state/drawing"
 import { view } from "state/view"
 import { perfectDrawing, simplifyRDP } from "../stroke/simplify"
 import {
@@ -81,7 +81,7 @@ export class BoardLiveStroke implements LiveStroke {
         const selectedStrokes = this.selectLineCollision(strokes)
 
         if (Object.keys(selectedStrokes).length > 0) {
-            store.dispatch(SET_ERASED_STROKES(selectedStrokes))
+            drawing.setErasedStrokes(selectedStrokes)
         }
     }
 
@@ -174,14 +174,14 @@ export class BoardLiveStroke implements LiveStroke {
     static async register(stroke: Stroke): Promise<void> {
         switch (stroke.type) {
             case ToolType.Eraser: {
-                const { erasedStrokes } = store.getState().drawing
+                const { erasedStrokes } = drawing.getState()
                 const strokes = Object.keys(erasedStrokes).map(
                     (id) => erasedStrokes[id]
                 )
                 if (strokes.length > 0) {
                     handleDeleteStrokes(strokes)
                 }
-                store.dispatch(CLEAR_ERASED_STROKES())
+                drawing.clearErasedStrokes()
                 break
             }
             case ToolType.Select: {
