@@ -1,8 +1,6 @@
 import { FormattedMessage } from "language"
 import React from "react"
-import store from "redux/store"
-import { useCustomSelector } from "hooks"
-import { END_LOADING } from "redux/loading"
+import { loading, useLoading } from "state/loading"
 import {
     Cover,
     Frame,
@@ -29,12 +27,13 @@ const spinnerAnimations = ringDiameters.map((diameter, i) =>
         : `spin ${diameter}s linear infinite`
 )
 
+// TODO: Check why loading animation isn't showing properly and redesign
 const Loading: React.FC = () => {
-    const { isLoading, loadingInfo } = useCustomSelector((state) => state.info)
+    const { isLoading, loadingInfo } = useLoading()
 
     // Abort loading animation on close
     const onClose = () => {
-        store.dispatch(END_LOADING())
+        loading.endLoading()
     }
 
     return (

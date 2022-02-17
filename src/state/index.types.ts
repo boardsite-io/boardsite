@@ -1,13 +1,17 @@
 // Global types
 
-export interface GlobalState<T> {
+/**
+ * T: State
+ * U: Subscribers
+ */
+export interface GlobalState<T, U> {
     state: T
-    subscribers: Subscribers | Record<string, Subscribers>
+    subscribers: U
 
     getState: () => T
     setState: (newState: T) => void
-    subscribe: (trigger: RenderTrigger, subscription?: any) => void
-    unsubscribe: (trigger: RenderTrigger, subscription?: any) => void
+    subscribe: (trigger: RenderTrigger, subscription: keyof U) => void
+    unsubscribe: (trigger: RenderTrigger, subscription: keyof U) => void
 }
 
 export type RenderTrigger = React.Dispatch<React.SetStateAction<object>>

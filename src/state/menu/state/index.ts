@@ -7,7 +7,7 @@ import {
     MenuSubscription,
 } from "./index.types"
 
-export class Menu implements GlobalState<MenuState> {
+export class Menu implements GlobalState<MenuState, MenuSubscribers> {
     state: MenuState = {
         mainMenuState: MainMenuState.Closed,
         mainSubMenuState: MainSubMenuState.Closed,

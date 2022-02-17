@@ -10,12 +10,12 @@ import {
     MIME_TYPE_PDF,
     MIME_TYPE_WORKSPACE,
 } from "consts"
-import { END_LOADING, START_LOADING } from "redux/loading"
 import { fileOpen, fileSave } from "browser-fs-access"
 import { LOAD_BOARD_STATE } from "redux/board"
 import { BoardState } from "redux/board/index.types"
 import { isConnected } from "api/session"
 import { menu } from "state/menu"
+import { loading } from "state/loading"
 import { handleImportPdfFile, renderAsPdf } from "./pdf"
 import { handleImportWorkspaceFile, saveWorkspace } from "./workspace"
 
@@ -82,9 +82,9 @@ export const handleImportWorkspace = async () => {
 }
 
 export const handleExportPdf = async (): Promise<void> => {
-    store.dispatch(START_LOADING({ messageId: "Loading.ExportingPdf" }))
+    loading.startLoading({ messageId: "Loading.ExportingPdf" })
     const pdfBytes = await renderAsPdf()
-    store.dispatch(END_LOADING())
+    loading.endLoading()
     // Save to file system
     await fileSave(
         new Blob([pdfBytes], {

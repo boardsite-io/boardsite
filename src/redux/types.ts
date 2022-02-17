@@ -1,11 +1,9 @@
 import { BoardState } from "./board/index.types"
-import { LoadingState } from "./loading/index.types"
 import { DrawingState } from "./drawing/index.types"
 
 export type RootState = {
     board: BoardState
     drawing: DrawingState
-    info: LoadingState
 }
 
 export type FileHeader = {

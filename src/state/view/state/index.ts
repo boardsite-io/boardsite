@@ -5,10 +5,10 @@ import {
     ViewTransform,
     ViewState,
     ViewSubscribers,
-    Subscription,
+    ViewSubscription,
 } from "./index.types"
 
-export class View implements GlobalState<ViewState> {
+export class View implements GlobalState<ViewState, ViewSubscribers> {
     state: ViewState = {
         viewTransform: DEFAULT_VIEW_TRANSFORM,
         layerConfig: {
@@ -47,18 +47,18 @@ export class View implements GlobalState<ViewState> {
         this.render("layerConfig")
     }
 
-    subscribe(trigger: RenderTrigger, subscription: Subscription) {
+    subscribe(trigger: RenderTrigger, subscription: ViewSubscription) {
         if (this.subscribers[subscription].indexOf(trigger) > -1) return
         this.subscribers[subscription].push(trigger)
     }
 
-    unsubscribe(trigger: RenderTrigger, subscription: Subscription) {
+    unsubscribe(trigger: RenderTrigger, subscription: ViewSubscription) {
         this.subscribers[subscription] = this.subscribers[subscription].filter(
             (subscriber) => subscriber !== trigger
         )
     }
 
-    render(subscription: Subscription): void {
+    render(subscription: ViewSubscription): void {
         this.subscribers[subscription].forEach((render) => {
             render({})
         })
