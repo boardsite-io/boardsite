@@ -3,7 +3,8 @@ import { Point } from "drawing/stroke/index.types"
 import { PageSize } from "redux/board/index.types"
 import { ViewTransform } from "state/view/state/index.types"
 import { MainMenuState } from "redux/menu/index.types"
-import { DialogState } from "redux/session/index.types"
+import { online } from "state/online"
+import { DialogState } from "state/online/state/index.types"
 import store from "redux/store"
 import { view } from "state/view"
 
@@ -51,7 +52,7 @@ export const onLastPage = (): boolean =>
 export const isMenuOpen = () =>
     store.getState().menu.mainMenuState !== MainMenuState.Closed ||
     store.getState().menu.shortcutsOpen ||
-    store.getState().session.dialogState !== DialogState.Closed
+    online.getState().dialogState !== DialogState.Closed
 
 export const isFullScreen = () => {
     const effectivePageWidth =

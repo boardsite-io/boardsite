@@ -1,11 +1,10 @@
 import { FormattedMessage } from "language"
 import React from "react"
-import store from "redux/store"
+import { online } from "state/online"
+import { DialogState } from "state/online/state/index.types"
 import { currentSession } from "api/session"
 import { Button, DialogContent, DialogTitle } from "components"
 import { useNavigate } from "react-router-dom"
-import { SET_SESSION_DIALOG } from "redux/session"
-import { DialogState } from "redux/session/index.types"
 import { UserAlias, UserColor, UserInfo, UserList } from "./index.styled"
 
 const ManageOnlineSession: React.FC = () => {
@@ -13,7 +12,7 @@ const ManageOnlineSession: React.FC = () => {
 
     const handleLeave = () => {
         currentSession().disconnect()
-        store.dispatch(SET_SESSION_DIALOG(DialogState.InitialSelection))
+        online.setSessionDialog(DialogState.InitialSelection)
         navigate("/")
     }
 

@@ -16,7 +16,6 @@ import {
 import store, { ReduxStore } from "redux/store"
 import { assign } from "lodash"
 import { BoardPage } from "drawing/page"
-import { CREATE_SESSION } from "redux/session"
 import {
     ADD_ATTACHMENTS,
     ADD_STROKES,
@@ -39,6 +38,7 @@ import {
     User,
 } from "./types"
 import { API_URL, Request } from "./request"
+import { online } from "../state/online"
 
 export class BoardSession implements Session {
     id?: string
@@ -386,15 +386,15 @@ export class BoardSession implements Session {
  * Creates a new instance if not found.
  */
 export const currentSession = (): Session => {
-    let { session } = store.getState().session
+    let { session } = online.getState()
     if (!session) {
         session = new BoardSession()
-        store.dispatch(CREATE_SESSION({ session }))
+        online.setSession(session)
     }
     return session
 }
 
 export const isConnected = (): boolean => {
-    const { session } = store.getState().session
+    const { session } = online.getState()
     return session !== undefined && session.isConnected()
 }
