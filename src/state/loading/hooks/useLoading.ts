@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useState } from "react"
-import { online } from "../state"
+import { loading } from "../state"
 
-export const useOnline = () => {
+export const useLoading = () => {
     const [, render] = useState<object>({})
     const trigger = useCallback(() => render({}), [])
 
     useEffect(() => {
-        online.subscribe(trigger, "session")
+        loading.subscribe(trigger, "loading")
 
         return () => {
-            online.unsubscribe(trigger, "session")
+            loading.unsubscribe(trigger, "loading")
         }
     }, [])
 
-    return online.getState()
+    return loading.getState()
 }

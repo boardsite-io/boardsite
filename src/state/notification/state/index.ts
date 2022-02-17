@@ -1,20 +1,26 @@
 import { IntlMessageId } from "language"
-import { GlobalState, RenderTrigger, Subscribers } from "../../index.types"
-import { NotificationState } from "./index.types"
+import { GlobalState, RenderTrigger } from "../../index.types"
+import {
+    NotificationState,
+    NotificationSubscribers,
+    NotificationSubscription,
+} from "./index.types"
 
-export class Notification implements GlobalState<NotificationState> {
+export class Notification
+    implements GlobalState<NotificationState, NotificationSubscribers>
+{
     state: NotificationState = { notifications: [] }
 
-    subscribers: Subscribers = []
+    subscribers: NotificationSubscribers = { notification: [] }
 
     addNotification(id: IntlMessageId): void {
         this.state.notifications.unshift(id)
-        this.render()
+        this.render("notification")
     }
 
     removeNotification(): void {
         this.state.notifications.pop()
-        this.render()
+        this.render("notification")
     }
 
     getState(): NotificationState {
@@ -25,20 +31,23 @@ export class Notification implements GlobalState<NotificationState> {
         this.state = newState
     }
 
-    subscribe(trigger: RenderTrigger) {
-        if (this.subscribers.indexOf(trigger) > -1) return
-        this.subscribers.push(trigger)
+    subscribe(trigger: RenderTrigger, subscription: NotificationSubscription) {
+        if (this.subscribers[subscription].indexOf(trigger) > -1) return
+        this.subscribers[subscription].push(trigger)
     }
 
-    unsubscribe(trigger: RenderTrigger) {
-        this.subscribers = this.subscribers.filter(
+    unsubscribe(
+        trigger: RenderTrigger,
+        subscription: NotificationSubscription
+    ) {
+        this.subscribers[subscription] = this.subscribers[subscription].filter(
             (subscriber) => subscriber !== trigger
         )
     }
 
-    render(): void {
-        this.subscribers?.forEach((trigger) => {
-            trigger({})
+    render(subscription: NotificationSubscription): void {
+        this.subscribers[subscription].forEach((render) => {
+            render({})
         })
     }
 }

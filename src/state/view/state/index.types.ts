@@ -20,4 +20,4 @@ export type ViewSubscribers = {
     viewTransform: Subscribers
 }
 
-export type Subscription = keyof ViewSubscribers
+export type ViewSubscription = keyof ViewSubscribers
