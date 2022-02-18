@@ -6,10 +6,10 @@ export const useNotification = () => {
     const trigger = useCallback(() => render({}), [])
 
     useEffect(() => {
-        notification.subscribe(trigger, "notification")
+        notification.subscribe("notification", trigger)
 
         return () => {
-            notification.unsubscribe(trigger, "notification")
+            notification.unsubscribe("notification", trigger)
         }
     }, [])
 

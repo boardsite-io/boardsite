@@ -1,6 +1,23 @@
 import { StrokeCollection, Tool } from "drawing/stroke/index.types"
-import { PageMeta } from "redux/board/index.types"
-import { Subscribers } from "state/index.types"
+import { PageMeta } from "state/board/state/index.types"
+import { RenderTrigger } from "state/index.types"
+
+export type DrawingSubscriber =
+    | "PageBackgroundSetting"
+    | "PageSizeSetting"
+    | "ActiveTool"
+    | "ColorPicker"
+    | "WidthPicker"
+    | "ToolRing"
+    | "FavoriteTools"
+    | "ShapeTools"
+    | "PageSizeMenu"
+    | "PageStyleMenu"
+    | "SettingsMenu" // direct draw
+    | "useViewControl" // pan mode
+    | "useLiveStroke" // pan mode
+
+export type DrawingSubscribers = Record<DrawingSubscriber, RenderTrigger[]>
 
 export interface DrawingState {
     directDraw: boolean
@@ -11,13 +28,3 @@ export interface DrawingState {
 }
 
 export type SerializedDrawingState = DrawingState & { version?: string }
-
-export type DrawingSubscription =
-    | "directDraw"
-    | "toolStyle"
-    | "toolType"
-    | "favoriteTools"
-    | "pageSize"
-    | "pageStyle"
-
-export type DrawingSubscribers = Record<DrawingSubscription, Subscribers>

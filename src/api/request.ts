@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestHeaders, Method } from "axios"
-import { Page, PageId, PageMeta } from "redux/board/index.types"
+import { Page, PageId, PageMeta } from "state/board/state/index.types"
 import {
     PageSync,
     ResponsePostSession,

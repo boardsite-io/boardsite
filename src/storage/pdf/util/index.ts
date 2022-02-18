@@ -1,22 +1,16 @@
 import { PDFDocument, PDFImage, PDFPage } from "pdf-lib"
-import store from "redux/store"
 import { backgroundStyle, MAX_PIXEL_SCALE } from "consts"
 import { currentSession, isConnected } from "api/session"
 import { handleDeleteAllPages } from "drawing/handlers"
-import { readFileAsUint8Array } from "drawing/fileManagement/helpers"
+import { readFileAsUint8Array } from "storage/util"
 import { BoardPage } from "drawing/page"
-import {
-    ADD_ATTACHMENTS,
-    ADD_PAGES,
-    CLEAR_UNDO_REDO,
-    JUMP_TO_FIRST_PAGE,
-} from "redux/board"
-import { AttachId, Attachment, PageMeta } from "redux/board/index.types"
 import { PDFAttachment } from "drawing/attachment"
 import { handleResetView } from "state/view/interface"
+import { board } from "state/board"
+import { AttachId, Attachment, PageMeta } from "state/board/state/index.types"
 import { pageToDataURL } from "./rendering"
 
-export const handleImportPdfFile = async (file: File): Promise<void> => {
+export const importPdfFile = async (file: File): Promise<void> => {
     const blob = await readFileAsUint8Array(file)
     const pdf = await new PDFAttachment(blob).render()
 
@@ -25,7 +19,7 @@ export const handleImportPdfFile = async (file: File): Promise<void> => {
         pdf.setId(attachId)
     }
 
-    store.dispatch(ADD_ATTACHMENTS([pdf]))
+    board.addAttachments([pdf])
     await addRenderedPdf(pdf)
 }
 
@@ -69,17 +63,17 @@ const addRenderedPdf = async (attachment: Attachment): Promise<void> => {
             }
         })
 
-        store.dispatch(ADD_PAGES({ data: addPageData }))
+        board.addPages({ data: addPageData })
         handleResetView()
     }
 
-    store.dispatch(JUMP_TO_FIRST_PAGE())
+    board.jumpToFirstPage()
     // clear the stacks when importing pdfs
-    store.dispatch(CLEAR_UNDO_REDO())
+    board.clearUndoRedo()
 }
 
 export const renderAsPdf = async (): Promise<Uint8Array> => {
-    const { pageRank, pageCollection } = store.getState().board
+    const { pageRank, pageCollection } = board.getState()
     const pdfDocuments: Record<AttachId, PDFPage[]> = {}
     const pdf = await PDFDocument.create()
 
@@ -107,8 +101,10 @@ export const renderAsPdf = async (): Promise<Uint8Array> => {
         ) {
             if (!pdfDocuments[attachId]) {
                 // if document is not loaded yet (loaded by pdf-lib)
-                const attachment = store.getState().board.attachments[attachId]
-                const src = await PDFDocument.load(attachment.cachedBlob)
+                const attachment = board.getState().attachments[attachId]
+                const src = await PDFDocument.load(attachment.cachedBlob, {
+                    ignoreEncryption: true, // TODO: Wrap in try catch and add notifications for different errors + check on encrypted PDF issue
+                })
                 pdfDocuments[attachId] = await pdf.copyPages(src, [
                     ...Array(src.getPages().length).keys(),
                 ])

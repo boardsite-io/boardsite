@@ -6,5 +6,5 @@ module.exports = {
         "^.+\\.(ts|tsx)?$": "ts-jest",
         "^.+\\.(js|jsx)$": "babel-jest",
     },
-    transformIgnorePatterns: ["node_modules/(?!(konva|react-konva|canvas)/)"],
+    transformIgnorePatterns: ["node_modules/(?!(canvas)/)"],
 }

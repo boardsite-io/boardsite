@@ -1,9 +1,7 @@
 import { handleAddStrokes, handleDeleteStrokes } from "drawing/handlers"
 import { Point } from "drawing/stroke/index.types"
-import { useCustomSelector } from "hooks"
 import { MouseEvent, TouchEvent, useCallback, useEffect } from "react"
-import { CLEAR_TRANSFORM, SET_TRANSFORM_STROKES } from "redux/board"
-import store from "redux/store"
+import { board, useBoard } from "state/board"
 import { draw } from "../../shapes"
 import { PageOffset } from "../index.types"
 import {
@@ -34,9 +32,7 @@ export const useTransformer = (
     canvasRef: React.RefObject<HTMLCanvasElement>,
     pageOffset: PageOffset
 ) => {
-    const transformStrokes = useCustomSelector(
-        (state) => state.board.transformStrokes
-    )
+    const { transformStrokes } = useBoard("Transformer")
 
     const bounds = getOuterBounds(transformStrokes)
 
@@ -72,7 +68,7 @@ export const useTransformer = (
             handleType = extractHandle(e)
 
             if (handleType === "clear") {
-                store.dispatch(CLEAR_TRANSFORM())
+                board.clearTransform()
                 return
             }
 
@@ -116,7 +112,7 @@ export const useTransformer = (
                 )
 
                 handleAddStrokes(newStrokes, true)
-                store.dispatch(SET_TRANSFORM_STROKES(newStrokes))
+                board.setTransformStrokes(newStrokes)
             }
             isMouseOrTouchDown = false
         },

@@ -1,5 +1,6 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { useKeyboardShortcuts } from "hooks"
+import { drawing } from "state/drawing"
 import Board from "./Board"
 import { ViewWrap } from "./index.styled"
 import SessionInfo from "./SessionInfo"
@@ -13,6 +14,10 @@ import Shortcuts from "./Shortcuts"
 
 const View: React.FC = () => {
     useKeyboardShortcuts()
+
+    useEffect(() => {
+        drawing.loadFromLocalStorage()
+    }, [])
 
     return (
         <ViewWrap>

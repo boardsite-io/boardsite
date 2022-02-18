@@ -1,5 +1,5 @@
-import { PageMeta } from "redux/board/index.types"
-import store from "redux/store"
+import { board } from "state/board"
+import { PageMeta } from "state/board/state/index.types"
 
 export const drawBackground = (
     ctx: CanvasRenderingContext2D,
@@ -23,7 +23,7 @@ export const drawBackground = (
             if (attachId === undefined || documentPageNum === undefined) return
 
             const imageData =
-                store.getState().board.attachments[attachId].renderedData[
+                board.getState().attachments[attachId].renderedData[
                     documentPageNum
                 ]
             ctx.putImageData(imageData, 0, 0)

@@ -13,7 +13,7 @@ const addFavoriteTool = () => {
 }
 
 const FavoriteTools: React.FC = () => {
-    const { favoriteTools } = useDrawing("favoriteTools")
+    const { favoriteTools } = useDrawing("FavoriteTools")
 
     return (
         <FavToolsStyled>

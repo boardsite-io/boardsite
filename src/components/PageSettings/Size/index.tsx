@@ -1,9 +1,9 @@
 import { FormattedMessage } from "language"
 import React, { useCallback } from "react"
 import { pageSize } from "consts"
-import { PageSize } from "redux/board/index.types"
 import { Position, ToolTip } from "components"
 import { drawing, useDrawing } from "state/drawing"
+import { PageSize } from "state/board/state/index.types"
 import {
     A4Landscape,
     A4Portrait,
@@ -12,7 +12,7 @@ import {
 } from "./index.styled"
 
 const Size: React.FC = () => {
-    const { width, height } = useDrawing("pageSize").pageMeta.size
+    const { width, height } = useDrawing("PageSizeMenu").pageMeta.size
 
     const isMatch = useCallback(
         (size: PageSize) => width === size.width && height === size.height,

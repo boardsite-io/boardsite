@@ -10,8 +10,8 @@ export interface GlobalState<T, U> {
 
     getState: () => T
     setState: (newState: T) => void
-    subscribe: (trigger: RenderTrigger, subscription: keyof U) => void
-    unsubscribe: (trigger: RenderTrigger, subscription: keyof U) => void
+    subscribe: (subscription: keyof U, trigger: RenderTrigger) => void
+    unsubscribe: (subscription: keyof U, trigger: RenderTrigger) => void
 }
 
 export type RenderTrigger = React.Dispatch<React.SetStateAction<object>>

@@ -1,4 +1,4 @@
-import { Page } from "redux/board/index.types"
+import { Page } from "state/board/state/index.types"
 
 export type PageOffset = {
     left: number

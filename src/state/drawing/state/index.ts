@@ -1,39 +1,49 @@
 import { StrokeCollection, Tool, ToolType } from "drawing/stroke/index.types"
-import { PageBackgroundStyle, PageSize } from "redux/board/index.types"
+import { loadLocalStorage, saveLocalStorage } from "storage/local"
+import { PageBackgroundStyle, PageSize } from "state/board/state/index.types"
 import { GlobalState, RenderTrigger } from "../../index.types"
 import { getDefaultDrawingState } from "./default"
 import { isDrawType } from "../util"
 import {
     DrawingState,
+    DrawingSubscriber,
     DrawingSubscribers,
-    DrawingSubscription,
+    SerializedDrawingState,
 } from "./index.types"
+import { deserializeDrawingState, serializeDrawingState } from "../serializers"
 
 export class Drawing implements GlobalState<DrawingState, DrawingSubscribers> {
     state: DrawingState = getDefaultDrawingState()
 
     subscribers: DrawingSubscribers = {
-        directDraw: [],
-        toolStyle: [],
-        toolType: [],
-        favoriteTools: [],
-        pageSize: [],
-        pageStyle: [],
+        ActiveTool: [],
+        ColorPicker: [],
+        FavoriteTools: [],
+        PageBackgroundSetting: [],
+        PageSizeMenu: [],
+        PageSizeSetting: [],
+        PageStyleMenu: [],
+        SettingsMenu: [],
+        ShapeTools: [],
+        ToolRing: [],
+        WidthPicker: [],
+        useLiveStroke: [],
+        useViewControl: [],
     }
 
     setColor(color: string) {
         this.state.tool.style.color = color
-        this.render("toolStyle")
+        this.render("ActiveTool", "ColorPicker")
     }
 
     setWidth(width: number) {
         this.state.tool.style.width = width
-        this.render("toolStyle")
+        this.render("ActiveTool", "WidthPicker")
     }
 
     toggleDirectDraw() {
         this.state.directDraw = !this.state.directDraw
-        this.render("directDraw")
+        this.render("SettingsMenu")
     }
 
     setErasedStrokes(strokes: StrokeCollection): void {
@@ -48,12 +58,12 @@ export class Drawing implements GlobalState<DrawingState, DrawingSubscribers> {
 
     setPageBackground(style: PageBackgroundStyle) {
         this.state.pageMeta.background.style = style
-        this.render("pageStyle")
+        this.render("PageStyleMenu", "PageBackgroundSetting")
     }
 
     setPageSize(size: PageSize) {
         this.state.pageMeta.size = size
-        this.render("pageSize")
+        this.render("PageSizeMenu", "PageSizeSetting")
     }
 
     setTool(tool: Partial<Tool>): void {
@@ -65,12 +75,18 @@ export class Drawing implements GlobalState<DrawingState, DrawingSubscribers> {
                 this.state.tool.latestDrawType = tool.type
             }
 
-            this.render("toolType")
+            this.render(
+                "ActiveTool",
+                "ToolRing",
+                "ShapeTools",
+                "useViewControl",
+                "useLiveStroke"
+            )
         }
         if (tool.style !== undefined) {
             this.state.tool.style = { ...tool.style }
 
-            this.render("toolStyle")
+            this.render("ActiveTool", "WidthPicker", "ColorPicker")
         }
     }
 
@@ -82,13 +98,13 @@ export class Drawing implements GlobalState<DrawingState, DrawingSubscribers> {
 
         if (isDrawType(tool.type)) {
             this.state.favoriteTools.push(tool)
-            this.render("favoriteTools")
+            this.render("FavoriteTools")
         }
     }
 
     removeFavoriteTool(index: number) {
         this.state.favoriteTools.splice(index, 1)
-        this.render("favoriteTools")
+        this.render("FavoriteTools")
     }
 
     replaceFavoriteTool(index: number): void {
@@ -100,7 +116,7 @@ export class Drawing implements GlobalState<DrawingState, DrawingSubscribers> {
         // validate tool candidate
         if (tool.type !== ToolType.Eraser && tool.type !== ToolType.Select) {
             this.state.favoriteTools[index] = tool
-            this.render("favoriteTools")
+            this.render("FavoriteTools")
         }
     }
 
@@ -110,22 +126,69 @@ export class Drawing implements GlobalState<DrawingState, DrawingSubscribers> {
 
     setState(newState: DrawingState): void {
         this.state = newState
+        this.renderAll()
     }
 
-    subscribe(trigger: RenderTrigger, subscription: DrawingSubscription) {
+    getSerializedState(): SerializedDrawingState {
+        return serializeDrawingState(this.getState())
+    }
+
+    async setSerializedState(
+        serializedDrawingState: Partial<SerializedDrawingState>
+    ): Promise<void> {
+        try {
+            const deserializedDrawingState = await deserializeDrawingState(
+                serializedDrawingState
+            )
+            this.setState(deserializedDrawingState)
+        } catch (error) {}
+    }
+
+    saveToLocalStorage(): void {
+        const serializedDrawingState = this.getSerializedState()
+        saveLocalStorage("drawing", serializedDrawingState)
+    }
+
+    async loadFromLocalStorage(): Promise<void> {
+        try {
+            const serializedDrawingState = await loadLocalStorage("drawing")
+            if (serializedDrawingState === null) return
+
+            const deserializedDrawingState = await deserializeDrawingState(
+                serializedDrawingState
+            )
+
+            this.setState(deserializedDrawingState)
+        } catch (error) {}
+    }
+
+    subscribe(subscription: DrawingSubscriber, trigger: RenderTrigger) {
         if (this.subscribers[subscription].indexOf(trigger) > -1) return
         this.subscribers[subscription].push(trigger)
     }
 
-    unsubscribe(trigger: RenderTrigger, subscription: DrawingSubscription) {
+    unsubscribe(subscription: DrawingSubscriber, trigger: RenderTrigger) {
         this.subscribers[subscription] = this.subscribers[subscription].filter(
             (subscriber) => subscriber !== trigger
         )
     }
 
-    render(subscription: DrawingSubscription): void {
-        this.subscribers[subscription].forEach((render) => {
-            render({})
+    render(...subscriptions: DrawingSubscriber[]): void {
+        subscriptions.forEach((sub) => {
+            this.subscribers[sub].forEach((trigger) => {
+                trigger({})
+            })
+        })
+
+        // Save to local storage on each render
+        this.saveToLocalStorage()
+    }
+
+    renderAll(): void {
+        Object.values(this.subscribers).forEach((triggerList) => {
+            triggerList.forEach((trigger) => {
+                trigger({})
+            })
         })
     }
 }

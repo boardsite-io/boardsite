@@ -8,8 +8,7 @@ import {
     DEVICE_PIXEL_RATIO,
 } from "consts"
 import { debounce } from "lodash"
-import { DECREMENT_PAGE_INDEX, INCREMENT_PAGE_INDEX } from "redux/board"
-import store from "redux/store"
+import { board } from "state/board"
 import { view } from "state/view"
 import { ViewTransform } from "./state/index.types"
 import {
@@ -31,10 +30,10 @@ export const updateViewTransform = (newTransform: ViewTransform) => {
 
     if (detectionResult === DetectionResult.Next) {
         newTransform = toNextPage(newTransform)
-        store.dispatch(INCREMENT_PAGE_INDEX())
+        board.incrementPageIndex()
     } else if (detectionResult === DetectionResult.Previous) {
         newTransform = toPreviousPage(newTransform)
-        store.dispatch(DECREMENT_PAGE_INDEX())
+        board.decrementPageIndex()
     }
     newTransform = applyBounds(newTransform)
 

@@ -1,5 +1,5 @@
 import { Tool, ToolType } from "drawing/stroke/index.types"
-import { PageBackgroundStyle } from "redux/board/index.types"
+import { PageBackgroundStyle } from "state/board/state/index.types"
 import { ViewTransform } from "state/view/state/index.types"
 
 /**

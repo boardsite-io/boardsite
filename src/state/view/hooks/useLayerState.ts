@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react"
-import { Page } from "redux/board/index.types"
+import { Page } from "state/board/state/index.types"
 import { drawBackground } from "View/Board/RenderNG/Page/Background/backgrounds"
 import { view } from "../state"
 
@@ -11,10 +11,10 @@ export const useLayerState = (
     const reRender = useCallback(() => render({}), [])
 
     useEffect(() => {
-        view.subscribe(reRender, "layerConfig")
+        view.subscribe("layerConfig", reRender)
 
         return () => {
-            view.unsubscribe(reRender, "layerConfig")
+            view.unsubscribe("layerConfig", reRender)
         }
     }, [])
 

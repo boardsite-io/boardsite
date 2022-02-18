@@ -7,7 +7,7 @@ import { Position, ToolTip } from "components"
 import { Preset, WidthPresetInnerDot, WidthPresets } from "./index.styled"
 
 const WidthPicker: React.FC = memo(() => {
-    const { width } = useDrawing("toolStyle").tool.style
+    const { width } = useDrawing("WidthPicker").tool.style
 
     return (
         <WidthPresets>

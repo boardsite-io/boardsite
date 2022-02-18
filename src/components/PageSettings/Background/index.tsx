@@ -6,7 +6,7 @@ import { Position, ToolTip } from "components"
 import { Backgrounds, Blank, Checkered, Ruled } from "./index.styled"
 
 const Background: React.FC = () => {
-    const { style } = useDrawing("pageStyle").pageMeta.background
+    const { style } = useDrawing("PageBackgroundSetting").pageMeta.background
 
     return (
         <Backgrounds>

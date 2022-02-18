@@ -54,12 +54,12 @@ export class Menu implements GlobalState<MenuState, MenuSubscribers> {
         this.render("shortcutsOpen")
     }
 
-    subscribe(trigger: RenderTrigger, subscription: MenuSubscription) {
+    subscribe(subscription: MenuSubscription, trigger: RenderTrigger) {
         if (this.subscribers[subscription].indexOf(trigger) > -1) return
         this.subscribers[subscription].push(trigger)
     }
 
-    unsubscribe(trigger: RenderTrigger, subscription: MenuSubscription) {
+    unsubscribe(subscription: MenuSubscription, trigger: RenderTrigger) {
         this.subscribers[subscription] = this.subscribers[subscription].filter(
             (subscriber) => subscriber !== trigger
         )

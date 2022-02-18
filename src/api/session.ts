@@ -1,11 +1,3 @@
-import {
-    AttachId,
-    AttachType,
-    Page,
-    PageCollection,
-    PageId,
-    PageMeta,
-} from "redux/board/index.types"
 import { Stroke, StrokeUpdate, ToolType } from "drawing/stroke/index.types"
 import {
     adjectives,
@@ -13,18 +5,18 @@ import {
     colors,
     uniqueNamesGenerator,
 } from "unique-names-generator"
-import store, { ReduxStore } from "redux/store"
 import { assign } from "lodash"
 import { BoardPage } from "drawing/page"
-import {
-    ADD_ATTACHMENTS,
-    ADD_STROKES,
-    CLEAR_ATTACHMENTS,
-    DELETE_ALL_PAGES,
-    ERASE_STROKES,
-    SYNC_PAGES,
-} from "redux/board"
 import { newAttachment } from "drawing/attachment/utils"
+import { board } from "state/board"
+import {
+    AttachId,
+    AttachType,
+    Page,
+    PageCollection,
+    PageId,
+    PageMeta,
+} from "state/board/state/index.types"
 import { getRandomColor } from "helpers"
 import {
     ConnectedUsers,
@@ -47,10 +39,8 @@ export class BoardSession implements Session {
     request: Request
     socket?: WebSocket
     users?: ConnectedUsers
-    reduxStore: ReduxStore
 
-    constructor(url?: string, reduxStore?: ReduxStore) {
-        this.reduxStore = reduxStore ?? store
+    constructor(url?: string) {
         this.apiURL = new URL(url ?? API_URL)
         this.request = new Request(this.apiURL.toString())
         this.user = {
@@ -109,18 +99,17 @@ export class BoardSession implements Session {
 
         if (copyOffline) {
             // create an online session from the current offline
-            const { pageRank, pageCollection } =
-                this.reduxStore.getState().board
+            const { pageRank, pageCollection } = board.getState()
             await this.synchronize(pageRank, pageCollection)
         } else {
             // clear documents which may be overwritten by session
-            this.reduxStore.dispatch(CLEAR_ATTACHMENTS())
+            board.clearAttachments()
             // synchronize with the online content
             const sync = await this.request.getPagesSync()
             await this.syncPages(sync)
         }
 
-        if (this.reduxStore.getState().board.pageRank.length === 0) {
+        if (board.getState().pageRank.length === 0) {
             // create a page if there are none yet
             await this.request.postPages([new BoardPage()], [0])
         }
@@ -137,8 +126,7 @@ export class BoardSession implements Session {
     disconnect(): void {
         this.socket?.close()
         this.users = {}
-        this.reduxStore.dispatch(CLEAR_ATTACHMENTS())
-        this.reduxStore.dispatch(DELETE_ALL_PAGES())
+        board.clearAttachments()
     }
 
     async synchronize(
@@ -174,7 +162,7 @@ export class BoardSession implements Session {
 
         await Promise.all(
             new Array(...mapping.keys()).map(async (id) => {
-                const { cachedBlob } = store.getState().board.attachments[id]
+                const { cachedBlob } = board.getState().attachments[id]
                 const file = new File([cachedBlob], id)
                 const { attachId } = await this.request.postAttachment(file)
                 mapping.set(id, attachId)
@@ -186,8 +174,8 @@ export class BoardSession implements Session {
             page.meta.background.attachId = mapping.get(attachId ?? "")
         })
 
-        this.reduxStore.dispatch(DELETE_ALL_PAGES())
-        this.reduxStore.dispatch(CLEAR_ATTACHMENTS())
+        board.deleteAllPages()
+        board.clearAttachments()
 
         const sync: PageSync = {
             pageRank,
@@ -307,20 +295,23 @@ export class BoardSession implements Session {
         }
     }
 
+    // TODO
+    // eslint-disable-next-line class-methods-use-this
     receiveStrokes(strokes: Stroke[]): void {
         const erasedStrokes = strokes.filter((s) => s.type === 0)
         if (erasedStrokes.length > 0) {
-            this.reduxStore.dispatch(ERASE_STROKES({ data: erasedStrokes }))
+            board.eraseStrokes({ data: erasedStrokes })
         }
 
         strokes = strokes.filter((s) => s.type !== 0)
+
         if (strokes.length > 0) {
-            this.reduxStore.dispatch(ADD_STROKES({ data: strokes }))
+            board.addStrokes({ data: strokes })
         }
     }
 
     async syncPages({ pageRank, pages }: PageSync): Promise<void> {
-        const { pageCollection } = this.reduxStore.getState().board
+        const { pageCollection } = board.getState()
         const newPageCollection: Record<string, Page> = {}
         for (let i = 0; i < pageRank.length; i++) {
             const pid = pageRank[i]
@@ -355,14 +346,13 @@ export class BoardSession implements Session {
             }
         }
 
-        this.reduxStore.dispatch(
-            SYNC_PAGES({ pageRank, pageCollection: newPageCollection })
-        )
+        board.syncPages(pageRank, newPageCollection)
     }
 
     // loads an attachment into the cache
+    // eslint-disable-next-line class-methods-use-this
     async loadAttachment(type: AttachType, id: AttachId): Promise<void> {
-        if (this.reduxStore.getState().board.attachments[id]) {
+        if (board.getState().attachments[id]) {
             // already loaded
             return
         }
@@ -372,7 +362,7 @@ export class BoardSession implements Session {
             id,
             cachedBlob: blob,
         }).render()
-        this.reduxStore.dispatch(ADD_ATTACHMENTS([attachment]))
+        board.addAttachments([attachment])
     }
 
     static path(sessionURL: string): string {

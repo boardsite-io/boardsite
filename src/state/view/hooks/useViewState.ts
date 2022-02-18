@@ -6,10 +6,10 @@ export const useViewState = () => {
     const reRender = useCallback(() => render({}), [])
 
     useEffect(() => {
-        view.subscribe(reRender, "viewTransform")
+        view.subscribe("viewTransform", reRender)
 
         return () => {
-            view.unsubscribe(reRender, "viewTransform")
+            view.unsubscribe("viewTransform", reRender)
         }
     }, [])
 

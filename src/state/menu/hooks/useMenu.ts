@@ -7,10 +7,10 @@ export const useMenu = (subscription: MenuSubscription) => {
     const trigger = useCallback(() => render({}), [])
 
     useEffect(() => {
-        menu.subscribe(trigger, subscription)
+        menu.subscribe(subscription, trigger)
 
         return () => {
-            menu.unsubscribe(trigger, subscription)
+            menu.unsubscribe(subscription, trigger)
         }
     }, [])
 

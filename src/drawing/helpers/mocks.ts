@@ -1,4 +1,4 @@
-import { RootState } from "redux/types"
+import { BoardState } from "state/board/state/index.types"
 
 export const MOCK_STROKE_ID_1 = "2vl2xtzkgldbsatk"
 export const MOCK_PAGE_ID_1 = "jtWj1Y7e"
@@ -36,10 +36,8 @@ export const MOCK_PAGE_1 = {
     },
 }
 
-export const mockState1 = {
-    board: {
-        pageCollection: {
-            [MOCK_PAGE_ID_1]: MOCK_PAGE_1,
-        },
+export const mockBoardState1 = {
+    pageCollection: {
+        [MOCK_PAGE_ID_1]: MOCK_PAGE_1,
     },
-} as unknown as RootState
+} as unknown as BoardState

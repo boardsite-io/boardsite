@@ -5,8 +5,21 @@ import {
     StrokeCollection,
     StrokeUpdate,
 } from "drawing/stroke/index.types"
+import { RenderTrigger } from "state/index.types"
 
-export type SerializedBoardState = BoardState & { version?: string }
+export type BoardSubscriber =
+    | "RenderNG"
+    | "PageBackground"
+    | "PageContent"
+    | "MenuPageButton"
+    | "Transformer"
+    | "EditMenu" // UndoRedo
+    | "SettingsMenu"
+
+export type BoardSubscribers = Record<BoardSubscriber, RenderTrigger[]>
+
+// ------------------
+
 export interface BoardState {
     currentPageIndex: number
     pageRank: PageRank
@@ -18,22 +31,15 @@ export interface BoardState {
     strokeUpdates?: StrokeUpdate[]
     transformStrokes?: TransformStrokes
     transformPagePosition?: Point
-    renderTrigger?: number
-
-    clearTransform?(): void
-    triggerStageRender?(): void
-    triggerStrokesRender?(): void
-
-    serialize?(): SerializedBoardState
-    deserialize?(parsed: SerializedBoardState): Promise<BoardState>
 }
+
+export type SerializedBoardState = BoardState & { version?: string }
 
 export type PageRank = string[]
 export type RenderedData = ImageData[]
 
 export interface View {
     keepCentered: boolean
-    renderTrigger: boolean
 }
 
 export type AttachId = string
@@ -110,29 +116,19 @@ export interface PageBackground {
     documentPageNum?: number
 }
 
-export type PageBackgroundStyle = "blank" | "checkered" | "ruled" | "doc"
-
-/* ------- Reducer Action Types ------- */
-export type LoadBoardState = BoardState
-export type SyncPages = {
-    pageRank: PageRank
-    pageCollection: PageCollection
-}
-export type SetPageMeta = BoardAction<
+export type SetPageMetaAction = BoardAction<
     Pick<Page, "pageId" | "meta">[],
     Pick<Page, "pageId" | "meta">[]
 >
+
+export type PageBackgroundStyle = "blank" | "checkered" | "ruled" | "doc"
+
 export type AddPageData = {
     page: Page
     index?: number
 }
-export type AddPages = BoardAction<AddPageData[], void[]>
-export type ClearPages = BoardAction<PageId[], Stroke[]>
-export type DeletePages = BoardAction<PageId[], AddPageData[]>
-export type MoveShapesToDragLayer = Stroke[]
-export type AddStrokes = BoardAction<Stroke[], void[]>
-export type EraseStrokes = BoardAction<Stroke[], void[]>
-
-export type AddAttachments = Attachment[]
-export type DeleteAttachments = AttachId[]
-export type JumpToPageWithIndex = number
+export type AddStrokesAction = BoardAction<Stroke[], void[]>
+export type EraseStrokesAction = BoardAction<Stroke[], void[]>
+export type AddPagesAction = BoardAction<AddPageData[], void[]>
+export type ClearPagesAction = BoardAction<PageId[], Stroke[]>
+export type DeletePagesAction = BoardAction<PageId[], AddPageData[]>
