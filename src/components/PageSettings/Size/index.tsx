@@ -1,11 +1,9 @@
 import { FormattedMessage } from "language"
 import React, { useCallback } from "react"
-import { useCustomSelector } from "hooks"
-import store from "redux/store"
 import { pageSize } from "consts"
-import { SET_PAGE_SIZE } from "redux/drawing"
 import { PageSize } from "redux/board/index.types"
 import { Position, ToolTip } from "components"
+import { drawing, useDrawing } from "state/drawing"
 import {
     A4Landscape,
     A4Portrait,
@@ -14,9 +12,7 @@ import {
 } from "./index.styled"
 
 const Size: React.FC = () => {
-    const { width, height } = useCustomSelector(
-        (state) => state.drawing.pageMeta.size
-    )
+    const { width, height } = useDrawing("pageSize").pageMeta.size
 
     const isMatch = useCallback(
         (size: PageSize) => width === size.width && height === size.height,
@@ -35,7 +31,7 @@ const Size: React.FC = () => {
                         id="a4-portrait"
                         $active={isMatch(pageSize.a4portrait)}
                         onClick={() => {
-                            store.dispatch(SET_PAGE_SIZE(pageSize.a4portrait))
+                            drawing.setPageSize(pageSize.a4portrait)
                         }}
                     />
                 </SizePresetLabel>
@@ -50,7 +46,7 @@ const Size: React.FC = () => {
                         id="a4-landscape"
                         $active={isMatch(pageSize.a4landscape)}
                         onClick={() => {
-                            store.dispatch(SET_PAGE_SIZE(pageSize.a4landscape))
+                            drawing.setPageSize(pageSize.a4landscape)
                         }}
                     />
                 </SizePresetLabel>

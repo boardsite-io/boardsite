@@ -1,16 +1,12 @@
 import { FormattedMessage } from "language"
 import React from "react"
-import { useCustomSelector } from "hooks"
-import store from "redux/store"
-import { SET_PAGE_BACKGROUND } from "redux/drawing"
+import { drawing, useDrawing } from "state/drawing"
 import { backgroundStyle } from "consts"
 import { Position, ToolTip } from "components"
 import { Backgrounds, Blank, Checkered, Ruled } from "./index.styled"
 
 const Background: React.FC = () => {
-    const background = useCustomSelector(
-        (state) => state.drawing.pageMeta.background.style
-    )
+    const { style } = useDrawing("pageStyle").pageMeta.background
 
     return (
         <Backgrounds>
@@ -20,11 +16,9 @@ const Background: React.FC = () => {
             >
                 <Blank
                     type="button"
-                    $active={background === backgroundStyle.BLANK}
+                    $active={style === backgroundStyle.BLANK}
                     onClick={() =>
-                        store.dispatch(
-                            SET_PAGE_BACKGROUND(backgroundStyle.BLANK)
-                        )
+                        drawing.setPageBackground(backgroundStyle.BLANK)
                     }
                 />
             </ToolTip>
@@ -34,11 +28,9 @@ const Background: React.FC = () => {
             >
                 <Checkered
                     type="button"
-                    $active={background === backgroundStyle.CHECKERED}
+                    $active={style === backgroundStyle.CHECKERED}
                     onClick={() =>
-                        store.dispatch(
-                            SET_PAGE_BACKGROUND(backgroundStyle.CHECKERED)
-                        )
+                        drawing.setPageBackground(backgroundStyle.CHECKERED)
                     }
                 />
             </ToolTip>
@@ -48,11 +40,9 @@ const Background: React.FC = () => {
             >
                 <Ruled
                     type="button"
-                    $active={background === backgroundStyle.RULED}
+                    $active={style === backgroundStyle.RULED}
                     onClick={() =>
-                        store.dispatch(
-                            SET_PAGE_BACKGROUND(backgroundStyle.RULED)
-                        )
+                        drawing.setPageBackground(backgroundStyle.RULED)
                     }
                 />
             </ToolTip>

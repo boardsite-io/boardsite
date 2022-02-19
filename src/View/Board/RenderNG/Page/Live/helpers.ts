@@ -1,7 +1,7 @@
 import { LiveStroke } from "drawing/livestroke/index.types"
 import { Point } from "drawing/stroke/index.types"
 import React, { MouseEvent, TouchEvent } from "react"
-import store from "redux/store"
+import { drawing } from "state/drawing"
 import { view } from "state/view"
 import { draw } from "View/Board/RenderNG/shapes"
 import { PageOffset } from "../index.types"
@@ -65,7 +65,7 @@ const applyTransformTo = (point: Point, pageOffset: PageOffset): Point => {
 export const isValidTouch = (e: TouchEvent<HTMLElement>): boolean => {
     const touch1 = e.touches[0] as Touch & { touchType?: string }
     const touch2 = e.touches[1] as Touch & { touchType?: string }
-    const { directDraw } = store.getState().drawing
+    const { directDraw } = drawing.getState()
 
     if (touch1.touchType === undefined) {
         return false

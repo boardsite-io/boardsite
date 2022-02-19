@@ -1,9 +1,7 @@
 import { BoardState } from "./board/index.types"
-import { DrawingState } from "./drawing/index.types"
 
 export type RootState = {
     board: BoardState
-    drawing: DrawingState
 }
 
 export type FileHeader = {
@@ -11,7 +9,7 @@ export type FileHeader = {
     states: SerializableReducerState[]
 }
 
-export type SerializableReducerState = "board" | "drawing"
+export type SerializableReducerState = "board"
 
 export type SerializableStateRecord = Record<
     SerializableReducerState,

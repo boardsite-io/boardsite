@@ -2,24 +2,21 @@ import React, { useCallback } from "react"
 import { FormattedMessage } from "language"
 import { TickIcon } from "components"
 import { pageSize } from "consts"
-import { useCustomSelector } from "hooks"
-import { SET_PAGE_SIZE } from "redux/drawing"
 import { PageSize } from "redux/board/index.types"
-import store from "redux/store"
+import { drawing, useDrawing } from "state/drawing"
 import { SubMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 
 const onClickA4landscape = () => {
-    store.dispatch(SET_PAGE_SIZE(pageSize.a4landscape))
+    drawing.setPageSize(pageSize.a4landscape)
 }
 const onClickA4portrait = () => {
-    store.dispatch(SET_PAGE_SIZE(pageSize.a4portrait))
+    drawing.setPageSize(pageSize.a4portrait)
 }
 
 const PageSizeMenu = () => {
-    const { width, height } = useCustomSelector(
-        (state) => state.drawing.pageMeta.size
-    )
+    const { width, height } = useDrawing("pageSize").pageMeta.size
+
     const isMatch = useCallback(
         (size: PageSize) => width === size.width && height === size.height,
         [width, height]

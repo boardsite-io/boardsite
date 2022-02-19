@@ -17,16 +17,7 @@ export const draw = (
     ctx.fillStyle = strokeStyleToRGBA(stroke.style)
     ctx.strokeStyle = strokeStyleToRGBA(stroke.style)
 
-    drawShape[stroke.type]?.(ctx, stroke)
-}
-
-const drawPen = (
-    ctx: CanvasRenderingContext2D,
-    stroke: Stroke | LiveStroke
-) => {
     const { points, x, y, scaleX, scaleY } = stroke
-    const pts = shiftPoints(points, x, y)
-
     const sX = scaleX ?? 1
     const sY = scaleY ?? 1
     const isScaled = sX !== 1 || sY !== 1
@@ -35,68 +26,52 @@ const drawPen = (
     if (isScaled) {
         ctx.scale(sX, sY)
     }
-    ctx.moveTo(pts[0], pts[1])
-    let n = 0
-    while (n < pts.length) {
-        ctx.lineTo(pts[n++], pts[n++])
-    }
+
+    const pts = shiftPoints(points, x, y)
+    drawShape[stroke.type]?.(ctx, pts)
+
     ctx.stroke()
     if (isScaled) {
         ctx.scale(1 / sX, 1 / sY)
     }
 }
 
-const drawEraser = (
-    ctx: CanvasRenderingContext2D,
-    stroke: Stroke | LiveStroke
-) => {
+const drawPen = (ctx: CanvasRenderingContext2D, points: number[]) => {
+    ctx.moveTo(points[0], points[1])
+    let n = 0
+    while (n < points.length) {
+        ctx.lineTo(points[n++], points[n++])
+    }
+}
+
+const drawEraser = (ctx: CanvasRenderingContext2D, points: number[]) => {
     ctx.strokeStyle = ERASER_STROKE
     ctx.lineWidth = ERASER_WIDTH
-    drawPen(ctx, stroke)
+    drawPen(ctx, points)
 }
 
-const drawLine = (
-    ctx: CanvasRenderingContext2D,
-    stroke: Stroke | LiveStroke
-) => {
-    const [x1, y1, x2, y2] = stroke.points
-    ctx.beginPath()
+const drawLine = (ctx: CanvasRenderingContext2D, points: number[]) => {
+    const [x1, y1, x2, y2] = points
     ctx.moveTo(x1, y1)
     ctx.lineTo(x2, y2)
-    ctx.stroke()
 }
 
-const drawRect = (
-    ctx: CanvasRenderingContext2D,
-    stroke: Stroke | LiveStroke
-) => {
-    const [x1, y1, x2, y2] = stroke.points
-    ctx.beginPath()
+const drawRect = (ctx: CanvasRenderingContext2D, points: number[]) => {
+    const [x1, y1, x2, y2] = points
     ctx.rect(x1, y1, x2 - x1, y2 - y1)
-    ctx.stroke()
 }
 
-const drawCircle = (
-    ctx: CanvasRenderingContext2D,
-    stroke: Stroke | LiveStroke
-) => {
-    const [x1, y1, x2, y2] = stroke.points
+const drawCircle = (ctx: CanvasRenderingContext2D, points: number[]) => {
+    const [x1, y1, x2, y2] = points
     const rx = (x2 - x1) / 2
     const ry = (y2 - y1) / 2
-    ctx.beginPath()
     ctx.ellipse(x1 + rx, y1 + ry, Math.abs(rx), Math.abs(ry), 0, Math.PI * 2, 0)
-    ctx.stroke()
 }
 
-const drawSelect = (
-    ctx: CanvasRenderingContext2D,
-    stroke: Stroke | LiveStroke
-) => {
-    const [x1, y1, x2, y2] = stroke.points
+const drawSelect = (ctx: CanvasRenderingContext2D, points: number[]) => {
+    const [x1, y1, x2, y2] = points
     ctx.fillStyle = SELECTION_FILL
-    ctx.beginPath()
     ctx.fillRect(x1, y1, x2 - x1, y2 - y1)
-    ctx.stroke()
 }
 
 const drawShape = {

@@ -1,6 +1,5 @@
 import localforage from "localforage"
 import * as boardState from "./board/state"
-import * as drawingState from "./drawing/state"
 import { ReducerState } from "./reducer"
 import { RootState, SerializableState } from "./types"
 
@@ -99,9 +98,6 @@ export function newState(
     switch (stateName) {
         case "board":
             return boardState.newState() as SerializableState<object, object>
-
-        case "drawing":
-            return drawingState.newState() as SerializableState<object, object>
 
         default:
             return undefined

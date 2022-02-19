@@ -122,11 +122,11 @@ export class BoardStroke implements Stroke {
             }
 
             case ToolType.Rectangle: {
-                // only outline
-                const x1 = x
-                const y1 = y
-                const x2 = x + (points[2] - points[0]) * scaleX
-                const y2 = y + (points[3] - points[1]) * scaleY
+                let [x1, y1, x2, y2] = points
+                x1 = (x1 + x) * scaleX
+                y1 = (y1 + y) * scaleY
+                x2 = (x2 + x) * scaleX
+                y2 = (y2 + y) * scaleY
                 this.hitboxes.push(
                     getHitboxPolygon([x1, y1, x1, y2], this.style.width, {
                         x: this.scaleX,
@@ -149,13 +149,11 @@ export class BoardStroke implements Stroke {
             }
 
             case ToolType.Circle: {
-                // only outline
-                const radX = (points[2] - points[0]) / 2
-                const radY = (points[3] - points[1]) / 2
-                const x1 = x - radX * scaleX
-                const y1 = y - radY * scaleY
-                const x2 = x + radX * scaleX
-                const y2 = y + radY * scaleY
+                let [x1, y1, x2, y2] = points
+                x1 = (x1 + x) * scaleX
+                y1 = (y1 + y) * scaleY
+                x2 = (x2 + x) * scaleX
+                y2 = (y2 + y) * scaleY
                 this.hitboxes.push(
                     getHitboxPolygon([x1, y1, x1, y2], this.style.width, {
                         x: this.scaleX,

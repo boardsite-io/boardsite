@@ -10,9 +10,8 @@ import {
     ToolTip,
 } from "components"
 import React, { useState } from "react"
-import { REPLACE_FAVORITE_TOOL, REMOVE_FAVORITE_TOOL } from "redux/drawing"
-import store from "redux/store"
 import { handleSetTool } from "drawing/handlers"
+import { drawing } from "state/drawing"
 import { FavToolOptions, FavToolWrapper } from "./index.styled"
 
 interface FavToolButtonProps {
@@ -25,11 +24,11 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({ icon, tool, index }) => {
     const [open, setOpen] = useState(false)
 
     const replaceTool = () => {
-        store.dispatch(REPLACE_FAVORITE_TOOL(index))
+        drawing.replaceFavoriteTool(index)
     }
 
     const removeTool = () => {
-        store.dispatch(REMOVE_FAVORITE_TOOL(index))
+        drawing.removeFavoriteTool(index)
     }
 
     let clickActive = false

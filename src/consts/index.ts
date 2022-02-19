@@ -53,7 +53,6 @@ export const DEFAULT_VIEW_TRANSFORM: ViewTransform = {
     yOffset: DEFAULT_VIEW_OFFSET_Y,
     scale: DEFAULT_VIEW_SCALE,
 }
-export const DEFAULT_ISDRAGGABLE = false
 export const DEFAULT_KEEP_CENTERED = false
 export const DRAG_SHADOW_BLUR = 4
 

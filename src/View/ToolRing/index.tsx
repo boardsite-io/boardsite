@@ -1,6 +1,5 @@
 import { FormattedMessage } from "language"
 import React, { memo, useCallback } from "react"
-import { useCustomSelector } from "hooks"
 import {
     EraserIcon,
     IconButton,
@@ -11,35 +10,36 @@ import {
 } from "components"
 import { handleNotification, handleSetTool } from "drawing/handlers"
 import { ToolType } from "drawing/stroke/index.types"
+import { useDrawing } from "state/drawing"
 import ActiveTool from "./ActiveTool"
 import { ToolRingWrap } from "./index.styled"
 
 const ToolRing: React.FC = memo(() => {
-    const typeSelector = useCustomSelector((state) => state.drawing.tool.type)
+    const { type } = useDrawing("toolType").tool
 
     const onClickEraser = useCallback(() => {
-        if (typeSelector === ToolType.Eraser) {
+        if (type === ToolType.Eraser) {
             return
         }
         handleSetTool({ type: ToolType.Eraser })
         handleNotification("Tool.Eraser.Notification")
-    }, [typeSelector])
+    }, [type])
 
     const onClickSelect = useCallback(() => {
-        if (typeSelector === ToolType.Select) {
+        if (type === ToolType.Select) {
             return
         }
         handleSetTool({ type: ToolType.Select })
         handleNotification("Tool.Selection.Notification")
-    }, [typeSelector])
+    }, [type])
 
     const onClickPan = useCallback(() => {
-        if (typeSelector === ToolType.Pan) {
+        if (type === ToolType.Pan) {
             return
         }
         handleSetTool({ type: ToolType.Pan })
         handleNotification("Tool.Panning.Notification")
-    }, [typeSelector])
+    }, [type])
 
     return (
         <ToolRingWrap>
@@ -50,7 +50,7 @@ const ToolRing: React.FC = memo(() => {
             >
                 <IconButton
                     icon={<EraserIcon />}
-                    active={typeSelector === ToolType.Eraser}
+                    active={type === ToolType.Eraser}
                     onClick={onClickEraser}
                 />
             </ToolTip>
@@ -60,7 +60,7 @@ const ToolRing: React.FC = memo(() => {
             >
                 <IconButton
                     icon={<SelectIcon />}
-                    active={typeSelector === ToolType.Select}
+                    active={type === ToolType.Select}
                     onClick={onClickSelect}
                 />
             </ToolTip>
@@ -70,7 +70,7 @@ const ToolRing: React.FC = memo(() => {
             >
                 <IconButton
                     icon={<PanIcon />}
-                    active={typeSelector === ToolType.Pan}
+                    active={type === ToolType.Pan}
                     onClick={onClickPan}
                 />
             </ToolTip>

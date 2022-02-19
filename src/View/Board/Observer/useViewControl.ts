@@ -9,13 +9,11 @@ import {
     zoomTo,
 } from "state/view/util"
 import { updateViewTransform } from "state/view/interface"
-import { useCustomSelector } from "hooks"
 import { ViewTransform } from "state/view/state/index.types"
+import { useDrawing } from "state/drawing"
 
 export const useViewControl = () => {
-    const isPanMode = useCustomSelector(
-        (state) => state.drawing.tool.type === ToolType.Pan
-    )
+    const isPanMode = useDrawing("toolType").tool.type === ToolType.Pan
 
     const lastX = useRef<number>(0)
     const lastY = useRef<number>(0)

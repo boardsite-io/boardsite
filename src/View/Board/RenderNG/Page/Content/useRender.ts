@@ -16,7 +16,7 @@ export const useRender = (
 
         Object.values(strokes).forEach((stroke) => {
             draw(ctx, stroke)
-            // drawHitboxRects(ctx, stroke) // DEBUGGING
+            // drawHitboxRects(ctx, stroke) // Hitbox debugging
         })
     })
 }

@@ -3,8 +3,8 @@ import { useCustomSelector } from "hooks"
 import { FormattedMessage } from "language"
 import React from "react"
 import { TOGGLE_SHOULD_CENTER } from "redux/board"
-import { TOGGLE_DIRECTDRAW } from "redux/drawing"
 import store from "redux/store"
+import { drawing, useDrawing } from "state/drawing"
 import { SubMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 
@@ -12,7 +12,7 @@ const SettingsMenu = () => {
     const keepCentered = useCustomSelector(
         (state) => state.board.view.keepCentered
     )
-    const directDraw = useCustomSelector((state) => state.drawing.directDraw)
+    const { directDraw } = useDrawing("directDraw")
 
     return (
         <SubMenuWrap level={4}>
@@ -25,7 +25,7 @@ const SettingsMenu = () => {
                 text={
                     <FormattedMessage id="Menu.General.Settings.DirectDraw" />
                 }
-                onClick={() => store.dispatch(TOGGLE_DIRECTDRAW())}
+                onClick={() => drawing.toggleDirectDraw()}
                 icon={directDraw ? <TickIcon /> : undefined}
             />
         </SubMenuWrap>

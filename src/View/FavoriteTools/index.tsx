@@ -2,23 +2,18 @@ import { FormattedMessage } from "language"
 import { nanoid } from "@reduxjs/toolkit"
 import React from "react"
 import { IconButton, PlusIcon, ToolTip, Position, ToolIcons } from "components"
-import store from "redux/store"
-import { useCustomSelector } from "hooks"
-import { ADD_FAVORITE_TOOL } from "redux/drawing"
-import { RootState } from "redux/types"
 import { MAX_FAVORITE_TOOLS } from "consts"
+import { drawing, useDrawing } from "state/drawing"
 import { FavToolsStyled } from "./index.styled"
 import FavToolButton from "./FavoriteToolButton"
 
 // add current draw settings as new fav tool
 const addFavoriteTool = () => {
-    store.dispatch(ADD_FAVORITE_TOOL())
+    drawing.addFavoriteTool()
 }
 
 const FavoriteTools: React.FC = () => {
-    const favoriteTools = useCustomSelector(
-        (state: RootState) => state.drawing.favoriteTools
-    )
+    const { favoriteTools } = useDrawing("favoriteTools")
 
     return (
         <FavToolsStyled>

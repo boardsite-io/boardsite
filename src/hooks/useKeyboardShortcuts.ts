@@ -21,6 +21,7 @@ import {
     handleImportWorkspace,
 } from "drawing/fileManagement"
 import { isMenuOpen } from "state/view/util"
+import { drawing } from "state/drawing"
 
 export const useKeyboardShortcuts = (): void => {
     useEffect(() => {
@@ -74,8 +75,7 @@ const keyListener = (e: KeyboardEvent): void => {
             case "1":
                 handleSetTool({
                     type:
-                        store.getState().drawing.tool.latestDrawType ??
-                        ToolType.Pen,
+                        drawing.getState().tool.latestDrawType ?? ToolType.Pen,
                 })
                 break
             case "2":
