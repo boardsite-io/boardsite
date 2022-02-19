@@ -1,5 +1,5 @@
 import { FormattedMessage } from "language"
-import { nanoid } from "@reduxjs/toolkit"
+import { nanoid } from "nanoid"
 import React from "react"
 import { IconButton, PlusIcon, ToolTip, Position, ToolIcons } from "components"
 import { MAX_FAVORITE_TOOLS } from "consts"

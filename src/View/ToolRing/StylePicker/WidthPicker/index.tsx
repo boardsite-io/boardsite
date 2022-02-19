@@ -1,9 +1,9 @@
 import { FormattedMessage } from "language"
 import React, { memo } from "react"
-import { nanoid } from "@reduxjs/toolkit"
 import { drawing, useDrawing } from "state/drawing"
 import { STROKE_WIDTH_PRESETS } from "consts"
 import { Position, ToolTip } from "components"
+import { nanoid } from "nanoid"
 import { Preset, WidthPresetInnerDot, WidthPresets } from "./index.styled"
 
 const WidthPicker: React.FC = memo(() => {

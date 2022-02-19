@@ -12,6 +12,9 @@ describe("board reducer state", () => {
             version: BOARD_VERSION,
             ...getDefaultBoardState(),
         }
+        delete want.undoStack
+        delete want.redoStack
+        delete want.strokeUpdates
 
         expect(JSON.stringify(got)).toEqual(JSON.stringify(want))
     })

@@ -2,7 +2,7 @@
 import { MAX_PIXEL_SCALE } from "consts"
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf"
 import { RenderParameters } from "pdfjs-dist/types/src/display/api"
-import { nanoid } from "@reduxjs/toolkit"
+import { nanoid } from "nanoid"
 import {
     AttachId,
     Attachment,
