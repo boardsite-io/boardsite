@@ -31,8 +31,8 @@ export class Request {
     pdfRequest: AxiosInstance
     transformResponse: (data: string) => string
 
-    constructor(baseURL: string, sessionId?: string) {
-        this.baseURL = `${baseURL}b`
+    constructor(sessionId?: string) {
+        this.baseURL = `${API_URL}/b`
         this.sessionId = sessionId
         this.transformResponse = (data) => {
             try {
@@ -61,8 +61,6 @@ export class Request {
 
     getHeaders(useUserValidation?: boolean): AxiosRequestHeaders {
         const headers: AxiosRequestHeaders = {
-            // prettier-ignore
-            "Accept": "application/json",
             "Content-Type": "application/json",
         }
         if (useUserValidation) {
@@ -183,14 +181,5 @@ export class Request {
             { headers }
         )
         return response.data
-    }
-
-    async validateToken(): Promise<boolean> {
-        const resp = await this.jsonRequest.request({
-            method: "GET",
-            url: "github/oauth/validate",
-            headers: this.getHeaders(false),
-        })
-        return resp.status === 204
     }
 }

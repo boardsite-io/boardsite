@@ -4,8 +4,9 @@ import { HorizontalRule } from "components"
 import { isConnected } from "api/session"
 import { BsPeople } from "react-icons/bs"
 import { FaGithub } from "react-icons/fa"
+import { SiGithubsponsors } from "react-icons/si"
 import { isMobile } from "react-device-detect"
-import { online } from "state/online"
+import { online, useOnline } from "state/online"
 import { DialogState } from "state/online/state/index.types"
 import { menu } from "state/menu"
 import { AUTH_URL } from "api/auth"
@@ -35,12 +36,17 @@ const onClickSignIn = () => {
     window.location.href = AUTH_URL
 }
 
+const onClickSignOut = () => {
+    online.clearToken()
+}
+
 const onClickShortcuts = () => {
     menu.openShortcuts()
     menu.closeMainMenu()
 }
 
 const GeneralMenu = () => {
+    const { isSignedIn, isAuthorized } = useOnline()
     return (
         <MainMenuWrap>
             <MenuItem
@@ -80,11 +86,26 @@ const GeneralMenu = () => {
                 />
             )}
             <HorizontalRule />
-            <MenuItem
-                isMainMenu
-                text={<FormattedMessage id="Menu.General.SignIn" />}
-                onClick={onClickSignIn}
-            />
+            {isAuthorized() && (
+                <MenuItem
+                    isMainMenu
+                    text={<FormattedMessage id="Menu.General.GithubSponsor" />}
+                    icon={<SiGithubsponsors id="transitory-icon" />}
+                />
+            )}
+            {!isSignedIn() ? (
+                <MenuItem
+                    isMainMenu
+                    text={<FormattedMessage id="Menu.General.SignIn" />}
+                    onClick={onClickSignIn}
+                />
+            ) : (
+                <MenuItem
+                    isMainMenu
+                    text={<FormattedMessage id="Menu.General.SignOut" />}
+                    onClick={onClickSignOut}
+                />
+            )}
         </MainMenuWrap>
     )
 }

@@ -14,15 +14,13 @@ import {
 
 export interface Session {
     id?: string
-    apiURL: URL
     user: User
     socket?: WebSocket
     users?: ConnectedUsers
     token?: string
 
-    setToken(token: string): Promise<boolean>
+    setToken(token: string): void
     updateUser(user: Partial<User>): void
-    setAPIURL(url: URL): void
     setID(sessionId: string): Session
     create(): Promise<string>
     join(copyOffline?: boolean): Promise<void>

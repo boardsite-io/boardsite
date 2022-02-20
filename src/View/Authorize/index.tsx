@@ -1,23 +1,18 @@
 import React, { useEffect } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
-import { online } from "../../state/online"
-import { currentSession } from "../../api/session"
+import { online } from "state/online"
 
 const Callback: React.FC = () => {
+    const navigate = useNavigate()
     const [searchParams] = useSearchParams()
     const token = searchParams.get("token")
 
-    if (token && searchParams.get("token_type") === "bearer") {
-        currentSession()
-            .setToken(token)
-            .then((isAuthorized) => {
-                online.setToken(token, isAuthorized)
-            })
-    }
-
-    const navigate = useNavigate()
     useEffect(() => {
-        navigate("/")
+        if (token && searchParams.get("token_type") === "bearer") {
+            online.setToken(token).then(() => {
+                navigate("/")
+            })
+        }
     })
 
     return null
