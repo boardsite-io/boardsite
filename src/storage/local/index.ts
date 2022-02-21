@@ -11,18 +11,21 @@ type StateInLocalStorage = "drawing"
 
 type StateInIndexedDB = "board"
 
-export function saveLocalStorage(
+export const saveLocalStorage = (
     name: StateInLocalStorage,
     data: object
-): void {
+): void => {
     try {
         localStorage.setItem(`${NAMESPACE}_${name}`, JSON.stringify(data))
     } catch (error) {}
 }
 
-export function saveIndexedDB(name: StateInIndexedDB, data: object): void {
+export const saveIndexedDB = async (
+    name: StateInIndexedDB,
+    data: object
+): Promise<void> => {
     try {
-        localforage.setItem(`${NAMESPACE}_${name}`, data)
+        await localforage.setItem(`${NAMESPACE}_${name}`, data)
     } catch (error) {}
 }
 

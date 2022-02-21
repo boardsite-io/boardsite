@@ -410,9 +410,9 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
         }
     }
 
-    saveToLocalStorage(): void {
+    async saveToLocalStorage(): Promise<void> {
         const serializedBoardState = this.getSerializedState()
-        saveIndexedDB("board", serializedBoardState)
+        await saveIndexedDB("board", serializedBoardState)
     }
 
     async loadFromLocalStorage(): Promise<void> {
