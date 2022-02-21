@@ -3,13 +3,20 @@ import { BoardStroke } from "drawing/stroke"
 import { LiveStroke } from "drawing/livestroke/index.types"
 import { Stroke, ToolType } from "drawing/stroke/index.types"
 import { BoardPage } from "drawing/page"
-import { PageCollection, PageMeta } from "state/board/state/index.types"
+import {
+    BoardState,
+    PageCollection,
+    PageMeta,
+} from "state/board/state/index.types"
+import { Board } from "state/board"
 import { BoardSession } from "./session"
 import { Request } from "./request"
 import { Message, PageSync, StrokeDelete, User } from "./types"
 
 jest.mock("./request")
 const requestMock = Request as jest.MockedClass<typeof Request>
+jest.mock("state/board")
+const stateMock = Board as jest.MockedClass<typeof Board>
 
 const mockSessionId = "testId"
 const mockUser: User = {
@@ -59,7 +66,10 @@ function createMockSocket<T>(fn: (data: Message<T[]>) => void): WebSocket {
 }
 
 describe("session", () => {
-    beforeEach(() => requestMock.mockClear())
+    beforeEach(() => {
+        requestMock.mockClear()
+        stateMock.mockClear()
+    })
 
     it("creates a new session", async () => {
         requestMock.prototype.postSession.mockResolvedValue({
@@ -81,6 +91,10 @@ describe("session", () => {
             pageRank: [],
             pages: {},
         })
+        stateMock.prototype.getState.mockReturnValue({
+            pageCollection: {},
+            pageRank: [],
+        } as unknown as BoardState)
         const session = createMockSession()
 
         await session.join(false)
@@ -110,26 +124,29 @@ describe("session", () => {
             },
         }
         requestMock.prototype.getPagesSync.mockResolvedValue(sync)
+        stateMock.prototype.getState.mockReturnValue({
+            pageCollection: {},
+            pageRank: [],
+        } as unknown as BoardState)
         const session = createMockSession()
 
         await session.join(false)
 
-        // TODO:
-        // expect(mockStore.dispatch).toHaveBeenCalledWith({
-        //     pageRank: sync.pageRank,
-        //     pageCollection: {
-        //         pageId1: {
-        //             pageId: "pageId1",
-        //             meta: mockPageMeta,
-        //             strokes: {},
-        //         },
-        //         pageId2: {
-        //             pageId: "pageId2",
-        //             meta: mockPageMeta,
-        //             strokes: {},
-        //         },
-        //     },
-        // })
+        expect(stateMock.prototype.syncPages).toHaveBeenCalledWith(
+            sync.pageRank,
+            {
+                pageId1: {
+                    pageId: "pageId1",
+                    meta: mockPageMeta,
+                    strokes: {},
+                },
+                pageId2: {
+                    pageId: "pageId2",
+                    meta: mockPageMeta,
+                    strokes: {},
+                },
+            }
+        )
     })
 
     it("is connected if socket is open and sessionId is set", () => {
@@ -189,9 +206,10 @@ describe("session", () => {
         const pageRank = ["pageId"]
         const page = new BoardPage().setID("pageId").updateMeta(mockPageMeta)
         const pageCollection: PageCollection = { [page.pageId]: page }
-        // mockStore.getState.mockReturnValue({
-        //     board: { pageCollection, pageRank },
-        // })
+        stateMock.prototype.getState.mockReturnValue({
+            pageCollection,
+            pageRank,
+        } as unknown as BoardState)
 
         const sync: PageSync = {
             pageRank: ["pageId2"],
@@ -209,13 +227,10 @@ describe("session", () => {
         const wantPageCollection = {
             pageId2: new BoardPage().setID("pageId2").updateMeta(mockPageMeta),
         }
-        // expect(mockStore.dispatch).toHaveBeenCalledWith({
-        //     payload: {
-        //         pageRank: wantPageRank,
-        //         pageCollection: wantPageCollection,
-        //     },
-        //     type: "board/SYNC_PAGES",
-        // })
+        expect(stateMock.prototype.syncPages).toHaveBeenCalledWith(
+            wantPageRank,
+            wantPageCollection
+        )
     })
 
     it("synchronizes pages by updating pages meta", async () => {
@@ -223,9 +238,10 @@ describe("session", () => {
         const pageRank = ["pageId"]
         const page = new BoardPage().setID("pageId")
         const pageCollection: PageCollection = { [page.pageId]: page }
-        // mockStore.getState.mockReturnValue({
-        //     board: { pageCollection, pageRank },
-        // })
+        stateMock.prototype.getState.mockReturnValue({
+            pageCollection,
+            pageRank,
+        } as unknown as BoardState)
 
         const sync: PageSync = {
             pageRank: ["pageId"],
@@ -244,13 +260,10 @@ describe("session", () => {
         const wantPageCollection = {
             pageId: new BoardPage().setID("pageId").updateMeta(mockPageMeta),
         }
-        // expect(mockStore.dispatch).toHaveBeenCalledWith({
-        //     payload: {
-        //         pageRank: wantPageRank,
-        //         pageCollection: wantPageCollection,
-        //     },
-        //     type: "board/SYNC_PAGES",
-        // })
+        expect(stateMock.prototype.syncPages).toHaveBeenCalledWith(
+            wantPageRank,
+            wantPageCollection
+        )
     })
 
     it("synchronizes pages by clearing pages", async () => {
@@ -261,9 +274,10 @@ describe("session", () => {
             .updateMeta(mockPageMeta)
             .addStrokes([mockStroke])
         const pageCollection: PageCollection = { [page.pageId]: page }
-        // mockStore.getState.mockReturnValue({
-        //     board: { pageCollection, pageRank },
-        // })
+        stateMock.prototype.getState.mockReturnValue({
+            pageCollection,
+            pageRank,
+        } as unknown as BoardState)
 
         const sync: PageSync = {
             pageRank: ["pageId2"],
@@ -281,12 +295,9 @@ describe("session", () => {
         const wantPageCollection = {
             pageId2: new BoardPage().setID("pageId2").updateMeta(mockPageMeta),
         }
-        // expect(mockStore.dispatch).toHaveBeenCalledWith({
-        //     payload: {
-        //         pageRank: wantPageRank,
-        //         pageCollection: wantPageCollection,
-        //     },
-        //     type: "board/SYNC_PAGES",
-        // })
+        expect(stateMock.prototype.syncPages).toHaveBeenCalledWith(
+            wantPageRank,
+            wantPageCollection
+        )
     })
 })
