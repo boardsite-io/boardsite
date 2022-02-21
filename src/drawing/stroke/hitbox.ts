@@ -73,24 +73,3 @@ export function matchStrokeCollision(
     })
     return result
 }
-
-// export function getSelectedShapes(
-//     selection: Stroke, // selection rectangle
-//     strokes: StrokeMap,
-//     e: KonvaEventObject<MouseEvent>
-// ): Node<NodeConfig>[] {
-//     const selectedIds = matchStrokeCollision(
-//         strokes,
-//         getSelectionPolygon(selection.points)
-//     )
-//     const selectedShapes: Node<NodeConfig>[] = []
-//     e.target
-//         .getParent()
-//         ?.find(`.${selection.pageId}`)
-//         .forEach((element: Node<NodeConfig>) => {
-//             if (selectedIds[element.attrs.id]) {
-//                 selectedShapes.push(element)
-//             }
-//         })
-//     return selectedShapes
-// }

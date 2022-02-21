@@ -32,12 +32,12 @@ export class Online implements GlobalState<OnlineState, OnlineSubscribers> {
         this.render("session")
     }
 
-    subscribe(trigger: RenderTrigger, subscription: OnlineSubscription) {
+    subscribe(subscription: OnlineSubscription, trigger: RenderTrigger) {
         if (this.subscribers[subscription].indexOf(trigger) > -1) return
         this.subscribers[subscription].push(trigger)
     }
 
-    unsubscribe(trigger: RenderTrigger, subscription: OnlineSubscription) {
+    unsubscribe(subscription: OnlineSubscription, trigger: RenderTrigger) {
         this.subscribers[subscription] = this.subscribers[subscription].filter(
             (subscriber) => subscriber !== trigger
         )

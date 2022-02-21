@@ -33,7 +33,6 @@
         "extends": "react-app"
     },
     "dependencies": {
-        "@reduxjs/toolkit": "^1.5.0",
         "axios": "^0.24.0",
         "bezier-js": "^6.1.0",
         "bfj": "^7.0.2",
@@ -52,6 +51,7 @@
         "jss": "^10.5.1",
         "localforage": "^1.10.0",
         "lodash": "^4.17.21",
+        "nanoid": "^3.3.1",
         "pako": "^2.0.4",
         "pdf-lib": "^1.16.0",
         "pdfjs-dist": "^2.7.570",
@@ -64,7 +64,6 @@
         "react-icons": "^4.2.0",
         "react-intl": "^5.24.1",
         "react-is": "^17.0.2",
-        "react-redux": "^7.2.2",
         "react-refresh": "^0.11.0",
         "react-router-dom": "^6.0.2",
         "react-transition-group": "^4.4.2",

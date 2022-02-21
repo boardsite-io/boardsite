@@ -15,7 +15,7 @@ import { useDrawing } from "state/drawing"
 import { StyledShapeTools } from "./index.styled"
 
 const ShapeTools: React.FC = memo(() => {
-    const { type } = useDrawing("toolType").tool
+    const { type } = useDrawing("ShapeTools").tool
 
     return (
         <StyledShapeTools>

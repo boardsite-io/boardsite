@@ -1,7 +1,7 @@
-import { nanoid } from "@reduxjs/toolkit"
+import { nanoid } from "nanoid"
 import { backgroundStyle, pageSize } from "consts"
 import { BoardStroke } from "drawing/stroke"
-import { Page, PageMeta } from "redux/board/index.types"
+import { Page, PageMeta } from "state/board/state/index.types"
 import {
     SerializedStroke,
     Stroke,

@@ -1,6 +1,6 @@
 import { Point } from "drawing/stroke/index.types"
 import { MouseEvent, TouchEvent } from "react"
-import { TransformStrokes } from "redux/board/index.types"
+import { TransformStrokes } from "state/board/state/index.types"
 import { TrHandle } from "./index.styled"
 
 export type TrBounds = {

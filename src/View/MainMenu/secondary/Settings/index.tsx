@@ -1,24 +1,20 @@
 import { TickIcon } from "components"
-import { useCustomSelector } from "hooks"
 import { FormattedMessage } from "language"
 import React from "react"
-import { TOGGLE_SHOULD_CENTER } from "redux/board"
-import store from "redux/store"
+import { board, useBoard } from "state/board"
 import { drawing, useDrawing } from "state/drawing"
 import { SubMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 
 const SettingsMenu = () => {
-    const keepCentered = useCustomSelector(
-        (state) => state.board.view.keepCentered
-    )
-    const { directDraw } = useDrawing("directDraw")
+    const { keepCentered } = useBoard("SettingsMenu").view
+    const { directDraw } = useDrawing("SettingsMenu")
 
     return (
         <SubMenuWrap level={4}>
             <MenuItem
                 text={<FormattedMessage id="Menu.General.Settings.Center" />}
-                onClick={() => store.dispatch(TOGGLE_SHOULD_CENTER())}
+                onClick={() => board.toggleShouldCenter()}
                 icon={keepCentered ? <TickIcon /> : undefined}
             />
             <MenuItem

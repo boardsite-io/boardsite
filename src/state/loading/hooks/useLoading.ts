@@ -6,10 +6,10 @@ export const useLoading = () => {
     const trigger = useCallback(() => render({}), [])
 
     useEffect(() => {
-        loading.subscribe(trigger, "loading")
+        loading.subscribe("loading", trigger)
 
         return () => {
-            loading.unsubscribe(trigger, "loading")
+            loading.unsubscribe("loading", trigger)
         }
     }, [])
 

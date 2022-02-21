@@ -1,11 +1,4 @@
 import {
-    JUMP_TO_FIRST_PAGE,
-    JUMP_TO_LAST_PAGE,
-    JUMP_TO_NEXT_PAGE,
-    JUMP_TO_PREV_PAGE,
-} from "redux/board"
-import store from "redux/store"
-import {
     handleSetTool,
     handleRedo,
     handleUndo,
@@ -16,12 +9,10 @@ import {
 } from "drawing/handlers"
 import { ToolType } from "drawing/stroke/index.types"
 import { useEffect } from "react"
-import {
-    handleExportWorkspace,
-    handleImportWorkspace,
-} from "drawing/fileManagement"
 import { isMenuOpen } from "state/view/util"
 import { drawing } from "state/drawing"
+import { board } from "state/board"
+import { handleExportWorkspace, handleImportWorkspace } from "storage/workspace"
 
 export const useKeyboardShortcuts = (): void => {
     useEffect(() => {
@@ -100,16 +91,16 @@ const keyListener = (e: KeyboardEvent): void => {
                 handleSetTool({ type: ToolType.Circle })
                 break
             case "ArrowUp":
-                store.dispatch(JUMP_TO_FIRST_PAGE())
+                board.jumpToFirstPage()
                 break
             case "ArrowDown":
-                store.dispatch(JUMP_TO_LAST_PAGE())
+                board.jumpToLastPage()
                 break
             case "ArrowLeft":
-                store.dispatch(JUMP_TO_PREV_PAGE())
+                board.jumpToPrevPage()
                 break
             case "ArrowRight":
-                store.dispatch(JUMP_TO_NEXT_PAGE())
+                board.jumpToNextPage()
                 break
             default:
                 break

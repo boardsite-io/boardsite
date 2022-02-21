@@ -1,20 +1,16 @@
 import { useCallback, useEffect, useState } from "react"
 import { drawing } from "../state"
-import { DrawingSubscription } from "../state/index.types"
+import { DrawingSubscriber } from "../state/index.types"
 
-export const useDrawing = (...subscriptions: DrawingSubscription[]) => {
+export const useDrawing = (subscriber: DrawingSubscriber) => {
     const [, render] = useState<object>({})
     const trigger = useCallback(() => render({}), [])
 
     useEffect(() => {
-        subscriptions.forEach((sub) => {
-            drawing.subscribe(trigger, sub)
-        })
+        drawing.subscribe(subscriber, trigger)
 
         return () => {
-            subscriptions.forEach((sub) => {
-                drawing.unsubscribe(trigger, sub)
-            })
+            drawing.unsubscribe(subscriber, trigger)
         }
     }, [])
 

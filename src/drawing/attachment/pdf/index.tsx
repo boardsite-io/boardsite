@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { MAX_PIXEL_SCALE } from "consts"
+import * as pdfjs from "pdfjs-dist/legacy/build/pdf"
+import { RenderParameters } from "pdfjs-dist/types/src/display/api"
+import { nanoid } from "nanoid"
 import {
     AttachId,
     Attachment,
     AttachType,
     RenderedData,
-} from "redux/board/index.types"
-import * as pdfjs from "pdfjs-dist/legacy/build/pdf"
-import { RenderParameters } from "pdfjs-dist/types/src/display/api"
-import { nanoid } from "@reduxjs/toolkit"
+} from "state/board/state/index.types"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const pdfjsWorker: any = require("pdfjs-dist/legacy/build/pdf.worker.entry")

@@ -1,34 +1,22 @@
 import { cloneDeep } from "lodash"
 import { Stroke, Tool } from "drawing/stroke/index.types"
-import {
-    CLEAR_PAGES,
-    DELETE_PAGES,
-    SET_PAGEMETA,
-    ADD_PAGES,
-    ADD_STROKES,
-    ERASE_STROKES,
-    UNDO_ACTION,
-    REDO_ACTION,
-    CLEAR_TRANSFORM,
-    JUMP_TO_NEXT_PAGE,
-} from "redux/board"
 import { currentSession, isConnected } from "api/session"
 import { backgroundStyle, NOTIFICATION_DURATION } from "consts"
-import store from "redux/store"
-import {
-    PageMeta,
-    DeletePages,
-    AddPages,
-    AddStrokes,
-    EraseStrokes,
-    PageId,
-    ClearPages,
-    SetPageMeta,
-} from "redux/board/index.types"
 import { IntlMessageId } from "language"
 import { handleResetView } from "state/view/interface"
 import { notification } from "state/notification"
 import { drawing } from "state/drawing"
+import { board } from "state/board"
+import {
+    AddPagesAction,
+    AddStrokesAction,
+    ClearPagesAction,
+    DeletePagesAction,
+    EraseStrokesAction,
+    PageId,
+    PageMeta,
+    SetPageMetaAction,
+} from "state/board/state/index.types"
 import { BoardPage } from "./page"
 import { getVerifiedPageIds, getVerifiedPages } from "./helpers"
 
@@ -37,43 +25,46 @@ const createPage = (): BoardPage =>
 
 export function handleSetTool(tool: Partial<Tool>): void {
     drawing.setTool(tool)
-    store.dispatch(CLEAR_TRANSFORM())
+    board.clearTransform()
 }
 
 export function handleAddPageOver(): void {
     const page = createPage()
-    const index = store.getState().board.currentPageIndex
-    const payload: AddPages = {
+
+    const index = board.getState().currentPageIndex
+    const addPagesAction: AddPagesAction = {
         data: [{ page, index }],
         isRedoable: true,
     }
 
     if (isConnected()) {
         const session = currentSession()
-        payload.sessionHandler = () => session.addPages([page], [index])
-        payload.sessionUndoHandler = () => session.deletePages([page.pageId])
+        addPagesAction.sessionHandler = () => session.addPages([page], [index])
+        addPagesAction.sessionUndoHandler = () =>
+            session.deletePages([page.pageId])
     }
 
-    store.dispatch(ADD_PAGES(payload))
+    board.addPages(addPagesAction)
     handleResetView()
 }
 
 export function handleAddPageUnder(): void {
     const page = createPage()
-    const index = store.getState().board.currentPageIndex + 1
-    const payload: AddPages = {
+    const index = board.getState().currentPageIndex + 1
+    const addPagesAction: AddPagesAction = {
         data: [{ page, index }],
         isRedoable: true,
     }
 
     if (isConnected()) {
         const session = currentSession()
-        payload.sessionHandler = () => session.addPages([page], [index])
-        payload.sessionUndoHandler = () => session.deletePages([page.pageId])
+        addPagesAction.sessionHandler = () => session.addPages([page], [index])
+        addPagesAction.sessionUndoHandler = () =>
+            session.deletePages([page.pageId])
     }
 
-    store.dispatch(ADD_PAGES(payload))
-    store.dispatch(JUMP_TO_NEXT_PAGE())
+    board.addPages(addPagesAction)
+    board.jumpToNextPage()
     handleResetView()
 }
 
@@ -85,22 +76,22 @@ export function handleClearPages(pageIds: PageId[]): void {
     const verifiedPageIds = getVerifiedPageIds(pageIds)
     const verifiedPages = getVerifiedPages(pageIds)
 
-    const payload: ClearPages = {
+    const clearPagesAction: ClearPagesAction = {
         data: verifiedPageIds,
         isRedoable: true,
     }
 
     if (isConnected()) {
         const session = currentSession()
-        payload.sessionHandler = () => {
+        clearPagesAction.sessionHandler = () => {
             session.updatePages(verifiedPages, true)
         }
-        payload.sessionUndoHandler = (...undos) => {
+        clearPagesAction.sessionUndoHandler = (...undos) => {
             session.sendStrokes(undos)
         }
     }
 
-    store.dispatch(CLEAR_PAGES(payload))
+    board.clearPages(clearPagesAction)
 }
 
 export function handleDeleteCurrentPage(): void {
@@ -111,7 +102,7 @@ export function handleDeletePages(
     pageIds: PageId[],
     isRedoable?: boolean
 ): void {
-    const payload: DeletePages = {
+    const deletePagesAction: DeletePagesAction = {
         data: pageIds,
         isRedoable,
     }
@@ -119,10 +110,10 @@ export function handleDeletePages(
     if (isConnected()) {
         const session = currentSession()
         const indices = pageIds.map((pid) =>
-            store.getState().board.pageRank.indexOf(pid)
+            board.getState().pageRank.indexOf(pid)
         )
-        payload.sessionHandler = () => session.deletePages(pageIds)
-        payload.sessionUndoHandler = (...undos) => {
+        deletePagesAction.sessionHandler = () => session.deletePages(pageIds)
+        deletePagesAction.sessionUndoHandler = (...undos) => {
             const pages = undos.map(({ page }) => page)
             // TODO: send pagerank
             session.addPages(pages, indices as number[])
@@ -135,15 +126,15 @@ export function handleDeletePages(
         }
     }
 
-    store.dispatch(DELETE_PAGES(payload))
+    board.deletePages(deletePagesAction)
 }
 
 export function handleDeleteAllPages(isRedoable?: boolean): void {
-    handleDeletePages(store.getState().board.pageRank, isRedoable)
+    handleDeletePages(board.getState().pageRank, isRedoable)
 }
 
 export function handleAddStrokes(strokes: Stroke[], isUpdate: boolean): void {
-    const payload: AddStrokes = {
+    const addStrokesAction: AddStrokesAction = {
         data: strokes,
         isUpdate,
         isRedoable: true,
@@ -151,36 +142,38 @@ export function handleAddStrokes(strokes: Stroke[], isUpdate: boolean): void {
 
     if (isConnected()) {
         const session = currentSession()
-        payload.sessionHandler = () => session.sendStrokes(strokes)
-        payload.sessionUndoHandler = () => session.eraseStrokes(strokes)
+        addStrokesAction.sessionHandler = () => session.sendStrokes(strokes)
+        addStrokesAction.sessionUndoHandler = () =>
+            session.eraseStrokes(strokes)
     }
 
-    store.dispatch(ADD_STROKES(payload))
+    board.addStrokes(addStrokesAction)
 }
 
 export function handleDeleteStrokes(strokes: Stroke[]): void {
-    const payload: EraseStrokes = {
+    const eraseStrokesAction: EraseStrokesAction = {
         data: strokes,
         isRedoable: true,
     }
 
     if (isConnected()) {
         const session = currentSession()
-        payload.sessionHandler = () => session.eraseStrokes(strokes)
-        payload.sessionUndoHandler = () => session.sendStrokes(strokes)
+        eraseStrokesAction.sessionHandler = () => session.eraseStrokes(strokes)
+        eraseStrokesAction.sessionUndoHandler = () =>
+            session.sendStrokes(strokes)
     }
 
-    store.dispatch(ERASE_STROKES(payload))
+    board.eraseStrokes(eraseStrokesAction)
 }
 
 export function handleUndo(): void {
-    store.dispatch(CLEAR_TRANSFORM())
-    store.dispatch(UNDO_ACTION())
+    board.clearTransform()
+    board.undoAction()
 }
 
 export function handleRedo(): void {
-    store.dispatch(CLEAR_TRANSFORM())
-    store.dispatch(REDO_ACTION())
+    board.clearTransform()
+    board.redoAction()
 }
 
 export function handleChangePageBackground(): void {
@@ -203,31 +196,30 @@ export function handleChangePageBackground(): void {
         meta: newMeta,
     }
 
-    const payload: SetPageMeta = {
+    const setPageMetaAction: SetPageMetaAction = {
         data: [pageUpdate],
         isRedoable: true,
     }
 
     if (isConnected()) {
         const session = currentSession()
-        payload.sessionHandler = () => session.updatePages([pageUpdate], false)
-        payload.sessionUndoHandler = (...undos) =>
+        setPageMetaAction.sessionHandler = () =>
+            session.updatePages([pageUpdate], false)
+        setPageMetaAction.sessionUndoHandler = (...undos) =>
             session.updatePages(undos, false)
     }
 
-    store.dispatch(SET_PAGEMETA(payload))
+    board.setPageMeta(setPageMetaAction)
 }
 
 function getCurrentPageId() {
-    return store.getState().board.pageRank[
-        store.getState().board.currentPageIndex
-    ]
+    const { pageRank, currentPageIndex } = board.getState()
+    return pageRank[currentPageIndex]
 }
 
 function getCurrentPage() {
-    return store.getState().board.pageCollection[
-        store.getState().board.pageRank[store.getState().board.currentPageIndex]
-    ]
+    const { pageRank, pageCollection, currentPageIndex } = board.getState()
+    return pageCollection[pageRank[currentPageIndex]]
 }
 
 export const handleNotification = (id: IntlMessageId) => {

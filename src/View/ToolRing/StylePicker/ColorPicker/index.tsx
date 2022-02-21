@@ -7,7 +7,7 @@ const handleChange = (newColor: string) => {
 }
 
 const ColorPicker: React.FC = memo(() => {
-    const { color } = useDrawing("toolStyle").tool.style
+    const { color } = useDrawing("ColorPicker").tool.style
 
     return <CustomColorPicker color={color} onChange={handleChange} />
 })

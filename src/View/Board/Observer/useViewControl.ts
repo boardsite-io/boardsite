@@ -13,7 +13,7 @@ import { ViewTransform } from "state/view/state/index.types"
 import { useDrawing } from "state/drawing"
 
 export const useViewControl = () => {
-    const isPanMode = useDrawing("toolType").tool.type === ToolType.Pan
+    const isPanMode = useDrawing("useViewControl").tool.type === ToolType.Pan
 
     const lastX = useRef<number>(0)
     const lastY = useRef<number>(0)

@@ -20,7 +20,7 @@ const onClickApply = () => {
     handleChangePageBackground()
 }
 const PageStyleMenu = () => {
-    const { style } = useDrawing("pageStyle").pageMeta.background
+    const { style } = useDrawing("PageStyleMenu").pageMeta.background
 
     return (
         <SubMenuWrap level={3}>

@@ -1,4 +1,4 @@
-import { Attachment, AttachType } from "redux/board/index.types"
+import { Attachment, AttachType } from "state/board/state/index.types"
 import { PDFAttachment } from "./pdf"
 
 /**

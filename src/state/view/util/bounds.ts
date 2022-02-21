@@ -5,8 +5,8 @@ import {
     ZOOM_SCALE_MAX,
     ZOOM_SCALE_MIN,
 } from "consts"
+import { board } from "state/board"
 import { ViewTransform } from "state/view/state/index.types"
-import store from "redux/store"
 import {
     getPageSize,
     isFullScreen,
@@ -22,7 +22,7 @@ export const applyBounds = (viewTransform: ViewTransform): ViewTransform => ({
 })
 
 export const applyBoundsX = (viewTransform: ViewTransform): number => {
-    const { keepCentered } = store.getState().board.view
+    const { keepCentered } = board.getState().view
 
     // Zoomed out with keepCentered setting on sticks to center
     if (keepCentered && !isFullScreen()) {

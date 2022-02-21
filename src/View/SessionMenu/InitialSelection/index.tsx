@@ -1,14 +1,11 @@
 import { FormattedMessage } from "language"
 import React from "react"
-import store from "redux/store"
 import { Button, DialogContent, DialogTitle } from "components"
 import PageSettings from "components/PageSettings"
 import { handleAddPageUnder } from "drawing/handlers"
-import { LOAD_BOARD_STATE } from "redux/board"
-import { loadIndexedDB } from "redux/localstorage"
-import { BoardState } from "redux/board/index.types"
 import { online } from "state/online"
 import { DialogState } from "state/online/state/index.types"
+import { board } from "state/board"
 
 const createOfflineSession = () => {
     handleAddPageUnder()
@@ -20,9 +17,7 @@ const createOnlineSession = () => {
 }
 
 const continuePreviousSession = async () => {
-    const state = await loadIndexedDB("board")
-
-    store.dispatch(LOAD_BOARD_STATE(state.board as BoardState))
+    await board.loadFromLocalStorage()
     online.setSessionDialog(DialogState.Closed)
 }
 

@@ -10,7 +10,7 @@ import {
     PageId,
     PageMeta,
     PageRank,
-} from "redux/board/index.types"
+} from "state/board/state/index.types"
 
 export interface Session {
     id?: string

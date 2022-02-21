@@ -32,12 +32,12 @@ export class Loading implements GlobalState<LoadingState, LoadingSubscribers> {
         this.render("loading")
     }
 
-    subscribe(trigger: RenderTrigger, subscription: LoadingSubscription) {
+    subscribe(subscription: LoadingSubscription, trigger: RenderTrigger) {
         if (this.subscribers[subscription].indexOf(trigger) > -1) return
         this.subscribers[subscription].push(trigger)
     }
 
-    unsubscribe(trigger: RenderTrigger, subscription: LoadingSubscription) {
+    unsubscribe(subscription: LoadingSubscription, trigger: RenderTrigger) {
         this.subscribers[subscription] = this.subscribers[subscription].filter(
             (subscriber) => subscriber !== trigger
         )

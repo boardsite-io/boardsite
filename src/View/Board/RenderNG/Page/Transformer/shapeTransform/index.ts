@@ -1,6 +1,6 @@
 import { Point } from "drawing/stroke/index.types"
 import { cloneDeep } from "lodash"
-import { TransformStrokes } from "redux/board/index.types"
+import { TransformStrokes } from "state/board/state/index.types"
 import { calcScaleDelta, trHandleFactors, TrBounds } from "../helpers"
 import { TrHandle } from "../index.styled"
 import { TransformState } from "./index.types"

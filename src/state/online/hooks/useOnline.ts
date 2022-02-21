@@ -6,10 +6,10 @@ export const useOnline = () => {
     const trigger = useCallback(() => render({}), [])
 
     useEffect(() => {
-        online.subscribe(trigger, "session")
+        online.subscribe("session", trigger)
 
         return () => {
-            online.unsubscribe(trigger, "session")
+            online.unsubscribe("session", trigger)
         }
     }, [])
 

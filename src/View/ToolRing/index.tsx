@@ -15,7 +15,7 @@ import ActiveTool from "./ActiveTool"
 import { ToolRingWrap } from "./index.styled"
 
 const ToolRing: React.FC = memo(() => {
-    const { type } = useDrawing("toolType").tool
+    const { type } = useDrawing("ToolRing").tool
 
     const onClickEraser = useCallback(() => {
         if (type === ToolType.Eraser) {

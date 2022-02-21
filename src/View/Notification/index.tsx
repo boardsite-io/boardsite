@@ -3,7 +3,7 @@ import React, { Fragment } from "react"
 import { HorizontalRule } from "components"
 import { CSSTransition } from "react-transition-group"
 import { NOTIFICATION_TRANSITION } from "consts"
-import { nanoid } from "@reduxjs/toolkit"
+import { nanoid } from "nanoid"
 import { useNotification } from "state/notification/hooks/useNotification"
 import { Message, NotificationWrap } from "./index.styled"
 

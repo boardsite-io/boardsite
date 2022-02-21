@@ -2,13 +2,9 @@ import { FormattedMessage } from "language"
 import React from "react"
 import { HorizontalRule } from "components"
 import { handleAddPageUnder, handleDeleteAllPages } from "drawing/handlers"
-import {
-    handleExportPdf,
-    handleExportWorkspace,
-    handleImportPdf,
-    handleImportWorkspace,
-} from "drawing/fileManagement"
 import { menu } from "state/menu"
+import { handleExportWorkspace, handleImportWorkspace } from "storage/workspace"
+import { handleExportPdf, handleImportPdf } from "storage/pdf"
 import { SubMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 

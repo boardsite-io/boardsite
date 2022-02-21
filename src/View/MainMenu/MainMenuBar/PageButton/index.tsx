@@ -1,16 +1,13 @@
-import { useCustomSelector } from "hooks"
 import { FormattedMessage } from "language"
 import React, { memo } from "react"
+import { useBoard } from "state/board"
 import { MainMenuButton } from "../index.styled"
 
 const PageButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> =
     memo((props) => {
-        const pageRank = useCustomSelector((state) => state.board.pageRank)
-        const pageIndex = useCustomSelector(
-            (state) => state.board.currentPageIndex
-        )
+        const { currentPageIndex, pageRank } = useBoard("MenuPageButton")
 
-        const currentPage = pageIndex + 1
+        const currentPage = currentPageIndex + 1
         const numberPages = pageRank.length
 
         return (

@@ -1,13 +1,13 @@
 import { pageSize } from "consts"
 import { Point } from "drawing/stroke/index.types"
-import { PageSize } from "redux/board/index.types"
 import { ViewTransform } from "state/view/state/index.types"
 import { online } from "state/online"
 import { view } from "state/view"
 import { menu } from "state/menu"
 import { MainMenuState } from "state/menu/state/index.types"
 import { DialogState } from "state/online/state/index.types"
-import store from "redux/store"
+import { board } from "state/board"
+import { PageSize } from "state/board/state/index.types"
 
 export const getCenterOfScreen = () => ({
     x: getCenterX(),
@@ -36,19 +36,17 @@ export const applyTransformToPoint = (
 })
 
 export const getPageSize = (indexOffset = 0): PageSize => {
-    const { pageRank, currentPageIndex, pageCollection } =
-        store.getState().board
+    const { pageRank, currentPageIndex, pageCollection } = board.getState()
     const pageId = pageRank[currentPageIndex + indexOffset]
 
     return pageCollection[pageId]?.meta?.size ?? pageSize.a4landscape
 }
 
 export const onFirstPage = (): boolean =>
-    store.getState().board.currentPageIndex === 0
+    board.getState().currentPageIndex === 0
 
 export const onLastPage = (): boolean =>
-    store.getState().board.currentPageIndex ===
-    store.getState().board.pageRank.length - 1
+    board.getState().currentPageIndex === board.getState().pageRank.length - 1
 
 export const isMenuOpen = () =>
     menu.getState().mainMenuState !== MainMenuState.Closed ||

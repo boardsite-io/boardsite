@@ -6,11 +6,10 @@ import {
     ERASER_WIDTH,
 } from "consts"
 import { handleAddStrokes, handleDeleteStrokes } from "drawing/handlers"
-import { SET_TRANSFORM_STROKES } from "redux/board"
-import store from "redux/store"
-import { Page } from "redux/board/index.types"
 import { drawing } from "state/drawing"
 import { view } from "state/view"
+import { board } from "state/board"
+import { Page } from "state/board/state/index.types"
 import { perfectDrawing, simplifyRDP } from "../stroke/simplify"
 import {
     getHitboxPolygon,
@@ -77,7 +76,7 @@ export class BoardLiveStroke implements LiveStroke {
     }
 
     moveEraser(): void {
-        const { strokes } = store.getState().board.pageCollection[this.pageId]
+        const { strokes } = board.getState().pageCollection[this.pageId]
         const selectedStrokes = this.selectLineCollision(strokes)
 
         if (Object.keys(selectedStrokes).length > 0) {
@@ -185,16 +184,14 @@ export class BoardLiveStroke implements LiveStroke {
                 break
             }
             case ToolType.Select: {
-                const { strokes } = store.getState().board.pageCollection[
+                const { strokes } = board.getState().pageCollection[
                     stroke.pageId
                 ] as Page
                 const selectedStrokes = matchStrokeCollision(
                     strokes,
                     getSelectionPolygon(stroke.points)
                 )
-                store.dispatch(
-                    SET_TRANSFORM_STROKES(Object.values(selectedStrokes))
-                )
+                board.setTransformStrokes(Object.values(selectedStrokes))
                 break
             }
             default: {

@@ -9,10 +9,7 @@ import StylePicker from "../StylePicker"
 const ActiveTool: React.FC = memo(() => {
     const [open, setOpen] = useState(false)
 
-    const { style, type, latestDrawType } = useDrawing(
-        "toolStyle",
-        "toolType"
-    ).tool
+    const { style, type, latestDrawType } = useDrawing("ActiveTool").tool
 
     const isDraw = isDrawType(type)
     const ToolIcon = ToolIcons[latestDrawType ?? type]

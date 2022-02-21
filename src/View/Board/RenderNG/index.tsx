@@ -1,26 +1,17 @@
 import { DEFAULT_PAGE_GAP } from "consts"
-import { useCustomSelector } from "hooks"
-import React, { Fragment, memo, useCallback } from "react"
-import store from "redux/store"
-import { RootState } from "redux/types"
-import { createSelector } from "reselect"
+import React, { memo, useCallback } from "react"
+import { useBoard } from "state/board"
 import Page from "./Page"
 import { PageOffset } from "./Page/index.types"
 
 const RenderNG = memo(() => {
-    const pageIdSelector = createSelector(
-        (state: RootState) => state.board.currentPageIndex,
-        (state: RootState) => state.board.pageRank,
-        (currentPageIndex, pageRank) => [
-            pageRank[currentPageIndex - 1],
-            pageRank[currentPageIndex],
-            pageRank[currentPageIndex + 1],
-        ]
-    )
-    const pageRankSection = useCustomSelector(pageIdSelector)
-    const pages = pageRankSection.map(
-        (pageId) => store.getState().board.pageCollection[pageId]
-    )
+    const { pageRank, currentPageIndex, pageCollection } = useBoard("RenderNG")
+
+    // TODO: improve undefined typing
+    const pages = new Array(3).fill(undefined).map((_, i) => {
+        const pageId = pageRank[currentPageIndex + i - 1]
+        return pageCollection[pageId]
+    })
 
     const getPageY = useCallback(
         (i: number) => {
@@ -49,15 +40,15 @@ const RenderNG = memo(() => {
 
     return (
         <>
-            {pageRankSection.map((pageId, i) => {
+            {pages.map((page, i) => {
                 if (!isValid(i)) return null
 
                 const pageInfo = getPageInfo(i)
                 return (
                     isValid(i) && (
                         <Page
-                            key={pageId}
-                            page={pages[i]}
+                            key={page.pageId}
+                            page={page}
                             pageOffset={pageInfo}
                         />
                     )

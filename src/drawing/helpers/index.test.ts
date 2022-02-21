@@ -1,14 +1,8 @@
-import { loadIndexedDB } from "redux/localstorage"
-import store from "redux/store"
+import { board } from "state/board"
 import { getVerifiedPages, getVerifiedPageIds } from "."
-import { mockState1, MOCK_PAGE_1, MOCK_PAGE_ID_1 } from "./mocks"
+import { mockBoardState1, MOCK_PAGE_1, MOCK_PAGE_ID_1 } from "./mocks"
 
-store.getState = () => mockState1
-
-// init db
-;(async () => {
-    await loadIndexedDB("board")
-})()
+board.getState = () => mockBoardState1
 
 describe("helpers", () => {
     it("should return only verified page ids", () => {

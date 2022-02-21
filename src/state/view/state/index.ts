@@ -47,12 +47,12 @@ export class View implements GlobalState<ViewState, ViewSubscribers> {
         this.render("layerConfig")
     }
 
-    subscribe(trigger: RenderTrigger, subscription: ViewSubscription) {
+    subscribe(subscription: ViewSubscription, trigger: RenderTrigger) {
         if (this.subscribers[subscription].indexOf(trigger) > -1) return
         this.subscribers[subscription].push(trigger)
     }
 
-    unsubscribe(trigger: RenderTrigger, subscription: ViewSubscription) {
+    unsubscribe(subscription: ViewSubscription, trigger: RenderTrigger) {
         this.subscribers[subscription] = this.subscribers[subscription].filter(
             (subscriber) => subscriber !== trigger
         )

@@ -31,14 +31,14 @@ export class Notification
         this.state = newState
     }
 
-    subscribe(trigger: RenderTrigger, subscription: NotificationSubscription) {
+    subscribe(subscription: NotificationSubscription, trigger: RenderTrigger) {
         if (this.subscribers[subscription].indexOf(trigger) > -1) return
         this.subscribers[subscription].push(trigger)
     }
 
     unsubscribe(
-        trigger: RenderTrigger,
-        subscription: NotificationSubscription
+        subscription: NotificationSubscription,
+        trigger: RenderTrigger
     ) {
         this.subscribers[subscription] = this.subscribers[subscription].filter(
             (subscriber) => subscriber !== trigger
