@@ -34,15 +34,13 @@ import { online } from "../state/online"
 
 export class BoardSession implements Session {
     id?: string
-    apiURL: URL
     user: User
     request: Request
     socket?: WebSocket
     users?: ConnectedUsers
 
-    constructor(url?: string) {
-        this.apiURL = new URL(url ?? API_URL)
-        this.request = new Request(this.apiURL.toString())
+    constructor() {
+        this.request = new Request()
         this.user = {
             alias: uniqueNamesGenerator({
                 dictionaries: [adjectives, colors, animals],
@@ -53,17 +51,17 @@ export class BoardSession implements Session {
         }
     }
 
+    setToken(token: string): void {
+        this.request.token = token
+    }
+
     updateUser(user: Partial<User>): void {
         assign(this.user, user)
     }
 
-    setAPIURL(url: URL): void {
-        this.apiURL = url
-    }
-
     setID(sessionId: string): Session {
         this.id = sessionId
-        this.request = new Request(this.apiURL.toString(), this.id)
+        this.request = new Request(this.id)
         return this
     }
 
@@ -80,7 +78,7 @@ export class BoardSession implements Session {
         this.user.id = id
 
         return new Promise((resolve, reject) => {
-            const url = new URL(this.apiURL.toString())
+            const url = new URL(API_URL)
             url.protocol = url.protocol.replace("http", "ws")
             this.socket = new WebSocket(
                 `${url.toString()}b/${this.id}/users/${this.user.id}/socket`
@@ -255,10 +253,7 @@ export class BoardSession implements Session {
     }
 
     attachURL(attachId: string): URL {
-        return new URL(
-            attachId,
-            `${this.apiURL.toString()}b/${this.id}/attachments/`
-        )
+        return new URL(attachId, `${API_URL}/b/${this.id}/attachments/`)
     }
 
     userConnect(user: User): void {

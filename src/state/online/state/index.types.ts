@@ -4,6 +4,9 @@ import { Subscribers } from "state/index.types"
 export interface OnlineState {
     dialogState: DialogState
     session?: Session
+    token?: string
+    isAuthorized: () => boolean
+    isSignedIn: () => boolean
 }
 
 export enum DialogState {

@@ -22,6 +22,7 @@ export class Request {
     baseURL: string
     sessionId?: string
     userId?: string
+    token?: string
 
     timeout = 3000
 
@@ -30,8 +31,8 @@ export class Request {
     pdfRequest: AxiosInstance
     transformResponse: (data: string) => string
 
-    constructor(baseURL: string, sessionId?: string) {
-        this.baseURL = `${baseURL}b`
+    constructor(sessionId?: string) {
+        this.baseURL = `${API_URL}/b`
         this.sessionId = sessionId
         this.transformResponse = (data) => {
             try {
@@ -60,12 +61,13 @@ export class Request {
 
     getHeaders(useUserValidation?: boolean): AxiosRequestHeaders {
         const headers: AxiosRequestHeaders = {
-            // prettier-ignore
-            "Accept": "application/json",
             "Content-Type": "application/json",
         }
         if (useUserValidation) {
             headers[HEADER_USER_ID] = this.userId ?? ""
+        }
+        if (this.token) {
+            headers.Authorization = `Bearer ${this.token}`
         }
         return headers
     }

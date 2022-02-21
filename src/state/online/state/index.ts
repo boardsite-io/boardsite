@@ -1,4 +1,5 @@
 import { Session } from "api/types"
+import { validateToken } from "api/auth"
 import {
     DialogState,
     OnlineState,
@@ -10,6 +11,8 @@ import { GlobalState, RenderTrigger } from "../../index.types"
 export class Online implements GlobalState<OnlineState, OnlineSubscribers> {
     state: OnlineState = {
         dialogState: DialogState.InitialSelectionFirstLoad,
+        isAuthorized: () => false,
+        isSignedIn: () => !!this.state.token,
     }
 
     subscribers: OnlineSubscribers = { session: [] }
@@ -29,7 +32,20 @@ export class Online implements GlobalState<OnlineState, OnlineSubscribers> {
 
     setSession(session: Session): void {
         this.state.session = session
+        this.state.session.setToken(this.state.token ?? "")
         this.render("session")
+    }
+
+    async setToken(token: string): Promise<void> {
+        this.state.session?.setToken(token)
+        this.state.token = token
+        const isAuthorized = await validateToken(token)
+        this.state.isAuthorized = () => isAuthorized
+        this.render("session")
+    }
+
+    clearToken(): void {
+        this.setToken("")
     }
 
     subscribe(subscription: OnlineSubscription, trigger: RenderTrigger) {
