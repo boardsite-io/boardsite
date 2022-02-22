@@ -1,7 +1,7 @@
 import { Stroke } from "drawing/stroke/index.types"
 import { assign, cloneDeep, keys, pick } from "lodash"
 import { loadIndexedDB, saveIndexedDB } from "storage/local"
-import { GlobalState, RenderTrigger } from "../../index.types"
+import { GlobalState, RenderTrigger, SerializedState } from "../../index.types"
 import { deserializeBoardState, serializeBoardState } from "../serializers"
 import { getDefaultBoardState } from "./default"
 import {
@@ -20,7 +20,6 @@ import {
     PageCollection,
     PageRank,
     SetPageMetaAction,
-    SerializedBoardState,
 } from "./index.types"
 import {
     addAction,
@@ -392,38 +391,26 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
         this.render("RenderNG")
     }
 
-    getSerializedState(): SerializedBoardState {
+    getSerializedState(): SerializedState<BoardState> {
         return serializeBoardState(this.getState())
     }
 
     async setSerializedState(
-        serializedBoardState: Partial<SerializedBoardState>
+        serializedState: SerializedState<BoardState>
     ): Promise<void> {
-        try {
-            const deserializedBoardState = await deserializeBoardState(
-                serializedBoardState
-            )
-
-            this.setState(deserializedBoardState)
-        } catch (error) {
-            // TODO: Notification or catch in deserialize
-        }
+        const deserializedState = await deserializeBoardState(serializedState)
+        this.setState(deserializedState)
     }
 
-    async saveToLocalStorage(): Promise<void> {
-        const serializedBoardState = this.getSerializedState()
-        await saveIndexedDB("board", serializedBoardState)
+    saveToLocalStorage(): void {
+        const serializedState = this.getSerializedState()
+        saveIndexedDB("board", serializedState)
     }
 
     async loadFromLocalStorage(): Promise<void> {
-        const serializedBoardState = await loadIndexedDB("board")
-        if (serializedBoardState === null) return
-
-        const deserializedBoardState = await deserializeBoardState(
-            serializedBoardState
-        )
-
-        this.setState(deserializedBoardState)
+        const serializedState = await loadIndexedDB("board")
+        if (serializedState === null) return
+        await this.setSerializedState(serializedState)
     }
 
     subscribe(subscription: BoardSubscriber, trigger: RenderTrigger) {

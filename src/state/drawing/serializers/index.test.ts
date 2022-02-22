@@ -6,8 +6,9 @@ import {
     serializeDrawingState,
 } from "."
 import { getDefaultDrawingState } from "../state/default"
-import { SerializedDrawingState } from "../state/index.types"
 import stateV1 from "./__test__/stateV1.json"
+import { SerializedState } from "../../index.types"
+import { DrawingState } from "../state/index.types"
 
 describe("board reducer state", () => {
     it("should serialize the default state", () => {
@@ -31,7 +32,7 @@ describe("board reducer state", () => {
 
     it("should deserialize the state version 1.0", async () => {
         const drawingState = await deserializeDrawingState(
-            cloneDeep(stateV1) as Partial<SerializedDrawingState>
+            cloneDeep(stateV1) as Partial<SerializedState<DrawingState>>
         )
         const got = serializeDrawingState(drawingState)
         const want = stateV1

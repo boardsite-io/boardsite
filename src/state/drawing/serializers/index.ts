@@ -1,6 +1,7 @@
 import { assign, cloneDeep, keys, pick } from "lodash"
 import { getDefaultDrawingState } from "../state/default"
-import { DrawingState, SerializedDrawingState } from "../state/index.types"
+import { DrawingState } from "../state/index.types"
+import { SerializedState } from "../../index.types"
 
 /*
     Version of the board state reducer to allow backward compatibility for stored data
@@ -10,7 +11,7 @@ export const CURRENT_DRAWING_VERSION = "1.0"
 
 export const serializeDrawingState = (
     state: DrawingState
-): SerializedDrawingState => {
+): SerializedState<DrawingState> => {
     const stateClone = cloneDeep<DrawingState>(state)
     stateClone.erasedStrokes = {}
 
@@ -18,7 +19,7 @@ export const serializeDrawingState = (
 }
 
 export const deserializeDrawingState = async (
-    serialisedState: Partial<SerializedDrawingState>
+    serialisedState: SerializedState<DrawingState>
 ): Promise<DrawingState> => {
     const newDrawingState = getDefaultDrawingState()
     const { version } = serialisedState // avoid side-effects

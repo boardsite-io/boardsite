@@ -26,5 +26,3 @@ export interface DrawingState {
     favoriteTools: Tool[]
     erasedStrokes: StrokeCollection
 }
-
-export type SerializedDrawingState = DrawingState & { version?: string }
