@@ -75,10 +75,14 @@ export const deserializeBoardState = async (
     // reload attachments
     await Promise.all(
         Object.keys(newBoardState.attachments).map(async (attachId) => {
-            const attachment = await newAttachment(
-                newBoardState.attachments[attachId]
+            const attachment = newBoardState.attachments[attachId]
+            // make sure cachedBlob is an Uint8Array, not an object due to inflate
+            attachment.cachedBlob = new Uint8Array(
+                Object.values(attachment.cachedBlob)
+            )
+            newBoardState.attachments[attachId] = await newAttachment(
+                attachment
             ).render()
-            newBoardState.attachments[attachId] = attachment
         })
     )
 
