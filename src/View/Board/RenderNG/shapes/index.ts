@@ -2,7 +2,7 @@ import { ERASER_STROKE, SELECTION_FILL } from "App/theme"
 import { LiveStroke } from "drawing/livestroke/index.types"
 import { ToolType, Stroke } from "drawing/stroke/index.types"
 import { StrokeStyle } from "../index.types"
-import { ERASER_WIDTH } from "../../../../consts"
+import { ERASED_OPACITY, ERASER_WIDTH } from "../../../../consts"
 
 export const shiftPoints = (points: number[], x: number, y: number) =>
     points.map((p, i) => (i % 2 === 0 ? p + x : p + y))
@@ -11,11 +11,33 @@ export const draw = (
     ctx: CanvasRenderingContext2D,
     stroke: Stroke | LiveStroke
 ) => {
+    ctx.fillStyle = strokeStyleToRGBA(stroke.style)
+    ctx.strokeStyle = strokeStyleToRGBA(stroke.style)
+    drawStroke(ctx, stroke)
+}
+
+export const drawErased = (
+    ctx: CanvasRenderingContext2D,
+    stroke: Stroke | LiveStroke
+) => {
+    ctx.fillStyle = strokeStyleToRGBA({
+        ...stroke.style,
+        opacity: ERASED_OPACITY,
+    })
+    ctx.strokeStyle = strokeStyleToRGBA({
+        ...stroke.style,
+        opacity: ERASED_OPACITY,
+    })
+    drawStroke(ctx, stroke)
+}
+
+const drawStroke = (
+    ctx: CanvasRenderingContext2D,
+    stroke: Stroke | LiveStroke
+) => {
     ctx.lineCap = "round"
     ctx.lineJoin = "round"
     ctx.lineWidth = stroke.style.width
-    ctx.fillStyle = strokeStyleToRGBA(stroke.style)
-    ctx.strokeStyle = strokeStyleToRGBA(stroke.style)
 
     const { points, x, y, scaleX, scaleY } = stroke
     const sX = scaleX ?? 1
@@ -88,8 +110,7 @@ const strokeStyleToRGBA = (style: StrokeStyle): string => {
     const r = parseInt(style.color.slice(1, 3), 16)
     const g = parseInt(style.color.slice(3, 5), 16)
     const b = parseInt(style.color.slice(5, 7), 16)
-    const alpha = Math.floor(255 * style.opacity)
-    return `rgba(${r},${g},${b},${alpha})`
+    return `rgba(${r},${g},${b},${style.opacity})`
 }
 
 export const drawHitboxRects = (

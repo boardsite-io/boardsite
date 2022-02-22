@@ -1,13 +1,15 @@
 import { StrokeCollection } from "drawing/stroke/index.types"
 import { useEffect } from "react"
 import { useBoard } from "state/board"
-import { draw } from "View/Board/RenderNG/shapes"
+import { useDrawing } from "state/drawing"
+import { draw, drawErased } from "View/Board/RenderNG/shapes"
 
 export const useRender = (
     strokes: StrokeCollection,
     canvasRef: React.RefObject<HTMLCanvasElement>
 ) => {
     useBoard("PageContent")
+    const { erasedStrokes } = useDrawing("PageContent")
 
     useEffect(() => {
         const canvas = canvasRef.current
@@ -15,7 +17,11 @@ export const useRender = (
         if (!ctx) return
 
         Object.values(strokes).forEach((stroke) => {
-            draw(ctx, stroke)
+            if (erasedStrokes[stroke.id]) {
+                drawErased(ctx, stroke)
+            } else {
+                draw(ctx, stroke)
+            }
             // drawHitboxRects(ctx, stroke) // Hitbox debugging
         })
     })

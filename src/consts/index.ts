@@ -62,6 +62,7 @@ export const TR_BORDER_STROKE_WIDTH = 1
 export const TR_ANCHOR_FILL = "#00a2ff38"
 
 export const ERASER_WIDTH = 3
+export const ERASED_OPACITY = 0.4
 export const DEFAULT_TOOL = ToolType.Pen
 // allow drawing with finger
 export const DEFAULT_DIRECTDRAW = true
