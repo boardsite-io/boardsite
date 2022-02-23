@@ -59,7 +59,9 @@ export class Online implements GlobalState<OnlineState, OnlineSubscribers> {
         serializedDrawingState: SerializedState<DrawingState>
     ): Promise<void> {
         const { token } = await deserializeOnlineToken(serializedDrawingState)
-        await this.setToken(token ?? "")
+        // dont erase an existing token
+        if (!token) return
+        await this.setToken(token)
     }
 
     saveToLocalStorage(): void {
