@@ -2,8 +2,9 @@
 import { cloneDeep } from "lodash"
 import { BOARD_VERSION, deserializeBoardState, serializeBoardState } from "."
 import { getDefaultBoardState } from "../state/default"
-import { SerializedBoardState } from "../state/index.types"
 import stateV1 from "./__test__/stateV1.json"
+import { SerializedState } from "../../index.types"
+import { BoardState } from "../state/index.types"
 
 describe("board reducer state", () => {
     it("should serialize the default state", () => {
@@ -30,7 +31,9 @@ describe("board reducer state", () => {
 
     it("should deserialize the state version 1.0", async () => {
         const boardState = await deserializeBoardState(
-            cloneDeep(stateV1) as unknown as Partial<SerializedBoardState> // TODO
+            cloneDeep(stateV1) as unknown as Partial<
+                SerializedState<BoardState>
+            > // TODO
         )
         const got = serializeBoardState(boardState)
         const want = stateV1

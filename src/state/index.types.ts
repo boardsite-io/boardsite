@@ -17,3 +17,5 @@ export interface GlobalState<T, U> {
 export type RenderTrigger = React.Dispatch<React.SetStateAction<object>>
 
 export type Subscribers = RenderTrigger[]
+
+export type SerializedState<T> = Partial<T> & { version?: string }

@@ -3,7 +3,8 @@ import { BoardPage } from "drawing/page"
 import { BoardStroke } from "drawing/stroke"
 import { assign, cloneDeep, keys, pick } from "lodash"
 import { getDefaultBoardState } from "../state/default"
-import { BoardState, SerializedBoardState } from "../state/index.types"
+import { BoardState } from "../state/index.types"
+import { SerializedState } from "../../index.types"
 
 /*
     Version of the board state reducer to allow backward compatibility for stored data
@@ -13,7 +14,7 @@ export const BOARD_VERSION = "1.0"
 
 export const serializeBoardState = (
     state: BoardState
-): SerializedBoardState => {
+): SerializedState<BoardState> => {
     const stateClone = cloneDeep<BoardState>(state)
 
     // dont pollute the serialized object with image data
@@ -40,7 +41,7 @@ export const serializeBoardState = (
 }
 
 export const deserializeBoardState = async (
-    serializedState: Partial<SerializedBoardState>
+    serializedState: SerializedState<BoardState>
 ): Promise<BoardState> => {
     const newBoardState = getDefaultBoardState()
     if (!serializedState.version) {

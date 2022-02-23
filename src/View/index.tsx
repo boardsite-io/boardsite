@@ -11,12 +11,15 @@ import SessionMenu from "./SessionMenu"
 import MainMenu from "./MainMenu"
 import Notification from "./Notification"
 import Shortcuts from "./Shortcuts"
+import { online } from "../state/online"
 
 const View: React.FC = () => {
     useKeyboardShortcuts()
 
     useEffect(() => {
+        // TODO error handling
         drawing.loadFromLocalStorage()
+        online.loadFromLocalStorage()
     }, [])
 
     return (

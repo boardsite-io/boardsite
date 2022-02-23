@@ -33,8 +33,6 @@ export interface BoardState {
     transformPagePosition?: Point
 }
 
-export type SerializedBoardState = BoardState & { version?: string }
-
 export type PageRank = string[]
 export type RenderedData = ImageData[]
 

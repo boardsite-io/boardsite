@@ -1,14 +1,13 @@
 import { StrokeCollection, Tool, ToolType } from "drawing/stroke/index.types"
 import { loadLocalStorage, saveLocalStorage } from "storage/local"
 import { PageBackgroundStyle, PageSize } from "state/board/state/index.types"
-import { GlobalState, RenderTrigger } from "../../index.types"
+import { GlobalState, RenderTrigger, SerializedState } from "../../index.types"
 import { getDefaultDrawingState } from "./default"
 import { isDrawType } from "../util"
 import {
     DrawingState,
     DrawingSubscriber,
     DrawingSubscribers,
-    SerializedDrawingState,
 } from "./index.types"
 import { deserializeDrawingState, serializeDrawingState } from "../serializers"
 
@@ -129,19 +128,15 @@ export class Drawing implements GlobalState<DrawingState, DrawingSubscribers> {
         this.renderAll()
     }
 
-    getSerializedState(): SerializedDrawingState {
+    getSerializedState(): SerializedState<DrawingState> {
         return serializeDrawingState(this.getState())
     }
 
     async setSerializedState(
-        serializedDrawingState: Partial<SerializedDrawingState>
+        serializedState: SerializedState<DrawingState>
     ): Promise<void> {
-        try {
-            const deserializedDrawingState = await deserializeDrawingState(
-                serializedDrawingState
-            )
-            this.setState(deserializedDrawingState)
-        } catch (error) {}
+        const deserializedState = await deserializeDrawingState(serializedState)
+        this.setState(deserializedState)
     }
 
     saveToLocalStorage(): void {
@@ -150,16 +145,9 @@ export class Drawing implements GlobalState<DrawingState, DrawingSubscribers> {
     }
 
     async loadFromLocalStorage(): Promise<void> {
-        try {
-            const serializedDrawingState = await loadLocalStorage("drawing")
-            if (serializedDrawingState === null) return
-
-            const deserializedDrawingState = await deserializeDrawingState(
-                serializedDrawingState
-            )
-
-            this.setState(deserializedDrawingState)
-        } catch (error) {}
+        const serializedState = await loadLocalStorage("drawing")
+        if (serializedState === null) return
+        await this.setSerializedState(serializedState)
     }
 
     subscribe(subscription: DrawingSubscriber, trigger: RenderTrigger) {

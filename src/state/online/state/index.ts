@@ -1,12 +1,15 @@
 import { Session } from "api/types"
 import { validateToken } from "api/auth"
+import { loadLocalStorage, saveLocalStorage } from "storage/local"
 import {
     DialogState,
     OnlineState,
     OnlineSubscribers,
     OnlineSubscription,
 } from "./index.types"
-import { GlobalState, RenderTrigger } from "../../index.types"
+import { GlobalState, RenderTrigger, SerializedState } from "../../index.types"
+import { DrawingState } from "../../drawing/state/index.types"
+import { deserializeOnlineToken, serializeOnlineState } from "../serializers"
 
 export class Online implements GlobalState<OnlineState, OnlineSubscribers> {
     state: OnlineState = {
@@ -48,6 +51,27 @@ export class Online implements GlobalState<OnlineState, OnlineSubscribers> {
         this.setToken("")
     }
 
+    getSerializedState(): SerializedState<DrawingState> {
+        return serializeOnlineState(this.getState())
+    }
+
+    async setSerializedState(
+        serializedDrawingState: SerializedState<DrawingState>
+    ): Promise<void> {
+        const { token } = await deserializeOnlineToken(serializedDrawingState)
+        await this.setToken(token ?? "")
+    }
+
+    saveToLocalStorage(): void {
+        saveLocalStorage("online", this.getSerializedState())
+    }
+
+    async loadFromLocalStorage(): Promise<void> {
+        const serializedState = await loadLocalStorage("online")
+        if (serializedState === null) return
+        await this.setSerializedState(serializedState)
+    }
+
     subscribe(subscription: OnlineSubscription, trigger: RenderTrigger) {
         if (this.subscribers[subscription].indexOf(trigger) > -1) return
         this.subscribers[subscription].push(trigger)
@@ -63,6 +87,9 @@ export class Online implements GlobalState<OnlineState, OnlineSubscribers> {
         this.subscribers[subscription].forEach((render) => {
             render({})
         })
+
+        // Save to local storage on each render
+        this.saveToLocalStorage()
     }
 }
 
