@@ -16,6 +16,7 @@ export type DrawingSubscriber =
     | "SettingsMenu" // direct draw
     | "useViewControl" // pan mode
     | "useLiveStroke" // pan mode
+    | "PageContent" // erased strokes
 
 export type DrawingSubscribers = Record<DrawingSubscriber, RenderTrigger[]>
 

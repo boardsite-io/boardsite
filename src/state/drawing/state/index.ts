@@ -28,6 +28,7 @@ export class Drawing implements GlobalState<DrawingState, DrawingSubscribers> {
         WidthPicker: [],
         useLiveStroke: [],
         useViewControl: [],
+        PageContent: [],
     }
 
     setColor(color: string) {
@@ -49,6 +50,7 @@ export class Drawing implements GlobalState<DrawingState, DrawingSubscribers> {
         Object.keys(strokes).forEach((id) => {
             this.state.erasedStrokes[id] = strokes[id]
         })
+        this.render("PageContent")
     }
 
     clearErasedStrokes(): void {
