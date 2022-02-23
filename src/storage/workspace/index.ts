@@ -26,7 +26,7 @@ export const handleImportWorkspace = async () => {
                 inflate(readFile, { to: "string" })
             )
 
-            board.setSerializedState(serializedBoardState)
+            await board.setSerializedState(serializedBoardState)
             menu.closeMainMenu()
         } else {
             handleNotification("ImportMenu.Error.CouldntLoadWorkspace")
