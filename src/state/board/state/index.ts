@@ -333,8 +333,8 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
     }
 
     setTransformStrokes(strokes: Stroke[], pageId: PageId): void {
+        this.clearTransform()
         this.state.transformStrokes = strokes
-
         this.pageSubscribers[pageId]?.transformer?.({})
     }
 

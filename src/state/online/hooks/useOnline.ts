@@ -11,7 +11,7 @@ export const useOnline = () => {
         return () => {
             online.unsubscribe("session", trigger)
         }
-    }, [])
+    }, [trigger])
 
     return online.getState()
 }

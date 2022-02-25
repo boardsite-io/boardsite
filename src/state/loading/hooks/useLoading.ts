@@ -11,7 +11,7 @@ export const useLoading = () => {
         return () => {
             loading.unsubscribe("loading", trigger)
         }
-    }, [])
+    }, [trigger])
 
     return loading.getState()
 }

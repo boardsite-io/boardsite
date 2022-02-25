@@ -30,7 +30,7 @@ export const useLiveStroke = (
 
             drawLiveStroke(liveStroke, canvasRef)
         },
-        [isMouseOrTouchDown]
+        [canvasRef, pageId]
     )
 
     const moveLiveStroke = useCallback(
@@ -38,7 +38,7 @@ export const useLiveStroke = (
             liveStroke.move(point)
             drawLiveStroke(liveStroke, canvasRef)
         },
-        [isMouseOrTouchDown]
+        [canvasRef]
     )
 
     const endLiveStroke = useCallback(
@@ -52,7 +52,7 @@ export const useLiveStroke = (
 
             isMouseOrTouchDown = false
         },
-        [isMouseOrTouchDown]
+        [canvasRef]
     )
 
     // cancel stroke when right / left+right mouse
@@ -64,7 +64,7 @@ export const useLiveStroke = (
         }
 
         isMouseOrTouchDown = false
-    }, [])
+    }, [canvasRef])
 
     const onMouseDown = useCallback(
         (e: MouseEvent<HTMLCanvasElement>) => {
@@ -76,7 +76,7 @@ export const useLiveStroke = (
                 startLiveStroke(point)
             }
         },
-        [pageOffset, isMouseOrTouchDown]
+        [startLiveStroke, pageOffset]
     )
 
     const onMouseMove = useCallback(
@@ -91,7 +91,7 @@ export const useLiveStroke = (
                 resetLiveStroke()
             }
         },
-        [pageOffset, isMouseOrTouchDown, moveLiveStroke]
+        [pageOffset, resetLiveStroke, moveLiveStroke]
     )
 
     const onMouseUp = useCallback(
@@ -104,7 +104,7 @@ export const useLiveStroke = (
                 endLiveStroke(point)
             }
         },
-        [pageOffset, isMouseOrTouchDown, endLiveStroke]
+        [pageOffset, endLiveStroke]
     )
 
     const onMouseLeave = useCallback(
@@ -137,7 +137,7 @@ export const useLiveStroke = (
                 resetLiveStroke()
             }
         },
-        [pageOffset, isMouseOrTouchDown, liveStroke, moveLiveStroke]
+        [pageOffset, resetLiveStroke, moveLiveStroke]
     )
 
     const onTouchEnd = useCallback(
@@ -149,7 +149,7 @@ export const useLiveStroke = (
                 endLiveStroke(point)
             }
         },
-        [pageOffset, isMouseOrTouchDown, endLiveStroke]
+        [pageOffset, endLiveStroke]
     )
 
     const onTouchCancel = useCallback(

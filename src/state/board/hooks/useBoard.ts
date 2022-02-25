@@ -12,7 +12,7 @@ export const useBoard = (subscriber: BoardSubscriber) => {
         return () => {
             board.unsubscribe(subscriber, trigger)
         }
-    }, [])
+    }, [subscriber, trigger])
 
     return board.getState()
 }

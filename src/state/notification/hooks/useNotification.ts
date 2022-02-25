@@ -11,7 +11,7 @@ export const useNotification = () => {
         return () => {
             notification.unsubscribe("notification", trigger)
         }
-    }, [])
+    }, [trigger])
 
     return notification.getState()
 }

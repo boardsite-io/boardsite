@@ -12,7 +12,7 @@ export const useDrawing = (subscriber: DrawingSubscriber) => {
         return () => {
             drawing.unsubscribe(subscriber, trigger)
         }
-    }, [])
+    }, [subscriber, trigger])
 
     return drawing.getState()
 }

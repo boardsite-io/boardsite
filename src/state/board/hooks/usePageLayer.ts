@@ -12,7 +12,7 @@ export const usePageLayer = (pageLayer: PageLayer, pageId: PageId) => {
         return () => {
             board.unsubscribePage(pageLayer, pageId)
         }
-    }, [])
+    }, [pageLayer, pageId, trigger])
 
     return board.getState()
 }

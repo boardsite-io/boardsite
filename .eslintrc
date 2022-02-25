@@ -14,8 +14,9 @@
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended"
     ],
-    "plugins": ["jsx-a11y", "react", "prettier", "@typescript-eslint", "import"],
+    "plugins": ["jsx-a11y", "react", "react-hooks", "prettier", "@typescript-eslint", "import"],
     "rules": {
+        "react-hooks/exhaustive-deps": 1,
         "no-shadow": 0, // Enum bug fix
         "arrow-body-style": 0,
         "semi": 0,

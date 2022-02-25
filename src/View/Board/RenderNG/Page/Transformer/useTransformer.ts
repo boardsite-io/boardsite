@@ -100,7 +100,7 @@ export const useTransformer = (
 
             lastPoint = point
         },
-        [bounds]
+        [bounds, trRef]
     )
 
     const onEnd = useCallback(
@@ -118,7 +118,7 @@ export const useTransformer = (
             }
             isMouseOrTouchDown = false
         },
-        [bounds, onMove, transformStrokes]
+        [bounds, onMove, transformStrokes, page.pageId, trRef]
     )
 
     const onMouseDown = useCallback(
@@ -131,7 +131,7 @@ export const useTransformer = (
                 onStart(point, e)
             }
         },
-        [pageOffset, onStart, transformStrokes]
+        [pageOffset, onStart]
     )
 
     const onMouseMove = useCallback(
@@ -144,7 +144,7 @@ export const useTransformer = (
                 onMove(point)
             }
         },
-        [pageOffset, onMove, bounds]
+        [pageOffset, onMove]
     )
 
     const onMouseUp = useCallback(
@@ -160,9 +160,12 @@ export const useTransformer = (
         [pageOffset, onEnd]
     )
 
-    const onMouseLeave = useCallback((e: MouseEvent<HTMLDivElement>) => {
-        onMouseUp(e)
-    }, [])
+    const onMouseLeave = useCallback(
+        (e: MouseEvent<HTMLDivElement>) => {
+            onMouseUp(e)
+        },
+        [onMouseUp]
+    )
 
     const onTouchStart = useCallback(
         (e: TouchEvent<HTMLDivElement>) => {
@@ -174,7 +177,7 @@ export const useTransformer = (
                 onStart(point, e)
             }
         },
-        [onStart]
+        [onStart, pageOffset]
     )
 
     const onTouchMove = useCallback(
@@ -187,7 +190,7 @@ export const useTransformer = (
                 onMove(point)
             }
         },
-        [onMove]
+        [onMove, pageOffset]
     )
 
     const onTouchEnd = useCallback(
@@ -200,7 +203,7 @@ export const useTransformer = (
                 onEnd(point)
             }
         },
-        [onEnd]
+        [onEnd, pageOffset]
     )
 
     const onTouchCancel = useCallback(
