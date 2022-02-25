@@ -12,6 +12,7 @@ import { menu, useMenu } from "state/menu"
 import { MainMenuBarWrap } from "./index.styled"
 import ViewButton from "./ViewButton"
 import PageButton from "./PageButton"
+import SessionButton from "./SessionButton"
 
 const onClickGeneral = () => {
     menu.setMainMenu(MainMenuState.General)
@@ -21,6 +22,9 @@ const onClickView = () => {
 }
 const onClickPage = () => {
     menu.setMainMenu(MainMenuState.Page)
+}
+const onClickSession = () => {
+    menu.setMainMenu(MainMenuState.Session)
 }
 
 const onEnter = (newState: MainMenuState, currentState: MainMenuState) => {
@@ -41,6 +45,9 @@ const MainMenuBar: React.FC = memo(() => {
     }, [mainMenuState])
     const onMouseEnterPage = useCallback(() => {
         onEnter(MainMenuState.Page, mainMenuState)
+    }, [mainMenuState])
+    const onMouseEnterSession = useCallback(() => {
+        onEnter(MainMenuState.Session, mainMenuState)
     }, [mainMenuState])
 
     return (
@@ -76,6 +83,17 @@ const MainMenuBar: React.FC = memo(() => {
                 <ViewButton
                     onClick={onClickView}
                     onMouseEnter={onMouseEnterView}
+                />
+            </ToolTip>
+            <VerticalRule />
+            <ToolTip
+                deactivate={mainMenuState !== MainMenuState.Closed}
+                position={Position.BottomRight}
+                text={<FormattedMessage id="Menu.Bar.Session.ToolTip" />}
+            >
+                <SessionButton
+                    onClick={onClickSession}
+                    onMouseEnter={onMouseEnterSession}
                 />
             </ToolTip>
         </MainMenuBarWrap>

@@ -5,6 +5,7 @@ export enum MainMenuState {
     General,
     View,
     Page,
+    Session,
 }
 
 export enum MainSubMenuState {
@@ -15,6 +16,7 @@ export enum MainSubMenuState {
     PageSize,
     GoTo,
     Settings,
+    SessionSettings,
 }
 
 export interface MenuState {

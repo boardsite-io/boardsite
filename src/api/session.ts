@@ -111,6 +111,8 @@ export class BoardSession implements Session {
             // create a page if there are none yet
             await this.request.postPages([new BoardPage()], [0])
         }
+
+        online.render("session")
     }
 
     isConnected(): boolean {
@@ -125,6 +127,9 @@ export class BoardSession implements Session {
         this.socket?.close()
         this.users = {}
         board.clearAttachments()
+        board.deleteAllPages()
+        board.addPages({ data: [{ page: new BoardPage(), index: -1 }] })
+        online.render("session")
     }
 
     async synchronize(
@@ -261,10 +266,12 @@ export class BoardSession implements Session {
             ...this.users,
             [user.id as string]: user,
         }
+        online.render("session")
     }
 
     userDisconnect({ id }: User): void {
         delete this.users?.[id as string]
+        online.render("session")
     }
 
     receive(message: Message<unknown>): void {

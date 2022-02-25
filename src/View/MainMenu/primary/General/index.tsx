@@ -2,7 +2,6 @@ import React from "react"
 import { FormattedMessage } from "language"
 import { HorizontalRule } from "components"
 import { isConnected } from "api/session"
-import { BsPeople } from "react-icons/bs"
 import { FaGithub } from "react-icons/fa"
 import { SiGithubsponsors } from "react-icons/si"
 import { isMobile } from "react-device-detect"
@@ -58,13 +57,6 @@ const GeneralMenu = () => {
                 isMainMenu
                 text={<FormattedMessage id="Menu.General.Edit" />}
                 expandMenu={MainSubMenuState.Edit}
-            />
-            <HorizontalRule />
-            <MenuItem
-                isMainMenu
-                text={<FormattedMessage id="Menu.General.OnlineSession" />}
-                icon={<BsPeople id="transitory-icon" />}
-                onClick={onClickOnlineSession}
             />
             <HorizontalRule />
             <MenuItem
