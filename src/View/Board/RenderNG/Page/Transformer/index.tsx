@@ -26,9 +26,13 @@ export const Transformer: React.FC<PageProps> = memo(({ page, pageOffset }) => {
         onTouchMove,
         onTouchEnd,
         onTouchCancel,
-    } = useTransformer(trRef, canvasRef, pageOffset)
+    } = useTransformer(trRef, canvasRef, pageOffset, page)
 
-    if (transformStrokes === undefined || transformStrokes.length === 0) {
+    if (
+        transformStrokes === undefined ||
+        transformStrokes.length === 0 ||
+        transformStrokes[0].pageId !== page.pageId
+    ) {
         return null
     }
 

@@ -191,7 +191,10 @@ export class BoardLiveStroke implements LiveStroke {
                     strokes,
                     getSelectionPolygon(stroke.points)
                 )
-                board.setTransformStrokes(Object.values(selectedStrokes))
+                board.setTransformStrokes(
+                    Object.values(selectedStrokes),
+                    stroke.pageId
+                )
                 break
             }
             default: {

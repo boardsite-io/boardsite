@@ -1,7 +1,8 @@
 import { handleAddStrokes, handleDeleteStrokes } from "drawing/handlers"
 import { Point } from "drawing/stroke/index.types"
 import { MouseEvent, TouchEvent, useCallback, useEffect } from "react"
-import { board, useBoard } from "state/board"
+import { board, usePageLayer } from "state/board"
+import { Page } from "state/board/state/index.types"
 import { draw } from "../../shapes"
 import { PageOffset } from "../index.types"
 import {
@@ -30,9 +31,10 @@ let isMouseOrTouchDown = false
 export const useTransformer = (
     trRef: React.RefObject<HTMLDivElement>,
     canvasRef: React.RefObject<HTMLCanvasElement>,
-    pageOffset: PageOffset
+    pageOffset: PageOffset,
+    page: Page
 ) => {
-    const { transformStrokes } = useBoard("Transformer")
+    const { transformStrokes } = usePageLayer("transformer", page.pageId)
 
     const bounds = getOuterBounds(transformStrokes)
 
@@ -112,7 +114,7 @@ export const useTransformer = (
                 )
 
                 handleAddStrokes(newStrokes, true)
-                board.setTransformStrokes(newStrokes)
+                board.setTransformStrokes(newStrokes, page.pageId)
             }
             isMouseOrTouchDown = false
         },

@@ -20,6 +20,9 @@ import {
     PageCollection,
     PageRank,
     SetPageMetaAction,
+    PageSubscribers,
+    PageLayer,
+    PageId,
 } from "./index.types"
 import {
     addAction,
@@ -39,12 +42,11 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
     subscribers: BoardSubscribers = {
         EditMenu: [],
         MenuPageButton: [],
-        PageBackground: [],
-        PageContent: [],
         RenderNG: [],
         SettingsMenu: [],
-        Transformer: [],
     }
+
+    pageSubscribers: PageSubscribers = {}
 
     addStrokes(addStrokesAction: AddStrokesAction): void {
         const {
@@ -324,12 +326,16 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
     clearTransform(): void {
         this.state.transformStrokes = []
         this.state.strokeUpdates = []
-        this.render("Transformer")
+
+        Object.values(this.pageSubscribers).forEach((pageLayers) =>
+            pageLayers?.transformer?.({})
+        )
     }
 
-    setTransformStrokes(strokes: Stroke[]): void {
+    setTransformStrokes(strokes: Stroke[], pageId: PageId): void {
         this.state.transformStrokes = strokes
-        this.render("Transformer")
+
+        this.pageSubscribers[pageId]?.transformer?.({})
     }
 
     setPageMeta(setPageMetaAction: SetPageMetaAction): void {
@@ -422,6 +428,28 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
         this.subscribers[subscription] = this.subscribers[subscription].filter(
             (subscriber) => subscriber !== trigger
         )
+    }
+
+    subscribePage(
+        pageLayer: PageLayer,
+        pageId: PageId,
+        trigger: RenderTrigger
+    ): void {
+        if (!this.pageSubscribers[pageId]) {
+            this.pageSubscribers[pageId] = {}
+        }
+        this.pageSubscribers[pageId] = {
+            ...this.pageSubscribers[pageId],
+            [pageLayer]: trigger,
+        }
+    }
+
+    unsubscribePage(pageLayer: PageLayer, pageId: PageId): void {
+        delete this.pageSubscribers[pageId]?.[pageLayer]
+    }
+
+    renderPageLayer(pageLayer: PageLayer, pageId: PageId): void {
+        this.pageSubscribers[pageId]?.[pageLayer]?.({})
     }
 
     render(...subscriptions: BoardSubscriber[]): void {

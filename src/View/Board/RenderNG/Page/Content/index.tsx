@@ -8,7 +8,7 @@ export const Content: React.FC<PageProps> = memo(({ page, pageOffset }) => {
     const canvasRef = React.useRef<HTMLCanvasElement>(null)
     const layerState = useLayerState(canvasRef)
 
-    useRender(page.strokes, canvasRef)
+    useRender(page, canvasRef)
 
     return (
         <Canvas
