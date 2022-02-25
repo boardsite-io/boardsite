@@ -86,7 +86,15 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
             isNew: true,
         })
 
-        this.render("RenderNG", "EditMenu")
+        const renderedPages: Record<PageId, boolean> = {}
+        strokes.forEach((stroke) => {
+            if (!renderedPages[stroke.pageId]) {
+                renderedPages[stroke.pageId] = true // prevent rerendering twice
+                this.renderPageLayer("content", stroke.pageId)
+            }
+        })
+
+        this.render("EditMenu")
     }
 
     eraseStrokes(eraseStrokesAction: EraseStrokesAction): void {
@@ -116,7 +124,15 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
             isNew: true,
         })
 
-        this.render("RenderNG", "EditMenu")
+        const renderedPages: Record<PageId, boolean> = {}
+        strokes.forEach((stroke) => {
+            if (!renderedPages[stroke.pageId]) {
+                renderedPages[stroke.pageId] = true // prevent rerendering twice
+                this.renderPageLayer("content", stroke.pageId)
+            }
+        })
+
+        this.render("EditMenu")
     }
 
     addAttachments(attachments: Attachment[]): void {
@@ -435,7 +451,7 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
         pageId: PageId,
         trigger: RenderTrigger
     ): void {
-        if (!this.pageSubscribers[pageId]) {
+        if (this.pageSubscribers[pageId] === undefined) {
             this.pageSubscribers[pageId] = {}
         }
         this.pageSubscribers[pageId] = {

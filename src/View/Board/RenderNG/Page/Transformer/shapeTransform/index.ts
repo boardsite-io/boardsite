@@ -1,7 +1,7 @@
 import { Point } from "drawing/stroke/index.types"
 import { cloneDeep } from "lodash"
 import { TransformStrokes } from "state/board/state/index.types"
-import { calcScaleDelta, trHandleFactors, TrBounds } from "../helpers"
+import { trHandleFactors, TrBounds } from "../helpers"
 import { TrHandle } from "../index.styled"
 import { TransformState } from "./index.types"
 
@@ -13,55 +13,51 @@ export class ShapeTransformer {
         scaleY: 1,
     }
 
-    setTrState(newState: TransformState): void {
-        if (this.trState === newState) return
-        this.trState = newState
+    firstPoint: Point = { x: 0, y: 0 }
+
+    bounds: TrBounds = {
+        offsetX: 0,
+        offsetY: 0,
+        xMin: 0,
+        xMax: 0,
+        yMin: 0,
+        yMax: 0,
     }
 
-    startTr() {
-        this.trState = {
-            x: 0,
-            y: 0,
-            scaleX: 1,
-            scaleY: 1,
+    start(point: Point, trHandle: TrHandle | "pan") {
+        if (trHandle === "pan") {
+            this.firstPoint = point
+        } else {
+            this.setFirstPointHandle(trHandle)
         }
+        this.resetTrState()
     }
 
-    updateTrPosition(trDiv: HTMLDivElement | null, delta: Point): void {
-        this.trState.x += delta.x
-        this.trState.y += delta.y
-        this.applyTr(trDiv)
-    }
-
-    updateTrScale(
-        trDiv: HTMLDivElement | null,
-        delta: Point,
-        bounds: TrBounds,
-        handleType: TrHandle
+    move(
+        point: Point,
+        trHandle: TrHandle | "pan",
+        trDiv: HTMLDivElement | null
     ): void {
-        const { xScale, yScale } = calcScaleDelta(delta, bounds)
-        const { fsx, fsy, fdx, fdy } = trHandleFactors[handleType]
+        const delta = this.getPointDelta(point)
 
-        this.trState.x += fdx * delta.x
-        this.trState.y += fdy * delta.y
-
-        this.trState.scaleX += fsx * xScale
-        this.trState.scaleY += fsy * yScale
-
+        if (trHandle === "pan") {
+            this.pan(delta)
+        } else {
+            this.scale(delta, trHandle)
+        }
         this.applyTr(trDiv)
     }
 
-    endTr(
+    end(
         trDiv: HTMLDivElement | null,
-        trStrokes: TransformStrokes,
-        bounds: TrBounds
+        trStrokes: TransformStrokes
     ): TransformStrokes {
         const updatedStrokes = cloneDeep(trStrokes).map((stroke) => {
             const tr = this.trState
             // Transform selection transform to page transform
             const pageTr: TransformState = {
-                x: (tr.x - (tr.scaleX - 1) * bounds.xMin) / tr.scaleX,
-                y: (tr.y - (tr.scaleY - 1) * bounds.yMin) / tr.scaleY,
+                x: (tr.x - (tr.scaleX - 1) * this.bounds.xMin) / tr.scaleX,
+                y: (tr.y - (tr.scaleY - 1) * this.bounds.yMin) / tr.scaleY,
                 scaleX: tr.scaleX,
                 scaleY: tr.scaleY,
             }
@@ -97,6 +93,24 @@ export class ShapeTransformer {
         trDiv.style.transform = `translate(${x}px, ${y}px) scale(${scaleX}, ${scaleY})`
     }
 
+    setBounds(bounds: TrBounds): void {
+        this.bounds = bounds
+    }
+
+    setTrState(newState: TransformState): void {
+        if (this.trState === newState) return
+        this.trState = newState
+    }
+
+    resetTrState(): void {
+        this.trState = {
+            x: 0,
+            y: 0,
+            scaleX: 1,
+            scaleY: 1,
+        }
+    }
+
     resetTr(trDiv: HTMLDivElement | null): void {
         if (!trDiv) return
         const { childNodes } = trDiv
@@ -108,11 +122,147 @@ export class ShapeTransformer {
 
         trDiv.style.transform = `translate(0,0) scale(1,1)`
 
-        this.trState = {
-            x: 0,
-            y: 0,
-            scaleX: 1,
-            scaleY: 1,
+        this.resetTrState()
+    }
+
+    pan(delta: Point): void {
+        this.trState.x = delta.x
+        this.trState.y = delta.y
+    }
+
+    scale(delta: Point, trHandle: TrHandle): void {
+        const scaleDelta = this.getScaleDelta(delta)
+        const { fsx, fsy, fdx, fdy } = trHandleFactors[trHandle]
+        const trWidth = this.bounds.xMax - this.bounds.xMin
+        const trHeight = this.bounds.yMax - this.bounds.yMin
+
+        if (
+            trHandle === TrHandle.BottomRight ||
+            trHandle === TrHandle.BottomLeft ||
+            trHandle === TrHandle.TopLeft ||
+            trHandle === TrHandle.TopRight
+        ) {
+            if (trHeight > trWidth) {
+                this.trState.scaleX = 1 + fsx * scaleDelta.x
+                this.trState.scaleY = 1 + fsx * scaleDelta.x
+            } else {
+                this.trState.scaleX = 1 + fsy * scaleDelta.y
+                this.trState.scaleY = 1 + fsy * scaleDelta.y
+            }
+
+            if (trHandle === TrHandle.BottomRight) {
+                if (trHeight > trWidth) {
+                    this.trState.x = fdx * delta.x
+                    this.trState.y = fdy * delta.x
+                } else {
+                    this.trState.x = fdx * delta.y
+                    this.trState.y = fdy * delta.y
+                }
+            } else if (trHandle === TrHandle.TopLeft) {
+                if (trHeight > trWidth) {
+                    this.trState.x = delta.x
+                    this.trState.y = (trHeight / trWidth) * delta.x
+                } else {
+                    this.trState.x = (trWidth / trHeight) * delta.y
+                    this.trState.y = delta.y
+                }
+            } else if (trHandle === TrHandle.BottomLeft) {
+                if (trHeight > trWidth) {
+                    this.trState.x = fdx * delta.x
+                } else {
+                    this.trState.x = -(trWidth / trHeight) * delta.y
+                }
+                this.trState.y = 0
+            } else if (trHandle === TrHandle.TopRight) {
+                if (trHeight > trWidth) {
+                    this.trState.x = fdx * delta.x
+                    this.trState.y = (-trHeight / trWidth) * delta.x
+                } else {
+                    this.trState.x = fdx * delta.y
+                    this.trState.y = fdy * delta.y
+                }
+            }
+        } else {
+            this.trState.scaleX = 1 + fsx * scaleDelta.x
+            this.trState.scaleY = 1 + fsy * scaleDelta.y
+            this.trState.x = fdx * delta.x
+            this.trState.y = fdy * delta.y
+        }
+    }
+
+    getBoundCenterX(): number {
+        return this.bounds.xMax - (this.bounds.xMax - this.bounds.xMin) / 2
+    }
+
+    getBoundCenterY(): number {
+        return this.bounds.yMax - (this.bounds.yMax - this.bounds.yMin) / 2
+    }
+
+    setFirstPointHandle(trHandle: TrHandle) {
+        switch (trHandle) {
+            case TrHandle.TopLeft:
+                this.firstPoint = {
+                    x: this.bounds.xMin,
+                    y: this.bounds.yMin,
+                }
+                break
+            case TrHandle.TopRight:
+                this.firstPoint = {
+                    x: this.bounds.xMax,
+                    y: this.bounds.yMin,
+                }
+                break
+            case TrHandle.BottomRight:
+                this.firstPoint = {
+                    x: this.bounds.xMax,
+                    y: this.bounds.yMax,
+                }
+                break
+            case TrHandle.BottomLeft:
+                this.firstPoint = {
+                    x: this.bounds.xMin,
+                    y: this.bounds.yMax,
+                }
+                break
+            case TrHandle.Top:
+                this.firstPoint = {
+                    x: this.getBoundCenterX(),
+                    y: this.bounds.yMin,
+                }
+                break
+            case TrHandle.Right:
+                this.firstPoint = {
+                    x: this.bounds.xMax,
+                    y: this.getBoundCenterY(),
+                }
+                break
+            case TrHandle.Bottom:
+                this.firstPoint = {
+                    x: this.getBoundCenterX(),
+                    y: this.bounds.yMax,
+                }
+                break
+            case TrHandle.Left:
+            default:
+                this.firstPoint = {
+                    x: this.bounds.xMin,
+                    y: this.getBoundCenterY(),
+                }
+                break
+        }
+    }
+
+    getPointDelta(point: Point): Point {
+        return {
+            x: point.x - this.firstPoint.x,
+            y: point.y - this.firstPoint.y,
+        }
+    }
+
+    getScaleDelta(delta: Point): Point {
+        return {
+            x: delta.x / (this.bounds.xMax - this.bounds.xMin),
+            y: delta.y / (this.bounds.yMax - this.bounds.yMin),
         }
     }
 }

@@ -11,6 +11,7 @@ import {
     isValidClick,
     isValidTouch,
 } from "../Live/helpers"
+import { applyBounds, applyLeaveBounds } from "./bounds"
 import { extractHandle, getOuterBounds } from "./helpers"
 import { TrHandle } from "./index.styled"
 import { shapeTr } from "./shapeTransform"
@@ -24,7 +25,6 @@ export type TrCoords = {
     offsetY: number
 }
 
-let lastPoint: Point
 let handleType: TrHandle | "clear" | "pan"
 let isMouseOrTouchDown = false
 
@@ -35,8 +35,8 @@ export const useTransformer = (
     page: Page
 ) => {
     const { transformStrokes } = usePageLayer("transformer", page.pageId)
-
     const bounds = getOuterBounds(transformStrokes)
+    shapeTr.setBounds(bounds)
 
     const trCoords: TrCoords = {
         width: bounds.xMax - bounds.xMin,
@@ -68,57 +68,39 @@ export const useTransformer = (
             e: MouseEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>
         ) => {
             handleType = extractHandle(e)
-
             if (handleType === "clear") {
                 board.clearTransform()
                 return
             }
-
-            isMouseOrTouchDown = true
-            lastPoint = point
-            shapeTr.startTr()
-
+            shapeTr.start(point, handleType)
             if (transformStrokes) {
                 handleDeleteStrokes(transformStrokes)
             }
+            isMouseOrTouchDown = true
         },
         [transformStrokes]
     )
 
     const onMove = useCallback(
         (point: Point) => {
-            const delta = {
-                x: point.x - lastPoint.x,
-                y: point.y - lastPoint.y,
-            }
-
-            if (handleType !== "clear" && handleType !== "pan") {
-                shapeTr.updateTrScale(trRef.current, delta, bounds, handleType)
-            } else {
-                shapeTr.updateTrPosition(trRef.current, delta)
-            }
-
-            lastPoint = point
+            if (handleType === "clear") return
+            point = applyBounds(point, page)
+            shapeTr.move(point, handleType, trRef.current)
         },
-        [bounds, trRef]
+        [trRef, page]
     )
 
     const onEnd = useCallback(
         (point: Point) => {
             onMove(point)
             if (transformStrokes) {
-                const newStrokes = shapeTr.endTr(
-                    trRef.current,
-                    transformStrokes,
-                    bounds
-                )
-
+                const newStrokes = shapeTr.end(trRef.current, transformStrokes)
                 handleAddStrokes(newStrokes, true)
                 board.setTransformStrokes(newStrokes, page.pageId)
             }
             isMouseOrTouchDown = false
         },
-        [bounds, onMove, transformStrokes, page.pageId, trRef]
+        [onMove, transformStrokes, page.pageId, trRef]
     )
 
     const onMouseDown = useCallback(
@@ -208,9 +190,19 @@ export const useTransformer = (
 
     const onTouchCancel = useCallback(
         (e: TouchEvent<HTMLDivElement>) => {
-            onTouchEnd(e)
+            e.stopPropagation()
+            e.preventDefault()
+
+            if (isMouseOrTouchDown) {
+                const point = applyLeaveBounds(
+                    getTouchPosition(e, pageOffset),
+                    page
+                )
+
+                onEnd(point)
+            }
         },
-        [onTouchEnd]
+        [onEnd, pageOffset, page]
     )
 
     return {

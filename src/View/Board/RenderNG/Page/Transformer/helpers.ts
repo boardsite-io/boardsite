@@ -1,4 +1,3 @@
-import { Point } from "drawing/stroke/index.types"
 import { MouseEvent, TouchEvent } from "react"
 import { TransformStrokes } from "state/board/state/index.types"
 import { TrHandle } from "./index.styled"
@@ -66,11 +65,6 @@ export const trHandleFactors = {
     [TrHandle.Left]: { fsx: -1, fsy: 0, fdx: 1, fdy: 0 },
     [TrHandle.TopLeft]: { fsx: -1, fsy: -1, fdx: 1, fdy: 1 },
 }
-
-export const calcScaleDelta = (delta: Point, bounds: TrBounds) => ({
-    xScale: delta.x / (bounds.xMax - bounds.xMin),
-    yScale: delta.y / (bounds.yMax - bounds.yMin),
-})
 
 export const extractHandle = (
     e: MouseEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>
