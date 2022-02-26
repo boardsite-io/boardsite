@@ -1,18 +1,18 @@
 import { useCallback, useEffect, useState } from "react"
 import { board } from "../state"
-import { BoardSubscriber } from "../state/index.types"
+import { PageId, PageLayer } from "../state/index.types"
 
-export const useBoard = (subscriber: BoardSubscriber) => {
+export const usePageLayer = (pageLayer: PageLayer, pageId: PageId) => {
     const [, render] = useState<object>({})
     const trigger = useCallback(() => render({}), [])
 
     useEffect(() => {
-        board.subscribe(subscriber, trigger)
+        board.subscribePage(pageLayer, pageId, trigger)
 
         return () => {
-            board.unsubscribe(subscriber, trigger)
+            board.unsubscribePage(pageLayer, pageId)
         }
-    }, [subscriber, trigger])
+    }, [pageLayer, pageId, trigger])
 
     return board.getState()
 }

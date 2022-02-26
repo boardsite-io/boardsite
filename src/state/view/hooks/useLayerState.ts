@@ -16,7 +16,7 @@ export const useLayerState = (
         return () => {
             view.unsubscribe("layerConfig", reRender)
         }
-    }, [])
+    }, [reRender])
 
     useEffect(() => {
         const canvas = canvasRef.current

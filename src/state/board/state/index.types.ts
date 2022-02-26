@@ -9,14 +9,20 @@ import { RenderTrigger } from "state/index.types"
 
 export type BoardSubscriber =
     | "RenderNG"
-    | "PageBackground"
-    | "PageContent"
     | "MenuPageButton"
-    | "Transformer"
     | "EditMenu" // UndoRedo
     | "SettingsMenu"
 
 export type BoardSubscribers = Record<BoardSubscriber, RenderTrigger[]>
+
+export type PageLayer = "background" | "content" | "transformer"
+
+export type PageLayerTriggers = Record<PageLayer, RenderTrigger>
+
+export type PageSubscribers = Record<
+    PageId,
+    Partial<PageLayerTriggers> | undefined
+>
 
 // ------------------
 

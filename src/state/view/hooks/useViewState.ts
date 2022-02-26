@@ -11,7 +11,7 @@ export const useViewState = () => {
         return () => {
             view.unsubscribe("viewTransform", reRender)
         }
-    }, [])
+    }, [reRender])
 
     return view.getViewTransform()
 }

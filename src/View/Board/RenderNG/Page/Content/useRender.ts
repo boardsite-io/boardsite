@@ -1,14 +1,15 @@
-import { StrokeCollection } from "drawing/stroke/index.types"
 import { useEffect } from "react"
-import { useBoard } from "state/board"
+import { usePageLayer } from "state/board"
+import { Page } from "state/board/state/index.types"
 import { useDrawing } from "state/drawing"
 import { draw, drawErased } from "View/Board/RenderNG/shapes"
 
 export const useRender = (
-    strokes: StrokeCollection,
+    page: Page,
     canvasRef: React.RefObject<HTMLCanvasElement>
 ) => {
-    useBoard("PageContent")
+    usePageLayer("content", page.pageId)
+
     const { erasedStrokes } = useDrawing("PageContent")
 
     useEffect(() => {
@@ -16,7 +17,7 @@ export const useRender = (
         const ctx = canvas?.getContext("2d")
         if (!ctx) return
 
-        Object.values(strokes).forEach((stroke) => {
+        Object.values(page.strokes).forEach((stroke) => {
             if (erasedStrokes[stroke.id]) {
                 drawErased(ctx, stroke)
             } else {

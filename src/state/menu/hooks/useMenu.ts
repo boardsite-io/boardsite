@@ -12,7 +12,7 @@ export const useMenu = (subscription: MenuSubscription) => {
         return () => {
             menu.unsubscribe(subscription, trigger)
         }
-    }, [])
+    }, [subscription, trigger])
 
     return menu.getState()
 }

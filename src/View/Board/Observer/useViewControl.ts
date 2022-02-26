@@ -30,7 +30,7 @@ export const useViewControl = () => {
 
         return () =>
             document.removeEventListener("mousewheel", preventDefaultWheel)
-    }, [])
+    }, [preventDefaultWheel])
 
     const panningUpdate = useCallback((e: React.MouseEvent) => {
         if (!isMouseDown.current) return
@@ -64,7 +64,7 @@ export const useViewControl = () => {
             e.preventDefault()
             panningUpdate(e)
         },
-        []
+        [panningUpdate]
     )
 
     const onMouseUp: React.MouseEventHandler<HTMLDivElement> = useCallback(
@@ -73,16 +73,7 @@ export const useViewControl = () => {
             panningUpdate(e)
             isMouseDown.current = false
         },
-        []
-    )
-
-    const onTouchStart: React.TouchEventHandler<HTMLDivElement> = useCallback(
-        (e) => {
-            if (isMenuOpen()) return
-            e.preventDefault()
-            onTouchMove(e)
-        },
-        []
+        [panningUpdate]
     )
 
     const onTouchMove: React.TouchEventHandler<HTMLDivElement> = useCallback(
@@ -114,6 +105,15 @@ export const useViewControl = () => {
         []
     )
 
+    const onTouchStart: React.TouchEventHandler<HTMLDivElement> = useCallback(
+        (e) => {
+            if (isMenuOpen()) return
+            e.preventDefault()
+            onTouchMove(e)
+        },
+        [onTouchMove]
+    )
+
     const onTouchEnd: React.TouchEventHandler<HTMLDivElement> = useCallback(
         (e) => {
             if (isMenuOpen()) return
@@ -121,7 +121,7 @@ export const useViewControl = () => {
             onTouchMove(e)
             multiTouchEnd()
         },
-        []
+        [onTouchMove]
     )
 
     const onTouchCancel: React.TouchEventHandler<HTMLDivElement> = useCallback(

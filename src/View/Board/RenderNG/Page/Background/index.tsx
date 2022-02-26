@@ -1,12 +1,12 @@
 import { MAX_PIXEL_SCALE } from "consts"
 import React, { memo } from "react"
-import { useBoard } from "state/board"
+import { usePageLayer } from "state/board"
 import { useLayerState } from "state/view"
 import { PageProps } from "../index.types"
 import { CanvasBG } from "./index.styled"
 
 export const Background: React.FC<PageProps> = memo(({ page, pageOffset }) => {
-    useBoard("PageBackground")
+    usePageLayer("background", page.pageId)
 
     const canvasRef = React.useRef<HTMLCanvasElement>(null)
     const layerState = useLayerState(canvasRef, page)
