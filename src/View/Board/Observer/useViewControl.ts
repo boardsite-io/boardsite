@@ -12,8 +12,9 @@ import { updateViewTransform } from "state/view/interface"
 import { ViewTransform } from "state/view/state/index.types"
 import { useDrawing } from "state/drawing"
 
-const previousPoint = { x: 0, y: 0 }
+let previousPoint = { x: 0, y: 0 }
 let isMouseDown = false
+let multiTouchActive = false
 
 export const useViewControl = () => {
     const isPanMode = useDrawing("useViewControl").tool.type === ToolType.Pan
@@ -31,8 +32,8 @@ export const useViewControl = () => {
             document.removeEventListener("mousewheel", preventDefaultWheel)
     }, [preventDefaultWheel])
 
-    const panningUpdate = useCallback((point: Point) => {
-        if (!isMouseDown) return
+    const panningUpdate = useCallback((point: Point, isTouch = false) => {
+        if (!isMouseDown && !isTouch) return
 
         const { xOffset, yOffset, scale } = view.getViewTransform()
 
@@ -85,8 +86,9 @@ export const useViewControl = () => {
 
     const onTouchMove: React.TouchEventHandler<HTMLDivElement> = useCallback(
         (e) => {
-            if (isMenuOpen()) return
             e.preventDefault()
+            if (isMenuOpen()) return
+
             const touch1 = e.touches[0]
             const touch2 = e.touches[1]
 
@@ -107,18 +109,31 @@ export const useViewControl = () => {
                 })
 
                 updateViewTransform(newTransform)
+
+                multiTouchActive = true
+            } else if (touch1 && !touch2 && isPanMode && !multiTouchActive) {
+                const point: Point = {
+                    x: touch1.clientX,
+                    y: touch1.clientY,
+                }
+                panningUpdate(point, true)
             }
         },
-        []
+        [isPanMode, panningUpdate]
     )
 
     const onTouchStart: React.TouchEventHandler<HTMLDivElement> = useCallback(
         (e) => {
-            if (isMenuOpen()) return
             e.preventDefault()
-            onTouchMove(e)
+            const touch1 = e.touches[0]
+            if (!touch1 || isMenuOpen()) return
+
+            previousPoint = {
+                x: touch1.clientX,
+                y: touch1.clientY,
+            }
         },
-        [onTouchMove]
+        []
     )
 
     const onTouchEnd: React.TouchEventHandler<HTMLDivElement> = useCallback(
@@ -127,6 +142,11 @@ export const useViewControl = () => {
             e.preventDefault()
             onTouchMove(e)
             multiTouchEnd()
+
+            // Both fingers are off the screen
+            if (e.touches[0] === undefined) {
+                multiTouchActive = false
+            }
         },
         [onTouchMove]
     )
@@ -134,6 +154,7 @@ export const useViewControl = () => {
     const onTouchCancel: React.TouchEventHandler<HTMLDivElement> = useCallback(
         (e) => {
             e.preventDefault()
+            multiTouchActive = false
         },
         []
     )
