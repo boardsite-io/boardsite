@@ -3,10 +3,10 @@ import { Stroke, Tool } from "drawing/stroke/index.types"
 import { currentSession, isConnected } from "api/session"
 import { backgroundStyle, NOTIFICATION_DURATION } from "consts"
 import { IntlMessageId } from "language"
-import { handleResetView } from "state/view/interface"
 import { notification } from "state/notification"
 import { drawing } from "state/drawing"
 import { board } from "state/board"
+import { view } from "state/view"
 import {
     AddPagesAction,
     AddStrokesAction,
@@ -45,7 +45,7 @@ export function handleAddPageOver(): void {
     }
 
     board.addPages(addPagesAction)
-    handleResetView()
+    view.resetView()
 }
 
 export function handleAddPageUnder(): void {
@@ -65,7 +65,7 @@ export function handleAddPageUnder(): void {
 
     board.addPages(addPagesAction)
     board.jumpToNextPage()
-    handleResetView()
+    view.resetView()
 }
 
 export function handleClearPage(): void {

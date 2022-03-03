@@ -5,7 +5,7 @@ import { handleDeleteAllPages } from "drawing/handlers"
 import { readFileAsUint8Array } from "storage/util"
 import { BoardPage } from "drawing/page"
 import { PDFAttachment } from "drawing/attachment"
-import { handleResetView } from "state/view/interface"
+import { view } from "state/view"
 import { board } from "state/board"
 import { AttachId, Attachment, PageMeta } from "state/board/state/index.types"
 import { pageToDataURL } from "./rendering"
@@ -64,7 +64,7 @@ const addRenderedPdf = async (attachment: Attachment): Promise<void> => {
         })
 
         board.addPages({ data: addPageData })
-        handleResetView()
+        view.resetView()
     }
 
     board.jumpToFirstPage()

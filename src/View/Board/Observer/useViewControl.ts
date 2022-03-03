@@ -8,7 +8,6 @@ import {
     multiTouchMove,
     zoomTo,
 } from "state/view/util"
-import { updateViewTransform } from "state/view/interface"
 import { ViewTransform } from "state/view/state/index.types"
 import { useDrawing } from "state/drawing"
 
@@ -43,7 +42,7 @@ export const useViewControl = () => {
             yOffset: yOffset + (point.y - previousPoint.y) / scale,
         }
 
-        updateViewTransform(newTransform)
+        view.updateViewTransform(newTransform)
 
         previousPoint.x = point.x
         previousPoint.y = point.y
@@ -108,7 +107,7 @@ export const useViewControl = () => {
                     p2,
                 })
 
-                updateViewTransform(newTransform)
+                view.updateViewTransform(newTransform)
 
                 multiTouchActive = true
             } else if (touch1 && !touch2 && isPanMode && !multiTouchActive) {
@@ -172,7 +171,7 @@ export const useViewControl = () => {
                         deltaY < 0 ? ZOOM_IN_WHEEL_SCALE : ZOOM_OUT_WHEEL_SCALE,
                 })
 
-                updateViewTransform(newTransform)
+                view.updateViewTransform(newTransform)
             } else {
                 const newTransform: ViewTransform = {
                     ...transform,
@@ -180,7 +179,7 @@ export const useViewControl = () => {
                     yOffset: transform.yOffset - deltaY / transform.scale,
                 }
 
-                updateViewTransform(newTransform)
+                view.updateViewTransform(newTransform)
             }
         },
         [isPanMode]

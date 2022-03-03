@@ -9,10 +9,10 @@ import { board } from "state/board"
 import { ViewTransform } from "state/view/state/index.types"
 import {
     getPageSize,
-    isFullScreen,
     getCenterX,
     onFirstPage,
     onLastPage,
+    isFullScreen,
 } from "./helpers"
 
 export const applyBounds = (viewTransform: ViewTransform): ViewTransform => ({
@@ -25,7 +25,7 @@ export const applyBoundsX = (viewTransform: ViewTransform): number => {
     const { keepCentered } = board.getState().view
 
     // Zoomed out with keepCentered setting on sticks to center
-    if (keepCentered && !isFullScreen()) {
+    if (keepCentered && !isFullScreen(viewTransform)) {
         return getCenterX() / viewTransform.scale
     }
 

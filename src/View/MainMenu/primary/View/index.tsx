@@ -7,11 +7,7 @@ import {
     ZoomOutIcon,
     HorizontalRule,
 } from "components"
-import {
-    handleFitToPage,
-    handleResetViewScale,
-    handleZoomCenter,
-} from "state/view/interface"
+import { view } from "state/view"
 import { MainSubMenuState } from "state/menu/state/index.types"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
@@ -29,25 +25,25 @@ const ViewMenu = () => {
                 isMainMenu
                 text={<FormattedMessage id="Menu.View.ResetView" />}
                 icon={<ShrinkIcon />}
-                onClick={() => handleResetViewScale()}
+                onClick={() => view.resetViewScale()}
             />
             <MenuItem
                 isMainMenu
                 text={<FormattedMessage id="Menu.View.MaximizeView" />}
                 icon={<ExpandIcon />}
-                onClick={() => handleFitToPage()}
+                onClick={() => view.fitToPage()}
             />
             <MenuItem
                 isMainMenu
                 text={<FormattedMessage id="Menu.View.ZoomIn" />}
                 icon={<ZoomInIcon />}
-                onClick={() => handleZoomCenter(true)}
+                onClick={() => view.zoomCenter(true)}
             />
             <MenuItem
                 isMainMenu
                 text={<FormattedMessage id="Menu.View.ZoomOut" />}
                 icon={<ZoomOutIcon />}
-                onClick={() => handleZoomCenter(false)}
+                onClick={() => view.zoomCenter(false)}
             />
         </MainMenuWrap>
     )
