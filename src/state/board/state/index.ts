@@ -410,7 +410,7 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
 
     setState(newState: Partial<BoardState>): void {
         assign(this.state, pick(newState, keys(this.state)))
-        this.render("RenderNG")
+        this.renderAll()
     }
 
     getSerializedState(): SerializedState<BoardState> {
