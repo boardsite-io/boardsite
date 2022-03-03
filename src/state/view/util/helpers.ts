@@ -2,7 +2,6 @@ import { pageSize } from "consts"
 import { Point } from "drawing/stroke/index.types"
 import { ViewTransform } from "state/view/state/index.types"
 import { online } from "state/online"
-import { view } from "state/view"
 import { menu } from "state/menu"
 import { MainMenuState } from "state/menu/state/index.types"
 import { DialogState } from "state/online/state/index.types"
@@ -35,6 +34,11 @@ export const applyTransformToPoint = (
     y: applyTransform1D(point.y, transform.scale, transform.yOffset),
 })
 
+export const isFullScreen = (viewTransform: ViewTransform) => {
+    const effectivePageWidth = getPageSize().width * viewTransform.scale
+    return effectivePageWidth > window.innerWidth
+}
+
 export const getPageSize = (indexOffset = 0): PageSize => {
     const { pageRank, currentPageIndex, pageCollection } = board.getState()
     const pageId = pageRank[currentPageIndex + indexOffset]
@@ -52,15 +56,3 @@ export const isMenuOpen = () =>
     menu.getState().mainMenuState !== MainMenuState.Closed ||
     menu.getState().shortcutsOpen ||
     online.getState().dialogState !== DialogState.Closed
-
-export const isFullScreen = () => {
-    const effectivePageWidth =
-        getPageSize().width * view.getViewTransform().scale
-    return effectivePageWidth > window.innerWidth
-}
-
-export const newOffsetY = (newScale: number, yFixed: number): number => {
-    const { scale, yOffset } = view.getViewTransform()
-
-    return yOffset + yFixed / newScale - yFixed / scale
-}
