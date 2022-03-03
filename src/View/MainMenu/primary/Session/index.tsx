@@ -22,8 +22,16 @@ const leaveSession = (navigate: NavigateFunction) => () => {
     navigate("/")
 }
 
-const userName = (session: Session | undefined, user: User) =>
-    session?.user.id === user.id ? `${user.alias} (👈 You)` : user.alias
+const userName = (session: Session | undefined, user: User) => {
+    let name = user.alias
+    if (user.id === session?.config?.host) {
+        name += " (Host)"
+    }
+    if (user.id === session?.user.id) {
+        name += " (👈 You)"
+    }
+    return name
+}
 
 const SessionMenu = () => {
     const navigate = useNavigate()

@@ -5,12 +5,15 @@ import {
     ResponsePostSession,
     ResponsePostAttachment,
     User,
+    ResponseGetConfig,
+    SessionConfig,
 } from "./types"
 
 // api
 export const API_URL = process.env.REACT_APP_B_API_URL as string
 
 const HEADER_USER_ID = "Boardsite-User-Id"
+const HEADER_SESSION_SECRET = "Boardsite-Session-Secret"
 
 enum PageQueryParam {
     clear = "clear",
@@ -102,8 +105,24 @@ export class Request {
         return user
     }
 
-    getUsers(): Promise<Record<string, User>> {
-        return this.jsonSend("GET", `${this.sessionId}/users`, true)
+    getConfig(): Promise<ResponseGetConfig> {
+        return this.jsonSend("GET", `${this.sessionId}/config`, true)
+    }
+
+    async putConfig(
+        secret: string,
+        config: Partial<SessionConfig>
+    ): Promise<void> {
+        const headers = {
+            ...this.getHeaders(true),
+            [HEADER_SESSION_SECRET]: secret,
+        }
+        await this.jsonRequest.request({
+            method: "PUT",
+            url: `${this.sessionId}/config`,
+            data: config,
+            headers,
+        })
     }
 
     getPageRank(): Promise<PageId[]> {

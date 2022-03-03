@@ -13,7 +13,7 @@ import {
 } from "state/board/state/index.types"
 
 export interface Session {
-    id?: string
+    config?: SessionConfig
     user: User
     socket?: WebSocket
     users?: ConnectedUsers
@@ -21,11 +21,11 @@ export interface Session {
 
     setToken(token: string): void
     updateUser(user: Partial<User>): void
-    setID(sessionId: string): Session
     create(): Promise<string>
     join(copyOffline?: boolean): Promise<void>
     createSocket(sessionId: string): Promise<void>
     isConnected(): boolean
+    isHost(): boolean
     disconnect(): void
     synchronize(
         pageRank: PageId[],
@@ -43,6 +43,7 @@ export interface Session {
     addAttachment(file: File): Promise<string>
     getAttachment(attachId: string): Promise<Uint8Array>
     attachURL(attachId: string): URL
+    updateConfig(config: Partial<SessionConfig>): Promise<void>
 }
 
 export type User = {
@@ -57,19 +58,15 @@ export type StrokeDelete = {
     pageId: string
 }
 
-export type MessageType =
-    | "stroke"
-    | "userconn"
-    | "userdisc"
-    | "pagesync"
-    | "pageupdate"
-
-export const messages = {
-    Stroke: "stroke" as MessageType,
-    UserConnected: "userconn" as MessageType,
-    UserDisconnected: "userdisc" as MessageType,
-    PageSync: "pagesync" as MessageType,
-    PageUpdate: "pageupdate" as MessageType,
+export enum MessageType {
+    Error = "error",
+    Stroke = "stroke",
+    UserHost = "userhost",
+    UserConnected = "userconn",
+    UserDisconnected = "userdisc",
+    PageSync = "pagesync",
+    PageUpdate = "pageupdate",
+    Config = "config",
 }
 
 export interface Message<T> {
@@ -79,7 +76,7 @@ export interface Message<T> {
 }
 
 export interface ResponsePostSession {
-    sessionId: string
+    config: SessionConfig
 }
 
 export type SerializedPage = {
@@ -95,4 +92,16 @@ export interface PageSync {
 
 export interface ResponsePostAttachment {
     attachId: string
+}
+
+export interface ResponseGetConfig {
+    users: Record<string, User>
+    config: SessionConfig
+}
+
+export type SessionConfig = {
+    id: string
+    host: string
+    maxUsers: number
+    readOnly: boolean
 }
