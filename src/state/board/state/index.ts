@@ -396,9 +396,11 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
         this.state.pageCollection = pageCollection
 
         // Adjust view if necessary
-        if (this.state.currentPageIndex > pageRank.length - 1) {
+        if (
+            pageRank.length &&
+            this.state.currentPageIndex > pageRank.length - 1
+        ) {
             this.state.currentPageIndex = pageRank.length - 1
-            // initialView(state)
         }
 
         this.render("RenderNG", "EditMenu", "MenuPageButton")
@@ -410,7 +412,7 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
 
     setState(newState: Partial<BoardState>): void {
         assign(this.state, pick(newState, keys(this.state)))
-        this.render("RenderNG")
+        this.renderAll()
     }
 
     getSerializedState(): SerializedState<BoardState> {
