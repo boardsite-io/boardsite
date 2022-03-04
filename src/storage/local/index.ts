@@ -1,4 +1,5 @@
 import localforage from "localforage"
+import { notification } from "state/notification"
 
 const NAMESPACE = "boardsite"
 const debounceTime = 500 // ms
@@ -37,6 +38,7 @@ export const loadLocalStorage = async (
 
         return JSON.parse(data)
     } catch (error) {
+        notification.create("Storage.LoadLocalStorageFailed")
         return null
     }
 }
@@ -50,6 +52,7 @@ export const loadIndexedDB = async (
 
         return data as object
     } catch (error) {
+        notification.create("Storage.LoadIndexedDBFailed")
         return null
     }
 }

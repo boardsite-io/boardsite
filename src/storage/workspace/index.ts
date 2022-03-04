@@ -6,10 +6,10 @@ import {
     MIME_TYPE_WORKSPACE,
 } from "consts"
 import { readFileAsUint8Array } from "storage/util"
-import { handleNotification } from "drawing/handlers"
 import { deflate, inflate } from "pako"
 import { board } from "state/board"
 import { menu } from "state/menu"
+import { notification } from "state/notification"
 
 export const handleImportWorkspace = async () => {
     try {
@@ -29,10 +29,10 @@ export const handleImportWorkspace = async () => {
             await board.setSerializedState(serializedBoardState)
             menu.closeMainMenu()
         } else {
-            handleNotification("ImportMenu.Error.CouldntLoadWorkspace")
+            notification.create("ImportMenu.Error.CouldntLoadWorkspace")
         }
     } catch (error) {
-        handleNotification("ImportMenu.Error.CouldntLoadWorkspace")
+        notification.create("ImportMenu.Error.CouldntLoadWorkspace")
     }
 }
 
@@ -54,7 +54,6 @@ export const handleExportWorkspace = async () => {
 
         menu.closeMainMenu()
     } catch (error) {
-        // TODO
-        // handleNotification("ImportMenu.Error.CouldntLoadWorkspace")
+        notification.create("ImportMenu.Error.CouldntLoadWorkspace")
     }
 }

@@ -3,9 +3,9 @@ import React from "react"
 import { Button, DialogContent, DialogTitle, UserSelection } from "components"
 import { useNavigate, useParams } from "react-router-dom"
 import { BoardSession, currentSession } from "api/session"
-import { handleNotification } from "drawing/handlers"
 import { online } from "state/online"
 import { DialogState } from "state/online/state/index.types"
+import { notification } from "state/notification"
 
 const JoinOnly: React.FC = () => {
     const { sid } = useParams()
@@ -31,7 +31,7 @@ const JoinOnly: React.FC = () => {
 
             navigate(path)
         } catch (error) {
-            handleNotification("SessionMenu.JoinOnly.UnableToJoin.Notification")
+            notification.create("SessionMenu.JoinOnly.Error.UnableToJoin")
             navigate("/")
         }
     }

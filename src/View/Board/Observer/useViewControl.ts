@@ -85,7 +85,6 @@ export const useViewControl = () => {
 
     const onTouchMove: React.TouchEventHandler<HTMLDivElement> = useCallback(
         (e) => {
-            e.preventDefault()
             if (isMenuOpen()) return
 
             const touch1 = e.touches[0]
@@ -123,7 +122,6 @@ export const useViewControl = () => {
 
     const onTouchStart: React.TouchEventHandler<HTMLDivElement> = useCallback(
         (e) => {
-            e.preventDefault()
             const touch1 = e.touches[0]
             if (!touch1 || isMenuOpen()) return
 
@@ -138,7 +136,6 @@ export const useViewControl = () => {
     const onTouchEnd: React.TouchEventHandler<HTMLDivElement> = useCallback(
         (e) => {
             if (isMenuOpen()) return
-            e.preventDefault()
             onTouchMove(e)
             multiTouchEnd()
 
@@ -150,13 +147,11 @@ export const useViewControl = () => {
         [onTouchMove]
     )
 
-    const onTouchCancel: React.TouchEventHandler<HTMLDivElement> = useCallback(
-        (e) => {
-            e.preventDefault()
+    const onTouchCancel: React.TouchEventHandler<HTMLDivElement> =
+        useCallback(() => {
+            multiTouchEnd()
             multiTouchActive = false
-        },
-        []
-    )
+        }, [])
 
     const onWheel: React.WheelEventHandler<HTMLDivElement> = useCallback(
         (e) => {

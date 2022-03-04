@@ -1,9 +1,10 @@
 import { FormattedMessage } from "language"
 import { Popup, ToolTip, Position, ToolIcons, ToolButton } from "components"
 import React, { memo, useState } from "react"
-import { handleNotification, handleSetTool } from "drawing/handlers"
+import { handleSetTool } from "drawing/handlers"
 import { isDrawType } from "state/drawing/util"
 import { useDrawing } from "state/drawing"
+import { notification } from "state/notification"
 import StylePicker from "../StylePicker"
 
 const ActiveTool: React.FC = memo(() => {
@@ -19,7 +20,7 @@ const ActiveTool: React.FC = memo(() => {
             setOpen(true)
         } else {
             handleSetTool({ type: latestDrawType })
-            handleNotification("Tool.Active.Notification")
+            notification.create("Tool.Active.Notification")
         }
     }
 

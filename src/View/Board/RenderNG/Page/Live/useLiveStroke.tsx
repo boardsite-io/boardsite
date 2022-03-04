@@ -116,8 +116,6 @@ export const useLiveStroke = (
 
     const onTouchStart = useCallback(
         (e: TouchEvent<HTMLCanvasElement>) => {
-            e.preventDefault()
-
             const point = getTouchPosition(e, pageOffset)
             if (isValidTouch(e)) {
                 startLiveStroke(point)
@@ -128,8 +126,6 @@ export const useLiveStroke = (
 
     const onTouchMove = useCallback(
         (e: TouchEvent<HTMLCanvasElement>) => {
-            e.preventDefault()
-
             if (isMouseOrTouchDown && isValidTouch(e)) {
                 const point = getTouchPosition(e, pageOffset)
                 moveLiveStroke(point)
@@ -142,8 +138,6 @@ export const useLiveStroke = (
 
     const onTouchEnd = useCallback(
         (e: TouchEvent<HTMLCanvasElement>) => {
-            e.preventDefault()
-
             if (isMouseOrTouchDown) {
                 const point = getTouchPosition(e, pageOffset)
                 endLiveStroke(point)

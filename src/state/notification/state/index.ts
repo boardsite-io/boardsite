@@ -1,3 +1,4 @@
+import { NOTIFICATION_DURATION } from "consts"
 import { IntlMessageId } from "language"
 import { GlobalState, RenderTrigger } from "../../index.types"
 import {
@@ -13,12 +14,20 @@ export class Notification
 
     subscribers: NotificationSubscribers = { notification: [] }
 
-    addNotification(id: IntlMessageId): void {
+    create(id: IntlMessageId): void {
+        this.addNotification(id)
+
+        setTimeout(() => {
+            this.removeNotification()
+        }, NOTIFICATION_DURATION)
+    }
+
+    private addNotification(id: IntlMessageId): void {
         this.state.notifications.unshift(id)
         this.render("notification")
     }
 
-    removeNotification(): void {
+    private removeNotification(): void {
         this.state.notifications.pop()
         this.render("notification")
     }
