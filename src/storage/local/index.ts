@@ -19,13 +19,21 @@ export const saveLocalStorage = (
     data: object
 ): void => {
     debounce(name, () => {
-        localStorage.setItem(`${NAMESPACE}_${name}`, JSON.stringify(data))
+        try {
+            localStorage.setItem(`${NAMESPACE}_${name}`, JSON.stringify(data))
+        } catch (error) {
+            notification.create("Storage.SaveLocalStorageFailed")
+        }
     })
 }
 
 export const saveIndexedDB = (name: StateInIndexedDB, data: object): void => {
     debounce(name, () => {
-        localforage.setItem(`${NAMESPACE}_${name}`, data)
+        try {
+            localforage.setItem(`${NAMESPACE}_${name}`, data)
+        } catch (error) {
+            notification.create("Storage.SaveIndexedDBFailed")
+        }
     })
 }
 

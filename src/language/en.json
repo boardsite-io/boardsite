@@ -144,6 +144,8 @@
     "Loading.ExportingPdf": "Exporting as PDF...",
     "Loading.ExportingWorkspace": "Exporting workspace...",
     "UserSelection.TextFieldLabel.ChooseAlias": "Choose alias",
+    "Storage.SaveLocalStorageFailed": "Data could not be saved to local storage!",
     "Storage.LoadLocalStorageFailed": "Data could not be loaded from local storage!",
+    "Storage.SaveIndexedDBFailed": "Data could not be saved to indexedDB storage!",
     "Storage.LoadIndexedDBFailed": "Data could not be loaded from indexedDB storage!"
 }
