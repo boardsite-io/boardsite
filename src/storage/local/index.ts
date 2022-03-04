@@ -1,9 +1,10 @@
 import localforage from "localforage"
+import { debounce } from "lodash"
 import { notification } from "state/notification"
 
 const NAMESPACE = "boardsite"
-const debounceTime = 500 // ms
-const debounceTimeout: Record<string, NodeJS.Timeout> = {}
+const DEBOUNCE_LOCAL_STORAGE = 500
+const DEBOUNCE_INDEXED_DB = 500
 
 localforage.config({
     name: NAMESPACE,
@@ -14,28 +15,27 @@ type StateInLocalStorage = "drawing" | "online"
 
 type StateInIndexedDB = "board"
 
-export const saveLocalStorage = (
-    name: StateInLocalStorage,
-    data: object
-): void => {
-    debounce(name, () => {
+export const saveLocalStorage = debounce(
+    (name: StateInLocalStorage, data: object): void => {
         try {
             localStorage.setItem(`${NAMESPACE}_${name}`, JSON.stringify(data))
         } catch (error) {
             notification.create("Storage.SaveLocalStorageFailed")
         }
-    })
-}
+    },
+    DEBOUNCE_LOCAL_STORAGE
+)
 
-export const saveIndexedDB = (name: StateInIndexedDB, data: object): void => {
-    debounce(name, () => {
+export const saveIndexedDB = debounce(
+    (name: StateInIndexedDB, data: object): void => {
         try {
             localforage.setItem(`${NAMESPACE}_${name}`, data)
         } catch (error) {
             notification.create("Storage.SaveIndexedDBFailed")
         }
-    })
-}
+    },
+    DEBOUNCE_INDEXED_DB
+)
 
 export const loadLocalStorage = async (
     name: StateInLocalStorage
@@ -63,18 +63,4 @@ export const loadIndexedDB = async (
         notification.create("Storage.LoadIndexedDBFailed")
         return null
     }
-}
-
-const debounce = (
-    stateName: StateInLocalStorage | StateInIndexedDB,
-    callback: () => void
-): void => {
-    if (debounceTimeout[stateName]) {
-        clearTimeout(debounceTimeout[stateName])
-    }
-
-    // Save to LocalStorage after the debounce period has elapsed
-    debounceTimeout[stateName] = setTimeout(() => {
-        callback()
-    }, debounceTime)
 }
