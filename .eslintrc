@@ -22,7 +22,7 @@
         "semi": 0,
         "no-param-reassign": 0, // redux slices
         "no-use-before-define": 0, // hoisting
-        "no-empty": 0, // allow empty catch blocks
+        "no-empty": 1,
         "no-plusplus": 0, // i++
         "no-bitwise": 0, // shifting
         "no-await-in-loop": 0,

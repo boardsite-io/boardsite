@@ -103,7 +103,7 @@ export const renderAsPdf = async (): Promise<Uint8Array> => {
                 // if document is not loaded yet (loaded by pdf-lib)
                 const attachment = board.getState().attachments[attachId]
                 const src = await PDFDocument.load(attachment.cachedBlob, {
-                    ignoreEncryption: true, // TODO: Wrap in try catch and add notifications for different errors + check on encrypted PDF issue
+                    ignoreEncryption: false, // TODO: Fix or handle encrypted PDF issue separately
                 })
                 pdfDocuments[attachId] = await pdf.copyPages(src, [
                     ...Array(src.getPages().length).keys(),

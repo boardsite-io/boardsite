@@ -8,7 +8,8 @@ import {
     SelectIcon,
     ToolTip,
 } from "components"
-import { handleNotification, handleSetTool } from "drawing/handlers"
+import { handleSetTool } from "drawing/handlers"
+import { notification } from "state/notification"
 import { ToolType } from "drawing/stroke/index.types"
 import { useDrawing } from "state/drawing"
 import ActiveTool from "./ActiveTool"
@@ -22,7 +23,7 @@ const ToolRing: React.FC = memo(() => {
             return
         }
         handleSetTool({ type: ToolType.Eraser })
-        handleNotification("Tool.Eraser.Notification")
+        notification.create("Tool.Eraser.Notification")
     }, [type])
 
     const onClickSelect = useCallback(() => {
@@ -30,7 +31,7 @@ const ToolRing: React.FC = memo(() => {
             return
         }
         handleSetTool({ type: ToolType.Select })
-        handleNotification("Tool.Selection.Notification")
+        notification.create("Tool.Selection.Notification")
     }, [type])
 
     const onClickPan = useCallback(() => {
@@ -38,7 +39,7 @@ const ToolRing: React.FC = memo(() => {
             return
         }
         handleSetTool({ type: ToolType.Pan })
-        handleNotification("Tool.Panning.Notification")
+        notification.create("Tool.Panning.Notification")
     }, [type])
 
     return (

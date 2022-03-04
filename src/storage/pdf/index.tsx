@@ -7,7 +7,7 @@ import {
 import { fileOpen, fileSave } from "browser-fs-access"
 import { menu } from "state/menu"
 import { loading } from "state/loading"
-import { handleNotification } from "drawing/handlers"
+import { notification } from "state/notification"
 import { importPdfFile, renderAsPdf } from "./util"
 
 export const handleImportPdf = async () => {
@@ -20,14 +20,16 @@ export const handleImportPdf = async () => {
         })
 
         if (file.type !== "application/pdf") {
-            handleNotification("ImportMenu.Error.InvalidFileType")
+            notification.create("ImportMenu.Error.InvalidFileType")
             return
         }
 
         await importPdfFile(file)
 
         menu.closeMainMenu()
-    } catch (error) {}
+    } catch (error) {
+        notification.create("ImportMenu.Error.PdfImportFailed")
+    }
 }
 
 export const handleExportPdf = async (): Promise<void> => {
@@ -48,6 +50,7 @@ export const handleExportPdf = async (): Promise<void> => {
         )
         menu.closeMainMenu()
     } catch (error) {
+        notification.create("ExportMenu.Error.PdfExportFailed")
         loading.endLoading()
     }
 }

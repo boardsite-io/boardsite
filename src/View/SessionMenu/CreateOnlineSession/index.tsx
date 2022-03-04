@@ -1,5 +1,5 @@
 import { FormattedMessage } from "language"
-import React, { useState } from "react"
+import React, { useCallback, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { BoardSession, currentSession } from "api/session"
 import {
@@ -10,6 +10,7 @@ import {
     UserSelection,
 } from "components"
 import { online } from "state/online"
+import { notification } from "state/notification"
 import { DialogState } from "state/online/state/index.types"
 import { OnlineSessionOptions } from "./index.styled"
 
@@ -19,54 +20,63 @@ const CreateOnlineSession: React.FC = () => {
     const navigate = useNavigate()
 
     /**
+     * Handle the join session button click in the session dialog
+     */
+    const handleJoin = useCallback(
+        async (sessionId: string) => {
+            try {
+                const path = BoardSession.path(sessionId)
+
+                await currentSession().createSocket(path.split("/").pop() ?? "")
+                await currentSession().join()
+
+                navigate(path)
+                online.setSessionDialog(DialogState.Closed)
+                setIsValidInput(true)
+            } catch (error) {
+                setIsValidInput(false)
+            }
+        },
+        [navigate]
+    )
+
+    /**
      * Handle the create session button click in the session dialog
      */
-    const handleCreate = async () => {
+    const handleCreate = useCallback(async () => {
         try {
             const sessionId = await currentSession().create()
             await handleJoin(sessionId)
             setSidInput(sessionId)
         } catch (error) {
-            // console.log("error")
+            notification.create("SessionMenu.CreateOnline.Error")
         }
-    }
-
-    /**
-     * Handle the join session button click in the session dialog
-     */
-    const handleJoin = async (sessionId: string) => {
-        try {
-            const path = BoardSession.path(sessionId)
-
-            await currentSession().createSocket(path.split("/").pop() ?? "")
-            await currentSession().join()
-
-            navigate(path)
-            online.setSessionDialog(DialogState.Closed)
-            setIsValidInput(true)
-        } catch (error) {
-            setIsValidInput(false)
-        }
-    }
+    }, [handleJoin])
 
     /**
      * Handle textfield events in the session dialog
      * @param {event} e event object
      */
-    const handleTextFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSidInput(e.target.value)
-    }
+    const handleTextFieldChange = useCallback(
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            setSidInput(e.target.value)
+        },
+        []
+    )
 
-    const onSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        handleJoin(sidInput)
-    }
+    const onSubmit = useCallback(
+        (e: React.ChangeEvent<HTMLFormElement>) => {
+            e.preventDefault()
+            handleJoin(sidInput)
+        },
+        [handleJoin, sidInput]
+    )
 
     let helperText: JSX.Element | undefined
 
     if (!isValidInput) {
         helperText = (
-            <FormattedMessage id="SessionMenu.CreateOnline.InvalidSession" />
+            <FormattedMessage id="SessionMenu.JoinOnly.Error.UnableToJoin" />
         )
     }
     return (

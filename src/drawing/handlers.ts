@@ -1,9 +1,7 @@
 import { cloneDeep } from "lodash"
 import { Stroke, Tool } from "drawing/stroke/index.types"
 import { currentSession, isConnected } from "api/session"
-import { backgroundStyle, NOTIFICATION_DURATION } from "consts"
-import { IntlMessageId } from "language"
-import { notification } from "state/notification"
+import { backgroundStyle } from "consts"
 import { drawing } from "state/drawing"
 import { board } from "state/board"
 import { view } from "state/view"
@@ -220,12 +218,4 @@ function getCurrentPageId() {
 function getCurrentPage() {
     const { pageRank, pageCollection, currentPageIndex } = board.getState()
     return pageCollection[pageRank[currentPageIndex]]
-}
-
-export const handleNotification = (id: IntlMessageId) => {
-    notification.addNotification(id)
-
-    setTimeout(() => {
-        notification.removeNotification()
-    }, NOTIFICATION_DURATION)
 }
