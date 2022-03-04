@@ -1,11 +1,12 @@
 import { FormattedMessage } from "language"
-import React from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { Button, DialogContent, DialogTitle } from "components"
 import PageSettings from "components/PageSettings"
 import { handleAddPageUnder } from "drawing/handlers"
 import { online } from "state/online"
 import { DialogState } from "state/online/state/index.types"
 import { board } from "state/board"
+import { loadIndexedDB } from "storage/local"
 
 const createOfflineSession = () => {
     handleAddPageUnder()
@@ -26,6 +27,21 @@ interface InitialSelectionProps {
 }
 
 const InitialSelection: React.FC<InitialSelectionProps> = ({ firstLoad }) => {
+    const [showContinue, setShowContinue] = useState(false)
+
+    const checkStorage = useCallback(async () => {
+        const data = await loadIndexedDB("board")
+        if (data !== null) {
+            setShowContinue(true)
+        }
+    }, [])
+
+    useEffect(() => {
+        if (firstLoad) {
+            checkStorage()
+        }
+    }, [firstLoad, checkStorage])
+
     return (
         <>
             <DialogTitle>
@@ -34,7 +50,10 @@ const InitialSelection: React.FC<InitialSelectionProps> = ({ firstLoad }) => {
             <DialogContent>
                 <PageSettings />
                 {firstLoad && (
-                    <Button onClick={continuePreviousSession}>
+                    <Button
+                        disabled={!showContinue}
+                        onClick={continuePreviousSession}
+                    >
                         <FormattedMessage id="SessionMenu.InitialSelection.Continue" />
                     </Button>
                 )}

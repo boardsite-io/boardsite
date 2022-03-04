@@ -5,23 +5,26 @@ interface Props {
 }
 
 export const StyledButton = styled.button<Props>`
-    /* text-transform: uppercase; */
+    cursor: pointer;
+    color: var(--cPrimary);
+    background: var(--cDetails);
     padding: 0.5rem 1.5rem;
     border-width: 0;
     border-radius: var(--button-border-radius);
     transition: all 100ms ease-in-out;
-    &:hover {
-        cursor: pointer;
-    }
-    color: var(--cPrimary);
-    background: var(--cDetails);
     box-shadow: var(--box-shadow);
 
     &:hover {
         background: var(--cDetails2);
     }
 
+    &:disabled {
+        cursor: not-allowed;
+        background: #00000044;
+    }
+
     ${({ $withIcon }) => ($withIcon ? iconStyle : noIconStyle)};
+
     svg {
         height: 1rem;
         width: 1rem;
