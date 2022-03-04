@@ -64,6 +64,7 @@ export enum MessageType {
     UserHost = "userhost",
     UserConnected = "userconn",
     UserDisconnected = "userdisc",
+    UserKick = "userkick",
     PageSync = "pagesync",
     PageUpdate = "pageupdate",
     Config = "config",
@@ -88,6 +89,14 @@ export type SerializedPage = {
 export interface PageSync {
     pageRank: PageRank
     pages: Record<PageId, SerializedPage>
+}
+
+export interface UserHost {
+    secret: string
+}
+
+export interface ConfigMessage {
+    config: SessionConfig
 }
 
 export interface ResponsePostAttachment {

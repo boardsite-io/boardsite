@@ -66,14 +66,16 @@ const SessionMenu = () => {
                         />
                     ))}
                     <HorizontalRule />
-                    <MenuItem
-                        isMainMenu
-                        text={
-                            <FormattedMessage id="Menu.General.Session.Settings" />
-                        }
-                        expandMenu={MainSubMenuState.SessionSettings}
-                        onClick={leaveSession(navigate)}
-                    />
+                    {session?.isHost() && (
+                        <MenuItem
+                            isMainMenu
+                            text={
+                                <FormattedMessage id="Menu.General.Session.Settings" />
+                            }
+                            expandMenu={MainSubMenuState.SessionSettings}
+                            onClick={leaveSession(navigate)}
+                        />
+                    )}
                     <MenuItem
                         isMainMenu
                         text={

@@ -19,6 +19,7 @@ import {
 } from "state/board/state/index.types"
 import { getRandomColor } from "helpers"
 import {
+    ConfigMessage,
     ConnectedUsers,
     Message,
     MessageType,
@@ -28,6 +29,7 @@ import {
     SessionConfig,
     StrokeDelete,
     User,
+    UserHost,
 } from "./types"
 import { API_URL, Request } from "./request"
 import { online } from "../state/online"
@@ -274,6 +276,12 @@ export class BoardSession implements Session {
         delete this.users?.[id as string]
     }
 
+    async kickUser({ id }: User): Promise<void> {
+        if (!this.secret) return
+        if (!id) return
+        await this.request.putUser(this.secret, id)
+    }
+
     async updateConfig(config: Partial<SessionConfig>): Promise<void> {
         if (!this.secret) return
         await this.request.putConfig(this.secret, config)
@@ -290,7 +298,7 @@ export class BoardSession implements Session {
                 break
 
             case MessageType.UserHost:
-                this.secret = (message.content as any).secret
+                this.secret = (message.content as UserHost).secret
                 break
 
             case MessageType.UserConnected:
@@ -301,8 +309,13 @@ export class BoardSession implements Session {
                 this.userDisconnect(message.content as User)
                 break
 
+            case MessageType.UserKick:
+                // TODO notification
+                this.disconnect()
+                break
+
             case MessageType.Config:
-                this.config = (message.content as any).config
+                this.config = (message.content as ConfigMessage).config
                 break
 
             default:

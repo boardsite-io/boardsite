@@ -105,6 +105,18 @@ export class Request {
         return user
     }
 
+    async putUser(secret: string, userId: string): Promise<void> {
+        const headers = {
+            ...this.getHeaders(true),
+            [HEADER_SESSION_SECRET]: secret,
+        }
+        await this.jsonRequest.request({
+            method: "PUT",
+            url: `${this.sessionId}/users/${userId}`,
+            headers,
+        })
+    }
+
     getConfig(): Promise<ResponseGetConfig> {
         return this.jsonSend("GET", `${this.sessionId}/config`, true)
     }

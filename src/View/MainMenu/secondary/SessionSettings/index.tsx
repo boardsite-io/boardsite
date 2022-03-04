@@ -2,6 +2,7 @@ import React from "react"
 import { TickIcon } from "components"
 import { Session } from "api/types"
 import { useOnline } from "state/online"
+import { FormattedMessage } from "language"
 import { SubMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 
@@ -14,7 +15,9 @@ const SessionSettingsMenu = () => {
     return (
         <SubMenuWrap level={2}>
             <MenuItem
-                text="Read only"
+                text={
+                    <FormattedMessage id="Menu.General.Session.Config.ReadOnly" />
+                }
                 onClick={onClickReadOnly(session)}
                 icon={session?.config?.readOnly ? <TickIcon /> : undefined}
             />

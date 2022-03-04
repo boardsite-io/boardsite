@@ -1,12 +1,10 @@
 import React from "react"
 import { FormattedMessage } from "language"
 import { HorizontalRule } from "components"
-import { isConnected } from "api/session"
 import { FaGithub } from "react-icons/fa"
 import { SiGithubsponsors } from "react-icons/si"
 import { isMobile } from "react-device-detect"
 import { online, useOnline } from "state/online"
-import { DialogState } from "state/online/state/index.types"
 import { menu } from "state/menu"
 import { AUTH_URL } from "api/auth"
 import { MainSubMenuState } from "state/menu/state/index.types"
@@ -16,15 +14,6 @@ import MenuItem from "../../MenuItem"
 export const openInNewTab = (url: string): void => {
     const newWindow = window.open(url, "_blank", "noopener,noreferrer")
     if (newWindow) newWindow.opener = null
-}
-
-const onClickOnlineSession = () => {
-    if (isConnected()) {
-        online.setSessionDialog(DialogState.ManageOnlineSession)
-    } else {
-        online.setSessionDialog(DialogState.CreateOnlineSession)
-    }
-    menu.closeMainMenu()
 }
 
 const onClickGithub = () => {
