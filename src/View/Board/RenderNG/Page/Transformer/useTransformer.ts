@@ -152,7 +152,6 @@ export const useTransformer = (
     const onTouchStart = useCallback(
         (e: TouchEvent<HTMLDivElement>) => {
             e.stopPropagation()
-            e.preventDefault()
 
             if (isValidTouch(e)) {
                 const point = getTouchPosition(e, pageOffset)
@@ -165,7 +164,6 @@ export const useTransformer = (
     const onTouchMove = useCallback(
         (e: TouchEvent<HTMLDivElement>) => {
             e.stopPropagation()
-            e.preventDefault()
 
             if (isMouseOrTouchDown && isValidTouch(e)) {
                 const point = getTouchPosition(e, pageOffset)
@@ -178,7 +176,6 @@ export const useTransformer = (
     const onTouchEnd = useCallback(
         (e: TouchEvent<HTMLDivElement>) => {
             e.stopPropagation()
-            e.preventDefault()
 
             if (isMouseOrTouchDown) {
                 const point = getTouchPosition(e, pageOffset)
@@ -191,7 +188,6 @@ export const useTransformer = (
     const onTouchCancel = useCallback(
         (e: TouchEvent<HTMLDivElement>) => {
             e.stopPropagation()
-            e.preventDefault()
 
             if (isMouseOrTouchDown) {
                 const point = applyLeaveBounds(
