@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { FormattedMessage } from "language"
 import {
     ExpandIcon,
@@ -6,41 +6,51 @@ import {
     ZoomInIcon,
     ZoomOutIcon,
     HorizontalRule,
+    ExpandableIcon,
 } from "components"
 import { view } from "state/view"
-import { MainSubMenuState } from "state/menu/state/index.types"
+import { CSSTransition } from "react-transition-group"
+import { cssTransition } from "View/MainMenu/cssTransition"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
+import GoToMenu from "./GoTo"
+
+enum SubMenu {
+    Closed,
+    GoTo,
+}
 
 const ViewMenu = () => {
+    const [subMenu, setSubMenu] = useState<SubMenu>(SubMenu.Closed)
+
     return (
         <MainMenuWrap>
             <MenuItem
-                isMainMenu
                 text={<FormattedMessage id="Menu.View.GoTo" />}
-                expandMenu={MainSubMenuState.GoTo}
-            />
+                expandMenu={() => setSubMenu(SubMenu.GoTo)}
+                icon={<ExpandableIcon />}
+            >
+                <CSSTransition in={subMenu === SubMenu.GoTo} {...cssTransition}>
+                    <GoToMenu />
+                </CSSTransition>
+            </MenuItem>
             <HorizontalRule />
             <MenuItem
-                isMainMenu
                 text={<FormattedMessage id="Menu.View.ResetView" />}
                 icon={<ShrinkIcon />}
                 onClick={() => view.resetViewScale()}
             />
             <MenuItem
-                isMainMenu
                 text={<FormattedMessage id="Menu.View.MaximizeView" />}
                 icon={<ExpandIcon />}
                 onClick={() => view.fitToPage()}
             />
             <MenuItem
-                isMainMenu
                 text={<FormattedMessage id="Menu.View.ZoomIn" />}
                 icon={<ZoomInIcon />}
                 onClick={() => view.zoomCenter(true)}
             />
             <MenuItem
-                isMainMenu
                 text={<FormattedMessage id="Menu.View.ZoomOut" />}
                 icon={<ZoomOutIcon />}
                 onClick={() => view.zoomCenter(false)}

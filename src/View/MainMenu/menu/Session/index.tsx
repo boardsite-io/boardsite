@@ -1,14 +1,16 @@
 import { FormattedMessage } from "language"
-import React from "react"
+import React, { useState } from "react"
 import { NavigateFunction, useNavigate } from "react-router-dom"
 import { BoardSession, currentSession, isConnected } from "api/session"
-import { HorizontalRule } from "components"
+import { ExpandableIcon, HorizontalRule } from "components"
 import { Session, User } from "api/types"
 import { useOnline } from "state/online"
 import { notification } from "state/notification"
-import { SubMenuWrap } from "../../index.styled"
+import { CSSTransition } from "react-transition-group"
+import { cssTransition } from "View/MainMenu/cssTransition"
+import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
-import { MainSubMenuState } from "../../../../state/menu/state/index.types"
+import SessionSettingsMenu from "./SessionSettings"
 
 const createAndJoin =
     (navigate: NavigateFunction, copyOffline?: boolean) => async () => {
@@ -27,7 +29,7 @@ const leaveSession = (navigate: NavigateFunction) => () => {
     navigate("/")
 }
 
-const userName = (session: Session | undefined, user: User) => {
+const getUserName = (session: Session | undefined, user: User) => {
     let name = user.alias
     if (user.id === session?.config?.host) {
         name += " (Host)"
@@ -38,23 +40,27 @@ const userName = (session: Session | undefined, user: User) => {
     return name
 }
 
+enum SubMenu {
+    Closed,
+    SessionSettings,
+}
+
 const SessionMenu = () => {
+    const [subMenu, setSubMenu] = useState<SubMenu>(SubMenu.Closed)
     const navigate = useNavigate()
     const { session } = useOnline()
 
     return (
-        <SubMenuWrap>
+        <MainMenuWrap>
             {!isConnected() ? (
                 <>
                     <MenuItem
-                        isMainMenu
                         text={
                             <FormattedMessage id="Menu.General.Session.New" />
                         }
                         onClick={createAndJoin(navigate, false)}
                     />
                     <MenuItem
-                        isMainMenu
                         text={
                             <FormattedMessage id="Menu.General.Session.NewFromCurrent" />
                         }
@@ -65,24 +71,30 @@ const SessionMenu = () => {
                 <>
                     {Object.values(session?.users ?? {}).map((user) => (
                         <MenuItem
-                            isMainMenu
                             key={user.id}
-                            text={userName(session, user)}
+                            text={getUserName(session, user)}
                         />
                     ))}
                     <HorizontalRule />
                     {session?.isHost() && (
                         <MenuItem
-                            isMainMenu
                             text={
                                 <FormattedMessage id="Menu.General.Session.Settings" />
                             }
-                            expandMenu={MainSubMenuState.SessionSettings}
-                            onClick={leaveSession(navigate)}
-                        />
+                            expandMenu={() =>
+                                setSubMenu(SubMenu.SessionSettings)
+                            }
+                            icon={<ExpandableIcon />}
+                        >
+                            <CSSTransition
+                                in={subMenu === SubMenu.SessionSettings}
+                                {...cssTransition}
+                            >
+                                <SessionSettingsMenu />
+                            </CSSTransition>
+                        </MenuItem>
                     )}
                     <MenuItem
-                        isMainMenu
                         text={
                             <FormattedMessage id="Menu.General.Session.Leave" />
                         }
@@ -90,7 +102,7 @@ const SessionMenu = () => {
                     />
                 </>
             )}
-        </SubMenuWrap>
+        </MainMenuWrap>
     )
 }
 

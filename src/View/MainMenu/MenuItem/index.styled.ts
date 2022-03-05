@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components"
 
 export const ItemWrap = styled.li`
+    position: relative;
     display: flex;
     justify-content: space-between;
     width: 100%;

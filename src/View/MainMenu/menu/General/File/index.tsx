@@ -5,8 +5,8 @@ import { handleAddPageUnder, handleDeleteAllPages } from "drawing/handlers"
 import { menu } from "state/menu"
 import { handleExportWorkspace, handleImportWorkspace } from "storage/workspace"
 import { handleExportPdf, handleImportPdf } from "storage/pdf"
-import { SubMenuWrap } from "../../index.styled"
-import MenuItem from "../../MenuItem"
+import { SubMenuWrap } from "../../../index.styled"
+import MenuItem from "../../../MenuItem"
 
 const onClickNew = () => {
     handleDeleteAllPages()
