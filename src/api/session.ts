@@ -1,10 +1,4 @@
 import { Stroke, StrokeUpdate, ToolType } from "drawing/stroke/index.types"
-import {
-    adjectives,
-    animals,
-    colors,
-    uniqueNamesGenerator,
-} from "unique-names-generator"
 import { assign } from "lodash"
 import { BoardPage } from "drawing/page"
 import { newAttachment } from "drawing/attachment/utils"
@@ -17,7 +11,6 @@ import {
     PageId,
     PageMeta,
 } from "state/board/state/index.types"
-import { getRandomColor } from "helpers"
 import {
     ConfigMessage,
     ConnectedUsers,
@@ -42,16 +35,9 @@ export class BoardSession implements Session {
     socket?: WebSocket
     users?: ConnectedUsers
 
-    constructor() {
+    constructor(user: User) {
         this.request = new Request()
-        this.user = {
-            alias: uniqueNamesGenerator({
-                dictionaries: [adjectives, colors, animals],
-                separator: "",
-                style: "capital",
-            }),
-            color: getRandomColor(),
-        }
+        this.user = user
     }
 
     setToken(token: string): void {
@@ -88,7 +74,7 @@ export class BoardSession implements Session {
     }
 
     async join(copyOffline?: boolean): Promise<void> {
-        if (!isConnected) {
+        if (!this.isConnected) {
             throw new Error("no open websocket")
         }
         const { users, config } = await this.request.getConfig()
@@ -379,13 +365,12 @@ export class BoardSession implements Session {
     }
 
     // loads an attachment into the cache
-    // eslint-disable-next-line class-methods-use-this
     async loadAttachment(type: AttachType, id: AttachId): Promise<void> {
         if (board.getState().attachments[id]) {
             // already loaded
             return
         }
-        const blob = await currentSession().getAttachment(id)
+        const blob = await this.getAttachment(id)
         const attachment = await newAttachment({
             type,
             id,
@@ -398,22 +383,4 @@ export class BoardSession implements Session {
         const url = sessionURL.split("/")
         return `/b/${url[url.length - 1]}`
     }
-}
-
-/**
- * Fetches the current session instance from redux.
- * Creates a new instance if not found.
- */
-export const currentSession = (): Session => {
-    let { session } = online.getState()
-    if (!session) {
-        session = new BoardSession()
-        online.setSession(session)
-    }
-    return session
-}
-
-export const isConnected = (): boolean => {
-    const { session } = online.getState()
-    return session !== undefined && session.isConnected()
 }

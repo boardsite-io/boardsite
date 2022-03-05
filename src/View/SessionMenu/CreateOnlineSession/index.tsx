@@ -1,7 +1,8 @@
 import { FormattedMessage } from "language"
 import React, { useCallback, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { BoardSession, currentSession } from "api/session"
+import { Session, SessionConfig } from "api/types"
+import { BoardSession } from "api/session"
 import {
     Button,
     DialogContent,
@@ -23,12 +24,12 @@ const CreateOnlineSession: React.FC = () => {
      * Handle the join session button click in the session dialog
      */
     const handleJoin = useCallback(
-        async (sessionId: string) => {
+        async (session: Session) => {
             try {
-                const path = BoardSession.path(sessionId)
+                const path = BoardSession.path(session.config?.id ?? "")
 
-                await currentSession().createSocket(path.split("/").pop() ?? "")
-                await currentSession().join()
+                await session.createSocket(path.split("/").pop() ?? "")
+                await session.join()
 
                 navigate(path)
                 online.setSessionDialog(DialogState.Closed)
@@ -45,8 +46,9 @@ const CreateOnlineSession: React.FC = () => {
      */
     const handleCreate = useCallback(async () => {
         try {
-            const sessionId = await currentSession().create()
-            await handleJoin(sessionId)
+            const session = new BoardSession(online.state.userSelection)
+            const sessionId = await session.create()
+            await handleJoin(session)
             setSidInput(sessionId)
         } catch (error) {
             notification.create("SessionMenu.CreateOnline.Error")
@@ -67,7 +69,9 @@ const CreateOnlineSession: React.FC = () => {
     const onSubmit = useCallback(
         (e: React.ChangeEvent<HTMLFormElement>) => {
             e.preventDefault()
-            handleJoin(sidInput)
+            const session = new BoardSession(online.state.userSelection)
+            session.config = { id: sidInput } as SessionConfig
+            handleJoin(session)
         },
         [handleJoin, sidInput]
     )

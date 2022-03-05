@@ -1,6 +1,13 @@
-import { Session } from "api/types"
+import { Session, User } from "api/types"
 import { validateToken } from "api/auth"
 import { loadLocalStorage, saveLocalStorage } from "storage/local"
+import { getRandomColor } from "helpers"
+import {
+    adjectives,
+    animals,
+    colors,
+    uniqueNamesGenerator,
+} from "unique-names-generator"
 import {
     DialogState,
     OnlineState,
@@ -14,6 +21,17 @@ import { deserializeOnlineToken, serializeOnlineState } from "../serializers"
 export class Online implements GlobalState<OnlineState, OnlineSubscribers> {
     state: OnlineState = {
         dialogState: DialogState.InitialSelectionFirstLoad,
+        userSelection: {
+            alias: uniqueNamesGenerator({
+                dictionaries: [adjectives, colors, animals],
+                separator: "",
+                style: "capital",
+            }),
+            color: getRandomColor(),
+        },
+        isConnected: () =>
+            this.state.session !== undefined &&
+            this.state.session.isConnected(),
         isAuthorized: () => false,
         isSignedIn: () => !!this.state.token,
     }
@@ -33,10 +51,17 @@ export class Online implements GlobalState<OnlineState, OnlineSubscribers> {
         this.render("session")
     }
 
-    setSession(session: Session): void {
+    newSession(session: Session): void {
         this.state.session = session
         this.state.session.setToken(this.state.token ?? "")
         this.render("session")
+    }
+
+    updateUser(user: Partial<User>): void {
+        this.state.userSelection = {
+            ...this.state.userSelection,
+            ...user,
+        }
     }
 
     async setToken(token: string): Promise<void> {

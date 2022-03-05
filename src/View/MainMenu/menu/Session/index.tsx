@@ -1,10 +1,10 @@
 import { FormattedMessage } from "language"
 import React, { useState } from "react"
 import { NavigateFunction, useNavigate } from "react-router-dom"
-import { BoardSession, currentSession, isConnected } from "api/session"
+import { BoardSession } from "api/session"
 import { ExpandableIcon, HorizontalRule } from "components"
 import { Session, User } from "api/types"
-import { useOnline } from "state/online"
+import { online, useOnline } from "state/online"
 import { notification } from "state/notification"
 import { CSSTransition } from "react-transition-group"
 import { cssTransition } from "View/MainMenu/cssTransition"
@@ -15,19 +15,22 @@ import SessionSettingsMenu from "./SessionSettings"
 const createAndJoin =
     (navigate: NavigateFunction, copyOffline?: boolean) => async () => {
         try {
-            const sessionId = await currentSession().create()
-            await currentSession().createSocket(sessionId)
-            await currentSession().join(copyOffline)
+            const session = new BoardSession(online.state.userSelection)
+            const sessionId = await session.create()
+            await session.createSocket(sessionId)
+            await session.join(copyOffline)
+            online.newSession(session)
             navigate(BoardSession.path(sessionId))
         } catch (error) {
             notification.create("Notification.SessionCreationFailed", 2000)
         }
     }
 
-const leaveSession = (navigate: NavigateFunction) => () => {
-    currentSession().disconnect()
-    navigate("/")
-}
+const leaveSession =
+    (session: Session | undefined, navigate: NavigateFunction) => () => {
+        session?.disconnect()
+        navigate("/")
+    }
 
 const getUserName = (session: Session | undefined, user: User) => {
     let name = user.alias
@@ -52,7 +55,7 @@ const SessionMenu = () => {
 
     return (
         <MainMenuWrap>
-            {!isConnected() ? (
+            {!session?.isConnected() ? (
                 <>
                     <MenuItem
                         text={
@@ -98,7 +101,7 @@ const SessionMenu = () => {
                         text={
                             <FormattedMessage id="Menu.General.Session.Leave" />
                         }
-                        onClick={leaveSession(navigate)}
+                        onClick={leaveSession(session, navigate)}
                     />
                 </>
             )}
