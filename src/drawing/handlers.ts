@@ -1,10 +1,10 @@
 import { cloneDeep } from "lodash"
 import { Stroke, Tool } from "drawing/stroke/index.types"
-import { currentSession, isConnected } from "api/session"
 import { backgroundStyle } from "consts"
 import { drawing } from "state/drawing"
 import { board } from "state/board"
 import { view } from "state/view"
+import { online } from "state/online"
 import {
     AddPagesAction,
     AddStrokesAction,
@@ -35,11 +35,11 @@ export function handleAddPageOver(): void {
         isRedoable: true,
     }
 
-    if (isConnected()) {
-        const session = currentSession()
-        addPagesAction.sessionHandler = () => session.addPages([page], [index])
+    if (online.state.session?.isConnected()) {
+        const { session } = online.state
+        addPagesAction.sessionHandler = () => session?.addPages([page], [index])
         addPagesAction.sessionUndoHandler = () =>
-            session.deletePages([page.pageId])
+            session?.deletePages([page.pageId])
     }
 
     board.addPages(addPagesAction)
@@ -54,11 +54,11 @@ export function handleAddPageUnder(): void {
         isRedoable: true,
     }
 
-    if (isConnected()) {
-        const session = currentSession()
-        addPagesAction.sessionHandler = () => session.addPages([page], [index])
+    if (online.state.session?.isConnected()) {
+        const { session } = online.state
+        addPagesAction.sessionHandler = () => session?.addPages([page], [index])
         addPagesAction.sessionUndoHandler = () =>
-            session.deletePages([page.pageId])
+            session?.deletePages([page.pageId])
     }
 
     board.addPages(addPagesAction)
@@ -79,13 +79,13 @@ export function handleClearPages(pageIds: PageId[]): void {
         isRedoable: true,
     }
 
-    if (isConnected()) {
-        const session = currentSession()
+    if (online.state.session?.isConnected()) {
+        const { session } = online.state
         clearPagesAction.sessionHandler = () => {
-            session.updatePages(verifiedPages, true)
+            session?.updatePages(verifiedPages, true)
         }
         clearPagesAction.sessionUndoHandler = (...undos) => {
-            session.sendStrokes(undos)
+            session?.sendStrokes(undos)
         }
     }
 
@@ -105,17 +105,17 @@ export function handleDeletePages(
         isRedoable,
     }
 
-    if (isConnected()) {
-        const session = currentSession()
+    if (online.state.session?.isConnected()) {
+        const { session } = online.state
         const indices = pageIds.map((pid) =>
             board.getState().pageRank.indexOf(pid)
         )
-        deletePagesAction.sessionHandler = () => session.deletePages(pageIds)
+        deletePagesAction.sessionHandler = () => session?.deletePages(pageIds)
         deletePagesAction.sessionUndoHandler = (...undos) => {
             const pages = undos.map(({ page }) => page)
             // TODO: send pagerank
-            session.addPages(pages, indices as number[])
-            session.sendStrokes(
+            session?.addPages(pages, indices as number[])
+            session?.sendStrokes(
                 pages.reduce<Stroke[]>(
                     (arr, page) => arr.concat(Object.values(page.strokes)),
                     []
@@ -138,11 +138,11 @@ export function handleAddStrokes(strokes: Stroke[], isUpdate: boolean): void {
         isRedoable: true,
     }
 
-    if (isConnected()) {
-        const session = currentSession()
-        addStrokesAction.sessionHandler = () => session.sendStrokes(strokes)
+    if (online.state.session?.isConnected()) {
+        const { session } = online.state
+        addStrokesAction.sessionHandler = () => session?.sendStrokes(strokes)
         addStrokesAction.sessionUndoHandler = () =>
-            session.eraseStrokes(strokes)
+            session?.eraseStrokes(strokes)
     }
 
     board.addStrokes(addStrokesAction)
@@ -154,11 +154,11 @@ export function handleDeleteStrokes(strokes: Stroke[]): void {
         isRedoable: true,
     }
 
-    if (isConnected()) {
-        const session = currentSession()
-        eraseStrokesAction.sessionHandler = () => session.eraseStrokes(strokes)
+    if (online.state.session?.isConnected()) {
+        const { session } = online.state
+        eraseStrokesAction.sessionHandler = () => session?.eraseStrokes(strokes)
         eraseStrokesAction.sessionUndoHandler = () =>
-            session.sendStrokes(strokes)
+            session?.sendStrokes(strokes)
     }
 
     board.eraseStrokes(eraseStrokesAction)
@@ -199,12 +199,12 @@ export function handleChangePageBackground(): void {
         isRedoable: true,
     }
 
-    if (isConnected()) {
-        const session = currentSession()
+    if (online.state.session?.isConnected()) {
+        const { session } = online.state
         setPageMetaAction.sessionHandler = () =>
-            session.updatePages([pageUpdate], false)
+            session?.updatePages([pageUpdate], false)
         setPageMetaAction.sessionUndoHandler = (...undos) =>
-            session.updatePages(undos, false)
+            session?.updatePages(undos, false)
     }
 
     board.setPageMeta(setPageMetaAction)

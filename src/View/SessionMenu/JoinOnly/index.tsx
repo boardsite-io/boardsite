@@ -2,7 +2,7 @@ import { FormattedMessage } from "language"
 import React from "react"
 import { Button, DialogContent, DialogTitle, UserSelection } from "components"
 import { useNavigate, useParams } from "react-router-dom"
-import { BoardSession, currentSession } from "api/session"
+import { BoardSession } from "api/session"
 import { online } from "state/online"
 import { DialogState } from "state/online/state/index.types"
 import { notification } from "state/notification"
@@ -24,8 +24,10 @@ const JoinOnly: React.FC = () => {
 
             const path = BoardSession.path(sid)
 
-            await currentSession().createSocket(path.split("/").pop() ?? "")
-            await currentSession().join()
+            const session = new BoardSession(online.state.userSelection)
+            await session.createSocket(path.split("/").pop() ?? "")
+            await session.join()
+            online.newSession(session)
 
             navigate(path)
         } catch (error) {
