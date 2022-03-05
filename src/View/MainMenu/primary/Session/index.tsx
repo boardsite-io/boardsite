@@ -1,26 +1,29 @@
 import { FormattedMessage } from "language"
 import React from "react"
 import { NavigateFunction, useNavigate } from "react-router-dom"
-import { BoardSession, currentSession, isConnected } from "api/session"
+import { BoardSession } from "api/session"
 import { HorizontalRule } from "components"
 import { Session, User } from "api/types"
-import { useOnline } from "state/online"
+import { useOnline, online } from "state/online"
+import { MainSubMenuState } from "state/menu/state/index.types"
 import { SubMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
-import { MainSubMenuState } from "../../../../state/menu/state/index.types"
 
 const createAndJoin =
     (navigate: NavigateFunction, copyOffline?: boolean) => async () => {
-        const sessionId = await currentSession().create()
-        await currentSession().createSocket(sessionId)
-        await currentSession().join(copyOffline)
+        const session = new BoardSession(online.state.userSelection)
+        const sessionId = await session.create()
+        await session.createSocket(sessionId)
+        await session.join(copyOffline)
+        online.newSession(session)
         navigate(BoardSession.path(sessionId))
     }
 
-const leaveSession = (navigate: NavigateFunction) => () => {
-    currentSession().disconnect()
-    navigate("/")
-}
+const leaveSession =
+    (session: Session | undefined, navigate: NavigateFunction) => () => {
+        session?.disconnect()
+        navigate("/")
+    }
 
 const userName = (session: Session | undefined, user: User) => {
     let name = user.alias
@@ -39,7 +42,7 @@ const SessionMenu = () => {
 
     return (
         <SubMenuWrap>
-            {!isConnected() ? (
+            {!session?.isConnected() ? (
                 <>
                     <MenuItem
                         isMainMenu
@@ -73,7 +76,7 @@ const SessionMenu = () => {
                                 <FormattedMessage id="Menu.General.Session.Settings" />
                             }
                             expandMenu={MainSubMenuState.SessionSettings}
-                            onClick={leaveSession(navigate)}
+                            onClick={leaveSession(session, navigate)}
                         />
                     )}
                     <MenuItem
@@ -81,7 +84,7 @@ const SessionMenu = () => {
                         text={
                             <FormattedMessage id="Menu.General.Session.Leave" />
                         }
-                        onClick={leaveSession(navigate)}
+                        onClick={leaveSession(session, navigate)}
                     />
                 </>
             )}

@@ -2,7 +2,6 @@ import React from "react"
 import { Dialog } from "components"
 import { online, useOnline } from "state/online"
 import { useParams } from "react-router-dom"
-import { isConnected } from "api/session"
 import { DialogState } from "state/online/state/index.types"
 import ManageOnlineSession from "./ManageOnlineSession"
 import CreateOnlineSession from "./CreateOnlineSession"
@@ -25,8 +24,9 @@ const contents = {
 const Session: React.FC = () => {
     const { dialogState } = useOnline()
     const { sid } = useParams()
+    const { session } = useOnline()
     const contentType =
-        sid && !isConnected() ? DialogState.JoinOnly : dialogState
+        sid && !session?.isConnected() ? DialogState.JoinOnly : dialogState
 
     return (
         <Dialog open={dialogState !== DialogState.Closed} onClose={handleClose}>

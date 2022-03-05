@@ -55,7 +55,7 @@ const mockPageMeta: PageMeta = {
 }
 
 function createMockSession(): BoardSession {
-    const session = new BoardSession()
+    const session = new BoardSession(mockUser)
     session.config = mockConfig
     session.user = mockUser
     return session
@@ -80,7 +80,7 @@ describe("session", () => {
         requestMock.prototype.postSession.mockResolvedValue({
             config: mockConfig,
         })
-        const session = new BoardSession()
+        const session = new BoardSession(mockUser)
         const sessionId = await session.create()
         expect(sessionId).toEqual(mockConfig.id)
         expect(session.config).toEqual(mockConfig)
@@ -158,7 +158,7 @@ describe("session", () => {
     })
 
     it("is connected if socket is open and sessionId is set", () => {
-        const session = new BoardSession()
+        const session = new BoardSession(mockUser)
         session.config = mockConfig
         session.socket = { readyState: WebSocket.OPEN } as WebSocket
         expect(session.isConnected()).toBeTruthy()
