@@ -29,7 +29,6 @@ const onClickSession = () => {
 
 const onEnter = (newState: MainMenuState, currentState: MainMenuState) => {
     if (currentState !== MainMenuState.Closed && currentState !== newState) {
-        // menu.setMainSubMenu(MainSubMenuState.Closed)
         menu.setMainMenu(newState)
     }
 }
