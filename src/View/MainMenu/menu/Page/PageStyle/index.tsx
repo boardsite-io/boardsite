@@ -4,8 +4,8 @@ import { backgroundStyle } from "consts"
 import { FormattedMessage } from "language"
 import { drawing, useDrawing } from "state/drawing"
 import { handleChangePageBackground } from "drawing/handlers"
-import { SubMenuWrap } from "../../index.styled"
-import MenuItem from "../../MenuItem"
+import { SubMenuWrap } from "View/MainMenu/index.styled"
+import MenuItem from "View/MainMenu/MenuItem"
 
 const onClickBlank = () => {
     drawing.setPageBackground(backgroundStyle.BLANK)
@@ -19,11 +19,11 @@ const onClickRuled = () => {
 const onClickApply = () => {
     handleChangePageBackground()
 }
-const PageStyleMenu = () => {
+const PageStyle = () => {
     const { style } = useDrawing("PageStyleMenu").pageMeta.background
 
     return (
-        <SubMenuWrap level={3}>
+        <SubMenuWrap>
             <MenuItem
                 text={<FormattedMessage id="Menu.Page.Style.Blank" />}
                 icon={
@@ -55,4 +55,4 @@ const PageStyleMenu = () => {
         </SubMenuWrap>
     )
 }
-export default PageStyleMenu
+export default PageStyle

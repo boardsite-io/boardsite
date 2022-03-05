@@ -1,7 +1,6 @@
 import { GlobalState, RenderTrigger } from "../../index.types"
 import {
     MainMenuState,
-    MainSubMenuState,
     MenuState,
     MenuSubscribers,
     MenuSubscription,
@@ -10,13 +9,11 @@ import {
 export class Menu implements GlobalState<MenuState, MenuSubscribers> {
     state: MenuState = {
         mainMenuState: MainMenuState.Closed,
-        mainSubMenuState: MainSubMenuState.Closed,
         shortcutsOpen: false,
     }
 
     subscribers: MenuSubscribers = {
         mainMenu: [],
-        mainSubMenu: [],
         shortcutsOpen: [],
     }
 
@@ -33,15 +30,8 @@ export class Menu implements GlobalState<MenuState, MenuSubscribers> {
         this.render("mainMenu")
     }
 
-    setMainSubMenu(newState: MainSubMenuState): void {
-        this.state.mainSubMenuState = newState
-        this.render("mainSubMenu")
-    }
-
     closeMainMenu() {
         this.setMainMenu(MainMenuState.Closed)
-        this.setMainSubMenu(MainSubMenuState.Closed)
-        this.render("mainSubMenu")
     }
 
     openShortcuts() {

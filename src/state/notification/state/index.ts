@@ -14,12 +14,12 @@ export class Notification
 
     subscribers: NotificationSubscribers = { notification: [] }
 
-    create(id: IntlMessageId): void {
+    create(id: IntlMessageId, duration = NOTIFICATION_DURATION): void {
         this.addNotification(id)
 
         setTimeout(() => {
             this.removeNotification()
-        }, NOTIFICATION_DURATION)
+        }, duration)
     }
 
     private addNotification(id: IntlMessageId): void {

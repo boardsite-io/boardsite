@@ -3,8 +3,8 @@ import React from "react"
 import { useBoard } from "state/board"
 import { RedoIcon, UndoIcon } from "components"
 import { handleRedo, handleUndo } from "drawing/handlers"
-import { SubMenuWrap } from "../../index.styled"
-import MenuItem from "../../MenuItem"
+import { SubMenuWrap } from "../../../index.styled"
+import MenuItem from "../../../MenuItem"
 
 const EditMenu = () => {
     const { undoStack, redoStack } = useBoard("EditMenu")
@@ -12,7 +12,7 @@ const EditMenu = () => {
     const disableRedoStack = redoStack?.length === 0
 
     return (
-        <SubMenuWrap level={2}>
+        <SubMenuWrap>
             <MenuItem
                 disabled={disableUndoStack}
                 text={<FormattedMessage id="Menu.General.Edit.Undo" />}

@@ -155,5 +155,6 @@
     "SessionMenu.ManageOnline.LeaveButton": "Leave current session",
     "Loading.ExportingPdf": "Exporting as PDF...",
     "Loading.ExportingWorkspace": "Exporting workspace...",
-    "UserSelection.TextFieldLabel.ChooseAlias": "Choose alias"
+    "UserSelection.TextFieldLabel.ChooseAlias": "Choose alias",
+    "Notification.SessionCreationFailed": "Session creation failed! Please try again later."
 }

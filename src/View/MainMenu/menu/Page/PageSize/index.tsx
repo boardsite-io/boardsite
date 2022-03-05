@@ -4,8 +4,8 @@ import { TickIcon } from "components"
 import { pageSize } from "consts"
 import { drawing, useDrawing } from "state/drawing"
 import { PageSize } from "state/board/state/index.types"
-import { SubMenuWrap } from "../../index.styled"
-import MenuItem from "../../MenuItem"
+import MenuItem from "View/MainMenu/MenuItem"
+import { SubMenuWrap } from "View/MainMenu/index.styled"
 
 const onClickA4landscape = () => {
     drawing.setPageSize(pageSize.a4landscape)
@@ -23,7 +23,7 @@ const PageSizeMenu = () => {
     )
 
     return (
-        <SubMenuWrap level={4}>
+        <SubMenuWrap>
             <MenuItem
                 text={<FormattedMessage id="Menu.Page.Size.A4Portrait" />}
                 icon={isMatch(pageSize.a4portrait) ? <TickIcon /> : undefined}

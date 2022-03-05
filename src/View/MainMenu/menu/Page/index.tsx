@@ -1,5 +1,6 @@
-import React from "react"
+import React, { useState } from "react"
 import {
+    ExpandableIcon,
     HorizontalRule,
     PageAboveIcon,
     PageBelowIcon,
@@ -16,9 +17,12 @@ import {
 } from "drawing/handlers"
 import { FormattedMessage } from "language"
 import { menu } from "state/menu"
-import { MainSubMenuState } from "state/menu/state/index.types"
+import { CSSTransition } from "react-transition-group"
+import { cssTransition } from "View/MainMenu/cssTransition"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
+import PageSizeMenu from "./PageSize"
+import PageStyle from "./PageStyle"
 
 const onClickNewPageBefore = () => {
     handleAddPageOver()
@@ -40,47 +44,64 @@ const onClickDeleteAllPages = () => {
     handleDeleteAllPages(true)
 }
 
+enum SubMenu {
+    Closed,
+    PageStyle,
+    PageSize,
+}
+
 const PageMenu = () => {
+    const [subMenu, setSubMenu] = useState<SubMenu>(SubMenu.Closed)
+
     return (
         <MainMenuWrap>
             <MenuItem
-                isMainMenu
                 text={<FormattedMessage id="Menu.Page.NewBefore" />}
                 icon={<PageAboveIcon />}
                 onClick={onClickNewPageBefore}
             />
             <MenuItem
-                isMainMenu
                 text={<FormattedMessage id="Menu.Page.NewAfter" />}
                 icon={<PageBelowIcon />}
                 onClick={onClickNewPageAfter}
             />
             <HorizontalRule />
             <MenuItem
-                isMainMenu
                 text={<FormattedMessage id="Menu.Page.Style" />}
-                expandMenu={MainSubMenuState.PageStyle}
-            />
+                expandMenu={() => setSubMenu(SubMenu.PageSize)}
+                icon={<ExpandableIcon />}
+            >
+                <CSSTransition
+                    in={subMenu === SubMenu.PageSize}
+                    {...cssTransition}
+                >
+                    <PageSizeMenu />
+                </CSSTransition>
+            </MenuItem>
             <MenuItem
-                isMainMenu
                 text={<FormattedMessage id="Menu.Page.Size" />}
-                expandMenu={MainSubMenuState.PageSize}
-            />
+                expandMenu={() => setSubMenu(SubMenu.PageStyle)}
+                icon={<ExpandableIcon />}
+            >
+                <CSSTransition
+                    in={subMenu === SubMenu.PageStyle}
+                    {...cssTransition}
+                >
+                    <PageStyle />
+                </CSSTransition>
+            </MenuItem>
             <HorizontalRule />
             <MenuItem
-                isMainMenu
                 text={<FormattedMessage id="Menu.Page.Clear" />}
                 // icon={<PageClearIcon />}
                 onClick={onClickClearPage}
             />
             <MenuItem
-                isMainMenu
                 text={<FormattedMessage id="Menu.Page.Delete" />}
                 // icon={<PageDeleteIcon />}
                 onClick={onClickDeletePage}
             />
             <MenuItem
-                isMainMenu
                 warning
                 text={<FormattedMessage id="Menu.Page.DeleteAll" />}
                 // icon={<PageDeleteAllIcon />}

@@ -31,7 +31,6 @@ const menuStyles = css`
     justify-content: center;
     margin: 0;
     padding: 0;
-    overflow: hidden;
     box-shadow: var(--toolbar-box-shadow);
     background: var(--cPrimary);
     border-radius: var(--toolbar-border-radius);
@@ -44,7 +43,7 @@ export const MainMenuWrap = styled.ul`
     ${menuStyles};
 `
 
-export const SubMenuWrap = styled.ul<{ level?: number }>`
+export const SubMenuWrap = styled.ul`
     ${menuStyles};
     z-index: -1; /* make transition animation go below */
     position: absolute;
@@ -68,11 +67,4 @@ export const SubMenuWrap = styled.ul<{ level?: number }>`
     &.menu-exit-active {
         transform: translateX(-300%);
     }
-
-    ${({ level }) =>
-        level
-            ? css`
-                  margin-top: calc(${level - 1} * 2.3rem);
-              `
-            : null}
 `

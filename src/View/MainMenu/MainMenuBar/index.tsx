@@ -7,7 +7,7 @@ import {
     ToolTip,
     VerticalRule,
 } from "components"
-import { MainMenuState, MainSubMenuState } from "state/menu/state/index.types"
+import { MainMenuState } from "state/menu/state/index.types"
 import { menu, useMenu } from "state/menu"
 import { MainMenuBarWrap } from "./index.styled"
 import ViewButton from "./ViewButton"
@@ -29,7 +29,6 @@ const onClickSession = () => {
 
 const onEnter = (newState: MainMenuState, currentState: MainMenuState) => {
     if (currentState !== MainMenuState.Closed && currentState !== newState) {
-        menu.setMainSubMenu(MainSubMenuState.Closed)
         menu.setMainMenu(newState)
     }
 }

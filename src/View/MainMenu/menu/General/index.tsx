@@ -1,15 +1,19 @@
-import React from "react"
+import React, { useState } from "react"
 import { FormattedMessage } from "language"
-import { HorizontalRule } from "components"
+import { ExpandableIcon, HorizontalRule } from "components"
 import { FaGithub } from "react-icons/fa"
 import { SiGithubsponsors } from "react-icons/si"
 import { isMobile } from "react-device-detect"
 import { online, useOnline } from "state/online"
 import { menu } from "state/menu"
 import { AUTH_URL } from "api/auth"
-import { MainSubMenuState } from "state/menu/state/index.types"
+import { CSSTransition } from "react-transition-group"
+import EditMenu from "View/MainMenu/menu/General/Edit"
+import { cssTransition } from "View/MainMenu/cssTransition"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
+import FileMenu from "./File"
+import SettingsMenu from "./Settings"
 
 export const openInNewTab = (url: string): void => {
     const newWindow = window.open(url, "_blank", "noopener,noreferrer")
@@ -33,35 +37,57 @@ const onClickShortcuts = () => {
     menu.closeMainMenu()
 }
 
+enum SubMenu {
+    Closed,
+    File,
+    Edit,
+    Settings,
+}
+
 const GeneralMenu = () => {
+    const [subMenu, setSubMenu] = useState<SubMenu>(SubMenu.Closed)
     const { isSignedIn, isAuthorized } = useOnline()
+
     return (
         <MainMenuWrap>
             <MenuItem
-                isMainMenu
                 text={<FormattedMessage id="Menu.General.File" />}
-                expandMenu={MainSubMenuState.File}
-            />
+                expandMenu={() => setSubMenu(SubMenu.File)}
+                icon={<ExpandableIcon />}
+            >
+                <CSSTransition in={subMenu === SubMenu.File} {...cssTransition}>
+                    <FileMenu />
+                </CSSTransition>
+            </MenuItem>
             <MenuItem
-                isMainMenu
                 text={<FormattedMessage id="Menu.General.Edit" />}
-                expandMenu={MainSubMenuState.Edit}
-            />
+                expandMenu={() => setSubMenu(SubMenu.Edit)}
+                icon={<ExpandableIcon />}
+            >
+                <CSSTransition in={subMenu === SubMenu.Edit} {...cssTransition}>
+                    <EditMenu />
+                </CSSTransition>
+            </MenuItem>
             <HorizontalRule />
             <MenuItem
-                isMainMenu
                 text={<FormattedMessage id="Menu.General.Settings" />}
-                expandMenu={MainSubMenuState.Settings}
-            />
+                expandMenu={() => setSubMenu(SubMenu.Settings)}
+                icon={<ExpandableIcon />}
+            >
+                <CSSTransition
+                    in={subMenu === SubMenu.Settings}
+                    {...cssTransition}
+                >
+                    <SettingsMenu />
+                </CSSTransition>
+            </MenuItem>
             <MenuItem
-                isMainMenu
                 text={<FormattedMessage id="Menu.General.Github" />}
                 icon={<FaGithub id="transitory-icon" />}
                 onClick={onClickGithub}
             />
             {!isMobile && (
                 <MenuItem
-                    isMainMenu
                     text={<FormattedMessage id="Menu.General.Shortcuts" />}
                     onClick={onClickShortcuts}
                 />
@@ -69,20 +95,17 @@ const GeneralMenu = () => {
             <HorizontalRule />
             {isAuthorized() && (
                 <MenuItem
-                    isMainMenu
                     text={<FormattedMessage id="Menu.General.GithubSponsor" />}
                     icon={<SiGithubsponsors id="transitory-icon" />}
                 />
             )}
             {!isSignedIn() ? (
                 <MenuItem
-                    isMainMenu
                     text={<FormattedMessage id="Menu.General.SignIn" />}
                     onClick={onClickSignIn}
                 />
             ) : (
                 <MenuItem
-                    isMainMenu
                     text={<FormattedMessage id="Menu.General.SignOut" />}
                     onClick={onClickSignOut}
                 />
