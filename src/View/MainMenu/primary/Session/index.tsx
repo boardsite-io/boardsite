@@ -5,16 +5,21 @@ import { BoardSession, currentSession, isConnected } from "api/session"
 import { HorizontalRule } from "components"
 import { Session, User } from "api/types"
 import { useOnline } from "state/online"
+import { notification } from "state/notification"
 import { SubMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 import { MainSubMenuState } from "../../../../state/menu/state/index.types"
 
 const createAndJoin =
     (navigate: NavigateFunction, copyOffline?: boolean) => async () => {
-        const sessionId = await currentSession().create()
-        await currentSession().createSocket(sessionId)
-        await currentSession().join(copyOffline)
-        navigate(BoardSession.path(sessionId))
+        try {
+            const sessionId = await currentSession().create()
+            await currentSession().createSocket(sessionId)
+            await currentSession().join(copyOffline)
+            navigate(BoardSession.path(sessionId))
+        } catch (error) {
+            notification.create("Notification.SessionCreationFailed", 2000)
+        }
     }
 
 const leaveSession = (navigate: NavigateFunction) => () => {
