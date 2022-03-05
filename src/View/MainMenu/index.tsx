@@ -14,6 +14,8 @@ import MainMenuBar from "./MainMenuBar"
 import GeneralMenu from "./primary/General"
 import GoToMenu from "./secondary/GoTo"
 import SettingsMenu from "./secondary/Settings"
+import SessionMenu from "./primary/Session"
+import SessionSettingsMenu from "./secondary/SessionSettings"
 
 const onClickBackground = () => {
     menu.closeMainMenu()
@@ -40,6 +42,7 @@ const MainMenu: React.FC = memo(() => {
                     {mainMenuState === MainMenuState.General && <GeneralMenu />}
                     {mainMenuState === MainMenuState.View && <ViewMenu />}
                     {mainMenuState === MainMenuState.Page && <PageMenu />}
+                    {mainMenuState === MainMenuState.Session && <SessionMenu />}
                     <CSSTransition
                         in={mainSubMenuState === MainSubMenuState.File}
                         {...cssTransitionProps}
@@ -75,6 +78,15 @@ const MainMenu: React.FC = memo(() => {
                         {...cssTransitionProps}
                     >
                         <SettingsMenu />
+                    </CSSTransition>
+                    <CSSTransition
+                        in={
+                            mainSubMenuState ===
+                            MainSubMenuState.SessionSettings
+                        }
+                        {...cssTransitionProps}
+                    >
+                        <SessionSettingsMenu />
                     </CSSTransition>
                 </MainMenuDropdown>
             </Popup>

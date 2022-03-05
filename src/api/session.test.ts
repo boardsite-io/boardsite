@@ -11,14 +11,19 @@ import {
 import { Board } from "state/board"
 import { BoardSession } from "./session"
 import { Request } from "./request"
-import { Message, PageSync, StrokeDelete, User } from "./types"
+import { Message, PageSync, SessionConfig, StrokeDelete, User } from "./types"
 
 jest.mock("./request")
 const requestMock = Request as jest.MockedClass<typeof Request>
 jest.mock("state/board")
 const stateMock = Board as jest.MockedClass<typeof Board>
 
-const mockSessionId = "testId"
+const mockConfig: SessionConfig = {
+    id: "testId",
+    maxUsers: 4,
+    host: "userId",
+    readOnly: false,
+}
 const mockUser: User = {
     alias: "user",
     color: "#00ff00",
@@ -51,7 +56,7 @@ const mockPageMeta: PageMeta = {
 
 function createMockSession(): BoardSession {
     const session = new BoardSession()
-    session.id = mockSessionId
+    session.config = mockConfig
     session.user = mockUser
     return session
 }
@@ -73,19 +78,22 @@ describe("session", () => {
 
     it("creates a new session", async () => {
         requestMock.prototype.postSession.mockResolvedValue({
-            sessionId: mockSessionId,
+            config: mockConfig,
         })
         const session = new BoardSession()
         const sessionId = await session.create()
-        expect(sessionId).toEqual(mockSessionId)
-        expect(session.id).toEqual(mockSessionId)
+        expect(sessionId).toEqual(mockConfig.id)
+        expect(session.config).toEqual(mockConfig)
         expect(requestMock.prototype.postSession).toHaveBeenCalledTimes(1)
     })
 
     it("joins an existing session", async () => {
-        requestMock.prototype.getUsers.mockResolvedValue({
-            [mockUser.id ?? ""]: mockUser,
-            [newUser.id ?? ""]: newUser,
+        requestMock.prototype.getConfig.mockResolvedValue({
+            config: mockConfig,
+            users: {
+                [mockUser.id ?? ""]: mockUser,
+                [newUser.id ?? ""]: newUser,
+            },
         })
         requestMock.prototype.getPagesSync.mockResolvedValue({
             pageRank: [],
@@ -103,7 +111,7 @@ describe("session", () => {
             [mockUser.id ?? ""]: mockUser,
             [newUser.id ?? ""]: newUser,
         })
-        expect(requestMock.prototype.getUsers).toHaveBeenCalledTimes(1)
+        expect(requestMock.prototype.getConfig).toHaveBeenCalledTimes(1)
         expect(requestMock.prototype.getPagesSync).toHaveBeenCalledTimes(1)
     })
 
@@ -151,7 +159,7 @@ describe("session", () => {
 
     it("is connected if socket is open and sessionId is set", () => {
         const session = new BoardSession()
-        session.id = mockSessionId
+        session.config = mockConfig
         session.socket = { readyState: WebSocket.OPEN } as WebSocket
         expect(session.isConnected()).toBeTruthy()
     })

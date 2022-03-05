@@ -19,21 +19,24 @@ import {
 } from "state/board/state/index.types"
 import { getRandomColor } from "helpers"
 import {
+    ConfigMessage,
     ConnectedUsers,
     Message,
-    messages,
     MessageType,
     PageSync,
     SerializedPage,
     Session,
+    SessionConfig,
     StrokeDelete,
     User,
+    UserHost,
 } from "./types"
 import { API_URL, Request } from "./request"
 import { online } from "../state/online"
 
 export class BoardSession implements Session {
-    id?: string
+    config?: SessionConfig
+    secret?: string
     user: User
     request: Request
     socket?: WebSocket
@@ -59,20 +62,15 @@ export class BoardSession implements Session {
         assign(this.user, user)
     }
 
-    setID(sessionId: string): Session {
-        this.id = sessionId
-        this.request = new Request(this.id)
-        return this
-    }
-
     async create(): Promise<string> {
-        const { sessionId } = await this.request.postSession()
-        this.setID(sessionId)
-        return sessionId
+        const { config } = await this.request.postSession()
+        this.config = config
+        this.request = new Request(config.id)
+        return config.id
     }
 
     async createSocket(sessionId: string): Promise<void> {
-        this.setID(sessionId)
+        this.request = new Request(sessionId)
         // create a new user for us
         const { id } = await this.request.postUser(this.user)
         this.user.id = id
@@ -81,7 +79,7 @@ export class BoardSession implements Session {
             const url = new URL(API_URL)
             url.protocol = url.protocol.replace("http", "ws")
             this.socket = new WebSocket(
-                `${url.toString()}b/${this.id}/users/${this.user.id}/socket`
+                `${url.toString()}b/${sessionId}/users/${this.user.id}/socket`
             )
             this.socket.onmessage = (msg) => this.receive(JSON.parse(msg.data))
             this.socket.onopen = () => resolve()
@@ -93,7 +91,9 @@ export class BoardSession implements Session {
         if (!isConnected) {
             throw new Error("no open websocket")
         }
-        this.users = await this.request.getUsers()
+        const { users, config } = await this.request.getConfig()
+        this.users = users
+        this.config = config
 
         if (copyOffline) {
             // create an online session from the current offline
@@ -111,20 +111,29 @@ export class BoardSession implements Session {
             // create a page if there are none yet
             await this.request.postPages([new BoardPage()], [0])
         }
+
+        online.render("session")
     }
 
     isConnected(): boolean {
         return (
-            this.id !== "" &&
+            this.config?.id !== "" &&
             this.socket != null &&
             this.socket?.readyState === WebSocket.OPEN
         )
+    }
+
+    isHost(): boolean {
+        return this.user.id === this.config?.host
     }
 
     disconnect(): void {
         this.socket?.close()
         this.users = {}
         board.clearAttachments()
+        board.deleteAllPages()
+        board.addPages({ data: [{ page: new BoardPage(), index: -1 }] })
+        online.render("session")
     }
 
     async synchronize(
@@ -204,12 +213,12 @@ export class BoardSession implements Session {
                 return null
             })
             .filter((s) => s)
-        this.send(messages.Stroke, strokesToSend)
+        this.send(MessageType.Stroke, strokesToSend)
     }
 
     eraseStrokes(strokes: StrokeDelete[]): void {
         this.send(
-            messages.Stroke,
+            MessageType.Stroke,
             strokes.map((s) => ({
                 id: s.id,
                 pageId: s.pageId,
@@ -253,7 +262,7 @@ export class BoardSession implements Session {
     }
 
     attachURL(attachId: string): URL {
-        return new URL(attachId, `${API_URL}/b/${this.id}/attachments/`)
+        return new URL(attachId, `${API_URL}/b/${this.config?.id}/attachments/`)
     }
 
     userConnect(user: User): void {
@@ -267,27 +276,52 @@ export class BoardSession implements Session {
         delete this.users?.[id as string]
     }
 
+    async kickUser({ id }: User): Promise<void> {
+        if (!this.secret) return
+        if (!id) return
+        await this.request.putUser(this.secret, id)
+    }
+
+    async updateConfig(config: Partial<SessionConfig>): Promise<void> {
+        if (!this.secret) return
+        await this.request.putConfig(this.secret, config)
+    }
+
     receive(message: Message<unknown>): void {
         switch (message.type) {
-            case messages.Stroke:
+            case MessageType.Stroke:
                 this.receiveStrokes(message.content as Stroke[])
                 break
 
-            case messages.PageSync:
+            case MessageType.PageSync:
                 this.syncPages(message.content as PageSync)
                 break
 
-            case messages.UserConnected:
+            case MessageType.UserHost:
+                this.secret = (message.content as UserHost).secret
+                break
+
+            case MessageType.UserConnected:
                 this.userConnect(message.content as User)
                 break
 
-            case messages.UserDisconnected:
+            case MessageType.UserDisconnected:
                 this.userDisconnect(message.content as User)
+                break
+
+            case MessageType.UserKick:
+                // TODO notification
+                this.disconnect()
+                break
+
+            case MessageType.Config:
+                this.config = (message.content as ConfigMessage).config
                 break
 
             default:
                 break
         }
+        online.render("session")
     }
 
     // TODO

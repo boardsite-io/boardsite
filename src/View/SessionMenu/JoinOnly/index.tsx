@@ -24,9 +24,7 @@ const JoinOnly: React.FC = () => {
 
             const path = BoardSession.path(sid)
 
-            await currentSession()
-                .setID(sid)
-                .createSocket(path.split("/").pop() ?? "")
+            await currentSession().createSocket(path.split("/").pop() ?? "")
             await currentSession().join()
 
             navigate(path)

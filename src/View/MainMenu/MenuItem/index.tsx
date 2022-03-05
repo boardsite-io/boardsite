@@ -5,7 +5,7 @@ import { MainSubMenuState } from "state/menu/state/index.types"
 import { ItemWrap, ItemButton } from "./index.styled"
 
 interface MenuItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    text: JSX.Element
+    text: JSX.Element | string
     icon?: JSX.Element
     isMainMenu?: boolean
     expandMenu?: MainSubMenuState
