@@ -1,4 +1,4 @@
-import { NOTIFICATION_DURATION } from "consts"
+import { DEFAULT_NOTIFICATION_DURATION } from "consts"
 import { IntlMessageId } from "language"
 import { GlobalState, RenderTrigger } from "../../index.types"
 import {
@@ -14,7 +14,7 @@ export class Notification
 
     subscribers: NotificationSubscribers = { notification: [] }
 
-    create(id: IntlMessageId, duration = NOTIFICATION_DURATION): void {
+    create(id: IntlMessageId, duration = DEFAULT_NOTIFICATION_DURATION): void {
         this.addNotification(id)
 
         setTimeout(() => {

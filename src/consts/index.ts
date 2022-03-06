@@ -30,7 +30,7 @@ export const FILE_NAME_PDF = "file"
 export const FILE_NAME_WORKSPACE = "workspace"
 
 export const NOTIFICATION_TRANSITION = 300 // in ms
-export const NOTIFICATION_DURATION = 1000
+export const DEFAULT_NOTIFICATION_DURATION = 2000
 export const MAX_FAVORITE_TOOLS = 5
 export const MAX_ALIAS_LENGTH = 30
 export const TRANSFORM_PIXEL_SCALE_DEBOUNCE = 100 // debounce time in ms

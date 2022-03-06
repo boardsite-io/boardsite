@@ -1,9 +1,9 @@
 import React from "react"
-import { ItemWrap, ItemButton } from "./index.styled"
+import { ItemWrap, ItemButton, TextWrap } from "./index.styled"
 
 interface MenuItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     text: JSX.Element | string
-    icon?: JSX.Element
+    icon?: JSX.Element | null | boolean
     expandMenu?: () => void
     warning?: boolean
 }
@@ -28,7 +28,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
                 }}
                 onMouseEnter={() => expandMenu?.()}
             >
-                {text}
+                <TextWrap>{text}</TextWrap>
                 {icon}
             </ItemButton>
             {children}
