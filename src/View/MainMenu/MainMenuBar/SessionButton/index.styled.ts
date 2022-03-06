@@ -21,6 +21,7 @@ export const SessionStatus = styled.div`
 `
 
 export const StyledMainMenuButton = styled(MainMenuButton)`
+    cursor: pointer;
     width: var(--icon-button-size);
     padding: var(--icon-button-padding);
 

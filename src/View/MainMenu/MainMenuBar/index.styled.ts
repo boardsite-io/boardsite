@@ -17,6 +17,7 @@ export const MainMenuBarWrap = styled.nav`
 `
 
 export const MainMenuButton = styled.button`
+    cursor: pointer;
     position: relative;
     display: flex;
     align-items: center;

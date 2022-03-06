@@ -2,6 +2,7 @@ import styled from "styled-components"
 import { MainMenuButton } from "../index.styled"
 
 export const StyledMainMenuButton = styled(MainMenuButton)`
+    cursor: pointer;
     margin-right: 0.6rem;
     padding: var(--icon-button-padding);
     height: var(--icon-button-size);
