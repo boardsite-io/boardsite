@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components"
 
-export const SELECTION_SIZE = "4rem"
+export const SELECTION_SIZE = "60px"
 
 export const active = css`
     box-shadow: 0 0 0 2px var(--cDetails), inset 0 0 0 2px var(--cDetails);

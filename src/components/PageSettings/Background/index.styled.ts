@@ -32,23 +32,23 @@ export const Checkered = styled.button<props>`
     background-image: repeating-linear-gradient(
             90deg,
             transparent 0,
-            transparent 0.95rem,
-            teal 0.95rem,
-            teal 1rem
+            transparent 14px,
+            teal 14px,
+            teal 15px
         ),
         repeating-linear-gradient(
             white 0,
-            white 0.95rem,
-            teal 0.95rem,
-            teal 1rem
+            white 14px,
+            teal 14px,
+            teal 15px
         );
 `
 export const Ruled = styled.button<props>`
     ${sharedStyle}
     background-image: repeating-linear-gradient(
-        white 0, 
-        white 0.95rem,
-        teal 0.95rem,
-        teal 1rem
+        white 0,
+        white 14px,
+        teal 14px,
+        teal 15px
     );
 `
