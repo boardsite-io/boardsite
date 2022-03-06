@@ -17,16 +17,27 @@ export const MainMenuBarWrap = styled.nav`
 `
 
 export const MainMenuButton = styled.button`
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: none;
     color: var(--cSecondary);
     background: var(--cPrimary);
     border-radius: var(--button-border-radius);
+    width: fit-content;
     height: var(--icon-button-size);
     margin: var(--icon-button-margin);
-    padding: var(--icon-button-padding);
+    padding: 0 0.2rem;
     transition: all 100ms ease-in-out;
 
     &:hover {
         filter: var(--main-menu-hover-filter);
+    }
+
+    svg {
+        height: 80%;
+        width: 80%;
     }
 `

@@ -26,25 +26,17 @@ const PageStyle = () => {
         <SubMenuWrap>
             <MenuItem
                 text={<FormattedMessage id="Menu.Page.Style.Blank" />}
-                icon={
-                    style === backgroundStyle.BLANK ? <TickIcon /> : undefined
-                }
+                icon={style === backgroundStyle.BLANK && <TickIcon />}
                 onClick={onClickBlank}
             />
             <MenuItem
                 text={<FormattedMessage id="Menu.Page.Style.Checkered" />}
-                icon={
-                    style === backgroundStyle.CHECKERED ? (
-                        <TickIcon />
-                    ) : undefined
-                }
+                icon={style === backgroundStyle.CHECKERED && <TickIcon />}
                 onClick={onClickCheckered}
             />
             <MenuItem
                 text={<FormattedMessage id="Menu.Page.Style.Ruled" />}
-                icon={
-                    style === backgroundStyle.RULED ? <TickIcon /> : undefined
-                }
+                icon={style === backgroundStyle.RULED && <TickIcon />}
                 onClick={onClickRuled}
             />
             <HorizontalRule />

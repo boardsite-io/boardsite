@@ -9,7 +9,7 @@ export const ToolRingWrap = styled.div`
     margin-right: var(--toolbar-margin);
 
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     z-index: var(--zIndexToolRing);
     background: var(--cPrimary);
@@ -20,6 +20,7 @@ export const ToolRingWrap = styled.div`
 
     @media (min-width: ${ScreenSize.Sm}) {
         margin-right: 0;
+        flex-direction: row;
         right: 50%;
         transform: translateX(50%);
     }

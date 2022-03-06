@@ -18,7 +18,7 @@ export class BoardPage implements Page {
             this.pageId = nanoid(8)
             this.strokes = {}
             this.meta = {
-                size: pageSize.a4landscape,
+                size: pageSize.a4portrait,
                 background: {
                     style: backgroundStyle.BLANK, // fallback type
                 },

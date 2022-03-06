@@ -19,7 +19,7 @@ const SessionSettingsMenu = () => {
                     <FormattedMessage id="Menu.General.Session.Config.ReadOnly" />
                 }
                 onClick={onClickReadOnly(session)}
-                icon={session?.config?.readOnly ? <TickIcon /> : undefined}
+                icon={session?.config?.readOnly && <TickIcon />}
             />
         </SubMenuWrap>
     )

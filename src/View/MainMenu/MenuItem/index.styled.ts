@@ -1,5 +1,15 @@
 import styled, { css } from "styled-components"
 
+// Ellipsis (...) text overflow for UserNames
+export const TextWrap = styled.span`
+    max-width: 11.3rem;
+    display: inline-block;
+    text-align: start;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+`
+
 export const ItemWrap = styled.li`
     position: relative;
     display: flex;
@@ -15,7 +25,7 @@ export const ItemWrap = styled.li`
 
 export const ItemButton = styled.button<{ $warning: boolean }>`
     display: flex;
-    flex-grow: 1;
+    width: 100%;
     align-items: center;
     justify-content: space-between;
     gap: var(--main-menu-button-gap);
