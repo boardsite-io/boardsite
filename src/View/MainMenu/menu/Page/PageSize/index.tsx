@@ -26,12 +26,12 @@ const PageSizeMenu = () => {
         <SubMenuWrap>
             <MenuItem
                 text={<FormattedMessage id="Menu.Page.Size.A4Portrait" />}
-                icon={isMatch(pageSize.a4portrait) ? <TickIcon /> : undefined}
+                icon={isMatch(pageSize.a4portrait) && <TickIcon />}
                 onClick={onClickA4portrait}
             />
             <MenuItem
                 text={<FormattedMessage id="Menu.Page.Size.A4Landscape" />}
-                icon={isMatch(pageSize.a4landscape) ? <TickIcon /> : undefined}
+                icon={isMatch(pageSize.a4landscape) && <TickIcon />}
                 onClick={onClickA4landscape}
             />
         </SubMenuWrap>

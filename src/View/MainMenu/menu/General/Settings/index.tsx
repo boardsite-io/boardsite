@@ -15,14 +15,14 @@ const SettingsMenu = () => {
             <MenuItem
                 text={<FormattedMessage id="Menu.General.Settings.Center" />}
                 onClick={() => board.toggleShouldCenter()}
-                icon={keepCentered ? <TickIcon /> : undefined}
+                icon={keepCentered && <TickIcon />}
             />
             <MenuItem
                 text={
                     <FormattedMessage id="Menu.General.Settings.DirectDraw" />
                 }
                 onClick={() => drawing.toggleDirectDraw()}
-                icon={directDraw ? <TickIcon /> : undefined}
+                icon={directDraw && <TickIcon />}
             />
         </SubMenuWrap>
     )
