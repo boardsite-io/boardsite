@@ -1,5 +1,5 @@
 import React, { useCallback } from "react"
-import { useOnline } from "state/online"
+import { online, useOnline } from "state/online"
 import { notification } from "state/notification"
 import { FormattedMessage } from "language"
 import { SubMenuWrap } from "../../../index.styled"
@@ -28,7 +28,7 @@ const UserOptions = ({ userId, isHost, userIsYou }: UserOptionsProps) => {
     return (
         <SubMenuWrap>
             <MenuItem
-                disabled={!isHost || userIsYou}
+                disabled={!isHost || userIsYou || !online.state.isAuthorized()}
                 warning
                 text={
                     <FormattedMessage id="Menu.General.Session.UserOptions.Kick" />
