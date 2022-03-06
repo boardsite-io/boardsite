@@ -1,18 +1,13 @@
 import { FormattedMessage } from "language"
 import React, { memo, useCallback } from "react"
-import {
-    IconButton,
-    MenuIcon,
-    Position,
-    ToolTip,
-    VerticalRule,
-} from "components"
+import { Position, ToolTip, VerticalRule } from "components"
 import { MainMenuState } from "state/menu/state/index.types"
 import { menu, useMenu } from "state/menu"
 import { MainMenuBarWrap } from "./index.styled"
 import ViewButton from "./ViewButton"
 import PageButton from "./PageButton"
 import SessionButton from "./SessionButton"
+import MenuButton from "./MenuButton"
 
 const onClickGeneral = () => {
     menu.setMainMenu(MainMenuState.General)
@@ -56,8 +51,7 @@ const MainMenuBar: React.FC = memo(() => {
                 position={Position.BottomRight}
                 text={<FormattedMessage id="Menu.Bar.General.ToolTip" />}
             >
-                <IconButton
-                    icon={<MenuIcon />}
+                <MenuButton
                     onClick={onClickGeneral}
                     onMouseEnter={onMouseEnterGeneral}
                 />

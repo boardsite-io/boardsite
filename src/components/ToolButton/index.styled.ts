@@ -14,10 +14,10 @@ export const ToolInfo = styled.div<{ $toolColor: string }>`
     padding: 0 0.3rem;
     color: var(--cPrimary);
     border-radius: var(--button-border-radius);
+    box-shadow: var(--box-shadow);
     filter: opacity(75%);
     ${({ $toolColor }) =>
         css`
             background: ${$toolColor};
-            box-shadow: var(--box-shadow);
         `}
 `
