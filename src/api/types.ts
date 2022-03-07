@@ -21,6 +21,7 @@ export interface Session {
 
     setToken(token: string): void
     updateUser(user: Partial<User>): void
+    getNumberOfUsers(): number
     kickUser({ id }: Pick<User, "id">): Promise<void>
     create(): Promise<string>
     join(copyOffline?: boolean): Promise<void>
