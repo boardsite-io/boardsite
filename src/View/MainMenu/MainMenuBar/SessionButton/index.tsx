@@ -10,7 +10,7 @@ const SessionButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> =
             <StyledMainMenuButton type="button" {...props}>
                 <BsPeople className="external-icon" />
                 <SessionStatus>
-                    {Object.keys(session?.users ?? {}).length || "+"}
+                    {session?.getNumberOfUsers() || "+"}
                 </SessionStatus>
             </StyledMainMenuButton>
         )

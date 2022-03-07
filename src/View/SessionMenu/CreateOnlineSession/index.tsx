@@ -13,7 +13,7 @@ import {
 import { online } from "state/online"
 import { notification } from "state/notification"
 import { DialogState } from "state/online/state/index.types"
-import { OnlineSessionOptions } from "./index.styled"
+import { OnlineSessionOptions as CreateSessionOptions } from "./index.styled"
 
 const CreateOnlineSession: React.FC = () => {
     const [sidInput, setSidInput] = useState<string>("")
@@ -39,18 +39,22 @@ const CreateOnlineSession: React.FC = () => {
         [navigate]
     )
 
-    /**
-     * Handle the create session button click in the session dialog
-     */
-    const handleCreate = useCallback(async () => {
-        try {
-            const session = new BoardSession(online.state.userSelection)
-            await session.create()
-            await handleJoin(session)
-        } catch (error) {
-            notification.create("SessionMenu.CreateOnline.Error")
-        }
-    }, [handleJoin])
+    const createAndJoin = useCallback(
+        async (copyOffline: boolean) => {
+            try {
+                const session = new BoardSession(online.state.userSelection)
+                const sessionId = await session.create()
+                await session.createSocket(sessionId)
+                await session.join(copyOffline)
+                online.newSession(session)
+                online.setSessionDialog(DialogState.Closed)
+                navigate(BoardSession.path(sessionId))
+            } catch (error) {
+                notification.create("Notification.SessionCreationFailed", 2000)
+            }
+        },
+        [navigate]
+    )
 
     /**
      * Handle textfield events in the session dialog
@@ -73,40 +77,39 @@ const CreateOnlineSession: React.FC = () => {
         [handleJoin, sidInput]
     )
 
-    let helperText: JSX.Element | undefined
-
-    if (!isValidInput) {
-        helperText = (
-            <FormattedMessage id="SessionMenu.JoinOnly.Error.UnableToJoin" />
-        )
-    }
     return (
-        <>
+        <form onSubmit={onSubmit}>
             <DialogTitle>
                 <FormattedMessage id="SessionMenu.CreateOnline.Title" />
             </DialogTitle>
             <DialogContent>
-                <form onSubmit={onSubmit}>
-                    <UserSelection />
-                    <OnlineSessionOptions>
-                        <Button onClick={handleCreate}>
-                            <FormattedMessage id="SessionMenu.CreateOnline.CreateButton" />
-                        </Button>
-                        <Button type="submit">
-                            <FormattedMessage id="SessionMenu.CreateOnline.JoinButton" />
-                        </Button>
-                    </OnlineSessionOptions>
-                    <TextField
-                        label={
-                            <FormattedMessage id="SessionMenu.CreateOnline.TextFieldLabel.SessionId" />
-                        }
-                        value={sidInput}
-                        onChange={handleTextFieldChange}
-                        helperText={helperText}
-                    />
-                </form>
+                <UserSelection />
+                <CreateSessionOptions>
+                    <Button onClick={() => createAndJoin(false)}>
+                        <FormattedMessage id="Menu.General.Session.New" />
+                    </Button>
+                    <Button onClick={() => createAndJoin(true)}>
+                        <FormattedMessage id="Menu.General.Session.NewFromCurrent" />
+                    </Button>
+                </CreateSessionOptions>
+                <TextField
+                    label={
+                        <FormattedMessage id="SessionMenu.CreateOnline.TextFieldLabel.SessionId" />
+                    }
+                    value={sidInput}
+                    onChange={handleTextFieldChange}
+                    error={!isValidInput}
+                    helperText={
+                        !isValidInput && (
+                            <FormattedMessage id="SessionMenu.JoinOnly.Error.UnableToJoin" />
+                        )
+                    }
+                />
+                <Button type="submit">
+                    <FormattedMessage id="SessionMenu.CreateOnline.JoinButton" />
+                </Button>
             </DialogContent>
-        </>
+        </form>
     )
 }
 

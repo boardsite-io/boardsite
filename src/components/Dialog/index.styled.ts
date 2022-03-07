@@ -24,6 +24,7 @@ export const DialogBox = styled.div<DialogProps>`
                   opacity: 1;
               `
             : css`
+                  visibility: hidden;
                   opacity: 0;
                   pointer-events: none;
               `};
@@ -41,6 +42,7 @@ export const DialogBackground = styled.div<DialogProps>`
                   opacity: 1;
               `
             : css`
+                  visibility: hidden;
                   opacity: 0;
                   pointer-events: none;
               `};

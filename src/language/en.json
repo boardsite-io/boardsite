@@ -1,7 +1,6 @@
 {
     "ExportMenu.Error.PdfExportFailed": "PDF export failed!",
     "ImportMenu.Error.PdfImportFailed": "PDF could not be loaded!",
-    "SessionMenu.CreateOnline.Error": "Session creation failed!",
     "SessionMenu.JoinOnly.Error.UnableToJoin": "Unable to join session! Please try again with a valid session ID",
     "Storage.SaveLocalStorageFailed": "Data could not be saved to local storage!",
     "Storage.LoadLocalStorageFailed": "Data could not be loaded from local storage!",

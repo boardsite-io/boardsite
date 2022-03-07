@@ -3,14 +3,14 @@ import { PopupCover } from "./index.styled"
 
 interface PopupProps {
     open: boolean
-    onClose: MouseEventHandler<HTMLDivElement>
+    onClose: MouseEventHandler<HTMLButtonElement>
     children: ReactNode
 }
 
 const Popup: React.FC<PopupProps> = ({ open, onClose, children }) =>
     open ? (
         <>
-            <PopupCover role="button" tabIndex={0} onClick={onClose} />
+            <PopupCover onClick={onClose} />
             {children}
         </>
     ) : null

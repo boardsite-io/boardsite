@@ -24,9 +24,9 @@ const View: React.FC = () => {
     return (
         <ViewWrap>
             <Board />
+            <MainMenu />
             <ToolRing />
             <FavoriteTools />
-            <MainMenu />
             <SessionMenu />
             <Shortcuts />
             <Loading />

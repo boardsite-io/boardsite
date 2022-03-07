@@ -1,10 +1,14 @@
 import styled from "styled-components"
 
-export const PopupCover = styled.div`
+export const PopupCover = styled.button`
     z-index: var(--zIndexPopupBG);
     position: fixed;
-    top: -100vh;
-    left: -100vw;
-    height: 200vh;
-    width: 200vw;
+    inset: 0;
+    background: transparent;
+    border: none;
+
+    &:focus-visible {
+        background: #00000033;
+        outline-width: 4px;
+    }
 `
