@@ -8,7 +8,7 @@ const SessionButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> =
         const { session } = useOnline()
         return (
             <StyledMainMenuButton type="button" {...props}>
-                <BsPeople id="transitory-icon" />
+                <BsPeople className="external-icon" />
                 <SessionStatus>
                     {Object.keys(session?.users ?? {}).length || "+"}
                 </SessionStatus>

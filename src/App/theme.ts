@@ -14,17 +14,19 @@ export const ERASER_STROKE = "#77110511"
 export const Theme = styled.div`
     /* --- Color --- */
     --cPage: #f9fbff; // Page background
+    --cBackground: #bcaaa4; // Global background
+
     --cPrimary: #f5f5f5; // Menu backgrounds
     --cSecondary: #121212; // Menu items
+    --cTertiary: #00796b; // Small details, borders, rails
+    --cQuaternary: #37474f; // Small details, borders, rails
+
     --cSelected: #d9d7f1; // Selected tool background
-    --cBackground: #bcaaa4; // Global background
     --cWarning: red; // Warning text
-    --cDetails: #00796b; // Small details, borders, rails
-    --cDetails2: #37474f; // Small details, borders, rails
     --cDialogBackground: #000000aa; // Dialog background
     --cRule: #00000022; // Horizontal and vertical rule
 
-    svg:not(#transitory-icon) {
+    svg:not(.external-icon) {
         stroke: var(--cSecondary);
         stroke-width: var(--icon-stroke-width);
     }
@@ -51,7 +53,7 @@ export const Theme = styled.div`
     --sel-color: ${SELECTION_FILL};
     --sel-handle-color: #00245366;
     --sel-handle-size: 0.75rem;
-    --sel-handle-border: 1px solid var(--cDetails2);
+    --sel-handle-border: 1px solid var(--cQuaternary);
     --sel-handle-border-radius: 2px;
 
     /* --- Menu Design --- */

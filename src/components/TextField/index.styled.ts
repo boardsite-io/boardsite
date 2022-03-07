@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 
 export const OuterWrap = styled.div`
     width: 100%;
@@ -53,14 +53,21 @@ export const InputBar = styled.div`
     transition: all 250ms;
     height: 1px;
     width: 100%;
-    background: ${({ $error, $hasFocus }: InputBarProps) => {
+
+    ${({ $error, $hasFocus }: InputBarProps) => {
         if ($error) {
-            return "red"
+            return css`
+                background: red;
+            `
         }
         if ($hasFocus) {
-            return "var(--cDetails)"
+            return css`
+                background: var(--cTertiary);
+            `
         }
-        return "var(--cDetails2)"
+        return css`
+            background: black;
+        `
     }};
 `
 

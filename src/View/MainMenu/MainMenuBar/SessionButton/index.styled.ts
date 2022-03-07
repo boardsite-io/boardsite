@@ -14,7 +14,7 @@ export const SessionStatus = styled.div`
     padding: 0 0.3rem;
 
     color: var(--cPrimary);
-    background: var(--cDetails);
+    background: var(--cTertiary);
     border-radius: var(--button-border-radius);
     filter: opacity(75%);
     box-shadow: var(--box-shadow);
@@ -25,7 +25,7 @@ export const StyledMainMenuButton = styled(MainMenuButton)`
     width: var(--icon-button-size);
     padding: var(--icon-button-padding);
 
-    #transitory-icon {
+    .external-icon {
         width: 60%;
         height: 60%;
     }

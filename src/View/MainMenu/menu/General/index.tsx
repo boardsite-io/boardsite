@@ -83,7 +83,7 @@ const GeneralMenu = () => {
             </MenuItem>
             <MenuItem
                 text={<FormattedMessage id="Menu.General.Github" />}
-                icon={<FaGithub id="transitory-icon" />}
+                icon={<FaGithub className="external-icon" />}
                 onClick={onClickGithub}
             />
             {!isMobile && (
@@ -96,7 +96,7 @@ const GeneralMenu = () => {
             {isAuthorized() && (
                 <MenuItem
                     text={<FormattedMessage id="Menu.General.GithubSponsor" />}
-                    icon={<SiGithubsponsors id="transitory-icon" />}
+                    icon={<SiGithubsponsors className="external-icon" />}
                 />
             )}
             {!isSignedIn() ? (
