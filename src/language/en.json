@@ -146,6 +146,7 @@
     "DialogMenu.CreateOnline.JoinButton": "Join Session",
     "DialogMenu.CreateOnline.TextFieldLabel.SessionId": "Insert Session ID",
     "DialogMenu.CreateOnline.InvalidSession": "Looks like the session you're trying to join does not exist 🤖",
+    "DialogMenu.CreateOnline.UrlInClipboard.Notification": "🔗 The session link has been copied to your clipboard!",
     "DialogMenu.InitialSelection.Title": "Welcome to BoardSite.io",
     "DialogMenu.InitialSelection.CreateOffline": "Create Offline Session",
     "DialogMenu.InitialSelection.OnlineSessionMenu": "Create Online Session",

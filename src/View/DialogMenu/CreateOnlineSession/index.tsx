@@ -51,7 +51,16 @@ const CreateOnlineSession: React.FC = () => {
                 navigate(BoardSession.path(sessionId))
             } catch (error) {
                 notification.create("Notification.SessionCreationFailed", 2000)
+                return
             }
+
+            navigator.clipboard
+                .writeText(window.location.href)
+                .then(() =>
+                    notification.create(
+                        "DialogMenu.CreateOnline.UrlInClipboard.Notification"
+                    )
+                )
         },
         [navigate]
     )
