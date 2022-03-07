@@ -16,7 +16,6 @@ export enum DialogState {
     InitialSelectionFirstLoad,
     InitialSelection,
     CreateOnlineSession,
-    ManageOnlineSession,
     JoinOnly,
 }
 

@@ -80,7 +80,7 @@ const CreateOnlineSession: React.FC = () => {
     return (
         <form onSubmit={onSubmit}>
             <DialogTitle>
-                <FormattedMessage id="SessionMenu.CreateOnline.Title" />
+                <FormattedMessage id="DialogMenu.CreateOnline.Title" />
             </DialogTitle>
             <DialogContent>
                 <UserSelection />
@@ -94,19 +94,19 @@ const CreateOnlineSession: React.FC = () => {
                 </CreateSessionOptions>
                 <TextField
                     label={
-                        <FormattedMessage id="SessionMenu.CreateOnline.TextFieldLabel.SessionId" />
+                        <FormattedMessage id="DialogMenu.CreateOnline.TextFieldLabel.SessionId" />
                     }
                     value={sidInput}
                     onChange={handleTextFieldChange}
                     error={!isValidInput}
                     helperText={
                         !isValidInput && (
-                            <FormattedMessage id="SessionMenu.JoinOnly.Error.UnableToJoin" />
+                            <FormattedMessage id="DialogMenu.JoinOnly.Error.UnableToJoin" />
                         )
                     }
                 />
                 <Button type="submit">
-                    <FormattedMessage id="SessionMenu.CreateOnline.JoinButton" />
+                    <FormattedMessage id="DialogMenu.CreateOnline.JoinButton" />
                 </Button>
             </DialogContent>
         </form>

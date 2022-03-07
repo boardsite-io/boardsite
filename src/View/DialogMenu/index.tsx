@@ -3,7 +3,6 @@ import { Dialog } from "components"
 import { online, useOnline } from "state/online"
 import { useParams } from "react-router-dom"
 import { DialogState } from "state/online/state/index.types"
-import ManageOnlineSession from "./ManageOnlineSession"
 import CreateOnlineSession from "./CreateOnlineSession"
 import InitialSelection from "./InitialSelection"
 import JoinOnly from "./JoinOnly"
@@ -18,13 +17,11 @@ const contents = {
     [DialogState.InitialSelectionFirstLoad]: <InitialSelection firstLoad />,
     [DialogState.JoinOnly]: <JoinOnly />,
     [DialogState.CreateOnlineSession]: <CreateOnlineSession />,
-    [DialogState.ManageOnlineSession]: <ManageOnlineSession />,
 }
 
-const Session: React.FC = () => {
-    const { dialogState } = useOnline()
+const DialogMenu: React.FC = () => {
+    const { dialogState, session } = useOnline()
     const { sid } = useParams()
-    const { session } = useOnline()
     const contentType =
         sid && !session?.isConnected() ? DialogState.JoinOnly : dialogState
 
@@ -35,4 +32,4 @@ const Session: React.FC = () => {
     )
 }
 
-export default Session
+export default DialogMenu

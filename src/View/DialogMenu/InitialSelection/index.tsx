@@ -45,7 +45,7 @@ const InitialSelection: React.FC<InitialSelectionProps> = ({ firstLoad }) => {
     return (
         <>
             <DialogTitle>
-                <FormattedMessage id="SessionMenu.InitialSelection.Title" />
+                <FormattedMessage id="DialogMenu.InitialSelection.Title" />
             </DialogTitle>
             <DialogContent>
                 <PageSettings />
@@ -54,14 +54,14 @@ const InitialSelection: React.FC<InitialSelectionProps> = ({ firstLoad }) => {
                         disabled={!showContinue}
                         onClick={continuePreviousSession}
                     >
-                        <FormattedMessage id="SessionMenu.InitialSelection.Continue" />
+                        <FormattedMessage id="DialogMenu.InitialSelection.Continue" />
                     </Button>
                 )}
                 <Button onClick={createOfflineSession}>
-                    <FormattedMessage id="SessionMenu.InitialSelection.CreateOffline" />
+                    <FormattedMessage id="DialogMenu.InitialSelection.CreateOffline" />
                 </Button>
                 <Button onClick={createOnlineSession}>
-                    <FormattedMessage id="SessionMenu.InitialSelection.OnlineSessionMenu" />
+                    <FormattedMessage id="DialogMenu.InitialSelection.OnlineSessionMenu" />
                 </Button>
             </DialogContent>
         </>
