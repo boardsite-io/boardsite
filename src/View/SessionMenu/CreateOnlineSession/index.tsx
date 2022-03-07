@@ -27,13 +27,11 @@ const CreateOnlineSession: React.FC = () => {
         async (session: Session) => {
             try {
                 const path = BoardSession.path(session.config?.id ?? "")
-
                 await session.createSocket(path.split("/").pop() ?? "")
                 await session.join()
 
-                navigate(path)
                 online.setSessionDialog(DialogState.Closed)
-                setIsValidInput(true)
+                navigate(path)
             } catch (error) {
                 setIsValidInput(false)
             }
@@ -47,9 +45,8 @@ const CreateOnlineSession: React.FC = () => {
     const handleCreate = useCallback(async () => {
         try {
             const session = new BoardSession(online.state.userSelection)
-            const sessionId = await session.create()
+            await session.create()
             await handleJoin(session)
-            setSidInput(sessionId)
         } catch (error) {
             notification.create("SessionMenu.CreateOnline.Error")
         }
@@ -67,11 +64,11 @@ const CreateOnlineSession: React.FC = () => {
     )
 
     const onSubmit = useCallback(
-        (e: React.ChangeEvent<HTMLFormElement>) => {
+        async (e: React.ChangeEvent<HTMLFormElement>) => {
             e.preventDefault()
             const session = new BoardSession(online.state.userSelection)
             session.config = { id: sidInput } as SessionConfig
-            handleJoin(session)
+            await handleJoin(session)
         },
         [handleJoin, sidInput]
     )
