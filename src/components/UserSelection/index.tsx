@@ -28,9 +28,7 @@ const UserSelection: React.FC = () => {
             />
             <TextField
                 value={online.state.userSelection.alias}
-                label={
-                    <FormattedMessage id="UserSelection.TextFieldLabel.ChooseAlias" />
-                }
+                label={<FormattedMessage id="UserSelection.ChooseAlias" />}
                 onChange={handleAliasChange}
                 maxLength={MAX_ALIAS_LENGTH}
                 align="left"

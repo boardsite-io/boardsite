@@ -21,7 +21,7 @@ const ShapeTools: React.FC = memo(() => {
         <StyledShapeTools>
             <ToolTip
                 position={Position.Right}
-                text={<FormattedMessage id="Tool.Pen" />}
+                text={<FormattedMessage id="ToolTip.Pen" />}
             >
                 <IconButton
                     icon={<PenIcon />}
@@ -33,7 +33,7 @@ const ShapeTools: React.FC = memo(() => {
             </ToolTip>
             <ToolTip
                 position={Position.Right}
-                text={<FormattedMessage id="Tool.Line" />}
+                text={<FormattedMessage id="ToolTip.Line" />}
             >
                 <IconButton
                     icon={<LineIcon />}
@@ -45,7 +45,7 @@ const ShapeTools: React.FC = memo(() => {
             </ToolTip>
             <ToolTip
                 position={Position.Right}
-                text={<FormattedMessage id="Tool.Rectangle" />}
+                text={<FormattedMessage id="ToolTip.Rectangle" />}
             >
                 <IconButton
                     icon={<RectangleIcon />}
@@ -57,7 +57,7 @@ const ShapeTools: React.FC = memo(() => {
             </ToolTip>
             <ToolTip
                 position={Position.Right}
-                text={<FormattedMessage id="Tool.Circle" />}
+                text={<FormattedMessage id="ToolTip.Circle" />}
             >
                 <IconButton
                     icon={<CircleIcon />}

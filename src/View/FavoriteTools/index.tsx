@@ -31,7 +31,7 @@ const FavoriteTools: React.FC = () => {
             })}
             {favoriteTools.length < MAX_FAVORITE_TOOLS && (
                 <ToolTip
-                    text={<FormattedMessage id="Favorite.Add" />}
+                    text={<FormattedMessage id="ToolTip.AddFavoriteTool" />}
                     position={Position.TopLeft}
                 >
                     <IconButton icon={<PlusIcon />} onClick={addFavoriteTool} />

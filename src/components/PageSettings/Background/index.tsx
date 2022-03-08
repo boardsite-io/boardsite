@@ -12,7 +12,7 @@ const Background: React.FC = () => {
         <Backgrounds>
             <ToolTip
                 position={Position.Top}
-                text={<FormattedMessage id="PageBackground.Blank" />}
+                text={<FormattedMessage id="ToolTip.PageBackground.Blank" />}
             >
                 <Blank
                     type="button"
@@ -24,7 +24,9 @@ const Background: React.FC = () => {
             </ToolTip>
             <ToolTip
                 position={Position.Top}
-                text={<FormattedMessage id="PageBackground.Checkered" />}
+                text={
+                    <FormattedMessage id="ToolTip.PageBackground.Checkered" />
+                }
             >
                 <Checkered
                     type="button"
@@ -36,7 +38,7 @@ const Background: React.FC = () => {
             </ToolTip>
             <ToolTip
                 position={Position.Top}
-                text={<FormattedMessage id="PageBackground.Ruled" />}
+                text={<FormattedMessage id="ToolTip.PageBackground.Ruled" />}
             >
                 <Ruled
                     type="button"
