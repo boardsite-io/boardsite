@@ -58,7 +58,7 @@ const CreateOnlineSession: React.FC = () => {
                 .writeText(window.location.href)
                 .then(() =>
                     notification.create(
-                        "Notification.SessionLinkCopiedToClipboard"
+                        "Notification.Session.CopiedToClipboard"
                     )
                 )
         },
