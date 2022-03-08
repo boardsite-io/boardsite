@@ -3,6 +3,8 @@ import React, { memo, useCallback } from "react"
 import { Position, ToolTip, VerticalRule } from "components"
 import { MainMenuState } from "state/menu/state/index.types"
 import { menu, useMenu } from "state/menu"
+import { online } from "state/online"
+import { DialogState } from "state/online/state/index.types"
 import { MainMenuBarWrap } from "./index.styled"
 import ViewButton from "./ViewButton"
 import PageButton from "./PageButton"
@@ -19,7 +21,13 @@ const onClickPage = () => {
     menu.setMainMenu(MainMenuState.Page)
 }
 const onClickSession = () => {
-    menu.setMainMenu(MainMenuState.Session)
+    const numberOfUsers = online.getState().session?.getNumberOfUsers()
+
+    if (numberOfUsers && numberOfUsers > 0) {
+        menu.setMainMenu(MainMenuState.Session)
+    } else {
+        online.setSessionDialog(DialogState.CreateOnlineSession)
+    }
 }
 
 const onEnter = (newState: MainMenuState, currentState: MainMenuState) => {
@@ -41,7 +49,10 @@ const MainMenuBar: React.FC = memo(() => {
         onEnter(MainMenuState.Page, mainMenuState)
     }, [mainMenuState])
     const onMouseEnterSession = useCallback(() => {
-        onEnter(MainMenuState.Session, mainMenuState)
+        const numberOfUsers = online.getState().session?.getNumberOfUsers()
+        if (numberOfUsers && numberOfUsers > 0) {
+            onEnter(MainMenuState.Session, mainMenuState)
+        }
     }, [mainMenuState])
 
     return (

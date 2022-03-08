@@ -44,6 +44,10 @@ export class BoardSession implements Session {
         this.request.token = token
     }
 
+    getNumberOfUsers(): number {
+        return Object.keys(this.users ?? {}).length
+    }
+
     updateUser(user: Partial<User>): void {
         assign(this.user, user)
     }

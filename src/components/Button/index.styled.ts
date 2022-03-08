@@ -13,6 +13,8 @@ export const StyledButton = styled.button<Props>`
     border-radius: var(--button-border-radius);
     transition: all 100ms ease-in-out;
     box-shadow: var(--box-shadow);
+    height: min-content;
+    width: 100%;
 
     &:hover {
         background: var(--cQuaternary);
