@@ -17,6 +17,7 @@ import RedoIcon from "./svgs/redo.svg"
 import DownloadIcon from "./svgs/download.svg"
 import UploadIcon from "./svgs/upload.svg"
 import MenuIcon from "./svgs/menu.svg"
+import OnlineIcon from "./svgs/online.svg"
 import ExpandableIcon from "./svgs/expandable.svg"
 import PageAboveIcon from "./svgs/pageabove.svg"
 import PageBelowIcon from "./svgs/pagebelow.svg"
@@ -48,6 +49,7 @@ export {
     DownloadIcon,
     UploadIcon,
     MenuIcon,
+    OnlineIcon,
     ExpandableIcon,
     PageAboveIcon,
     PageBelowIcon,

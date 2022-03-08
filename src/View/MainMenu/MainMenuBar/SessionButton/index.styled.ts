@@ -24,9 +24,4 @@ export const StyledMainMenuButton = styled(MainMenuButton)`
     cursor: pointer;
     width: var(--icon-button-size);
     padding: var(--icon-button-padding);
-
-    .external-icon {
-        width: 60%;
-        height: 60%;
-    }
 `

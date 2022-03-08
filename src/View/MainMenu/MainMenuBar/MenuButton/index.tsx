@@ -6,7 +6,7 @@ const MenuButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> =
     memo((props) => {
         return (
             <StyledMainMenuButton type="button" {...props}>
-                <MenuIcon style={{ color: "black" }} />
+                <MenuIcon />
             </StyledMainMenuButton>
         )
     })
