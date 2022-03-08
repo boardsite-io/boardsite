@@ -14,88 +14,82 @@ const Shortcuts = () => {
             onClose={() => menu.closeShortcuts()}
         >
             <DrawerTitle>
-                <FormattedMessage id="Shortcuts.Title" />
+                <FormattedMessage id="Shortcut.Title" />
             </DrawerTitle>
             <ShortcutList>
                 <Shortcut
-                    titleId="Shortcuts.File.New"
-                    keysId="Shortcuts.File.New.Keys"
+                    titleId="Shortcut.File.New"
+                    keysId="Shortcut.File.New.Keys"
                 />
                 <Shortcut
-                    titleId="Shortcuts.File.Open"
-                    keysId="Shortcuts.File.Open.Keys"
+                    titleId="Shortcut.File.Open"
+                    keysId="Shortcut.File.Open.Keys"
                 />
                 <Shortcut
-                    titleId="Shortcuts.File.Save"
-                    keysId="Shortcuts.File.Save.Keys"
+                    titleId="Shortcut.File.Save"
+                    keysId="Shortcut.File.Save.Keys"
+                />
+                <Shortcut titleId="Shortcut.Undo" keysId="Shortcut.Undo.Keys" />
+                <Shortcut titleId="Shortcut.Redo" keysId="Shortcut.Redo.Keys" />
+                <Shortcut
+                    titleId="Shortcut.Page.AddOver"
+                    keysId="Shortcut.Page.AddOver.Keys"
                 />
                 <Shortcut
-                    titleId="Shortcuts.Undo"
-                    keysId="Shortcuts.Undo.Keys"
+                    titleId="Shortcut.Page.AddUnder"
+                    keysId="Shortcut.Page.AddUnder.Keys"
                 />
                 <Shortcut
-                    titleId="Shortcuts.Redo"
-                    keysId="Shortcuts.Redo.Keys"
+                    titleId="Shortcut.Page.DeleteCurrent"
+                    keysId="Shortcut.Page.DeleteCurrent.Keys"
                 />
                 <Shortcut
-                    titleId="Shortcuts.Page.AddOver"
-                    keysId="Shortcuts.Page.AddOver.Keys"
+                    titleId="Shortcut.Tool.Active"
+                    keysId="Shortcut.Tool.Active.Keys"
                 />
                 <Shortcut
-                    titleId="Shortcuts.Page.AddUnder"
-                    keysId="Shortcuts.Page.AddUnder.Keys"
+                    titleId="Shortcut.Tool.Eraser"
+                    keysId="Shortcut.Tool.Eraser.Keys"
                 />
                 <Shortcut
-                    titleId="Shortcuts.Page.DeleteCurrent"
-                    keysId="Shortcuts.Page.DeleteCurrent.Keys"
+                    titleId="Shortcut.Tool.Selection"
+                    keysId="Shortcut.Tool.Selection.Keys"
                 />
                 <Shortcut
-                    titleId="Shortcuts.Tool.Active"
-                    keysId="Shortcuts.Tool.Active.Keys"
+                    titleId="Shortcut.Tool.Panning"
+                    keysId="Shortcut.Tool.Panning.Keys"
                 />
                 <Shortcut
-                    titleId="Shortcuts.Tool.Eraser"
-                    keysId="Shortcuts.Tool.Eraser.Keys"
+                    titleId="Shortcut.Tool.Pen"
+                    keysId="Shortcut.Tool.Pen.Keys"
                 />
                 <Shortcut
-                    titleId="Shortcuts.Tool.Selection"
-                    keysId="Shortcuts.Tool.Selection.Keys"
+                    titleId="Shortcut.Tool.Line"
+                    keysId="Shortcut.Tool.Line.Keys"
                 />
                 <Shortcut
-                    titleId="Shortcuts.Tool.Panning"
-                    keysId="Shortcuts.Tool.Panning.Keys"
+                    titleId="Shortcut.Tool.Rectangle"
+                    keysId="Shortcut.Tool.Rectangle.Keys"
                 />
                 <Shortcut
-                    titleId="Shortcuts.Tool.Pen"
-                    keysId="Shortcuts.Tool.Pen.Keys"
+                    titleId="Shortcut.Tool.Circle"
+                    keysId="Shortcut.Tool.Circle.Keys"
                 />
                 <Shortcut
-                    titleId="Shortcuts.Tool.Line"
-                    keysId="Shortcuts.Tool.Line.Keys"
+                    titleId="Shortcut.FirstPage"
+                    keysId="Shortcut.FirstPage.Keys"
                 />
                 <Shortcut
-                    titleId="Shortcuts.Tool.Rectangle"
-                    keysId="Shortcuts.Tool.Rectangle.Keys"
+                    titleId="Shortcut.LastPage"
+                    keysId="Shortcut.LastPage.Keys"
                 />
                 <Shortcut
-                    titleId="Shortcuts.Tool.Circle"
-                    keysId="Shortcuts.Tool.Circle.Keys"
+                    titleId="Shortcut.PreviousPage"
+                    keysId="Shortcut.PreviousPage.Keys"
                 />
                 <Shortcut
-                    titleId="Shortcuts.FirstPage"
-                    keysId="Shortcuts.FirstPage.Keys"
-                />
-                <Shortcut
-                    titleId="Shortcuts.LastPage"
-                    keysId="Shortcuts.LastPage.Keys"
-                />
-                <Shortcut
-                    titleId="Shortcuts.PreviousPage"
-                    keysId="Shortcuts.PreviousPage.Keys"
-                />
-                <Shortcut
-                    titleId="Shortcuts.NextPage"
-                    keysId="Shortcuts.NextPage.Keys"
+                    titleId="Shortcut.NextPage"
+                    keysId="Shortcut.NextPage.Keys"
                 />
             </ShortcutList>
         </ShortcutDrawer>

@@ -60,7 +60,7 @@ const MainMenuBar: React.FC = memo(() => {
             <ToolTip
                 deactivate={mainMenuState !== MainMenuState.Closed}
                 position={Position.BottomRight}
-                text={<FormattedMessage id="Menu.Bar.General.ToolTip" />}
+                text={<FormattedMessage id="ToolTip.Menu.Bar.General" />}
             >
                 <MenuButton
                     onClick={onClickGeneral}
@@ -71,7 +71,7 @@ const MainMenuBar: React.FC = memo(() => {
             <ToolTip
                 deactivate={mainMenuState !== MainMenuState.Closed}
                 position={Position.BottomRight}
-                text={<FormattedMessage id="Menu.Bar.Page.ToolTip" />}
+                text={<FormattedMessage id="ToolTip.Menu.Bar.Page" />}
             >
                 <PageButton
                     onClick={onClickPage}
@@ -82,7 +82,7 @@ const MainMenuBar: React.FC = memo(() => {
             <ToolTip
                 deactivate={mainMenuState !== MainMenuState.Closed}
                 position={Position.BottomRight}
-                text={<FormattedMessage id="Menu.Bar.View.ToolTip" />}
+                text={<FormattedMessage id="ToolTip.Menu.Bar.View" />}
             >
                 <ViewButton
                     onClick={onClickView}
@@ -93,7 +93,7 @@ const MainMenuBar: React.FC = memo(() => {
             <ToolTip
                 deactivate={mainMenuState !== MainMenuState.Closed}
                 position={Position.BottomRight}
-                text={<FormattedMessage id="Menu.Bar.Session.ToolTip" />}
+                text={<FormattedMessage id="ToolTip.Menu.Bar.Session" />}
             >
                 <SessionButton
                     onClick={onClickSession}

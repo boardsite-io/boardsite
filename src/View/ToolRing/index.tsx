@@ -23,7 +23,7 @@ const ToolRing: React.FC = memo(() => {
             return
         }
         handleSetTool({ type: ToolType.Eraser })
-        notification.create("Tool.Eraser.Notification")
+        notification.create("Notification.Tool.Eraser")
     }, [type])
 
     const onClickSelect = useCallback(() => {
@@ -31,7 +31,7 @@ const ToolRing: React.FC = memo(() => {
             return
         }
         handleSetTool({ type: ToolType.Select })
-        notification.create("Tool.Selection.Notification")
+        notification.create("Notification.Tool.Selection")
     }, [type])
 
     const onClickPan = useCallback(() => {
@@ -39,7 +39,7 @@ const ToolRing: React.FC = memo(() => {
             return
         }
         handleSetTool({ type: ToolType.Pan })
-        notification.create("Tool.Panning.Notification")
+        notification.create("Notification.Tool.Panning")
     }, [type])
 
     return (

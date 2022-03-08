@@ -20,7 +20,7 @@ const ActiveTool: React.FC = memo(() => {
             setOpen(true)
         } else {
             handleSetTool({ type: latestDrawType })
-            notification.create("Tool.Active.Notification")
+            notification.create("Notification.Tool.Active")
         }
     }
 

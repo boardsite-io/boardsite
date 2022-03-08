@@ -50,7 +50,7 @@ const CreateOnlineSession: React.FC = () => {
                 online.setSessionDialog(DialogState.Closed)
                 navigate(BoardSession.path(sessionId))
             } catch (error) {
-                notification.create("Notification.SessionCreationFailed", 2000)
+                notification.create("Notification.Session.CreationFailed", 2000)
                 return
             }
 
@@ -58,7 +58,7 @@ const CreateOnlineSession: React.FC = () => {
                 .writeText(window.location.href)
                 .then(() =>
                     notification.create(
-                        "DialogMenu.CreateOnline.UrlInClipboard.Notification"
+                        "Notification.SessionLinkCopiedToClipboard"
                     )
                 )
         },
@@ -110,7 +110,7 @@ const CreateOnlineSession: React.FC = () => {
                     error={!isValidInput}
                     helperText={
                         !isValidInput && (
-                            <FormattedMessage id="DialogMenu.JoinOnly.Error.UnableToJoin" />
+                            <FormattedMessage id="Notification.Session.JoinFailed" />
                         )
                     }
                 />

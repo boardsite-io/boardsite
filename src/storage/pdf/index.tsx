@@ -20,7 +20,7 @@ export const handleImportPdf = async () => {
         })
 
         if (file.type !== "application/pdf") {
-            notification.create("ImportMenu.Error.InvalidFileType")
+            notification.create("Notification.InvalidFileTypePdfImport")
             return
         }
 
@@ -28,7 +28,7 @@ export const handleImportPdf = async () => {
 
         menu.closeMainMenu()
     } catch (error) {
-        notification.create("ImportMenu.Error.PdfImportFailed")
+        notification.create("Notification.PdfImportFailed")
     }
 }
 
@@ -50,7 +50,7 @@ export const handleExportPdf = async (): Promise<void> => {
         )
         menu.closeMainMenu()
     } catch (error) {
-        notification.create("ExportMenu.Error.PdfExportFailed")
+        notification.create("Notification.PdfExportFailed")
         loading.endLoading()
     }
 }

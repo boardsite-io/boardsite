@@ -31,7 +31,7 @@ const JoinOnly: React.FC = () => {
 
             navigate(path)
         } catch (error) {
-            notification.create("DialogMenu.JoinOnly.Error.UnableToJoin")
+            notification.create("Notification.Session.JoinFailed")
             navigate("/")
         }
     }

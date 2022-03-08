@@ -17,7 +17,7 @@ const WidthPicker: React.FC = memo(() => {
                     position={Position.Left}
                     text={
                         <FormattedMessage
-                            id="Tool.SelectWidth.ToolTip"
+                            id="ToolTip.ToolWidth"
                             values={{ width: strokeWidth }}
                         />
                     }

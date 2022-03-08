@@ -29,10 +29,10 @@ export const handleImportWorkspace = async () => {
             await board.setSerializedState(serializedBoardState)
             menu.closeMainMenu()
         } else {
-            notification.create("ImportMenu.Error.CouldntLoadWorkspace")
+            notification.create("Notification.ImportWorkspaceFailed")
         }
     } catch (error) {
-        notification.create("ImportMenu.Error.CouldntLoadWorkspace")
+        notification.create("Notification.ImportWorkspaceFailed")
     }
 }
 
@@ -54,6 +54,6 @@ export const handleExportWorkspace = async () => {
 
         menu.closeMainMenu()
     } catch (error) {
-        notification.create("ImportMenu.Error.CouldntLoadWorkspace")
+        notification.create("Notification.ImportWorkspaceFailed")
     }
 }

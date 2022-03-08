@@ -20,7 +20,7 @@ export const saveLocalStorage = debounce(
         try {
             localStorage.setItem(`${NAMESPACE}_${name}`, JSON.stringify(data))
         } catch (error) {
-            notification.create("Storage.SaveLocalStorageFailed")
+            notification.create("Notification.LocalStorageSaveFailed")
         }
     },
     DEBOUNCE_LOCAL_STORAGE
@@ -31,7 +31,7 @@ export const saveIndexedDB = debounce(
         try {
             localforage.setItem(`${NAMESPACE}_${name}`, data)
         } catch (error) {
-            notification.create("Storage.SaveIndexedDBFailed")
+            notification.create("Notification.IndexedDBSaveFailed")
         }
     },
     DEBOUNCE_INDEXED_DB
@@ -46,7 +46,7 @@ export const loadLocalStorage = async (
 
         return JSON.parse(data)
     } catch (error) {
-        notification.create("Storage.LoadLocalStorageFailed")
+        notification.create("Notification.LocalStorageLoadFailed")
         return null
     }
 }
@@ -60,7 +60,7 @@ export const loadIndexedDB = async (
 
         return data as object
     } catch (error) {
-        notification.create("Storage.LoadIndexedDBFailed")
+        notification.create("Notification.IndexedDBLoadFailed")
         return null
     }
 }

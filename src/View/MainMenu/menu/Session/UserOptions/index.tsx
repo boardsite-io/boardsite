@@ -18,10 +18,7 @@ const UserOptions = ({ userId, isHost, userIsYou }: UserOptionsProps) => {
         try {
             await session?.kickUser({ id: userId })
         } catch (error) {
-            notification.create(
-                "Menu.General.Session.UserOptions.KickFailed",
-                3000
-            )
+            notification.create("Notification.Session.KickUserFailed", 3000)
         }
     }, [session, userId])
 
