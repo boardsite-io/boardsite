@@ -1,17 +1,18 @@
 import { useCallback, useEffect, useState } from "react"
 import { online } from "../state"
+import { OnlineSubscription } from "../state/index.types"
 
-export const useOnline = () => {
+export const useOnline = (subscriber: OnlineSubscription) => {
     const [, render] = useState<object>({})
     const trigger = useCallback(() => render({}), [])
 
     useEffect(() => {
-        online.subscribe("session", trigger)
+        online.subscribe(subscriber, trigger)
 
         return () => {
-            online.unsubscribe("session", trigger)
+            online.unsubscribe(subscriber, trigger)
         }
-    }, [trigger])
+    }, [subscriber, trigger])
 
     return online.getState()
 }

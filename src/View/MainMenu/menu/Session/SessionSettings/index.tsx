@@ -10,7 +10,7 @@ const onClickReadOnly = (session: Session | undefined) => () =>
     session?.updateConfig({ readOnly: !session?.config?.readOnly })
 
 const SessionSettingsMenu = () => {
-    const { session } = useOnline()
+    const { session } = useOnline("session")
 
     return (
         <SubMenuWrap>

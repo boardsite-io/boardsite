@@ -50,7 +50,7 @@ enum SubMenu {
 
 const GeneralMenu = () => {
     const [subMenu, setSubMenu] = useState<SubMenu>(SubMenu.Closed)
-    const { isSignedIn, isAuthorized } = useOnline()
+    const { isSignedIn, isAuthorized } = useOnline("session")
 
     return (
         <MainMenuWrap>

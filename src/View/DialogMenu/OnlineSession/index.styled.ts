@@ -1,7 +1,7 @@
 import { Breakpoint } from "App/theme"
 import styled from "styled-components"
 
-export const OnlineSessionOptions = styled.div`
+export const CreateSessionOptions = styled.div`
     display: grid;
     gap: 1rem;
 

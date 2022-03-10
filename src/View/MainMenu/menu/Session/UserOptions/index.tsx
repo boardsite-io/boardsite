@@ -12,7 +12,7 @@ type UserOptionsProps = {
 }
 
 const UserOptions = ({ userId, isHost, userIsYou }: UserOptionsProps) => {
-    const { session } = useOnline()
+    const { session } = useOnline("session")
 
     const onKickUser = useCallback(async () => {
         try {
