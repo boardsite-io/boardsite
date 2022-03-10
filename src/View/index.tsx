@@ -11,12 +11,12 @@ import MainMenu from "./MainMenu"
 import Notification from "./Notification"
 import Shortcuts from "./Shortcuts"
 import { online } from "../state/online"
+import Subscribe from "./Subscribe"
 
 const View: React.FC = () => {
     useKeyboardShortcuts()
 
     useEffect(() => {
-        // TODO error handling
         drawing.loadFromLocalStorage()
         online.loadFromLocalStorage()
     }, [])
@@ -24,13 +24,14 @@ const View: React.FC = () => {
     return (
         <ViewWrap>
             <Board />
-            <MainMenu />
-            <ToolRing />
-            <FavoriteTools />
             <DialogMenu />
+            <Subscribe />
             <Shortcuts />
             <Loading />
             <Notification />
+            <MainMenu />
+            <ToolRing />
+            <FavoriteTools />
         </ViewWrap>
     )
 }

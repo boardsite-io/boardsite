@@ -9,7 +9,6 @@ import {
     SessionConfig,
 } from "./types"
 
-// api
 export const API_URL = process.env.REACT_APP_B_API_URL as string
 
 const HEADER_USER_ID = "Boardsite-User-Id"

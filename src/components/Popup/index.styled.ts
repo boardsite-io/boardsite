@@ -3,7 +3,7 @@ import styled from "styled-components"
 export const PopupCover = styled.button`
     z-index: var(--zIndexPopupBG);
     position: fixed;
-    inset: 0;
+    inset: -100vh -100vw;
     background: transparent;
     border: none;
 
