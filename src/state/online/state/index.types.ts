@@ -19,8 +19,6 @@ export enum DialogState {
     JoinOnly,
 }
 
-export type OnlineSubscribers = {
-    session: Subscribers
-}
+export type OnlineSubscription = "session" | "userSelection"
 
-export type OnlineSubscription = keyof OnlineSubscribers
+export type OnlineSubscribers = Record<OnlineSubscription, Subscribers>

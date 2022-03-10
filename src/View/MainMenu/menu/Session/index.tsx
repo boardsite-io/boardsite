@@ -21,7 +21,7 @@ enum SubMenu {
 const SessionMenu = () => {
     const [subMenu, setSubMenu] = useState<SubMenu | User["id"]>(SubMenu.Closed)
     const navigate = useNavigate()
-    const { session } = useOnline()
+    const { session } = useOnline("session")
 
     const leaveSession = useCallback(() => {
         session?.disconnect()

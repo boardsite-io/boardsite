@@ -1,16 +1,9 @@
 import { Breakpoint } from "App/theme"
-import { Drawer } from "components"
 import styled from "styled-components"
 
-export const ShortcutDrawer = styled(Drawer)`
-    width: fit-content;
-    max-width: 80vw;
-`
-export const ShortcutList = styled.ul`
+export const CreateSessionOptions = styled.div`
     display: grid;
-    margin: 0;
-    padding: 0.5rem 0.8rem;
-    gap: 0.2rem 3em;
+    gap: 1rem;
 
     @media (min-width: ${Breakpoint.Md}) {
         grid-auto-flow: row;

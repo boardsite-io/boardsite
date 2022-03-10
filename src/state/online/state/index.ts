@@ -36,7 +36,7 @@ export class Online implements GlobalState<OnlineState, OnlineSubscribers> {
         isSignedIn: () => !!this.state.token,
     }
 
-    subscribers: OnlineSubscribers = { session: [] }
+    subscribers: OnlineSubscribers = { session: [], userSelection: [] }
 
     getState(): OnlineState {
         return this.state
@@ -62,6 +62,7 @@ export class Online implements GlobalState<OnlineState, OnlineSubscribers> {
             ...this.state.userSelection,
             ...user,
         }
+        this.render("userSelection")
     }
 
     async setToken(token: string): Promise<void> {
@@ -115,8 +116,10 @@ export class Online implements GlobalState<OnlineState, OnlineSubscribers> {
             render({})
         })
 
-        // Save to local storage on each render
-        this.saveToLocalStorage()
+        if (subscription === "session") {
+            // Save to local storage on each render
+            this.saveToLocalStorage()
+        }
     }
 }
 

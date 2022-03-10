@@ -5,7 +5,7 @@ import { SessionStatus, StyledMainMenuButton } from "./index.styled"
 
 const SessionButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> =
     memo((props) => {
-        const { session } = useOnline()
+        const { session } = useOnline("session")
         return (
             <StyledMainMenuButton type="button" {...props}>
                 <OnlineIcon />
