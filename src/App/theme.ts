@@ -1,11 +1,11 @@
 import styled from "styled-components"
 
-export enum ScreenSize {
-    Xs = "30rem",
-    Sm = "50rem",
-    Md = "60rem",
-    Lg = "80rem",
-    Xl = "100rem",
+export enum Breakpoint {
+    Sm = "576px",
+    Md = "768px",
+    Lg = "992px",
+    Xl = "1200px",
+    Xxl = "1400px",
 }
 
 export const SELECTION_FILL = "#00a2ff38"
