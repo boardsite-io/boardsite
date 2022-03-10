@@ -10,11 +10,13 @@ export class Menu implements GlobalState<MenuState, MenuSubscribers> {
     state: MenuState = {
         mainMenuState: MainMenuState.Closed,
         shortcutsOpen: false,
+        subscribeOpen: false,
     }
 
     subscribers: MenuSubscribers = {
         mainMenu: [],
         shortcutsOpen: [],
+        subscribeOpen: [],
     }
 
     setState(newState: MenuState) {
@@ -42,6 +44,16 @@ export class Menu implements GlobalState<MenuState, MenuSubscribers> {
     closeShortcuts() {
         this.state.shortcutsOpen = false
         this.render("shortcutsOpen")
+    }
+
+    openSubscribe() {
+        this.state.subscribeOpen = true
+        this.render("subscribeOpen")
+    }
+
+    closeSubscribe() {
+        this.state.subscribeOpen = false
+        this.render("subscribeOpen")
     }
 
     subscribe(subscription: MenuSubscription, trigger: RenderTrigger) {

@@ -13,8 +13,8 @@ export const ERASER_STROKE = "#77110511"
 
 export const Theme = styled.div`
     /* --- Color --- */
-    --cPage: #f9fbff; // Page background
-    --cBackground: #bcaaa4; // Global background
+    --cPage: #f9fbff; // Editor page color
+    --cBackground: #bcaaa4; //  Editor background color
 
     --cPrimary: #f5f5f5; // Menu backgrounds
     --cSecondary: #121212; // Menu items

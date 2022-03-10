@@ -58,7 +58,7 @@ export const DialogContent = styled.div`
     text-align: justify;
 `
 
-export const DialogTitle = styled.h2`
+export const DialogTitle = styled.h1`
     margin: 1rem 1rem 0.5rem;
 `
 

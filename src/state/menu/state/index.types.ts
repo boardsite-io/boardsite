@@ -11,11 +11,9 @@ export enum MainMenuState {
 export interface MenuState {
     mainMenuState: MainMenuState
     shortcutsOpen: boolean
+    subscribeOpen: boolean
 }
 
-export type MenuSubscribers = {
-    mainMenu: Subscribers
-    shortcutsOpen: Subscribers
-}
+export type MenuSubscription = "mainMenu" | "shortcutsOpen" | "subscribeOpen"
 
-export type MenuSubscription = keyof MenuSubscribers
+export type MenuSubscribers = Record<MenuSubscription, Subscribers>

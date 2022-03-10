@@ -3,7 +3,7 @@ import React from "react"
 import { IntlProvider } from "react-intl"
 import { BrowserRouter } from "react-router-dom"
 import ElectronWrapper from "./electron"
-import Routes from "./routes"
+import Routes from "./router"
 import { Theme } from "./theme"
 
 const App = (): JSX.Element => {

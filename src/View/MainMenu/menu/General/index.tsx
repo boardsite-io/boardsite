@@ -6,10 +6,10 @@ import { SiGithubsponsors } from "react-icons/si"
 import { isMobile } from "react-device-detect"
 import { online, useOnline } from "state/online"
 import { menu } from "state/menu"
-import { AUTH_URL } from "api/auth"
 import { CSSTransition } from "react-transition-group"
 import EditMenu from "View/MainMenu/menu/General/Edit"
 import { cssTransition } from "View/MainMenu/cssTransition"
+import { AUTH_URL } from "api/auth"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 import FileMenu from "./File"
@@ -30,6 +30,10 @@ const onClickSignIn = () => {
 
 const onClickSignOut = () => {
     online.clearToken()
+}
+
+const onClickSponsor = () => {
+    menu.openSubscribe()
 }
 
 const onClickShortcuts = () => {
@@ -93,10 +97,11 @@ const GeneralMenu = () => {
                 />
             )}
             <HorizontalRule />
-            {isAuthorized() && (
+            {!isAuthorized() && (
                 <MenuItem
                     text={<FormattedMessage id="Menu.General.GithubSponsor" />}
                     icon={<SiGithubsponsors className="external-icon" />}
+                    onClick={onClickSponsor}
                 />
             )}
             {!isSignedIn() ? (
