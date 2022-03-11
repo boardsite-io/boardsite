@@ -31,7 +31,7 @@ export const FILE_NAME_WORKSPACE = "workspace"
 
 export const NOTIFICATION_TRANSITION = 300 // in ms
 export const DEFAULT_NOTIFICATION_DURATION = 2000
-export const MAX_FAVORITE_TOOLS = 5
+export const MAX_FAVORITE_TOOLS_FREE = 4
 export const MAX_ALIAS_LENGTH = 30
 export const SESSION_ID_LENGTH = 8
 export const TRANSFORM_PIXEL_SCALE_DEBOUNCE = 100 // debounce time in ms
@@ -55,21 +55,12 @@ export const DEFAULT_VIEW_TRANSFORM: ViewTransform = {
     scale: DEFAULT_VIEW_SCALE,
 }
 export const DEFAULT_KEEP_CENTERED = false
-export const DRAG_SHADOW_BLUR = 4
-
-// transform props
-export const TR_BORDER_STROKE = "#00a2ff38"
-export const TR_BORDER_STROKE_WIDTH = 1
-export const TR_ANCHOR_FILL = "#00a2ff38"
 
 export const ERASER_WIDTH = 3
 export const ERASED_OPACITY = 0.4
 export const DEFAULT_TOOL = ToolType.Pen
 // allow drawing with finger
 export const DEFAULT_DIRECTDRAW = true
-
-const ELEMENTS_PER_POINT = 2
-export const LIVESTROKE_SEGMENT_SIZE = 420 * ELEMENTS_PER_POINT
 
 export const pageSize = {
     a4portrait: { width: 620, height: 877 },
@@ -90,8 +81,6 @@ export enum Variant {
     Secondary,
 }
 
-export const LAYER_CACHE_PXL = 4
-
 const tool1: Tool = {
     type: ToolType.Pen,
     style: {
@@ -103,15 +92,15 @@ const tool1: Tool = {
 const tool2: Tool = {
     type: ToolType.Pen,
     style: {
-        color: "#0211a3",
-        width: STROKE_WIDTH_PRESETS[3],
+        color: "#ff0000",
+        width: STROKE_WIDTH_PRESETS[2],
         opacity: 1,
     },
 }
 const tool3: Tool = {
-    type: ToolType.Pen,
+    type: ToolType.Rectangle,
     style: {
-        color: "#ff0000",
+        color: "#0000ff",
         width: STROKE_WIDTH_PRESETS[4],
         opacity: 1,
     },

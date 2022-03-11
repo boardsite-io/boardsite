@@ -2,8 +2,9 @@ import { FormattedMessage } from "language"
 import { nanoid } from "nanoid"
 import React from "react"
 import { IconButton, PlusIcon, ToolTip, Position, ToolIcons } from "components"
-import { MAX_FAVORITE_TOOLS } from "consts"
+import { MAX_FAVORITE_TOOLS_FREE } from "consts"
 import { drawing, useDrawing } from "state/drawing"
+import { useOnline } from "state/online"
 import { FavToolsStyled } from "./index.styled"
 import FavToolButton from "./FavoriteToolButton"
 
@@ -14,6 +15,9 @@ const addFavoriteTool = () => {
 
 const FavoriteTools: React.FC = () => {
     const { favoriteTools } = useDrawing("FavoriteTools")
+    const { isAuthorized } = useOnline("session")
+    const canAddFavoriteTool =
+        isAuthorized() || favoriteTools.length < MAX_FAVORITE_TOOLS_FREE
 
     return (
         <FavToolsStyled>
@@ -29,7 +33,7 @@ const FavoriteTools: React.FC = () => {
                     />
                 )
             })}
-            {favoriteTools.length < MAX_FAVORITE_TOOLS && (
+            {canAddFavoriteTool && (
                 <ToolTip
                     text={<FormattedMessage id="ToolTip.AddFavoriteTool" />}
                     position={Position.TopLeft}
