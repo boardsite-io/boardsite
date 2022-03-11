@@ -5,8 +5,13 @@ name: Testing
 
 on:
   pull_request:
-    branches: [ master ]
-
+    paths:
+      - "src/**"
+      - "public/**"
+      - ".github/workflows/**"
+      - ".env"
+      - "package.json"
+      - "yarn.lock"
 jobs:
   build:
     name: Lint, test and build
