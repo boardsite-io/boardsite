@@ -5,6 +5,7 @@ import { handleSetTool } from "drawing/handlers"
 import { isDrawType } from "state/drawing/util"
 import { useDrawing } from "state/drawing"
 import { notification } from "state/notification"
+import { menu } from "state/menu"
 import StylePicker from "../StylePicker"
 
 const ActiveTool: React.FC = memo(() => {
@@ -18,6 +19,7 @@ const ActiveTool: React.FC = memo(() => {
     const onClick = () => {
         if (isDraw) {
             setOpen(true)
+            menu.closeMainMenu()
         } else {
             handleSetTool({ type: latestDrawType })
             notification.create("Notification.Tool.Active")
