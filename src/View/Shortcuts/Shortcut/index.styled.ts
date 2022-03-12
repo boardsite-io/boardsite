@@ -14,7 +14,7 @@ export const Item = styled.li`
 export const Title = styled.span``
 export const Keys = styled.span`
     text-overflow: ellipsis;
-    background: var(--cSelected);
+    background: ${({ theme }) => theme.palette.editor.selected};
     padding: var(--main-menu-button-padding);
     margin: var(--main-menu-button-margin);
     border-radius: var(--button-border-radius);

@@ -13,7 +13,7 @@ export const SessionStatus = styled.div`
     right: -0.45rem;
     padding: 0 0.3rem;
 
-    color: ${({ theme }) => theme.palette.primary.main};
+    color: ${({ theme }) => theme.palette.secondary.contrastText};
     background: ${({ theme }) => theme.palette.secondary.main};
     border-radius: var(--button-border-radius);
     filter: opacity(75%);

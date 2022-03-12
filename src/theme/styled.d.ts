@@ -7,7 +7,6 @@ interface IPalette {
 
 declare module "styled-components" {
     export interface DefaultTheme {
-        borderRadius: string
         palette: {
             primary: IPalette
             secondary: IPalette

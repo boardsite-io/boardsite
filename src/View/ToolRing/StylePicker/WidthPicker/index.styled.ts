@@ -26,7 +26,7 @@ export const Preset = styled.button<PresetProps>`
     ${({ $active }) => ($active ? activePreset : inActivePreset)};
 `
 const activePreset = css`
-    background: var(--cSelected);
+    background: ${({ theme }) => theme.palette.editor.selected};
 `
 const inActivePreset = css`
     background: transparent;

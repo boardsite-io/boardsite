@@ -13,12 +13,19 @@ export const ERASER_STROKE = "#77110511"
 
 export const GlobalStyles = styled.div`
     /* --- Color --- */
-    --cDialogBackground: #000000aa; // Dialog background
+    --cDialogBackground: #000000aa; // Dialog background dimming
+    color: ${({ theme }) => theme.palette.primary.contrastText};
 
     svg:not(.external-icon) {
         stroke: ${({ theme }) => theme.palette.primary.contrastText};
         stroke-width: var(--icon-stroke-width);
     }
+
+    /* --- Selection Tool --- */
+    --sel-color: ${SELECTION_FILL};
+    --sel-handle-color: #00245366;
+    --sel-handle-size: 0.75rem;
+    --sel-handle-border-radius: 2px;
 
     /* --- General --- */
     --border-radius: 0.5rem;
@@ -37,12 +44,6 @@ export const GlobalStyles = styled.div`
     --zIndexToolRing: 60;
     --zIndexFavoriteTools: 60;
     --zIndexPopupBG: 10;
-
-    /* --- Selection Tool --- */
-    --sel-color: ${SELECTION_FILL};
-    --sel-handle-color: #00245366;
-    --sel-handle-size: 0.75rem;
-    --sel-handle-border-radius: 2px;
 
     /* --- Menu Design --- */
     --toolbar-gap: 0;
@@ -78,7 +79,7 @@ export const GlobalStyles = styled.div`
         font-weight: inherit;
     }
 
-    h1,
+    /* h1,
     h2,
     h3,
     h4,
@@ -86,7 +87,7 @@ export const GlobalStyles = styled.div`
     h6 {
         font-family: inherit;
         font-weight: 600;
-    }
+    } */
 
     font-family: "Lato", sans-serif;
     font-size: 1rem;
