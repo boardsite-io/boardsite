@@ -2,7 +2,7 @@ import styled from "styled-components"
 
 export const Item = styled.li`
     list-style: none;
-    color: var(--cSecondary);
+    color: ${({ theme }) => theme.palette.primary.contrastText};
     display: flex;
     justify-content: space-between;
     align-items: center;

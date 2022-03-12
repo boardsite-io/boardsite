@@ -1,0 +1,25 @@
+// theme.ts
+import { DefaultTheme } from "styled-components"
+
+export const lightTheme: DefaultTheme = {
+    borderRadius: "4px",
+    palette: {
+        primary: {
+            main: "#f5f5f5",
+            contrastText: "#000000",
+        },
+        secondary: {
+            main: "#00796b",
+            contrastText: "#ffffff",
+        },
+        editor: {
+            background: "#bcaaa4",
+            paper: "#f9fbff",
+            selected: "#d9d7f1",
+        },
+        common: {
+            warning: "#ff0000",
+            rule: "#00000022",
+        },
+    },
+}

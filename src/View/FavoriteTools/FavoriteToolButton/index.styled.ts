@@ -12,6 +12,6 @@ export const FavToolOptions = styled.div`
     transform: translateX(50%);
     display: flex;
     border-radius: var(--border-radius);
-    background-color: var(--cPrimary);
+    background-color: ${({ theme }) => theme.palette.primary.main};
     box-shadow: var(--toolbar-box-shadow);
 `

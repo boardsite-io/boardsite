@@ -10,7 +10,7 @@ export const MainMenuBarWrap = styled.nav`
     margin-left: var(--toolbar-margin);
     top: 0;
     left: 0;
-    background: var(--cPrimary);
+    background: ${({ theme }) => theme.palette.primary.main};
     border-radius: var(--toolbar-border-radius);
     box-shadow: var(--toolbar-box-shadow);
     padding: var(--toolbar-padding);
@@ -23,8 +23,8 @@ export const MainMenuButton = styled.button`
     align-items: center;
     justify-content: center;
     border: none;
-    color: var(--cSecondary);
-    background: var(--cPrimary);
+    color: ${({ theme }) => theme.palette.primary.contrastText};
+    background: ${({ theme }) => theme.palette.primary.main};
     border-radius: var(--button-border-radius);
     width: fit-content;
     height: var(--icon-button-size);

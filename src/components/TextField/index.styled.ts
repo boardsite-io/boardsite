@@ -62,7 +62,7 @@ export const InputBar = styled.div`
         }
         if ($hasFocus) {
             return css`
-                background: var(--cTertiary);
+                background: ${({ theme }) => theme.palette.secondary.main};
             `
         }
         return css`

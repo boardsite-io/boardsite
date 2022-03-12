@@ -13,8 +13,8 @@ export const SessionStatus = styled.div`
     right: -0.45rem;
     padding: 0 0.3rem;
 
-    color: var(--cPrimary);
-    background: var(--cTertiary);
+    color: ${({ theme }) => theme.palette.primary.main};
+    background: ${({ theme }) => theme.palette.secondary.main};
     border-radius: var(--button-border-radius);
     filter: opacity(75%);
     box-shadow: var(--box-shadow);

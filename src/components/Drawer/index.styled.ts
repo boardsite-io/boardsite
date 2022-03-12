@@ -12,7 +12,7 @@ export const DrawerBox = styled.div<DrawerBoxProps>`
     width: min(20rem, 80%);
     display: flex;
     flex-direction: column;
-    background: var(--cPrimary);
+    background: ${({ theme }) => theme.palette.primary.main};
     padding: 0.5rem;
     box-shadow: var(--box-shadow);
     overflow-y: auto;

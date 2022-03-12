@@ -16,10 +16,10 @@ export const StyledIconButton = styled.button<Props>`
     padding: var(--icon-button-padding);
     border: none;
     border-radius: var(--button-border-radius);
-    background: var(--cPrimary);
+    background: ${({ theme }) => theme.palette.primary.main};
 
     /* color for non custom svgs */
-    color: var(--cSecondary);
+    color: ${({ theme }) => theme.palette.primary.contrastText};
     svg {
         transition: all 100ms ease-in-out;
         height: 80%;
@@ -31,7 +31,7 @@ export const StyledIconButton = styled.button<Props>`
 `
 
 const active = css`
-    background: var(--cSelected);
+    background: ${({ theme }) => theme.palette.editor.selected};
 `
 const inactive = css`
     &:hover {
@@ -43,6 +43,6 @@ const inactive = css`
 const deactivated = css`
     cursor: not-allowed;
     svg {
-        stroke: var(--cPrimary);
+        stroke: ${({ theme }) => theme.palette.primary.main};
     }
 `

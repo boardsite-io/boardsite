@@ -4,8 +4,6 @@ import { Canvas } from "../index.styled"
 export const TrWrap = styled.div`
     position: absolute;
     inset: 0;
-    /* background: #22334455; */
-    background: 00000088;
 `
 
 export const SelectionTransformer = styled.div`
@@ -26,7 +24,8 @@ export const TrCanvasHandle = styled.div<{ position: TrHandle }>`
     width: var(--sel-handle-size);
     height: var(--sel-handle-size);
     background: var(--sel-handle-color);
-    border: var(--sel-handle-border);
+    border: 1px solid;
+    border-color: ${({ theme }) => theme.palette.secondary.main};
     border-radius: var(--sel-handle-border-radius);
 
     transform-origin: center;

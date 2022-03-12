@@ -34,8 +34,8 @@ export const ItemButton = styled.button<{ $warning: boolean }>`
     border: none;
     border-radius: var(--border-radius);
     transition: all 200ms ease;
-    color: var(--cSecondary);
-    background: var(--cPrimary);
+    color: ${({ theme }) => theme.palette.primary.contrastText};
+    background: ${({ theme }) => theme.palette.primary.main};
 
     &:hover {
         filter: var(--main-menu-hover-filter);
@@ -43,13 +43,12 @@ export const ItemButton = styled.button<{ $warning: boolean }>`
 
     &:disabled {
         cursor: no-drop;
-        color: var(--cRule);
+        filter: opacity(20%);
     }
 
     ${({ $warning }) =>
-        $warning
-            ? css`
-                  color: var(--cWarning);
-              `
-            : css``};
+        $warning &&
+        css`
+            color: ${({ theme }) => theme.palette.common.warning};
+        `}
 `

@@ -1,4 +1,4 @@
-import { Breakpoint } from "App/theme"
+import { Breakpoint } from "App/global.styled"
 import styled from "styled-components"
 
 export const CreateSessionOptions = styled.div`

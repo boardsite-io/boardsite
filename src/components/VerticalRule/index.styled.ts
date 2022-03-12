@@ -1,7 +1,7 @@
 import styled from "styled-components"
 
 export const VerticalRule = styled.div`
-    background: var(--cRule);
+    background: ${({ theme }) => theme.palette.common.rule};
     outline: none;
     border: none;
     height: var(--icon-button-size);

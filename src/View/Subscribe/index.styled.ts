@@ -47,14 +47,14 @@ export const BenefitItem = styled.li`
 
 export const SubscribeButton = styled.a`
     text-align: center;
-    color: var(--cPrimary);
-    background: var(--cTertiary);
+    color: ${({ theme }) => theme.palette.secondary.contrastText};
+    background: ${({ theme }) => theme.palette.secondary.main};
     padding: 1rem 2rem;
     cursor: pointer;
     text-decoration: none;
     transition: all 100ms ease-in-out;
 
     &:hover {
-        background: var(--cQuaternary);
+        filter: brightness(120%);
     }
 `

@@ -6,8 +6,8 @@ interface Props {
 
 export const StyledButton = styled.button<Props>`
     cursor: pointer;
-    color: var(--cPrimary);
-    background: var(--cTertiary);
+    color: ${({ theme }) => theme.palette.secondary.contrastText};
+    background: ${({ theme }) => theme.palette.secondary.main};
     padding: 0.5rem 1.5rem;
     border-width: 0;
     border-radius: var(--button-border-radius);
@@ -17,7 +17,7 @@ export const StyledButton = styled.button<Props>`
     width: 100%;
 
     &:hover {
-        background: var(--cQuaternary);
+        filter: brightness(120%);
     }
 
     &:disabled {

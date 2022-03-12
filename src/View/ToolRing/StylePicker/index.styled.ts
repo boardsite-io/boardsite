@@ -12,7 +12,7 @@ export const StyledStylePicker = styled.div`
     width: 70vw;
     min-width: 20rem;
     max-width: 30rem;
-    background: var(--cPrimary);
+    background: ${({ theme }) => theme.palette.primary.main};
     border-radius: var(--border-radius);
     box-shadow: var(--toolbar-box-shadow);
 `

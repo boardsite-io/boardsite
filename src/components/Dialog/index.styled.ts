@@ -9,7 +9,7 @@ export const DialogBox = styled.div<DialogProps>`
     display: flex;
     flex-direction: column;
     position: fixed;
-    background: var(--cPrimary);
+    background: ${({ theme }) => theme.palette.primary.main};
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
