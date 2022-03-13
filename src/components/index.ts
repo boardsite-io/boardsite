@@ -3,7 +3,6 @@ export { default as IconButton } from "./IconButton"
 export { default as ToolButton } from "./ToolButton"
 export { default as Button } from "./Button"
 export { default as Popup } from "./Popup"
-export { default as Switch } from "./Switch"
 export { default as TextField } from "./TextField"
 export { default as ToolTip } from "./ToolTip"
 export { Position } from "./ToolTip/index.types" // Cleaner imports

@@ -14,10 +14,11 @@ export const LoadingDots = styled.div`
     gap: 1rem;
 `
 export const Dot = styled.div<{ delay: string }>`
-    box-shadow: 0 0 0.2rem 0 var(--cTertiary);
+    color: ${({ theme }) => theme.palette.secondary.main};
+    background: ${({ theme }) => theme.palette.secondary.main};
+    box-shadow: 0 0 0.2rem 0;
     width: 0.5rem;
     height: 0.5rem;
-    background: var(--cTertiary);
     border-radius: 100%;
     animation-name: loading-animation;
     animation-duration: 1.5s;

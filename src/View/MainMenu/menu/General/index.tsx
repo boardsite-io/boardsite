@@ -14,6 +14,7 @@ import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 import FileMenu from "./File"
 import SettingsMenu from "./Settings"
+import ThemeMenu from "./Theme"
 
 export const openInNewTab = (url: string): void => {
     const newWindow = window.open(url, "_blank", "noopener,noreferrer")
@@ -46,6 +47,7 @@ enum SubMenu {
     File,
     Edit,
     Settings,
+    Theme,
 }
 
 const GeneralMenu = () => {
@@ -83,6 +85,18 @@ const GeneralMenu = () => {
                     {...cssTransition}
                 >
                     <SettingsMenu />
+                </CSSTransition>
+            </MenuItem>
+            <MenuItem
+                text={<FormattedMessage id="Menu.General.Theme" />}
+                expandMenu={() => setSubMenu(SubMenu.Theme)}
+                icon={<ExpandableIcon />}
+            >
+                <CSSTransition
+                    in={subMenu === SubMenu.Theme}
+                    {...cssTransition}
+                >
+                    <ThemeMenu />
                 </CSSTransition>
             </MenuItem>
             <MenuItem

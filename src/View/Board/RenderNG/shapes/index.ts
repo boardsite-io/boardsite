@@ -1,4 +1,4 @@
-import { ERASER_STROKE, SELECTION_FILL } from "App/theme"
+import { ERASER_STROKE, SELECTION_FILL } from "App/global.styled"
 import { LiveStroke } from "drawing/livestroke/index.types"
 import { ToolType, Stroke } from "drawing/stroke/index.types"
 import { StrokeStyle } from "../index.types"

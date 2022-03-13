@@ -10,7 +10,7 @@ export const FavToolsStyled = styled.div`
     flex-direction: row;
     justify-content: space-between;
     z-index: var(--zIndexFavoriteTools);
-    background: var(--cPrimary);
+    background: ${({ theme }) => theme.palette.primary.main};
     gap: var(--toolbar-gap);
     padding: var(--toolbar-padding);
     border-radius: var(--toolbar-border-radius);

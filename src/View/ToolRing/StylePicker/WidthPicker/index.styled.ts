@@ -7,7 +7,7 @@ export const WidthPresets = styled.div`
     column-gap: var(--toolbar-gap);
     grid-template-columns: repeat(2, 1fr);
     border-radius: var(--border-radius);
-    background: var(--cPrimary);
+    background: ${({ theme }) => theme.palette.primary.main};
 `
 
 interface PresetProps {
@@ -26,7 +26,7 @@ export const Preset = styled.button<PresetProps>`
     ${({ $active }) => ($active ? activePreset : inActivePreset)};
 `
 const activePreset = css`
-    background: var(--cSelected);
+    background: ${({ theme }) => theme.palette.editor.selected};
 `
 const inActivePreset = css`
     background: transparent;
@@ -41,7 +41,7 @@ interface StrokeWidth {
 
 export const WidthPresetInnerDot = styled.div<StrokeWidth>`
     display: flex;
-    background: var(--cSecondary);
+    background: ${({ theme }) => theme.palette.primary.contrastText};
     ${({ $strokeWidth }) =>
         css`
             height: ${$strokeWidth}px;

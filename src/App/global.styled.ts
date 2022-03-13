@@ -11,25 +11,21 @@ export enum Breakpoint {
 export const SELECTION_FILL = "#00a2ff38"
 export const ERASER_STROKE = "#77110511"
 
-export const Theme = styled.div`
+export const GlobalStyles = styled.div`
     /* --- Color --- */
-    --cPage: #f9fbff; // Editor page color
-    --cBackground: #bcaaa4; //  Editor background color
-
-    --cPrimary: #f5f5f5; // Menu backgrounds
-    --cSecondary: #121212; // Menu items
-    --cTertiary: #00796b; // Small details, borders, rails
-    --cQuaternary: #37474f; // Small details, borders, rails
-
-    --cSelected: #d9d7f1; // Selected tool background
-    --cWarning: red; // Warning text
-    --cDialogBackground: #000000aa; // Dialog background
-    --cRule: #00000022; // Horizontal and vertical rule
+    --cDialogBackground: #000000aa; // Dialog background dimming
+    color: ${({ theme }) => theme.palette.primary.contrastText};
 
     svg:not(.external-icon) {
-        stroke: var(--cSecondary);
+        stroke: ${({ theme }) => theme.palette.primary.contrastText};
         stroke-width: var(--icon-stroke-width);
     }
+
+    /* --- Selection Tool --- */
+    --sel-color: ${SELECTION_FILL};
+    --sel-handle-color: #00245366;
+    --sel-handle-size: 0.75rem;
+    --sel-handle-border-radius: 2px;
 
     /* --- General --- */
     --border-radius: 0.5rem;
@@ -48,13 +44,6 @@ export const Theme = styled.div`
     --zIndexToolRing: 60;
     --zIndexFavoriteTools: 60;
     --zIndexPopupBG: 10;
-
-    /* --- Selection Tool --- */
-    --sel-color: ${SELECTION_FILL};
-    --sel-handle-color: #00245366;
-    --sel-handle-size: 0.75rem;
-    --sel-handle-border: 1px solid var(--cQuaternary);
-    --sel-handle-border-radius: 2px;
 
     /* --- Menu Design --- */
     --toolbar-gap: 0;
@@ -90,7 +79,7 @@ export const Theme = styled.div`
         font-weight: inherit;
     }
 
-    h1,
+    /* h1,
     h2,
     h3,
     h4,
@@ -98,7 +87,7 @@ export const Theme = styled.div`
     h6 {
         font-family: inherit;
         font-weight: 600;
-    }
+    } */
 
     font-family: "Lato", sans-serif;
     font-size: 1rem;
@@ -107,5 +96,4 @@ export const Theme = styled.div`
     /* --- Style Picker --- */
     --style-picker-hue-width: 1.2rem;
     --style-picker-hue-height: 2rem;
-    --style-picker-pointer-border: 2px solid var(--cPrimary);
 `

@@ -32,7 +32,7 @@ const menuStyles = css`
     margin: 0;
     padding: 0;
     box-shadow: var(--toolbar-box-shadow);
-    background: var(--cPrimary);
+    background: ${({ theme }) => theme.palette.primary.main};
     border-radius: var(--toolbar-border-radius);
 
     width: max-content;

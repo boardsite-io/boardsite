@@ -1,7 +1,7 @@
 import styled from "styled-components"
 
 export const HorizontalRule = styled.hr`
-    background: var(--cRule);
+    background: ${({ theme }) => theme.palette.common.rule};
     outline: none;
     border: none;
     width: 100%;

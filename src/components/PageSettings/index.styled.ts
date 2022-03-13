@@ -3,10 +3,12 @@ import styled, { css } from "styled-components"
 export const SELECTION_SIZE = "60px"
 
 export const active = css`
-    box-shadow: 0 0 0 2px var(--cTertiary), inset 0 0 0 2px var(--cTertiary);
+    color: ${({ theme }) => theme.palette.secondary.main};
+    box-shadow: 0 0 0 2px, inset 0 0 0 2px;
 `
 export const inactive = css`
-    box-shadow: 0 0 0 1px var(--cTertiary), var(--box-shadow);
+    color: ${({ theme }) => theme.palette.secondary.main};
+    box-shadow: 0 0 0 1px, var(--box-shadow);
 `
 export const PageSettingsWrap = styled.div`
     display: flex;

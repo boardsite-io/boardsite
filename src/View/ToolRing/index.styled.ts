@@ -1,4 +1,4 @@
-import { Breakpoint } from "App/theme"
+import { Breakpoint } from "App/global.styled"
 import styled from "styled-components"
 
 export const ToolRingWrap = styled.div`
@@ -10,7 +10,7 @@ export const ToolRingWrap = styled.div`
     margin-top: var(--toolbar-margin);
     margin-right: var(--toolbar-margin);
     z-index: var(--zIndexToolRing);
-    background: var(--cPrimary);
+    background: ${({ theme }) => theme.palette.primary.main};
     gap: var(--toolbar-gap);
     padding: var(--toolbar-padding);
     border-radius: var(--toolbar-border-radius);

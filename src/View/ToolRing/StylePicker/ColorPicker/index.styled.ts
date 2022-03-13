@@ -7,7 +7,8 @@ export const CustomColorPicker = styled(HexColorPicker)`
     .react-colorful__saturation-pointer,
     .react-colorful__alpha-pointer,
     .react-colorful__hue-pointer {
-        border: var(--style-picker-pointer-border);
+        border: 2px solid;
+        border-color: ${({ theme }) => theme.palette.primary.contrastText};
     }
 
     .react-colorful__saturation-pointer,

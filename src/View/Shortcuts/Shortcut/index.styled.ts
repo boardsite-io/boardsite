@@ -2,7 +2,7 @@ import styled from "styled-components"
 
 export const Item = styled.li`
     list-style: none;
-    color: var(--cSecondary);
+    color: ${({ theme }) => theme.palette.primary.contrastText};
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -14,7 +14,7 @@ export const Item = styled.li`
 export const Title = styled.span``
 export const Keys = styled.span`
     text-overflow: ellipsis;
-    background: var(--cSelected);
+    background: ${({ theme }) => theme.palette.editor.selected};
     padding: var(--main-menu-button-padding);
     margin: var(--main-menu-button-margin);
     border-radius: var(--button-border-radius);

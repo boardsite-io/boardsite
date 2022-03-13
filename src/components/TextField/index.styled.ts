@@ -30,7 +30,8 @@ export const InputLabel = styled.label`
     font-size: ${({ $hasFocus }: InputLabelProps) =>
         $hasFocus ? "0.9rem" : "1rem"};
     height: 1rem;
-    color: #00000088;
+    color: ${({ theme }) => theme.palette.primary.contrastText};
+    filter: brightness(70%);
 `
 
 export const InputHelperText = styled.label`
@@ -39,7 +40,7 @@ export const InputHelperText = styled.label`
     bottom: 0;
     font-size: 0.9rem;
     height: 1rem;
-    color: #00000088;
+    color: ${({ theme }) => theme.palette.primary.contrastText};
 `
 
 interface InputBarProps {
@@ -57,16 +58,16 @@ export const InputBar = styled.div`
     ${({ $error, $hasFocus }: InputBarProps) => {
         if ($error) {
             return css`
-                background: red;
+                background: ${({ theme }) => theme.palette.common.warning};
             `
         }
         if ($hasFocus) {
             return css`
-                background: var(--cTertiary);
+                background: ${({ theme }) => theme.palette.secondary.main};
             `
         }
         return css`
-            background: black;
+            background: ${({ theme }) => theme.palette.primary.contrastText};
         `
     }};
 `
@@ -77,6 +78,7 @@ interface InputProps {
 }
 
 export const StyledInput = styled.input`
+    color: ${({ theme }) => theme.palette.primary.contrastText};
     background: transparent;
     position: absolute;
     padding: 0;
