@@ -1,24 +1,24 @@
 // theme.ts
 import { DefaultTheme } from "styled-components"
 
-export const darkTheme: DefaultTheme = {
+export const oceanTheme: DefaultTheme = {
     palette: {
         primary: {
-            main: "#37474F",
+            main: "#1565C0",
             contrastText: "#E0E0E0",
         },
         secondary: {
-            main: "#00796b",
-            contrastText: "#ffffff",
+            main: "#0D47A1",
+            contrastText: "#E1F5FE",
         },
         editor: {
-            background: "#bcaaa4",
+            background: "#90CAF9",
             paper: "#f9fbff",
-            selected: "#00838F",
+            selected: "#0288D1",
         },
         common: {
             warning: "#ff0000",
-            rule: "#00000022",
+            rule: "#E0F7FA55",
         },
     },
 }

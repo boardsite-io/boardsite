@@ -15,9 +15,8 @@ export const ToolInfo = styled.div<{ $toolColor: string }>`
     color: ${({ theme }) => theme.palette.secondary.contrastText};
     border-radius: var(--button-border-radius);
     box-shadow: var(--box-shadow);
-    filter: opacity(75%);
     ${({ $toolColor }) =>
         css`
-            background: ${$toolColor};
+            background: ${$toolColor}66;
         `}
 `
