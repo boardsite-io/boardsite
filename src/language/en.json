@@ -118,6 +118,7 @@
     "Notification.Session.InvalidSessionId": "🚨 Please enter a valid session ID.",
     "Notification.Session.KickUserFailed": "🚨 User could not be kicked.",
     "Notification.Session.CopiedToClipboard": "🔗 The session link has been copied to your clipboard.",
+    "Notification.Session.OauthFlowFailed": "Sign in aborted.",
     "Shortcut.Title": "Shortcuts",
     "Shortcut.File.New": "New File",
     "Shortcut.File.New.Keys": "^ + N",
