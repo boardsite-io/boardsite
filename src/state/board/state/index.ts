@@ -260,7 +260,7 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
                 page: this.state.pageCollection[pid] as Page,
             }))
             .filter(({ page }) => page !== undefined)
-        const pageRank = [...this.state.pageRank]
+        const pageRank = this.state.pageRank.slice()
 
         const handler = () => {
             this.deletePages(pageIds)
