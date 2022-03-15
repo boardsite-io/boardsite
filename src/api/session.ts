@@ -121,7 +121,7 @@ export class BoardSession implements Session {
         this.socket?.close()
         this.users = {}
         board.clearAttachments()
-        board.deleteAllPages()
+        board.deleteAllPages() // Use non-redoable internal option
         board.handleAddPages({ data: [{ page: new BoardPage(), index: -1 }] })
         online.render("session")
     }

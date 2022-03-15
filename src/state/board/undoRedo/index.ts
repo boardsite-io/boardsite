@@ -8,7 +8,6 @@ export function undoAction(state: BoardState): void {
             undoHandler: action.undoHandler,
             stack: state.redoStack,
             isRedoable: true,
-            state,
         })
     }
 }
@@ -21,7 +20,6 @@ export function redoAction(state: BoardState): void {
             undoHandler: action.undoHandler,
             stack: state.undoStack,
             isRedoable: true,
-            state,
         })
     }
 }

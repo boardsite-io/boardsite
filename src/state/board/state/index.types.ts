@@ -77,14 +77,13 @@ export interface BoardAction<T extends any[], U extends any[]> {
     data: T
     isUpdate?: boolean
     isRedoable?: boolean
-    sessionHandler?: (...redos: T) => void
-    sessionUndoHandler?: (...undos: U) => void
+    sessionHandler?: (redos: T) => void
+    sessionUndoHandler?: (undos: U) => void
 }
 
 export interface ActionConfig {
     handler: () => void
     undoHandler: () => void
-    state: BoardState
     stack?: StackAction[]
     isRedoable?: boolean
     isNew?: boolean

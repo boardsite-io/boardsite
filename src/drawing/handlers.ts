@@ -84,7 +84,7 @@ export function handleClearPages(pageIds: PageId[]): void {
         clearPagesAction.sessionHandler = () => {
             session?.updatePages(verifiedPages, true)
         }
-        clearPagesAction.sessionUndoHandler = (...undos) => {
+        clearPagesAction.sessionUndoHandler = (undos) => {
             session?.sendStrokes(undos)
         }
     }
@@ -111,7 +111,7 @@ export function handleDeletePages(
             board.getState().pageRank.indexOf(pid)
         )
         deletePagesAction.sessionHandler = () => session?.deletePages(pageIds)
-        deletePagesAction.sessionUndoHandler = (...undos) => {
+        deletePagesAction.sessionUndoHandler = (undos) => {
             const pages = undos.map(({ page }) => page)
             // TODO: send pagerank
             session?.addPages(pages, indices as number[])
@@ -128,10 +128,12 @@ export function handleDeletePages(
 }
 
 export function handleDeleteAllPages(isRedoable?: boolean): void {
-    handleDeletePages(board.getState().pageRank, isRedoable)
+    handleDeletePages(board.getState().pageRank.slice(), isRedoable)
 }
 
 export function handleAddStrokes(strokes: Stroke[], isUpdate: boolean): void {
+    strokes.sort((a, b) => ((a.id ?? "") > (b.id ?? "") ? 1 : -1))
+
     const addStrokesAction: AddStrokesAction = {
         data: strokes,
         isUpdate,
@@ -203,7 +205,7 @@ export function handleChangePageBackground(): void {
         const { session } = online.state
         setPageMetaAction.sessionHandler = () =>
             session?.updatePages([pageUpdate], false)
-        setPageMetaAction.sessionUndoHandler = (...undos) =>
+        setPageMetaAction.sessionUndoHandler = (undos) =>
             session?.updatePages(undos, false)
     }
 
