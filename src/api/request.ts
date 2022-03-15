@@ -152,6 +152,10 @@ export class Request {
                 (obj, page) => ({ ...obj, [page.pageId]: page.meta }),
                 {}
             ),
+            strokes: pages.reduce(
+                (obj, page) => ({ ...obj, [page.pageId]: page.strokes }),
+                {}
+            ),
         })
     }
 

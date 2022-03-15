@@ -115,12 +115,6 @@ export function handleDeletePages(
             const pages = undos.map(({ page }) => page)
             // TODO: send pagerank
             session?.addPages(pages, indices as number[])
-            session?.sendStrokes(
-                pages.reduce<Stroke[]>(
-                    (arr, page) => arr.concat(Object.values(page.strokes)),
-                    []
-                )
-            )
         }
     }
 
