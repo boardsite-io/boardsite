@@ -63,7 +63,7 @@ const addRenderedPdf = async (attachment: Attachment): Promise<void> => {
             }
         })
 
-        board.addPages({ data: addPageData })
+        board.handleAddPages({ data: addPageData })
         view.resetView()
     }
 

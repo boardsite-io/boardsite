@@ -74,7 +74,7 @@ export const useTransformer = (
             }
             shapeTr.start(point, handleType)
             if (transformStrokes) {
-                handleDeleteStrokes(transformStrokes)
+                handleDeleteStrokes(transformStrokes, true)
             }
             isMouseOrTouchDown = true
         },

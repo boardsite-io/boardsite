@@ -121,8 +121,8 @@ export class BoardSession implements Session {
         this.socket?.close()
         this.users = {}
         board.clearAttachments()
-        board.deleteAllPages()
-        board.addPages({ data: [{ page: new BoardPage(), index: -1 }] })
+        board.deleteAllPages() // Use non-redoable internal option
+        board.handleAddPages({ data: [{ page: new BoardPage(), index: -1 }] })
         online.render("session")
     }
 
@@ -319,13 +319,13 @@ export class BoardSession implements Session {
     receiveStrokes(strokes: Stroke[]): void {
         const erasedStrokes = strokes.filter((s) => s.type === 0)
         if (erasedStrokes.length > 0) {
-            board.eraseStrokes({ data: erasedStrokes })
+            board.handleEraseStrokes({ data: erasedStrokes })
         }
 
         strokes = strokes.filter((s) => s.type !== 0)
 
         if (strokes.length > 0) {
-            board.addStrokes({ data: strokes })
+            board.handleAddStrokes({ data: strokes })
         }
     }
 

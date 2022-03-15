@@ -42,7 +42,7 @@ export function handleAddPageOver(): void {
             session?.deletePages([page.pageId])
     }
 
-    board.addPages(addPagesAction)
+    board.handleAddPages(addPagesAction)
     view.resetView()
 }
 
@@ -61,7 +61,7 @@ export function handleAddPageUnder(): void {
             session?.deletePages([page.pageId])
     }
 
-    board.addPages(addPagesAction)
+    board.handleAddPages(addPagesAction)
     board.jumpToNextPage()
     view.resetView()
 }
@@ -84,12 +84,12 @@ export function handleClearPages(pageIds: PageId[]): void {
         clearPagesAction.sessionHandler = () => {
             session?.updatePages(verifiedPages, true)
         }
-        clearPagesAction.sessionUndoHandler = (...undos) => {
+        clearPagesAction.sessionUndoHandler = (undos) => {
             session?.sendStrokes(undos)
         }
     }
 
-    board.clearPages(clearPagesAction)
+    board.handleClearPages(clearPagesAction)
 }
 
 export function handleDeleteCurrentPage(): void {
@@ -111,27 +111,23 @@ export function handleDeletePages(
             board.getState().pageRank.indexOf(pid)
         )
         deletePagesAction.sessionHandler = () => session?.deletePages(pageIds)
-        deletePagesAction.sessionUndoHandler = (...undos) => {
+        deletePagesAction.sessionUndoHandler = (undos) => {
             const pages = undos.map(({ page }) => page)
             // TODO: send pagerank
             session?.addPages(pages, indices as number[])
-            session?.sendStrokes(
-                pages.reduce<Stroke[]>(
-                    (arr, page) => arr.concat(Object.values(page.strokes)),
-                    []
-                )
-            )
         }
     }
 
-    board.deletePages(deletePagesAction)
+    board.handleDeletePages(deletePagesAction)
 }
 
 export function handleDeleteAllPages(isRedoable?: boolean): void {
-    handleDeletePages(board.getState().pageRank, isRedoable)
+    handleDeletePages(board.getState().pageRank.slice(), isRedoable)
 }
 
 export function handleAddStrokes(strokes: Stroke[], isUpdate: boolean): void {
+    strokes.sort((a, b) => ((a.id ?? "") > (b.id ?? "") ? 1 : -1))
+
     const addStrokesAction: AddStrokesAction = {
         data: strokes,
         isUpdate,
@@ -145,23 +141,26 @@ export function handleAddStrokes(strokes: Stroke[], isUpdate: boolean): void {
             session?.eraseStrokes(strokes)
     }
 
-    board.addStrokes(addStrokesAction)
+    board.handleAddStrokes(addStrokesAction)
 }
 
-export function handleDeleteStrokes(strokes: Stroke[]): void {
+export function handleDeleteStrokes(
+    strokes: Stroke[],
+    offlineOnly = false
+): void {
     const eraseStrokesAction: EraseStrokesAction = {
         data: strokes,
         isRedoable: true,
     }
 
-    if (online.state.session?.isConnected()) {
+    if (!offlineOnly && online.state.session?.isConnected()) {
         const { session } = online.state
         eraseStrokesAction.sessionHandler = () => session?.eraseStrokes(strokes)
         eraseStrokesAction.sessionUndoHandler = () =>
             session?.sendStrokes(strokes)
     }
 
-    board.eraseStrokes(eraseStrokesAction)
+    board.handleEraseStrokes(eraseStrokesAction)
 }
 
 export function handleUndo(): void {
@@ -203,11 +202,11 @@ export function handleChangePageBackground(): void {
         const { session } = online.state
         setPageMetaAction.sessionHandler = () =>
             session?.updatePages([pageUpdate], false)
-        setPageMetaAction.sessionUndoHandler = (...undos) =>
+        setPageMetaAction.sessionUndoHandler = (undos) =>
             session?.updatePages(undos, false)
     }
 
-    board.setPageMeta(setPageMetaAction)
+    board.handleSetPageMeta(setPageMetaAction)
 }
 
 function getCurrentPageId() {
