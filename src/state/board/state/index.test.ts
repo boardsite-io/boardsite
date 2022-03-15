@@ -90,17 +90,17 @@ describe("board reducer", () => {
             isRedoable,
         })
 
-        mockBoard.addStrokes(getPayload(true))
+        mockBoard.handleAddStrokes(getPayload(true))
         expect(mockBoard.getState().undoStack?.length).toEqual(1)
         expect(mockBoard.getState().redoStack?.length).toEqual(0)
 
         mockBoard.undoAction()
-        mockBoard.addStrokes(getPayload(false))
+        mockBoard.handleAddStrokes(getPayload(false))
         expect(mockBoard.getState().undoStack?.length).toEqual(0)
         expect(mockBoard.getState().redoStack?.length).toEqual(1)
 
-        mockBoard.addStrokes(getPayload(true))
-        mockBoard.addStrokes(getPayload(true))
+        mockBoard.handleAddStrokes(getPayload(true))
+        mockBoard.handleAddStrokes(getPayload(true))
         expect(mockBoard.getState().undoStack?.length).toEqual(2)
         expect(mockBoard.getState().redoStack?.length).toEqual(0)
     })
@@ -114,7 +114,7 @@ describe("board reducer", () => {
             data: [{ page, index }],
         }
 
-        mockBoard.addPages(pagesAction)
+        mockBoard.handleAddPages(pagesAction)
 
         expect(mockBoard.getState().pageRank).toEqual([
             page.pageId,
@@ -134,7 +134,7 @@ describe("board reducer", () => {
             data: [{ page, index }],
         }
 
-        mockBoard.addPages(pagesAction)
+        mockBoard.handleAddPages(pagesAction)
 
         expect(mockBoard.getState().pageRank).toEqual([
             page1.pageId,
@@ -153,7 +153,7 @@ describe("board reducer", () => {
             data: [{ page, index }],
         }
 
-        mockBoard.addPages(pagesAction)
+        mockBoard.handleAddPages(pagesAction)
 
         expect(mockBoard.getState().pageRank).toEqual([
             page1.pageId,
@@ -172,7 +172,7 @@ describe("board reducer", () => {
             data: [{ page, index }],
         }
 
-        mockBoard.addPages(pagesAction)
+        mockBoard.handleAddPages(pagesAction)
 
         expect(mockBoard.getState().pageRank).toEqual([
             page1.pageId,
@@ -194,7 +194,7 @@ describe("board reducer", () => {
             isRedoable: true,
         }
 
-        mockBoard.addPages(pagesAction)
+        mockBoard.handleAddPages(pagesAction)
         mockBoard.undoAction()
 
         expect(mockBoard.getState().pageRank).toEqual([
@@ -225,7 +225,7 @@ describe("board reducer", () => {
             isRedoable: true,
         }
 
-        mockBoard.clearPages(clearPagesAction)
+        mockBoard.handleClearPages(clearPagesAction)
 
         mockBoardState.pageRank.forEach((pid) => {
             expect(mockBoard.getState().pageCollection[pid]?.strokes).toEqual(
@@ -257,7 +257,7 @@ describe("board reducer", () => {
             isRedoable: true,
         }
 
-        mockBoard.deletePages(deletePagesAction)
+        mockBoard.handleDeletePages(deletePagesAction)
 
         expect(mockBoard.getState().pageRank).toEqual([
             page2.pageId,
@@ -290,7 +290,7 @@ describe("board reducer", () => {
             isRedoable: true,
         }
 
-        mockBoard.deletePages(deletePagesAction)
+        mockBoard.handleDeletePages(deletePagesAction)
 
         expect(mockBoard.getState().pageRank).toEqual([])
 
@@ -329,7 +329,7 @@ describe("board reducer", () => {
             isRedoable: true,
         }
 
-        mockBoard.setPageMeta(setPageMetaAction)
+        mockBoard.handleSetPageMeta(setPageMetaAction)
 
         expect(mockBoard.getState().pageCollection[page1.pageId]?.meta).toEqual(
             newMeta
@@ -356,7 +356,7 @@ describe("board reducer", () => {
             isRedoable: true,
         }
 
-        mockBoard.addStrokes(addStrokesAction)
+        mockBoard.handleAddStrokes(addStrokesAction)
 
         expect(
             mockBoard.getState().pageCollection[page1.pageId]?.strokes[
@@ -392,7 +392,7 @@ describe("board reducer", () => {
             isRedoable: true,
         }
 
-        mockBoard.eraseStrokes(eraseStrokesAction)
+        mockBoard.handleEraseStrokes(eraseStrokesAction)
 
         expect(
             mockBoard.getState().pageCollection[page1.pageId]?.strokes
@@ -433,8 +433,8 @@ describe("board reducer", () => {
         }
 
         // update == delete + add
-        mockBoard.eraseStrokes(eraseStrokesAction)
-        mockBoard.addStrokes(addStrokesAction)
+        mockBoard.handleEraseStrokes(eraseStrokesAction)
+        mockBoard.handleAddStrokes(addStrokesAction)
 
         expect(
             mockBoard.getState().pageCollection[page1.pageId]?.strokes[

@@ -68,8 +68,8 @@ export type Attachments = Record<AttachId, Attachment>
 
 export type DocumentSrc = string | Uint8Array
 export interface StackAction {
-    handler: (boardState: BoardState) => void
-    undoHandler: (boardState: BoardState) => void
+    handler: () => void
+    undoHandler: () => void
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -82,8 +82,8 @@ export interface BoardAction<T extends any[], U extends any[]> {
 }
 
 export interface ActionConfig {
-    handler: (boardState: BoardState) => void
-    undoHandler: (boardState: BoardState) => void
+    handler: () => void
+    undoHandler: () => void
     state: BoardState
     stack?: StackAction[]
     isRedoable?: boolean

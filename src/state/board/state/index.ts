@@ -1,4 +1,5 @@
-import { Stroke } from "drawing/stroke/index.types"
+import { BoardStroke } from "drawing/stroke"
+import { Stroke, StrokeUpdate } from "drawing/stroke/index.types"
 import { assign, cloneDeep, keys, pick } from "lodash"
 import { loadIndexedDB, saveIndexedDB } from "storage/local"
 import { GlobalState, RenderTrigger, SerializedState } from "../../index.types"
@@ -24,17 +25,7 @@ import {
     PageLayer,
     PageId,
 } from "./index.types"
-import {
-    addAction,
-    addOrUpdateStrokes,
-    addPages,
-    clearPages,
-    deletePages,
-    deleteStrokes,
-    redoAction,
-    undoAction,
-    updatePages,
-} from "../undoRedo"
+import { addAction, redoAction, undoAction } from "../undoRedo"
 
 export class Board implements GlobalState<BoardState, BoardSubscribers> {
     state: BoardState = getDefaultBoardState()
@@ -47,93 +38,6 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
     }
 
     pageSubscribers: PageSubscribers = {}
-
-    addStrokes(addStrokesAction: AddStrokesAction): void {
-        const {
-            data: strokes,
-            isRedoable,
-            sessionHandler,
-            sessionUndoHandler,
-            isUpdate,
-        } = addStrokesAction
-
-        strokes.sort((a, b) => ((a.id ?? "") > (b.id ?? "") ? 1 : -1))
-
-        const handler = (boardState: BoardState) => {
-            addOrUpdateStrokes(boardState, ...strokes)
-            sessionHandler?.()
-        }
-
-        let undoHandler = (boardState: BoardState) => {
-            deleteStrokes(boardState, ...strokes)
-            sessionUndoHandler?.()
-        }
-
-        if (isUpdate) {
-            const addUpdateStartPoint = this.state.undoStack?.pop()?.handler
-
-            if (addUpdateStartPoint) {
-                undoHandler = addUpdateStartPoint
-            }
-        }
-
-        addAction({
-            handler,
-            undoHandler,
-            stack: this.state.undoStack,
-            isRedoable,
-            state: this.state,
-            isNew: true,
-        })
-
-        const renderedPages: Record<PageId, boolean> = {}
-        strokes.forEach((stroke) => {
-            if (!renderedPages[stroke.pageId]) {
-                renderedPages[stroke.pageId] = true // prevent rerendering twice
-                this.renderPageLayer("content", stroke.pageId)
-            }
-        })
-
-        this.render("EditMenu")
-    }
-
-    eraseStrokes(eraseStrokesAction: EraseStrokesAction): void {
-        const {
-            data: strokes,
-            isRedoable,
-            sessionHandler,
-            sessionUndoHandler,
-        } = eraseStrokesAction
-
-        const handler = (boardState: BoardState) => {
-            deleteStrokes(boardState, ...strokes)
-            sessionHandler?.()
-        }
-
-        const undoHandler = (boardState: BoardState) => {
-            addOrUpdateStrokes(boardState, ...strokes)
-            sessionUndoHandler?.()
-        }
-
-        addAction({
-            handler,
-            undoHandler,
-            stack: this.state.undoStack,
-            isRedoable,
-            state: this.state,
-            isNew: true,
-        })
-
-        const renderedPages: Record<PageId, boolean> = {}
-        strokes.forEach((stroke) => {
-            if (!renderedPages[stroke.pageId]) {
-                renderedPages[stroke.pageId] = true // prevent rerendering twice
-                this.renderPageLayer("content", stroke.pageId)
-            }
-        })
-
-        this.render("EditMenu")
-    }
 
     addAttachments(attachments: Attachment[]): void {
         attachments.forEach((attachment) => {
@@ -206,22 +110,74 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
         this.render("SettingsMenu")
     }
 
-    addPages(addPagesAction: AddPagesAction): void {
+    /**
+     * Undoable action handlers
+     */
+
+    handleAddStrokes(addStrokesAction: AddStrokesAction): void {
         const {
-            data: addPageData,
+            data: strokes,
             isRedoable,
             sessionHandler,
             sessionUndoHandler,
-        } = addPagesAction
+            isUpdate,
+        } = addStrokesAction
 
-        const handler = (boardState: BoardState) => {
-            addPages(boardState, ...addPageData)
+        strokes.sort((a, b) => ((a.id ?? "") > (b.id ?? "") ? 1 : -1))
+
+        const handler = () => {
+            this.addOrUpdateStrokes(strokes)
             sessionHandler?.()
         }
 
-        const undoHandler = (boardState: BoardState) => {
-            const pageIds = addPageData.map(({ page }) => page.pageId)
-            deletePages(boardState, ...pageIds)
+        let undoHandler = () => {
+            this.deleteStrokes(strokes)
+            sessionUndoHandler?.()
+        }
+
+        if (isUpdate) {
+            const addUpdateStartPoint = this.state.undoStack?.pop()?.handler
+
+            if (addUpdateStartPoint) {
+                undoHandler = addUpdateStartPoint
+            }
+        }
+
+        addAction({
+            handler,
+            undoHandler,
+            stack: this.state.undoStack,
+            isRedoable,
+            state: this.state,
+        })
+        this.state.redoStack = []
+
+        const renderedPages: Record<PageId, boolean> = {}
+        strokes.forEach((stroke) => {
+            if (!renderedPages[stroke.pageId]) {
+                renderedPages[stroke.pageId] = true // prevent rerendering twice
+                this.renderPageLayer("content", stroke.pageId)
+            }
+        })
+
+        this.render("EditMenu")
+    }
+
+    handleEraseStrokes(eraseStrokesAction: EraseStrokesAction): void {
+        const {
+            data: strokes,
+            isRedoable,
+            sessionHandler,
+            sessionUndoHandler,
+        } = eraseStrokesAction
+
+        const handler = () => {
+            this.deleteStrokes(strokes)
+            sessionHandler?.()
+        }
+
+        const undoHandler = () => {
+            this.addOrUpdateStrokes(strokes)
             sessionUndoHandler?.()
         }
 
@@ -231,13 +187,51 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
             stack: this.state.undoStack,
             isRedoable,
             state: this.state,
-            isNew: true,
+        })
+        this.state.redoStack = []
+
+        const renderedPages: Record<PageId, boolean> = {}
+        strokes.forEach((stroke) => {
+            if (!renderedPages[stroke.pageId]) {
+                renderedPages[stroke.pageId] = true // prevent rerendering twice
+                this.renderPageLayer("content", stroke.pageId)
+            }
         })
 
+        this.render("EditMenu")
+    }
+
+    handleAddPages(addPagesAction: AddPagesAction): void {
+        const {
+            data: addPageData,
+            isRedoable,
+            sessionHandler,
+            sessionUndoHandler,
+        } = addPagesAction
+
+        const handler = () => {
+            this.addPages(addPageData)
+            sessionHandler?.()
+        }
+
+        const undoHandler = () => {
+            const pageIds = addPageData.map(({ page }) => page.pageId)
+            this.deletePages(pageIds)
+            sessionUndoHandler?.()
+        }
+
+        addAction({
+            handler,
+            undoHandler,
+            stack: this.state.undoStack,
+            isRedoable,
+            state: this.state,
+        })
+        this.state.redoStack = []
         this.render("RenderNG", "EditMenu", "MenuPageButton")
     }
 
-    clearPages(clearPagesAction: ClearPagesAction): void {
+    handleClearPages(clearPagesAction: ClearPagesAction): void {
         const {
             data: pageIds,
             isRedoable,
@@ -255,13 +249,13 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
                 []
             )
 
-        const handler = (boardState: BoardState) => {
-            clearPages(boardState, ...pageIds)
+        const handler = () => {
+            this.clearPages(pageIds)
             sessionHandler?.()
         }
 
-        const undoHandler = (boardState: BoardState) => {
-            addOrUpdateStrokes(boardState, ...strokes)
+        const undoHandler = () => {
+            this.addOrUpdateStrokes(strokes)
             sessionUndoHandler?.(...strokes)
         }
 
@@ -271,13 +265,12 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
             stack: this.state.undoStack,
             isRedoable,
             state: this.state,
-            isNew: true,
         })
-
+        this.state.redoStack = []
         this.render("RenderNG", "EditMenu", "MenuPageButton")
     }
 
-    deletePages(deletePagesAction: DeletePagesAction): void {
+    handleDeletePages(deletePagesAction: DeletePagesAction): void {
         const {
             data: pageIds,
             isRedoable,
@@ -292,15 +285,15 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
             .filter(({ page }) => page !== undefined)
         const pageRank = [...this.state.pageRank]
 
-        const handler = (boardState: BoardState) => {
-            deletePages(boardState, ...pageIds)
+        const handler = () => {
+            this.deletePages(pageIds)
             sessionHandler?.()
         }
 
-        const undoHandler = (boardState: BoardState) => {
+        const undoHandler = () => {
             // set pagerank manually as it was before deletion
-            boardState.pageRank = pageRank
-            addPages(boardState, ...addPageData)
+            this.state.pageRank = pageRank
+            this.addPages(addPageData)
             sessionUndoHandler?.(...addPageData)
         }
 
@@ -310,8 +303,8 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
             stack: this.state.undoStack,
             isRedoable,
             state: this.state,
-            isNew: true,
         })
+        this.state.redoStack = []
 
         if (!this.state.pageRank.length) {
             // All pages have been deleted so view and index can be reset
@@ -328,6 +321,102 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
         // Make sure that transform is cleared when page is deleted
         this.clearTransform()
         this.render("RenderNG", "EditMenu", "MenuPageButton")
+    }
+
+    handleSetPageMeta(setPageMetaAction: SetPageMetaAction): void {
+        const {
+            data: pageUpdates,
+            isRedoable,
+            sessionHandler,
+            sessionUndoHandler,
+        } = setPageMetaAction
+
+        // make a copy of old page meta
+        const pages = pageUpdates.map((page) =>
+            cloneDeep(
+                pick(this.state.pageCollection[page.pageId], ["pageId", "meta"])
+            )
+        ) as Page[]
+
+        const handler = () => {
+            this.updatePages(pageUpdates)
+            sessionHandler?.()
+        }
+
+        const undoHandler = () => {
+            this.updatePages(pages)
+            sessionUndoHandler?.(...pages)
+        }
+
+        addAction({
+            handler,
+            undoHandler,
+            stack: this.state.undoStack,
+            isRedoable,
+            state: this.state,
+        })
+        this.state.redoStack = []
+        this.render("RenderNG", "EditMenu")
+    }
+
+    /**
+     * Internal Undoable Functions
+     */
+
+    deleteStrokes(strokes: Stroke[] | StrokeUpdate[]): void {
+        strokes.forEach(({ id, pageId }) => {
+            const page = this.getState().pageCollection[pageId ?? ""]
+            if (page && id) {
+                delete page.strokes[id]
+            }
+        })
+    }
+
+    addOrUpdateStrokes(strokes: Stroke[] | StrokeUpdate[]): void {
+        strokes.forEach((stroke) => {
+            const page = this.getState().pageCollection[stroke.pageId ?? ""]
+            if (page && stroke.id) {
+                if (page.strokes[stroke.id]) {
+                    // stroke exists -> update
+                    page.strokes[stroke.id].update(stroke)
+                } else {
+                    page.strokes[stroke.id] = new BoardStroke(stroke as Stroke)
+                }
+            }
+        })
+    }
+
+    addPages(addPageData: AddPageData[]): void {
+        addPageData.forEach(({ page, index }) => {
+            this.getState().pageCollection[page.pageId] = page
+            if (index !== undefined) {
+                if (index >= 0) {
+                    this.getState().pageRank.splice(index, 0, page.pageId)
+                } else {
+                    this.getState().pageRank.push(page.pageId)
+                }
+            }
+        })
+    }
+
+    deletePages(pageIds: PageId[]): void {
+        const { pageRank, pageCollection } = this.getState()
+        pageIds.forEach((pid) => {
+            pageRank.splice(pageRank.indexOf(pid), 1)
+            delete pageCollection[pid]
+        })
+    }
+
+    clearPages(pageIds: PageId[]): void {
+        pageIds.forEach((pid) => {
+            this.getState().pageCollection[pid]?.clear()
+        })
+    }
+
+    updatePages(pages: Pick<Page, "pageId" | "meta">[]): void {
+        pages.forEach((page) => {
+            this.getState().pageCollection[page.pageId]?.updateMeta(page.meta)
+        })
     }
 
     deleteAllPages(): void {
@@ -352,43 +441,6 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
         this.clearTransform()
         this.state.transformStrokes = strokes
         this.pageSubscribers[pageId]?.transformer?.({})
-    }
-
-    setPageMeta(setPageMetaAction: SetPageMetaAction): void {
-        const {
-            data: pageUpdates,
-            isRedoable,
-            sessionHandler,
-            sessionUndoHandler,
-        } = setPageMetaAction
-
-        // make a copy of old page meta
-        const pages = pageUpdates.map((page) =>
-            cloneDeep(
-                pick(this.state.pageCollection[page.pageId], ["pageId", "meta"])
-            )
-        ) as Page[]
-
-        const handler = (boardState: BoardState) => {
-            updatePages(boardState, ...pageUpdates)
-            sessionHandler?.()
-        }
-
-        const undoHandler = (boardState: BoardState) => {
-            updatePages(boardState, ...pages)
-            sessionUndoHandler?.(...pages)
-        }
-
-        addAction({
-            handler,
-            undoHandler,
-            stack: this.state.undoStack,
-            isRedoable,
-            state: this.state,
-            isNew: true,
-        })
-
-        this.render("RenderNG", "EditMenu")
     }
 
     syncPages(pageRank: PageRank, pageCollection: PageCollection): void {

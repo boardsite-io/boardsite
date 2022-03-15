@@ -42,7 +42,7 @@ export function handleAddPageOver(): void {
             session?.deletePages([page.pageId])
     }
 
-    board.addPages(addPagesAction)
+    board.handleAddPages(addPagesAction)
     view.resetView()
 }
 
@@ -61,7 +61,7 @@ export function handleAddPageUnder(): void {
             session?.deletePages([page.pageId])
     }
 
-    board.addPages(addPagesAction)
+    board.handleAddPages(addPagesAction)
     board.jumpToNextPage()
     view.resetView()
 }
@@ -89,7 +89,7 @@ export function handleClearPages(pageIds: PageId[]): void {
         }
     }
 
-    board.clearPages(clearPagesAction)
+    board.handleClearPages(clearPagesAction)
 }
 
 export function handleDeleteCurrentPage(): void {
@@ -124,7 +124,7 @@ export function handleDeletePages(
         }
     }
 
-    board.deletePages(deletePagesAction)
+    board.handleDeletePages(deletePagesAction)
 }
 
 export function handleDeleteAllPages(isRedoable?: boolean): void {
@@ -145,7 +145,7 @@ export function handleAddStrokes(strokes: Stroke[], isUpdate: boolean): void {
             session?.eraseStrokes(strokes)
     }
 
-    board.addStrokes(addStrokesAction)
+    board.handleAddStrokes(addStrokesAction)
 }
 
 export function handleDeleteStrokes(strokes: Stroke[]): void {
@@ -161,7 +161,7 @@ export function handleDeleteStrokes(strokes: Stroke[]): void {
             session?.sendStrokes(strokes)
     }
 
-    board.eraseStrokes(eraseStrokesAction)
+    board.handleEraseStrokes(eraseStrokesAction)
 }
 
 export function handleUndo(): void {
@@ -207,7 +207,7 @@ export function handleChangePageBackground(): void {
             session?.updatePages(undos, false)
     }
 
-    board.setPageMeta(setPageMetaAction)
+    board.handleSetPageMeta(setPageMetaAction)
 }
 
 function getCurrentPageId() {
