@@ -5,8 +5,8 @@ import {
     ZOOM_SCALE_MAX,
     ZOOM_SCALE_MIN,
 } from "consts"
-import { board } from "state/board"
 import { ViewTransform } from "state/view/state/index.types"
+import { settings } from "state/settings"
 import {
     getPageSize,
     getCenterX,
@@ -22,7 +22,7 @@ export const applyBounds = (viewTransform: ViewTransform): ViewTransform => ({
 })
 
 export const applyBoundsX = (viewTransform: ViewTransform): number => {
-    const { keepCentered } = board.getState().view
+    const { keepCentered } = settings.getState()
 
     // Zoomed out with keepCentered setting on sticks to center
     if (keepCentered && !isFullScreen(viewTransform)) {

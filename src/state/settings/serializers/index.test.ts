@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { cloneDeep } from "lodash"
-import { Theme } from "theme"
 import {
     CURRENT_THEME_VERSION,
     serializeThemeState,
@@ -8,11 +7,12 @@ import {
 } from "."
 import stateV1 from "./__test__/stateV1.json"
 import { SerializedState } from "../../index.types"
-import { ThemeState } from "../state/index.types"
+import { SettingsState } from "../state/index.types"
+import { getDefaultSettingsState } from "../state/default"
 
 describe("board reducer state", () => {
     it("should serialize the default state", () => {
-        const themeState: ThemeState = { theme: Theme.Light }
+        const themeState: SettingsState = getDefaultSettingsState()
         const got = serializeThemeState(themeState)
         const want = {
             version: CURRENT_THEME_VERSION,
@@ -26,14 +26,14 @@ describe("board reducer state", () => {
         const got = await deserializeThemeState({
             version: CURRENT_THEME_VERSION,
         })
-        const want = { theme: Theme.Light }
+        const want = getDefaultSettingsState()
 
         expect(JSON.stringify(got)).toEqual(JSON.stringify(want))
     })
 
     it("should deserialize the state version 1.0", async () => {
         const drawingState = await deserializeThemeState(
-            cloneDeep(stateV1) as Partial<SerializedState<ThemeState>>
+            cloneDeep(stateV1) as Partial<SerializedState<SettingsState>>
         )
         const got = serializeThemeState(drawingState)
         const want = stateV1

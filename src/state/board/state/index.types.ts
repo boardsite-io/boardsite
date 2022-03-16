@@ -31,7 +31,6 @@ export interface BoardState {
     pageRank: PageRank
     pageCollection: PageCollection
     attachments: Attachments
-    view: View
     undoStack?: StackAction[]
     redoStack?: StackAction[]
     strokeUpdates?: StrokeUpdate[]
@@ -41,10 +40,6 @@ export interface BoardState {
 
 export type PageRank = string[]
 export type RenderedData = ImageData[]
-
-export interface View {
-    keepCentered: boolean
-}
 
 export type AttachId = string
 

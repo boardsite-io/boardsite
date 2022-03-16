@@ -1,17 +1,18 @@
 import { useCallback, useEffect, useState } from "react"
 import { view } from "../state"
+import { ViewSubscription } from "../state/index.types"
 
-export const useViewState = () => {
+export const useView = (subscriber: ViewSubscription) => {
     const [, render] = useState<object>({})
     const reRender = useCallback(() => render({}), [])
 
     useEffect(() => {
-        view.subscribe("viewTransform", reRender)
+        view.subscribe(subscriber, reRender)
 
         return () => {
-            view.unsubscribe("viewTransform", reRender)
+            view.unsubscribe(subscriber, reRender)
         }
-    }, [reRender])
+    }, [reRender, subscriber])
 
-    return view.getViewTransform()
+    return view.getState()
 }

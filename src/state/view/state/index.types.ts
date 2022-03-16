@@ -15,9 +15,6 @@ export type ViewState = {
     viewTransform: ViewTransform
 }
 
-export type ViewSubscribers = {
-    layerConfig: Subscribers
-    viewTransform: Subscribers
-}
+export type ViewSubscription = "layerConfig" | "viewTransform"
 
-export type ViewSubscription = keyof ViewSubscribers
+export type ViewSubscribers = Record<ViewSubscription, Subscribers>

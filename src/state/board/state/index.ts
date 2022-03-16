@@ -105,11 +105,6 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
         this.clearTransform()
     }
 
-    toggleShouldCenter(): void {
-        this.state.view.keepCentered = !this.state.view.keepCentered
-        this.render("SettingsMenu")
-    }
-
     /**
      * Undoable action handlers
      */

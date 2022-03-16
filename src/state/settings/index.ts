@@ -2,4 +2,4 @@
 export * from "./state"
 
 // Hooks
-export * from "./hooks/useTheme"
+export * from "./hooks/useSettings"

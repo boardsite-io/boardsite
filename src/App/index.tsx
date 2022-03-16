@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from "react"
 import { IntlProvider } from "react-intl"
 import { BrowserRouter } from "react-router-dom"
 import { ThemeProvider } from "styled-components"
-import { theme, useTheme } from "state/theme"
+import { settings, useSettings } from "state/settings"
 import { drawing } from "state/drawing"
 import { online } from "state/online"
 import { themes } from "theme"
@@ -13,13 +13,13 @@ import { GlobalStyles } from "./global.styled"
 
 const App = () => {
     const [loading, setLoading] = useState(true)
-    const { theme: currentTheme } = useTheme("theme")
+    const { theme: currentTheme } = useSettings("theme")
 
     const loadLocalStates = useCallback(async () => {
         await Promise.all([
             drawing.loadFromLocalStorage(),
             online.loadFromLocalStorage(),
-            theme.loadFromLocalStorage(),
+            settings.loadFromLocalStorage(),
         ])
         setLoading(false)
     }, [])

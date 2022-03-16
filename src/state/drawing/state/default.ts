@@ -1,7 +1,6 @@
 import {
     backgroundStyle,
     DEFAULT_COLOR,
-    DEFAULT_DIRECTDRAW,
     DEFAULT_FAV_TOOLS,
     DEFAULT_TOOL,
     DEFAULT_WIDTH,
@@ -10,7 +9,6 @@ import {
 import { DrawingState } from "./index.types"
 
 export const getDefaultDrawingState = (): DrawingState => ({
-    directDraw: DEFAULT_DIRECTDRAW,
     tool: {
         type: DEFAULT_TOOL,
         latestDrawType: DEFAULT_TOOL,
