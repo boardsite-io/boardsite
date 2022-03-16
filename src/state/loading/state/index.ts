@@ -8,12 +8,12 @@ export class Loading implements GlobalState<LoadingState> {
         loadingInfo: { messageId: "Loading.ExportingPdf" },
     }
 
-    setState(newState: LoadingState) {
-        this.state = newState
-    }
-
     getState(): LoadingState {
         return this.state
+    }
+
+    setState(newState: LoadingState) {
+        this.state = newState
     }
 
     startLoading(loadingInfo: LoadingInfo): void {

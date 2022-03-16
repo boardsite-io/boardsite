@@ -11,6 +11,20 @@ import { deserializeDrawingState, serializeDrawingState } from "../serializers"
 export class Drawing implements GlobalState<DrawingState> {
     state: DrawingState = getDefaultDrawingState()
 
+    getState(): DrawingState {
+        return this.state
+    }
+
+    setState(newState: DrawingState): void {
+        this.state = newState
+        subscriptionState.render(
+            "FavoriteTools",
+            "ActiveTool",
+            "WidthPicker",
+            "ColorPicker"
+        )
+    }
+
     setColor(color: string) {
         this.state.tool.style.color = color
         subscriptionState.render("ActiveTool", "ColorPicker")
@@ -94,20 +108,6 @@ export class Drawing implements GlobalState<DrawingState> {
             this.state.favoriteTools[index] = tool
             subscriptionState.render("FavoriteTools")
         }
-    }
-
-    getState(): DrawingState {
-        return this.state
-    }
-
-    setState(newState: DrawingState): void {
-        this.state = newState
-        subscriptionState.render(
-            "FavoriteTools",
-            "ActiveTool",
-            "WidthPicker",
-            "ColorPicker"
-        )
     }
 
     getSerializedState(): SerializedState<DrawingState> {

@@ -7,6 +7,14 @@ import { NotificationState } from "./index.types"
 export class Notification implements GlobalState<NotificationState> {
     state: NotificationState = { notifications: [] }
 
+    getState(): NotificationState {
+        return this.state
+    }
+
+    setState(newState: NotificationState): void {
+        this.state = newState
+    }
+
     create(id: IntlMessageId, duration = DEFAULT_NOTIFICATION_DURATION): void {
         this.addNotification(id)
 
@@ -23,14 +31,6 @@ export class Notification implements GlobalState<NotificationState> {
     private removeNotification(): void {
         this.state.notifications.pop()
         subscriptionState.render("Notification")
-    }
-
-    getState(): NotificationState {
-        return this.state
-    }
-
-    setState(newState: NotificationState): void {
-        this.state = newState
     }
 }
 

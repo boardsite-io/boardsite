@@ -27,6 +27,15 @@ import { addAction, redoAction, undoAction } from "../undoRedo"
 export class Board implements GlobalState<BoardState> {
     state: BoardState = getDefaultBoardState()
 
+    getState(): BoardState {
+        return this.state
+    }
+
+    setState(newState: Partial<BoardState>): void {
+        assign(this.state, pick(newState, keys(this.state)))
+        subscriptionState.render("RenderNG", "EditMenu", "MenuPageButton")
+    }
+
     addAttachments(attachments: Attachment[]): void {
         attachments.forEach((attachment) => {
             this.state.attachments[attachment.id] = attachment
@@ -442,15 +451,6 @@ export class Board implements GlobalState<BoardState> {
             this.state.currentPageIndex = pageRank.length - 1
         }
 
-        subscriptionState.render("RenderNG", "EditMenu", "MenuPageButton")
-    }
-
-    getState(): BoardState {
-        return this.state
-    }
-
-    setState(newState: Partial<BoardState>): void {
-        assign(this.state, pick(newState, keys(this.state)))
         subscriptionState.render("RenderNG", "EditMenu", "MenuPageButton")
     }
 

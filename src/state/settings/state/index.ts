@@ -9,6 +9,15 @@ import { SettingsState } from "./index.types"
 export class SettingsClass implements GlobalState<SettingsState> {
     state: SettingsState = getDefaultSettingsState()
 
+    getState(): SettingsState {
+        return this.state
+    }
+
+    setState(newState: SettingsState): void {
+        this.state = newState
+        subscriptionState.render("Theme", "Settings")
+    }
+
     getTheme(): Theme {
         return this.state.theme
     }
@@ -51,15 +60,6 @@ export class SettingsClass implements GlobalState<SettingsState> {
         const serializedState = await loadLocalStorage("settings")
         if (serializedState === null) return
         await this.setSerializedState(serializedState)
-    }
-
-    getState(): SettingsState {
-        return this.state
-    }
-
-    setState(newState: SettingsState): void {
-        this.state = newState
-        subscriptionState.render("Theme", "Settings")
     }
 }
 

@@ -9,12 +9,12 @@ export class Menu implements GlobalState<MenuState> {
         subscribeOpen: false,
     }
 
-    setState(newState: MenuState) {
-        this.state = newState
-    }
-
     getState(): MenuState {
         return this.state
+    }
+
+    setState(newState: MenuState) {
+        this.state = newState
     }
 
     setMainMenu(newState: MainMenuState): void {

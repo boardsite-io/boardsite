@@ -34,6 +34,14 @@ export class View implements GlobalState<ViewState> {
         },
     }
 
+    getState(): ViewState {
+        return this.state
+    }
+
+    setState(newState: ViewState) {
+        this.state = newState
+    }
+
     updateViewTransform(newTransform: ViewTransform): void {
         const detectionResult = detectPageChange(newTransform)
 
@@ -107,14 +115,6 @@ export class View implements GlobalState<ViewState> {
 
     fitToPage(): void {
         this.rescaleAtCenter(window.innerWidth / getPageSize().width)
-    }
-
-    setState(newState: ViewState) {
-        this.state = newState
-    }
-
-    getState(): ViewState {
-        return this.state
     }
 
     getViewTransform(): ViewTransform {
