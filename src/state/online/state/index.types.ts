@@ -1,5 +1,4 @@
 import { Session, User } from "api/types"
-import { Subscribers } from "state/index.types"
 
 export interface OnlineState {
     dialogState: DialogState
@@ -18,7 +17,3 @@ export enum DialogState {
     CreateOnlineSession,
     JoinOnly,
 }
-
-export type OnlineSubscription = "session" | "userSelection"
-
-export type OnlineSubscribers = Record<OnlineSubscription, Subscribers>

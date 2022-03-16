@@ -5,26 +5,6 @@ import {
     StrokeCollection,
     StrokeUpdate,
 } from "drawing/stroke/index.types"
-import { RenderTrigger } from "state/index.types"
-
-export type BoardSubscriber =
-    | "RenderNG"
-    | "MenuPageButton"
-    | "EditMenu" // UndoRedo
-    | "SettingsMenu"
-
-export type BoardSubscribers = Record<BoardSubscriber, RenderTrigger[]>
-
-export type PageLayer = "background" | "content" | "transformer"
-
-export type PageLayerTriggers = Record<PageLayer, RenderTrigger>
-
-export type PageSubscribers = Record<
-    PageId,
-    Partial<PageLayerTriggers> | undefined
->
-
-// ------------------
 
 export interface BoardState {
     currentPageIndex: number

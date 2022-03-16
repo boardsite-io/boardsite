@@ -1,5 +1,3 @@
-import { Subscribers } from "state/index.types"
-
 export enum MainMenuState {
     Closed,
     General,
@@ -13,7 +11,3 @@ export interface MenuState {
     shortcutsOpen: boolean
     subscribeOpen: boolean
 }
-
-export type MenuSubscription = "mainMenu" | "shortcutsOpen" | "subscribeOpen"
-
-export type MenuSubscribers = Record<MenuSubscription, Subscribers>

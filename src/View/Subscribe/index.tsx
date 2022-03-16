@@ -3,7 +3,8 @@ import { TickIcon } from "components"
 import { FormattedMessage } from "language"
 import React, { useCallback } from "react"
 import { FaInfinity } from "react-icons/fa"
-import { menu, useMenu } from "state/menu"
+import { menu } from "state/menu"
+import { useGState } from "state"
 import {
     BenefitItem,
     BenefitList,
@@ -25,7 +26,7 @@ const Benefit = ({
 )
 
 const Subscribe: React.FC = () => {
-    const { subscribeOpen } = useMenu("subscribeOpen")
+    const { subscribeOpen } = useGState("SubscribeOpen").menu
 
     const onClose = useCallback(() => {
         // Abort loading animation on close

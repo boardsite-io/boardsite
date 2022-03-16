@@ -2,8 +2,9 @@ import { FormattedMessage } from "language"
 import React, { memo, useCallback } from "react"
 import { Position, ToolTip, VerticalRule } from "components"
 import { MainMenuState } from "state/menu/state/index.types"
-import { menu, useMenu } from "state/menu"
+import { menu } from "state/menu"
 import { online } from "state/online"
+import { useGState } from "state"
 import { DialogState } from "state/online/state/index.types"
 import { MainMenuBarWrap } from "./index.styled"
 import ViewButton from "./ViewButton"
@@ -37,7 +38,7 @@ const onEnter = (newState: MainMenuState, currentState: MainMenuState) => {
 }
 
 const MainMenuBar: React.FC = memo(() => {
-    const { mainMenuState } = useMenu("mainMenu")
+    const { mainMenuState } = useGState("MainMenu").menu
 
     const onMouseEnterGeneral = useCallback(() => {
         onEnter(MainMenuState.General, mainMenuState)

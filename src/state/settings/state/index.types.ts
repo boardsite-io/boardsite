@@ -1,4 +1,3 @@
-import { Subscribers } from "state/index.types"
 import { Theme } from "theme"
 
 export interface SettingsState {
@@ -6,7 +5,3 @@ export interface SettingsState {
     keepCentered: boolean
     directDraw: boolean
 }
-
-export type SettingsSubscription = "theme" | "settings"
-
-export type SettingsSubscribers = Record<SettingsSubscription, Subscribers>

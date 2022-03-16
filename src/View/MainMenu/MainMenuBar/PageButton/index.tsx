@@ -1,11 +1,11 @@
 import { FormattedMessage } from "language"
 import React, { memo } from "react"
-import { useBoard } from "state/board"
+import { useGState } from "state"
 import { MainMenuButton } from "../index.styled"
 
 const PageButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> =
     memo((props) => {
-        const { currentPageIndex, pageRank } = useBoard("MenuPageButton")
+        const { currentPageIndex, pageRank } = useGState("MenuPageButton").board
 
         const currentPage = currentPageIndex + 1
         const numberPages = pageRank.length

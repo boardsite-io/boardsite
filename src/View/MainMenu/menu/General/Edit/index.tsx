@@ -1,13 +1,13 @@
-import { FormattedMessage } from "language"
 import React from "react"
-import { useBoard } from "state/board"
+import { FormattedMessage } from "language"
+import { useGState } from "state"
 import { RedoIcon, UndoIcon } from "components"
 import { handleRedo, handleUndo } from "drawing/handlers"
 import { SubMenuWrap } from "../../../index.styled"
 import MenuItem from "../../../MenuItem"
 
 const EditMenu = () => {
-    const { undoStack, redoStack } = useBoard("EditMenu")
+    const { undoStack, redoStack } = useGState("EditMenu").board
     const disableUndoStack = undoStack?.length === 0
     const disableRedoStack = redoStack?.length === 0
 

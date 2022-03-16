@@ -6,7 +6,7 @@ import {
     deserializeThemeState,
 } from "."
 import stateV1 from "./__test__/stateV1.json"
-import { SerializedState } from "../../index.types"
+import { SerializedState } from "../../types"
 import { SettingsState } from "../state/index.types"
 import { getDefaultSettingsState } from "../state/default"
 

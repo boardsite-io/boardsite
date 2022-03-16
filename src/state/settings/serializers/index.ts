@@ -1,6 +1,6 @@
 import { assign, cloneDeep, keys, pick } from "lodash"
 import { SettingsState } from "../state/index.types"
-import { SerializedState } from "../../index.types"
+import { SerializedState } from "../../types"
 import { getDefaultSettingsState } from "../state/default"
 
 /*

@@ -1,11 +1,12 @@
 import { DEFAULT_PAGE_GAP } from "consts"
 import React, { memo, useCallback } from "react"
-import { useBoard } from "state/board"
+import { useGState } from "state"
 import Page from "./Page"
 import { PageOffset } from "./Page/index.types"
 
 const RenderNG = memo(() => {
-    const { pageRank, currentPageIndex, pageCollection } = useBoard("RenderNG")
+    const { pageRank, currentPageIndex, pageCollection } =
+        useGState("RenderNG").board
 
     // TODO: improve undefined typing
     const pages = new Array(3).fill(undefined).map((_, i) => {

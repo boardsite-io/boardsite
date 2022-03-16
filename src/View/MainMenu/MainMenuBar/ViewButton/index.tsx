@@ -1,10 +1,10 @@
 import React, { memo } from "react"
-import { useView } from "state/view"
+import { useGState } from "state"
 import { MainMenuButton } from "../index.styled"
 
 const ViewButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> =
     memo((props) => {
-        const { scale } = useView("viewTransform").viewTransform
+        const { scale } = useGState("ViewTransform").view.viewTransform
 
         return (
             <MainMenuButton type="button" {...props}>

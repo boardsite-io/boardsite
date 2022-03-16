@@ -3,11 +3,12 @@ import { MAX_ALIAS_LENGTH } from "consts"
 import { getRandomColor } from "helpers"
 import { FormattedMessage } from "language"
 import React, { useCallback } from "react"
-import { online, useOnline } from "state/online"
+import { online } from "state/online"
+import { useGState } from "state"
 import { ColorButton, Selection } from "./index.styled"
 
 export const UserSelection = () => {
-    const { alias, color } = useOnline("userSelection").userSelection
+    const { alias, color } = useGState("UserSelection").online.userSelection
 
     const handleAliasChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {

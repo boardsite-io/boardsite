@@ -1,11 +1,11 @@
 import { OnlineIcon } from "components"
 import React, { memo } from "react"
-import { useOnline } from "state/online"
+import { useGState } from "state"
 import { SessionStatus, StyledMainMenuButton } from "./index.styled"
 
 const SessionButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> =
     memo((props) => {
-        const { session } = useOnline("session")
+        const { session } = useGState("Session").online
         return (
             <StyledMainMenuButton type="button" {...props}>
                 <OnlineIcon />

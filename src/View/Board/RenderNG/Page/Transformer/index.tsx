@@ -1,6 +1,7 @@
 import React, { memo } from "react"
-import { useLayerState } from "state/view"
+import { useGState } from "state"
 import { PageProps } from "../index.types"
+import { useLayerConfig } from "../useLayerConfig"
 import {
     TrCanvas,
     TrCanvasHandle,
@@ -13,7 +14,8 @@ import { useTransformer } from "./useTransformer"
 export const Transformer: React.FC<PageProps> = memo(({ page, pageOffset }) => {
     const trRef = React.useRef<HTMLDivElement>(null)
     const canvasRef = React.useRef<HTMLCanvasElement>(null)
-    const layerState = useLayerState(canvasRef)
+    const { layerConfig } = useGState("LayerConfig").view
+    useLayerConfig(canvasRef)
 
     const {
         trCoords,
@@ -67,8 +69,8 @@ export const Transformer: React.FC<PageProps> = memo(({ page, pageOffset }) => {
                         width: trCoords.width,
                         height: trCoords.height,
                     }}
-                    width={trCoords.width * layerState.pixelScale}
-                    height={trCoords.height * layerState.pixelScale}
+                    width={trCoords.width * layerConfig.pixelScale}
+                    height={trCoords.height * layerConfig.pixelScale}
                 />
                 {[
                     TrHandle.Top,

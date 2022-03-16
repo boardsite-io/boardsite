@@ -2,8 +2,9 @@ import { FormattedMessage } from "language"
 import React, { useCallback } from "react"
 import { pageSize } from "consts"
 import { Position, ToolTip } from "components"
-import { drawing, useDrawing } from "state/drawing"
+import { drawing } from "state/drawing"
 import { PageSize } from "state/board/state/index.types"
+import { useGState } from "state"
 import {
     A4Landscape,
     A4Portrait,
@@ -12,7 +13,7 @@ import {
 } from "./index.styled"
 
 const Size: React.FC = () => {
-    const { width, height } = useDrawing("PageSizeMenu").pageMeta.size
+    const { width, height } = useGState("PageSizeMenu").drawing.pageMeta.size
 
     const isMatch = useCallback(
         (size: PageSize) => width === size.width && height === size.height,

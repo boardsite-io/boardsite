@@ -3,9 +3,10 @@ import React, { useCallback, useEffect, useState } from "react"
 import { IntlProvider } from "react-intl"
 import { BrowserRouter } from "react-router-dom"
 import { ThemeProvider } from "styled-components"
-import { settings, useSettings } from "state/settings"
+import { settings } from "state/settings"
 import { drawing } from "state/drawing"
 import { online } from "state/online"
+import { useGState } from "state"
 import { themes } from "theme"
 import ElectronWrapper from "./electron"
 import Routes from "./router"
@@ -13,7 +14,7 @@ import { GlobalStyles } from "./global.styled"
 
 const App = () => {
     const [loading, setLoading] = useState(true)
-    const { theme: currentTheme } = useSettings("theme")
+    const { theme: currentTheme } = useGState("Theme").settings
 
     const loadLocalStates = useCallback(async () => {
         await Promise.all([

@@ -4,8 +4,9 @@ import { ExpandableIcon, HorizontalRule } from "components"
 import { FaGithub } from "react-icons/fa"
 import { SiGithubsponsors } from "react-icons/si"
 import { isMobile } from "react-device-detect"
-import { online, useOnline } from "state/online"
+import { online } from "state/online"
 import { menu } from "state/menu"
+import { useGState } from "state"
 import { CSSTransition } from "react-transition-group"
 import EditMenu from "View/MainMenu/menu/General/Edit"
 import { cssTransition } from "View/MainMenu/cssTransition"
@@ -52,7 +53,7 @@ enum SubMenu {
 
 const GeneralMenu = () => {
     const [subMenu, setSubMenu] = useState<SubMenu>(SubMenu.Closed)
-    const { isSignedIn, isAuthorized } = useOnline("session")
+    const { isSignedIn, isAuthorized } = useGState("Session").online
 
     return (
         <MainMenuWrap>

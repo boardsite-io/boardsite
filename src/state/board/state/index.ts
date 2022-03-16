@@ -1,8 +1,9 @@
 import { BoardStroke } from "drawing/stroke"
 import { Stroke, StrokeUpdate } from "drawing/stroke/index.types"
+import { subscriptionState } from "state/subscription"
 import { assign, cloneDeep, keys, pick } from "lodash"
 import { loadIndexedDB, saveIndexedDB } from "storage/local"
-import { GlobalState, RenderTrigger, SerializedState } from "../../index.types"
+import { GlobalState, SerializedState } from "../../types"
 import { deserializeBoardState, serializeBoardState } from "../serializers"
 import { getDefaultBoardState } from "./default"
 import {
@@ -12,8 +13,6 @@ import {
     AttachId,
     Attachment,
     BoardState,
-    BoardSubscribers,
-    BoardSubscriber,
     ClearPagesAction,
     DeletePagesAction,
     EraseStrokesAction,
@@ -21,23 +20,12 @@ import {
     PageCollection,
     PageRank,
     SetPageMetaAction,
-    PageSubscribers,
-    PageLayer,
     PageId,
 } from "./index.types"
 import { addAction, redoAction, undoAction } from "../undoRedo"
 
-export class Board implements GlobalState<BoardState, BoardSubscribers> {
+export class Board implements GlobalState<BoardState> {
     state: BoardState = getDefaultBoardState()
-
-    subscribers: BoardSubscribers = {
-        EditMenu: [],
-        MenuPageButton: [],
-        RenderNG: [],
-        SettingsMenu: [],
-    }
-
-    pageSubscribers: PageSubscribers = {}
 
     addAttachments(attachments: Attachment[]): void {
         attachments.forEach((attachment) => {
@@ -57,23 +45,23 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
 
     undoAction(): void {
         undoAction(this.state)
-        this.render("RenderNG", "EditMenu")
+        subscriptionState.render("RenderNG", "EditMenu")
     }
 
     redoAction(): void {
         redoAction(this.state)
-        this.render("RenderNG", "EditMenu")
+        subscriptionState.render("RenderNG", "EditMenu")
     }
 
     decrementPageIndex(): void {
         this.state.currentPageIndex -= 1
-        this.render("RenderNG", "MenuPageButton")
+        subscriptionState.render("RenderNG", "MenuPageButton")
         this.clearTransform()
     }
 
     incrementPageIndex(): void {
         this.state.currentPageIndex += 1
-        this.render("RenderNG", "MenuPageButton")
+        subscriptionState.render("RenderNG", "MenuPageButton")
         this.clearTransform()
     }
 
@@ -81,7 +69,7 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
         if (this.state.currentPageIndex < this.state.pageRank.length - 1) {
             this.state.currentPageIndex += 1
         }
-        this.render("RenderNG", "MenuPageButton")
+        subscriptionState.render("RenderNG", "MenuPageButton")
         this.clearTransform()
     }
 
@@ -89,19 +77,19 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
         if (this.state.currentPageIndex > 0) {
             this.state.currentPageIndex -= 1
         }
-        this.render("RenderNG", "MenuPageButton")
+        subscriptionState.render("RenderNG", "MenuPageButton")
         this.clearTransform()
     }
 
     jumpToFirstPage(): void {
         this.state.currentPageIndex = 0
-        this.render("RenderNG", "MenuPageButton")
+        subscriptionState.render("RenderNG", "MenuPageButton")
         this.clearTransform()
     }
 
     jumpToLastPage(): void {
         this.state.currentPageIndex = this.state.pageRank.length - 1
-        this.render("RenderNG", "MenuPageButton")
+        subscriptionState.render("RenderNG", "MenuPageButton")
         this.clearTransform()
     }
 
@@ -343,16 +331,17 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
         this.renderPagesWithStrokeChanges(strokes)
     }
 
+    // eslint-disable-next-line class-methods-use-this
     renderPagesWithStrokeChanges(strokes: Stroke[] | StrokeUpdate[]): void {
         const renderedPages: Record<PageId, boolean> = {}
         strokes.forEach((stroke) => {
             const { pageId } = stroke
             if (pageId && !renderedPages[pageId]) {
                 renderedPages[pageId] = true // prevent rerendering twice
-                this.renderPageLayer("content", pageId)
+                subscriptionState.renderPageLayer("content", pageId)
             }
         })
-        this.render("EditMenu")
+        subscriptionState.render("EditMenu")
     }
 
     addPages(addPageData: AddPageData[]): void {
@@ -366,7 +355,7 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
                 }
             }
         })
-        this.render("RenderNG", "EditMenu", "MenuPageButton")
+        subscriptionState.render("RenderNG", "EditMenu", "MenuPageButton")
     }
 
     deletePages(pageIds: PageId[]): void {
@@ -390,47 +379,47 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
 
         // Make sure that transform is cleared when page is deleted
         this.clearTransform()
-        this.render("RenderNG", "EditMenu", "MenuPageButton")
+        subscriptionState.render("RenderNG", "EditMenu", "MenuPageButton")
     }
 
     clearPages(pageIds: PageId[]): void {
         pageIds.forEach((pageId) => {
             this.getState().pageCollection[pageId]?.clear()
-            this.renderPageLayer("content", pageId)
+            subscriptionState.renderPageLayer("content", pageId)
         })
-        this.render("EditMenu", "MenuPageButton")
+        subscriptionState.render("EditMenu", "MenuPageButton")
     }
 
     updatePages(pages: Pick<Page, "pageId" | "meta">[]): void {
         pages.forEach((page) => {
             this.getState().pageCollection[page.pageId]?.updateMeta(page.meta)
         })
-        this.render("RenderNG", "EditMenu")
+        subscriptionState.render("RenderNG", "EditMenu")
     }
 
     deleteAllPages(): void {
         this.setState(getDefaultBoardState())
-        this.render("RenderNG")
+        subscriptionState.render("RenderNG")
     }
 
     clearRedoCheck(isRedoable?: boolean): void {
         if (isRedoable) {
             this.state.redoStack = []
-            this.render("EditMenu")
+            subscriptionState.render("EditMenu")
         }
     }
 
     clearUndoRedo(): void {
         this.state.undoStack = []
         this.state.redoStack = []
-        this.render("EditMenu")
+        subscriptionState.render("EditMenu")
     }
 
     clearTransform(): void {
         this.state.transformStrokes = []
         this.state.strokeUpdates = []
 
-        Object.values(this.pageSubscribers).forEach((pageLayers) =>
+        Object.values(subscriptionState.pageSubscribers).forEach((pageLayers) =>
             pageLayers?.transformer?.({})
         )
     }
@@ -438,7 +427,7 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
     setTransformStrokes(strokes: Stroke[], pageId: PageId): void {
         this.clearTransform()
         this.state.transformStrokes = strokes
-        this.pageSubscribers[pageId]?.transformer?.({})
+        subscriptionState.pageSubscribers[pageId]?.transformer?.({})
     }
 
     syncPages(pageRank: PageRank, pageCollection: PageCollection): void {
@@ -453,7 +442,7 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
             this.state.currentPageIndex = pageRank.length - 1
         }
 
-        this.render("RenderNG", "EditMenu", "MenuPageButton")
+        subscriptionState.render("RenderNG", "EditMenu", "MenuPageButton")
     }
 
     getState(): BoardState {
@@ -462,7 +451,7 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
 
     setState(newState: Partial<BoardState>): void {
         assign(this.state, pick(newState, keys(this.state)))
-        this.renderAll()
+        subscriptionState.render("RenderNG", "EditMenu", "MenuPageButton")
     }
 
     getSerializedState(): SerializedState<BoardState> {
@@ -485,58 +474,6 @@ export class Board implements GlobalState<BoardState, BoardSubscribers> {
         const serializedState = await loadIndexedDB("board")
         if (serializedState === null) return
         await this.setSerializedState(serializedState)
-    }
-
-    subscribe(subscription: BoardSubscriber, trigger: RenderTrigger) {
-        if (this.subscribers[subscription].indexOf(trigger) > -1) return
-        this.subscribers[subscription].push(trigger)
-    }
-
-    unsubscribe(subscription: BoardSubscriber, trigger: RenderTrigger) {
-        this.subscribers[subscription] = this.subscribers[subscription].filter(
-            (subscriber) => subscriber !== trigger
-        )
-    }
-
-    subscribePage(
-        pageLayer: PageLayer,
-        pageId: PageId,
-        trigger: RenderTrigger
-    ): void {
-        if (this.pageSubscribers[pageId] === undefined) {
-            this.pageSubscribers[pageId] = {}
-        }
-        this.pageSubscribers[pageId] = {
-            ...this.pageSubscribers[pageId],
-            [pageLayer]: trigger,
-        }
-    }
-
-    unsubscribePage(pageLayer: PageLayer, pageId: PageId): void {
-        delete this.pageSubscribers[pageId]?.[pageLayer]
-    }
-
-    renderPageLayer(pageLayer: PageLayer, pageId: PageId): void {
-        this.pageSubscribers[pageId]?.[pageLayer]?.({})
-    }
-
-    render(...subscriptions: BoardSubscriber[]): void {
-        subscriptions.forEach((sub) => {
-            this.subscribers[sub].forEach((trigger) => {
-                trigger({})
-            })
-        })
-
-        // Save to local storage on each render
-        this.saveToLocalStorage()
-    }
-
-    renderAll(): void {
-        Object.values(this.subscribers).forEach((triggerList) => {
-            triggerList.forEach((trigger) => {
-                trigger({})
-            })
-        })
     }
 }
 

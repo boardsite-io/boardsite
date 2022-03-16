@@ -3,7 +3,7 @@ import { cloneDeep } from "lodash"
 import { BOARD_VERSION, deserializeBoardState, serializeBoardState } from "."
 import { getDefaultBoardState } from "../state/default"
 import stateV1 from "./__test__/stateV1.json"
-import { SerializedState } from "../../index.types"
+import { SerializedState } from "../../types"
 import { BoardState } from "../state/index.types"
 
 describe("board reducer state", () => {

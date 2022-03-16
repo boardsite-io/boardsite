@@ -1,23 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { Page } from "state/board/state/index.types"
+import { view } from "state/view"
 import { drawBackground } from "View/Board/RenderNG/Page/Background/backgrounds"
-import { view } from "../state"
 
-export const useLayerState = (
+export const useLayerConfig = (
     canvasRef: React.RefObject<HTMLCanvasElement>,
     page?: Page
 ) => {
-    const [, render] = useState<object>({})
-    const reRender = useCallback(() => render({}), [])
-
-    useEffect(() => {
-        view.subscribe("layerConfig", reRender)
-
-        return () => {
-            view.unsubscribe("layerConfig", reRender)
-        }
-    }, [reRender])
-
     useEffect(() => {
         const canvas = canvasRef.current
         if (!canvas) return
@@ -41,6 +30,4 @@ export const useLayerState = (
             drawBackground(ctx, page.meta)
         }
     })
-
-    return view.getLayerConfig()
 }

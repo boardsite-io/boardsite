@@ -9,14 +9,15 @@ import {
     zoomTo,
 } from "state/view/util"
 import { ViewTransform } from "state/view/state/index.types"
-import { useDrawing } from "state/drawing"
+import { useGState } from "state"
 
 let previousPoint = { x: 0, y: 0 }
 let isMouseDown = false
 let multiTouchActive = false
 
 export const useViewControl = () => {
-    const isPanMode = useDrawing("useViewControl").tool.type === ToolType.Pan
+    const isPanMode =
+        useGState("UseViewControl").drawing.tool.type === ToolType.Pan
 
     const preventDefaultWheel = useCallback((e) => {
         e.preventDefault()

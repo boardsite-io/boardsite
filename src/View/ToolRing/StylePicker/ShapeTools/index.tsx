@@ -1,5 +1,6 @@
 import { FormattedMessage } from "language"
 import React, { memo } from "react"
+import { useGState } from "state"
 import {
     CircleIcon,
     IconButton,
@@ -11,11 +12,10 @@ import {
 } from "components"
 import { ToolType } from "drawing/stroke/index.types"
 import { handleSetTool } from "drawing/handlers"
-import { useDrawing } from "state/drawing"
 import { StyledShapeTools } from "./index.styled"
 
 const ShapeTools: React.FC = memo(() => {
-    const { type } = useDrawing("ShapeTools").tool
+    const { type } = useGState("ShapeTools").drawing.tool
 
     return (
         <StyledShapeTools>

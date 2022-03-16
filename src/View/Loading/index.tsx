@@ -1,6 +1,7 @@
 import { FormattedMessage } from "language"
 import React, { useCallback } from "react"
-import { loading, useLoading } from "state/loading"
+import { loading } from "state/loading"
+import { useGState } from "state"
 import {
     StyledDialogContent,
     StyledDialog,
@@ -10,7 +11,7 @@ import {
 
 // TODO: Check why loading animation isn't showing properly in some cases
 const Loading: React.FC = () => {
-    const { isLoading, loadingInfo } = useLoading()
+    const { isLoading, loadingInfo } = useGState("Loading").loading
 
     const onClose = useCallback(() => {
         // Abort loading animation on close

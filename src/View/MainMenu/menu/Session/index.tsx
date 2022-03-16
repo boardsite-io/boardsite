@@ -3,9 +3,9 @@ import React, { useCallback, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ExpandableIcon, HorizontalRule } from "components"
 import { User } from "api/types"
-import { useOnline } from "state/online"
 import { MainMenuState } from "state/menu/state/index.types"
 import { menu } from "state/menu"
+import { useGState } from "state"
 import { CSSTransition } from "react-transition-group"
 import { cssTransition } from "View/MainMenu/cssTransition"
 import { MainMenuWrap } from "../../index.styled"
@@ -21,7 +21,7 @@ enum SubMenu {
 const SessionMenu = () => {
     const [subMenu, setSubMenu] = useState<SubMenu | User["id"]>(SubMenu.Closed)
     const navigate = useNavigate()
-    const { session } = useOnline("session")
+    const { session } = useGState("Session").online
 
     const leaveSession = useCallback(() => {
         session?.disconnect()
