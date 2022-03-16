@@ -1,12 +1,14 @@
 import { FormattedMessage } from "language"
 import React from "react"
-import { drawing, useDrawing } from "state/drawing"
+import { drawing } from "state/drawing"
 import { backgroundStyle } from "consts"
 import { Position, ToolTip } from "components"
+import { useGState } from "state"
 import { Backgrounds, Blank, Checkered, Ruled } from "./index.styled"
 
 const Background: React.FC = () => {
-    const { style } = useDrawing("PageBackgroundSetting").pageMeta.background
+    const { style } = useGState("PageBackgroundSetting").drawing.pageMeta
+        .background
 
     return (
         <Backgrounds>

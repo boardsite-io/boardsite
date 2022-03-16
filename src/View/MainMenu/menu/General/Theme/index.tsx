@@ -1,15 +1,15 @@
 import React from "react"
 import { FormattedMessage } from "language"
 import { TickIcon } from "components"
-import { settings, useSettings } from "state/settings"
-import { useOnline } from "state/online"
+import { useGState } from "state"
+import { settings } from "state/settings"
 import { Theme } from "theme"
 import { SubMenuWrap } from "../../../index.styled"
 import MenuItem from "../../../MenuItem"
 
 const ThemeMenu = () => {
-    const { theme: activeTheme } = useSettings("theme")
-    const isAuthorized = useOnline("session").isAuthorized()
+    const { theme: activeTheme } = useGState("Theme").settings
+    const isAuthorized = useGState("Session").online.isAuthorized()
 
     return (
         <SubMenuWrap>

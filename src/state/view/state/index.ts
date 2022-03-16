@@ -10,7 +10,8 @@ import {
 } from "consts"
 import { debounce } from "lodash"
 import { board } from "state/board"
-import { GlobalState, RenderTrigger } from "../../index.types"
+import { subscriptionState } from "state/subscription"
+import { GlobalState } from "../../types"
 import {
     applyBounds,
     DetectionResult,
@@ -23,15 +24,9 @@ import {
     toPreviousPage,
     zoomTo,
 } from "../util"
-import {
-    LayerConfig,
-    ViewTransform,
-    ViewState,
-    ViewSubscribers,
-    ViewSubscription,
-} from "./index.types"
+import { LayerConfig, ViewTransform, ViewState } from "./index.types"
 
-export class View implements GlobalState<ViewState, ViewSubscribers> {
+export class View implements GlobalState<ViewState> {
     state: ViewState = {
         viewTransform: DEFAULT_VIEW_TRANSFORM,
         layerConfig: {
@@ -39,9 +34,12 @@ export class View implements GlobalState<ViewState, ViewSubscribers> {
         },
     }
 
-    subscribers: ViewSubscribers = {
-        viewTransform: [],
-        layerConfig: [],
+    getState(): ViewState {
+        return this.state
+    }
+
+    setState(newState: ViewState) {
+        this.state = newState
     }
 
     updateViewTransform(newTransform: ViewTransform): void {
@@ -119,14 +117,6 @@ export class View implements GlobalState<ViewState, ViewSubscribers> {
         this.rescaleAtCenter(window.innerWidth / getPageSize().width)
     }
 
-    setState(newState: ViewState) {
-        this.state = newState
-    }
-
-    getState(): ViewState {
-        return this.state
-    }
-
     getViewTransform(): ViewTransform {
         return this.state.viewTransform
     }
@@ -137,29 +127,12 @@ export class View implements GlobalState<ViewState, ViewSubscribers> {
 
     setTransformState(newState: ViewTransform): void {
         this.state.viewTransform = newState
-        this.render("viewTransform")
+        subscriptionState.render("ViewTransform")
     }
 
     setLayerConfig(newState: LayerConfig): void {
         this.state.layerConfig = newState
-        this.render("layerConfig")
-    }
-
-    subscribe(subscription: ViewSubscription, trigger: RenderTrigger) {
-        if (this.subscribers[subscription].indexOf(trigger) > -1) return
-        this.subscribers[subscription].push(trigger)
-    }
-
-    unsubscribe(subscription: ViewSubscription, trigger: RenderTrigger) {
-        this.subscribers[subscription] = this.subscribers[subscription].filter(
-            (subscriber) => subscriber !== trigger
-        )
-    }
-
-    render(subscription: ViewSubscription): void {
-        this.subscribers[subscription].forEach((render) => {
-            render({})
-        })
+        subscriptionState.render("LayerConfig")
     }
 }
 

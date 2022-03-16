@@ -2,10 +2,11 @@ import React, { useCallback } from "react"
 import { FormattedMessage } from "language"
 import { TickIcon } from "components"
 import { pageSize } from "consts"
-import { drawing, useDrawing } from "state/drawing"
+import { drawing } from "state/drawing"
 import { PageSize } from "state/board/state/index.types"
 import MenuItem from "View/MainMenu/MenuItem"
 import { SubMenuWrap } from "View/MainMenu/index.styled"
+import { useGState } from "state"
 
 const onClickA4landscape = () => {
     drawing.setPageSize(pageSize.a4landscape)
@@ -15,7 +16,7 @@ const onClickA4portrait = () => {
 }
 
 const PageSizeMenu = () => {
-    const { width, height } = useDrawing("PageSizeMenu").pageMeta.size
+    const { width, height } = useGState("PageSizeMenu").drawing.pageMeta.size
 
     const isMatch = useCallback(
         (size: PageSize) => width === size.width && height === size.height,

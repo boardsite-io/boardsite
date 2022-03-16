@@ -1,13 +1,14 @@
 import { FormattedMessage } from "language"
 import React, { memo } from "react"
-import { drawing, useDrawing } from "state/drawing"
+import { drawing } from "state/drawing"
+import { useGState } from "state"
 import { STROKE_WIDTH_PRESETS } from "consts"
 import { Position, ToolTip } from "components"
 import { nanoid } from "nanoid"
 import { Preset, WidthPresetInnerDot, WidthPresets } from "./index.styled"
 
 const WidthPicker: React.FC = memo(() => {
-    const { width } = useDrawing("WidthPicker").tool.style
+    const { width } = useGState("WidthPicker").drawing.tool.style
 
     return (
         <WidthPresets>

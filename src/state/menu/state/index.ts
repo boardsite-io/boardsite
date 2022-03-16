@@ -1,35 +1,25 @@
-import { GlobalState, RenderTrigger } from "../../index.types"
-import {
-    MainMenuState,
-    MenuState,
-    MenuSubscribers,
-    MenuSubscription,
-} from "./index.types"
+import { subscriptionState } from "state/subscription"
+import { GlobalState } from "../../types"
+import { MainMenuState, MenuState } from "./index.types"
 
-export class Menu implements GlobalState<MenuState, MenuSubscribers> {
+export class Menu implements GlobalState<MenuState> {
     state: MenuState = {
         mainMenuState: MainMenuState.Closed,
         shortcutsOpen: false,
         subscribeOpen: false,
     }
 
-    subscribers: MenuSubscribers = {
-        mainMenu: [],
-        shortcutsOpen: [],
-        subscribeOpen: [],
+    getState(): MenuState {
+        return this.state
     }
 
     setState(newState: MenuState) {
         this.state = newState
     }
 
-    getState(): MenuState {
-        return this.state
-    }
-
     setMainMenu(newState: MainMenuState): void {
         this.state.mainMenuState = newState
-        this.render("mainMenu")
+        subscriptionState.render("MainMenu")
     }
 
     closeMainMenu() {
@@ -38,39 +28,22 @@ export class Menu implements GlobalState<MenuState, MenuSubscribers> {
 
     openShortcuts() {
         this.state.shortcutsOpen = true
-        this.render("shortcutsOpen")
+        subscriptionState.render("ShortcutsOpen")
     }
 
     closeShortcuts() {
         this.state.shortcutsOpen = false
-        this.render("shortcutsOpen")
+        subscriptionState.render("ShortcutsOpen")
     }
 
     openSubscribe() {
         this.state.subscribeOpen = true
-        this.render("subscribeOpen")
+        subscriptionState.render("SubscribeOpen")
     }
 
     closeSubscribe() {
         this.state.subscribeOpen = false
-        this.render("subscribeOpen")
-    }
-
-    subscribe(subscription: MenuSubscription, trigger: RenderTrigger) {
-        if (this.subscribers[subscription].indexOf(trigger) > -1) return
-        this.subscribers[subscription].push(trigger)
-    }
-
-    unsubscribe(subscription: MenuSubscription, trigger: RenderTrigger) {
-        this.subscribers[subscription] = this.subscribers[subscription].filter(
-            (subscriber) => subscriber !== trigger
-        )
-    }
-
-    render(subscription: MenuSubscription): void {
-        this.subscribers[subscription].forEach((render) => {
-            render({})
-        })
+        subscriptionState.render("SubscribeOpen")
     }
 }
 

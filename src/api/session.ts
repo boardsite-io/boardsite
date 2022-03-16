@@ -3,6 +3,7 @@ import { assign } from "lodash"
 import { BoardPage } from "drawing/page"
 import { newAttachment } from "drawing/attachment/utils"
 import { board } from "state/board"
+import { subscriptionState } from "state/subscription"
 import {
     AttachId,
     AttachType,
@@ -25,7 +26,6 @@ import {
     UserHost,
 } from "./types"
 import { API_URL, Request } from "./request"
-import { online } from "../state/online"
 
 export class BoardSession implements Session {
     config?: SessionConfig
@@ -102,7 +102,7 @@ export class BoardSession implements Session {
             await this.request.postPages([new BoardPage()], [0])
         }
 
-        online.render("session")
+        subscriptionState.render("Session")
     }
 
     isConnected(): boolean {
@@ -123,7 +123,7 @@ export class BoardSession implements Session {
         board.clearAttachments()
         board.deleteAllPages() // Use non-redoable internal option
         board.handleAddPages({ data: [{ page: new BoardPage(), index: -1 }] })
-        online.render("session")
+        subscriptionState.render("Session")
     }
 
     async synchronize(
@@ -311,7 +311,7 @@ export class BoardSession implements Session {
             default:
                 break
         }
-        online.render("session")
+        subscriptionState.render("Session")
     }
 
     // TODO

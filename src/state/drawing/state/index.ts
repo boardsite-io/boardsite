@@ -1,50 +1,45 @@
 import { StrokeCollection, Tool, ToolType } from "drawing/stroke/index.types"
 import { loadLocalStorage, saveLocalStorage } from "storage/local"
 import { PageBackgroundStyle, PageSize } from "state/board/state/index.types"
-import { GlobalState, RenderTrigger, SerializedState } from "../../index.types"
+import { subscriptionState } from "state/subscription"
+import { GlobalState, SerializedState } from "../../types"
 import { getDefaultDrawingState } from "./default"
 import { isDrawType } from "../util"
-import {
-    DrawingState,
-    DrawingSubscriber,
-    DrawingSubscribers,
-} from "./index.types"
+import { DrawingState } from "./index.types"
 import { deserializeDrawingState, serializeDrawingState } from "../serializers"
 
-export class Drawing implements GlobalState<DrawingState, DrawingSubscribers> {
+export class Drawing implements GlobalState<DrawingState> {
     state: DrawingState = getDefaultDrawingState()
 
-    subscribers: DrawingSubscribers = {
-        ActiveTool: [],
-        ColorPicker: [],
-        FavoriteTools: [],
-        PageBackgroundSetting: [],
-        PageSizeMenu: [],
-        PageSizeSetting: [],
-        PageStyleMenu: [],
-        ShapeTools: [],
-        ToolRing: [],
-        WidthPicker: [],
-        useLiveStroke: [],
-        useViewControl: [],
-        PageContent: [],
+    getState(): DrawingState {
+        return this.state
+    }
+
+    setState(newState: DrawingState): void {
+        this.state = newState
+        subscriptionState.render(
+            "FavoriteTools",
+            "ActiveTool",
+            "WidthPicker",
+            "ColorPicker"
+        )
     }
 
     setColor(color: string) {
         this.state.tool.style.color = color
-        this.render("ActiveTool", "ColorPicker")
+        subscriptionState.render("ActiveTool", "ColorPicker")
     }
 
     setWidth(width: number) {
         this.state.tool.style.width = width
-        this.render("ActiveTool", "WidthPicker")
+        subscriptionState.render("ActiveTool", "WidthPicker")
     }
 
     setErasedStrokes(strokes: StrokeCollection): void {
         Object.keys(strokes).forEach((id) => {
             this.state.erasedStrokes[id] = strokes[id]
         })
-        this.render("PageContent")
+        subscriptionState.render("PageContent")
     }
 
     clearErasedStrokes(): void {
@@ -53,12 +48,12 @@ export class Drawing implements GlobalState<DrawingState, DrawingSubscribers> {
 
     setPageBackground(style: PageBackgroundStyle) {
         this.state.pageMeta.background.style = style
-        this.render("PageStyleMenu", "PageBackgroundSetting")
+        subscriptionState.render("PageStyleMenu", "PageBackgroundSetting")
     }
 
     setPageSize(size: PageSize) {
         this.state.pageMeta.size = size
-        this.render("PageSizeMenu", "PageSizeSetting")
+        subscriptionState.render("PageSizeMenu", "PageSizeSetting")
     }
 
     setTool(tool: Partial<Tool>): void {
@@ -70,18 +65,18 @@ export class Drawing implements GlobalState<DrawingState, DrawingSubscribers> {
                 this.state.tool.latestDrawType = tool.type
             }
 
-            this.render(
+            subscriptionState.render(
                 "ActiveTool",
                 "ToolRing",
                 "ShapeTools",
-                "useViewControl",
-                "useLiveStroke"
+                "UseViewControl",
+                "UseLiveStroke"
             )
         }
         if (tool.style !== undefined) {
             this.state.tool.style = { ...tool.style }
 
-            this.render("ActiveTool", "WidthPicker", "ColorPicker")
+            subscriptionState.render("ActiveTool", "WidthPicker", "ColorPicker")
         }
     }
 
@@ -93,13 +88,13 @@ export class Drawing implements GlobalState<DrawingState, DrawingSubscribers> {
 
         if (isDrawType(tool.type)) {
             this.state.favoriteTools.push(tool)
-            this.render("FavoriteTools")
+            subscriptionState.render("FavoriteTools")
         }
     }
 
     removeFavoriteTool(index: number) {
         this.state.favoriteTools.splice(index, 1)
-        this.render("FavoriteTools")
+        subscriptionState.render("FavoriteTools")
     }
 
     replaceFavoriteTool(index: number): void {
@@ -111,17 +106,8 @@ export class Drawing implements GlobalState<DrawingState, DrawingSubscribers> {
         // validate tool candidate
         if (tool.type !== ToolType.Eraser && tool.type !== ToolType.Select) {
             this.state.favoriteTools[index] = tool
-            this.render("FavoriteTools")
+            subscriptionState.render("FavoriteTools")
         }
-    }
-
-    getState(): DrawingState {
-        return this.state
-    }
-
-    setState(newState: DrawingState): void {
-        this.state = newState
-        this.renderAll()
     }
 
     getSerializedState(): SerializedState<DrawingState> {
@@ -144,36 +130,6 @@ export class Drawing implements GlobalState<DrawingState, DrawingSubscribers> {
         const serializedState = await loadLocalStorage("drawing")
         if (serializedState === null) return
         await this.setSerializedState(serializedState)
-    }
-
-    subscribe(subscription: DrawingSubscriber, trigger: RenderTrigger) {
-        if (this.subscribers[subscription].indexOf(trigger) > -1) return
-        this.subscribers[subscription].push(trigger)
-    }
-
-    unsubscribe(subscription: DrawingSubscriber, trigger: RenderTrigger) {
-        this.subscribers[subscription] = this.subscribers[subscription].filter(
-            (subscriber) => subscriber !== trigger
-        )
-    }
-
-    render(...subscriptions: DrawingSubscriber[]): void {
-        subscriptions.forEach((sub) => {
-            this.subscribers[sub].forEach((trigger) => {
-                trigger({})
-            })
-        })
-
-        // Save to local storage on each render
-        this.saveToLocalStorage()
-    }
-
-    renderAll(): void {
-        Object.values(this.subscribers).forEach((triggerList) => {
-            triggerList.forEach((trigger) => {
-                trigger({})
-            })
-        })
     }
 }
 

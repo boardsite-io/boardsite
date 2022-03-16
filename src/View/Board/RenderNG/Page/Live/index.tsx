@@ -1,7 +1,8 @@
 import React, { memo } from "react"
-import { useLayerState } from "state/view"
+import { useGState } from "state"
 import { Canvas } from "../index.styled"
 import { PageProps } from "../index.types"
+import { useLayerConfig } from "../useLayerConfig"
 import { useLiveStroke } from "./useLiveStroke"
 
 export const Live: React.FC<PageProps> = memo(({ page, pageOffset }) => {
@@ -18,8 +19,8 @@ export const Live: React.FC<PageProps> = memo(({ page, pageOffset }) => {
         onTouchEnd,
         onTouchCancel,
     } = useLiveStroke(page.pageId, canvasRef, pageOffset)
-
-    const layerState = useLayerState(canvasRef)
+    const { layerConfig } = useGState("LayerConfig").view
+    useLayerConfig(canvasRef)
 
     return (
         <Canvas
@@ -32,8 +33,8 @@ export const Live: React.FC<PageProps> = memo(({ page, pageOffset }) => {
                 left: pageOffset.left,
                 top: pageOffset.top,
             }}
-            width={page.meta.size.width * layerState.pixelScale}
-            height={page.meta.size.height * layerState.pixelScale}
+            width={page.meta.size.width * layerConfig.pixelScale}
+            height={page.meta.size.height * layerConfig.pixelScale}
             onMouseDown={onMouseDown}
             onMouseMove={onMouseMove}
             onMouseUp={onMouseUp}

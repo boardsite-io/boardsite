@@ -1,12 +1,13 @@
 import { DrawerTitle } from "components"
 import { FormattedMessage } from "language"
 import React from "react"
-import { menu, useMenu } from "state/menu"
+import { menu } from "state/menu"
+import { useGState } from "state"
 import { ShortcutDrawer, ShortcutList } from "./index.styled"
 import Shortcut from "./Shortcut"
 
 const Shortcuts = () => {
-    const { shortcutsOpen } = useMenu("shortcutsOpen")
+    const { shortcutsOpen } = useGState("ShortcutsOpen").menu
 
     return (
         <ShortcutDrawer

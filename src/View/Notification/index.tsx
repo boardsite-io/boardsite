@@ -1,16 +1,16 @@
 import { FormattedMessage, IntlMessageId } from "language"
 import React, { Fragment } from "react"
+import { useGState } from "state"
 import { HorizontalRule } from "components"
 import { CSSTransition } from "react-transition-group"
 import { NOTIFICATION_TRANSITION } from "consts"
 import { nanoid } from "nanoid"
-import { useNotification } from "state/notification/hooks/useNotification"
 import { Message, NotificationWrap } from "./index.styled"
 
 let lastNonEmptyState: IntlMessageId[] = []
 
 const Notification: React.FC = () => {
-    const { notifications } = useNotification()
+    const { notifications } = useGState("Notification").notification
 
     // Keep last non empty state for fade out animation
     if (notifications.length > 0) {

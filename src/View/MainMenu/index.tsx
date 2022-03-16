@@ -1,7 +1,8 @@
 import React, { memo } from "react"
 import { Popup } from "components"
-import { menu, useMenu } from "state/menu"
+import { menu } from "state/menu"
 import { MainMenuState } from "state/menu/state/index.types"
+import { useGState } from "state"
 import { MainMenuDropdown } from "./index.styled"
 import ViewMenu from "./menu/View"
 import PageMenu from "./menu/Page"
@@ -14,7 +15,7 @@ const onClickBackground = () => {
 }
 
 const MainMenu: React.FC = memo(() => {
-    const { mainMenuState } = useMenu("mainMenu")
+    const { mainMenuState } = useGState("MainMenu").menu
 
     return (
         <>

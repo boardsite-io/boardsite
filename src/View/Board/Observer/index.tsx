@@ -1,5 +1,5 @@
 import React from "react"
-import { useView } from "state/view"
+import { useGState } from "state"
 import { Content, ViewControl, ViewBackground } from "./index.styled"
 import { useViewControl } from "./useViewControl"
 
@@ -19,7 +19,8 @@ const Observer: React.FC<ViewTransformerProps> = ({ children }) => {
         onScroll,
     } = useViewControl()
 
-    const { scale, xOffset, yOffset } = useView("viewTransform").viewTransform
+    const { scale, xOffset, yOffset } =
+        useGState("ViewTransform").view.viewTransform
 
     return (
         <ViewBackground

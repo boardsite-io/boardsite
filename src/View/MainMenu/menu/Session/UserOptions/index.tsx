@@ -1,6 +1,7 @@
 import React, { useCallback } from "react"
-import { online, useOnline } from "state/online"
+import { online } from "state/online"
 import { notification } from "state/notification"
+import { useGState } from "state"
 import { FormattedMessage } from "language"
 import { SubMenuWrap } from "../../../index.styled"
 import MenuItem from "../../../MenuItem"
@@ -12,7 +13,7 @@ type UserOptionsProps = {
 }
 
 const UserOptions = ({ userId, isHost, userIsYou }: UserOptionsProps) => {
-    const { session } = useOnline("session")
+    const { session } = useGState("Session").online
 
     const onKickUser = useCallback(async () => {
         try {

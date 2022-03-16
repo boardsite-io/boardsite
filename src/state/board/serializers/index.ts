@@ -4,7 +4,7 @@ import { BoardStroke } from "drawing/stroke"
 import { assign, cloneDeep, keys, pick } from "lodash"
 import { getDefaultBoardState } from "../state/default"
 import { BoardState } from "../state/index.types"
-import { SerializedState } from "../../index.types"
+import { SerializedState } from "../../types"
 
 /*
     Version of the board state reducer to allow backward compatibility for stored data

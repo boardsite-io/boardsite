@@ -1,5 +1,6 @@
 import React, { memo } from "react"
-import { drawing, useDrawing } from "state/drawing"
+import { drawing } from "state/drawing"
+import { useGState } from "state"
 import { CustomColorPicker } from "./index.styled"
 
 const handleChange = (newColor: string) => {
@@ -7,7 +8,7 @@ const handleChange = (newColor: string) => {
 }
 
 const ColorPicker: React.FC = memo(() => {
-    const { color } = useDrawing("ColorPicker").tool.style
+    const { color } = useGState("ColorPicker").drawing.tool.style
 
     return <CustomColorPicker color={color} onChange={handleChange} />
 })

@@ -2,10 +2,11 @@ import React from "react"
 import { HorizontalRule, TickIcon } from "components"
 import { backgroundStyle } from "consts"
 import { FormattedMessage } from "language"
-import { drawing, useDrawing } from "state/drawing"
+import { drawing } from "state/drawing"
 import { handleChangePageBackground } from "drawing/handlers"
 import { SubMenuWrap } from "View/MainMenu/index.styled"
 import MenuItem from "View/MainMenu/MenuItem"
+import { useGState } from "state"
 
 const onClickBlank = () => {
     drawing.setPageBackground(backgroundStyle.BLANK)
@@ -20,7 +21,7 @@ const onClickApply = () => {
     handleChangePageBackground()
 }
 const PageStyle = () => {
-    const { style } = useDrawing("PageStyleMenu").pageMeta.background
+    const { style } = useGState("PageStyleMenu").drawing.pageMeta.background
 
     return (
         <SubMenuWrap>

@@ -1,7 +1,6 @@
 import { useEffect } from "react"
-import { usePageLayer } from "state/board"
 import { Page } from "state/board/state/index.types"
-import { useDrawing } from "state/drawing"
+import { useGState, usePageLayer } from "state"
 import { draw, drawErased } from "View/Board/RenderNG/shapes"
 
 export const useRender = (
@@ -10,7 +9,7 @@ export const useRender = (
 ) => {
     usePageLayer("content", page.pageId)
 
-    const { erasedStrokes } = useDrawing("PageContent")
+    const { erasedStrokes } = useGState("PageContent").drawing
 
     useEffect(() => {
         const canvas = canvasRef.current

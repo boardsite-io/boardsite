@@ -10,13 +10,13 @@ import {
 } from "components"
 import { handleSetTool } from "drawing/handlers"
 import { notification } from "state/notification"
+import { useGState } from "state"
 import { ToolType } from "drawing/stroke/index.types"
-import { useDrawing } from "state/drawing"
 import ActiveTool from "./ActiveTool"
 import { ToolRingWrap } from "./index.styled"
 
 const ToolRing: React.FC = memo(() => {
-    const { type } = useDrawing("ToolRing").tool
+    const { type } = useGState("ToolRing").drawing.tool
 
     const onClickEraser = useCallback(() => {
         if (type === ToolType.Eraser) {

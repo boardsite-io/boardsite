@@ -7,7 +7,7 @@ import {
 } from "."
 import { getDefaultDrawingState } from "../state/default"
 import stateV1 from "./__test__/stateV1.json"
-import { SerializedState } from "../../index.types"
+import { SerializedState } from "../../types"
 import { DrawingState } from "../state/index.types"
 
 describe("board reducer state", () => {

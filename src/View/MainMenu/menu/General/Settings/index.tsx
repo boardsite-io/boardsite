@@ -1,12 +1,13 @@
 import React from "react"
 import { TickIcon } from "components"
 import { FormattedMessage } from "language"
-import { settings, useSettings } from "state/settings"
+import { settings } from "state/settings"
+import { useGState } from "state"
 import { SubMenuWrap } from "../../../index.styled"
 import MenuItem from "../../../MenuItem"
 
 const SettingsMenu = () => {
-    const { keepCentered, directDraw } = useSettings("settings")
+    const { keepCentered, directDraw } = useGState("Settings").settings
 
     return (
         <SubMenuWrap>
