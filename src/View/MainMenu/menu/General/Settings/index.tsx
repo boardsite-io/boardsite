@@ -1,27 +1,25 @@
+import React from "react"
 import { TickIcon } from "components"
 import { FormattedMessage } from "language"
-import React from "react"
-import { board, useBoard } from "state/board"
-import { drawing, useDrawing } from "state/drawing"
+import { settings, useSettings } from "state/settings"
 import { SubMenuWrap } from "../../../index.styled"
 import MenuItem from "../../../MenuItem"
 
 const SettingsMenu = () => {
-    const { keepCentered } = useBoard("SettingsMenu").view
-    const { directDraw } = useDrawing("SettingsMenu")
+    const { keepCentered, directDraw } = useSettings("settings")
 
     return (
         <SubMenuWrap>
             <MenuItem
                 text={<FormattedMessage id="Menu.General.Settings.Center" />}
-                onClick={() => board.toggleShouldCenter()}
+                onClick={() => settings.toggleShouldCenter()}
                 icon={keepCentered && <TickIcon />}
             />
             <MenuItem
                 text={
                     <FormattedMessage id="Menu.General.Settings.DirectDraw" />
                 }
-                onClick={() => drawing.toggleDirectDraw()}
+                onClick={() => settings.toggleDirectDraw()}
                 icon={directDraw && <TickIcon />}
             />
         </SubMenuWrap>

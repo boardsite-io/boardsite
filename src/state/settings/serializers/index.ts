@@ -1,7 +1,7 @@
-import { Theme } from "theme"
 import { assign, cloneDeep, keys, pick } from "lodash"
-import { ThemeState } from "../state/index.types"
+import { SettingsState } from "../state/index.types"
 import { SerializedState } from "../../index.types"
+import { getDefaultSettingsState } from "../state/default"
 
 /*
     Version of the board state reducer to allow backward compatibility for stored data
@@ -10,16 +10,16 @@ import { SerializedState } from "../../index.types"
 export const CURRENT_THEME_VERSION = "1.0"
 
 export const serializeThemeState = (
-    state: ThemeState
-): SerializedState<ThemeState> => {
-    const stateClone = cloneDeep<ThemeState>(state)
+    state: SettingsState
+): SerializedState<SettingsState> => {
+    const stateClone = cloneDeep<SettingsState>(state)
     return { version: CURRENT_THEME_VERSION, ...stateClone }
 }
 
 export const deserializeThemeState = async (
-    serialisedState: SerializedState<ThemeState>
-): Promise<ThemeState> => {
-    const newThemeState: ThemeState = { theme: Theme.Light }
+    serialisedState: SerializedState<SettingsState>
+): Promise<SettingsState> => {
+    const newThemeState: SettingsState = getDefaultSettingsState()
     const { version } = serialisedState // avoid side-effects
     if (!version) {
         throw new Error("cannot deserialize state, missing version")

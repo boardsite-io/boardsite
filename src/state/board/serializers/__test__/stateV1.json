@@ -40,10 +40,5 @@
             }
         }
     },
-    "attachments": {},
-    "view": {
-        "keepCentered": false,
-        "hideNavBar": false,
-        "renderTrigger": "false"
-    }
+    "attachments": {}
 }

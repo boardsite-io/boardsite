@@ -13,7 +13,6 @@ export type DrawingSubscriber =
     | "ShapeTools"
     | "PageSizeMenu"
     | "PageStyleMenu"
-    | "SettingsMenu" // direct draw
     | "useViewControl" // pan mode
     | "useLiveStroke" // pan mode
     | "PageContent" // erased strokes
@@ -21,7 +20,6 @@ export type DrawingSubscriber =
 export type DrawingSubscribers = Record<DrawingSubscriber, RenderTrigger[]>
 
 export interface DrawingState {
-    directDraw: boolean
     tool: Tool
     pageMeta: PageMeta
     favoriteTools: Tool[]

@@ -22,7 +22,6 @@ export class Drawing implements GlobalState<DrawingState, DrawingSubscribers> {
         PageSizeMenu: [],
         PageSizeSetting: [],
         PageStyleMenu: [],
-        SettingsMenu: [],
         ShapeTools: [],
         ToolRing: [],
         WidthPicker: [],
@@ -39,11 +38,6 @@ export class Drawing implements GlobalState<DrawingState, DrawingSubscribers> {
     setWidth(width: number) {
         this.state.tool.style.width = width
         this.render("ActiveTool", "WidthPicker")
-    }
-
-    toggleDirectDraw() {
-        this.state.directDraw = !this.state.directDraw
-        this.render("SettingsMenu")
     }
 
     setErasedStrokes(strokes: StrokeCollection): void {
