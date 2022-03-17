@@ -16,6 +16,7 @@ export class SettingsClass implements GlobalState<SettingsState> {
     setState(newState: SettingsState): void {
         this.state = newState
         subscriptionState.render("Theme", "Settings")
+        this.saveToLocalStorage()
     }
 
     getTheme(): Theme {
@@ -25,16 +26,19 @@ export class SettingsClass implements GlobalState<SettingsState> {
     setTheme(theme: Theme) {
         this.state.theme = theme
         subscriptionState.render("Theme")
+        this.saveToLocalStorage()
     }
 
     toggleShouldCenter(): void {
         this.state.keepCentered = !this.state.keepCentered
         subscriptionState.render("Settings")
+        this.saveToLocalStorage()
     }
 
     toggleDirectDraw() {
         this.state.directDraw = !this.state.directDraw
         subscriptionState.render("Settings")
+        this.saveToLocalStorage()
     }
 
     getSerializedState(): SerializedState<SettingsState> {
