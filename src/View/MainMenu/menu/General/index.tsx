@@ -6,6 +6,7 @@ import { SiGithubsponsors } from "react-icons/si"
 import { isMobile } from "react-device-detect"
 import { online } from "state/online"
 import { menu } from "state/menu"
+import { notification } from "state/notification"
 import { useGState } from "state"
 import { CSSTransition } from "react-transition-group"
 import EditMenu from "View/MainMenu/menu/General/Edit"
@@ -16,6 +17,7 @@ import MenuItem from "../../MenuItem"
 import FileMenu from "./File"
 import SettingsMenu from "./Settings"
 import ThemeMenu from "./Theme"
+import { AuthenticatedMenuItem } from "./index.styled"
 
 export const openInNewTab = (url: string): void => {
     const newWindow = window.open(url, "_blank", "noopener,noreferrer")
@@ -112,22 +114,30 @@ const GeneralMenu = () => {
                 />
             )}
             <HorizontalRule />
-            {!isAuthorized() && (
+            {isAuthorized() ? (
+                <AuthenticatedMenuItem
+                    text={<FormattedMessage id="Menu.General.Authenticated" />}
+                    icon={<SiGithubsponsors className="external-icon" />}
+                    onClick={() =>
+                        notification.create("Notification.ThanksForSupport")
+                    }
+                />
+            ) : (
                 <MenuItem
                     text={<FormattedMessage id="Menu.General.GithubSponsor" />}
                     icon={<SiGithubsponsors className="external-icon" />}
                     onClick={onClickSponsor}
                 />
             )}
-            {!isSignedIn() ? (
-                <MenuItem
-                    text={<FormattedMessage id="Menu.General.SignIn" />}
-                    onClick={onClickSignIn}
-                />
-            ) : (
+            {isSignedIn() ? (
                 <MenuItem
                     text={<FormattedMessage id="Menu.General.SignOut" />}
                     onClick={onClickSignOut}
+                />
+            ) : (
+                <MenuItem
+                    text={<FormattedMessage id="Menu.General.SignIn" />}
+                    onClick={onClickSignIn}
                 />
             )}
         </MainMenuWrap>
