@@ -8,7 +8,7 @@ import { fileOpen, fileSave } from "browser-fs-access"
 import { menu } from "state/menu"
 import { loading } from "state/loading"
 import { notification } from "state/notification"
-import { importPdfFile, renderAsPdf } from "./util"
+import { ENCRYPTED_PDF_ERROR, importPdfFile, renderAsPdf } from "./util"
 
 export const handleImportPdf = async () => {
     try {
@@ -50,7 +50,12 @@ export const handleExportPdf = async (): Promise<void> => {
         )
         menu.closeMainMenu()
     } catch (error) {
-        notification.create("Notification.PdfExportFailed")
+        if ((error as Error)?.message === ENCRYPTED_PDF_ERROR) {
+            notification.create("Notification.PdfExportFailedEncrypted", 4000)
+        } else {
+            notification.create("Notification.PdfExportFailed")
+        }
+
         loading.endLoading()
     }
 }

@@ -72,6 +72,8 @@ const addRenderedPdf = async (attachment: Attachment): Promise<void> => {
     board.clearUndoRedo()
 }
 
+export const ENCRYPTED_PDF_ERROR = "Encrypted PDF"
+
 export const renderAsPdf = async (): Promise<Uint8Array> => {
     const { pageRank, pageCollection } = board.getState()
     const pdfDocuments: Record<AttachId, PDFPage[]> = {}
@@ -102,12 +104,17 @@ export const renderAsPdf = async (): Promise<Uint8Array> => {
             if (!pdfDocuments[attachId]) {
                 // if document is not loaded yet (loaded by pdf-lib)
                 const attachment = board.getState().attachments[attachId]
-                const src = await PDFDocument.load(attachment.cachedBlob, {
-                    ignoreEncryption: false, // TODO: Fix or handle encrypted PDF issue separately
-                })
-                pdfDocuments[attachId] = await pdf.copyPages(src, [
-                    ...Array(src.getPages().length).keys(),
-                ])
+
+                try {
+                    const src = await PDFDocument.load(attachment.cachedBlob, {
+                        ignoreEncryption: false,
+                    })
+                    pdfDocuments[attachId] = await pdf.copyPages(src, [
+                        ...Array(src.getPages().length).keys(),
+                    ])
+                } catch (error) {
+                    throw new Error(ENCRYPTED_PDF_ERROR)
+                }
             }
             basePage = pdfDocuments[attachId][documentPageNum]
         }
