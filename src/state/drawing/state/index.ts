@@ -23,6 +23,7 @@ export class Drawing implements GlobalState<DrawingState> {
             "WidthPicker",
             "ColorPicker"
         )
+        this.saveToLocalStorage()
     }
 
     setColor(color: string) {
@@ -49,11 +50,13 @@ export class Drawing implements GlobalState<DrawingState> {
     setPageBackground(style: PageBackgroundStyle) {
         this.state.pageMeta.background.style = style
         subscriptionState.render("PageStyleMenu", "PageBackgroundSetting")
+        this.saveToLocalStorage()
     }
 
     setPageSize(size: PageSize) {
         this.state.pageMeta.size = size
         subscriptionState.render("PageSizeMenu", "PageSizeSetting")
+        this.saveToLocalStorage()
     }
 
     setTool(tool: Partial<Tool>): void {
@@ -89,12 +92,14 @@ export class Drawing implements GlobalState<DrawingState> {
         if (isDrawType(tool.type)) {
             this.state.favoriteTools.push(tool)
             subscriptionState.render("FavoriteTools")
+            this.saveToLocalStorage()
         }
     }
 
     removeFavoriteTool(index: number) {
         this.state.favoriteTools.splice(index, 1)
         subscriptionState.render("FavoriteTools")
+        this.saveToLocalStorage()
     }
 
     replaceFavoriteTool(index: number): void {
@@ -107,6 +112,7 @@ export class Drawing implements GlobalState<DrawingState> {
         if (tool.type !== ToolType.Eraser && tool.type !== ToolType.Select) {
             this.state.favoriteTools[index] = tool
             subscriptionState.render("FavoriteTools")
+            this.saveToLocalStorage()
         }
     }
 
