@@ -34,6 +34,7 @@ export class Board implements GlobalState<BoardState> {
     setState(newState: Partial<BoardState>): void {
         assign(this.state, pick(newState, keys(this.state)))
         subscriptionState.render("RenderNG", "EditMenu", "MenuPageButton")
+        this.saveToLocalStorage()
     }
 
     addAttachments(attachments: Attachment[]): void {
@@ -55,23 +56,27 @@ export class Board implements GlobalState<BoardState> {
     undoAction(): void {
         undoAction(this.state)
         subscriptionState.render("RenderNG", "EditMenu")
+        this.saveToLocalStorage()
     }
 
     redoAction(): void {
         redoAction(this.state)
         subscriptionState.render("RenderNG", "EditMenu")
+        this.saveToLocalStorage()
     }
 
     decrementPageIndex(): void {
         this.state.currentPageIndex -= 1
         subscriptionState.render("RenderNG", "MenuPageButton")
         this.clearTransform()
+        this.saveToLocalStorage()
     }
 
     incrementPageIndex(): void {
         this.state.currentPageIndex += 1
         subscriptionState.render("RenderNG", "MenuPageButton")
         this.clearTransform()
+        this.saveToLocalStorage()
     }
 
     jumpToNextPage(): void {
@@ -80,6 +85,7 @@ export class Board implements GlobalState<BoardState> {
         }
         subscriptionState.render("RenderNG", "MenuPageButton")
         this.clearTransform()
+        this.saveToLocalStorage()
     }
 
     jumpToPrevPage(): void {
@@ -88,18 +94,21 @@ export class Board implements GlobalState<BoardState> {
         }
         subscriptionState.render("RenderNG", "MenuPageButton")
         this.clearTransform()
+        this.saveToLocalStorage()
     }
 
     jumpToFirstPage(): void {
         this.state.currentPageIndex = 0
         subscriptionState.render("RenderNG", "MenuPageButton")
         this.clearTransform()
+        this.saveToLocalStorage()
     }
 
     jumpToLastPage(): void {
         this.state.currentPageIndex = this.state.pageRank.length - 1
         subscriptionState.render("RenderNG", "MenuPageButton")
         this.clearTransform()
+        this.saveToLocalStorage()
     }
 
     /**
@@ -351,6 +360,7 @@ export class Board implements GlobalState<BoardState> {
             }
         })
         subscriptionState.render("EditMenu")
+        this.saveToLocalStorage()
     }
 
     addPages(addPageData: AddPageData[]): void {
@@ -365,6 +375,7 @@ export class Board implements GlobalState<BoardState> {
             }
         })
         subscriptionState.render("RenderNG", "EditMenu", "MenuPageButton")
+        this.saveToLocalStorage()
     }
 
     deletePages(pageIds: PageId[]): void {
@@ -389,6 +400,7 @@ export class Board implements GlobalState<BoardState> {
         // Make sure that transform is cleared when page is deleted
         this.clearTransform()
         subscriptionState.render("RenderNG", "EditMenu", "MenuPageButton")
+        this.saveToLocalStorage()
     }
 
     clearPages(pageIds: PageId[]): void {
@@ -397,6 +409,7 @@ export class Board implements GlobalState<BoardState> {
             subscriptionState.renderPageLayer("content", pageId)
         })
         subscriptionState.render("EditMenu", "MenuPageButton")
+        this.saveToLocalStorage()
     }
 
     updatePages(pages: Pick<Page, "pageId" | "meta">[]): void {
@@ -404,11 +417,13 @@ export class Board implements GlobalState<BoardState> {
             this.getState().pageCollection[page.pageId]?.updateMeta(page.meta)
         })
         subscriptionState.render("RenderNG", "EditMenu")
+        this.saveToLocalStorage()
     }
 
     deleteAllPages(): void {
         this.setState(getDefaultBoardState())
         subscriptionState.render("RenderNG")
+        this.saveToLocalStorage()
     }
 
     clearRedoCheck(isRedoable?: boolean): void {
@@ -452,6 +467,7 @@ export class Board implements GlobalState<BoardState> {
         }
 
         subscriptionState.render("RenderNG", "EditMenu", "MenuPageButton")
+        this.saveToLocalStorage()
     }
 
     getSerializedState(): SerializedState<BoardState> {
