@@ -15,7 +15,7 @@ export const StyledIconButton = styled.button<Props>`
     margin: var(--icon-button-margin);
     padding: var(--icon-button-padding);
     border: none;
-    border-radius: var(--button-border-radius);
+    border-radius: var(--border-radius);
     background: ${({ theme }) => theme.palette.primary.main};
 
     /* color for non custom svgs */

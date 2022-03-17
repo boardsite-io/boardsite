@@ -28,9 +28,8 @@ export const GlobalStyles = styled.div`
     --sel-handle-border-radius: 2px;
 
     /* --- General --- */
-    --border-radius: 0.5rem;
+    --border-radius: 4px;
     --box-shadow: 0 1px 6px #00000033, 0 1px 4px #00000033;
-
     --page-box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
 
     /* --- Stacking Context --- */
@@ -51,14 +50,12 @@ export const GlobalStyles = styled.div`
     --toolbar-margin: 0.2rem;
     --toolbar-margin-favorite: 1rem;
     --toolbar-box-shadow: 0px 0px 2px 0px #00000088;
-    --toolbar-border-radius: 0.5rem;
 
-    --main-menu-button-gap: 0.5rem;
-    --main-menu-button-padding: 0.4rem 0.6rem;
-    --main-menu-button-margin: 0.1rem;
+    --main-menu-button-gap: 10px;
+    --main-menu-button-padding: 7px 10px;
+    --main-menu-button-margin: 3px;
     --main-menu-hover-filter: brightness(80%);
 
-    --button-border-radius: 0.35rem;
     --button-hover-transform: scale(1.2, 1.2);
 
     --icon-button-size: 2rem;

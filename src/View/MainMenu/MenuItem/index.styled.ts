@@ -25,7 +25,7 @@ export const ItemWrap = styled.li`
 
 export const ItemButton = styled.button<{ $warning: boolean }>`
     display: flex;
-    width: 100%;
+    flex-grow: 1;
     align-items: center;
     justify-content: space-between;
     gap: var(--main-menu-button-gap);

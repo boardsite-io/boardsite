@@ -13,7 +13,7 @@ const sharedStyle = css<props>`
     /* remove a pixel for pixel perfect symmetry */
     height: calc(${SELECTION_SIZE} - 1px);
     width: calc(${SELECTION_SIZE} - 1px);
-    border-radius: var(--button-border-radius);
+    border-radius: var(--border-radius);
     ${({ $active }) => ($active ? active : inactive)};
     &:hover {
         cursor: pointer;

@@ -15,7 +15,7 @@ export const SessionStatus = styled.div`
 
     color: ${({ theme }) => theme.palette.secondary.contrastText};
     background: ${({ theme }) => theme.palette.secondary.main};
-    border-radius: var(--button-border-radius);
+    border-radius: var(--border-radius);
     filter: opacity(75%);
     box-shadow: var(--box-shadow);
 `

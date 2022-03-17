@@ -10,7 +10,7 @@ export const SizePresets = styled.form`
 const sharedStyle = css<props>`
     background: white;
     border: none;
-    border-radius: var(--button-border-radius);
+    border-radius: var(--border-radius);
     ${({ $active }) => ($active ? active : inactive)};
     &:hover {
         cursor: pointer;
