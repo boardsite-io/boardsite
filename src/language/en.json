@@ -108,6 +108,7 @@
     "Notification.ImportWorkspaceFailed": "🚨 Load failed!",
     "Notification.InvalidFileTypePdfImport": "🚨 Invalid file type. Please choose a supported file type.",
     "Notification.PdfExportFailed": "🚨 PDF export failed.",
+    "Notification.PdfExportFailedEncrypted": "🚨 PDF export failed. Encrypted PDFs cannot be exported!",
     "Notification.PdfImportFailed": "🚨 PDF could not be loaded.",
     "Notification.LocalStorageSaveFailed": "🚨 Data could not be saved to local storage.",
     "Notification.LocalStorageLoadFailed": "🚨 Data could not be loaded from local storage.",
