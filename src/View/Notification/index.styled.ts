@@ -14,7 +14,7 @@ export const NotificationWrap = styled.div`
     box-shadow: var(--toolbar-box-shadow);
     color: ${({ theme }) => theme.palette.primary.contrastText};
     background: ${({ theme }) => theme.palette.primary.main};
-    border-radius: var(--toolbar-border-radius);
+    border-radius: var(--border-radius);
 
     transition: all ${NOTIFICATION_TRANSITION}ms ease-in-out;
 

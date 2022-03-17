@@ -12,6 +12,7 @@ import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 import SessionSettingsMenu from "./SessionSettings"
 import UserOptions from "./UserOptions"
+import { UserMenuItem } from "./index.styled"
 
 enum SubMenu {
     Closed = "Closed",
@@ -42,7 +43,8 @@ const SessionMenu = () => {
                 const userIsYou = user.id === session.user.id
 
                 return (
-                    <MenuItem
+                    <UserMenuItem
+                        color={user.color}
                         icon={<ExpandableIcon />}
                         key={user.id}
                         text={
@@ -69,7 +71,7 @@ const SessionMenu = () => {
                                 />
                             )}
                         </CSSTransition>
-                    </MenuItem>
+                    </UserMenuItem>
                 )
             })}
             <HorizontalRule />

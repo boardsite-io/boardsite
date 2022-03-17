@@ -11,7 +11,7 @@ export const MainMenuBarWrap = styled.nav`
     top: 0;
     left: 0;
     background: ${({ theme }) => theme.palette.primary.main};
-    border-radius: var(--toolbar-border-radius);
+    border-radius: var(--border-radius);
     box-shadow: var(--toolbar-box-shadow);
     padding: var(--toolbar-padding);
 `
@@ -25,7 +25,7 @@ export const MainMenuButton = styled.button`
     border: none;
     color: ${({ theme }) => theme.palette.primary.contrastText};
     background: ${({ theme }) => theme.palette.primary.main};
-    border-radius: var(--button-border-radius);
+    border-radius: var(--border-radius);
     width: fit-content;
     height: var(--icon-button-size);
     margin: var(--icon-button-margin);

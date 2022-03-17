@@ -13,7 +13,7 @@ export const ToolRingWrap = styled.div`
     background: ${({ theme }) => theme.palette.primary.main};
     gap: var(--toolbar-gap);
     padding: var(--toolbar-padding);
-    border-radius: var(--toolbar-border-radius);
+    border-radius: var(--border-radius);
     box-shadow: var(--toolbar-box-shadow);
 
     @media (min-width: ${Breakpoint.Md}) {

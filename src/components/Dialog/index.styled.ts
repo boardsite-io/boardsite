@@ -15,7 +15,7 @@ export const DialogBox = styled.div<DialogProps>`
     transform: translate(-50%, -50%);
     width: min(90vw, 40rem);
     max-height: 80vh;
-    border-radius: var(--toolbar-border-radius);
+    border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     transition: 250ms ease-in-out;
     ${({ open }) =>

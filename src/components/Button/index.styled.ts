@@ -10,7 +10,7 @@ export const StyledButton = styled.button<Props>`
     background: ${({ theme }) => theme.palette.secondary.main};
     padding: 0.5rem 1.5rem;
     border-width: 0;
-    border-radius: var(--button-border-radius);
+    border-radius: var(--border-radius);
     transition: all 100ms ease-in-out;
     box-shadow: var(--box-shadow);
     height: min-content;

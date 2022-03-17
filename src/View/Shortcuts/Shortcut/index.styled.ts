@@ -17,5 +17,5 @@ export const Keys = styled.span`
     background: ${({ theme }) => theme.palette.editor.selected};
     padding: var(--main-menu-button-padding);
     margin: var(--main-menu-button-margin);
-    border-radius: var(--button-border-radius);
+    border-radius: var(--border-radius);
 `
