@@ -9,31 +9,42 @@ import { CreateSessionOptions } from "./index.styled"
 import { UserSelection } from "./UserSelection"
 import { createOnlineSession, joinOnlineSession } from "./helpers"
 
+let submissionActive = false
+
 const OnlineSession: React.FC = () => {
     const navigate = useNavigate()
 
     const onSubmitCreate = useCallback(
-        (e: React.ChangeEvent<HTMLFormElement>) => {
+        async (e: React.ChangeEvent<HTMLFormElement>) => {
             e.preventDefault()
-            createOnlineSession(false, navigate)
+            if (submissionActive) return
+            submissionActive = true
+            await createOnlineSession(false, navigate)
+            submissionActive = false
         },
         [navigate]
     )
 
-    const createFromCurrent = useCallback(() => {
-        createOnlineSession(true, navigate)
+    const createFromCurrent = useCallback(async () => {
+        if (submissionActive) return
+        submissionActive = true
+        await createOnlineSession(true, navigate)
+        submissionActive = false
     }, [navigate])
 
     const onSubmitJoin = useCallback(
-        (e: React.ChangeEvent<HTMLFormElement>) => {
+        async (e: React.ChangeEvent<HTMLFormElement>) => {
             e.preventDefault()
+            if (submissionActive) return
+            submissionActive = true
             const sessionId = (e.target[0] as HTMLInputElement).value
 
             if (sessionId.length === SESSION_ID_LENGTH) {
-                joinOnlineSession(sessionId, navigate)
+                await joinOnlineSession(sessionId, navigate)
             } else {
                 notification.create("Notification.Session.InvalidSessionId")
             }
+            submissionActive = false
         },
         [navigate]
     )
