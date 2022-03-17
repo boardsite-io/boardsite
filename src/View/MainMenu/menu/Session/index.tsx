@@ -22,7 +22,8 @@ enum SubMenu {
 const SessionMenu = () => {
     const [subMenu, setSubMenu] = useState<SubMenu | User["id"]>(SubMenu.Closed)
     const navigate = useNavigate()
-    const { session } = useGState("Session").online
+    const { online } = useGState("Session")
+    const { session } = online
 
     const leaveSession = useCallback(() => {
         session?.disconnect()
@@ -75,7 +76,7 @@ const SessionMenu = () => {
                 )
             })}
             <HorizontalRule />
-            {isHost && (
+            {isHost && online.isAuthorized() && (
                 <MenuItem
                     text={
                         <FormattedMessage id="Menu.General.Session.Settings" />

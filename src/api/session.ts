@@ -26,6 +26,7 @@ import {
     UserHost,
 } from "./types"
 import { API_URL, Request } from "./request"
+import { notification } from "../state/notification"
 
 export class BoardSession implements Session {
     config?: SessionConfig
@@ -124,6 +125,7 @@ export class BoardSession implements Session {
         board.deleteAllPages() // Use non-redoable internal option
         board.handleAddPages({ data: [{ page: new BoardPage(), index: -1 }] })
         subscriptionState.render("Session")
+        notification.create("Notification.Session.Leave", 3000)
     }
 
     async synchronize(
@@ -300,7 +302,7 @@ export class BoardSession implements Session {
                 break
 
             case MessageType.UserKick:
-                // TODO notification
+                notification.create("Notification.Session.UserKicked", 3000)
                 this.disconnect()
                 break
 
@@ -314,7 +316,6 @@ export class BoardSession implements Session {
         subscriptionState.render("Session")
     }
 
-    // TODO
     // eslint-disable-next-line class-methods-use-this
     receiveStrokes(strokes: Stroke[]): void {
         const erasedStrokes = strokes.filter((s) => s.type === 0)

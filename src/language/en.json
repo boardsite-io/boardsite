@@ -118,6 +118,8 @@
     "Notification.Session.JoinFailed": "🚨 Unable to join session. Please try again with a valid session ID.",
     "Notification.Session.InvalidSessionId": "🚨 Please enter a valid session ID.",
     "Notification.Session.KickUserFailed": "🚨 User could not be kicked.",
+    "Notification.Session.UserKicked": "You have been kicked from the session.",
+    "Notification.Session.Leave": "Session left.",
     "Notification.Session.CopiedToClipboard": "🔗 The session link has been copied to your clipboard.",
     "Notification.Session.OauthFlowFailed": "Sign in aborted.",
     "Shortcut.Title": "Shortcuts",
