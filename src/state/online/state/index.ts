@@ -43,12 +43,14 @@ export class Online implements GlobalState<OnlineState> {
     setSessionDialog(dialogState: DialogState): void {
         this.state.dialogState = dialogState
         subscriptionState.render("Session")
+        this.saveToLocalStorage()
     }
 
     newSession(session: Session): void {
         this.state.session = session
         this.state.session.setToken(this.state.token ?? "")
         subscriptionState.render("Session")
+        this.saveToLocalStorage()
     }
 
     updateUser(user: Partial<User>): void {
@@ -57,6 +59,7 @@ export class Online implements GlobalState<OnlineState> {
             ...user,
         }
         subscriptionState.render("UserSelection")
+        this.saveToLocalStorage()
     }
 
     async setToken(token: string): Promise<void> {
@@ -65,6 +68,7 @@ export class Online implements GlobalState<OnlineState> {
         const isAuthorized = await validateToken(token)
         this.state.isAuthorized = () => isAuthorized
         subscriptionState.render("Session")
+        this.saveToLocalStorage()
     }
 
     clearToken(): void {

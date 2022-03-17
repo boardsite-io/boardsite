@@ -24,6 +24,7 @@ export const ItemWrap = styled.li`
 `
 
 export const ItemButton = styled.button<{ $warning: boolean }>`
+    cursor: pointer;
     display: flex;
     flex-grow: 1;
     align-items: center;
