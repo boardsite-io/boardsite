@@ -19,6 +19,11 @@ export const handleImportWorkspace = async () => {
             extensions: [FILE_EXTENSION_WORKSPACE],
             multiple: false,
         })
+
+        if (!workspaceFile) {
+            return
+        }
+
         if (workspaceFile.name.endsWith(FILE_EXTENSION_WORKSPACE)) {
             const readFile = await readFileAsUint8Array(workspaceFile)
 
@@ -46,7 +51,7 @@ export const handleExportWorkspace = async () => {
                 type: MIME_TYPE_WORKSPACE,
             }),
             {
-                fileName: FILE_NAME_WORKSPACE,
+                fileName: `${FILE_NAME_WORKSPACE}${FILE_EXTENSION_WORKSPACE}`,
                 description: FILE_DESCRIPTION_WORKSPACE,
                 extensions: [FILE_EXTENSION_WORKSPACE],
             }
