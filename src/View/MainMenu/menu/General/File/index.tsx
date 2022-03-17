@@ -1,8 +1,9 @@
 import { FormattedMessage } from "language"
 import React from "react"
 import { HorizontalRule } from "components"
-import { handleAddPageUnder, handleDeleteAllPages } from "drawing/handlers"
+import { useGState } from "state"
 import { menu } from "state/menu"
+import { handleAddPageUnder, handleDeleteAllPages } from "drawing/handlers"
 import { handleExportWorkspace, handleImportWorkspace } from "storage/workspace"
 import { handleExportPdf, handleImportPdf } from "storage/pdf"
 import { SubMenuWrap } from "../../../index.styled"
@@ -31,6 +32,8 @@ const onClickExportPdf = () => {
 }
 
 const FileMenu = () => {
+    const { isConnected, isAuthorized } = useGState("Session").online
+
     return (
         <SubMenuWrap>
             <MenuItem
@@ -48,6 +51,7 @@ const FileMenu = () => {
             <HorizontalRule />
             <MenuItem
                 text={<FormattedMessage id="Menu.General.File.ImportPdf" />}
+                disabled={isConnected() && !isAuthorized()}
                 onClick={onClickImportPdf}
             />
             <MenuItem
