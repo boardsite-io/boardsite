@@ -1,11 +1,10 @@
 import { FormattedMessage } from "language"
 import React, { memo, useCallback } from "react"
 import { Position, ToolTip, VerticalRule } from "components"
-import { MainMenuState } from "state/menu/state/index.types"
+import { DialogState, MainMenuState } from "state/menu/state/index.types"
 import { menu } from "state/menu"
 import { online } from "state/online"
 import { useGState } from "state"
-import { DialogState } from "state/online/state/index.types"
 import { MainMenuBarWrap } from "./index.styled"
 import ViewButton from "./ViewButton"
 import PageButton from "./PageButton"
@@ -27,7 +26,7 @@ const onClickSession = () => {
     if (numberOfUsers && numberOfUsers > 0) {
         menu.setMainMenu(MainMenuState.Session)
     } else {
-        online.setSessionDialog(DialogState.CreateOnlineSession)
+        menu.setSessionDialog(DialogState.CreateOnlineSession)
     }
 }
 

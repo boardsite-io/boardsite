@@ -3,13 +3,11 @@ import React, { useCallback, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ExpandableIcon, HorizontalRule } from "components"
 import { User } from "api/types"
-import { MainMenuState } from "state/menu/state/index.types"
+import { DialogState, MainMenuState } from "state/menu/state/index.types"
 import { menu } from "state/menu"
 import { useGState } from "state"
 import { CSSTransition } from "react-transition-group"
 import { cssTransition } from "View/MainMenu/cssTransition"
-import { online } from "state/online"
-import { DialogState } from "state/online/state/index.types"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 import SessionSettingsMenu from "./SessionSettings"
@@ -30,7 +28,7 @@ const SessionMenu = () => {
     const leaveSession = useCallback(() => {
         session?.disconnect()
         menu.setMainMenu(MainMenuState.Closed)
-        online.setSessionDialog(DialogState.InitialSelection)
+        menu.setSessionDialog(DialogState.InitialSelection)
         navigate("/")
     }, [session, navigate])
 

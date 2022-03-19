@@ -1,10 +1,11 @@
 import { subscriptionState } from "state/subscription"
 import { GlobalState } from "../../types"
-import { MainMenuState, MenuState } from "./index.types"
+import { DialogState, MainMenuState, MenuState } from "./index.types"
 
 export class Menu implements GlobalState<MenuState> {
     state: MenuState = {
         mainMenuState: MainMenuState.Closed,
+        dialogState: DialogState.InitialSelectionFirstLoad,
         shortcutsOpen: false,
         subscribeOpen: false,
     }
@@ -15,6 +16,11 @@ export class Menu implements GlobalState<MenuState> {
 
     setState(newState: MenuState) {
         this.state = newState
+    }
+
+    setSessionDialog(dialogState: DialogState): void {
+        this.state.dialogState = dialogState
+        subscriptionState.render("DialogState")
     }
 
     setMainMenu(newState: MainMenuState): void {

@@ -23,6 +23,7 @@ export type Subscription =
     // Loading
     | "Loading"
     // Menu
+    | "DialogState"
     | "MainMenu"
     | "ShortcutsOpen"
     | "SubscribeOpen"
@@ -30,7 +31,6 @@ export type Subscription =
     | "Notification"
     // Online
     | "Session"
-    | "SessionDialog"
     // Settings
     | "Theme"
     | "Settings"

@@ -1,9 +1,10 @@
 import { BoardSession } from "api/session"
 import { ROUTE } from "App/routes"
 import { NavigateFunction } from "react-router-dom"
+import { menu } from "state/menu"
+import { DialogState } from "state/menu/state/index.types"
 import { notification } from "state/notification"
 import { online } from "state/online"
-import { DialogState } from "state/online/state/index.types"
 
 /**
  * Create an online session either from current local state or from scratch
@@ -30,7 +31,7 @@ export const createOnlineSession = async (
             // Could not save URL to clipboard - no notification needed here
         }
 
-        online.setSessionDialog(DialogState.Closed)
+        menu.setSessionDialog(DialogState.Closed)
     } catch (error) {
         notification.create("Notification.Session.CreationFailed", 2500)
     }
@@ -51,7 +52,7 @@ export const joinOnlineSession = async (
         await session.createSocket(sessionId)
         await session.join()
         online.newSession(session)
-        online.setSessionDialog(DialogState.Closed)
+        menu.setSessionDialog(DialogState.Closed)
         navigate(path)
     } catch (error) {
         notification.create("Notification.Session.JoinFailed", 5000)
