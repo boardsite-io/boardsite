@@ -30,7 +30,7 @@ export const FormattedMessage: React.FC<FormattedMessageProps> = ({
     return <ReactIntlFormattedMessage id={id} {...rest} />
 }
 
-export const useIntl = (): object => {
+export const useIntl = () => {
     // Pull out the original formatMessage function.
     const { formatMessage, ...rest } = useReactIntl()
 

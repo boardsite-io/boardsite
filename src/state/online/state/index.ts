@@ -6,7 +6,6 @@ import { getRandomColor } from "helpers"
 import {
     adjectives,
     animals,
-    colors,
     uniqueNamesGenerator,
 } from "unique-names-generator"
 import { DialogState, OnlineState } from "./index.types"
@@ -19,7 +18,7 @@ export class Online implements GlobalState<OnlineState> {
         dialogState: DialogState.InitialSelectionFirstLoad,
         userSelection: {
             alias: uniqueNamesGenerator({
-                dictionaries: [adjectives, colors, animals],
+                dictionaries: [adjectives, animals],
                 separator: "",
                 style: "capital",
             }),
@@ -42,7 +41,7 @@ export class Online implements GlobalState<OnlineState> {
 
     setSessionDialog(dialogState: DialogState): void {
         this.state.dialogState = dialogState
-        subscriptionState.render("Session")
+        subscriptionState.render("SessionDialog")
         this.saveToLocalStorage()
     }
 
@@ -58,7 +57,6 @@ export class Online implements GlobalState<OnlineState> {
             ...this.state.userSelection,
             ...user,
         }
-        subscriptionState.render("UserSelection")
         this.saveToLocalStorage()
     }
 

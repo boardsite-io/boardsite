@@ -20,7 +20,6 @@ export const createOnlineSession = async (
         await session.createSocket(sessionId)
         await session.join(fromCurrent)
         online.newSession(session)
-        online.setSessionDialog(DialogState.Closed)
         navigate(BoardSession.path(sessionId))
 
         // Copy session URL to the clipboard to make it easier to invite friends
@@ -28,10 +27,12 @@ export const createOnlineSession = async (
             navigator.clipboard.writeText(window.location.href)
             notification.create("Notification.Session.CopiedToClipboard")
         } catch (error) {
-            // Could not save URL to clipboard
+            // Could not save URL to clipboard - no notification needed here
         }
+
+        online.setSessionDialog(DialogState.Closed)
     } catch (error) {
-        notification.create("Notification.Session.CreationFailed", 2000)
+        notification.create("Notification.Session.CreationFailed", 2500)
     }
 }
 
@@ -53,7 +54,7 @@ export const joinOnlineSession = async (
         online.setSessionDialog(DialogState.Closed)
         navigate(path)
     } catch (error) {
-        notification.create("Notification.Session.JoinFailed")
+        notification.create("Notification.Session.JoinFailed", 5000)
         navigate(ROUTE.HOME)
     }
 }

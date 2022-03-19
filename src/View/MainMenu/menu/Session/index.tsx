@@ -8,6 +8,8 @@ import { menu } from "state/menu"
 import { useGState } from "state"
 import { CSSTransition } from "react-transition-group"
 import { cssTransition } from "View/MainMenu/cssTransition"
+import { online } from "state/online"
+import { DialogState } from "state/online/state/index.types"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 import SessionSettingsMenu from "./SessionSettings"
@@ -22,12 +24,13 @@ enum SubMenu {
 const SessionMenu = () => {
     const [subMenu, setSubMenu] = useState<SubMenu | User["id"]>(SubMenu.Closed)
     const navigate = useNavigate()
-    const { online } = useGState("Session")
-    const { session } = online
+    const { online: onlineState } = useGState("Session")
+    const { session } = onlineState
 
     const leaveSession = useCallback(() => {
         session?.disconnect()
         menu.setMainMenu(MainMenuState.Closed)
+        online.setSessionDialog(DialogState.InitialSelection)
         navigate("/")
     }, [session, navigate])
 
@@ -76,7 +79,7 @@ const SessionMenu = () => {
                 )
             })}
             <HorizontalRule />
-            {isHost && online.isAuthorized() && (
+            {isHost && onlineState.isAuthorized() && (
                 <MenuItem
                     text={
                         <FormattedMessage id="Menu.General.Session.Settings" />

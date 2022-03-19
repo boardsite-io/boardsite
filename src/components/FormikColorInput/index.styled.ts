@@ -10,14 +10,8 @@ export const ColorButton = styled.button`
     width: 1.5rem;
     border-radius: 100%;
     border: none;
+
     &:hover {
         cursor: pointer;
     }
-`
-
-export const Selection = styled.div`
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    gap: 1rem;
 `

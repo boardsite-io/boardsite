@@ -12,3 +12,9 @@ export const CreateSessionOptions = styled.div`
         grid-template-columns: repeat(2, 1fr);
     }
 `
+
+export const Selection = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+`

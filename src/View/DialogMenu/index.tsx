@@ -21,10 +21,12 @@ const contents = {
 }
 
 const DialogMenu: React.FC = () => {
-    const { dialogState, session } = useGState("Session").online
-    const { sid } = useParams()
+    const { dialogState, session } = useGState("SessionDialog").online
+    const { sessionId } = useParams()
     const contentType =
-        sid && !session?.isConnected() ? DialogState.JoinOnly : dialogState
+        sessionId && !session?.isConnected()
+            ? DialogState.JoinOnly
+            : dialogState
 
     return (
         <Dialog open={dialogState !== DialogState.Closed} onClose={handleClose}>

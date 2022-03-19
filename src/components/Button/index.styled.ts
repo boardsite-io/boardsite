@@ -8,6 +8,7 @@ export const StyledButton = styled.button<Props>`
     cursor: pointer;
     color: ${({ theme }) => theme.palette.secondary.contrastText};
     background: ${({ theme }) => theme.palette.secondary.main};
+    margin: 0.5rem 0;
     padding: 0.5rem 1.5rem;
     border-width: 0;
     border-radius: var(--border-radius);

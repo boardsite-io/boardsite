@@ -10,16 +10,12 @@ export const inactive = css`
     color: ${({ theme }) => theme.palette.secondary.main};
     box-shadow: 0 0 0 1px, var(--box-shadow);
 `
+
 export const PageSettingsWrap = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2px; /* provide space for outline shadows */
-`
-export const PageSettingsInnerWrap = styled.div`
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: 1rem;
-    width: 100%;
+    margin: auto;
+    margin-bottom: 1rem;
     max-width: 16rem;
+    padding: 2px; /* provide space for outline shadows */
 `

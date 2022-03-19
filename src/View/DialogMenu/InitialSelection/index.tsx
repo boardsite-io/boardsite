@@ -2,13 +2,14 @@ import { FormattedMessage } from "language"
 import React, { useCallback, useEffect, useState } from "react"
 import { Button, DialogContent, DialogTitle } from "components"
 import PageSettings from "components/PageSettings"
-import { handleAddPageUnder } from "drawing/handlers"
+import { handleAddPageUnder, handleDeleteAllPages } from "drawing/handlers"
 import { online } from "state/online"
 import { DialogState } from "state/online/state/index.types"
 import { board } from "state/board"
 import { loadIndexedDB } from "storage/local"
 
 const createOfflineSession = () => {
+    handleDeleteAllPages() // Make sure state is clean
     handleAddPageUnder()
     online.setSessionDialog(DialogState.Closed)
 }

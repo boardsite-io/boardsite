@@ -30,7 +30,7 @@ export type Subscription =
     | "Notification"
     // Online
     | "Session"
-    | "UserSelection"
+    | "SessionDialog"
     // Settings
     | "Theme"
     | "Settings"

@@ -1,5 +1,5 @@
 export const ROUTE = {
     HOME: "/",
-    SESSION: "/b/:sid",
+    SESSION: "/b/:sessionId",
     AUTH_CALLBACK: "/github/oauth/callback",
 }

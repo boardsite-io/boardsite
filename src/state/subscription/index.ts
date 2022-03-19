@@ -31,11 +31,11 @@ export class SubscriptionState {
         Theme: [],
         RenderNG: [],
         Session: [],
+        SessionDialog: [],
         Settings: [],
         SettingsMenu: [],
         ShortcutsOpen: [],
         SubscribeOpen: [],
-        UserSelection: [],
         ViewTransform: [],
     }
 
