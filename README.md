@@ -47,7 +47,7 @@ Lets you run a local instance on your machine. Note that you will not be able to
 functionality with this step (See section *Self hosting*).
 
 Requires `node`
-and `yarn` installed.
+and `yarn`.
 
 ```
 yarn
