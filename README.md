@@ -1,4 +1,5 @@
-![BoardSite io Banner](https://user-images.githubusercontent.com/18195396/159169225-0c446776-dd36-4bd4-8d6e-691f55fc2132.png)
+![boardsite_banner](https://user-images.githubusercontent.com/18195396/159179075-43e595d0-97eb-49db-b3d7-468d7ee4a457.png)
+
 
 # About
 
