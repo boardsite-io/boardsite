@@ -10,7 +10,7 @@ with a browser.
 # Features
 
 - [x] Create documents, annotate and draw with stylus/pen support
-- [x] Share your notes and collaborate with peers via sessions
+- [x] Share your notes and collaborate with peers in real-time
 - [x] Import, annotate and export PDF files
 - [x] Save and load your notes to/from disk
 - [x] Custom page sizes and backgrounds
