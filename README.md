@@ -1,50 +1,78 @@
 ![boardsite_banner](https://user-images.githubusercontent.com/18195396/159179075-43e595d0-97eb-49db-b3d7-468d7ee4a457.png)
 
-
-# About
-
-[Boardsite.io](https://boardsite.io/) is a free productivity app with many useful features, which are listed below. We cherish user privacy and therefore don't use advertisements or tracking cookies. By providing advanced features to users which choose to become supporters, we hope to cover the server expenses.
+<p align="center">
+    Boardsite is a productivity app for taking
+notes, annotating documents and collaborating with 
+friends on any device 
+with a browser.
+</p>
 
 # Features
 
-- [x] Save / Load workspace to harddrive
-- [x] Import and annotate PDF files
-- [x] Export as PDF file
-- [x] Online sessions with friends
-- [x] A4 Portrait / Landscape paper format
-- [x] Blank / Checkered / Ruled paper style
-- [x] Stylus / Pen support w/ option to disable finger drawing
-- [x] Pinch zoom support
-- [x] Save favorite tools 
-- [x] Various tools: Pen / Line / Circle / Rect / Eraser / Selection / Drag
-- [x] Move and rescale shapes with selection tool
-- [x] Various themes to chose from
-- [x] Many shortcuts to boost productivity
-- [x] Undo / Redo which only affects your own actions in online sessions to avoid weird behaviour
+- [x] Create documents, annotate and draw with stylus/pen support
+- [x] Share your notes and collaborate with peers via sessions
+- [x] Import, annotate and export PDF files
+- [x] Save and reload your notes to/from disk
+- [x] Custom page sizes and backgrounds
+- [x] Common Tools for annotating: Pen, Marker, Eraser, Selection
+- [x] Smooth pen tool, optimized particularly for writing
+- [x] Save your favorite tools in the quick menu
 - [x] High resolution canvas for devices with high device pixel ratios
-- [x] Option to keep view centered while zooming and panning
+- [x] Many more upcoming in the future!
 
-# Support the Project
+# Sponsor the Project
 
-If you enjoy our website and have enough money to spare we welcome any support which allows us to keep the site add-free. Besides supporting the project you will receive the following benefits:
+If you enjoy this application consider supporting us in order to let us maintain [boardsite.io](https://boardsite.io)
+and add more awesome features in the future!
 
-- Unlimited Favorite Tools
-- Many more themes to choose from
-- Attachments in sessions
-- Up to 30 users in one session
-- Password protected online sessions
-- Ability to kick users
+We cherish user privacy and therefore refrain from using advertisements or tracking cookies
+on [boardsite.io](https://boardsite.io). Your donation allows us to keep the website add-free.
+
+As a small thanks, sponsors additionally receive the following benefits on [boardsite.io](https://boardsite.io):
+
+- [x] Up to 30 collaborators in one online session
+- [x] Extended session capabilities and settings
+- [x] Custom themes
+- [x] Many more...
+
+Thank you for your support! ❤️
 
 # Installation
 
-## Run in your Browser
+This section shows how you can easily set up boardsite on your machine.
 
-    $ yarn start
+### Run locally without backend
 
-## From Source (Linux/Windows)
-Requires Docker + Buildkit
+Lets you run an instance without backend locally on your machine. Note that you will not be able to use any online
+functionality with this step (See section *Self hosting*).
 
-    $ yarn electron-pack
+Requires `node`
+and `yarn` installed.
 
+```
+yarn
+yarn start
+```
 
+This will host boardsite on http://localhost:3000
 
+### Self hosting
+
+We provide a docker image that lets you run boardsite with all its dependencies and features on your own servers.
+
+*coming soon*
+
+## Contribute
+
+Contributions are always welcome. For small changes feel free to send us a PR. For bigger changes please create an issue
+first to discuss your proposal.
+
+Issues can also be used for
+
+* Bug reports
+* Feature requests
+* Questions
+
+## License
+
+Licensed under [GNU AGPL v3.0](https://github.com/boardsite-io/boardsite/blob/master/LICENSE)
