@@ -43,7 +43,7 @@ This section shows how you can easily set up boardsite on your machine.
 
 ### Run locally without backend
 
-Lets you run an instance without backend locally on your machine. Note that you will not be able to use any online
+Lets you run a local instance on your machine. Note that you will not be able to use any online
 functionality with this step (See section *Self hosting*).
 
 Requires `node`
