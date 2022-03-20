@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react"
 import { FieldProps } from "formik"
-import { getRandomColor } from "helpers"
+import { getRandomColor } from "util/color"
 import { ColorButton } from "./index.styled"
 
 const FormikColorInput: React.FC<FieldProps> = ({ form, field }) => {

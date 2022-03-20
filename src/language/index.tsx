@@ -11,7 +11,7 @@ import langEN from "./en.json"
 // import langDE from "./de.json"
 
 // The arguments to the original formatMessage function.
-type FormatMessageArgs = Parameters<IntlFormatters["formatMessage"]>
+export type FormatMessageArgs = Parameters<IntlFormatters["formatMessage"]>
 
 // Our new union type of all available message IDs.
 export type IntlMessageId = keyof typeof langEN

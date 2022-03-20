@@ -1,7 +1,7 @@
 import { ERASER_STROKE, SELECTION_FILL } from "App/global.styled"
 import { LiveStroke } from "drawing/livestroke/index.types"
 import { ToolType, Stroke } from "drawing/stroke/index.types"
-import { StrokeStyle } from "../index.types"
+import { strokeStyleToRGBA } from "util/color"
 import { ERASED_OPACITY, ERASER_WIDTH } from "../../../../consts"
 
 export const shiftPoints = (points: number[], x: number, y: number) =>
@@ -104,13 +104,6 @@ const drawShape = {
     [ToolType.Rectangle]: drawRect,
     [ToolType.Select]: drawSelect,
     [ToolType.Pan]: undefined,
-}
-
-const strokeStyleToRGBA = (style: StrokeStyle): string => {
-    const r = parseInt(style.color.slice(1, 3), 16)
-    const g = parseInt(style.color.slice(3, 5), 16)
-    const b = parseInt(style.color.slice(5, 7), 16)
-    return `rgba(${r},${g},${b},${style.opacity})`
 }
 
 export const drawHitboxRects = (

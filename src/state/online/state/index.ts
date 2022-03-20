@@ -2,7 +2,7 @@ import { Session, User } from "api/types"
 import { validateToken } from "api/auth"
 import { loadLocalStorage, saveLocalStorage } from "storage/local"
 import { subscriptionState } from "state/subscription"
-import { getRandomColor } from "helpers"
+import { getRandomColor } from "util/color"
 import {
     adjectives,
     animals,

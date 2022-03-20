@@ -32,7 +32,6 @@ export const FILE_NAME_WORKSPACE = "workspace"
 export const NOTIFICATION_TRANSITION = 300 // in ms
 export const DEFAULT_NOTIFICATION_DURATION = 2000
 export const MAX_FAVORITE_TOOLS_FREE = 4
-export const SESSION_ID_LENGTH = 8
 export const TRANSFORM_PIXEL_SCALE_DEBOUNCE = 100 // debounce time in ms
 export const STROKE_WIDTH_PRESETS = [0.5, 1, 2, 3, 4, 5, 7, 10, 14, 20]
 export const DEFAULT_PAGE_GAP = 20
