@@ -28,7 +28,7 @@ and add more awesome features in the future!
 We cherish user privacy and therefore refrain from using advertisements or tracking cookies
 on [boardsite.io](https://boardsite.io). Your donation allows us to keep the website add-free.
 
-As a small thanks, sponsors additionally receive the following benefits on [boardsite.io](https://boardsite.io):
+As a small thanks, sponsors receive the following benefits on [boardsite.io](https://boardsite.io):
 
 - [x] Up to 30 collaborators in one online session
 - [x] Extended session capabilities and settings
