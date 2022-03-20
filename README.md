@@ -3,7 +3,7 @@
 
 # About
 
-BoardSite.io is a free productivity app with many useful features, which are listed below. We cherish user privacy and therefore don't use advertisements or tracking cookies. By providing advanced features to users which choose to become supporters, we hope to cover the server expenses.
+[Boardsite.io](https://boardsite.io/) is a free productivity app with many useful features, which are listed below. We cherish user privacy and therefore don't use advertisements or tracking cookies. By providing advanced features to users which choose to become supporters, we hope to cover the server expenses.
 
 # Features
 
