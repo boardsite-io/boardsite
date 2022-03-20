@@ -9,6 +9,7 @@ import {
     PageMeta,
 } from "state/board/state/index.types"
 import { Board } from "state/board"
+import exp from "constants"
 import { BoardSession } from "./session"
 import { Request } from "./request"
 import { Message, PageSync, SessionConfig, StrokeDelete, User } from "./types"
@@ -307,5 +308,56 @@ describe("session", () => {
             wantPageRank,
             wantPageCollection
         )
+    })
+
+    it("updates a user info", async () => {
+        const session = createMockSession()
+        const update = {
+            alias: "newUser",
+            color: "#ffffff",
+        }
+        const want: User = {
+            id: mockUser.id,
+            alias: update.alias,
+            color: update.color,
+        }
+        requestMock.prototype.putUser.mockImplementation(async (update) => {
+            expect(update).toEqual(want)
+        })
+
+        await session.updateUser(update)
+        expect(session.user).toEqual(want)
+    })
+
+    it("updates only user alias", async () => {
+        const session = createMockSession()
+        const update = {
+            alias: "newUser",
+        }
+        const want: User = {
+            id: mockUser.id,
+            alias: update.alias,
+            color: mockUser.color,
+        }
+        requestMock.prototype.putUser.mockImplementation(async (update) => {
+            expect(update).toEqual(want)
+        })
+
+        await session.updateUser(update)
+        expect(session.user).toEqual(want)
+    })
+
+    it("updates a user info throws error", async () => {
+        const session = createMockSession()
+        const update = {
+            alias: "newUser",
+            color: "#ffffff",
+        }
+        requestMock.prototype.putUser.mockImplementation(async () => {
+            throw new Error("error")
+        })
+
+        await expect(session.updateUser(update)).rejects.toThrow()
+        expect(session.user).toEqual(mockUser)
     })
 })

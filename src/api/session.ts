@@ -1,5 +1,4 @@
 import { Stroke, StrokeUpdate, ToolType } from "drawing/stroke/index.types"
-import { assign } from "lodash"
 import { BoardPage } from "drawing/page"
 import { newAttachment } from "drawing/attachment/utils"
 import { board } from "state/board"
@@ -60,8 +59,14 @@ export class BoardSession implements Session {
         return Object.keys(this.users ?? {}).length
     }
 
-    updateUser(user: Partial<User>): void {
-        assign(this.user, user)
+    async updateUser(update: Partial<User>): Promise<void> {
+        const updatedUser: User = {
+            id: this.user.id,
+            alias: update.alias ?? this.user.alias,
+            color: update.color ?? this.user.color,
+        }
+        await this.request.putUser(updatedUser)
+        this.user = updatedUser
     }
 
     async create(): Promise<string> {
@@ -275,6 +280,10 @@ export class BoardSession implements Session {
         }
     }
 
+    userSync(users: Record<string, User>): void {
+        this.users = users
+    }
+
     userDisconnect({ id }: User): void {
         delete this.users?.[id as string]
     }
@@ -282,7 +291,7 @@ export class BoardSession implements Session {
     async kickUser({ id }: User): Promise<void> {
         if (!this.secret) return
         if (!id) return
-        await this.request.putUser(this.secret, id)
+        await this.request.putKickUser(this.secret, id)
     }
 
     async updateConfig(config: Partial<SessionConfig>): Promise<void> {
@@ -306,6 +315,10 @@ export class BoardSession implements Session {
 
             case MessageType.UserConnected:
                 this.userConnect(message.content as User)
+                break
+
+            case MessageType.UserSync:
+                this.userSync(message.content as Record<string, User>)
                 break
 
             case MessageType.UserDisconnected:

@@ -7,6 +7,7 @@ import {
     User,
     ResponseGetConfig,
     SessionConfig,
+    UpdateUserRequest,
 } from "./types"
 
 export const API_URL = process.env.REACT_APP_B_API_URL as string
@@ -104,7 +105,14 @@ export class Request {
         return user
     }
 
-    async putUser(secret: string, userId: string): Promise<void> {
+    async putUser(updatedUser: User): Promise<void> {
+        const payload: UpdateUserRequest = {
+            user: updatedUser,
+        }
+        return this.jsonSend("PUT", `${this.sessionId}/users`, true, payload)
+    }
+
+    async putKickUser(secret: string, userId: string): Promise<void> {
         const headers = {
             ...this.getHeaders(true),
             [HEADER_SESSION_SECRET]: secret,

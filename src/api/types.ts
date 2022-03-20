@@ -66,6 +66,7 @@ export enum MessageType {
     Stroke = "stroke",
     UserHost = "userhost",
     UserConnected = "userconn",
+    UserSync = "usersync",
     UserDisconnected = "userdisc",
     UserKick = "userkick",
     PageSync = "pagesync",
@@ -116,4 +117,8 @@ export type SessionConfig = {
     host: string
     maxUsers: number
     readOnly: boolean
+}
+
+export type UpdateUserRequest = {
+    user: User
 }
