@@ -2,24 +2,25 @@ import { FormattedMessage } from "language"
 import React, { useCallback, useEffect, useState } from "react"
 import { Button, DialogContent, DialogTitle } from "components"
 import PageSettings from "components/PageSettings"
-import { handleAddPageUnder } from "drawing/handlers"
-import { online } from "state/online"
-import { DialogState } from "state/online/state/index.types"
+import { handleAddPageUnder, handleDeleteAllPages } from "drawing/handlers"
 import { board } from "state/board"
 import { loadIndexedDB } from "storage/local"
+import { menu } from "state/menu"
+import { DialogState } from "state/menu/state/index.types"
 
 const createOfflineSession = () => {
+    handleDeleteAllPages() // Make sure state is clean
     handleAddPageUnder()
-    online.setSessionDialog(DialogState.Closed)
+    menu.setSessionDialog(DialogState.Closed)
 }
 
 const createOnlineSession = () => {
-    online.setSessionDialog(DialogState.CreateOnlineSession)
+    menu.setSessionDialog(DialogState.CreateOnlineSession)
 }
 
 const continuePreviousSession = async () => {
     await board.loadFromLocalStorage()
-    online.setSessionDialog(DialogState.Closed)
+    menu.setSessionDialog(DialogState.Closed)
 }
 
 interface InitialSelectionProps {

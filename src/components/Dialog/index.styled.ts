@@ -49,13 +49,8 @@ export const DialogBackground = styled.div<DialogProps>`
 `
 
 export const DialogContent = styled.div`
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
     overflow: auto;
-    gap: 1rem;
-    padding: 1.5rem;
-    text-align: justify;
+    padding: 1rem 1.5rem;
 `
 
 export const DialogTitle = styled.h1`

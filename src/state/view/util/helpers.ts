@@ -1,10 +1,8 @@
 import { pageSize } from "consts"
 import { Point } from "drawing/stroke/index.types"
 import { ViewTransform } from "state/view/state/index.types"
-import { online } from "state/online"
 import { menu } from "state/menu"
-import { MainMenuState } from "state/menu/state/index.types"
-import { DialogState } from "state/online/state/index.types"
+import { DialogState, MainMenuState } from "state/menu/state/index.types"
 import { board } from "state/board"
 import { PageSize } from "state/board/state/index.types"
 
@@ -55,4 +53,4 @@ export const onLastPage = (): boolean =>
 export const isMenuOpen = () =>
     menu.getState().mainMenuState !== MainMenuState.Closed ||
     menu.getState().shortcutsOpen ||
-    online.getState().dialogState !== DialogState.Closed
+    menu.getState().dialogState !== DialogState.Closed

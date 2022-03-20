@@ -25,6 +25,7 @@ export class SubscriptionState {
         PageContent: [],
         LayerConfig: [],
         Loading: [],
+        DialogState: [],
         MainMenu: [],
         MenuPageButton: [],
         Notification: [],
@@ -35,7 +36,6 @@ export class SubscriptionState {
         SettingsMenu: [],
         ShortcutsOpen: [],
         SubscribeOpen: [],
-        UserSelection: [],
         ViewTransform: [],
     }
 

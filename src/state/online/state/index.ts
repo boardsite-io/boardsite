@@ -6,20 +6,18 @@ import { getRandomColor } from "helpers"
 import {
     adjectives,
     animals,
-    colors,
     uniqueNamesGenerator,
 } from "unique-names-generator"
-import { DialogState, OnlineState } from "./index.types"
+import { OnlineState } from "./index.types"
 import { GlobalState, SerializedState } from "../../types"
 import { DrawingState } from "../../drawing/state/index.types"
 import { deserializeOnlineToken, serializeOnlineState } from "../serializers"
 
 export class Online implements GlobalState<OnlineState> {
     state: OnlineState = {
-        dialogState: DialogState.InitialSelectionFirstLoad,
         userSelection: {
             alias: uniqueNamesGenerator({
-                dictionaries: [adjectives, colors, animals],
+                dictionaries: [adjectives, animals],
                 separator: "",
                 style: "capital",
             }),
@@ -40,12 +38,6 @@ export class Online implements GlobalState<OnlineState> {
         this.state = newState
     }
 
-    setSessionDialog(dialogState: DialogState): void {
-        this.state.dialogState = dialogState
-        subscriptionState.render("Session")
-        this.saveToLocalStorage()
-    }
-
     newSession(session: Session): void {
         this.state.session = session
         this.state.session.setToken(this.state.token ?? "")
@@ -58,7 +50,6 @@ export class Online implements GlobalState<OnlineState> {
             ...this.state.userSelection,
             ...user,
         }
-        subscriptionState.render("UserSelection")
         this.saveToLocalStorage()
     }
 
