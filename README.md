@@ -7,20 +7,20 @@ friends on any device
 with a browser.
 </p>
 
-# Features
+## Features
 
 - [x] Create documents, annotate and draw with stylus/pen support
 - [x] Share your notes and collaborate with peers in real-time
-- [x] Import, annotate and export PDF files
+- [x] Import and export PDF files
 - [x] Save and load your notes to/from disk
 - [x] Custom page sizes and backgrounds
-- [x] Common Tools for annotating: Pen, Marker, Eraser, Selection
+- [x] Common Tools: Pen, Marker, Eraser, Selection
 - [x] Smooth pen tool, optimized particularly for writing
 - [x] Save your favorite tools in the quick menu
 - [x] High resolution canvas for devices with high device pixel ratios
 - [x] Many more upcoming in the future!
 
-# Sponsor the Project
+## Sponsor the Project
 
 If you enjoy this application, consider becoming a sponsor to help us maintain [boardsite.io](https://boardsite.io)
 and add more awesome features in the future!
@@ -32,12 +32,13 @@ As a small thanks, sponsors receive the following benefits on [boardsite.io](htt
 
 - [x] Up to 30 collaborators in one online session
 - [x] Extended session capabilities and settings
+- [x] Unlimited favorite tools
 - [x] Custom themes
 - [x] Many more...
 
 Thanks for your support! ❤️
 
-# Installation
+## Installation
 
 This section shows how you can easily set up boardsite on your machine.
 
