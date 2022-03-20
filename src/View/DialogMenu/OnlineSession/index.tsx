@@ -8,7 +8,6 @@ import {
     FormikLabel,
     FormikColorInput,
 } from "components"
-import { SESSION_ID_LENGTH } from "consts"
 import { Field, Form, Formik, FormikProps } from "formik"
 import { useNavigate } from "react-router-dom"
 import * as Yup from "yup"
@@ -147,23 +146,11 @@ const OnlineSession: React.FC = () => {
                                     id: "DialogMenu.FormInput.SessionId.Required",
                                 })
                             )
-                            .min(
-                                SESSION_ID_LENGTH,
-                                f(
-                                    {
-                                        id: "DialogMenu.FormInput.SessionId.Min",
-                                    },
-                                    { idLength: SESSION_ID_LENGTH }
-                                )
-                            )
-                            .max(
-                                SESSION_ID_LENGTH,
-                                f(
-                                    {
-                                        id: "DialogMenu.FormInput.SessionId.Max",
-                                    },
-                                    { idLength: SESSION_ID_LENGTH }
-                                )
+                            .matches(
+                                /^[a-zA-Z0-9]{8,20}$/,
+                                f({
+                                    id: "DialogMenu.FormInput.SessionId.Characters",
+                                })
                             ),
                     })}
                 >
