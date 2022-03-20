@@ -35,7 +35,7 @@ As a small thanks, sponsors receive the following benefits on [boardsite.io](htt
 - [x] Custom themes
 - [x] Many more...
 
-Thank you for your support! ❤️
+Thanks for your support! ❤️
 
 # Installation
 
