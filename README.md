@@ -58,7 +58,7 @@ This will host boardsite on http://localhost:3000
 
 ### Self hosting
 
-We provide a docker image that lets you run boardsite with all its dependencies and features on your own servers.
+We provide a docker image that lets you self-host boardsite with all its dependencies and features.
 
 *coming soon*
 
