@@ -64,7 +64,7 @@ We provide a docker image that lets you self-host boardsite with all its depende
 
 ## Contribute
 
-Contributions are always welcome. For small changes feel free to send us a PR. For bigger changes please create an issue
+Contributions are always welcome. For small changes feel free to submit a PR. For larger changes please create an issue
 first to discuss your proposal.
 
 Issues can also be used for
