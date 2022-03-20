@@ -22,7 +22,7 @@ with a browser.
 
 # Sponsor the Project
 
-If you enjoy this application consider supporting us in order to let us maintain [boardsite.io](https://boardsite.io)
+If you enjoy this application, consider becoming a sponsor to help us maintain [boardsite.io](https://boardsite.io)
 and add more awesome features in the future!
 
 We cherish user privacy and therefore refrain from using advertisements or tracking cookies
