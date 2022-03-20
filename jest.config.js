@@ -7,4 +7,8 @@ module.exports = {
         "^.+\\.(js|jsx)$": "babel-jest",
     },
     transformIgnorePatterns: ["node_modules/(?!(canvas)/)"],
+    moduleNameMapper: {
+        "\\.svg$": "<rootDir>/src/util/testing/svgrMock.ts",
+    },
+    setupFilesAfterEnv: ["./jest.setup.js"],
 }
