@@ -12,7 +12,7 @@ with a browser.
 - [x] Create documents, annotate and draw with stylus/pen support
 - [x] Share your notes and collaborate with peers via sessions
 - [x] Import, annotate and export PDF files
-- [x] Save and reload your notes to/from disk
+- [x] Save and load your notes to/from disk
 - [x] Custom page sizes and backgrounds
 - [x] Common Tools for annotating: Pen, Marker, Eraser, Selection
 - [x] Smooth pen tool, optimized particularly for writing
