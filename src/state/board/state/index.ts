@@ -483,10 +483,18 @@ export class Board implements GlobalState<BoardState> {
         return pageCollection[pageId]?.meta?.size ?? pageSize.a4landscape
     }
 
+    /**
+     * Find out if currently on first page
+     * @returns true if on first page
+     */
     onFirstPage(): boolean {
         return this.getState().currentPageIndex === 0
     }
 
+    /**
+     * Find out if currently on last page
+     * @returns true if on last page
+     */
     onLastPage(): boolean {
         return (
             this.getState().currentPageIndex ===

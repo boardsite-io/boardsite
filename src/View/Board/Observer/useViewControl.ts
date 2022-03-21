@@ -35,7 +35,7 @@ export const useViewControl = () => {
     const panningUpdate = useCallback((point: Point, isTouch = false) => {
         if (!isMouseDown && !isTouch) return
 
-        const { xOffset, yOffset, scale } = view.getViewTransform()
+        const { xOffset, yOffset, scale } = view.getState().viewTransform
 
         const newTransform = {
             scale,
@@ -102,7 +102,7 @@ export const useViewControl = () => {
                 }
 
                 const newTransform = multiTouchMove({
-                    viewTransform: view.getViewTransform(),
+                    viewTransform: view.getState().viewTransform,
                     p1,
                     p2,
                 })
@@ -157,11 +157,11 @@ export const useViewControl = () => {
     const onWheel: React.WheelEventHandler<HTMLDivElement> = useCallback(
         (e) => {
             const { clientX, clientY, deltaX, deltaY, ctrlKey } = e
-            const transform = view.getViewTransform()
+            const { viewTransform } = view.getState()
 
             if (isPanMode || ctrlKey) {
                 const newTransform = zoomTo({
-                    viewTransform: transform,
+                    viewTransform,
                     zoomPoint: { x: clientX, y: clientY },
                     zoomScale:
                         deltaY < 0 ? ZOOM_IN_WHEEL_SCALE : ZOOM_OUT_WHEEL_SCALE,
@@ -170,9 +170,11 @@ export const useViewControl = () => {
                 view.updateViewTransform(newTransform)
             } else {
                 const newTransform: ViewTransform = {
-                    ...transform,
-                    xOffset: transform.xOffset - deltaX / transform.scale,
-                    yOffset: transform.yOffset - deltaY / transform.scale,
+                    ...viewTransform,
+                    xOffset:
+                        viewTransform.xOffset - deltaX / viewTransform.scale,
+                    yOffset:
+                        viewTransform.yOffset - deltaY / viewTransform.scale,
                 }
 
                 view.updateViewTransform(newTransform)

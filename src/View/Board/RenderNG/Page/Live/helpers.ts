@@ -54,7 +54,7 @@ export const getMousePosition = (
 }
 
 const applyTransformTo = (point: Point, pageOffset: PageOffset): Point => {
-    const { scale, xOffset, yOffset } = view.getViewTransform()
+    const { scale, xOffset, yOffset } = view.getState().viewTransform
 
     return {
         x: point.x / scale - xOffset - pageOffset.left,
