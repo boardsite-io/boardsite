@@ -2,6 +2,7 @@ import { BoardStroke } from "drawing/stroke"
 import { Stroke, StrokeUpdate } from "drawing/stroke/index.types"
 import { subscriptionState } from "state/subscription"
 import { assign, cloneDeep, keys, pick } from "lodash"
+import { pageSize } from "consts"
 import { loadIndexedDB, saveIndexedDB } from "storage/local"
 import { GlobalState, SerializedState } from "../../types"
 import { deserializeBoardState, serializeBoardState } from "../serializers"
@@ -21,6 +22,7 @@ import {
     PageRank,
     SetPageMetaAction,
     PageId,
+    PageSize,
 } from "./index.types"
 import { addAction, redoAction, undoAction } from "../undoRedo"
 
@@ -468,6 +470,28 @@ export class Board implements GlobalState<BoardState> {
 
         subscriptionState.render("RenderNG", "EditMenu", "MenuPageButton")
         this.saveToLocalStorage()
+    }
+
+    /**
+     * Util function to get the page size of a specified page
+     * @param indexOffset offset relative to current page index
+     * @returns pageSize of target page
+     */
+    getPageSize(indexOffset = 0): PageSize {
+        const { pageRank, currentPageIndex, pageCollection } = this.getState()
+        const pageId = pageRank[currentPageIndex + indexOffset]
+        return pageCollection[pageId]?.meta?.size ?? pageSize.a4landscape
+    }
+
+    onFirstPage(): boolean {
+        return this.getState().currentPageIndex === 0
+    }
+
+    onLastPage(): boolean {
+        return (
+            this.getState().currentPageIndex ===
+            this.getState().pageRank.length - 1
+        )
     }
 
     getSerializedState(): SerializedState<BoardState> {

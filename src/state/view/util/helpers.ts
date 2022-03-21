@@ -1,10 +1,8 @@
-import { pageSize } from "consts"
 import { Point } from "drawing/stroke/index.types"
 import { ViewTransform } from "state/view/state/index.types"
 import { menu } from "state/menu"
 import { DialogState, MainMenuState } from "state/menu/state/index.types"
 import { board } from "state/board"
-import { PageSize } from "state/board/state/index.types"
 
 export const getCenterOfScreen = () => ({
     x: getCenterX(),
@@ -33,22 +31,9 @@ export const applyTransformToPoint = (
 })
 
 export const isFullScreen = (viewTransform: ViewTransform) => {
-    const effectivePageWidth = getPageSize().width * viewTransform.scale
+    const effectivePageWidth = board.getPageSize().width * viewTransform.scale
     return effectivePageWidth > window.innerWidth
 }
-
-export const getPageSize = (indexOffset = 0): PageSize => {
-    const { pageRank, currentPageIndex, pageCollection } = board.getState()
-    const pageId = pageRank[currentPageIndex + indexOffset]
-
-    return pageCollection[pageId]?.meta?.size ?? pageSize.a4landscape
-}
-
-export const onFirstPage = (): boolean =>
-    board.getState().currentPageIndex === 0
-
-export const onLastPage = (): boolean =>
-    board.getState().currentPageIndex === board.getState().pageRank.length - 1
 
 export const isMenuOpen = () =>
     menu.getState().mainMenuState !== MainMenuState.Closed ||

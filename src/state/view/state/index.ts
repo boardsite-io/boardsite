@@ -19,7 +19,6 @@ import {
     getCenterOfScreen,
     getCenterX,
     getCenterY,
-    getPageSize,
     toNextPage,
     toPreviousPage,
     zoomTo,
@@ -114,7 +113,7 @@ export class View implements GlobalState<ViewState> {
     }
 
     fitToPage(): void {
-        this.rescaleAtCenter(window.innerWidth / getPageSize().width)
+        this.rescaleAtCenter(window.innerWidth / board.getPageSize().width)
     }
 
     getViewTransform(): ViewTransform {
