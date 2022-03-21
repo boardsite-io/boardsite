@@ -1,7 +1,5 @@
 import { Point } from "drawing/stroke/index.types"
 import { ViewTransform } from "state/view/state/index.types"
-import { menu } from "state/menu"
-import { DialogState, MainMenuState } from "state/menu/state/index.types"
 import { board } from "state/board"
 
 export const getCenterOfScreen = () => ({
@@ -34,8 +32,3 @@ export const isFullScreen = (viewTransform: ViewTransform) => {
     const effectivePageWidth = board.getPageSize().width * viewTransform.scale
     return effectivePageWidth > window.innerWidth
 }
-
-export const isMenuOpen = () =>
-    menu.getState().mainMenuState !== MainMenuState.Closed ||
-    menu.getState().shortcutsOpen ||
-    menu.getState().dialogState !== DialogState.Closed

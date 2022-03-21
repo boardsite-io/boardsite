@@ -9,10 +9,10 @@ import {
 } from "drawing/handlers"
 import { ToolType } from "drawing/stroke/index.types"
 import { useEffect } from "react"
-import { isMenuOpen } from "state/view/util"
 import { drawing } from "state/drawing"
 import { board } from "state/board"
 import { handleExportWorkspace, handleImportWorkspace } from "storage/workspace"
+import { menu } from "state/menu"
 
 export const useKeyboardShortcuts = (): void => {
     useEffect(() => {
@@ -26,7 +26,7 @@ export const useKeyboardShortcuts = (): void => {
 const keyListener = (e: KeyboardEvent): void => {
     // Avoid triggering shortcuts while in menus
     // Avoid repeat spam
-    if (isMenuOpen() || e.repeat) {
+    if (menu.isAnyMenuOpen() || e.repeat) {
         return
     }
 

@@ -2,14 +2,10 @@ import { useCallback, useEffect } from "react"
 import { ZOOM_IN_WHEEL_SCALE, ZOOM_OUT_WHEEL_SCALE } from "consts"
 import { Point, ToolType } from "drawing/stroke/index.types"
 import { view } from "state/view"
-import {
-    isMenuOpen,
-    multiTouchEnd,
-    multiTouchMove,
-    zoomTo,
-} from "state/view/util"
+import { multiTouchEnd, multiTouchMove, zoomTo } from "state/view/util"
 import { ViewTransform } from "state/view/state/index.types"
 import { useGState } from "state"
+import { menu } from "state/menu"
 
 let previousPoint = { x: 0, y: 0 }
 let isMouseDown = false
@@ -86,7 +82,7 @@ export const useViewControl = () => {
 
     const onTouchMove: React.TouchEventHandler<HTMLDivElement> = useCallback(
         (e) => {
-            if (isMenuOpen()) return
+            if (menu.isAnyMenuOpen()) return
 
             const touch1 = e.touches[0]
             const touch2 = e.touches[1]
@@ -124,7 +120,7 @@ export const useViewControl = () => {
     const onTouchStart: React.TouchEventHandler<HTMLDivElement> = useCallback(
         (e) => {
             const touch1 = e.touches[0]
-            if (!touch1 || isMenuOpen()) return
+            if (!touch1 || menu.isAnyMenuOpen()) return
 
             previousPoint = {
                 x: touch1.clientX,
@@ -136,7 +132,7 @@ export const useViewControl = () => {
 
     const onTouchEnd: React.TouchEventHandler<HTMLDivElement> = useCallback(
         (e) => {
-            if (isMenuOpen()) return
+            if (menu.isAnyMenuOpen()) return
             onTouchMove(e)
             multiTouchEnd()
 
