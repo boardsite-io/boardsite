@@ -89,7 +89,7 @@ export interface PageMeta {
     background: PageBackground
 }
 export interface PageBackground {
-    style: PageBackgroundStyle
+    style: Paper
     attachId?: string
     documentPageNum?: number
 }
@@ -99,7 +99,7 @@ export type SetPageMetaAction = BoardAction<
     Pick<Page, "pageId" | "meta">[]
 >
 
-export type PageBackgroundStyle = "blank" | "checkered" | "ruled" | "doc"
+export type Paper = "blank" | "checkered" | "ruled" | "doc"
 
 export type AddPageData = {
     page: Page

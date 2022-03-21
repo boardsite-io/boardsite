@@ -1,6 +1,6 @@
 import { StrokeCollection, Tool, ToolType } from "drawing/stroke/index.types"
 import { loadLocalStorage, saveLocalStorage } from "storage/local"
-import { PageBackgroundStyle, PageSize } from "state/board/state/index.types"
+import { Paper, PageSize } from "state/board/state/index.types"
 import { subscriptionState } from "state/subscription"
 import { GlobalState, SerializedState } from "../../types"
 import { getDefaultDrawingState } from "./default"
@@ -47,7 +47,7 @@ export class Drawing implements GlobalState<DrawingState> {
         this.state.erasedStrokes = {}
     }
 
-    setPageBackground(style: PageBackgroundStyle) {
+    setPageBackground(style: Paper) {
         this.state.pageMeta.background.style = style
         subscriptionState.render("PageStyleMenu", "PageBackgroundSetting")
         this.saveToLocalStorage()

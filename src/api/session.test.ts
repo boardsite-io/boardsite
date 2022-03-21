@@ -1,4 +1,4 @@
-import { backgroundStyle } from "consts"
+import { PAPER } from "consts"
 import { BoardStroke } from "drawing/stroke"
 import { LiveStroke } from "drawing/livestroke/index.types"
 import { Stroke, ToolType } from "drawing/stroke/index.types"
@@ -50,7 +50,7 @@ const mockPageMeta: PageMeta = {
         height: 800,
     },
     background: {
-        style: backgroundStyle.BLANK,
+        style: PAPER.BLANK,
     },
 }
 

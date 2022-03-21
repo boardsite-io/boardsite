@@ -2,7 +2,7 @@ import { BoardStroke } from "drawing/stroke"
 import { Stroke, StrokeUpdate } from "drawing/stroke/index.types"
 import { subscriptionState } from "state/subscription"
 import { assign, cloneDeep, keys, pick } from "lodash"
-import { pageSize } from "consts"
+import { PAGE_SIZE } from "consts"
 import { loadIndexedDB, saveIndexedDB } from "storage/local"
 import { GlobalState, SerializedState } from "../../types"
 import { deserializeBoardState, serializeBoardState } from "../serializers"
@@ -480,7 +480,7 @@ export class Board implements GlobalState<BoardState> {
     getPageSize(indexOffset = 0): PageSize {
         const { pageRank, currentPageIndex, pageCollection } = this.getState()
         const pageId = pageRank[currentPageIndex + indexOffset]
-        return pageCollection[pageId]?.meta?.size ?? pageSize.a4landscape
+        return pageCollection[pageId]?.meta?.size ?? PAGE_SIZE.A4_LANDSCAPE
     }
 
     /**

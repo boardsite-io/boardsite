@@ -1,6 +1,6 @@
 import { FormattedMessage } from "language"
 import React, { useCallback } from "react"
-import { pageSize } from "consts"
+import { PAGE_SIZE } from "consts"
 import { Position, ToolTip } from "components"
 import { drawing } from "state/drawing"
 import { PageSize } from "state/board/state/index.types"
@@ -30,9 +30,9 @@ const Size: React.FC = () => {
                     <A4Portrait
                         type="button"
                         id="a4-portrait"
-                        $active={isMatch(pageSize.a4portrait)}
+                        $active={isMatch(PAGE_SIZE.A4_PORTRAIT)}
                         onClick={() => {
-                            drawing.setPageSize(pageSize.a4portrait)
+                            drawing.setPageSize(PAGE_SIZE.A4_PORTRAIT)
                         }}
                     />
                 </SizePresetLabel>
@@ -45,9 +45,9 @@ const Size: React.FC = () => {
                     <A4Landscape
                         type="button"
                         id="a4-landscape"
-                        $active={isMatch(pageSize.a4landscape)}
+                        $active={isMatch(PAGE_SIZE.A4_LANDSCAPE)}
                         onClick={() => {
-                            drawing.setPageSize(pageSize.a4landscape)
+                            drawing.setPageSize(PAGE_SIZE.A4_LANDSCAPE)
                         }}
                     />
                 </SizePresetLabel>

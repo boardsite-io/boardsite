@@ -1,10 +1,10 @@
 import {
-    backgroundStyle,
+    PAPER,
     DEFAULT_COLOR,
     DEFAULT_FAV_TOOLS,
     DEFAULT_TOOL,
     DEFAULT_WIDTH,
-    pageSize,
+    PAGE_SIZE,
 } from "consts"
 import { DrawingState } from "./index.types"
 
@@ -19,8 +19,8 @@ export const getDefaultDrawingState = (): DrawingState => ({
         },
     },
     pageMeta: {
-        background: { style: backgroundStyle.BLANK },
-        size: pageSize.a4portrait,
+        background: { style: PAPER.BLANK },
+        size: PAGE_SIZE.A4_PORTRAIT,
     },
     favoriteTools: DEFAULT_FAV_TOOLS,
     erasedStrokes: {},
