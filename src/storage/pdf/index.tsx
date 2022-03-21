@@ -33,29 +33,39 @@ export const handleImportPdf = async () => {
 }
 
 export const handleExportPdf = async (): Promise<void> => {
-    try {
-        loading.startLoading({ messageId: "Loading.ExportingPdf" })
-        const pdfBytes = await renderAsPdf()
-        loading.endLoading()
-        // Save to file system
-        await fileSave(
-            new Blob([pdfBytes], {
-                type: MIME_TYPE_PDF,
-            }),
-            {
-                fileName: FILE_NAME_PDF,
-                description: FILE_DESCRIPTION_PDF,
-                extensions: [FILE_EXTENSION_PDF],
-            }
-        )
-        menu.closeMainMenu()
-    } catch (error) {
-        if ((error as Error)?.message === ENCRYPTED_PDF_ERROR) {
-            notification.create("Notification.PdfExportFailedEncrypted", 4000)
-        } else {
-            notification.create("Notification.PdfExportFailed")
-        }
+    loading.startLoading("Loading.ExportingPdf")
 
-        loading.endLoading()
-    }
+    /* 
+        For some reason the loading dialog doesnt show if the pdf render 
+        isnt delayed a little. Probably the state updates are combined and 
+        then the pdf render blocks any updates until its finished.
+    */
+    setTimeout(async () => {
+        try {
+            const pdfBytes = await renderAsPdf()
+            loading.endLoading()
+            // Save to file system
+            await fileSave(
+                new Blob([pdfBytes], {
+                    type: MIME_TYPE_PDF,
+                }),
+                {
+                    fileName: FILE_NAME_PDF,
+                    description: FILE_DESCRIPTION_PDF,
+                    extensions: [FILE_EXTENSION_PDF],
+                }
+            )
+            menu.closeMainMenu()
+        } catch (error) {
+            if ((error as Error)?.message === ENCRYPTED_PDF_ERROR) {
+                notification.create(
+                    "Notification.PdfExportFailedEncrypted",
+                    4000
+                )
+            } else {
+                notification.create("Notification.PdfExportFailed")
+            }
+            loading.endLoading() // Stop loading animation on error
+        }
+    }, 10)
 }

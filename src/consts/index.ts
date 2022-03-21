@@ -1,13 +1,6 @@
 import { Tool, ToolType } from "drawing/stroke/index.types"
-import { PageBackgroundStyle } from "state/board/state/index.types"
+import { Paper } from "state/board/state/index.types"
 import { ViewTransform } from "state/view/state/index.types"
-
-/**
- * Returns true if in development mode
- */
-export default function isDev(): boolean {
-    return !process.env.NODE_ENV || process.env.NODE_ENV === "development"
-}
 
 /* 
 These constants define the distance of each respective scroll limit to the upper viewport 
@@ -60,26 +53,19 @@ export const DEFAULT_TOOL = ToolType.Pen
 // allow drawing with finger
 export const DEFAULT_DIRECTDRAW = true
 
-export const pageSize = {
-    a4portrait: { width: 620, height: 877 },
-    a4landscape: { width: 877, height: 620 },
+export const PAGE_SIZE = {
+    A4_PORTRAIT: { width: 620, height: 877 },
+    A4_LANDSCAPE: { width: 877, height: 620 },
 }
 
-type BackgroundStyle = Record<string, PageBackgroundStyle>
-
-export const backgroundStyle: BackgroundStyle = {
+export const PAPER: Record<string, Paper> = {
     BLANK: "blank",
     CHECKERED: "checkered",
     RULED: "ruled",
     DOC: "doc",
 }
 
-export enum Variant {
-    Primary,
-    Secondary,
-}
-
-const tool1: Tool = {
+const FAVORITE_TOOL_1: Tool = {
     type: ToolType.Pen,
     style: {
         color: "#000000",
@@ -87,7 +73,7 @@ const tool1: Tool = {
         opacity: 1,
     },
 }
-const tool2: Tool = {
+const FAVORITE_TOOL_2: Tool = {
     type: ToolType.Pen,
     style: {
         color: "#ff0000",
@@ -95,7 +81,7 @@ const tool2: Tool = {
         opacity: 1,
     },
 }
-const tool3: Tool = {
+const FAVORITE_TOOL_3: Tool = {
     type: ToolType.Rectangle,
     style: {
         color: "#0000ff",
@@ -104,4 +90,8 @@ const tool3: Tool = {
     },
 }
 
-export const DEFAULT_FAV_TOOLS = [tool1, tool2, tool3]
+export const DEFAULT_FAV_TOOLS = [
+    FAVORITE_TOOL_1,
+    FAVORITE_TOOL_2,
+    FAVORITE_TOOL_3,
+]

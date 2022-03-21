@@ -7,13 +7,8 @@ import {
 } from "consts"
 import { ViewTransform } from "state/view/state/index.types"
 import { settings } from "state/settings"
-import {
-    getPageSize,
-    getCenterX,
-    onFirstPage,
-    onLastPage,
-    isFullScreen,
-} from "./helpers"
+import { board } from "state/board"
+import { getCenterX, isFullScreen } from "./helpers"
 
 export const applyBounds = (viewTransform: ViewTransform): ViewTransform => ({
     ...viewTransform,
@@ -21,7 +16,9 @@ export const applyBounds = (viewTransform: ViewTransform): ViewTransform => ({
     yOffset: applyBoundsY(viewTransform),
 })
 
-export const applyBoundsX = (viewTransform: ViewTransform): number => {
+export const applyBoundsX = (
+    viewTransform: ViewTransform
+): ViewTransform["xOffset"] => {
     const { keepCentered } = settings.getState()
 
     // Zoomed out with keepCentered setting on sticks to center
@@ -40,15 +37,17 @@ export const applyBoundsX = (viewTransform: ViewTransform): number => {
     return viewTransform.xOffset
 }
 
-export const applyBoundsY = (viewTransform: ViewTransform): number => {
-    if (onFirstPage()) {
+export const applyBoundsY = (
+    viewTransform: ViewTransform
+): ViewTransform["yOffset"] => {
+    if (board.onFirstPage()) {
         const upperBound = getUpperBound(viewTransform)
 
         if (viewTransform.yOffset > upperBound) {
             return upperBound
         }
 
-        if (onLastPage()) {
+        if (board.onLastPage()) {
             const lowerBound = getLowerBound(viewTransform)
 
             // If the upper and lower bounds cross
@@ -63,7 +62,7 @@ export const applyBoundsY = (viewTransform: ViewTransform): number => {
         }
     }
 
-    if (onLastPage()) {
+    if (board.onLastPage()) {
         const lowerBound = getLowerBound(viewTransform)
 
         if (viewTransform.yOffset < lowerBound) {
@@ -79,7 +78,7 @@ const getUpperBound = (viewTransform: ViewTransform): number =>
 
 const getLowerBound = (viewTransform: ViewTransform): number =>
     (window.innerHeight * SCROLL_LIMIT_LAST_PAGE) / viewTransform.scale -
-    getPageSize().height
+    board.getPageSize().height
 
 const getLeftRightBounds = (
     viewTransform: ViewTransform,
@@ -88,7 +87,7 @@ const getLeftRightBounds = (
     const limit = useStrictBounds ? 1 : SCROLL_LIMIT_HORIZONTAL
     const offset =
         (window.innerWidth * limit) / viewTransform.scale -
-        getPageSize().width / 2
+        board.getPageSize().width / 2
 
     return {
         leftBound: offset,

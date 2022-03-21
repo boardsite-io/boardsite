@@ -1,5 +1,5 @@
 import { PDFDocument, PDFImage, PDFPage } from "pdf-lib"
-import { backgroundStyle, MAX_PIXEL_SCALE } from "consts"
+import { PAPER, MAX_PIXEL_SCALE } from "consts"
 import { handleDeleteAllPages } from "drawing/handlers"
 import { readFileAsUint8Array } from "storage/util"
 import { BoardPage } from "drawing/page"
@@ -30,7 +30,7 @@ const addRenderedPdf = async (attachment: Attachment): Promise<void> => {
         const pages = attachment.renderedData.map((img, i) => {
             return new BoardPage().updateMeta({
                 background: {
-                    style: backgroundStyle.DOC,
+                    style: PAPER.DOC,
                     attachId: attachment.id,
                     documentPageNum: i,
                 },
@@ -50,7 +50,7 @@ const addRenderedPdf = async (attachment: Attachment): Promise<void> => {
             return {
                 page: new BoardPage().updateMeta({
                     background: {
-                        style: backgroundStyle.DOC,
+                        style: PAPER.DOC,
                         attachId: attachment.id,
                         documentPageNum: i,
                     },
@@ -97,7 +97,7 @@ export const renderAsPdf = async (): Promise<Uint8Array> => {
         let basePage: PDFPage | undefined
         const { style, attachId, documentPageNum } = meta.background
         if (
-            style === backgroundStyle.DOC &&
+            style === PAPER.DOC &&
             documentPageNum !== undefined &&
             attachId !== undefined
         ) {

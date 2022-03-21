@@ -1,6 +1,6 @@
 import React from "react"
 import { HorizontalRule, TickIcon } from "components"
-import { backgroundStyle } from "consts"
+import { PAPER } from "consts"
 import { FormattedMessage } from "language"
 import { drawing } from "state/drawing"
 import { handleChangePageBackground } from "drawing/handlers"
@@ -9,13 +9,13 @@ import MenuItem from "View/MainMenu/MenuItem"
 import { useGState } from "state"
 
 const onClickBlank = () => {
-    drawing.setPageBackground(backgroundStyle.BLANK)
+    drawing.setPageBackground(PAPER.BLANK)
 }
 const onClickCheckered = () => {
-    drawing.setPageBackground(backgroundStyle.CHECKERED)
+    drawing.setPageBackground(PAPER.CHECKERED)
 }
 const onClickRuled = () => {
-    drawing.setPageBackground(backgroundStyle.RULED)
+    drawing.setPageBackground(PAPER.RULED)
 }
 const onClickApply = () => {
     handleChangePageBackground()
@@ -27,17 +27,17 @@ const PageStyle = () => {
         <SubMenuWrap>
             <MenuItem
                 text={<FormattedMessage id="Menu.Page.Style.Blank" />}
-                icon={style === backgroundStyle.BLANK && <TickIcon />}
+                icon={style === PAPER.BLANK && <TickIcon />}
                 onClick={onClickBlank}
             />
             <MenuItem
                 text={<FormattedMessage id="Menu.Page.Style.Checkered" />}
-                icon={style === backgroundStyle.CHECKERED && <TickIcon />}
+                icon={style === PAPER.CHECKERED && <TickIcon />}
                 onClick={onClickCheckered}
             />
             <MenuItem
                 text={<FormattedMessage id="Menu.Page.Style.Ruled" />}
-                icon={style === backgroundStyle.RULED && <TickIcon />}
+                icon={style === PAPER.RULED && <TickIcon />}
                 onClick={onClickRuled}
             />
             <HorizontalRule />

@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid"
-import { backgroundStyle, pageSize } from "consts"
+import { PAPER, PAGE_SIZE } from "consts"
 import { BoardStroke } from "drawing/stroke"
 import { Page, PageMeta } from "state/board/state/index.types"
 import {
@@ -18,9 +18,9 @@ export class BoardPage implements Page {
             this.pageId = nanoid(8)
             this.strokes = {}
             this.meta = {
-                size: pageSize.a4portrait,
+                size: PAGE_SIZE.A4_PORTRAIT,
                 background: {
-                    style: backgroundStyle.BLANK, // fallback type
+                    style: PAPER.BLANK, // fallback type
                 },
             }
         }

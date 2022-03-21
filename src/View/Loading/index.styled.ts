@@ -1,17 +1,15 @@
-import { Dialog, DialogContent } from "components"
+import { Dialog } from "components"
 import styled from "styled-components"
 
 export const StyledDialog = styled(Dialog)`
     width: min(20rem, 90vw);
 `
 
-export const StyledDialogContent = styled(DialogContent)`
-    align-items: center;
-`
-
 export const LoadingDots = styled.div`
+    margin-top: 2rem;
     display: flex;
     gap: 1rem;
+    justify-content: center;
 `
 export const Dot = styled.div<{ delay: string }>`
     color: ${({ theme }) => theme.palette.secondary.main};

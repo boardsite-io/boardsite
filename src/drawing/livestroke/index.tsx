@@ -114,7 +114,7 @@ export class BoardLiveStroke implements LiveStroke {
     }
 
     processPoints(): void {
-        const { scale } = view.getViewTransform()
+        const { scale } = view.getState().viewTransform
 
         switch (this.type) {
             case ToolType.Pen: {

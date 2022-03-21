@@ -2,14 +2,10 @@ import { useCallback, useEffect } from "react"
 import { ZOOM_IN_WHEEL_SCALE, ZOOM_OUT_WHEEL_SCALE } from "consts"
 import { Point, ToolType } from "drawing/stroke/index.types"
 import { view } from "state/view"
-import {
-    isMenuOpen,
-    multiTouchEnd,
-    multiTouchMove,
-    zoomTo,
-} from "state/view/util"
+import { multiTouchEnd, multiTouchMove, zoomTo } from "state/view/util"
 import { ViewTransform } from "state/view/state/index.types"
 import { useGState } from "state"
+import { menu } from "state/menu"
 
 let previousPoint = { x: 0, y: 0 }
 let isMouseDown = false
@@ -35,7 +31,7 @@ export const useViewControl = () => {
     const panningUpdate = useCallback((point: Point, isTouch = false) => {
         if (!isMouseDown && !isTouch) return
 
-        const { xOffset, yOffset, scale } = view.getViewTransform()
+        const { xOffset, yOffset, scale } = view.getState().viewTransform
 
         const newTransform = {
             scale,
@@ -86,7 +82,7 @@ export const useViewControl = () => {
 
     const onTouchMove: React.TouchEventHandler<HTMLDivElement> = useCallback(
         (e) => {
-            if (isMenuOpen()) return
+            if (menu.isAnyMenuOpen()) return
 
             const touch1 = e.touches[0]
             const touch2 = e.touches[1]
@@ -102,7 +98,7 @@ export const useViewControl = () => {
                 }
 
                 const newTransform = multiTouchMove({
-                    viewTransform: view.getViewTransform(),
+                    viewTransform: view.getState().viewTransform,
                     p1,
                     p2,
                 })
@@ -124,7 +120,7 @@ export const useViewControl = () => {
     const onTouchStart: React.TouchEventHandler<HTMLDivElement> = useCallback(
         (e) => {
             const touch1 = e.touches[0]
-            if (!touch1 || isMenuOpen()) return
+            if (!touch1 || menu.isAnyMenuOpen()) return
 
             previousPoint = {
                 x: touch1.clientX,
@@ -136,7 +132,7 @@ export const useViewControl = () => {
 
     const onTouchEnd: React.TouchEventHandler<HTMLDivElement> = useCallback(
         (e) => {
-            if (isMenuOpen()) return
+            if (menu.isAnyMenuOpen()) return
             onTouchMove(e)
             multiTouchEnd()
 
@@ -157,11 +153,11 @@ export const useViewControl = () => {
     const onWheel: React.WheelEventHandler<HTMLDivElement> = useCallback(
         (e) => {
             const { clientX, clientY, deltaX, deltaY, ctrlKey } = e
-            const transform = view.getViewTransform()
+            const { viewTransform } = view.getState()
 
             if (isPanMode || ctrlKey) {
                 const newTransform = zoomTo({
-                    viewTransform: transform,
+                    viewTransform,
                     zoomPoint: { x: clientX, y: clientY },
                     zoomScale:
                         deltaY < 0 ? ZOOM_IN_WHEEL_SCALE : ZOOM_OUT_WHEEL_SCALE,
@@ -170,9 +166,11 @@ export const useViewControl = () => {
                 view.updateViewTransform(newTransform)
             } else {
                 const newTransform: ViewTransform = {
-                    ...transform,
-                    xOffset: transform.xOffset - deltaX / transform.scale,
-                    yOffset: transform.yOffset - deltaY / transform.scale,
+                    ...viewTransform,
+                    xOffset:
+                        viewTransform.xOffset - deltaX / viewTransform.scale,
+                    yOffset:
+                        viewTransform.yOffset - deltaY / viewTransform.scale,
                 }
 
                 view.updateViewTransform(newTransform)

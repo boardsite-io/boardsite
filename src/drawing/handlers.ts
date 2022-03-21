@@ -1,6 +1,6 @@
 import { cloneDeep } from "lodash"
 import { Stroke, Tool } from "drawing/stroke/index.types"
-import { backgroundStyle } from "consts"
+import { PAPER } from "consts"
 import { drawing } from "state/drawing"
 import { board } from "state/board"
 import { view } from "state/view"
@@ -181,7 +181,7 @@ export function handleChangePageBackground(): void {
         return
     }
     // cannot update background of doc type
-    if (currentPage.meta.background.style === backgroundStyle.DOC) {
+    if (currentPage.meta.background.style === PAPER.DOC) {
         return
     }
 

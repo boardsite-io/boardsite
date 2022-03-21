@@ -19,7 +19,6 @@ import {
     getCenterOfScreen,
     getCenterX,
     getCenterY,
-    getPageSize,
     toNextPage,
     toPreviousPage,
     zoomTo,
@@ -42,6 +41,53 @@ export class View implements GlobalState<ViewState> {
         this.state = newState
     }
 
+    getLayerConfig(): LayerConfig {
+        return this.state.layerConfig
+    }
+
+    /**
+     * Zoom to the center of the screen
+     * @param isZoomingIn set to true to zoom in
+     */
+    zoomCenter(isZoomingIn: boolean): void {
+        const newTransform = zoomTo({
+            viewTransform: this.getState().viewTransform,
+            zoomPoint: getCenterOfScreen(),
+            zoomScale: isZoomingIn ? ZOOM_IN_WHEEL_SCALE : ZOOM_OUT_WHEEL_SCALE,
+        })
+
+        this.updateViewTransform(newTransform)
+    }
+
+    /**
+     * Reset the view transform to the default values
+     */
+    resetView(): void {
+        this.updateViewTransform({
+            scale: DEFAULT_VIEW_SCALE,
+            xOffset: getCenterX(),
+            yOffset: DEFAULT_VIEW_OFFSET_Y,
+        })
+    }
+
+    /**
+     * Reset the view scale at the center of the screen
+     */
+    resetViewScale(): void {
+        this.rescaleAtCenter(1)
+    }
+
+    /**
+     * Set the view scale so that the current page fits the viewport width
+     */
+    fitToPage(): void {
+        this.rescaleAtCenter(window.innerWidth / board.getPageSize().width)
+    }
+
+    /**
+     * Update the view transform. Bounds and a pixel scale update are applied if necessary
+     * @param newTransform transform update to be applied
+     */
     updateViewTransform(newTransform: ViewTransform): void {
         const detectionResult = detectPageChange(newTransform)
 
@@ -54,52 +100,58 @@ export class View implements GlobalState<ViewState> {
         }
         newTransform = applyBounds(newTransform)
 
-        view.setTransformState(newTransform)
+        this.state.viewTransform = newTransform
         this.checkPixelScaleDebounced(newTransform)
+
+        subscriptionState.render("ViewTransform")
     }
 
-    checkPixelScale(newTransform: ViewTransform): void {
+    /**
+     * Debounced pixel scale check
+     */
+    private checkPixelScaleDebounced = debounce(
+        this.checkPixelScale,
+        TRANSFORM_PIXEL_SCALE_DEBOUNCE
+    )
+
+    /**
+     * Check if the pixel scale needs adjustment and apply if necessary.
+     * @param newTransform new viewTransform which could trigger a rescale
+     */
+    private checkPixelScale(newTransform: ViewTransform): void {
         const pixelScale = Math.min(
             DEVICE_PIXEL_RATIO * Math.ceil(newTransform.scale),
             MAX_PIXEL_SCALE
         )
 
         if (pixelScale !== this.getLayerConfig().pixelScale) {
-            this.setLayerConfig({
+            this.state.layerConfig = {
                 pixelScale,
-            })
+            }
+            subscriptionState.render("LayerConfig")
         }
     }
 
-    checkPixelScaleDebounced = debounce(
-        this.checkPixelScale,
-        TRANSFORM_PIXEL_SCALE_DEBOUNCE
-    )
-
-    zoomCenter(isZoomingIn: boolean): void {
-        const newTransform = zoomTo({
-            viewTransform: view.getViewTransform(),
-            zoomPoint: getCenterOfScreen(),
-            zoomScale: isZoomingIn ? ZOOM_IN_WHEEL_SCALE : ZOOM_OUT_WHEEL_SCALE,
-        })
-
-        this.updateViewTransform(newTransform)
-    }
-
-    resetView(): void {
-        this.updateViewTransform({
-            scale: DEFAULT_VIEW_SCALE,
-            xOffset: getCenterX(),
-            yOffset: DEFAULT_VIEW_OFFSET_Y,
-        })
-    }
-
-    private scaleWithFixedY(newScale: number, yFixed: number): number {
-        const { scale, yOffset } = this.getViewTransform()
+    /**
+     * Get the yOffset at which a rescale will not
+     * change the position at a specified y coordinate
+     * @param newScale new scale to be applied
+     * @param yFixed y coordinate at which the view should rescale at
+     * @returns new yOffset
+     */
+    private scaleWithFixedY(
+        newScale: number,
+        yFixed: number
+    ): ViewTransform["yOffset"] {
+        const { scale, yOffset } = this.getState().viewTransform
 
         return yOffset + yFixed / newScale - yFixed / scale
     }
 
+    /**
+     * Rescale the view at the center of the viewport
+     * @param newScale new scale to be applied
+     */
     private rescaleAtCenter(newScale: number): void {
         const newTransform = {
             scale: newScale,
@@ -107,32 +159,6 @@ export class View implements GlobalState<ViewState> {
             yOffset: this.scaleWithFixedY(newScale, getCenterY()),
         }
         this.updateViewTransform(newTransform)
-    }
-
-    resetViewScale(): void {
-        this.rescaleAtCenter(1)
-    }
-
-    fitToPage(): void {
-        this.rescaleAtCenter(window.innerWidth / getPageSize().width)
-    }
-
-    getViewTransform(): ViewTransform {
-        return this.state.viewTransform
-    }
-
-    getLayerConfig(): LayerConfig {
-        return this.state.layerConfig
-    }
-
-    setTransformState(newState: ViewTransform): void {
-        this.state.viewTransform = newState
-        subscriptionState.render("ViewTransform")
-    }
-
-    setLayerConfig(newState: LayerConfig): void {
-        this.state.layerConfig = newState
-        subscriptionState.render("LayerConfig")
     }
 }
 

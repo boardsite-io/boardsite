@@ -1,6 +1,7 @@
 import { DEFAULT_PAGE_GAP } from "consts"
+import { board } from "state/board"
 import { ViewTransform } from "state/view/state/index.types"
-import { getPageSize, getViewCenterY, onFirstPage, onLastPage } from "./helpers"
+import { getViewCenterY } from "./helpers"
 
 export enum DetectionResult {
     Previous,
@@ -14,14 +15,14 @@ export const detectPageChange = (
     const transformedCenterY = getViewCenterY(viewTransform)
     const prevPageBorder = -DEFAULT_PAGE_GAP / 2
     const nextPageBorder =
-        getPageSize(0).height * viewTransform.scale + DEFAULT_PAGE_GAP / 2
+        board.getPageSize().height * viewTransform.scale + DEFAULT_PAGE_GAP / 2
 
     if (transformedCenterY < prevPageBorder) {
-        if (!onFirstPage()) {
+        if (!board.onFirstPage()) {
             return DetectionResult.Previous
         }
     } else if (transformedCenterY > nextPageBorder) {
-        if (!onLastPage()) {
+        if (!board.onLastPage()) {
             return DetectionResult.Next
         }
     }
@@ -30,7 +31,7 @@ export const detectPageChange = (
 }
 
 export const toPreviousPage = (viewTransform: ViewTransform): ViewTransform => {
-    const prevPageHeight = getPageSize(-1).height
+    const prevPageHeight = board.getPageSize(-1).height
 
     if (prevPageHeight) {
         return {
@@ -43,7 +44,7 @@ export const toPreviousPage = (viewTransform: ViewTransform): ViewTransform => {
 }
 
 export const toNextPage = (viewTransform: ViewTransform): ViewTransform => {
-    const currPageHeight = getPageSize().height
+    const currPageHeight = board.getPageSize().height
 
     if (currPageHeight) {
         return {

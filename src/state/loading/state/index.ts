@@ -1,11 +1,12 @@
+import { IntlMessageId } from "language"
 import { subscriptionState } from "state/subscription"
 import { GlobalState } from "../../types"
-import { LoadingInfo, LoadingState } from "./index.types"
+import { LoadingState } from "./index.types"
 
 export class Loading implements GlobalState<LoadingState> {
     state: LoadingState = {
         isLoading: false,
-        loadingInfo: { messageId: "Loading.ExportingPdf" },
+        messageId: "Loading.ExportingPdf",
     }
 
     getState(): LoadingState {
@@ -16,8 +17,8 @@ export class Loading implements GlobalState<LoadingState> {
         this.state = newState
     }
 
-    startLoading(loadingInfo: LoadingInfo): void {
-        this.setState({ isLoading: true, loadingInfo })
+    startLoading(messageId: IntlMessageId): void {
+        this.setState({ isLoading: true, messageId })
         subscriptionState.render("Loading")
     }
 

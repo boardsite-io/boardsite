@@ -7,9 +7,9 @@ import {
     DEFAULT_VIEW_SCALE,
     DEFAULT_VIEW_OFFSET_X,
     DEFAULT_VIEW_OFFSET_Y,
-    backgroundStyle,
+    PAPER,
     STROKE_WIDTH_PRESETS,
-    pageSize,
+    PAGE_SIZE,
 } from "consts"
 import {
     AddPagesAction,
@@ -59,7 +59,7 @@ export const mockBoardState = {
     },
     attachments: {},
     pageMeta: {
-        background: { style: backgroundStyle.BLANK },
+        background: { style: PAPER.BLANK },
         size: {
             width: 10,
             height: 10,
@@ -318,8 +318,8 @@ describe("board reducer", () => {
     it("updates pages meta, undos and redos the action", () => {
         mockBoard.setState(cloneDeep(mockBoardState))
         const newMeta = cloneDeep(page1.meta)
-        newMeta.size = pageSize.a4portrait
-        newMeta.background.style = backgroundStyle.CHECKERED
+        newMeta.size = PAGE_SIZE.A4_PORTRAIT
+        newMeta.background.style = PAPER.CHECKERED
         const pageUpdate = {
             pageId: page1.pageId,
             meta: newMeta,
