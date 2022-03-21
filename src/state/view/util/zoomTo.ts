@@ -18,11 +18,9 @@ export const zoomTo = ({
 
     return {
         xOffset:
-            zoomPoint.x / scale2 -
-            (zoomPoint.x / scale1 - viewTransform.xOffset),
+            viewTransform.xOffset + zoomPoint.x / scale2 - zoomPoint.x / scale1,
         yOffset:
-            zoomPoint.y / scale2 -
-            (zoomPoint.y / scale1 - viewTransform.yOffset),
+            viewTransform.yOffset + zoomPoint.y / scale2 - zoomPoint.y / scale1,
         scale: scale2,
     }
 }
