@@ -4,12 +4,10 @@ import { SerializedStroke, ToolType } from "drawing/stroke/index.types"
 import { cloneDeep } from "lodash"
 import {
     DEFAULT_KEEP_CENTERED,
-    DEFAULT_VIEW_SCALE,
-    DEFAULT_VIEW_OFFSET_X,
-    DEFAULT_VIEW_OFFSET_Y,
     PAPER,
     STROKE_WIDTH_PRESETS,
     PAGE_SIZE,
+    DEFAULT_VIEW_TRANSFORM,
 } from "consts"
 import {
     AddPagesAction,
@@ -67,11 +65,7 @@ export const mockBoardState = {
     },
     view: {
         keepCentered: DEFAULT_KEEP_CENTERED,
-        transform: {
-            xOffset: DEFAULT_VIEW_OFFSET_X,
-            yOffset: DEFAULT_VIEW_OFFSET_Y,
-            scale: DEFAULT_VIEW_SCALE,
-        },
+        transform: DEFAULT_VIEW_TRANSFORM,
         renderTrigger: false,
     },
     undoStack: [],

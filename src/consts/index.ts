@@ -37,13 +37,10 @@ export const ZOOM_OUT_BUTTON_SCALE = 0.9
 export const ZOOM_SCALE_MAX = 5.0
 export const ZOOM_SCALE_MIN = 0.5
 export const DEFAULT_CURRENT_PAGE_INDEX = 0
-export const DEFAULT_VIEW_OFFSET_X = window.innerWidth / 2
-export const DEFAULT_VIEW_OFFSET_Y = 60
-export const DEFAULT_VIEW_SCALE = 1
 export const DEFAULT_VIEW_TRANSFORM: ViewTransform = {
-    xOffset: DEFAULT_VIEW_OFFSET_X,
-    yOffset: DEFAULT_VIEW_OFFSET_Y,
-    scale: DEFAULT_VIEW_SCALE,
+    xOffset: window.innerWidth / 2,
+    yOffset: 60,
+    scale: 1,
 }
 export const DEFAULT_KEEP_CENTERED = false
 

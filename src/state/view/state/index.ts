@@ -1,6 +1,4 @@
 import {
-    DEFAULT_VIEW_OFFSET_Y,
-    DEFAULT_VIEW_SCALE,
     DEFAULT_VIEW_TRANSFORM,
     DEVICE_PIXEL_RATIO,
     MAX_PIXEL_SCALE,
@@ -64,9 +62,9 @@ export class View implements GlobalState<ViewState> {
      */
     resetView(): void {
         this.updateViewTransform({
-            scale: DEFAULT_VIEW_SCALE,
+            scale: DEFAULT_VIEW_TRANSFORM.scale,
             xOffset: getCenterX(),
-            yOffset: DEFAULT_VIEW_OFFSET_Y,
+            yOffset: DEFAULT_VIEW_TRANSFORM.yOffset,
         })
     }
 
