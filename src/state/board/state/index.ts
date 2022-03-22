@@ -85,6 +85,79 @@ export class Board implements GlobalState<BoardState> {
     }
 
     /**
+     * Clear undo and redo stack
+     */
+    clearUndoRedo(): void {
+        this.state.undoStack = []
+        this.state.redoStack = []
+        subscriptionState.render("EditMenu")
+    }
+
+    /**
+     * Clear shape transformer
+     */
+    clearTransform(): void {
+        this.state.transformStrokes = []
+        this.state.strokeUpdates = []
+
+        Object.values(subscriptionState.pageSubscribers).forEach((pageLayers) =>
+            pageLayers?.transformer?.({})
+        )
+    }
+
+    /**
+     * Delete all pages - essentially a full board state reset
+     */
+    deleteAllPages(): void {
+        this.setState(getDefaultBoardState())
+        subscriptionState.render("RenderNG")
+        this.saveToLocalStorage()
+    }
+
+    /**
+     * Add strokes to the shape transformer
+     * @param strokes shapes to be added to the shape transformer
+     * @param pageId page on which the transformer is active
+     */
+    setTransformStrokes(strokes: Stroke[], pageId: PageId): void {
+        this.clearTransform()
+        this.state.transformStrokes = strokes
+        subscriptionState.pageSubscribers[pageId]?.transformer?.({})
+    }
+
+    /**
+     * Set the pagerank and pagecollection - this will override the current states
+     * @param pageRank new pageRank
+     * @param pageCollection new pageCollection
+     */
+    syncPages(pageRank: PageRank, pageCollection: PageCollection): void {
+        this.state.pageRank = pageRank
+        this.state.pageCollection = pageCollection
+
+        // Adjust view if necessary
+        if (
+            pageRank.length &&
+            this.state.currentPageIndex > pageRank.length - 1
+        ) {
+            this.state.currentPageIndex = pageRank.length - 1
+        }
+
+        subscriptionState.render("RenderNG", "EditMenu", "MenuPageButton")
+        this.saveToLocalStorage()
+    }
+
+    /**
+     * Util function to get the page size of a specified page
+     * @param indexOffset offset relative to current page index
+     * @returns pageSize of target page
+     */
+    getPageSize(indexOffset = 0): PageSize {
+        const { pageRank, currentPageIndex, pageCollection } = this.getState()
+        const pageId = pageRank[currentPageIndex + indexOffset]
+        return pageCollection[pageId]?.meta?.size ?? PAGE_SIZE.A4_LANDSCAPE
+    }
+
+    /**
      * Go to the next page
      */
     jumpToNextPage(): void {
@@ -117,14 +190,22 @@ export class Board implements GlobalState<BoardState> {
     }
 
     /**
-     * Helper function for performing the necessary updates when switching page index
-     * @param index new page index
+     * Find out if currently on first page
+     * @returns true if on first page
      */
-    private goToPageIndex(index: number): void {
-        this.state.currentPageIndex = index
-        subscriptionState.render("RenderNG", "MenuPageButton")
-        this.clearTransform()
-        this.saveToLocalStorage()
+    onFirstPage(): boolean {
+        return this.getState().currentPageIndex === 0
+    }
+
+    /**
+     * Find out if currently on last page
+     * @returns true if on last page
+     */
+    onLastPage(): boolean {
+        return (
+            this.getState().currentPageIndex ===
+            this.getState().pageRank.length - 1
+        )
     }
 
     /* --- Undoable action handlers --- */
@@ -364,7 +445,7 @@ export class Board implements GlobalState<BoardState> {
      * Add or update strokes
      * @param strokes new strokes or stroke updates
      */
-    addOrUpdateStrokes(strokes: Stroke[] | StrokeUpdate[]): void {
+    private addOrUpdateStrokes(strokes: Stroke[] | StrokeUpdate[]): void {
         strokes.forEach((stroke) => {
             const page = this.getState().pageCollection[stroke.pageId ?? ""]
             if (page && stroke.id) {
@@ -383,7 +464,7 @@ export class Board implements GlobalState<BoardState> {
      * Delete strokes
      * @param strokes strokes to be deleted
      */
-    deleteStrokes(strokes: Stroke[] | StrokeUpdate[]): void {
+    private deleteStrokes(strokes: Stroke[] | StrokeUpdate[]): void {
         strokes.forEach(({ id, pageId }) => {
             const page = this.getState().pageCollection[pageId ?? ""]
             if (page && id) {
@@ -416,7 +497,7 @@ export class Board implements GlobalState<BoardState> {
      * Add pages
      * @param addPageData pages and respective indices to be added
      */
-    addPages(addPageData: AddPageData[]): void {
+    private addPages(addPageData: AddPageData[]): void {
         addPageData.forEach(({ page, index }) => {
             this.getState().pageCollection[page.pageId] = page
             if (index !== undefined) {
@@ -435,7 +516,7 @@ export class Board implements GlobalState<BoardState> {
      * Delete pages
      * @param pageIds ids of pages which should be deleted
      */
-    deletePages(pageIds: PageId[]): void {
+    private deletePages(pageIds: PageId[]): void {
         const { pageRank, pageCollection } = this.getState()
         pageIds.forEach((pid) => {
             pageRank.splice(pageRank.indexOf(pid), 1)
@@ -464,7 +545,7 @@ export class Board implements GlobalState<BoardState> {
      * Clear pages
      * @param pageIds ids of pages which should be cleared
      */
-    clearPages(pageIds: PageId[]): void {
+    private clearPages(pageIds: PageId[]): void {
         pageIds.forEach((pageId) => {
             this.getState().pageCollection[pageId]?.clear()
             subscriptionState.renderPageLayer("content", pageId)
@@ -477,20 +558,11 @@ export class Board implements GlobalState<BoardState> {
      * Update meta info of pages
      * @param pages array which contains pages with their meta and pageId
      */
-    updatePages(pages: Pick<Page, "pageId" | "meta">[]): void {
+    private updatePages(pages: Pick<Page, "pageId" | "meta">[]): void {
         pages.forEach((page) => {
             this.getState().pageCollection[page.pageId]?.updateMeta(page.meta)
         })
         subscriptionState.render("RenderNG", "EditMenu")
-        this.saveToLocalStorage()
-    }
-
-    /**
-     * Delete all pages - essentially a full board state reset
-     */
-    deleteAllPages(): void {
-        this.setState(getDefaultBoardState())
-        subscriptionState.render("RenderNG")
         this.saveToLocalStorage()
     }
 
@@ -506,86 +578,14 @@ export class Board implements GlobalState<BoardState> {
     }
 
     /**
-     * Clear undo and redo stack
+     * Helper function for performing the necessary updates when switching page index
+     * @param index new page index
      */
-    clearUndoRedo(): void {
-        this.state.undoStack = []
-        this.state.redoStack = []
-        subscriptionState.render("EditMenu")
-    }
-
-    /**
-     * Clear shape transformer
-     */
-    clearTransform(): void {
-        this.state.transformStrokes = []
-        this.state.strokeUpdates = []
-
-        Object.values(subscriptionState.pageSubscribers).forEach((pageLayers) =>
-            pageLayers?.transformer?.({})
-        )
-    }
-
-    /**
-     * Add strokes to the shape transformer
-     * @param strokes shapes to be added to the shape transformer
-     * @param pageId page on which the transformer is active
-     */
-    setTransformStrokes(strokes: Stroke[], pageId: PageId): void {
+    private goToPageIndex(index: number): void {
+        this.state.currentPageIndex = index
+        subscriptionState.render("RenderNG", "MenuPageButton")
         this.clearTransform()
-        this.state.transformStrokes = strokes
-        subscriptionState.pageSubscribers[pageId]?.transformer?.({})
-    }
-
-    /**
-     * Set the pagerank and pagecollection - this will override the current states
-     * @param pageRank new pageRank
-     * @param pageCollection new pageCollection
-     */
-    syncPages(pageRank: PageRank, pageCollection: PageCollection): void {
-        this.state.pageRank = pageRank
-        this.state.pageCollection = pageCollection
-
-        // Adjust view if necessary
-        if (
-            pageRank.length &&
-            this.state.currentPageIndex > pageRank.length - 1
-        ) {
-            this.state.currentPageIndex = pageRank.length - 1
-        }
-
-        subscriptionState.render("RenderNG", "EditMenu", "MenuPageButton")
         this.saveToLocalStorage()
-    }
-
-    /**
-     * Util function to get the page size of a specified page
-     * @param indexOffset offset relative to current page index
-     * @returns pageSize of target page
-     */
-    getPageSize(indexOffset = 0): PageSize {
-        const { pageRank, currentPageIndex, pageCollection } = this.getState()
-        const pageId = pageRank[currentPageIndex + indexOffset]
-        return pageCollection[pageId]?.meta?.size ?? PAGE_SIZE.A4_LANDSCAPE
-    }
-
-    /**
-     * Find out if currently on first page
-     * @returns true if on first page
-     */
-    onFirstPage(): boolean {
-        return this.getState().currentPageIndex === 0
-    }
-
-    /**
-     * Find out if currently on last page
-     * @returns true if on last page
-     */
-    onLastPage(): boolean {
-        return (
-            this.getState().currentPageIndex ===
-            this.getState().pageRank.length - 1
-        )
     }
 
     getSerializedState(): SerializedState<BoardState> {
