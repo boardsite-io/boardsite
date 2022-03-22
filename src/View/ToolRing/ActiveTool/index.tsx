@@ -2,10 +2,10 @@ import { FormattedMessage } from "language"
 import { Popup, ToolTip, Position, ToolIcons, ToolButton } from "components"
 import React, { memo, useState } from "react"
 import { handleSetTool } from "drawing/handlers"
-import { isDrawType } from "state/drawing/util"
 import { useGState } from "state"
 import { notification } from "state/notification"
 import { menu } from "state/menu"
+import { isDrawType } from "util/drawing"
 import StylePicker from "../StylePicker"
 
 const ActiveTool: React.FC = memo(() => {
