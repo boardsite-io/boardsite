@@ -55,11 +55,11 @@ export const PAGE_SIZE = {
     A4_LANDSCAPE: { width: 877, height: 620 },
 }
 
-export const PAPER: Record<string, Paper> = {
-    BLANK: "blank",
-    CHECKERED: "checkered",
-    RULED: "ruled",
-    DOC: "doc",
+export const PAPER = {
+    BLANK: "blank" as Paper,
+    CHECKERED: "checkered" as Paper,
+    RULED: "ruled" as Paper,
+    DOC: "doc" as Paper,
 }
 
 const FAVORITE_TOOL_1: Tool = {

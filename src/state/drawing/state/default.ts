@@ -19,7 +19,7 @@ export const getDefaultDrawingState = (): DrawingState => ({
         },
     },
     pageMeta: {
-        background: { style: PAPER.BLANK },
+        background: { paper: PAPER.BLANK },
         size: PAGE_SIZE.A4_PORTRAIT,
     },
     favoriteTools: DEFAULT_FAV_TOOLS,

@@ -12,7 +12,7 @@ export const Background: React.FC<PageProps> = memo(({ page, pageOffset }) => {
     usePageLayer("background", page.pageId)
 
     const pxlScale =
-        page.meta.background.style === "doc"
+        page.meta.background.paper === "doc"
             ? MAX_PIXEL_SCALE
             : layerConfig.pixelScale
 

@@ -181,12 +181,12 @@ export function handleChangePageBackground(): void {
         return
     }
     // cannot update background of doc type
-    if (currentPage.meta.background.style === PAPER.DOC) {
+    if (currentPage.meta.background.paper === PAPER.DOC) {
         return
     }
 
     const newMeta = cloneDeep<PageMeta>(currentPage.meta)
-    newMeta.background.style = drawing.getState().pageMeta.background.style
+    newMeta.background.paper = drawing.getState().pageMeta.background.paper
 
     const pageUpdate = {
         pageId: currentPage.pageId,

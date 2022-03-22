@@ -20,6 +20,7 @@ export interface Session {
     token?: string
 
     setToken(token: string): void
+    clearToken(): void
     updateUser(user: Partial<User>): void
     getNumberOfUsers(): number
     kickUser({ id }: Pick<User, "id">): Promise<void>

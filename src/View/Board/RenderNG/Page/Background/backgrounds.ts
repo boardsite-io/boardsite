@@ -5,12 +5,12 @@ export const drawBackground = (
     ctx: CanvasRenderingContext2D,
     meta: PageMeta
 ): void => {
-    const { style, attachId, documentPageNum } = meta.background
+    const { paper, attachId, documentPageNum } = meta.background
 
     ctx.lineWidth = 1
     ctx.strokeStyle = "#00000022"
     ctx.beginPath()
-    switch (style) {
+    switch (paper) {
         case "blank":
             break
         case "checkered":

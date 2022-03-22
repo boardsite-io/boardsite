@@ -28,7 +28,7 @@ const OnlineSession: React.FC = () => {
     const navigate = useNavigate()
     const { formatMessage: f } = useIntl()
     const userFormikRef = useRef<FormikProps<CreateFormValues>>(null)
-    const { alias, color } = online.getState().userSelection
+    const { alias, color } = online.getState().user
 
     return (
         <>

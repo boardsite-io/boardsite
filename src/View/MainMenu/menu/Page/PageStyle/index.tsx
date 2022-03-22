@@ -21,23 +21,23 @@ const onClickApply = () => {
     handleChangePageBackground()
 }
 const PageStyle = () => {
-    const { style } = useGState("PageStyleMenu").drawing.pageMeta.background
+    const { paper } = useGState("PageStyleMenu").drawing.pageMeta.background
 
     return (
         <SubMenuWrap>
             <MenuItem
                 text={<FormattedMessage id="Menu.Page.Style.Blank" />}
-                icon={style === PAPER.BLANK && <TickIcon />}
+                icon={paper === PAPER.BLANK && <TickIcon />}
                 onClick={onClickBlank}
             />
             <MenuItem
                 text={<FormattedMessage id="Menu.Page.Style.Checkered" />}
-                icon={style === PAPER.CHECKERED && <TickIcon />}
+                icon={paper === PAPER.CHECKERED && <TickIcon />}
                 onClick={onClickCheckered}
             />
             <MenuItem
                 text={<FormattedMessage id="Menu.Page.Style.Ruled" />}
-                icon={style === PAPER.RULED && <TickIcon />}
+                icon={paper === PAPER.RULED && <TickIcon />}
                 onClick={onClickRuled}
             />
             <HorizontalRule />

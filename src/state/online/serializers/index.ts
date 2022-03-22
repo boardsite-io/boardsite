@@ -12,12 +12,13 @@ export const serializeOnlineState = (
 ): SerializedState<OnlineState> => {
     const stateClone: Partial<OnlineState> = {
         token: state.token,
+        user: state.user,
     }
 
     return { version: CURRENT_ONLINE_VERSION, ...stateClone }
 }
 
-export const deserializeOnlineToken = async (
+export const deserializeOnlineState = async (
     serialisedState: SerializedState<OnlineState>
 ): Promise<Partial<OnlineState>> => {
     const { version } = serialisedState // avoid side-effects
@@ -36,5 +37,5 @@ export const deserializeOnlineToken = async (
             )
     }
 
-    return { token: serialisedState.token }
+    return serialisedState
 }

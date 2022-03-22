@@ -39,84 +39,100 @@ export class Board implements GlobalState<BoardState> {
         this.saveToLocalStorage()
     }
 
+    /**
+     * Add new attachments
+     * @param attachments new attachments
+     */
     addAttachments(attachments: Attachment[]): void {
         attachments.forEach((attachment) => {
             this.state.attachments[attachment.id] = attachment
         })
     }
 
+    /**
+     * Delete specified attachments
+     * @param attachIds ids of attachments to be remove
+     */
     deleteAttachments(attachIds: AttachId[]): void {
         attachIds.forEach((attachId) => {
             delete this.state.attachments[attachId]
         })
     }
 
+    /**
+     * Clear all attachments
+     */
     clearAttachments(): void {
         this.state.attachments = {}
     }
 
+    /**
+     * Undo last action
+     */
     undoAction(): void {
         undoAction(this.state)
         subscriptionState.render("RenderNG", "EditMenu")
         this.saveToLocalStorage()
     }
 
+    /**
+     * Redo last action
+     */
     redoAction(): void {
         redoAction(this.state)
         subscriptionState.render("RenderNG", "EditMenu")
         this.saveToLocalStorage()
     }
 
-    decrementPageIndex(): void {
-        this.state.currentPageIndex -= 1
-        subscriptionState.render("RenderNG", "MenuPageButton")
-        this.clearTransform()
-        this.saveToLocalStorage()
-    }
-
-    incrementPageIndex(): void {
-        this.state.currentPageIndex += 1
-        subscriptionState.render("RenderNG", "MenuPageButton")
-        this.clearTransform()
-        this.saveToLocalStorage()
-    }
-
+    /**
+     * Go to the next page
+     */
     jumpToNextPage(): void {
         if (this.state.currentPageIndex < this.state.pageRank.length - 1) {
-            this.state.currentPageIndex += 1
+            this.goToPageIndex(this.state.currentPageIndex + 1)
         }
-        subscriptionState.render("RenderNG", "MenuPageButton")
-        this.clearTransform()
-        this.saveToLocalStorage()
-    }
-
-    jumpToPrevPage(): void {
-        if (this.state.currentPageIndex > 0) {
-            this.state.currentPageIndex -= 1
-        }
-        subscriptionState.render("RenderNG", "MenuPageButton")
-        this.clearTransform()
-        this.saveToLocalStorage()
-    }
-
-    jumpToFirstPage(): void {
-        this.state.currentPageIndex = 0
-        subscriptionState.render("RenderNG", "MenuPageButton")
-        this.clearTransform()
-        this.saveToLocalStorage()
-    }
-
-    jumpToLastPage(): void {
-        this.state.currentPageIndex = this.state.pageRank.length - 1
-        subscriptionState.render("RenderNG", "MenuPageButton")
-        this.clearTransform()
-        this.saveToLocalStorage()
     }
 
     /**
-     * Undoable action handlers
+     * Go to the previous page
      */
+    jumpToPrevPage(): void {
+        if (this.state.currentPageIndex > 0) {
+            this.goToPageIndex(this.state.currentPageIndex - 1)
+        }
+    }
 
+    /**
+     * Go to the first page
+     */
+    jumpToFirstPage(): void {
+        this.goToPageIndex(0)
+    }
+
+    /**
+     * Go to the last page
+     */
+    jumpToLastPage(): void {
+        this.goToPageIndex(this.state.pageRank.length - 1)
+    }
+
+    /**
+     * Helper function for performing the necessary updates when switching page index
+     * @param index new page index
+     */
+    private goToPageIndex(index: number): void {
+        this.state.currentPageIndex = index
+        subscriptionState.render("RenderNG", "MenuPageButton")
+        this.clearTransform()
+        this.saveToLocalStorage()
+    }
+
+    /* --- Undoable action handlers --- */
+
+    /**
+     * Action: Add strokes
+     * @param addStrokesAction action object
+     */
     handleAddStrokes(addStrokesAction: AddStrokesAction): void {
         const {
             data: strokes,
@@ -154,6 +170,10 @@ export class Board implements GlobalState<BoardState> {
         this.clearRedoCheck(isRedoable)
     }
 
+    /**
+     * Action: Erase strokes
+     * @param eraseStrokesAction action object
+     */
     handleEraseStrokes(eraseStrokesAction: EraseStrokesAction): void {
         const {
             data: strokes,
@@ -182,6 +202,10 @@ export class Board implements GlobalState<BoardState> {
         this.clearRedoCheck(isRedoable)
     }
 
+    /**
+     * Action: Add pages
+     * @param addPagesAction action object
+     */
     handleAddPages(addPagesAction: AddPagesAction): void {
         const {
             data: addPageData,
@@ -212,6 +236,10 @@ export class Board implements GlobalState<BoardState> {
         this.clearRedoCheck(isRedoable)
     }
 
+    /**
+     * Action: Clear pages
+     * @param clearPagesAction action object
+     */
     handleClearPages(clearPagesAction: ClearPagesAction): void {
         const {
             data: pageIds,
@@ -250,6 +278,10 @@ export class Board implements GlobalState<BoardState> {
         this.clearRedoCheck(isRedoable)
     }
 
+    /**
+     * Action: Delete pages
+     * @param deletePagesAction action object
+     */
     handleDeletePages(deletePagesAction: DeletePagesAction): void {
         const {
             data: pageIds,
@@ -287,6 +319,10 @@ export class Board implements GlobalState<BoardState> {
         this.clearRedoCheck(isRedoable)
     }
 
+    /**
+     * Action: Update page meta of one or more pages
+     * @param setPageMetaAction action object
+     */
     handleSetPageMeta(setPageMetaAction: SetPageMetaAction): void {
         const {
             data: pageUpdates,
@@ -322,10 +358,12 @@ export class Board implements GlobalState<BoardState> {
         this.clearRedoCheck(isRedoable)
     }
 
-    /**
-     * Internal Undoable Functions
-     */
+    /* --- Internal Undoable Functions --- */
 
+    /**
+     * Add or update strokes
+     * @param strokes new strokes or stroke updates
+     */
     addOrUpdateStrokes(strokes: Stroke[] | StrokeUpdate[]): void {
         strokes.forEach((stroke) => {
             const page = this.getState().pageCollection[stroke.pageId ?? ""]
@@ -341,6 +379,10 @@ export class Board implements GlobalState<BoardState> {
         this.renderPagesWithStrokeChanges(strokes)
     }
 
+    /**
+     * Delete strokes
+     * @param strokes strokes to be deleted
+     */
     deleteStrokes(strokes: Stroke[] | StrokeUpdate[]): void {
         strokes.forEach(({ id, pageId }) => {
             const page = this.getState().pageCollection[pageId ?? ""]
@@ -351,8 +393,13 @@ export class Board implements GlobalState<BoardState> {
         this.renderPagesWithStrokeChanges(strokes)
     }
 
-    // eslint-disable-next-line class-methods-use-this
-    renderPagesWithStrokeChanges(strokes: Stroke[] | StrokeUpdate[]): void {
+    /**
+     * Rerender all pages which have changed content
+     * @param strokes stroke updates which could require a content render
+     */
+    private renderPagesWithStrokeChanges(
+        strokes: Stroke[] | StrokeUpdate[]
+    ): void {
         const renderedPages: Record<PageId, boolean> = {}
         strokes.forEach((stroke) => {
             const { pageId } = stroke
@@ -365,6 +412,10 @@ export class Board implements GlobalState<BoardState> {
         this.saveToLocalStorage()
     }
 
+    /**
+     * Add pages
+     * @param addPageData pages and respective indices to be added
+     */
     addPages(addPageData: AddPageData[]): void {
         addPageData.forEach(({ page, index }) => {
             this.getState().pageCollection[page.pageId] = page
@@ -380,6 +431,10 @@ export class Board implements GlobalState<BoardState> {
         this.saveToLocalStorage()
     }
 
+    /**
+     * Delete pages
+     * @param pageIds ids of pages which should be deleted
+     */
     deletePages(pageIds: PageId[]): void {
         const { pageRank, pageCollection } = this.getState()
         pageIds.forEach((pid) => {
@@ -405,6 +460,10 @@ export class Board implements GlobalState<BoardState> {
         this.saveToLocalStorage()
     }
 
+    /**
+     * Clear pages
+     * @param pageIds ids of pages which should be cleared
+     */
     clearPages(pageIds: PageId[]): void {
         pageIds.forEach((pageId) => {
             this.getState().pageCollection[pageId]?.clear()
@@ -414,6 +473,10 @@ export class Board implements GlobalState<BoardState> {
         this.saveToLocalStorage()
     }
 
+    /**
+     * Update meta info of pages
+     * @param pages array which contains pages with their meta and pageId
+     */
     updatePages(pages: Pick<Page, "pageId" | "meta">[]): void {
         pages.forEach((page) => {
             this.getState().pageCollection[page.pageId]?.updateMeta(page.meta)
@@ -422,25 +485,38 @@ export class Board implements GlobalState<BoardState> {
         this.saveToLocalStorage()
     }
 
+    /**
+     * Delete all pages - essentially a full board state reset
+     */
     deleteAllPages(): void {
         this.setState(getDefaultBoardState())
         subscriptionState.render("RenderNG")
         this.saveToLocalStorage()
     }
 
-    clearRedoCheck(isRedoable?: boolean): void {
+    /**
+     * Reset the redoStack where otherwise a parallel timeline would be created
+     * @param isRedoable
+     */
+    private clearRedoCheck(isRedoable?: boolean): void {
         if (isRedoable) {
             this.state.redoStack = []
             subscriptionState.render("EditMenu")
         }
     }
 
+    /**
+     * Clear undo and redo stack
+     */
     clearUndoRedo(): void {
         this.state.undoStack = []
         this.state.redoStack = []
         subscriptionState.render("EditMenu")
     }
 
+    /**
+     * Clear shape transformer
+     */
     clearTransform(): void {
         this.state.transformStrokes = []
         this.state.strokeUpdates = []
@@ -450,12 +526,22 @@ export class Board implements GlobalState<BoardState> {
         )
     }
 
+    /**
+     * Add strokes to the shape transformer
+     * @param strokes shapes to be added to the shape transformer
+     * @param pageId page on which the transformer is active
+     */
     setTransformStrokes(strokes: Stroke[], pageId: PageId): void {
         this.clearTransform()
         this.state.transformStrokes = strokes
         subscriptionState.pageSubscribers[pageId]?.transformer?.({})
     }
 
+    /**
+     * Set the pagerank and pagecollection - this will override the current states
+     * @param pageRank new pageRank
+     * @param pageCollection new pageCollection
+     */
     syncPages(pageRank: PageRank, pageCollection: PageCollection): void {
         this.state.pageRank = pageRank
         this.state.pageCollection = pageCollection

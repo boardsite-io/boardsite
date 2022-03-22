@@ -18,12 +18,12 @@ export const useLayerConfig = (
 
         if (!page) {
             ctx.setTransform(1, 0, 0, 1, 0, 0) // reset last transform
-            const { pixelScale } = view.getLayerConfig()
+            const { pixelScale } = view.getState().layerConfig
             ctx.scale(pixelScale, pixelScale)
         } else {
-            if (page.meta.background.style !== "doc") {
+            if (page.meta.background.paper !== "doc") {
                 ctx.setTransform(1, 0, 0, 1, 0, 0) // reset last transform
-                const { pixelScale } = view.getLayerConfig()
+                const { pixelScale } = view.getState().layerConfig
                 ctx.scale(pixelScale, pixelScale)
             }
 

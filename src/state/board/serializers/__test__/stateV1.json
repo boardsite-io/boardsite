@@ -29,7 +29,7 @@
             },
             "meta": {
                 "background": {
-                    "style": "blank",
+                    "paper": "blank",
                     "attachId": "",
                     "documentPageNum": 0
                 },

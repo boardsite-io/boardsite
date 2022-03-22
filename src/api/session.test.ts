@@ -50,7 +50,7 @@ const mockPageMeta: PageMeta = {
         height: 800,
     },
     background: {
-        style: PAPER.BLANK,
+        paper: PAPER.BLANK,
     },
 }
 

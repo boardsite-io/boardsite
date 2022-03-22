@@ -21,7 +21,7 @@ import {
     toPreviousPage,
     zoomTo,
 } from "../util"
-import { LayerConfig, ViewTransform, ViewState } from "./index.types"
+import { ViewTransform, ViewState } from "./index.types"
 
 export class View implements GlobalState<ViewState> {
     state: ViewState = {
@@ -37,10 +37,6 @@ export class View implements GlobalState<ViewState> {
 
     setState(newState: ViewState) {
         this.state = newState
-    }
-
-    getLayerConfig(): LayerConfig {
-        return this.state.layerConfig
     }
 
     /**
@@ -91,10 +87,10 @@ export class View implements GlobalState<ViewState> {
 
         if (detectionResult === DetectionResult.Next) {
             newTransform = toNextPage(newTransform)
-            board.incrementPageIndex()
+            board.jumpToNextPage()
         } else if (detectionResult === DetectionResult.Previous) {
             newTransform = toPreviousPage(newTransform)
-            board.decrementPageIndex()
+            board.jumpToPrevPage()
         }
         newTransform = applyBounds(newTransform)
 
@@ -117,14 +113,14 @@ export class View implements GlobalState<ViewState> {
      * @param newTransform new viewTransform which could trigger a rescale
      */
     private checkPixelScale(newTransform: ViewTransform): void {
-        const pixelScale = Math.min(
+        const newPixelScale = Math.min(
             DEVICE_PIXEL_RATIO * Math.ceil(newTransform.scale),
             MAX_PIXEL_SCALE
         )
 
-        if (pixelScale !== this.getLayerConfig().pixelScale) {
+        if (newPixelScale !== this.getState().layerConfig.pixelScale) {
             this.state.layerConfig = {
-                pixelScale,
+                pixelScale: newPixelScale,
             }
             subscriptionState.render("LayerConfig")
         }
