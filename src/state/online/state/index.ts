@@ -53,6 +53,10 @@ export class Online implements GlobalState<OnlineState> {
         this.saveToLocalStorage()
     }
 
+    /**
+     * Set the github authorization token
+     * @param token authorization token
+     */
     async setToken(token: string): Promise<void> {
         this.state.session?.setToken(token)
         this.state.token = token
@@ -62,8 +66,13 @@ export class Online implements GlobalState<OnlineState> {
         this.saveToLocalStorage()
     }
 
+    /**
+     * Clear the github authorization token
+     */
     clearToken(): void {
         this.setToken("")
+        this.state.session?.clearToken()
+        this.saveToLocalStorage()
     }
 
     getSerializedState(): SerializedState<DrawingState> {

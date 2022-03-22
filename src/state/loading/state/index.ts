@@ -17,11 +17,18 @@ export class Loading implements GlobalState<LoadingState> {
         this.state = newState
     }
 
+    /**
+     * Open a dialog with a loading animation and a specified text
+     * @param messageId intl message id of the loading text
+     */
     startLoading(messageId: IntlMessageId): void {
         this.setState({ isLoading: true, messageId })
         subscriptionState.render("Loading")
     }
 
+    /**
+     * Close the loading dialog
+     */
     endLoading(): void {
         this.state.isLoading = false
         subscriptionState.render("Loading")

@@ -20,7 +20,7 @@ export class BoardPage implements Page {
             this.meta = {
                 size: PAGE_SIZE.A4_PORTRAIT,
                 background: {
-                    style: PAPER.BLANK, // fallback type
+                    paper: PAPER.BLANK, // fallback type
                 },
             }
         }

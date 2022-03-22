@@ -30,7 +30,7 @@ export const pageToDataURL = async (
         })
 
         // Draw background layer
-        if (page.meta.background.style !== "doc") {
+        if (page.meta.background.paper !== "doc") {
             drawBackground(ctx, page.meta)
         }
     }

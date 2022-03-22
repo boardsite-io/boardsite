@@ -89,7 +89,7 @@ export interface PageMeta {
     background: PageBackground
 }
 export interface PageBackground {
-    style: Paper
+    paper: Paper
     attachId?: string
     documentPageNum?: number
 }

@@ -7,7 +7,7 @@ import { useGState } from "state"
 import { Backgrounds, Blank, Checkered, Ruled } from "./index.styled"
 
 const Background: React.FC = () => {
-    const { style } = useGState("PageBackgroundSetting").drawing.pageMeta
+    const { paper } = useGState("PageBackgroundSetting").drawing.pageMeta
         .background
 
     return (
@@ -18,7 +18,7 @@ const Background: React.FC = () => {
             >
                 <Blank
                     type="button"
-                    $active={style === PAPER.BLANK}
+                    $active={paper === PAPER.BLANK}
                     onClick={() => drawing.setPageBackground(PAPER.BLANK)}
                 />
             </ToolTip>
@@ -30,7 +30,7 @@ const Background: React.FC = () => {
             >
                 <Checkered
                     type="button"
-                    $active={style === PAPER.CHECKERED}
+                    $active={paper === PAPER.CHECKERED}
                     onClick={() => drawing.setPageBackground(PAPER.CHECKERED)}
                 />
             </ToolTip>
@@ -40,7 +40,7 @@ const Background: React.FC = () => {
             >
                 <Ruled
                     type="button"
-                    $active={style === PAPER.RULED}
+                    $active={paper === PAPER.RULED}
                     onClick={() => drawing.setPageBackground(PAPER.RULED)}
                 />
             </ToolTip>

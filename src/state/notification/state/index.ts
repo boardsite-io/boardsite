@@ -15,6 +15,11 @@ export class Notification implements GlobalState<NotificationState> {
         this.state = newState
     }
 
+    /**
+     * Create a notification with a specified duration
+     * @param id intl message id of notification message
+     * @param duration notification duration in milliseconds
+     */
     create(id: IntlMessageId, duration = DEFAULT_NOTIFICATION_DURATION): void {
         this.addNotification(id)
 

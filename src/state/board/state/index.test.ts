@@ -313,7 +313,7 @@ describe("board reducer", () => {
         mockBoard.setState(cloneDeep(mockBoardState))
         const newMeta = cloneDeep(page1.meta)
         newMeta.size = PAGE_SIZE.A4_PORTRAIT
-        newMeta.background.style = PAPER.CHECKERED
+        newMeta.background.paper = PAPER.CHECKERED
         const pageUpdate = {
             pageId: page1.pageId,
             meta: newMeta,

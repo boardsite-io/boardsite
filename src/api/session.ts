@@ -41,8 +41,19 @@ export class BoardSession implements Session {
         this.user = user
     }
 
+    /**
+     * Set the github authorization token
+     * @param token github auth token
+     */
     setToken(token: string): void {
         this.request.token = token
+    }
+
+    /**
+     * Clear the github authorization token
+     */
+    clearToken(): void {
+        delete this.request.token
     }
 
     getNumberOfUsers(): number {

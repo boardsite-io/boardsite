@@ -30,7 +30,7 @@ const addRenderedPdf = async (attachment: Attachment): Promise<void> => {
         const pages = attachment.renderedData.map((img, i) => {
             return new BoardPage().updateMeta({
                 background: {
-                    style: PAPER.DOC,
+                    paper: PAPER.DOC,
                     attachId: attachment.id,
                     documentPageNum: i,
                 },
@@ -50,7 +50,7 @@ const addRenderedPdf = async (attachment: Attachment): Promise<void> => {
             return {
                 page: new BoardPage().updateMeta({
                     background: {
-                        style: PAPER.DOC,
+                        paper: PAPER.DOC,
                         attachId: attachment.id,
                         documentPageNum: i,
                     },
@@ -95,9 +95,9 @@ export const renderAsPdf = async (): Promise<Uint8Array> => {
         meta: PageMeta
     ): Promise<PDFPage | undefined> => {
         let basePage: PDFPage | undefined
-        const { style, attachId, documentPageNum } = meta.background
+        const { paper, attachId, documentPageNum } = meta.background
         if (
-            style === PAPER.DOC &&
+            paper === PAPER.DOC &&
             documentPageNum !== undefined &&
             attachId !== undefined
         ) {

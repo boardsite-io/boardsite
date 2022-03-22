@@ -5,10 +5,10 @@
         "style": { "color": "#0211a3", "width": 1.5, "opacity": 0.5 }
     },
     "pageMeta": {
+        "size": { "width": 620, "height": 877 },
         "background": {
-            "style": "blank"
-        },
-        "size": { "width": 620, "height": 877 }
+            "paper": "blank"
+        }
     },
     "favoriteTools": [
         {

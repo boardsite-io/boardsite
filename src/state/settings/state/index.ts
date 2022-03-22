@@ -19,22 +19,36 @@ export class SettingsClass implements GlobalState<SettingsState> {
         this.saveToLocalStorage()
     }
 
+    /**
+     * Get the current theme
+     * @returns the current theme
+     */
     getTheme(): Theme {
         return this.state.theme
     }
 
+    /**
+     * Set the global theme
+     * @param theme new theme to be set
+     */
     setTheme(theme: Theme) {
         this.state.theme = theme
         subscriptionState.render("Theme")
         this.saveToLocalStorage()
     }
 
+    /**
+     * Toggle keep view centered setting
+     */
     toggleShouldCenter(): void {
         this.state.keepCentered = !this.state.keepCentered
         subscriptionState.render("Settings")
         this.saveToLocalStorage()
     }
 
+    /**
+     * Toggle direct draw setting
+     */
     toggleDirectDraw() {
         this.state.directDraw = !this.state.directDraw
         subscriptionState.render("Settings")
