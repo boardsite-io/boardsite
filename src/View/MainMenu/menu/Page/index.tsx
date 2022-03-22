@@ -68,18 +68,6 @@ const PageMenu = () => {
             <HorizontalRule />
             <MenuItem
                 text={<FormattedMessage id="Menu.Page.Style" />}
-                expandMenu={() => setSubMenu(SubMenu.PageSize)}
-                icon={<ExpandableIcon />}
-            >
-                <CSSTransition
-                    in={subMenu === SubMenu.PageSize}
-                    {...cssTransition}
-                >
-                    <PageSizeMenu />
-                </CSSTransition>
-            </MenuItem>
-            <MenuItem
-                text={<FormattedMessage id="Menu.Page.Size" />}
                 expandMenu={() => setSubMenu(SubMenu.PageStyle)}
                 icon={<ExpandableIcon />}
             >
@@ -88,6 +76,18 @@ const PageMenu = () => {
                     {...cssTransition}
                 >
                     <PageStyle />
+                </CSSTransition>
+            </MenuItem>
+            <MenuItem
+                text={<FormattedMessage id="Menu.Page.Size" />}
+                expandMenu={() => setSubMenu(SubMenu.PageSize)}
+                icon={<ExpandableIcon />}
+            >
+                <CSSTransition
+                    in={subMenu === SubMenu.PageSize}
+                    {...cssTransition}
+                >
+                    <PageSizeMenu />
                 </CSSTransition>
             </MenuItem>
             <HorizontalRule />
