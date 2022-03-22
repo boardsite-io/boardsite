@@ -26,7 +26,7 @@ export interface Session {
     kickUser({ id }: Pick<User, "id">): Promise<void>
     create(): Promise<string>
     join(copyOffline?: boolean): Promise<void>
-    createSocket(sessionId: string): Promise<void>
+    createSocket(sessionId: string, password?: string): Promise<void>
     isConnected(): boolean
     isHost(): boolean
     disconnect(): void
@@ -121,4 +121,9 @@ export type SessionConfig = {
 
 export type UpdateUserRequest = {
     user: User
+}
+
+export type CreateUserRequest = {
+    password?: string
+    user: Pick<User, "alias" | "color">
 }

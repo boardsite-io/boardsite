@@ -9,7 +9,6 @@ import {
     PageMeta,
 } from "state/board/state/index.types"
 import { Board } from "state/board"
-import exp from "constants"
 import { BoardSession } from "./session"
 import { Request } from "./request"
 import { Message, PageSync, SessionConfig, StrokeDelete, User } from "./types"

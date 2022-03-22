@@ -76,10 +76,10 @@ export class BoardSession implements Session {
         return config.id
     }
 
-    async createSocket(sessionId: string): Promise<void> {
+    async createSocket(sessionId: string, password?: string): Promise<void> {
         this.request = new Request(sessionId)
         // create a new user for us
-        const { id } = await this.request.postUser(this.user)
+        const { id } = await this.request.postUser(this.user, password)
         this.user.id = id
 
         return new Promise((resolve, reject) => {
