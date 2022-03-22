@@ -7,6 +7,8 @@ import {
     User,
     ResponseGetConfig,
     SessionConfig,
+    UpdateUserRequest,
+    CreateUserRequest,
 } from "./types"
 
 export const API_URL = process.env.REACT_APP_B_API_URL as string
@@ -93,18 +95,32 @@ export class Request {
         return this.jsonSend("POST", "/create")
     }
 
-    async postUser(data: Partial<User>): Promise<User> {
-        const user: User = await this.jsonSend(
+    async postUser(
+        user: Pick<User, "alias" | "color">,
+        password?: string
+    ): Promise<User> {
+        const data: CreateUserRequest = {
+            password,
+            user,
+        }
+        const userResp: User = await this.jsonSend(
             "POST",
             `${this.sessionId}/users`,
             false,
             data
         )
-        this.userId = user.id
-        return user
+        this.userId = userResp.id
+        return userResp
     }
 
-    async putUser(secret: string, userId: string): Promise<void> {
+    async putUser(updatedUser: User): Promise<void> {
+        const payload: UpdateUserRequest = {
+            user: updatedUser,
+        }
+        return this.jsonSend("PUT", `${this.sessionId}/users`, true, payload)
+    }
+
+    async putKickUser(secret: string, userId: string): Promise<void> {
         const headers = {
             ...this.getHeaders(true),
             [HEADER_SESSION_SECRET]: secret,
