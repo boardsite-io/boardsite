@@ -22,7 +22,7 @@ const OnlineSessionJoinOnly: React.FC = () => {
     const navigate = useNavigate()
     const { formatMessage: f } = useIntl()
     const { sessionId } = useParams()
-    const { alias, color } = online.getState().userSelection
+    const { alias, color } = online.getState().user
 
     return (
         <>

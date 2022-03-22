@@ -1,7 +1,7 @@
 import { Session, User } from "api/types"
 
 export interface OnlineState {
-    userSelection: User
+    user: User
     session?: Session
     token?: string
     isConnected: () => boolean

@@ -11,11 +11,11 @@ import {
 import { OnlineState } from "./index.types"
 import { GlobalState, SerializedState } from "../../types"
 import { DrawingState } from "../../drawing/state/index.types"
-import { deserializeOnlineToken, serializeOnlineState } from "../serializers"
+import { deserializeOnlineState, serializeOnlineState } from "../serializers"
 
 export class Online implements GlobalState<OnlineState> {
     state: OnlineState = {
-        userSelection: {
+        user: {
             alias: uniqueNamesGenerator({
                 dictionaries: [adjectives, animals],
                 separator: "",
@@ -38,16 +38,24 @@ export class Online implements GlobalState<OnlineState> {
         this.state = newState
     }
 
+    /**
+     * Add a new session
+     * @param session new session object
+     */
     newSession(session: Session): void {
         this.state.session = session
         this.state.session.setToken(this.state.token ?? "")
-        subscriptionState.render("Session")
         this.saveToLocalStorage()
+        subscriptionState.render("Session")
     }
 
+    /**
+     * Update the user settings, such as alias and color
+     * @param user an update to the user selection
+     */
     updateUser(user: Partial<User>): void {
-        this.state.userSelection = {
-            ...this.state.userSelection,
+        this.state.user = {
+            ...this.state.user,
             ...user,
         }
         this.saveToLocalStorage()
@@ -62,8 +70,8 @@ export class Online implements GlobalState<OnlineState> {
         this.state.token = token
         const isAuthorized = await validateToken(token)
         this.state.isAuthorized = () => isAuthorized
-        subscriptionState.render("Session")
         this.saveToLocalStorage()
+        subscriptionState.render("Session")
     }
 
     /**
@@ -82,7 +90,15 @@ export class Online implements GlobalState<OnlineState> {
     async setSerializedState(
         serializedDrawingState: SerializedState<DrawingState>
     ): Promise<void> {
-        const { token } = await deserializeOnlineToken(serializedDrawingState)
+        const { token, user: userSelection } = await deserializeOnlineState(
+            serializedDrawingState
+        )
+
+        // Load preferred user settings
+        if (userSelection) {
+            this.updateUser(userSelection)
+        }
+
         // dont erase an existing token
         if (!token) return
         await this.setToken(token)

@@ -16,7 +16,7 @@ export const createOnlineSession = async (
     navigate: NavigateFunction
 ): Promise<void> => {
     try {
-        const session = new BoardSession(online.getState().userSelection)
+        const session = new BoardSession(online.getState().user)
         const sessionId = await session.create()
         await session.createSocket(sessionId)
         await session.join(fromCurrent)
@@ -48,7 +48,7 @@ export const joinOnlineSession = async (
 ): Promise<void> => {
     try {
         const path = BoardSession.path(sessionId)
-        const session = new BoardSession(online.state.userSelection)
+        const session = new BoardSession(online.state.user)
         await session.createSocket(sessionId)
         await session.join()
         online.newSession(session)
