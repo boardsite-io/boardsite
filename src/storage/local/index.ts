@@ -16,9 +16,12 @@ type StateInLocalStorage = "drawing" | "online" | "settings"
 type StateInIndexedDB = "board"
 
 export const saveLocalStorage = debounce(
-    (name: StateInLocalStorage, data: object): void => {
+    (name: StateInLocalStorage, serializer: () => object): void => {
         try {
-            localStorage.setItem(`${NAMESPACE}_${name}`, JSON.stringify(data))
+            localStorage.setItem(
+                `${NAMESPACE}_${name}`,
+                JSON.stringify(serializer())
+            )
         } catch (error) {
             notification.create("Notification.LocalStorageSaveFailed")
         }
@@ -27,9 +30,9 @@ export const saveLocalStorage = debounce(
 )
 
 export const saveIndexedDB = debounce(
-    (name: StateInIndexedDB, data: object): void => {
+    async (name: StateInIndexedDB, serializer: () => object): Promise<void> => {
         try {
-            localforage.setItem(`${NAMESPACE}_${name}`, data)
+            await localforage.setItem(`${NAMESPACE}_${name}`, serializer())
         } catch (error) {
             notification.create("Notification.IndexedDBSaveFailed")
         }
