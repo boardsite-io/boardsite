@@ -71,7 +71,8 @@ export class SettingsClass implements GlobalState<SettingsState> {
     }
 
     saveToLocalStorage(): void {
-        saveLocalStorage("settings", this.getSerializedState())
+        const state = this.getState()
+        saveLocalStorage("settings", () => serializeThemeState(state))
     }
 
     async loadFromLocalStorage(): Promise<void> {

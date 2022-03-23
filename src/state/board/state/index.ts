@@ -600,8 +600,8 @@ export class Board implements GlobalState<BoardState> {
     }
 
     saveToLocalStorage(): void {
-        const serializedState = this.getSerializedState()
-        saveIndexedDB("board", serializedState)
+        const state = this.getState()
+        saveIndexedDB("board", () => serializeBoardState(state))
     }
 
     async loadFromLocalStorage(): Promise<void> {

@@ -166,8 +166,8 @@ export class Drawing implements GlobalState<DrawingState> {
     }
 
     saveToLocalStorage(): void {
-        const serializedDrawingState = this.getSerializedState()
-        saveLocalStorage("drawing", serializedDrawingState)
+        const state = this.getState()
+        saveLocalStorage("drawing", () => serializeDrawingState(state))
     }
 
     async loadFromLocalStorage(): Promise<void> {

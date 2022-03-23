@@ -105,7 +105,8 @@ export class Online implements GlobalState<OnlineState> {
     }
 
     saveToLocalStorage(): void {
-        saveLocalStorage("online", this.getSerializedState())
+        const state = this.getState()
+        saveLocalStorage("online", () => serializeOnlineState(state))
     }
 
     async loadFromLocalStorage(): Promise<void> {
