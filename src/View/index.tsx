@@ -1,5 +1,8 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { useKeyboardShortcuts } from "hooks"
+import { useParams } from "react-router-dom"
+import { menu } from "state/menu"
+import { DialogState } from "state/menu/state/index.types"
 import Board from "./Board"
 import { ViewWrap } from "./index.styled"
 import ToolRing from "./ToolRing"
@@ -13,6 +16,13 @@ import Subscribe from "./Subscribe"
 
 const View: React.FC = () => {
     useKeyboardShortcuts()
+
+    const { sessionId } = useParams()
+    useEffect(() => {
+        if (sessionId) {
+            menu.setDialogState(DialogState.OnlineJoin)
+        }
+    }, [sessionId])
 
     return (
         <ViewWrap>

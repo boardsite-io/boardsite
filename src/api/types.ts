@@ -117,6 +117,7 @@ export type SessionConfig = {
     host: string
     maxUsers: number
     readOnly: boolean
+    password: string
 }
 
 export type UpdateUserRequest = {

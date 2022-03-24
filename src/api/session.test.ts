@@ -23,6 +23,7 @@ const mockConfig: SessionConfig = {
     maxUsers: 4,
     host: "userId",
     readOnly: false,
+    password: "",
 }
 const mockUser: User = {
     alias: "user",

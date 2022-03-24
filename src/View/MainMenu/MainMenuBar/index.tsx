@@ -26,7 +26,7 @@ const onClickSession = () => {
     if (numberOfUsers && numberOfUsers > 0) {
         menu.setMainMenu(MainMenuState.Session)
     } else {
-        menu.setSessionDialog(DialogState.CreateOnlineSession)
+        menu.setDialogState(DialogState.OnlineCreate)
     }
 }
 

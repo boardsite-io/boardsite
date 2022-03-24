@@ -6,7 +6,7 @@ export const FormikLabel = styled.label<{
 }>`
     display: flex;
     flex-direction: column;
-    margin: 1rem 0;
+    margin: 0.5rem 0;
     color: ${({ theme }) => theme.palette.primary.contrastText}AA;
 
     ${({ fullWidth }) =>
@@ -37,8 +37,13 @@ export const Input = styled.input<{ isValid: boolean }>`
             ? theme.palette.secondary.main
             : theme.palette.primary.contrastText};
 
-    &:hover {
+    :hover {
         cursor: text;
+    }
+
+    :disabled {
+        filter: opacity(40%);
+        cursor: not-allowed;
     }
 `
 

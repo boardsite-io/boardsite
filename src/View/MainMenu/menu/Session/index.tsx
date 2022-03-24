@@ -28,7 +28,7 @@ const SessionMenu = () => {
     const leaveSession = useCallback(() => {
         session?.disconnect()
         menu.setMainMenu(MainMenuState.Closed)
-        menu.setSessionDialog(DialogState.InitialSelection)
+        menu.setDialogState(DialogState.InitialSelection)
         navigate("/")
     }, [session, navigate])
 

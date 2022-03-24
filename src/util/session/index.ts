@@ -6,21 +6,30 @@ import { DialogState } from "state/menu/state/index.types"
 import { notification } from "state/notification"
 import { online } from "state/online"
 
-/**
- * Create an online session either from current local state or from scratch
- * @param fromCurrent transfers the local session into the online session if set to true
- * @param navigate react-router-dom navigation function
- */
-export const createOnlineSession = async (
-    fromCurrent: boolean,
-    navigate: NavigateFunction
-): Promise<void> => {
+type CreateOnlineSession = {
+    fromCurrent: boolean // transfers the local session into the online session if set to true
+    password: string // Optional session password
+    navigate: NavigateFunction // react-router-dom navigation function
+}
+
+export const createOnlineSession = async ({
+    fromCurrent,
+    navigate,
+    password,
+}: CreateOnlineSession): Promise<void> => {
     try {
         const session = new BoardSession(online.getState().user)
         const sessionId = await session.create()
         await session.createSocket(sessionId)
         await session.join(fromCurrent)
+
+        // TODO: Clean up pw logic (and online state in general)
+        if (password.length) {
+            await session.updateConfig({ password })
+        }
+
         online.newSession(session)
+
         navigate(BoardSession.path(sessionId))
 
         // Copy session URL to the clipboard to make it easier to invite friends
@@ -31,28 +40,29 @@ export const createOnlineSession = async (
             // Could not save URL to clipboard - no notification needed here
         }
 
-        menu.setSessionDialog(DialogState.Closed)
+        menu.setDialogState(DialogState.Closed)
     } catch (error) {
         notification.create("Notification.Session.CreationFailed", 2500)
     }
 }
 
-/**
- * Join a session with the session ID
- * @param sessionId target session ID
- * @param navigate react-router-dom navigation function
- */
-export const joinOnlineSession = async (
-    sessionId: string,
-    navigate: NavigateFunction
-): Promise<void> => {
+type JoinOnlineSession = {
+    sessionId: string // target session ID
+    navigate: NavigateFunction // react-router-dom navigation function
+}
+
+export const joinOnlineSession = async ({
+    sessionId,
+    navigate,
+}: JoinOnlineSession): Promise<void> => {
+    // TODO: Session enter PW prompt when joining pw protected session
     try {
         const path = BoardSession.path(sessionId)
         const session = new BoardSession(online.state.user)
         await session.createSocket(sessionId)
         await session.join()
         online.newSession(session)
-        menu.setSessionDialog(DialogState.Closed)
+        menu.setDialogState(DialogState.Closed)
         navigate(path)
     } catch (error) {
         notification.create("Notification.Session.JoinFailed", 5000)

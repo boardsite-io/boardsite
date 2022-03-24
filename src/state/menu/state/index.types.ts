@@ -10,8 +10,10 @@ export enum DialogState {
     Closed,
     InitialSelectionFirstLoad,
     InitialSelection,
-    CreateOnlineSession,
-    JoinOnly,
+    OnlineCreate,
+    OnlineJoin,
+    OnlineChangeAlias,
+    OnlineChangePassword,
 }
 
 export interface MenuState {
