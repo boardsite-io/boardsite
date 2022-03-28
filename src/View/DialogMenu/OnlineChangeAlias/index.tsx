@@ -34,7 +34,7 @@ const OnlineChangeAlias: React.FC = () => {
                         alias,
                         color,
                     }: ChangeAliasFormValues) => {
-                        online.updateUser({
+                        online.setUser({
                             alias,
                             color,
                         })

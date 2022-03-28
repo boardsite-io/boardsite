@@ -2,12 +2,13 @@ import { FormattedMessage } from "language"
 import React, { useCallback, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ExpandableIcon, HorizontalRule } from "components"
-import { User } from "api/types"
 import { DialogState, MainMenuState } from "state/menu/state/index.types"
 import { menu } from "state/menu"
 import { useGState } from "state"
 import { CSSTransition } from "react-transition-group"
 import { cssTransition } from "View/MainMenu/cssTransition"
+import { online } from "state/online"
+import { User } from "state/online/state/index.types"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 import SessionSettingsMenu from "./SessionSettings"
@@ -22,27 +23,26 @@ enum SubMenu {
 const SessionMenu = () => {
     const [subMenu, setSubMenu] = useState<SubMenu | User["id"]>(SubMenu.Closed)
     const navigate = useNavigate()
-    const { online: onlineState } = useGState("Session")
-    const { session } = onlineState
+    useGState("Session")
 
     const leaveSession = useCallback(() => {
-        session?.disconnect()
+        online.disconnect()
         menu.setMainMenu(MainMenuState.Closed)
         menu.setDialogState(DialogState.InitialSelection)
         navigate("/")
-    }, [session, navigate])
+    }, [navigate])
 
-    if (!session) {
+    if (!online.state.session.socket) {
         return null
     }
 
-    const isHost = session.isHost()
+    const isHost = online.isHost()
 
     return (
         <MainMenuWrap>
-            {Object.values(session.users ?? {}).map((user) => {
-                const userIsHost = user.id === session.config?.host
-                const userIsYou = user.id === session.user.id
+            {Object.values(online.state.session.users ?? {}).map((user) => {
+                const userIsHost = user.id === online.state.session.config?.host
+                const userIsYou = user.id === online.state.user.id
 
                 return (
                     <UserMenuItem
@@ -77,7 +77,7 @@ const SessionMenu = () => {
                 )
             })}
             <HorizontalRule />
-            {isHost && onlineState.isAuthorized() && (
+            {isHost && online.state.isAuthorized && (
                 <MenuItem
                     text={
                         <FormattedMessage id="Menu.General.Session.Settings" />

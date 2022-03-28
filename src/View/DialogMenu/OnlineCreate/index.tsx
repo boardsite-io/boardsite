@@ -12,7 +12,6 @@ import { Field, Form, Formik } from "formik"
 import { useNavigate } from "react-router-dom"
 import * as Yup from "yup"
 import { online } from "state/online"
-import { createOnlineSession } from "util/session"
 import { menu } from "state/menu"
 import { DialogState } from "state/menu/state/index.types"
 import { Selection } from "../OnlineChangeAlias/index.styled"
@@ -38,17 +37,17 @@ const OnlineCreate: React.FC = () => {
                     initialValues={{ alias, color, password: "" }}
                     onSubmit={async ({
                         alias,
+                        // password,
                         color,
-                        password,
                     }: CreateFormValues) => {
-                        online.updateUser({
+                        online.setUser({
                             alias,
                             color,
                         })
-                        await createOnlineSession({
+                        await online.createOnlineSession({
                             fromCurrent: false,
                             navigate,
-                            password,
+                            // password,
                         })
                     }}
                     validationSchema={Yup.object().shape({
@@ -104,7 +103,7 @@ const OnlineCreate: React.FC = () => {
                                     />
                                 </FormikLabel>
                             </Selection>
-                            {online.getState().isAuthorized() && (
+                            {online.state.isAuthorized && (
                                 <FormikLabel
                                     htmlFor="password"
                                     textAlign="left"
@@ -127,14 +126,14 @@ const OnlineCreate: React.FC = () => {
                             <Button
                                 onClick={async () => {
                                     setSubmitting(true)
-                                    online.updateUser({
+                                    online.setUser({
                                         alias: values.alias,
                                         color: values.color,
                                     })
-                                    await createOnlineSession({
+                                    await online.createOnlineSession({
                                         fromCurrent: true,
                                         navigate,
-                                        password: values.password,
+                                        // password: values.password,
                                     })
                                     setSubmitting(false)
                                 }}

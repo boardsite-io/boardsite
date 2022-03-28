@@ -9,7 +9,7 @@ import MenuItem from "../../../MenuItem"
 
 const ThemeMenu = () => {
     const { theme: activeTheme } = useGState("Theme").settings
-    const isAuthorized = useGState("Session").online.isAuthorized()
+    const { isAuthorized } = useGState("Session").online
 
     return (
         <SubMenuWrap>

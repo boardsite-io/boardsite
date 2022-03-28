@@ -114,7 +114,7 @@ const GeneralMenu = () => {
                 />
             )}
             <HorizontalRule />
-            {isAuthorized() ? (
+            {isAuthorized ? (
                 <AuthenticatedMenuItem
                     text={<FormattedMessage id="Menu.General.Authenticated" />}
                     icon={<SiGithubsponsors className="external-icon" />}
@@ -129,7 +129,7 @@ const GeneralMenu = () => {
                     onClick={onClickSponsor}
                 />
             )}
-            {isSignedIn() ? (
+            {isSignedIn ? (
                 <MenuItem
                     text={<FormattedMessage id="Menu.General.SignOut" />}
                     onClick={onClickSignOut}

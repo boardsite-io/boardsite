@@ -1,5 +1,4 @@
 import React from "react"
-import { useNavigate, useParams } from "react-router-dom"
 import { FormattedMessage, useIntl } from "language"
 import {
     Button,
@@ -9,10 +8,6 @@ import {
     FormikLabel,
 } from "components"
 import { Field, Form, Formik } from "formik"
-import { notification } from "state/notification"
-import * as Yup from "yup"
-import { ROUTE } from "App/routes"
-import { joinOnlineSession } from "util/session"
 
 export interface CreateFormValues {
     password: string

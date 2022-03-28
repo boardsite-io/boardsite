@@ -17,7 +17,7 @@ const FavoriteTools: React.FC = () => {
     const { favoriteTools } = useGState("FavoriteTools").drawing
     const { isAuthorized } = useGState("Session").online
     const canAddFavoriteTool =
-        isAuthorized() || favoriteTools.length < MAX_FAVORITE_TOOLS_FREE
+        isAuthorized || favoriteTools.length < MAX_FAVORITE_TOOLS_FREE
 
     return (
         <FavToolsStyled>

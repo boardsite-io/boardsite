@@ -1,13 +1,14 @@
 import React from "react"
 import { TickIcon } from "components"
-import { Session } from "api/types"
 import { useGState } from "state"
+import { online } from "state/online"
+import { Session } from "state/online/state/index.types"
 import { FormattedMessage } from "language"
 import { SubMenuWrap } from "../../../index.styled"
 import MenuItem from "../../../MenuItem"
 
 const onClickReadOnly = (session: Session | undefined) => () =>
-    session?.updateConfig({ readOnly: !session?.config?.readOnly })
+    online.updateConfig({ readOnly: !session?.config?.readOnly })
 
 const SessionSettingsMenu = () => {
     const { session } = useGState("Session").online

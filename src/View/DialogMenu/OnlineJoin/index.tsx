@@ -12,7 +12,6 @@ import {
 import { Field, Form, Formik } from "formik"
 import * as Yup from "yup"
 import { online } from "state/online"
-import { joinOnlineSession } from "util/session"
 import { Selection } from "../OnlineChangeAlias/index.styled"
 
 export interface JoinFormValues {
@@ -41,11 +40,11 @@ const OnlineJoin: React.FC = () => {
                         color,
                         sessionId,
                     }: JoinFormValues) => {
-                        online.updateUser({
+                        online.setUser({
                             alias,
                             color,
                         })
-                        await joinOnlineSession({
+                        await online.joinOnlineSession({
                             sessionId,
                             navigate,
                         })
