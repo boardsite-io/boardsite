@@ -7,7 +7,7 @@ import {
     ResponsePostAttachment,
     ResponseGetConfig,
     UpdateUserRequest,
-    CreateUserRequest,
+    CreateUserRequest, RequestPostSession,
 } from "./types"
 
 export const API_URL = process.env.REACT_APP_B_API_URL as string
@@ -85,15 +85,18 @@ export class Request {
         return resp.data
     }
 
-    postSession(): Promise<ResponsePostSession> {
-        return this.jsonSend("POST", "/create")
+    postSession(config?: SessionConfig): Promise<ResponsePostSession> {
+        const payload: RequestPostSession = {
+            config,
+        }
+        return this.jsonSend("POST", "/create", false, payload)
     }
 
     async postUser(
         user: Pick<User, "alias" | "color">,
         password?: string
     ): Promise<User> {
-        const data: CreateUserRequest = {
+        const payload: CreateUserRequest = {
             password,
             user,
         }
@@ -101,7 +104,7 @@ export class Request {
             "POST",
             `${this.sessionId}/users`,
             false,
-            data
+            payload
         )
         this.userId = userResp.id
         return userResp

@@ -26,6 +26,10 @@ export interface Message<T> {
     content: T
 }
 
+export interface RequestPostSession {
+    config?: SessionConfig
+}
+
 export interface ResponsePostSession {
     config: SessionConfig
 }

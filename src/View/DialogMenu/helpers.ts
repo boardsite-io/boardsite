@@ -23,7 +23,7 @@ export const createOnlineSession = async ({
     navigate,
 }: CreateOrJoinConfig): Promise<void> => {
     try {
-        const sessionId = await online.create()
+        const sessionId = await online.createSession()
         await online.createSocket(sessionId)
         await online.join(fromCurrent)
 

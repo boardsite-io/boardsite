@@ -103,8 +103,8 @@ export class Online implements GlobalState<OnlineState> {
         this.saveToLocalStorage()
     }
 
-    async create(): Promise<string> {
-        const { config } = await request.postSession()
+    async createSession(setConfig?: SessionConfig): Promise<string> {
+        const { config } = await request.postSession(setConfig)
         this.state.session.config = config
         request.setSessionId(config.id)
         return config.id
