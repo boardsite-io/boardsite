@@ -3,6 +3,12 @@ import { PageId, PageMeta, PageRank } from "state/board/state/index.types"
 import { SessionConfig, User } from "state/online/state/index.types"
 
 export enum ErrorCode {
+    BadRequest = 4000,
+    RateLimitExceeded = 4001,
+    MissingIdentifier = 4002,
+    AttachmentSizeExceeded = 4003,
+    MaxNumberOfUsersReached = 4004,
+    BadUsername = 4005,
     InvalidPassword = 4006,
 }
 
