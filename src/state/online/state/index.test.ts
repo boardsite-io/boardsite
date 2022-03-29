@@ -84,7 +84,7 @@ describe("session", () => {
             config: mockConfig,
         })
         const online = createOnlineMock()
-        const sessionId = await online.create()
+        const sessionId = await online.createSession({ password: "" })
         expect(sessionId).toEqual(mockConfig.id)
         expect(online.state.session.config).toEqual(mockConfig)
         expect(requestMock.prototype.postSession).toHaveBeenCalledTimes(1)

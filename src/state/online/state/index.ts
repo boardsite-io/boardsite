@@ -103,8 +103,8 @@ export class Online implements GlobalState<OnlineState> {
         this.saveToLocalStorage()
     }
 
-    async createSession(setConfig?: SessionConfig): Promise<string> {
-        const { config } = await request.postSession(setConfig)
+    async createSession(createConfig: Partial<SessionConfig>): Promise<string> {
+        const { config } = await request.postSession(createConfig)
         this.state.session.config = config
         request.setSessionId(config.id)
         return config.id
@@ -128,6 +128,7 @@ export class Online implements GlobalState<OnlineState> {
                 this.receive(JSON.parse(msg.data))
             this.state.session.socket.onopen = () => resolve()
             this.state.session.socket.onerror = (ev) => reject(ev)
+            // TODO: onclose
         })
     }
 

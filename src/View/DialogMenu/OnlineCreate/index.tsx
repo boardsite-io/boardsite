@@ -38,8 +38,8 @@ const OnlineCreate: React.FC = () => {
                     initialValues={{ alias, color, password: "" }}
                     onSubmit={async ({
                         alias,
-                        // password,
                         color,
+                        password,
                     }: CreateFormValues) => {
                         online.setUser({
                             alias,
@@ -47,8 +47,8 @@ const OnlineCreate: React.FC = () => {
                         })
                         await createOnlineSession({
                             fromCurrent: false,
+                            password,
                             navigate,
-                            // password,
                         })
                     }}
                     validationSchema={Yup.object().shape({
@@ -104,23 +104,22 @@ const OnlineCreate: React.FC = () => {
                                     />
                                 </FormikLabel>
                             </Selection>
-                            {online.state.isAuthorized && (
-                                <FormikLabel
-                                    htmlFor="password"
-                                    textAlign="left"
-                                    fullWidth
-                                >
-                                    <FormattedMessage id="Dialog.OnlineCreate.Input.Password.Label" />
-                                    <Field
-                                        id="password"
-                                        name="password"
-                                        placeholder={f({
-                                            id: "Dialog.OnlineCreate.Input.Password.Placeholder",
-                                        })}
-                                        component={FormikInput}
-                                    />
-                                </FormikLabel>
-                            )}
+                            <FormikLabel
+                                htmlFor="password"
+                                textAlign="left"
+                                fullWidth
+                            >
+                                <FormattedMessage id="Dialog.OnlineCreate.Input.Password.Label" />
+                                <Field
+                                    id="password"
+                                    name="password"
+                                    type="password"
+                                    placeholder={f({
+                                        id: "Dialog.OnlineCreate.Input.Password.Placeholder",
+                                    })}
+                                    component={FormikInput}
+                                />
+                            </FormikLabel>
                             <Button type="submit" disabled={isSubmitting}>
                                 <FormattedMessage id="Dialog.OnlineCreate.SubmitButton.CreateNew" />
                             </Button>
@@ -133,8 +132,8 @@ const OnlineCreate: React.FC = () => {
                                     })
                                     await createOnlineSession({
                                         fromCurrent: true,
+                                        password: values.password,
                                         navigate,
-                                        // password: values.password,
                                     })
                                     setSubmitting(false)
                                 }}

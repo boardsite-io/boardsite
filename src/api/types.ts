@@ -2,6 +2,21 @@ import { SerializedStroke } from "drawing/stroke/index.types"
 import { PageId, PageMeta, PageRank } from "state/board/state/index.types"
 import { SessionConfig, User } from "state/online/state/index.types"
 
+export enum ErrorCode {
+    InvalidPassword = 4006,
+}
+
+type ErrorResponse = {
+    data: {
+        code: ErrorCode
+        message: string
+    }
+}
+
+export type ErrorBody = {
+    response?: ErrorResponse
+}
+
 export type StrokeDelete = {
     id: string
     pageId: string
@@ -27,7 +42,7 @@ export interface Message<T> {
 }
 
 export interface RequestPostSession {
-    config?: SessionConfig
+    config?: Partial<SessionConfig>
 }
 
 export interface ResponsePostSession {

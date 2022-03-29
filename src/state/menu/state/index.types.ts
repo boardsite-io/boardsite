@@ -12,6 +12,7 @@ export enum DialogState {
     InitialSelection,
     OnlineCreate,
     OnlineJoin,
+    OnlineEnterPassword,
     OnlineChangeAlias,
     OnlineChangePassword,
 }

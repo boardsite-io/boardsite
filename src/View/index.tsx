@@ -21,6 +21,8 @@ const View: React.FC = () => {
     useEffect(() => {
         if (sessionId) {
             menu.setDialogState(DialogState.OnlineJoin)
+        } else {
+            menu.setDialogState(DialogState.InitialSelectionFirstLoad)
         }
     }, [sessionId])
 

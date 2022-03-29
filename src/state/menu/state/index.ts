@@ -5,7 +5,7 @@ import { DialogState, MainMenuState, MenuState } from "./index.types"
 export class Menu implements GlobalState<MenuState> {
     state: MenuState = {
         mainMenuState: MainMenuState.Closed,
-        dialogState: DialogState.InitialSelectionFirstLoad,
+        dialogState: DialogState.Closed,
         shortcutsOpen: false,
         subscribeOpen: false,
     }

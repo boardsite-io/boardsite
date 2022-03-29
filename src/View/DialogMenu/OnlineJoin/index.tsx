@@ -12,6 +12,11 @@ import {
 import { Field, Form, Formik } from "formik"
 import * as Yup from "yup"
 import { online } from "state/online"
+import { menu } from "state/menu"
+import { DialogState } from "state/menu/state/index.types"
+import { notification } from "state/notification"
+import { ROUTE } from "App/routes"
+import { ErrorBody, ErrorCode } from "api/types"
 import { Selection } from "../OnlineChangeAlias/index.styled"
 import { joinOnlineSession } from "../helpers"
 
@@ -25,7 +30,6 @@ const OnlineJoin: React.FC = () => {
     const navigate = useNavigate()
     const { formatMessage: f } = useIntl()
     const { sessionId = "" } = useParams()
-
     const { alias, color } = online.getState().user
 
     return (
@@ -45,10 +49,27 @@ const OnlineJoin: React.FC = () => {
                             alias,
                             color,
                         })
-                        await joinOnlineSession({
-                            sessionId,
-                            navigate,
-                        })
+                        try {
+                            await joinOnlineSession({
+                                sessionId,
+                                navigate,
+                            })
+                        } catch (error) {
+                            if (
+                                (error as ErrorBody).response?.data.code ===
+                                ErrorCode.InvalidPassword
+                            ) {
+                                menu.setDialogState(
+                                    DialogState.OnlineEnterPassword
+                                )
+                            } else {
+                                notification.create(
+                                    "Notification.Session.JoinFailed",
+                                    5000
+                                )
+                                navigate(ROUTE.HOME)
+                            }
+                        }
                     }}
                     validationSchema={Yup.object().shape({
                         color: Yup.string()

@@ -2,36 +2,23 @@ import { NavigateFunction } from "react-router-dom"
 import { notification } from "../../state/notification"
 import { menu } from "../../state/menu"
 import { DialogState } from "../../state/menu/state/index.types"
-import { ROUTE } from "../../App/routes"
 import { Online, online } from "../../state/online"
 
 interface CreateOrJoinConfig {
-    navigate: NavigateFunction
-    fromCurrent?: boolean
-    password?: string
-    sessionId?: string
+    navigate: NavigateFunction // react-router-dom navigation function
+    fromCurrent: boolean // transfers the local session into the online session if set to true
+    password: string // Optional session password
 }
 
-/**
- *
- * @param fromCurrent transfers the local session into the online session if set to true
- * @param navigate react-router-dom navigation function
- * @param password Optional session password
- */
 export const createOnlineSession = async ({
     fromCurrent,
     navigate,
+    password,
 }: CreateOrJoinConfig): Promise<void> => {
     try {
-        const sessionId = await online.createSession()
-        await online.createSocket(sessionId)
+        const sessionId = await online.createSession({ password })
+        await online.createSocket(sessionId, password)
         await online.join(fromCurrent)
-
-        // TODO: Password logic
-        // if (password.length) {
-        //     await online.updateConfig({ password })
-        // }
-
         navigate(Online.path(sessionId))
 
         // Copy session URL to the clipboard to make it easier to invite friends
@@ -48,20 +35,21 @@ export const createOnlineSession = async ({
     }
 }
 
+interface JoinCfg {
+    navigate: NavigateFunction
+    sessionId: string
+    password?: string
+}
+
 export const joinOnlineSession = async ({
     sessionId,
+    password,
     navigate,
-}: CreateOrJoinConfig): Promise<void> => {
-    // TODO: Session enter PW prompt when joining pw protected session
-    try {
-        if (!sessionId) throw new Error("no sessionId provided")
-        const path = Online.path(sessionId)
-        await online.createSocket(sessionId)
-        await online.join()
-        menu.setDialogState(DialogState.Closed)
-        navigate(path)
-    } catch (error) {
-        notification.create("Notification.Session.JoinFailed", 5000)
-        navigate(ROUTE.HOME)
-    }
+}: JoinCfg): Promise<void> => {
+    if (!sessionId) throw new Error("no sessionId provided")
+    const path = Online.path(sessionId)
+    await online.createSocket(sessionId, password)
+    await online.join()
+    menu.setDialogState(DialogState.Closed)
+    navigate(path)
 }

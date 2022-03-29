@@ -7,7 +7,8 @@ import {
     ResponsePostAttachment,
     ResponseGetConfig,
     UpdateUserRequest,
-    CreateUserRequest, RequestPostSession,
+    CreateUserRequest,
+    RequestPostSession,
 } from "./types"
 
 export const API_URL = process.env.REACT_APP_B_API_URL as string
@@ -85,7 +86,7 @@ export class Request {
         return resp.data
     }
 
-    postSession(config?: SessionConfig): Promise<ResponsePostSession> {
+    postSession(config?: Partial<SessionConfig>): Promise<ResponsePostSession> {
         const payload: RequestPostSession = {
             config,
         }
