@@ -8,15 +8,16 @@ import {
     FormikLabel,
 } from "components"
 import { Field, Form, Formik } from "formik"
+import { online } from "state/online"
+import { menu } from "state/menu"
+import { DialogState } from "state/menu/state/index.types"
 
 export interface CreateFormValues {
     password: string
 }
 
 const OnlineChangePassword: React.FC = () => {
-    // const navigate = useNavigate()
     const { formatMessage: f } = useIntl()
-    // const { sessionId } = useParams()
 
     return (
         <>
@@ -27,7 +28,12 @@ const OnlineChangePassword: React.FC = () => {
                 <Formik
                     initialValues={{ password: "" }}
                     onSubmit={async ({ password }: CreateFormValues) => {
-                        console.log(password) // TODO: Change password
+                        try {
+                            await online.updateConfig({ password })
+                            menu.setDialogState(DialogState.Closed)
+                        } catch (error) {
+                            // Notification
+                        }
                     }}
                 >
                     {({ isSubmitting }) => (
@@ -41,6 +47,7 @@ const OnlineChangePassword: React.FC = () => {
                                 <Field
                                     id="password"
                                     name="password"
+                                    type="password"
                                     placeholder={f({
                                         id: "Dialog.OnlineChangePassword.Input.Password.Placeholder",
                                     })}

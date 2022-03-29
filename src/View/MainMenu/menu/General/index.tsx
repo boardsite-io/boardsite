@@ -55,7 +55,7 @@ enum SubMenu {
 
 const GeneralMenu = () => {
     const [subMenu, setSubMenu] = useState<SubMenu>(SubMenu.Closed)
-    const { isSignedIn, isAuthorized } = useGState("Session").online
+    useGState("Session")
 
     return (
         <MainMenuWrap>
@@ -114,7 +114,7 @@ const GeneralMenu = () => {
                 />
             )}
             <HorizontalRule />
-            {isAuthorized ? (
+            {online.isAuthorized() ? (
                 <AuthenticatedMenuItem
                     text={<FormattedMessage id="Menu.General.Authenticated" />}
                     icon={<SiGithubsponsors className="external-icon" />}
@@ -129,7 +129,7 @@ const GeneralMenu = () => {
                     onClick={onClickSponsor}
                 />
             )}
-            {isSignedIn ? (
+            {online.isSignedIn() ? (
                 <MenuItem
                     text={<FormattedMessage id="Menu.General.SignOut" />}
                     onClick={onClickSignOut}

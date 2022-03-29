@@ -11,6 +11,8 @@ import {
 import { Field, Form, Formik } from "formik"
 import { online } from "state/online"
 import * as Yup from "yup"
+import { menu } from "state/menu"
+import { DialogState } from "state/menu/state/index.types"
 import { Selection } from "./index.styled"
 
 export interface ChangeAliasFormValues {
@@ -34,11 +36,11 @@ const OnlineChangeAlias: React.FC = () => {
                         alias,
                         color,
                     }: ChangeAliasFormValues) => {
-                        online.setUser({
+                        await online.updateUser({
                             alias,
                             color,
                         })
-                        // TODO: Change alias
+                        menu.setDialogState(DialogState.Closed)
                     }}
                     validationSchema={Yup.object().shape({
                         color: Yup.string()

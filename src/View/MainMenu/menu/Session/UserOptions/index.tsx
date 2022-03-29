@@ -26,7 +26,7 @@ const UserOptions = ({ userId, isHost, userIsYou }: UserOptionsProps) => {
     return (
         <SubMenuWrap>
             <MenuItem
-                disabled={!isHost || userIsYou || !online.state.isAuthorized}
+                disabled={!isHost || userIsYou || !online.isAuthorized()}
                 warning
                 text={
                     <FormattedMessage id="Menu.General.Session.UserOptions.Kick" />

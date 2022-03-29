@@ -9,6 +9,7 @@ import { CSSTransition } from "react-transition-group"
 import { cssTransition } from "View/MainMenu/cssTransition"
 import { online } from "state/online"
 import { User } from "state/online/state/index.types"
+import { ROUTE } from "App/routes"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 import SessionSettingsMenu from "./SessionSettings"
@@ -29,14 +30,20 @@ const SessionMenu = () => {
         online.disconnect()
         menu.setMainMenu(MainMenuState.Closed)
         menu.setDialogState(DialogState.InitialSelection)
-        navigate("/")
+        navigate(ROUTE.HOME)
     }, [navigate])
+
+    const changePassword = useCallback(() => {
+        menu.setDialogState(DialogState.OnlineChangePassword)
+    }, [])
+
+    const changeAlias = useCallback(() => {
+        menu.setDialogState(DialogState.OnlineChangeAlias)
+    }, [])
 
     if (!online.state.session.socket) {
         return null
     }
-
-    const isHost = online.isHost()
 
     return (
         <MainMenuWrap>
@@ -68,7 +75,7 @@ const SessionMenu = () => {
                             {user.id && (
                                 <UserOptions
                                     userIsYou={userIsYou}
-                                    isHost={isHost}
+                                    isHost={online.isHost()}
                                     userId={user.id}
                                 />
                             )}
@@ -77,7 +84,7 @@ const SessionMenu = () => {
                 )
             })}
             <HorizontalRule />
-            {isHost && online.state.isAuthorized && (
+            {online.isHost() && online.isAuthorized() && (
                 <MenuItem
                     text={
                         <FormattedMessage id="Menu.General.Session.Settings" />
@@ -93,6 +100,18 @@ const SessionMenu = () => {
                     </CSSTransition>
                 </MenuItem>
             )}
+            <MenuItem
+                text={
+                    <FormattedMessage id="Menu.General.Session.ChangePassword" />
+                }
+                onClick={changePassword}
+            />
+            <MenuItem
+                text={
+                    <FormattedMessage id="Menu.General.Session.ChangeAlias" />
+                }
+                onClick={changeAlias}
+            />
             <MenuItem
                 text={<FormattedMessage id="Menu.General.Session.Leave" />}
                 onClick={leaveSession}

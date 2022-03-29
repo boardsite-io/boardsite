@@ -5,6 +5,7 @@ import { IconButton, PlusIcon, ToolTip, Position, ToolIcons } from "components"
 import { MAX_FAVORITE_TOOLS_FREE } from "consts"
 import { useGState } from "state"
 import { drawing } from "state/drawing"
+import { online } from "state/online"
 import { FavToolsStyled } from "./index.styled"
 import FavToolButton from "./FavoriteToolButton"
 
@@ -14,10 +15,10 @@ const addFavoriteTool = () => {
 }
 
 const FavoriteTools: React.FC = () => {
+    useGState("Session")
     const { favoriteTools } = useGState("FavoriteTools").drawing
-    const { isAuthorized } = useGState("Session").online
     const canAddFavoriteTool =
-        isAuthorized || favoriteTools.length < MAX_FAVORITE_TOOLS_FREE
+        online.isAuthorized() || favoriteTools.length < MAX_FAVORITE_TOOLS_FREE
 
     return (
         <FavToolsStyled>

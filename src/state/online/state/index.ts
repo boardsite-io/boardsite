@@ -47,7 +47,6 @@ export class Online implements GlobalState<OnlineState> {
         },
         session: {},
         isAuthorized: false,
-        isSignedIn: false,
     }
 
     getState(): OnlineState {
@@ -56,6 +55,31 @@ export class Online implements GlobalState<OnlineState> {
 
     setState(newState: OnlineState): void {
         this.state = newState
+    }
+
+    isConnected(): boolean {
+        return (
+            this.state.session.config?.id !== "" &&
+            this.state.session.socket != null &&
+            this.state.session.socket?.readyState === WebSocket.OPEN
+        )
+    }
+
+    isAuthorized(): boolean {
+        return this.state.isAuthorized
+    }
+
+    isSignedIn(): boolean {
+        return !!this.state.token
+    }
+
+    isHost(): boolean {
+        return this.state.user.id === this.state.session.config?.host
+    }
+
+    async updateConfig(config: Partial<SessionConfig>): Promise<void> {
+        if (!this.state.session.secret) return
+        await request.putConfig(this.state.session.secret, config)
     }
 
     /**
@@ -89,8 +113,9 @@ export class Online implements GlobalState<OnlineState> {
      * @param token authorization token
      */
     async setToken(token: string): Promise<void> {
-        this.state.token = token
         this.state.isAuthorized = await validateToken(token)
+        this.state.token = token
+        request.token = token
         this.saveToLocalStorage()
         subscriptionState.render("Session")
     }
@@ -158,18 +183,6 @@ export class Online implements GlobalState<OnlineState> {
         }
 
         subscriptionState.render("Session")
-    }
-
-    isConnected(): boolean {
-        return (
-            this.state.session.config?.id !== "" &&
-            this.state.session.socket != null &&
-            this.state.session.socket?.readyState === WebSocket.OPEN
-        )
-    }
-
-    isHost(): boolean {
-        return this.state.user.id === this.state.session.config?.host
     }
 
     disconnect(): void {
@@ -245,11 +258,6 @@ export class Online implements GlobalState<OnlineState> {
         if (!this.state.session.secret) return
         if (!id) return
         await request.putKickUser(this.state.session.secret, id)
-    }
-
-    async updateConfig(config: Partial<SessionConfig>): Promise<void> {
-        if (!this.state.session.secret) return
-        await request.putConfig(this.state.session.secret, config)
     }
 
     receive(message: Message<unknown>): void {

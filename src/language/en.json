@@ -21,6 +21,8 @@
     "Menu.General.OnlineSession": "Online",
     "Menu.General.Session.Settings": "Session settings",
     "Menu.General.Session.Leave": "Leave session",
+    "Menu.General.Session.ChangePassword": "Change session password",
+    "Menu.General.Session.ChangeAlias": "Change user name",
     "Menu.General.Session.Config.ReadOnly": "Read only",
     "Menu.General.Session.UserAlias": "{isHostPrefix}{isYouPrefix}{userAlias}",
     "Menu.General.Session.UserOptions.Kick": "Kick user",

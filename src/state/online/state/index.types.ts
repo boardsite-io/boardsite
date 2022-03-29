@@ -3,7 +3,6 @@ export interface OnlineState {
     session: Session
     token?: string
     isAuthorized: boolean
-    isSignedIn: boolean
 }
 
 export type Session = {

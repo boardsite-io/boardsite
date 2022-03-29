@@ -33,7 +33,7 @@ const onClickExportPdf = () => {
 }
 
 const FileMenu = () => {
-    const { isAuthorized } = useGState("Session").online
+    useGState("Session")
 
     return (
         <SubMenuWrap>
@@ -52,7 +52,7 @@ const FileMenu = () => {
             <HorizontalRule />
             <MenuItem
                 text={<FormattedMessage id="Menu.General.File.ImportPdf" />}
-                disabled={online.isConnected() && !isAuthorized}
+                disabled={online.isConnected() && !online.isAuthorized()}
                 onClick={onClickImportPdf}
             />
             <MenuItem
