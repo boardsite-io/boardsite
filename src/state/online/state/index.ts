@@ -29,10 +29,6 @@ import {
     PageMeta,
 } from "state/board/state/index.types"
 import { BoardPage } from "drawing/page"
-import { menu } from "state/menu"
-import { DialogState } from "state/menu/state/index.types"
-import { ROUTE } from "App/routes"
-import { NavigateFunction } from "react-router-dom"
 import { newAttachment } from "drawing/attachment/utils"
 import { OnlineState, SessionConfig, User } from "./index.types"
 import { GlobalState, SerializedState } from "../../types"
@@ -60,61 +56,6 @@ export class Online implements GlobalState<OnlineState> {
 
     setState(newState: OnlineState): void {
         this.state = newState
-    }
-
-    async createOnlineSession({
-        fromCurrent,
-        // password,
-        navigate,
-    }: {
-        fromCurrent: boolean // transfers the local session into the online session if set to true
-        // password: string // Optional session password
-        navigate: NavigateFunction // react-router-dom navigation function
-    }): Promise<void> {
-        try {
-            const sessionId = await this.create()
-            await this.createSocket(sessionId)
-            await this.join(fromCurrent)
-
-            // TODO: Password logic
-            // if (password.length) {
-            //     await online.updateConfig({ password })
-            // }
-
-            navigate(Online.path(sessionId))
-
-            // Copy session URL to the clipboard to make it easier to invite friends
-            try {
-                navigator.clipboard.writeText(window.location.href)
-                notification.create("Notification.Session.CopiedToClipboard")
-            } catch (error) {
-                // Could not save URL to clipboard - no notification needed here
-            }
-
-            menu.setDialogState(DialogState.Closed)
-        } catch (error) {
-            notification.create("Notification.Session.CreationFailed", 2500)
-        }
-    }
-
-    async joinOnlineSession({
-        sessionId,
-        navigate,
-    }: {
-        sessionId: string // target session ID
-        navigate: NavigateFunction // react-router-dom navigation function
-    }): Promise<void> {
-        // TODO: Session enter PW prompt when joining pw protected session
-        try {
-            const path = Online.path(sessionId)
-            await this.createSocket(sessionId)
-            await this.join()
-            menu.setDialogState(DialogState.Closed)
-            navigate(path)
-        } catch (error) {
-            notification.create("Notification.Session.JoinFailed", 5000)
-            navigate(ROUTE.HOME)
-        }
     }
 
     /**
@@ -149,8 +90,7 @@ export class Online implements GlobalState<OnlineState> {
      */
     async setToken(token: string): Promise<void> {
         this.state.token = token
-        const isAuthorized = await validateToken(token)
-        this.state.isAuthorized = isAuthorized
+        this.state.isAuthorized = await validateToken(token)
         this.saveToLocalStorage()
         subscriptionState.render("Session")
     }
@@ -501,6 +441,7 @@ export class Online implements GlobalState<OnlineState> {
 
         board.syncPages(pageRank, newPageCollection)
     }
+
     // loads an attachment into the cache
     async loadAttachment(type: AttachType, id: AttachId): Promise<void> {
         if (!this.isConnected()) return

@@ -15,6 +15,7 @@ import { online } from "state/online"
 import { menu } from "state/menu"
 import { DialogState } from "state/menu/state/index.types"
 import { Selection } from "../OnlineChangeAlias/index.styled"
+import { createOnlineSession } from "../helpers"
 
 export interface CreateFormValues {
     alias: string
@@ -44,7 +45,7 @@ const OnlineCreate: React.FC = () => {
                             alias,
                             color,
                         })
-                        await online.createOnlineSession({
+                        await createOnlineSession({
                             fromCurrent: false,
                             navigate,
                             // password,
@@ -130,7 +131,7 @@ const OnlineCreate: React.FC = () => {
                                         alias: values.alias,
                                         color: values.color,
                                     })
-                                    await online.createOnlineSession({
+                                    await createOnlineSession({
                                         fromCurrent: true,
                                         navigate,
                                         // password: values.password,
