@@ -27,6 +27,7 @@ export enum AttachType {
     PDF,
     PNG,
 }
+
 export interface Attachment {
     id: AttachId
     type: AttachType
@@ -42,6 +43,7 @@ export interface Attachment {
 export type Attachments = Record<AttachId, Attachment>
 
 export type DocumentSrc = string | Uint8Array
+
 export interface StackAction {
     handler: () => void
     undoHandler: () => void
@@ -52,8 +54,8 @@ export interface BoardAction<T extends any[], U extends any[]> {
     data: T
     isUpdate?: boolean
     isRedoable?: boolean
-    sessionHandler?: (redos: T) => void
-    sessionUndoHandler?: (undos: U) => void
+    sessionHandler?: <P extends T>(redos: P) => void
+    sessionUndoHandler?: <V extends U>(undos: V) => void
 }
 
 export interface ActionConfig {
@@ -67,6 +69,7 @@ export interface ActionConfig {
 export type TransformStrokes = Stroke[]
 
 export type PageId = string
+
 export interface Page {
     pageId: PageId
     strokes: StrokeCollection
@@ -84,10 +87,12 @@ export interface PageSize {
     width: number
     height: number
 }
+
 export interface PageMeta {
     size: PageSize
     background: PageBackground
 }
+
 export interface PageBackground {
     paper: Paper
     attachId?: string
