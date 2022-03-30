@@ -1,14 +1,14 @@
-import axios, { AxiosInstance, AxiosRequestHeaders, Method } from "axios"
+import axios, { AxiosRequestHeaders, Method } from "axios"
 import { Page, PageId, PageMeta } from "state/board/state/index.types"
+import { SessionConfig, User } from "state/online/state/index.types"
 import {
     PageSync,
     ResponsePostSession,
     ResponsePostAttachment,
-    User,
     ResponseGetConfig,
-    SessionConfig,
     UpdateUserRequest,
     CreateUserRequest,
+    RequestPostSession,
 } from "./types"
 
 export const API_URL = process.env.REACT_APP_B_API_URL as string
@@ -23,44 +23,39 @@ enum PageQueryParam {
 }
 
 export class Request {
-    baseURL: string
+    baseURL = `${API_URL}/b`
     sessionId?: string
     userId?: string
     token?: string
-
     timeout = 3000
 
-    jsonRequest: AxiosInstance
-    fileRequest: AxiosInstance
-    pdfRequest: AxiosInstance
-    transformResponse: (data: string) => string
+    jsonRequest = axios.create({
+        baseURL: this.baseURL.toString(),
+        transformRequest: [(data) => JSON.stringify(data) ?? ""], // for routes we dont need message type
+        transformResponse: [Request.transformResponse],
+        timeout: this.timeout,
+    })
+    fileRequest = axios.create({
+        baseURL: this.baseURL.toString(),
+        transformResponse: [Request.transformResponse],
+        timeout: this.timeout,
+    })
+    pdfRequest = axios.create({
+        baseURL: this.baseURL.toString(),
+        timeout: this.timeout,
+        responseType: "arraybuffer",
+    })
 
-    constructor(sessionId?: string) {
-        this.baseURL = `${API_URL}/b`
-        this.sessionId = sessionId
-        this.transformResponse = (data) => {
-            try {
-                return JSON.parse(data)
-            } catch {
-                return data
-            }
+    static transformResponse(data: string) {
+        try {
+            return JSON.parse(data)
+        } catch {
+            return data
         }
-        this.jsonRequest = axios.create({
-            baseURL: this.baseURL.toString(),
-            transformRequest: [(data) => JSON.stringify(data) ?? ""], // for routes we dont need message type
-            transformResponse: [this.transformResponse],
-            timeout: this.timeout,
-        })
-        this.fileRequest = axios.create({
-            baseURL: this.baseURL.toString(),
-            transformResponse: [this.transformResponse],
-            timeout: this.timeout,
-        })
-        this.pdfRequest = axios.create({
-            baseURL: this.baseURL.toString(),
-            timeout: this.timeout,
-            responseType: "arraybuffer",
-        })
+    }
+
+    setSessionId(sessionId?: string) {
+        this.sessionId = sessionId
     }
 
     getHeaders(useUserValidation?: boolean): AxiosRequestHeaders {
@@ -91,15 +86,18 @@ export class Request {
         return resp.data
     }
 
-    postSession(): Promise<ResponsePostSession> {
-        return this.jsonSend("POST", "/create")
+    postSession(config?: Partial<SessionConfig>): Promise<ResponsePostSession> {
+        const payload: RequestPostSession = {
+            config,
+        }
+        return this.jsonSend("POST", "/create", false, payload)
     }
 
     async postUser(
         user: Pick<User, "alias" | "color">,
         password?: string
     ): Promise<User> {
-        const data: CreateUserRequest = {
+        const payload: CreateUserRequest = {
             password,
             user,
         }
@@ -107,7 +105,7 @@ export class Request {
             "POST",
             `${this.sessionId}/users`,
             false,
-            data
+            payload
         )
         this.userId = userResp.id
         return userResp
@@ -233,3 +231,5 @@ export class Request {
         return response.data
     }
 }
+
+export const request = new Request()

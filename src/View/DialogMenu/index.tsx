@@ -1,37 +1,46 @@
-import React from "react"
+import React, { useCallback } from "react"
 import { Dialog } from "components"
-import { useParams } from "react-router-dom"
 import { useGState } from "state"
 import { menu } from "state/menu"
-import { online } from "state/online"
 import { DialogState } from "state/menu/state/index.types"
-import OnlineSession from "./OnlineSession"
+import { useNavigate } from "react-router-dom"
+import { ROUTE } from "App/routes"
+import { online } from "state/online"
+import OnlineCreate from "./OnlineCreate"
 import InitialSelection from "./InitialSelection"
-import OnlineSessionJoinOnly from "./OnlineSessionJoinOnly"
-
-const handleClose = () => {
-    menu.setSessionDialog(DialogState.Closed)
-}
+import OnlineJoin from "./OnlineJoin"
+import OnlineChangeAlias from "./OnlineChangeAlias"
+import OnlineChangePassword from "./OnlineChangePassword"
+import OnlineEnterPassword from "./OnlineEnterPassword"
 
 const contents = {
     [DialogState.Closed]: null,
     [DialogState.InitialSelection]: <InitialSelection firstLoad={false} />,
     [DialogState.InitialSelectionFirstLoad]: <InitialSelection firstLoad />,
-    [DialogState.CreateOnlineSession]: <OnlineSession />,
-    [DialogState.JoinOnly]: <OnlineSessionJoinOnly />,
+    [DialogState.OnlineCreate]: <OnlineCreate />,
+    [DialogState.OnlineJoin]: <OnlineJoin />,
+    [DialogState.OnlineEnterPassword]: <OnlineEnterPassword />,
+    [DialogState.OnlineChangeAlias]: <OnlineChangeAlias />,
+    [DialogState.OnlineChangePassword]: <OnlineChangePassword />,
 }
 
 const DialogMenu: React.FC = () => {
     const { dialogState } = useGState("DialogState").menu
-    const { sessionId } = useParams()
-    const contentType =
-        sessionId && !online.state.session?.isConnected()
-            ? DialogState.JoinOnly
-            : dialogState
+    const navigate = useNavigate()
+
+    const onCloseDialog = useCallback(() => {
+        menu.setDialogState(DialogState.Closed)
+        if (!online.isConnected()) {
+            navigate(ROUTE.HOME)
+        }
+    }, [navigate])
 
     return (
-        <Dialog open={dialogState !== DialogState.Closed} onClose={handleClose}>
-            {contents[contentType]}
+        <Dialog
+            open={dialogState !== DialogState.Closed}
+            onClose={onCloseDialog}
+        >
+            {contents[dialogState]}
         </Dialog>
     )
 }

@@ -9,20 +9,22 @@ import {
     PageMeta,
 } from "state/board/state/index.types"
 import { Board } from "state/board"
-import { BoardSession } from "./session"
-import { Request } from "./request"
-import { Message, PageSync, SessionConfig, StrokeDelete, User } from "./types"
+import { SessionConfig, User } from "state/online/state/index.types"
+import { Request } from "api/request"
+import { Message, PageSync, StrokeDelete } from "../../../api/types"
+import { Online } from "."
 
-jest.mock("./request")
+jest.mock("api/request")
 const requestMock = Request as jest.MockedClass<typeof Request>
 jest.mock("state/board")
-const stateMock = Board as jest.MockedClass<typeof Board>
+const boardStateMock = Board as jest.MockedClass<typeof Board>
 
 const mockConfig: SessionConfig = {
     id: "testId",
     maxUsers: 4,
     host: "userId",
     readOnly: false,
+    password: "",
 }
 const mockUser: User = {
     alias: "user",
@@ -54,11 +56,12 @@ const mockPageMeta: PageMeta = {
     },
 }
 
-function createMockSession(): BoardSession {
-    const session = new BoardSession(mockUser)
-    session.config = mockConfig
-    session.user = mockUser
-    return session
+function createOnlineMock(): Online {
+    const online = new Online()
+    online.setUser(mockUser)
+    online.state.session.config = mockConfig
+    online.isConnected = () => true
+    return online
 }
 
 function createMockSocket<T>(fn: (data: Message<T[]>) => void): WebSocket {
@@ -73,17 +76,17 @@ function createMockSocket<T>(fn: (data: Message<T[]>) => void): WebSocket {
 describe("session", () => {
     beforeEach(() => {
         requestMock.mockClear()
-        stateMock.mockClear()
+        boardStateMock.mockClear()
     })
 
     it("creates a new session", async () => {
         requestMock.prototype.postSession.mockResolvedValue({
             config: mockConfig,
         })
-        const session = new BoardSession(mockUser)
-        const sessionId = await session.create()
+        const online = createOnlineMock()
+        const sessionId = await online.createSession({ password: "" })
         expect(sessionId).toEqual(mockConfig.id)
-        expect(session.config).toEqual(mockConfig)
+        expect(online.state.session.config).toEqual(mockConfig)
         expect(requestMock.prototype.postSession).toHaveBeenCalledTimes(1)
     })
 
@@ -99,15 +102,15 @@ describe("session", () => {
             pageRank: [],
             pages: {},
         })
-        stateMock.prototype.getState.mockReturnValue({
+        boardStateMock.prototype.getState.mockReturnValue({
             pageCollection: {},
             pageRank: [],
         } as unknown as BoardState)
-        const session = createMockSession()
 
-        await session.join(false)
+        const online = createOnlineMock()
+        await online.join(false)
 
-        expect(session.users).toEqual({
+        expect(online.state.session.users).toEqual({
             [mockUser.id ?? ""]: mockUser,
             [newUser.id ?? ""]: newUser,
         })
@@ -132,15 +135,14 @@ describe("session", () => {
             },
         }
         requestMock.prototype.getPagesSync.mockResolvedValue(sync)
-        stateMock.prototype.getState.mockReturnValue({
+        boardStateMock.prototype.getState.mockReturnValue({
             pageCollection: {},
             pageRank: [],
         } as unknown as BoardState)
-        const session = createMockSession()
+        const online = createOnlineMock()
+        await online.join(false)
 
-        await session.join(false)
-
-        expect(stateMock.prototype.syncPages).toHaveBeenCalledWith(
+        expect(boardStateMock.prototype.syncPages).toHaveBeenCalledWith(
             sync.pageRank,
             {
                 pageId1: {
@@ -158,20 +160,21 @@ describe("session", () => {
     })
 
     it("is connected if socket is open and sessionId is set", () => {
-        const session = new BoardSession(mockUser)
-        session.config = mockConfig
-        session.socket = { readyState: WebSocket.OPEN } as WebSocket
-        expect(session.isConnected()).toBeTruthy()
+        const online = createOnlineMock()
+        online.state.session.socket = {
+            readyState: WebSocket.OPEN,
+        } as WebSocket
+        expect(online.isConnected()).toBeTruthy()
     })
 
     it("sends serialized strokes over the socket and remove invalid ones", () => {
-        const session = createMockSession()
+        const online = createOnlineMock()
         const strokes: Stroke[] = [
             mockStroke,
             { id: "strokeId2" } as Stroke,
             { pageId: "pageId2" } as Stroke,
         ]
-        session.socket = createMockSocket<Stroke>((data) => {
+        online.state.session.socket = createMockSocket<Stroke>((data) => {
             expect(data.content.length).toEqual(1)
             expect(data.content[0]).toHaveProperty("userId", mockUser.id)
             expect(data.content[0]).not.toHaveProperty("hitboxes")
@@ -181,40 +184,42 @@ describe("session", () => {
                 userId: mockUser.id,
             })
         })
-        session.sendStrokes(strokes)
+        online.sendStrokes(strokes)
     })
 
     it("sends strokes to be erased over the socket", () => {
-        const session = createMockSession()
+        const online = createOnlineMock()
         const strokes: StrokeDelete[] = [mockStroke]
-        session.socket = createMockSocket<StrokeDelete>((data) => {
+        online.state.session.socket = createMockSocket<StrokeDelete>((data) => {
             expect(data.content.length).toEqual(1)
             expect(data.content[0]).toHaveProperty("id", mockStroke.id)
             expect(data.content[0]).toHaveProperty("pageId", mockStroke.pageId)
             expect(data.content[0]).toHaveProperty("userId", mockUser.id)
             expect(data.content[0]).toHaveProperty("type", ToolType.Eraser)
         })
-        session.eraseStrokes(strokes)
+        online.eraseStrokes(strokes)
     })
 
     it("updates users on connect and disconnect", () => {
-        const session = createMockSession()
-        session.users = { [mockUser.id ?? ""]: mockUser }
-        session.userConnect(newUser)
-        expect(session.users).toEqual({
+        const online = createOnlineMock()
+        online.state.session.users = { [mockUser.id ?? ""]: mockUser }
+        online.userConnect(newUser)
+        expect(online.state.session.users).toEqual({
             [mockUser.id ?? ""]: mockUser,
             [newUser.id ?? ""]: newUser,
         })
-        session.userDisconnect(newUser)
-        expect(session.users).toEqual({ [mockUser.id ?? ""]: mockUser })
+        online.userDisconnect(newUser)
+        expect(online.state.session.users).toEqual({
+            [mockUser.id ?? ""]: mockUser,
+        })
     })
 
     it("synchronizes pages by deleting and adding pages", async () => {
-        const session = createMockSession()
+        const online = createOnlineMock()
         const pageRank = ["pageId"]
         const page = new BoardPage().setID("pageId").updateMeta(mockPageMeta)
         const pageCollection: PageCollection = { [page.pageId]: page }
-        stateMock.prototype.getState.mockReturnValue({
+        boardStateMock.prototype.getState.mockReturnValue({
             pageCollection,
             pageRank,
         } as unknown as BoardState)
@@ -229,24 +234,24 @@ describe("session", () => {
             },
         }
 
-        await session.syncPages(sync)
+        await online.syncPages(sync)
 
         const wantPageRank = ["pageId2"]
         const wantPageCollection = {
             pageId2: new BoardPage().setID("pageId2").updateMeta(mockPageMeta),
         }
-        expect(stateMock.prototype.syncPages).toHaveBeenCalledWith(
+        expect(boardStateMock.prototype.syncPages).toHaveBeenCalledWith(
             wantPageRank,
             wantPageCollection
         )
     })
 
     it("synchronizes pages by updating pages meta", async () => {
-        const session = createMockSession()
+        const online = createOnlineMock()
         const pageRank = ["pageId"]
         const page = new BoardPage().setID("pageId")
         const pageCollection: PageCollection = { [page.pageId]: page }
-        stateMock.prototype.getState.mockReturnValue({
+        boardStateMock.prototype.getState.mockReturnValue({
             pageCollection,
             pageRank,
         } as unknown as BoardState)
@@ -262,27 +267,27 @@ describe("session", () => {
             },
         }
 
-        await session.syncPages(sync)
+        await online.syncPages(sync)
 
         const wantPageRank = ["pageId"]
         const wantPageCollection = {
             pageId: new BoardPage().setID("pageId").updateMeta(mockPageMeta),
         }
-        expect(stateMock.prototype.syncPages).toHaveBeenCalledWith(
+        expect(boardStateMock.prototype.syncPages).toHaveBeenCalledWith(
             wantPageRank,
             wantPageCollection
         )
     })
 
     it("synchronizes pages by clearing pages", async () => {
-        const session = createMockSession()
+        const online = createOnlineMock()
         const pageRank = ["pageId"]
         const page = new BoardPage()
             .setID("pageId")
             .updateMeta(mockPageMeta)
             .addStrokes([mockStroke])
         const pageCollection: PageCollection = { [page.pageId]: page }
-        stateMock.prototype.getState.mockReturnValue({
+        boardStateMock.prototype.getState.mockReturnValue({
             pageCollection,
             pageRank,
         } as unknown as BoardState)
@@ -297,20 +302,20 @@ describe("session", () => {
             },
         }
 
-        await session.syncPages(sync)
+        await online.syncPages(sync)
 
         const wantPageRank = ["pageId2"]
         const wantPageCollection = {
             pageId2: new BoardPage().setID("pageId2").updateMeta(mockPageMeta),
         }
-        expect(stateMock.prototype.syncPages).toHaveBeenCalledWith(
+        expect(boardStateMock.prototype.syncPages).toHaveBeenCalledWith(
             wantPageRank,
             wantPageCollection
         )
     })
 
     it("updates a user info", async () => {
-        const session = createMockSession()
+        const online = createOnlineMock()
         const update = {
             alias: "newUser",
             color: "#ffffff",
@@ -324,12 +329,12 @@ describe("session", () => {
             expect(update).toEqual(want)
         })
 
-        await session.updateUser(update)
-        expect(session.user).toEqual(want)
+        await online.updateUser(update)
+        expect(online.state.user).toEqual(want)
     })
 
     it("updates only user alias", async () => {
-        const session = createMockSession()
+        const online = createOnlineMock()
         const update = {
             alias: "newUser",
         }
@@ -342,12 +347,12 @@ describe("session", () => {
             expect(update).toEqual(want)
         })
 
-        await session.updateUser(update)
-        expect(session.user).toEqual(want)
+        await online.updateUser(update)
+        expect(online.state.user).toEqual(want)
     })
 
     it("updates a user info throws error", async () => {
-        const session = createMockSession()
+        const online = createOnlineMock()
         const update = {
             alias: "newUser",
             color: "#ffffff",
@@ -356,7 +361,7 @@ describe("session", () => {
             throw new Error("error")
         })
 
-        await expect(session.updateUser(update)).rejects.toThrow()
-        expect(session.user).toEqual(mockUser)
+        await expect(online.updateUser(update)).rejects.toThrow()
+        expect(online.state.user).toEqual(mockUser)
     })
 })

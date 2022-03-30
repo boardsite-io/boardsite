@@ -2,6 +2,7 @@ import React, { useEffect } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { online } from "state/online"
 import { notification } from "state/notification"
+import { ROUTE } from "App/routes"
 
 const Callback: React.FC = () => {
     const navigate = useNavigate()
@@ -12,11 +13,11 @@ const Callback: React.FC = () => {
     useEffect(() => {
         if (error || !token || searchParams.get("token_type") !== "bearer") {
             notification.create("Notification.Session.OauthFlowFailed")
-            navigate("/")
+            navigate(ROUTE.HOME)
             return
         }
         online.setToken(token).then(() => {
-            navigate("/")
+            navigate(ROUTE.HOME)
         })
     })
 

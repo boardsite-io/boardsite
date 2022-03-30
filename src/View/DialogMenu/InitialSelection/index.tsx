@@ -11,16 +11,16 @@ import { DialogState } from "state/menu/state/index.types"
 const createOfflineSession = () => {
     handleDeleteAllPages() // Make sure state is clean
     handleAddPageUnder()
-    menu.setSessionDialog(DialogState.Closed)
+    menu.setDialogState(DialogState.Closed)
 }
 
 const createOnlineSession = () => {
-    menu.setSessionDialog(DialogState.CreateOnlineSession)
+    menu.setDialogState(DialogState.OnlineCreate)
 }
 
 const continuePreviousSession = async () => {
     await board.loadFromLocalStorage()
-    menu.setSessionDialog(DialogState.Closed)
+    menu.setDialogState(DialogState.Closed)
 }
 
 interface InitialSelectionProps {
@@ -46,7 +46,7 @@ const InitialSelection: React.FC<InitialSelectionProps> = ({ firstLoad }) => {
     return (
         <>
             <DialogTitle>
-                <FormattedMessage id="DialogMenu.InitialSelection.Title" />
+                <FormattedMessage id="Dialog.InitialSelection.Title" />
             </DialogTitle>
             <DialogContent>
                 <PageSettings />
@@ -55,14 +55,14 @@ const InitialSelection: React.FC<InitialSelectionProps> = ({ firstLoad }) => {
                         disabled={!showContinue}
                         onClick={continuePreviousSession}
                     >
-                        <FormattedMessage id="DialogMenu.InitialSelection.Continue" />
+                        <FormattedMessage id="Dialog.InitialSelection.Button.Continue" />
                     </Button>
                 )}
                 <Button onClick={createOfflineSession}>
-                    <FormattedMessage id="DialogMenu.InitialSelection.CreateOffline" />
+                    <FormattedMessage id="Dialog.InitialSelection.Button.CreateOffline" />
                 </Button>
                 <Button onClick={createOnlineSession}>
-                    <FormattedMessage id="DialogMenu.InitialSelection.OnlineSessionMenu" />
+                    <FormattedMessage id="Dialog.InitialSelection.Button.OnlineCreate" />
                 </Button>
             </DialogContent>
         </>

@@ -13,20 +13,20 @@ type UserOptionsProps = {
 }
 
 const UserOptions = ({ userId, isHost, userIsYou }: UserOptionsProps) => {
-    const { session } = useGState("Session").online
+    useGState("Session")
 
     const onKickUser = useCallback(async () => {
         try {
-            await session?.kickUser({ id: userId })
+            await online.kickUser({ id: userId })
         } catch (error) {
             notification.create("Notification.Session.KickUserFailed", 3000)
         }
-    }, [session, userId])
+    }, [userId])
 
     return (
         <SubMenuWrap>
             <MenuItem
-                disabled={!isHost || userIsYou || !online.state.isAuthorized()}
+                disabled={!isHost || userIsYou || !online.isAuthorized()}
                 warning
                 text={
                     <FormattedMessage id="Menu.General.Session.UserOptions.Kick" />

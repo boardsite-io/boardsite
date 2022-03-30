@@ -1,5 +1,4 @@
 import React from "react"
-import { useNavigate, useParams } from "react-router-dom"
 import { FormattedMessage, useIntl } from "language"
 import {
     Button,
@@ -11,64 +10,58 @@ import {
 } from "components"
 import { Field, Form, Formik } from "formik"
 import { online } from "state/online"
-import { notification } from "state/notification"
 import * as Yup from "yup"
-import { ROUTE } from "App/routes"
-import { joinOnlineSession } from "../OnlineSession/helpers"
-import { Selection } from "../OnlineSession/index.styled"
-import { CreateFormValues } from "../OnlineSession"
+import { menu } from "state/menu"
+import { DialogState } from "state/menu/state/index.types"
+import { Selection } from "./index.styled"
 
-const OnlineSessionJoinOnly: React.FC = () => {
-    const navigate = useNavigate()
+export interface ChangeAliasFormValues {
+    alias: string
+    color: string
+}
+
+const OnlineChangeAlias: React.FC = () => {
     const { formatMessage: f } = useIntl()
-    const { sessionId } = useParams()
     const { alias, color } = online.getState().user
 
     return (
         <>
             <DialogTitle>
-                <FormattedMessage id="DialogMenu.Online.JoinOnly.Title" />
+                <FormattedMessage id="Dialog.OnlineChangeAlias.Title" />
             </DialogTitle>
             <DialogContent>
                 <Formik
-                    initialValues={{ userAlias: alias, userColor: color }}
+                    initialValues={{ alias, color }}
                     onSubmit={async ({
-                        userAlias,
-                        userColor,
-                    }: CreateFormValues) => {
-                        online.updateUser({
-                            alias: userAlias,
-                            color: userColor,
+                        alias,
+                        color,
+                    }: ChangeAliasFormValues) => {
+                        await online.updateUser({
+                            alias,
+                            color,
                         })
-                        if (sessionId) {
-                            await joinOnlineSession(sessionId, navigate)
-                        } else {
-                            notification.create(
-                                "Notification.Session.JoinFailed"
-                            )
-                            navigate(ROUTE.HOME)
-                        }
+                        menu.setDialogState(DialogState.Closed)
                     }}
                     validationSchema={Yup.object().shape({
-                        userColor: Yup.string()
+                        color: Yup.string()
                             .required()
                             .matches(/^#[a-fA-F0-9]{6}$/),
-                        userAlias: Yup.string()
+                        alias: Yup.string()
                             .required(
                                 f({
-                                    id: "DialogMenu.FormInput.UserAlias.Required",
+                                    id: "Dialog.OnlineChangeAlias.Input.Alias.Required",
                                 })
                             )
                             .matches(
                                 /^.{4,32}$/,
                                 f({
-                                    id: "DialogMenu.FormInput.UserAlias.Length",
+                                    id: "Dialog.OnlineChangeAlias.Input.Alias.Length",
                                 })
                             )
                             .matches(
                                 /^[a-zA-Z0-9-_]{4,32}$/,
                                 f({
-                                    id: "DialogMenu.FormInput.UserAlias.Characters",
+                                    id: "Dialog.OnlineChangeAlias.Input.Alias.Characters",
                                 })
                             ),
                     })}
@@ -76,31 +69,28 @@ const OnlineSessionJoinOnly: React.FC = () => {
                     {({ isSubmitting }) => (
                         <Form spellCheck="false">
                             <Selection>
-                                <FormikLabel
-                                    htmlFor="userColor"
-                                    textAlign="left"
-                                >
+                                <FormikLabel htmlFor="color" textAlign="left">
                                     <Field
-                                        id="userColor"
-                                        name="userColor"
+                                        id="color"
+                                        name="color"
                                         component={FormikColorInput}
                                     />
                                 </FormikLabel>
                                 <FormikLabel
-                                    htmlFor="userAlias"
+                                    htmlFor="alias"
                                     textAlign="left"
                                     fullWidth
                                 >
-                                    <FormattedMessage id="DialogMenu.FormInput.UserAlias.Label" />
+                                    <FormattedMessage id="Dialog.OnlineChangeAlias.Input.Alias.Label" />
                                     <Field
-                                        id="userAlias"
-                                        name="userAlias"
+                                        id="alias"
+                                        name="alias"
                                         component={FormikInput}
                                     />
                                 </FormikLabel>
                             </Selection>
                             <Button type="submit" disabled={isSubmitting}>
-                                <FormattedMessage id="DialogMenu.FormSubmit.JoinSession" />
+                                <FormattedMessage id="Dialog.OnlineChangeAlias.SubmitButton.ChangeAlias" />
                             </Button>
                         </Form>
                     )}
@@ -110,4 +100,4 @@ const OnlineSessionJoinOnly: React.FC = () => {
     )
 }
 
-export default OnlineSessionJoinOnly
+export default OnlineChangeAlias

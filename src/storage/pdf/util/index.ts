@@ -7,6 +7,7 @@ import { PDFAttachment } from "drawing/attachment"
 import { view } from "state/view"
 import { board } from "state/board"
 import { online } from "state/online"
+import { request } from "api/request"
 import { AttachId, Attachment, PageMeta } from "state/board/state/index.types"
 import { pageToDataURL } from "./rendering"
 
@@ -14,8 +15,8 @@ export const importPdfFile = async (file: File): Promise<void> => {
     const blob = await readFileAsUint8Array(file)
     const pdf = await new PDFAttachment(blob).render()
 
-    if (online.state.session?.isConnected()) {
-        const attachId = await online.state.session?.addAttachment(file)
+    if (online.isConnected()) {
+        const { attachId } = await request.postAttachment(file)
         pdf.setId(attachId)
     }
 
@@ -26,7 +27,7 @@ export const importPdfFile = async (file: File): Promise<void> => {
 const addRenderedPdf = async (attachment: Attachment): Promise<void> => {
     handleDeleteAllPages()
 
-    if (online.state.session?.isConnected()) {
+    if (online.isConnected()) {
         const pages = attachment.renderedData.map((img, i) => {
             return new BoardPage().updateMeta({
                 background: {
@@ -41,7 +42,7 @@ const addRenderedPdf = async (attachment: Attachment): Promise<void> => {
             })
         })
 
-        online.state.session?.addPages(
+        online.addPages(
             pages,
             pages.map(() => -1)
         )

@@ -21,12 +21,12 @@ const onClickPage = () => {
     menu.setMainMenu(MainMenuState.Page)
 }
 const onClickSession = () => {
-    const numberOfUsers = online.getState().session?.getNumberOfUsers()
+    const numberOfUsers = online.getNumberOfUsers()
 
     if (numberOfUsers && numberOfUsers > 0) {
         menu.setMainMenu(MainMenuState.Session)
     } else {
-        menu.setSessionDialog(DialogState.CreateOnlineSession)
+        menu.setDialogState(DialogState.OnlineCreate)
     }
 }
 
@@ -49,8 +49,7 @@ const MainMenuBar: React.FC = memo(() => {
         onEnter(MainMenuState.Page, mainMenuState)
     }, [mainMenuState])
     const onMouseEnterSession = useCallback(() => {
-        const numberOfUsers = online.getState().session?.getNumberOfUsers()
-        if (numberOfUsers && numberOfUsers > 0) {
+        if (online.getNumberOfUsers() > 0) {
             onEnter(MainMenuState.Session, mainMenuState)
         }
     }, [mainMenuState])

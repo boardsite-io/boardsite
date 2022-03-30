@@ -35,11 +35,10 @@ export function handleAddPageOver(): void {
         isRedoable: true,
     }
 
-    if (online.state.session?.isConnected()) {
-        const { session } = online.state
-        addPagesAction.sessionHandler = () => session?.addPages([page], [index])
+    if (online.isConnected()) {
+        addPagesAction.sessionHandler = () => online.addPages([page], [index])
         addPagesAction.sessionUndoHandler = () =>
-            session?.deletePages([page.pageId])
+            online.deletePages([page.pageId])
     }
 
     board.handleAddPages(addPagesAction)
@@ -54,11 +53,10 @@ export function handleAddPageUnder(): void {
         isRedoable: true,
     }
 
-    if (online.state.session?.isConnected()) {
-        const { session } = online.state
-        addPagesAction.sessionHandler = () => session?.addPages([page], [index])
+    if (online.isConnected()) {
+        addPagesAction.sessionHandler = () => online.addPages([page], [index])
         addPagesAction.sessionUndoHandler = () =>
-            session?.deletePages([page.pageId])
+            online.deletePages([page.pageId])
     }
 
     board.handleAddPages(addPagesAction)
@@ -79,13 +77,12 @@ export function handleClearPages(pageIds: PageId[]): void {
         isRedoable: true,
     }
 
-    if (online.state.session?.isConnected()) {
-        const { session } = online.state
+    if (online.isConnected()) {
         clearPagesAction.sessionHandler = () => {
-            session?.updatePages(verifiedPages, true)
+            online.updatePages(verifiedPages, true)
         }
         clearPagesAction.sessionUndoHandler = (undos) => {
-            session?.sendStrokes(undos)
+            online.sendStrokes(undos)
         }
     }
 
@@ -105,16 +102,15 @@ export function handleDeletePages(
         isRedoable,
     }
 
-    if (online.state.session?.isConnected()) {
-        const { session } = online.state
+    if (online.isConnected()) {
         const indices = pageIds.map((pid) =>
             board.getState().pageRank.indexOf(pid)
         )
-        deletePagesAction.sessionHandler = () => session?.deletePages(pageIds)
+        deletePagesAction.sessionHandler = () => online.deletePages(pageIds)
         deletePagesAction.sessionUndoHandler = (undos) => {
             const pages = undos.map(({ page }) => page)
             // TODO: send pagerank
-            session?.addPages(pages, indices as number[])
+            online.addPages(pages, indices as number[])
         }
     }
 
@@ -134,11 +130,9 @@ export function handleAddStrokes(strokes: Stroke[], isUpdate: boolean): void {
         isRedoable: true,
     }
 
-    if (online.state.session?.isConnected()) {
-        const { session } = online.state
-        addStrokesAction.sessionHandler = () => session?.sendStrokes(strokes)
-        addStrokesAction.sessionUndoHandler = () =>
-            session?.eraseStrokes(strokes)
+    if (online.isConnected()) {
+        addStrokesAction.sessionHandler = () => online.sendStrokes(strokes)
+        addStrokesAction.sessionUndoHandler = () => online.eraseStrokes(strokes)
     }
 
     board.handleAddStrokes(addStrokesAction)
@@ -153,11 +147,10 @@ export function handleDeleteStrokes(
         isRedoable: true,
     }
 
-    if (!offlineOnly && online.state.session?.isConnected()) {
-        const { session } = online.state
-        eraseStrokesAction.sessionHandler = () => session?.eraseStrokes(strokes)
+    if (!offlineOnly && online.isConnected()) {
+        eraseStrokesAction.sessionHandler = () => online.eraseStrokes(strokes)
         eraseStrokesAction.sessionUndoHandler = () =>
-            session?.sendStrokes(strokes)
+            online.sendStrokes(strokes)
     }
 
     board.handleEraseStrokes(eraseStrokesAction)
@@ -198,12 +191,11 @@ export function handleChangePageBackground(): void {
         isRedoable: true,
     }
 
-    if (online.state.session?.isConnected()) {
-        const { session } = online.state
+    if (online.isConnected()) {
         setPageMetaAction.sessionHandler = () =>
-            session?.updatePages([pageUpdate], false)
+            online.updatePages([pageUpdate], false)
         setPageMetaAction.sessionUndoHandler = (undos) =>
-            session?.updatePages(undos, false)
+            online.updatePages(undos, false)
     }
 
     board.handleSetPageMeta(setPageMetaAction)

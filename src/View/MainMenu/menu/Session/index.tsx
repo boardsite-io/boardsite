@@ -2,12 +2,14 @@ import { FormattedMessage } from "language"
 import React, { useCallback, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ExpandableIcon, HorizontalRule } from "components"
-import { User } from "api/types"
 import { DialogState, MainMenuState } from "state/menu/state/index.types"
 import { menu } from "state/menu"
 import { useGState } from "state"
 import { CSSTransition } from "react-transition-group"
 import { cssTransition } from "View/MainMenu/cssTransition"
+import { online } from "state/online"
+import { User } from "state/online/state/index.types"
+import { ROUTE } from "App/routes"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 import SessionSettingsMenu from "./SessionSettings"
@@ -22,27 +24,32 @@ enum SubMenu {
 const SessionMenu = () => {
     const [subMenu, setSubMenu] = useState<SubMenu | User["id"]>(SubMenu.Closed)
     const navigate = useNavigate()
-    const { online: onlineState } = useGState("Session")
-    const { session } = onlineState
+    useGState("Session")
 
     const leaveSession = useCallback(() => {
-        session?.disconnect()
+        online.disconnect()
         menu.setMainMenu(MainMenuState.Closed)
-        menu.setSessionDialog(DialogState.InitialSelection)
-        navigate("/")
-    }, [session, navigate])
+        menu.setDialogState(DialogState.InitialSelection)
+        navigate(ROUTE.HOME)
+    }, [navigate])
 
-    if (!session) {
+    const changePassword = useCallback(() => {
+        menu.setDialogState(DialogState.OnlineChangePassword)
+    }, [])
+
+    const changeAlias = useCallback(() => {
+        menu.setDialogState(DialogState.OnlineChangeAlias)
+    }, [])
+
+    if (!online.state.session.socket) {
         return null
     }
 
-    const isHost = session.isHost()
-
     return (
         <MainMenuWrap>
-            {Object.values(session.users ?? {}).map((user) => {
-                const userIsHost = user.id === session.config?.host
-                const userIsYou = user.id === session.user.id
+            {Object.values(online.state.session.users ?? {}).map((user) => {
+                const userIsHost = user.id === online.state.session.config?.host
+                const userIsYou = user.id === online.state.user.id
 
                 return (
                     <UserMenuItem
@@ -68,7 +75,7 @@ const SessionMenu = () => {
                             {user.id && (
                                 <UserOptions
                                     userIsYou={userIsYou}
-                                    isHost={isHost}
+                                    isHost={online.isHost()}
                                     userId={user.id}
                                 />
                             )}
@@ -77,7 +84,7 @@ const SessionMenu = () => {
                 )
             })}
             <HorizontalRule />
-            {isHost && onlineState.isAuthorized() && (
+            {online.isHost() && online.isAuthorized() && (
                 <MenuItem
                     text={
                         <FormattedMessage id="Menu.General.Session.Settings" />
@@ -93,6 +100,18 @@ const SessionMenu = () => {
                     </CSSTransition>
                 </MenuItem>
             )}
+            <MenuItem
+                text={
+                    <FormattedMessage id="Menu.General.Session.ChangePassword" />
+                }
+                onClick={changePassword}
+            />
+            <MenuItem
+                text={
+                    <FormattedMessage id="Menu.General.Session.ChangeAlias" />
+                }
+                onClick={changeAlias}
+            />
             <MenuItem
                 text={<FormattedMessage id="Menu.General.Session.Leave" />}
                 onClick={leaveSession}

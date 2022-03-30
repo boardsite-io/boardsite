@@ -1,60 +1,27 @@
-import { BoardPage } from "drawing/page"
-import {
-    SerializedStroke,
-    Stroke,
-    StrokeUpdate,
-} from "drawing/stroke/index.types"
-import {
-    Page,
-    PageCollection,
-    PageId,
-    PageMeta,
-    PageRank,
-} from "state/board/state/index.types"
+import { SerializedStroke } from "drawing/stroke/index.types"
+import { PageId, PageMeta, PageRank } from "state/board/state/index.types"
+import { SessionConfig, User } from "state/online/state/index.types"
 
-export interface Session {
-    config?: SessionConfig
-    user: User
-    socket?: WebSocket
-    users?: ConnectedUsers
-    token?: string
-
-    setToken(token: string): void
-    clearToken(): void
-    updateUser(user: Partial<User>): void
-    getNumberOfUsers(): number
-    kickUser({ id }: Pick<User, "id">): Promise<void>
-    create(): Promise<string>
-    join(copyOffline?: boolean): Promise<void>
-    createSocket(sessionId: string, password?: string): Promise<void>
-    isConnected(): boolean
-    isHost(): boolean
-    disconnect(): void
-    synchronize(
-        pageRank: PageId[],
-        pageCollection: PageCollection
-    ): Promise<void>
-    send(type: MessageType, content: unknown): void
-    sendStrokes(strokes: Stroke[] | StrokeUpdate[]): void
-    eraseStrokes(strokes: { id: string; pageId: string }[]): void
-    addPages(pages: BoardPage[], pageIndex: number[]): Promise<void>
-    deletePages(pageIds: string[]): Promise<void>
-    updatePages(
-        pages: Pick<Page, "pageId" | "meta">[],
-        clear: boolean
-    ): Promise<void>
-    addAttachment(file: File): Promise<string>
-    getAttachment(attachId: string): Promise<Uint8Array>
-    attachURL(attachId: string): URL
-    updateConfig(config: Partial<SessionConfig>): Promise<void>
+export enum ErrorCode {
+    BadRequest = 4000,
+    RateLimitExceeded = 4001,
+    MissingIdentifier = 4002,
+    AttachmentSizeExceeded = 4003,
+    MaxNumberOfUsersReached = 4004,
+    BadUsername = 4005,
+    InvalidPassword = 4006,
 }
 
-export type User = {
-    id?: string
-    alias: string
-    color: string
+type ErrorResponse = {
+    data: {
+        code: ErrorCode
+        message: string
+    }
 }
-export type ConnectedUsers = Record<string, User>
+
+export type ErrorBody = {
+    response?: ErrorResponse
+}
 
 export type StrokeDelete = {
     id: string
@@ -78,6 +45,10 @@ export interface Message<T> {
     type: MessageType
     sender: string
     content: T
+}
+
+export interface RequestPostSession {
+    config?: Partial<SessionConfig>
 }
 
 export interface ResponsePostSession {
@@ -110,13 +81,6 @@ export interface ResponsePostAttachment {
 export interface ResponseGetConfig {
     users: Record<string, User>
     config: SessionConfig
-}
-
-export type SessionConfig = {
-    id: string
-    host: string
-    maxUsers: number
-    readOnly: boolean
 }
 
 export type UpdateUserRequest = {

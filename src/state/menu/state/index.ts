@@ -5,7 +5,7 @@ import { DialogState, MainMenuState, MenuState } from "./index.types"
 export class Menu implements GlobalState<MenuState> {
     state: MenuState = {
         mainMenuState: MainMenuState.Closed,
-        dialogState: DialogState.InitialSelectionFirstLoad,
+        dialogState: DialogState.Closed,
         shortcutsOpen: false,
         subscribeOpen: false,
     }
@@ -37,7 +37,7 @@ export class Menu implements GlobalState<MenuState> {
      * Set the session dialog state
      * @param dialogState new dialog state
      */
-    setSessionDialog(dialogState: DialogState): void {
+    setDialogState(dialogState: DialogState): void {
         this.state.dialogState = dialogState
         subscriptionState.render("DialogState")
     }
