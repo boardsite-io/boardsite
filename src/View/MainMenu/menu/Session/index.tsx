@@ -85,27 +85,30 @@ const SessionMenu = () => {
             })}
             <HorizontalRule />
             {online.isHost() && online.isAuthorized() && (
-                <MenuItem
-                    text={
-                        <FormattedMessage id="Menu.General.Session.Settings" />
-                    }
-                    expandMenu={() => setSubMenu(SubMenu.SessionSettings)}
-                    icon={<ExpandableIcon />}
-                >
-                    <CSSTransition
-                        in={subMenu === SubMenu.SessionSettings}
-                        {...cssTransition}
+                <>
+                    <MenuItem
+                        text={
+                            <FormattedMessage id="Menu.General.Session.Settings" />
+                        }
+                        expandMenu={() => setSubMenu(SubMenu.SessionSettings)}
+                        icon={<ExpandableIcon />}
                     >
-                        <SessionSettingsMenu />
-                    </CSSTransition>
-                </MenuItem>
+                        <CSSTransition
+                            in={subMenu === SubMenu.SessionSettings}
+                            {...cssTransition}
+                        >
+                            <SessionSettingsMenu />
+                        </CSSTransition>
+                    </MenuItem>
+                    <MenuItem
+                        text={
+                            <FormattedMessage id="Menu.General.Session.ChangePassword" />
+                        }
+                        onClick={changePassword}
+                    />
+                </>
             )}
-            <MenuItem
-                text={
-                    <FormattedMessage id="Menu.General.Session.ChangePassword" />
-                }
-                onClick={changePassword}
-            />
+
             <MenuItem
                 text={
                     <FormattedMessage id="Menu.General.Session.ChangeAlias" />
