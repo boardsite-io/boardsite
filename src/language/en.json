@@ -153,6 +153,7 @@
     "Notification.Session.Leave": "Session left.",
     "Notification.Session.CopiedToClipboard": "🔗 The session link has been copied to your clipboard.",
     "Notification.Session.OauthFlowFailed": "Sign in aborted.",
+    "Notification.Session.ReadOnly": "🔏 Host set the session to read-only",
     "Shortcut.Title": "Shortcuts",
     "Shortcut.File.New": "New File",
     "Shortcut.File.New.Keys": "^ + N",

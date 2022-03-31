@@ -79,6 +79,10 @@ export class Online implements GlobalState<OnlineState> {
         return this.state.user.id === this.state.session.config?.host
     }
 
+    isReadOnly(): boolean {
+        return !this.isHost() && !!this.state.session?.config?.readOnly
+    }
+
     async updateConfig(config: Partial<SessionConfig>): Promise<void> {
         if (!this.state.session.secret) return
         await request.putConfig(this.state.session.secret, config)

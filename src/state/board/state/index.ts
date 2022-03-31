@@ -39,6 +39,16 @@ export class Board implements GlobalState<BoardState> {
         this.saveToLocalStorage()
     }
 
+    getCurrentPageId() {
+        const { pageRank, currentPageIndex } = this.state
+        return pageRank[currentPageIndex]
+    }
+
+    getCurrentPage() {
+        const { pageRank, pageCollection, currentPageIndex } = this.state
+        return pageCollection[pageRank[currentPageIndex]]
+    }
+
     /**
      * Add new attachments
      * @param attachments new attachments

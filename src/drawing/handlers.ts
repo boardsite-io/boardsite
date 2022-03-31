@@ -8,6 +8,7 @@ import { online } from "state/online"
 import {
     AddPagesAction,
     AddStrokesAction,
+    BoardAction,
     ClearPagesAction,
     DeletePagesAction,
     EraseStrokesAction,
@@ -17,6 +18,7 @@ import {
 } from "state/board/state/index.types"
 import { BoardPage } from "./page"
 import { getVerifiedPageIds, getVerifiedPages } from "./helpers"
+import { notification } from "../state/notification"
 
 const createPage = (): BoardPage =>
     new BoardPage().updateMeta(cloneDeep(drawing.getState().pageMeta))
@@ -27,27 +29,18 @@ export function handleSetTool(tool: Partial<Tool>): void {
 }
 
 export function handleAddPageOver(): void {
-    const page = createPage()
-
-    const index = board.getState().currentPageIndex
-    const addPagesAction: AddPagesAction = {
-        data: [{ page, index }],
-        isRedoable: true,
-    }
-
-    if (online.isConnected()) {
-        addPagesAction.sessionHandler = () => online.addPages([page], [index])
-        addPagesAction.sessionUndoHandler = () =>
-            online.deletePages([page.pageId])
-    }
-
-    board.handleAddPages(addPagesAction)
+    handleAddPage(board.getState().currentPageIndex)
     view.resetView()
 }
 
 export function handleAddPageUnder(): void {
+    handleAddPage(board.getState().currentPageIndex + 1)
+    board.jumpToNextPage()
+    view.resetView()
+}
+
+export function handleAddPage(index: number): void {
     const page = createPage()
-    const index = board.getState().currentPageIndex + 1
     const addPagesAction: AddPagesAction = {
         data: [{ page, index }],
         isRedoable: true,
@@ -59,13 +52,11 @@ export function handleAddPageUnder(): void {
             online.deletePages([page.pageId])
     }
 
-    board.handleAddPages(addPagesAction)
-    board.jumpToNextPage()
-    view.resetView()
+    sendMutableAction(board.handleAddPages, addPagesAction)
 }
 
 export function handleClearPage(): void {
-    handleClearPages([getCurrentPageId()])
+    handleClearPages([board.getCurrentPageId()])
 }
 
 export function handleClearPages(pageIds: PageId[]): void {
@@ -86,11 +77,11 @@ export function handleClearPages(pageIds: PageId[]): void {
         }
     }
 
-    board.handleClearPages(clearPagesAction)
+    sendMutableAction(board.handleClearPages, clearPagesAction)
 }
 
 export function handleDeleteCurrentPage(): void {
-    handleDeletePages([getCurrentPageId()], true)
+    handleDeletePages([board.getCurrentPageId()], true)
 }
 
 export function handleDeletePages(
@@ -114,7 +105,7 @@ export function handleDeletePages(
         }
     }
 
-    board.handleDeletePages(deletePagesAction)
+    sendMutableAction(board.handleDeletePages, deletePagesAction)
 }
 
 export function handleDeleteAllPages(isRedoable?: boolean): void {
@@ -135,7 +126,7 @@ export function handleAddStrokes(strokes: Stroke[], isUpdate: boolean): void {
         addStrokesAction.sessionUndoHandler = () => online.eraseStrokes(strokes)
     }
 
-    board.handleAddStrokes(addStrokesAction)
+    sendMutableAction(board.handleAddStrokes, addStrokesAction)
 }
 
 export function handleDeleteStrokes(
@@ -153,22 +144,22 @@ export function handleDeleteStrokes(
             online.sendStrokes(strokes)
     }
 
-    board.handleEraseStrokes(eraseStrokesAction)
+    sendMutableAction(board.handleEraseStrokes, eraseStrokesAction)
 }
 
 export function handleUndo(): void {
     board.clearTransform()
-    board.undoAction()
+    sendMutableAction(board.undoAction)
 }
 
 export function handleRedo(): void {
     board.clearTransform()
-    board.redoAction()
+    sendMutableAction(board.redoAction)
 }
 
 export function handleChangePageBackground(): void {
     // update the default page type
-    const currentPage = getCurrentPage()
+    const currentPage = board.getCurrentPage()
     // there is no current page, eg. when all pages have been removed
     if (!currentPage) {
         return
@@ -198,15 +189,16 @@ export function handleChangePageBackground(): void {
             online.updatePages(undos, false)
     }
 
-    board.handleSetPageMeta(setPageMetaAction)
+    sendMutableAction(board.handleSetPageMeta, setPageMetaAction)
 }
 
-function getCurrentPageId() {
-    const { pageRank, currentPageIndex } = board.getState()
-    return pageRank[currentPageIndex]
-}
-
-function getCurrentPage() {
-    const { pageRank, pageCollection, currentPageIndex } = board.getState()
-    return pageCollection[pageRank[currentPageIndex]]
+function sendMutableAction<T extends BoardAction<unknown[], unknown[]>>(
+    handle: (a: T) => void,
+    action?: T
+): void {
+    if (online.isConnected() && online.isReadOnly()) {
+        notification.create("Notification.Session.ReadOnly", 3000)
+        return
+    }
+    handle.bind(board)(action as unknown as T)
 }
