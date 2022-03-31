@@ -1,5 +1,5 @@
 import React from "react"
-import { useInitialDialog, useKeyboardShortcuts } from "hooks"
+import { useInitialDialog, useKeyboardShortcuts, useWindowResize } from "hooks"
 import Board from "./Board"
 import { ViewWrap } from "./index.styled"
 import ToolRing from "./ToolRing"
@@ -14,6 +14,7 @@ import Subscribe from "./Subscribe"
 const View: React.FC = () => {
     useKeyboardShortcuts()
     useInitialDialog()
+    useWindowResize()
 
     return (
         <ViewWrap>
