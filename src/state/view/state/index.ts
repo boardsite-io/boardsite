@@ -40,6 +40,18 @@ export class View implements GlobalState<ViewState> {
     }
 
     /**
+     * Center the view while maintaining the current scale
+     */
+    centerView(): void {
+        const newTransform = {
+            ...this.getState().viewTransform,
+            xOffset: getCenterX() / this.getState().viewTransform.scale,
+        }
+
+        this.updateViewTransform(newTransform)
+    }
+
+    /**
      * Zoom to the center of the screen
      * @param isZoomingIn set to true to zoom in
      */
