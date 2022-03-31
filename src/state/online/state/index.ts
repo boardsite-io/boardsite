@@ -29,6 +29,8 @@ import {
     PageMeta,
 } from "state/board/state/index.types"
 import { BoardPage } from "drawing/page"
+import { menu } from "state/menu"
+import { DialogState } from "state/menu/state/index.types"
 import { newAttachment } from "drawing/attachment/utils"
 import { OnlineState, SessionConfig, User } from "./index.types"
 import { GlobalState, SerializedState } from "../../types"
@@ -144,16 +146,22 @@ export class Online implements GlobalState<OnlineState> {
         return new Promise((resolve, reject) => {
             const url = new URL(API_URL)
             url.protocol = url.protocol.replace("http", "ws")
-            this.state.session.socket = new WebSocket(
+
+            const webSocket = new WebSocket(
                 `${url.toString()}b/${sessionId}/users/${
                     this.state.user.id
                 }/socket`
             )
-            this.state.session.socket.onmessage = (msg) =>
-                this.receive(JSON.parse(msg.data))
-            this.state.session.socket.onopen = () => resolve()
-            this.state.session.socket.onerror = (ev) => reject(ev)
-            // TODO: onclose
+            webSocket.onmessage = (msg) => this.receive(JSON.parse(msg.data))
+            webSocket.onopen = () => resolve()
+            webSocket.onerror = (ev) => reject(ev)
+            webSocket.onclose = () => {
+                this.disconnect()
+                // Open join dialog to allow easy rejoining
+                menu.setDialogState(DialogState.OnlineJoin)
+            }
+
+            this.state.session.socket = webSocket
         })
     }
 
@@ -187,7 +195,8 @@ export class Online implements GlobalState<OnlineState> {
 
     disconnect(): void {
         this.state.session.socket?.close()
-        this.state.session.users = {}
+        delete this.state.session.users
+        delete this.state.session.socket
         board.clearAttachments()
         board.deleteAllPages() // Use non-redoable internal option
         board.handleAddPages({ data: [{ page: new BoardPage(), index: -1 }] })
