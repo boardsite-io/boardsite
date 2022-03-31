@@ -49,7 +49,6 @@ export const DialogBackground = styled.div<DialogProps>`
 `
 
 export const DialogContent = styled.div`
-    overflow: auto;
     padding: 1rem 1.5rem;
 `
 
