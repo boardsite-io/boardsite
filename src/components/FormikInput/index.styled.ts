@@ -32,6 +32,7 @@ export const Input = styled.input<{ isValid: boolean }>`
     outline: none;
     border: none;
     border-bottom: 1px solid;
+    border-radius: 0;
     border-color: ${({ isValid, theme }) =>
         isValid
             ? theme.palette.secondary.main
