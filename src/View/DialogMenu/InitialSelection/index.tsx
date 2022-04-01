@@ -7,27 +7,15 @@ import { board } from "state/board"
 import { loadIndexedDB } from "storage/local"
 import { menu } from "state/menu"
 import { DialogState } from "state/menu/state/index.types"
-
-const createOfflineSession = () => {
-    handleDeleteAllPages() // Make sure state is clean
-    handleAddPageUnder()
-    menu.setDialogState(DialogState.Closed)
-}
-
-const createOnlineSession = () => {
-    menu.setDialogState(DialogState.OnlineCreate)
-}
-
-const continuePreviousSession = async () => {
-    await board.loadFromLocalStorage()
-    menu.setDialogState(DialogState.Closed)
-}
+import { useNavigate } from "react-router-dom"
+import { ROUTE } from "App/routes"
 
 interface InitialSelectionProps {
     firstLoad: boolean
 }
 
 const InitialSelection: React.FC<InitialSelectionProps> = ({ firstLoad }) => {
+    const navigate = useNavigate()
     const [showContinue, setShowContinue] = useState(false)
 
     const checkStorage = useCallback(async () => {
@@ -40,8 +28,27 @@ const InitialSelection: React.FC<InitialSelectionProps> = ({ firstLoad }) => {
     useEffect(() => {
         if (firstLoad) {
             checkStorage()
+        } else {
+            // Leaving or getting kicked from a session opens this
+            // dialog so we can navigate to the home route here
+            navigate(ROUTE.HOME)
         }
-    }, [firstLoad, checkStorage])
+    }, [navigate, firstLoad, checkStorage])
+
+    const createOfflineSession = useCallback(() => {
+        handleDeleteAllPages() // Make sure state is clean
+        handleAddPageUnder()
+        menu.setDialogState(DialogState.Closed)
+    }, [])
+
+    const createOnlineSession = useCallback(() => {
+        menu.setDialogState(DialogState.OnlineCreate)
+    }, [])
+
+    const continuePreviousSession = useCallback(async () => {
+        await board.loadFromLocalStorage()
+        menu.setDialogState(DialogState.Closed)
+    }, [])
 
     return (
         <>

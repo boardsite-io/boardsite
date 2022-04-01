@@ -160,13 +160,49 @@ export class Online implements GlobalState<OnlineState> {
             webSocket.onopen = () => resolve()
             webSocket.onerror = (ev) => reject(ev)
             webSocket.onclose = () => {
-                this.disconnect()
-                // Open join dialog to allow easy rejoining
-                menu.setDialogState(DialogState.OnlineJoin)
+                // Open join dialog to allow easy rejoining in case of passive websocket disconnect
+                if (!this.isActivelyDisconnecting) {
+                    menu.setDialogState(DialogState.OnlineJoin)
+                    notification.create(
+                        "Notification.Session.Disconnected",
+                        5000
+                    )
+                    this.disconnectCleanUp()
+                }
+                this.isActivelyDisconnecting = false
             }
 
             this.state.session.socket = webSocket
         })
+    }
+
+    /**
+     * Indicate if a websocket disconnect has been triggered actively
+     */
+    isActivelyDisconnecting = false
+
+    disconnect(): void {
+        this.isActivelyDisconnecting = true
+        this.state.session.socket?.close()
+
+        // Trigger notification and dialog update here because the onclose event  is delayed
+        this.disconnectCleanUp()
+        // The initialSelection dialog navigates to the home route on mount
+        menu.setDialogState(DialogState.InitialSelection)
+    }
+
+    /**
+     * Clear board state and update session UI
+     */
+    private disconnectCleanUp(): void {
+        board.fullReset() // Use non-redoable internal option
+        board.handleAddPages({
+            data: [{ page: new BoardPage(), index: -1 }],
+        })
+
+        delete this.state.session.users
+        delete this.state.session.socket
+        subscriptionState.render("Session")
     }
 
     async join(copyOffline?: boolean): Promise<void> {
@@ -195,17 +231,6 @@ export class Online implements GlobalState<OnlineState> {
         }
 
         subscriptionState.render("Session")
-    }
-
-    disconnect(): void {
-        this.state.session.socket?.close()
-        delete this.state.session.users
-        delete this.state.session.socket
-        board.clearAttachments()
-        board.deleteAllPages() // Use non-redoable internal option
-        board.handleAddPages({ data: [{ page: new BoardPage(), index: -1 }] })
-        subscriptionState.render("Session")
-        notification.create("Notification.Session.Leave", 3000)
     }
 
     send(type: MessageType, content: unknown): void {
@@ -381,7 +406,7 @@ export class Online implements GlobalState<OnlineState> {
             page.meta.background.attachId = mapping.get(attachId ?? "")
         })
 
-        board.deleteAllPages()
+        board.fullReset()
         board.clearAttachments()
 
         const sync: PageSync = {

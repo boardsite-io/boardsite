@@ -118,7 +118,7 @@ export class Board implements GlobalState<BoardState> {
     /**
      * Delete all pages - essentially a full board state reset
      */
-    deleteAllPages(): void {
+    fullReset(): void {
         this.setState(getDefaultBoardState())
         subscriptionState.render("RenderNG")
         this.saveToLocalStorage()

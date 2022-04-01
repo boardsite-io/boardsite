@@ -1,6 +1,5 @@
 import { FormattedMessage } from "language"
 import React, { useCallback, useState } from "react"
-import { useNavigate } from "react-router-dom"
 import { ExpandableIcon, HorizontalRule } from "components"
 import { DialogState, MainMenuState } from "state/menu/state/index.types"
 import { menu } from "state/menu"
@@ -9,7 +8,7 @@ import { CSSTransition } from "react-transition-group"
 import { cssTransition } from "View/MainMenu/cssTransition"
 import { online } from "state/online"
 import { User } from "state/online/state/index.types"
-import { ROUTE } from "App/routes"
+import { notification } from "state/notification"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 import SessionSettingsMenu from "./SessionSettings"
@@ -23,15 +22,13 @@ enum SubMenu {
 
 const SessionMenu = () => {
     const [subMenu, setSubMenu] = useState<SubMenu | User["id"]>(SubMenu.Closed)
-    const navigate = useNavigate()
     useGState("Session")
 
     const leaveSession = useCallback(() => {
         online.disconnect()
         menu.setMainMenu(MainMenuState.Closed)
-        menu.setDialogState(DialogState.InitialSelection)
-        navigate(ROUTE.HOME)
-    }, [navigate])
+        notification.create("Notification.Session.Leave", 3000)
+    }, [])
 
     const changePassword = useCallback(() => {
         menu.setDialogState(DialogState.OnlineChangePassword)
