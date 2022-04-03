@@ -143,10 +143,18 @@ export class Online implements GlobalState<OnlineState> {
 
     async createSocket(sessionId: string, password?: string): Promise<void> {
         request.setSessionId(sessionId)
-        // create a new user for us
-        const { id } = await request.postUser(this.state.user, password)
-        this.state.user.id = id
+        try {
+            // first check if we can connect with an already existing userId
+            await this.connectWebsocket(sessionId)
+        } catch {
+            // create a new user for us
+            const { id } = await request.postUser(this.state.user, password)
+            this.state.user.id = id
+            await this.connectWebsocket(sessionId)
+        }
+    }
 
+    private async connectWebsocket(sessionId: string): Promise<void> {
         return new Promise((resolve, reject) => {
             const url = new URL(API_URL)
             url.protocol = url.protocol.replace("http", "ws")
@@ -157,11 +165,17 @@ export class Online implements GlobalState<OnlineState> {
                 }/socket`
             )
             webSocket.onmessage = (msg) => this.receive(JSON.parse(msg.data))
-            webSocket.onopen = () => resolve()
-            webSocket.onerror = (ev) => reject(ev)
+            webSocket.onopen = () => {
+                this.isActivelyDisconnecting = false
+                resolve()
+            }
+            webSocket.onerror = (ev) => {
+                this.isActivelyDisconnecting = true
+                reject(ev)
+            }
             webSocket.onclose = () => {
-                // Open join dialog to allow easy rejoining in case of passive websocket disconnect
                 if (!this.isActivelyDisconnecting) {
+                    // Open join dialog to allow easy rejoining in case of passive websocket disconnect
                     menu.setDialogState(DialogState.OnlineJoin)
                     notification.create(
                         "Notification.Session.Disconnected",
@@ -526,6 +540,7 @@ export class Online implements GlobalState<OnlineState> {
         // Load preferred user settings
         if (userSelection) {
             this.setUser(userSelection)
+            request.userId = userSelection.id
         }
 
         // dont erase an existing token
