@@ -14,6 +14,16 @@ import { Page } from "state/board/state/index.types"
 export const pageToDataURL = async (
     page: Page
 ): Promise<string | undefined> => {
+    // dont render pages that are empty and have no background
+    // because this would just produce a black image
+    if (
+        (page.meta.background.paper === "doc" ||
+            page.meta.background.paper === "blank") &&
+        Object.keys(page.strokes).length === 0
+    ) {
+        return undefined
+    }
+
     const tmp = document.createElement("div")
     const canvasRef = React.createRef<HTMLCanvasElement>()
 

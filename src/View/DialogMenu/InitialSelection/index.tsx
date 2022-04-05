@@ -9,6 +9,7 @@ import { menu } from "state/menu"
 import { DialogState } from "state/menu/state/index.types"
 import { useNavigate } from "react-router-dom"
 import { ROUTE } from "App/routes"
+import { startBackgroundJob } from "storage/util"
 
 interface InitialSelectionProps {
     firstLoad: boolean
@@ -46,8 +47,11 @@ const InitialSelection: React.FC<InitialSelectionProps> = ({ firstLoad }) => {
     }, [])
 
     const continuePreviousSession = useCallback(async () => {
-        await board.loadFromLocalStorage()
         menu.setDialogState(DialogState.Closed)
+        await startBackgroundJob(
+            "Loading.ContinuePreviousSession",
+            board.loadFromLocalStorage.bind(board)
+        )
     }, [])
 
     return (
