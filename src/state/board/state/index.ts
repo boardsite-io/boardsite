@@ -595,7 +595,6 @@ export class Board implements GlobalState<BoardState> {
         this.state.currentPageIndex = index
         subscriptionState.render("RenderNG", "MenuPageButton")
         this.clearTransform()
-        this.saveToLocalStorage()
     }
 
     getSerializedState(): SerializedState<BoardState> {
