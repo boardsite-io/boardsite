@@ -196,5 +196,9 @@
     "Shortcut.PreviousPage.Keys": "Arrow Left",
     "Shortcut.NextPage": "Go to next page",
     "Shortcut.NextPage.Keys": "Arrow Right",
-    "Loading.ExportingPdf": "Exporting as PDF..."
+    "Loading.ExportingPdf": "Exporting as PDF...",
+    "Loading.ImportingPdf": "Importing PDF...",
+    "Loading.ExportWorkspace": "Saving workspace...",
+    "Loading.ImportWorkspace": "Loading workspace...",
+    "Loading.ContinuePreviousSession": "Loading previous session..."
 }

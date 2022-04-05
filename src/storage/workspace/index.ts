@@ -5,26 +5,30 @@ import {
     FILE_NAME_WORKSPACE,
     MIME_TYPE_WORKSPACE,
 } from "consts"
-import { readFileAsUint8Array } from "storage/util"
+import { readFileAsUint8Array, startBackgroundJob } from "storage/util"
 import { deflate, inflate } from "pako"
 import { board } from "state/board"
 import { menu } from "state/menu"
 import { notification } from "state/notification"
 
 export const handleImportWorkspace = async () => {
+    menu.closeMainMenu()
     try {
-        const workspaceFile = await fileOpen({
-            description: FILE_DESCRIPTION_WORKSPACE,
-            mimeTypes: [MIME_TYPE_WORKSPACE],
-            extensions: [FILE_EXTENSION_WORKSPACE],
-            multiple: false,
-        })
+        await startBackgroundJob("Loading.ImportWorkspace", async () => {
+            const workspaceFile = await fileOpen({
+                description: FILE_DESCRIPTION_WORKSPACE,
+                mimeTypes: [MIME_TYPE_WORKSPACE],
+                extensions: [FILE_EXTENSION_WORKSPACE],
+                multiple: false,
+            })
 
-        if (!workspaceFile) {
-            return
-        }
+            if (
+                !workspaceFile ||
+                !workspaceFile.name.endsWith(FILE_EXTENSION_WORKSPACE)
+            ) {
+                throw new Error("unknown workspace file format")
+            }
 
-        if (workspaceFile.name.endsWith(FILE_EXTENSION_WORKSPACE)) {
             const readFile = await readFileAsUint8Array(workspaceFile)
 
             const serializedBoardState = JSON.parse(
@@ -32,32 +36,31 @@ export const handleImportWorkspace = async () => {
             )
 
             await board.setSerializedState(serializedBoardState)
-            menu.closeMainMenu()
-        } else {
-            notification.create("Notification.ImportWorkspaceFailed")
-        }
+        })
     } catch (error) {
         notification.create("Notification.ImportWorkspaceFailed")
     }
 }
 
 export const handleExportWorkspace = async () => {
-    const workspaceFile = deflate(JSON.stringify(board.getSerializedState()))
-
+    menu.closeMainMenu()
     try {
-        // Save to file system
-        await fileSave(
-            new Blob([workspaceFile], {
-                type: MIME_TYPE_WORKSPACE,
-            }),
-            {
-                fileName: `${FILE_NAME_WORKSPACE}${FILE_EXTENSION_WORKSPACE}`,
-                description: FILE_DESCRIPTION_WORKSPACE,
-                extensions: [FILE_EXTENSION_WORKSPACE],
-            }
-        )
-
-        menu.closeMainMenu()
+        await startBackgroundJob("Loading.ExportWorkspace", async () => {
+            const workspaceFile = deflate(
+                JSON.stringify(board.getSerializedState())
+            )
+            // Save to file system
+            await fileSave(
+                new Blob([workspaceFile], {
+                    type: MIME_TYPE_WORKSPACE,
+                }),
+                {
+                    fileName: `${FILE_NAME_WORKSPACE}${FILE_EXTENSION_WORKSPACE}`,
+                    description: FILE_DESCRIPTION_WORKSPACE,
+                    extensions: [FILE_EXTENSION_WORKSPACE],
+                }
+            )
+        })
     } catch (error) {
         notification.create("Notification.ImportWorkspaceFailed")
     }
