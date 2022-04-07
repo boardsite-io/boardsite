@@ -29,7 +29,7 @@ const ActiveTool: React.FC = memo(() => {
     return (
         <>
             <ToolTip
-                position={Position.Bottom}
+                position={Position.Left}
                 text={<FormattedMessage id="ToolTip.Active" />}
             >
                 <ToolButton

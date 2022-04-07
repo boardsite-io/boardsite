@@ -9,7 +9,7 @@ import {
     ToolButton,
     ToolTip,
 } from "components"
-import React, { useState } from "react"
+import React, { useCallback, useState } from "react"
 import { handleSetTool } from "drawing/handlers"
 import { drawing } from "state/drawing"
 import { FavToolOptions, FavToolWrapper } from "./index.styled"
@@ -20,49 +20,47 @@ interface FavToolButtonProps {
     index: number
 }
 
+let clickActive = false
+
 const FavToolButton: React.FC<FavToolButtonProps> = ({ icon, tool, index }) => {
     const [open, setOpen] = useState(false)
 
-    const replaceTool = () => {
+    const replaceTool = useCallback(() => {
         drawing.replaceFavoriteTool(index)
-    }
+    }, [index])
 
-    const removeTool = () => {
+    const removeTool = useCallback(() => {
         drawing.removeFavoriteTool(index)
-    }
+    }, [index])
 
-    let clickActive = false
-    let timeoutActive = false
-
-    const startClick = () => {
+    const startClick = useCallback(() => {
         clickActive = true
-        timeoutActive = true
         setTimeout(() => {
             if (clickActive) {
                 setOpen(true)
             }
-            timeoutActive = false
         }, 300)
-    }
+    }, [])
 
-    const endClick = () => {
-        if (timeoutActive) {
-            handleSetTool(tool)
-            timeoutActive = false
-        }
+    const endClick = useCallback(() => {
         clickActive = false
-    }
+    }, [])
+
+    const click = useCallback(() => {
+        handleSetTool(tool)
+    }, [tool])
 
     return (
         <FavToolWrapper>
             <ToolTip
                 text={<FormattedMessage id="ToolTip.SelectFavoriteTool" />}
-                position={Position.Top}
+                position={Position.Right}
             >
                 <ToolButton
                     icon={icon}
                     toolColor={tool.style.color}
                     toolWidth={tool.style.width}
+                    onClick={click}
                     onMouseDown={startClick}
                     onMouseUp={endClick}
                     onTouchStart={startClick}
@@ -75,7 +73,7 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({ icon, tool, index }) => {
                         text={
                             <FormattedMessage id="ToolTip.ReplaceFavoriteTool" />
                         }
-                        position={Position.Top}
+                        position={Position.TopRight}
                     >
                         <IconButton icon={<PlusIcon />} onClick={replaceTool} />
                     </ToolTip>
@@ -83,7 +81,7 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({ icon, tool, index }) => {
                         text={
                             <FormattedMessage id="ToolTip.RemoveFavoriteTool" />
                         }
-                        position={Position.Top}
+                        position={Position.TopRight}
                     >
                         <IconButton icon={<MinusIcon />} onClick={removeTool} />
                     </ToolTip>
