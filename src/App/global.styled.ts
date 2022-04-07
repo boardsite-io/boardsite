@@ -34,13 +34,13 @@ export const GlobalStyles = styled.div`
 
     /* --- Stacking Context --- */
     --zIndexNotifications: 999;
-    --zIndexToolTip: 99;
+    --zIndexToolTip: 888;
+    --zIndexToolRing: 777;
     --zIndexDrawer: 81;
     --zIndexDrawerBG: 80;
     --zIndexDialog: 81;
     --zIndexDialogBG: 80;
     --zIndexMainMenu: 70;
-    --zIndexToolRing: 60;
     --zIndexFavoriteTools: 60;
     --zIndexPopupBG: 10;
 
@@ -48,7 +48,6 @@ export const GlobalStyles = styled.div`
     --toolbar-gap: 0;
     --toolbar-padding: 0;
     --toolbar-margin: 0.2rem;
-    --toolbar-margin-favorite: 1rem;
     --toolbar-box-shadow: 0px 0px 2px 0px #00000088;
 
     --main-menu-button-gap: 10px;

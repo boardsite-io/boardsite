@@ -2,6 +2,9 @@ import styled from "styled-components"
 import { HexColorPicker } from "react-colorful"
 
 export const CustomColorPicker = styled(HexColorPicker)`
+    /* Override the 200px height and width */
+    width: auto !important;
+    height: auto !important;
     flex-grow: 1;
 
     .react-colorful__saturation-pointer,

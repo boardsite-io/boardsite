@@ -46,7 +46,7 @@ const ToolRing: React.FC = memo(() => {
         <ToolRingWrap>
             <ActiveTool />
             <ToolTip
-                position={Position.Bottom}
+                position={Position.Left}
                 text={<FormattedMessage id="ToolTip.Eraser" />}
             >
                 <IconButton
@@ -56,7 +56,7 @@ const ToolRing: React.FC = memo(() => {
                 />
             </ToolTip>
             <ToolTip
-                position={Position.Bottom}
+                position={Position.Left}
                 text={<FormattedMessage id="ToolTip.Selection" />}
             >
                 <IconButton
@@ -66,7 +66,7 @@ const ToolRing: React.FC = memo(() => {
                 />
             </ToolTip>
             <ToolTip
-                position={Position.Bottom}
+                position={Position.Left}
                 text={<FormattedMessage id="ToolTip.Panning" />}
             >
                 <IconButton

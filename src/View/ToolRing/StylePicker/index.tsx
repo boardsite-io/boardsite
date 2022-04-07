@@ -2,14 +2,14 @@ import React, { memo } from "react"
 import ColorPicker from "./ColorPicker"
 import ShapeTools from "./ShapeTools"
 import WidthPicker from "./WidthPicker"
-import { StyledStylePicker } from "./index.styled"
+import { StylePickerWrap } from "./index.styled"
 
 const StylePicker: React.FC = memo(() => (
-    <StyledStylePicker>
+    <StylePickerWrap>
         <ShapeTools />
         <ColorPicker />
         <WidthPicker />
-    </StyledStylePicker>
+    </StylePickerWrap>
 ))
 
 export default StylePicker

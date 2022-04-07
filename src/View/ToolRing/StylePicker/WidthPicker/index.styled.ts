@@ -2,12 +2,10 @@ import styled, { css } from "styled-components"
 
 export const WidthPresets = styled.div`
     display: grid;
-    justify-content: space-between;
-    align-items: center;
-    column-gap: var(--toolbar-gap);
     grid-template-columns: repeat(2, 1fr);
+    align-content: space-between;
+    align-items: center;
     border-radius: var(--border-radius);
-    background: ${({ theme }) => theme.palette.primary.main};
 `
 
 interface PresetProps {
@@ -24,15 +22,16 @@ export const Preset = styled.button<PresetProps>`
     width: var(--icon-button-size);
     transition: all ease-in-out 250ms;
     ${({ $active }) => ($active ? activePreset : inActivePreset)};
+
+    &:hover {
+        cursor: pointer;
+    }
 `
 const activePreset = css`
     background: ${({ theme }) => theme.palette.editor.selected};
 `
 const inActivePreset = css`
     background: transparent;
-    &:hover {
-        cursor: pointer;
-    }
 `
 
 interface StrokeWidth {

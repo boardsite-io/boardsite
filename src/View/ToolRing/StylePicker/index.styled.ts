@@ -1,18 +1,25 @@
 import styled from "styled-components"
 
-export const StyledStylePicker = styled.div`
+export const StylePickerWrap = styled.div`
     z-index: var(--zIndexToolRing);
-    position: fixed;
-    top: 3rem;
-    left: 50%;
-    transform: translateX(-50%);
+    position: absolute;
+    right: 100%;
+    top: 0;
     display: flex;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    width: 70vw;
-    min-width: 20rem;
-    max-width: 30rem;
+    margin-right: var(--toolbar-margin);
+    display: flex;
+    gap: 6px;
+    padding: 6px;
+    height: 15rem;
+    min-width: 18rem;
+    width: 75vw;
+    max-width: 25rem;
+
     background: ${({ theme }) => theme.palette.primary.main};
     border-radius: var(--border-radius);
     box-shadow: var(--toolbar-box-shadow);
+
+    button {
+        margin: 2px;
+    }
 `
