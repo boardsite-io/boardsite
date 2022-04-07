@@ -1,15 +1,17 @@
-import { Attachment, AttachType } from "state/board/state/index.types"
+import { Attachment, AttachType, SerializedAttachment } from "state/board/state/index.types"
 import { PDFAttachment } from "./pdf"
 
 /**
  * creates a new Attachment instance from a serialized one
  */
-export const newAttachment = (
-    attachment: Pick<Attachment, "id" | "type" | "cachedBlob">
-): Attachment => {
-    switch (attachment.type) {
+export const newAttachment = ({
+    type,
+    id,
+    cachedBlob,
+}: SerializedAttachment): Attachment => {
+    switch (type) {
         case AttachType.PDF:
-            return new PDFAttachment(attachment.cachedBlob).setId(attachment.id)
+            return new PDFAttachment(cachedBlob).setId(id)
 
         default:
             throw new Error("unknown attachment type")

@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { cloneDeep } from "lodash"
-import { BOARD_VERSION, deserializeBoardState, serializeBoardState } from "."
+import { BOARD_VERSION } from "."
 import { getDefaultBoardState } from "../state/default"
 import stateV1 from "./__test__/stateV1.json"
-import { SerializedState } from "../../types"
-import { BoardState } from "../state/index.types"
+import { SerializedBoardState } from "../state/index.types"
+import { Board } from "../state"
 
 describe("board reducer state", () => {
     it("should serialize the default state", () => {
-        const got = serializeBoardState(getDefaultBoardState())
+        const got = new Board().serialize()
         const want = {
             version: BOARD_VERSION,
             ...getDefaultBoardState(),
@@ -16,40 +16,29 @@ describe("board reducer state", () => {
         delete want.undoStack
         delete want.redoStack
         delete want.strokeUpdates
+        delete want.transformPagePosition
+        delete want.transformStrokes
 
-        expect(JSON.stringify(got)).toEqual(JSON.stringify(want))
-    })
-
-    it("should deserialize an empty object and set the defaults", async () => {
-        const got = await deserializeBoardState({
-            version: BOARD_VERSION,
-        })
-        const want = getDefaultBoardState()
-
-        expect(JSON.stringify(got)).toEqual(JSON.stringify(want))
+        expect(got).toStrictEqual(want)
     })
 
     it("should deserialize the state version 1.0", async () => {
-        const boardState = await deserializeBoardState(
-            cloneDeep(stateV1) as unknown as Partial<
-                SerializedState<BoardState>
-            > // TODO
+        const boardState = await new Board().deserialize(
+            cloneDeep<unknown>(stateV1) as SerializedBoardState
         )
-        const got = serializeBoardState(boardState)
+        const got = new Board(boardState).serialize()
         const want = stateV1
 
-        expect(JSON.stringify(got)).toBe(JSON.stringify(want))
+        expect(got).toStrictEqual(want)
     })
 
     it("throws an error for unknown or missing version", async () => {
-        await expect(deserializeBoardState({})).rejects.toThrow(
+        await expect(new Board().deserialize({} as any)).rejects.toThrow(
             "cannot deserialize state, missing version"
         )
 
         await expect(
-            deserializeBoardState({
-                version: "0.1",
-            } as any)
+            new Board().deserialize({ version: "0.1" } as any)
         ).rejects.toThrow("cannot deserialize state, unknown version 0.1")
     })
 })

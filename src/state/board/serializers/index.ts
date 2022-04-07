@@ -1,10 +1,11 @@
 import { newAttachment } from "drawing/attachment/utils"
 import { BoardPage } from "drawing/page"
-import { BoardStroke } from "drawing/stroke"
-import { assign, cloneDeep, keys, pick } from "lodash"
+import { assign, keys, pick } from "lodash"
+import { reduceRecord } from "util/lib"
+import { loadIndexedDB, saveIndexedDB } from "storage/local"
 import { getDefaultBoardState } from "../state/default"
-import { BoardState } from "../state/index.types"
-import { SerializedState } from "../../types"
+import { BoardState, SerializedBoardState } from "../state/index.types"
+import { StateSerializer } from "../../types"
 
 /*
     Version of the board state reducer to allow backward compatibility for stored data
@@ -12,80 +13,83 @@ import { SerializedState } from "../../types"
 */
 export const BOARD_VERSION = "1.0"
 
-export const serializeBoardState = (
-    state: BoardState
-): SerializedState<BoardState> => {
-    const stateClone = cloneDeep<BoardState>(state)
+export class BoardSerializer
+    implements StateSerializer<BoardState, SerializedBoardState>
+{
+    protected state: BoardState = getDefaultBoardState()
+    private version: string = BOARD_VERSION
 
-    // dont pollute the serialized object with image data
-    Object.values(stateClone.attachments).forEach((attachment) =>
-        attachment.serialize()
-    )
+    serialize(): SerializedBoardState {
+        // dont pollute the serialized object with image data
+        const attachments = reduceRecord(this.state.attachments, (attachment) =>
+            attachment.serialize()
+        )
 
-    Object.keys(stateClone.pageCollection).forEach((pageId) => {
-        const { strokes } = stateClone.pageCollection[pageId]
-        Object.keys(strokes).forEach((strokeId) => {
-            strokes[strokeId] = strokes[strokeId].serialize()
-        })
-    })
+        const pageCollection = reduceRecord(this.state.pageCollection, (page) =>
+            page.serialize()
+        )
 
-    // dont save undo redo actions and transform layer
-    delete stateClone.undoStack
-    delete stateClone.redoStack
-
-    delete stateClone.strokeUpdates
-    delete stateClone.transformStrokes
-    delete stateClone.transformPagePosition
-
-    return { version: BOARD_VERSION, ...stateClone }
-}
-
-export const deserializeBoardState = async (
-    serializedState: SerializedState<BoardState>
-): Promise<BoardState> => {
-    const newBoardState = getDefaultBoardState()
-    if (!serializedState.version) {
-        throw new Error("cannot deserialize state, missing version")
+        return {
+            version: this.version,
+            currentPageIndex: this.state.currentPageIndex,
+            pageRank: this.state.pageRank,
+            attachments,
+            pageCollection,
+        }
     }
 
-    switch (serializedState.version) {
-        case BOARD_VERSION:
-            // latest version; no preprocessing required
-            break
+    async deserialize(serialized: SerializedBoardState): Promise<BoardState> {
+        const newBoardState = getDefaultBoardState()
+        if (!serialized.version) {
+            throw new Error("cannot deserialize state, missing version")
+        }
 
-        default:
-            throw new Error(
-                `cannot deserialize state, unknown version ${serializedState.version}`
-            )
+        switch (serialized.version) {
+            case this.version:
+                // latest version; no preprocessing required
+                break
+
+            default:
+                throw new Error(
+                    `cannot deserialize state, unknown version ${serialized.version}`
+                )
+        }
+
+        // update all valid keys
+        assign(newBoardState, pick(serialized, keys(newBoardState)))
+
+        await Promise.all(
+            Object.keys(serialized.pageCollection).map(async (pageId) => {
+                const page = serialized.pageCollection[pageId]
+                newBoardState.pageCollection[pageId] =
+                    await new BoardPage().deserialize(page)
+            })
+        )
+
+        // reload attachments
+        await Promise.all(
+            Object.keys(serialized.attachments).map(async (attachId) => {
+                const attachment = serialized.attachments[attachId]
+                // make sure cachedBlob is an Uint8Array, not an object due to inflate
+                attachment.cachedBlob = new Uint8Array(
+                    Object.values(attachment.cachedBlob)
+                )
+                newBoardState.attachments[attachId] = await newAttachment(
+                    attachment
+                ).deserialize(attachment)
+            })
+        )
+
+        return newBoardState
     }
 
-    // update all valid keys
-    assign(newBoardState, pick(serializedState, keys(newBoardState)))
+    saveToLocalStorage(): void {
+        saveIndexedDB("board", () => this.serialize())
+    }
 
-    const { pageCollection } = newBoardState
-    Object.keys(pageCollection).forEach((pageId) => {
-        const page = pageCollection[pageId]
-        pageCollection[pageId] = new BoardPage(page)
-        const { strokes } = pageCollection[pageId]
-        Object.keys(strokes).forEach((strokeId) => {
-            const stroke = strokes[strokeId]
-            strokes[strokeId] = new BoardStroke(stroke) // deserialize a new instance
-        })
-    })
-
-    // reload attachments
-    await Promise.all(
-        Object.keys(newBoardState.attachments).map(async (attachId) => {
-            const attachment = newBoardState.attachments[attachId]
-            // make sure cachedBlob is an Uint8Array, not an object due to inflate
-            attachment.cachedBlob = new Uint8Array(
-                Object.values(attachment.cachedBlob)
-            )
-            newBoardState.attachments[attachId] = await newAttachment(
-                attachment
-            ).render()
-        })
-    )
-
-    return newBoardState
+    async loadFromLocalStorage(): Promise<BoardState> {
+        const serialized: SerializedBoardState = await loadIndexedDB("board")
+        this.state = await this.deserialize(serialized)
+        return this.state
+    }
 }

@@ -3,9 +3,7 @@ import { Stroke, StrokeUpdate } from "drawing/stroke/index.types"
 import { subscriptionState } from "state/subscription"
 import { assign, cloneDeep, keys, pick } from "lodash"
 import { PAGE_SIZE } from "consts"
-import { loadIndexedDB, saveIndexedDB } from "storage/local"
-import { GlobalState, SerializedState } from "../../types"
-import { deserializeBoardState, serializeBoardState } from "../serializers"
+import { GlobalState } from "../../types"
 import { getDefaultBoardState } from "./default"
 import {
     AddPageData,
@@ -25,9 +23,14 @@ import {
     PageSize,
 } from "./index.types"
 import { addAction, redoAction, undoAction } from "../undoRedo"
+import { BoardSerializer } from "../serializers"
 
-export class Board implements GlobalState<BoardState> {
-    state: BoardState = getDefaultBoardState()
+export class Board extends BoardSerializer implements GlobalState<BoardState> {
+    constructor(state?: BoardState) {
+        super()
+        if (!state) return
+        this.setState(state)
+    }
 
     getState(): BoardState {
         return this.state
@@ -37,6 +40,12 @@ export class Board implements GlobalState<BoardState> {
         assign(this.state, pick(newState, keys(this.state)))
         subscriptionState.render("RenderNG", "EditMenu", "MenuPageButton")
         this.saveToLocalStorage()
+    }
+
+    override async loadFromLocalStorage(): Promise<BoardState> {
+        const state = await super.loadFromLocalStorage()
+        subscriptionState.render("RenderNG", "EditMenu", "MenuPageButton")
+        return state
     }
 
     getCurrentPageId() {
@@ -57,6 +66,7 @@ export class Board implements GlobalState<BoardState> {
         attachments.forEach((attachment) => {
             this.state.attachments[attachment.id] = attachment
         })
+        this.saveToLocalStorage()
     }
 
     /**
@@ -67,6 +77,7 @@ export class Board implements GlobalState<BoardState> {
         attachIds.forEach((attachId) => {
             delete this.state.attachments[attachId]
         })
+        this.saveToLocalStorage()
     }
 
     /**
@@ -74,6 +85,7 @@ export class Board implements GlobalState<BoardState> {
      */
     clearAttachments(): void {
         this.state.attachments = {}
+        this.saveToLocalStorage()
     }
 
     /**
@@ -595,28 +607,6 @@ export class Board implements GlobalState<BoardState> {
         this.state.currentPageIndex = index
         subscriptionState.render("RenderNG", "MenuPageButton")
         this.clearTransform()
-    }
-
-    getSerializedState(): SerializedState<BoardState> {
-        return serializeBoardState(this.getState())
-    }
-
-    async setSerializedState(
-        serializedState: SerializedState<BoardState>
-    ): Promise<void> {
-        const deserializedState = await deserializeBoardState(serializedState)
-        this.setState(deserializedState)
-    }
-
-    saveToLocalStorage(): void {
-        const state = this.getState()
-        saveIndexedDB("board", () => serializeBoardState(state))
-    }
-
-    async loadFromLocalStorage(): Promise<void> {
-        const serializedState = await loadIndexedDB("board")
-        if (serializedState === null) return
-        await this.setSerializedState(serializedState)
     }
 }
 

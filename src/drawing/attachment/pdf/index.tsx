@@ -8,7 +8,9 @@ import {
     Attachment,
     AttachType,
     RenderedData,
+    SerializedAttachment,
 } from "state/board/state/index.types"
+import { assign, pick } from "lodash"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const pdfjsWorker: any = require("pdfjs-dist/legacy/build/pdf.worker.entry")
@@ -21,11 +23,11 @@ export class PDFAttachment implements Attachment {
     renderedData: RenderedData
     cachedBlob: Uint8Array
 
-    constructor(dataBlob: Uint8Array) {
+    constructor(dataBlob?: Uint8Array) {
         this.id = nanoid(16)
         this.type = AttachType.PDF
         this.renderedData = []
-        this.cachedBlob = dataBlob
+        this.cachedBlob = dataBlob ?? new Uint8Array()
     }
 
     setId(attachId: AttachId): PDFAttachment {
@@ -82,11 +84,17 @@ export class PDFAttachment implements Attachment {
         return this
     }
 
-    serialize(): void {
-        this.renderedData = []
+    serialize(): SerializedAttachment {
+        return {
+            id: this.id,
+            type: this.type,
+            cachedBlob: this.cachedBlob,
+        }
     }
 
-    deserialize(): Promise<PDFAttachment> {
-        return this.render()
+    async deserialize(serialized: SerializedAttachment): Promise<Attachment> {
+        assign(this, pick(serialized, ["id", "type", "cachedBlob"]))
+        await this.render()
+        return this
     }
 }

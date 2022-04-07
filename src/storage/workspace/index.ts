@@ -35,7 +35,8 @@ export const handleImportWorkspace = async () => {
                 inflate(readFile, { to: "string" })
             )
 
-            await board.setSerializedState(serializedBoardState)
+            const state = await board.deserialize(serializedBoardState)
+            await board.setState(state)
         })
     } catch (error) {
         notification.create("Notification.ImportWorkspaceFailed")
@@ -47,7 +48,7 @@ export const handleExportWorkspace = async () => {
     try {
         await startBackgroundJob("Loading.ExportWorkspace", async () => {
             const workspaceFile = deflate(
-                JSON.stringify(board.getSerializedState())
+                JSON.stringify(board.serialize())
             )
             // Save to file system
             await fileSave(
