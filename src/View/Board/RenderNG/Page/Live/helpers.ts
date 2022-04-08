@@ -67,10 +67,6 @@ export const isValidTouch = (e: TouchEvent<HTMLElement>): boolean => {
     const touch2 = e.touches[1] as Touch & { touchType?: string }
     const { directDraw } = settings.getState()
 
-    if (touch1.touchType === undefined) {
-        return false
-    }
-
     // exit if draw with finger is not set
     if (!directDraw && touch1.touchType === "direct") {
         return false
