@@ -47,9 +47,7 @@ export const handleExportWorkspace = async () => {
     menu.closeMainMenu()
     try {
         await startBackgroundJob("Loading.ExportWorkspace", async () => {
-            const workspaceFile = deflate(
-                JSON.stringify(board.serialize())
-            )
+            const workspaceFile = deflate(JSON.stringify(board.serialize()))
             // Save to file system
             await fileSave(
                 new Blob([workspaceFile], {

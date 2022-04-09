@@ -32,32 +32,25 @@ export const saveLocalStorage = debounce(
 export const saveIndexedDB = debounce(
     async (name: StateInIndexedDB, serializer: () => object): Promise<void> => {
         try {
-            console.time("serialize")
             const s = serializer()
-            console.timeEnd("serialize")
-
-            console.time("localforage")
             await localforage.setItem(`${NAMESPACE}_${name}`, s)
-            console.timeEnd("localforage")
         } catch (error) {
-            console.log(error)
             notification.create("Notification.IndexedDBSaveFailed")
         }
     },
     DEBOUNCE_INDEXED_DB
 )
 
-export const loadLocalStorage = async (
+export const loadLocalStorage = async <T>(
     name: StateInLocalStorage
-): Promise<object | null> => {
+): Promise<T> => {
     try {
         const data = localStorage.getItem(`${NAMESPACE}_${name}`)
-        if (data === null) return null
-
-        return JSON.parse(data)
+        if (!data) throw new Error(`cannot retrieve ${name} from localStorage`)
+        return JSON.parse(data) as T
     } catch (error) {
         notification.create("Notification.LocalStorageLoadFailed")
-        return null
+        throw error
     }
 }
 

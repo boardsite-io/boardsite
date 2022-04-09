@@ -1,54 +1,39 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { cloneDeep } from "lodash"
-import {
-    CURRENT_DRAWING_VERSION,
-    deserializeDrawingState,
-    serializeDrawingState,
-} from "."
+import { CURRENT_DRAWING_VERSION } from "."
 import { getDefaultDrawingState } from "../state/default"
 import stateV1 from "./__test__/stateV1.json"
-import { SerializedState } from "../../types"
-import { DrawingState } from "../state/index.types"
+import { SerializedDrawingState } from "../state/index.types"
+import { Drawing } from "../state"
 
 describe("board reducer state", () => {
     it("should serialize the default state", () => {
-        const got = serializeDrawingState(getDefaultDrawingState())
+        const got = new Drawing().serialize()
         const want = {
             version: CURRENT_DRAWING_VERSION,
             ...getDefaultDrawingState(),
         }
 
-        expect(JSON.stringify(got)).toEqual(JSON.stringify(want))
-    })
-
-    it("should deserialize an empty object and set the defaults", async () => {
-        const got = await deserializeDrawingState({
-            version: CURRENT_DRAWING_VERSION,
-        })
-        const want = getDefaultDrawingState()
-
-        expect(JSON.stringify(got)).toEqual(JSON.stringify(want))
+        expect(got).toStrictEqual(want)
     })
 
     it("should deserialize the state version 1.0", async () => {
-        const drawingState = await deserializeDrawingState(
-            cloneDeep(stateV1) as Partial<SerializedState<DrawingState>>
+        const drawingState = await new Drawing().deserialize(
+            cloneDeep<unknown>(stateV1) as SerializedDrawingState
         )
-        const got = serializeDrawingState(drawingState)
+        const got = new Drawing(drawingState).serialize()
         const want = stateV1
 
-        expect(JSON.stringify(got)).toBe(JSON.stringify(want))
+        expect(got).toStrictEqual(want)
     })
 
     it("throws an error for unknown or missing version", async () => {
-        await expect(deserializeDrawingState({})).rejects.toThrow(
+        await expect(new Drawing().deserialize({} as any)).rejects.toThrow(
             "cannot deserialize state, missing version"
         )
 
         await expect(
-            deserializeDrawingState({
-                version: "0.1",
-            } as any)
+            new Drawing().deserialize({ version: "0.1" } as any)
         ).rejects.toThrow("cannot deserialize state, unknown version 0.1")
     })
 })

@@ -1,13 +1,18 @@
 import { subscriptionState } from "state/subscription"
-import { loadLocalStorage, saveLocalStorage } from "storage/local"
 import { Theme } from "theme"
-import { GlobalState, SerializedState } from "../../types"
-import { deserializeThemeState, serializeThemeState } from "../serializers"
-import { getDefaultSettingsState } from "./default"
+import { GlobalState } from "../../types"
+import { SettingsSerializer } from "../serializers"
 import { SettingsState } from "./index.types"
 
-export class SettingsClass implements GlobalState<SettingsState> {
-    state: SettingsState = getDefaultSettingsState()
+export class SettingsClass
+    extends SettingsSerializer
+    implements GlobalState<SettingsState>
+{
+    constructor(state?: SettingsState) {
+        super()
+        if (!state) return
+        this.setState(state)
+    }
 
     getState(): SettingsState {
         return this.state
@@ -17,6 +22,12 @@ export class SettingsClass implements GlobalState<SettingsState> {
         this.state = newState
         subscriptionState.render("Theme", "Settings")
         this.saveToLocalStorage()
+    }
+
+    override async loadFromLocalStorage(): Promise<SettingsState> {
+        const state = await super.loadFromLocalStorage()
+        subscriptionState.render("Theme", "Settings")
+        return state
     }
 
     /**
@@ -53,32 +64,6 @@ export class SettingsClass implements GlobalState<SettingsState> {
         this.state.directDraw = !this.state.directDraw
         subscriptionState.render("Settings")
         this.saveToLocalStorage()
-    }
-
-    getSerializedState(): SerializedState<SettingsState> {
-        return serializeThemeState(this.getState())
-    }
-
-    async setSerializedState(
-        serializedThemeState: SerializedState<SettingsState>
-    ): Promise<void> {
-        try {
-            const state = await deserializeThemeState(serializedThemeState)
-            this.setState(state)
-        } catch (error) {
-            // Theme could not be deserialized, stick to default
-        }
-    }
-
-    saveToLocalStorage(): void {
-        const state = this.getState()
-        saveLocalStorage("settings", () => serializeThemeState(state))
-    }
-
-    async loadFromLocalStorage(): Promise<void> {
-        const serializedState = await loadLocalStorage("settings")
-        if (serializedState === null) return
-        await this.setSerializedState(serializedState)
     }
 }
 
