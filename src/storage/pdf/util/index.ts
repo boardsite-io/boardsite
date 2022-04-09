@@ -68,7 +68,7 @@ const addRenderedPdf = async (attachment: Attachment): Promise<void> => {
         view.resetView()
     }
 
-    board.jumpToFirstPage()
+    view.jumpToFirstPage()
     // clear the stacks when importing pdfs
     board.clearUndoRedo()
 }

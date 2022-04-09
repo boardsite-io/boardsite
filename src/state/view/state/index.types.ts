@@ -8,7 +8,10 @@ export type ViewTransform = {
     scale: number
 }
 
+export type PageIndex = number
+
 export type ViewState = {
-    layerConfig: LayerConfig
+    pageIndex: PageIndex
     viewTransform: ViewTransform
+    layerConfig: LayerConfig
 }

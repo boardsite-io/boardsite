@@ -1,7 +1,7 @@
 import { HorizontalRule } from "components"
 import { FormattedMessage } from "language"
 import React from "react"
-import { board } from "state/board"
+import { view } from "state/view"
 import { SubMenuWrap } from "../../../index.styled"
 import MenuItem from "../../../MenuItem"
 
@@ -10,20 +10,20 @@ const GoToMenu = () => {
         <SubMenuWrap>
             <MenuItem
                 text={<FormattedMessage id="Menu.View.GoTo.PreviousPage" />}
-                onClick={() => board.jumpToPrevPage()}
+                onClick={() => view.jumpToPrevPage()}
             />
             <MenuItem
                 text={<FormattedMessage id="Menu.View.GoTo.NextPage" />}
-                onClick={() => board.jumpToNextPage()}
+                onClick={() => view.jumpToNextPage()}
             />
             <HorizontalRule />
             <MenuItem
                 text={<FormattedMessage id="Menu.View.GoTo.FirstPage" />}
-                onClick={() => board.jumpToFirstPage()}
+                onClick={() => view.jumpToFirstPage()}
             />
             <MenuItem
                 text={<FormattedMessage id="Menu.View.GoTo.LastPage" />}
-                onClick={() => board.jumpToLastPage()}
+                onClick={() => view.jumpToLastPage()}
             />
         </SubMenuWrap>
     )

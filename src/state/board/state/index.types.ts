@@ -8,7 +8,6 @@ import {
 import { SerializedVersionState, Serializer } from "../../types"
 
 interface State<A extends SerializedAttachment, P extends SerializedPage> {
-    currentPageIndex: number
     pageRank: PageRank
     pageCollection: Record<PageId, P>
     attachments: Record<AttachId, A>

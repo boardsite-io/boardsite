@@ -1,6 +1,7 @@
+import { ZOOM_SCALE_MAX, ZOOM_SCALE_MIN } from "consts"
 import { Point } from "drawing/stroke/index.types"
 import { ViewTransform } from "state/view/state/index.types"
-import { boundScale } from "./bounds"
+import { applyBound } from "./bounds"
 
 interface ZoomToProps {
     viewTransform: ViewTransform
@@ -14,7 +15,11 @@ export const zoomTo = ({
     zoomScale,
 }: ZoomToProps): ViewTransform => {
     const scale1 = viewTransform.scale
-    const scale2 = boundScale(zoomScale * scale1)
+    const scale2 = applyBound({
+        value: zoomScale * scale1,
+        min: ZOOM_SCALE_MIN,
+        max: ZOOM_SCALE_MAX,
+    })
 
     return {
         xOffset:
