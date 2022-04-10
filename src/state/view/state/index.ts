@@ -1,5 +1,4 @@
 import {
-    DEFAULT_CURRENT_PAGE_INDEX,
     DEFAULT_PAGE_GAP,
     DEFAULT_VIEW_TRANSFORM,
     DEVICE_PIXEL_RATIO,
@@ -13,6 +12,7 @@ import { board } from "state/board"
 import { settings } from "state/settings"
 import { subscriptionState } from "state/subscription"
 import { GlobalState } from "../../types"
+import { ViewSerializer } from "../serializers"
 import {
     applyBound,
     getCenterOfScreen,
@@ -26,21 +26,20 @@ import {
 } from "../util"
 import { ViewTransform, ViewState, PageIndex } from "./index.types"
 
-export class View implements GlobalState<ViewState> {
-    state: ViewState = {
-        pageIndex: DEFAULT_CURRENT_PAGE_INDEX,
-        viewTransform: DEFAULT_VIEW_TRANSFORM,
-        layerConfig: {
-            pixelScale: DEVICE_PIXEL_RATIO,
-        },
-    }
-
+export class View extends ViewSerializer implements GlobalState<ViewState> {
     getState(): ViewState {
         return this.state
     }
 
     setState(newState: ViewState) {
         this.state = newState
+        return this
+    }
+
+    override async loadFromLocalStorage(): Promise<ViewState> {
+        const state = await super.loadFromLocalStorage()
+        subscriptionState.render("RenderNG", "ViewTransform")
+        return state
     }
 
     getPageIndex(): PageIndex {
@@ -49,6 +48,9 @@ export class View implements GlobalState<ViewState> {
 
     setPageIndex(pageIndex: PageIndex) {
         this.state.pageIndex = pageIndex
+        this.saveToLocalStorage()
+        subscriptionState.render("RenderNG", "MenuPageButton")
+        board.clearTransform()
     }
 
     /**
@@ -99,7 +101,7 @@ export class View implements GlobalState<ViewState> {
      * Set the view scale so that the current page fits the viewport width
      */
     fitToPage(): void {
-        const pageSize = board.getPageSize(this.getState().pageIndex)
+        const pageSize = board.getPageSize(this.getPageIndex())
         this.rescaleAtCenter(window.innerWidth / pageSize.width)
     }
 
@@ -151,7 +153,7 @@ export class View implements GlobalState<ViewState> {
      */
     jumpToNextPage(): void {
         if (this.state.pageIndex < board.getState().pageRank.length - 1) {
-            this.goToPageIndex(this.state.pageIndex + 1)
+            this.setPageIndex(this.state.pageIndex + 1)
         }
     }
 
@@ -160,7 +162,7 @@ export class View implements GlobalState<ViewState> {
      */
     jumpToPrevPage(): void {
         if (this.state.pageIndex > 0) {
-            this.goToPageIndex(this.state.pageIndex - 1)
+            this.setPageIndex(this.state.pageIndex - 1)
         }
     }
 
@@ -168,24 +170,14 @@ export class View implements GlobalState<ViewState> {
      * Go to the first page
      */
     jumpToFirstPage(): void {
-        this.goToPageIndex(0)
+        this.setPageIndex(0)
     }
 
     /**
      * Go to the last page
      */
     jumpToLastPage(): void {
-        this.goToPageIndex(board.getState().pageRank.length - 1)
-    }
-
-    /**
-     * Helper function for performing the necessary updates when switching page index
-     * @param index new page index
-     */
-    private goToPageIndex(index: number): void {
-        this.state.pageIndex = index
-        subscriptionState.render("RenderNG", "MenuPageButton")
-        board.clearTransform()
+        this.setPageIndex(board.getState().pageRank.length - 1)
     }
 
     /**

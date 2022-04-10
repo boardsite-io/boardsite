@@ -1,3 +1,5 @@
+import { SerializedVersionState } from "state/types"
+
 export type LayerConfig = {
     pixelScale: number
 }
@@ -15,3 +17,7 @@ export type ViewState = {
     viewTransform: ViewTransform
     layerConfig: LayerConfig
 }
+
+export type SerializedViewState = SerializedVersionState<
+    Pick<ViewState, "pageIndex">
+>

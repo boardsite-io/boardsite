@@ -16,6 +16,7 @@ export class Menu implements GlobalState<MenuState> {
 
     setState(newState: MenuState) {
         this.state = newState
+        return this
     }
 
     /**

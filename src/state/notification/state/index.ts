@@ -11,8 +11,9 @@ export class Notification implements GlobalState<NotificationState> {
         return this.state
     }
 
-    setState(newState: NotificationState): void {
+    setState(newState: NotificationState) {
         this.state = newState
+        return this
     }
 
     /**

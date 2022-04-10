@@ -9,7 +9,7 @@ import { Board } from "../state"
 describe("board reducer state", () => {
     it("should serialize the default state", () => {
         const got = new Board().serialize()
-        const want = {
+        const want: SerializedBoardState = {
             version: BOARD_VERSION,
             ...getDefaultBoardState(),
         }
@@ -24,9 +24,9 @@ describe("board reducer state", () => {
 
     it("should deserialize the state version 1.0", async () => {
         const boardState = await new Board().deserialize(
-            cloneDeep<unknown>(stateV1) as SerializedBoardState
+            cloneDeep<SerializedBoardState>(stateV1)
         )
-        const got = new Board(boardState).serialize()
+        const got = new Board().setState(boardState).serialize()
         const want = stateV1
 
         expect(got).toStrictEqual(want)

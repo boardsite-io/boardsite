@@ -1,6 +1,6 @@
 export interface GlobalState<T> {
     getState: () => T
-    setState: (newState: T) => void
+    setState: (newState: T) => GlobalState<T>
 }
 
 export type SerializedState<T> = Partial<T> & { version?: string }

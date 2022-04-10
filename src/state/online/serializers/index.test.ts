@@ -9,7 +9,7 @@ import { SerializedOnlineState } from "../state/index.types"
 describe("online serialize state", () => {
     it("should serialize the default state", () => {
         const got = new Online().serialize()
-        const want = {
+        const want: SerializedOnlineState = {
             version: CURRENT_ONLINE_VERSION,
             ...getDefaultOnlineState(),
         }
@@ -26,9 +26,9 @@ describe("online serialize state", () => {
 
     it("should deserialize the state version 1.0", async () => {
         const state = await new Online().deserialize(
-            cloneDeep<unknown>(stateV1) as SerializedOnlineState
+            cloneDeep<SerializedOnlineState>(stateV1)
         )
-        const got = new Online(state).serialize()
+        const got = new Online().setState(state).serialize()
         const want = stateV1
 
         expect(got).toStrictEqual(want)

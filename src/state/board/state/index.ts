@@ -27,20 +27,15 @@ import { addAction, redoAction, undoAction } from "../undoRedo"
 import { BoardSerializer } from "../serializers"
 
 export class Board extends BoardSerializer implements GlobalState<BoardState> {
-    constructor(state?: BoardState) {
-        super()
-        if (!state) return
-        this.setState(state)
-    }
-
     getState(): BoardState {
         return this.state
     }
 
-    setState(newState: Partial<BoardState>): void {
+    setState(newState: Partial<BoardState>) {
         assign(this.state, pick(newState, keys(this.state)))
         subscriptionState.render("RenderNG", "EditMenu", "MenuPageButton")
         this.saveToLocalStorage()
+        return this
     }
 
     override async loadFromLocalStorage(): Promise<BoardState> {

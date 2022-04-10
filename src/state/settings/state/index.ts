@@ -8,20 +8,15 @@ export class SettingsClass
     extends SettingsSerializer
     implements GlobalState<SettingsState>
 {
-    constructor(state?: SettingsState) {
-        super()
-        if (!state) return
-        this.setState(state)
-    }
-
     getState(): SettingsState {
         return this.state
     }
 
-    setState(newState: SettingsState): void {
+    setState(newState: SettingsState) {
         this.state = newState
         subscriptionState.render("Theme", "Settings")
         this.saveToLocalStorage()
+        return this
     }
 
     override async loadFromLocalStorage(): Promise<SettingsState> {

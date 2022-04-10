@@ -34,18 +34,13 @@ export class Online
     extends OnlineSerializer
     implements GlobalState<OnlineState>
 {
-    constructor(state?: OnlineState) {
-        super()
-        if (!state) return
-        this.setState(state)
-    }
-
     getState(): OnlineState {
         return this.state
     }
 
-    setState(newState: OnlineState): void {
+    setState(newState: OnlineState) {
         this.state = newState
+        return this
     }
 
     override async loadFromLocalStorage(): Promise<OnlineState> {

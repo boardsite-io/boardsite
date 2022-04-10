@@ -10,7 +10,7 @@ localforage.config({
     driver: [localforage.INDEXEDDB, localforage.LOCALSTORAGE],
 })
 
-type StateInLocalStorage = "drawing" | "online" | "settings"
+type StateInLocalStorage = "drawing" | "online" | "settings" | "view"
 
 type StateInIndexedDB = "board"
 

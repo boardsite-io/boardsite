@@ -1,39 +1,38 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { cloneDeep } from "lodash"
-import { CURRENT_DRAWING_VERSION } from "."
-import { getDefaultDrawingState } from "../state/default"
+import { VIEW_VERSION } from "."
+import { View } from "../state"
+import { getDefaultViewState } from "../state/default"
+import { SerializedViewState } from "../state/index.types"
 import stateV1 from "./__test__/stateV1.json"
-import { SerializedDrawingState } from "../state/index.types"
-import { Drawing } from "../state"
 
 describe("board reducer state", () => {
     it("should serialize the default state", () => {
-        const got = new Drawing().serialize()
-        const want = {
-            version: CURRENT_DRAWING_VERSION,
-            ...getDefaultDrawingState(),
+        const got = new View().serialize()
+        const want: SerializedViewState = {
+            version: VIEW_VERSION,
+            pageIndex: getDefaultViewState().pageIndex,
         }
-
         expect(got).toStrictEqual(want)
     })
 
     it("should deserialize the state version 1.0", async () => {
-        const drawingState = await new Drawing().deserialize(
-            cloneDeep<SerializedDrawingState>(stateV1)
+        const boardState = await new View().deserialize(
+            cloneDeep<SerializedViewState>(stateV1)
         )
-        const got = new Drawing().setState(drawingState).serialize()
+        const got = new View().setState(boardState).serialize()
         const want = stateV1
 
         expect(got).toStrictEqual(want)
     })
 
     it("throws an error for unknown or missing version", async () => {
-        await expect(new Drawing().deserialize({} as any)).rejects.toThrow(
+        await expect(new View().deserialize({} as any)).rejects.toThrow(
             "cannot deserialize state, missing version"
         )
 
         await expect(
-            new Drawing().deserialize({ version: "0.1" } as any)
+            new View().deserialize({ version: "0.1" } as any)
         ).rejects.toThrow("cannot deserialize state, unknown version 0.1")
     })
 })
