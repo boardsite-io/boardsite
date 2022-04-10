@@ -36,7 +36,7 @@ export const handleImportWorkspace = async () => {
             )
 
             const state = await board.deserialize(serializedBoardState)
-            await board.setState(state)
+            board.setState(state)
         })
     } catch (error) {
         notification.create("Notification.ImportWorkspaceFailed")

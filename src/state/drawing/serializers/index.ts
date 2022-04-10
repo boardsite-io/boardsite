@@ -3,6 +3,7 @@ import { getDefaultDrawingState } from "../state/default"
 import { DrawingState, SerializedDrawingState } from "../state/index.types"
 import { StateSerializer } from "../../types"
 import { loadLocalStorage, saveLocalStorage } from "../../../storage/local"
+import { notification } from "../../notification"
 
 /*
     Version of the board state reducer to allow backward compatibility for stored data
@@ -53,14 +54,24 @@ export class DrawingSerializer
     }
 
     saveToLocalStorage(): void {
-        saveLocalStorage("drawing", () => this.serialize())
+        try {
+            saveLocalStorage("drawing", () => this.serialize())
+        } catch {
+            notification.create("Notification.LocalStorageSaveFailed")
+        }
     }
 
     async loadFromLocalStorage(): Promise<DrawingState> {
-        const serialized: SerializedDrawingState = await loadLocalStorage(
-            "drawing"
-        )
-        this.state = await this.deserialize(serialized)
+        try {
+            const serialized = await loadLocalStorage<SerializedDrawingState>(
+                "drawing"
+            )
+            if (serialized) {
+                this.state = await this.deserialize(serialized)
+            }
+        } catch {
+            notification.create("Notification.LocalStorageLoadFailed")
+        }
         return this.state
     }
 }

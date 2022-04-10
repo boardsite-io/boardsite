@@ -3,6 +3,7 @@ import { OnlineState, SerializedOnlineState } from "../state/index.types"
 import { StateSerializer } from "../../types"
 import { loadLocalStorage, saveLocalStorage } from "../../../storage/local"
 import { getDefaultOnlineState } from "../state/default"
+import { notification } from "../../notification"
 
 /*
     Version of the board state reducer to allow backward compatibility for stored data
@@ -52,14 +53,24 @@ export class OnlineSerializer
     }
 
     saveToLocalStorage(): void {
-        saveLocalStorage("online", () => this.serialize())
+        try {
+            saveLocalStorage("online", () => this.serialize())
+        } catch {
+            notification.create("Notification.LocalStorageSaveFailed")
+        }
     }
 
     async loadFromLocalStorage(): Promise<OnlineState> {
-        const serialized: SerializedOnlineState = await loadLocalStorage(
-            "online"
-        )
-        this.state = await this.deserialize(serialized)
+        try {
+            const serialized = await loadLocalStorage<SerializedOnlineState>(
+                "online"
+            )
+            if (serialized) {
+                this.state = await this.deserialize(serialized)
+            }
+        } catch {
+            notification.create("Notification.LocalStorageLoadFailed")
+        }
         return this.state
     }
 }

@@ -3,6 +3,7 @@ import { SerializedSettingsState, SettingsState } from "../state/index.types"
 import { StateSerializer } from "../../types"
 import { getDefaultSettingsState } from "../state/default"
 import { loadLocalStorage, saveLocalStorage } from "../../../storage/local"
+import { notification } from "../../notification"
 
 /*
     Version of the board state reducer to allow backward compatibility for stored data
@@ -50,14 +51,24 @@ export class SettingsSerializer
     }
 
     saveToLocalStorage(): void {
-        saveLocalStorage("settings", () => this.serialize())
+        try {
+            saveLocalStorage("settings", () => this.serialize())
+        } catch {
+            notification.create("Notification.LocalStorageSaveFailed")
+        }
     }
 
     async loadFromLocalStorage(): Promise<SettingsState> {
-        const serialized: SerializedSettingsState = await loadLocalStorage(
-            "settings"
-        )
-        this.state = await this.deserialize(serialized)
+        try {
+            const serialized = await loadLocalStorage<SerializedSettingsState>(
+                "settings"
+            )
+            if (serialized) {
+                this.state = await this.deserialize(serialized)
+            }
+        } catch {
+            notification.create("Notification.LocalStorageLoadFailed")
+        }
         return this.state
     }
 }

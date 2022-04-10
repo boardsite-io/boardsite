@@ -14,8 +14,8 @@ describe("online serialize state", () => {
             ...getDefaultOnlineState(),
         }
 
-        expect(got.user.alias).not.toBeFalsy()
-        expect(got.user.color).not.toBeFalsy()
+        expect(got.user.alias).toBeTruthy()
+        expect(got.user.color).toBeTruthy()
 
         // set due to rng naming
         got.user.alias = want.user.alias

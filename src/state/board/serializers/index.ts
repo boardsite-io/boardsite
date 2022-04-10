@@ -6,6 +6,7 @@ import { loadIndexedDB, saveIndexedDB } from "storage/local"
 import { getDefaultBoardState } from "../state/default"
 import { BoardState, SerializedBoardState } from "../state/index.types"
 import { StateSerializer } from "../../types"
+import { notification } from "../../notification"
 
 /*
     Version of the board state reducer to allow backward compatibility for stored data
@@ -84,12 +85,24 @@ export class BoardSerializer
     }
 
     saveToLocalStorage(): void {
-        saveIndexedDB("board", () => this.serialize())
+        try {
+            saveIndexedDB("board", () => this.serialize())
+        } catch {
+            notification.create("Notification.LocalStorageSaveFailed")
+        }
     }
 
     async loadFromLocalStorage(): Promise<BoardState> {
-        const serialized: SerializedBoardState = await loadIndexedDB("board")
-        this.state = await this.deserialize(serialized)
+        try {
+            const serialized = await loadIndexedDB<SerializedBoardState>(
+                "board"
+            )
+            if (serialized) {
+                this.state = await this.deserialize(serialized)
+            }
+        } catch {
+            notification.create("Notification.LocalStorageLoadFailed")
+        }
         return this.state
     }
 }
