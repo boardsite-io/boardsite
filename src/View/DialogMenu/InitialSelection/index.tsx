@@ -21,7 +21,7 @@ const InitialSelection: React.FC<InitialSelectionProps> = ({ firstLoad }) => {
 
     const checkStorage = useCallback(async () => {
         try {
-            const data = loadIndexedDB("board")
+            const data = await loadIndexedDB("board")
             setShowContinue(!!data)
         } catch {
             setShowContinue(false)
