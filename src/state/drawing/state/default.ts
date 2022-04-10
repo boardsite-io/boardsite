@@ -1,11 +1,11 @@
 import {
-    PAPER,
     DEFAULT_COLOR,
     DEFAULT_FAV_TOOLS,
     DEFAULT_TOOL,
     DEFAULT_WIDTH,
     PAGE_SIZE,
 } from "consts"
+import { Paper } from "state/board/state/index.types"
 import { DrawingState } from "./index.types"
 
 export const getDefaultDrawingState = (): DrawingState => ({
@@ -19,7 +19,7 @@ export const getDefaultDrawingState = (): DrawingState => ({
         },
     },
     pageMeta: {
-        background: { paper: PAPER.BLANK },
+        background: { paper: Paper.Blank },
         size: PAGE_SIZE.A4_PORTRAIT,
     },
     favoriteTools: DEFAULT_FAV_TOOLS,

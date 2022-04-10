@@ -4,11 +4,11 @@ import { MAX_PIXEL_SCALE } from "consts"
 import { draw } from "View/Board/RenderNG/shapes"
 import { Canvas } from "View/Board/RenderNG/Page/index.styled"
 import { drawBackground } from "View/Board/RenderNG/Page/Background/backgrounds"
-import { Page } from "state/board/state/index.types"
+import { Page, Paper } from "state/board/state/index.types"
 
 /**
  * Renders a page as image data.
- * @param drawBackground draw the page background (ruled, checkered)
+ * @param page target page to be rendered
  * @returns image data urls
  */
 export const pageToDataURL = async (
@@ -17,8 +17,8 @@ export const pageToDataURL = async (
     // dont render pages that are empty and have no background
     // because this would just produce a black image
     if (
-        (page.meta.background.paper === "doc" ||
-            page.meta.background.paper === "blank") &&
+        (page.meta.background.paper === Paper.Doc ||
+            page.meta.background.paper === Paper.Blank) &&
         Object.keys(page.strokes).length === 0
     ) {
         return undefined
@@ -40,7 +40,7 @@ export const pageToDataURL = async (
         })
 
         // Draw background layer
-        if (page.meta.background.paper !== "doc") {
+        if (page.meta.background.paper !== Paper.Doc) {
             drawBackground(ctx, page.meta)
         }
     }

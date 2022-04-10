@@ -1,9 +1,9 @@
 import { FormattedMessage } from "language"
 import React from "react"
 import { drawing } from "state/drawing"
-import { PAPER } from "consts"
 import { Position, ToolTip } from "components"
 import { useGState } from "state"
+import { Paper } from "state/board/state/index.types"
 import { Backgrounds, Blank, Checkered, Ruled } from "./index.styled"
 
 const Background: React.FC = () => {
@@ -18,8 +18,8 @@ const Background: React.FC = () => {
             >
                 <Blank
                     type="button"
-                    $active={paper === PAPER.BLANK}
-                    onClick={() => drawing.setPageBackground(PAPER.BLANK)}
+                    $active={paper === Paper.Blank}
+                    onClick={() => drawing.setPageBackground(Paper.Blank)}
                 />
             </ToolTip>
             <ToolTip
@@ -30,8 +30,8 @@ const Background: React.FC = () => {
             >
                 <Checkered
                     type="button"
-                    $active={paper === PAPER.CHECKERED}
-                    onClick={() => drawing.setPageBackground(PAPER.CHECKERED)}
+                    $active={paper === Paper.Checkered}
+                    onClick={() => drawing.setPageBackground(Paper.Checkered)}
                 />
             </ToolTip>
             <ToolTip
@@ -40,8 +40,8 @@ const Background: React.FC = () => {
             >
                 <Ruled
                     type="button"
-                    $active={paper === PAPER.RULED}
-                    onClick={() => drawing.setPageBackground(PAPER.RULED)}
+                    $active={paper === Paper.Ruled}
+                    onClick={() => drawing.setPageBackground(Paper.Ruled)}
                 />
             </ToolTip>
         </Backgrounds>

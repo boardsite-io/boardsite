@@ -19,7 +19,7 @@ describe("board reducer state", () => {
 
     it("should deserialize the state version 1.0", async () => {
         const drawingState = await new Drawing().deserialize(
-            cloneDeep<SerializedDrawingState>(stateV1)
+            cloneDeep<unknown>(stateV1) as SerializedDrawingState
         )
         const got = new Drawing().setState(drawingState).serialize()
         const want = stateV1

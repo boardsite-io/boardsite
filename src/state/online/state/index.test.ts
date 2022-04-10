@@ -1,4 +1,3 @@
-import { PAPER } from "consts"
 import { BoardStroke } from "drawing/stroke"
 import { LiveStroke } from "drawing/livestroke/index.types"
 import { Stroke, ToolType } from "drawing/stroke/index.types"
@@ -7,6 +6,7 @@ import {
     BoardState,
     PageCollection,
     PageMeta,
+    Paper,
 } from "state/board/state/index.types"
 import { Board } from "state/board"
 import { View } from "state/view"
@@ -56,7 +56,7 @@ const mockPageMeta: PageMeta = {
         height: 800,
     },
     background: {
-        paper: PAPER.BLANK,
+        paper: Paper.Blank,
     },
 }
 

@@ -1,5 +1,4 @@
-import { PAPER } from "consts"
-import { BoardState } from "state/board/state/index.types"
+import { BoardState, Paper } from "state/board/state/index.types"
 
 export const MOCK_STROKE_ID_1 = "2vl2xtzkgldbsatk"
 export const MOCK_PAGE_ID_1 = "jtWj1Y7e"
@@ -26,7 +25,7 @@ export const MOCK_PAGE_1 = {
     },
     meta: {
         background: {
-            paper: PAPER.BLANK,
+            paper: Paper.Blank,
             attachId: "",
             documentPageNum: 0,
         },

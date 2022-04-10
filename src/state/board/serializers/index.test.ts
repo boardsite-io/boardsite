@@ -24,7 +24,7 @@ describe("board reducer state", () => {
 
     it("should deserialize the state version 1.0", async () => {
         const boardState = await new Board().deserialize(
-            cloneDeep<SerializedBoardState>(stateV1)
+            cloneDeep<unknown>(stateV1) as SerializedBoardState
         )
         const got = new Board().setState(boardState).serialize()
         const want = stateV1

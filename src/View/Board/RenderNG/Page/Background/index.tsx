@@ -1,6 +1,7 @@
 import { MAX_PIXEL_SCALE } from "consts"
 import React, { memo } from "react"
 import { useGState, usePageLayer } from "state"
+import { Paper } from "state/board/state/index.types"
 import { PageProps } from "../index.types"
 import { useLayerConfig } from "../useLayerConfig"
 import { CanvasBG } from "./index.styled"
@@ -12,7 +13,7 @@ export const Background: React.FC<PageProps> = memo(({ page, pageOffset }) => {
     usePageLayer("background", page.pageId)
 
     const pxlScale =
-        page.meta.background.paper === "doc"
+        page.meta.background.paper === Paper.Doc
             ? MAX_PIXEL_SCALE
             : layerConfig.pixelScale
 

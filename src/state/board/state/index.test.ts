@@ -4,7 +4,6 @@ import { SerializedStroke, ToolType } from "drawing/stroke/index.types"
 import { cloneDeep } from "lodash"
 import {
     DEFAULT_KEEP_CENTERED,
-    PAPER,
     STROKE_WIDTH_PRESETS,
     PAGE_SIZE,
     DEFAULT_VIEW_TRANSFORM,
@@ -16,6 +15,7 @@ import {
     DeletePagesAction,
     EraseStrokesAction,
     PageId,
+    Paper,
     SetPageMetaAction,
 } from "./index.types"
 import { Board } from "."
@@ -57,7 +57,7 @@ export const mockBoardState = {
     },
     attachments: {},
     pageMeta: {
-        background: { style: PAPER.BLANK },
+        background: { style: Paper.Blank },
         size: {
             width: 10,
             height: 10,
@@ -313,7 +313,7 @@ describe("board reducer", () => {
         mockBoard.setState(cloneDeep(mockBoardState))
         const newMeta = cloneDeep(page1.meta)
         newMeta.size = PAGE_SIZE.A4_PORTRAIT
-        newMeta.background.paper = PAPER.CHECKERED
+        newMeta.background.paper = Paper.Checkered
         const pageUpdate = {
             pageId: page1.pageId,
             meta: newMeta,

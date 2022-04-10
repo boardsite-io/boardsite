@@ -1,5 +1,4 @@
 import { Tool, ToolType } from "drawing/stroke/index.types"
-import { Paper } from "state/board/state/index.types"
 import { ViewTransform } from "state/view/state/index.types"
 
 /* 
@@ -53,13 +52,6 @@ export const DEFAULT_DIRECTDRAW = true
 export const PAGE_SIZE = {
     A4_PORTRAIT: { width: 620, height: 877 },
     A4_LANDSCAPE: { width: 877, height: 620 },
-}
-
-export const PAPER = {
-    BLANK: "blank" as Paper,
-    CHECKERED: "checkered" as Paper,
-    RULED: "ruled" as Paper,
-    DOC: "doc" as Paper,
 }
 
 const FAVORITE_TOOL_1: Tool = {

@@ -119,7 +119,12 @@ export type SetPageMetaAction = BoardAction<
     Pick<Page, "pageId" | "meta">[]
 >
 
-export type Paper = "blank" | "checkered" | "ruled" | "doc"
+export enum Paper {
+    Blank = "blank",
+    Checkered = "checkered",
+    Ruled = "ruled",
+    Doc = "doc",
+}
 
 export type AddPageData = {
     page: Page
