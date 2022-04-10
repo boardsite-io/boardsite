@@ -1,55 +1,39 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { cloneDeep } from "lodash"
-import {
-    CURRENT_THEME_VERSION,
-    serializeThemeState,
-    deserializeThemeState,
-} from "."
+import { CURRENT_THEME_VERSION } from "."
 import stateV1 from "./__test__/stateV1.json"
-import { SerializedState } from "../../types"
-import { SettingsState } from "../state/index.types"
+import { SerializedSettingsState } from "../state/index.types"
 import { getDefaultSettingsState } from "../state/default"
+import { SettingsClass } from "../state"
 
-describe("board reducer state", () => {
+describe("settings serialize state", () => {
     it("should serialize the default state", () => {
-        const themeState: SettingsState = getDefaultSettingsState()
-        const got = serializeThemeState(themeState)
+        const got = new SettingsClass().serialize()
         const want = {
             version: CURRENT_THEME_VERSION,
-            ...themeState,
+            ...getDefaultSettingsState(),
         }
 
-        expect(JSON.stringify(got)).toEqual(JSON.stringify(want))
-    })
-
-    it("should deserialize an empty object and set the defaults", async () => {
-        const got = await deserializeThemeState({
-            version: CURRENT_THEME_VERSION,
-        })
-        const want = getDefaultSettingsState()
-
-        expect(JSON.stringify(got)).toEqual(JSON.stringify(want))
+        expect(got).toStrictEqual(want)
     })
 
     it("should deserialize the state version 1.0", async () => {
-        const drawingState = await deserializeThemeState(
-            cloneDeep(stateV1) as Partial<SerializedState<SettingsState>>
+        const state = await new SettingsClass().deserialize(
+            cloneDeep<unknown>(stateV1) as SerializedSettingsState
         )
-        const got = serializeThemeState(drawingState)
+        const got = new SettingsClass(state).serialize()
         const want = stateV1
 
-        expect(JSON.stringify(got)).toBe(JSON.stringify(want))
+        expect(got).toStrictEqual(want)
     })
 
     it("throws an error for unknown or missing version", async () => {
-        await expect(deserializeThemeState({})).rejects.toThrow(
-            "cannot deserialize state, missing version"
-        )
+        await expect(
+            new SettingsClass().deserialize({} as any)
+        ).rejects.toThrow("cannot deserialize state, missing version")
 
         await expect(
-            deserializeThemeState({
-                version: "0.1",
-            } as any)
+            new SettingsClass().deserialize({ version: "0.1" } as any)
         ).rejects.toThrow("cannot deserialize state, unknown version 0.1")
     })
 })

@@ -1,13 +1,6 @@
 import { validateToken } from "api/auth"
 import { API_URL, request } from "api/request"
-import { loadLocalStorage, saveLocalStorage } from "storage/local"
 import { subscriptionState } from "state/subscription"
-import { getRandomColor } from "util/color"
-import {
-    adjectives,
-    animals,
-    uniqueNamesGenerator,
-} from "unique-names-generator"
 import {
     ConfigMessage,
     Message,
@@ -33,22 +26,17 @@ import { menu } from "state/menu"
 import { DialogState } from "state/menu/state/index.types"
 import { newAttachment } from "drawing/attachment/utils"
 import { OnlineState, SessionConfig, User } from "./index.types"
-import { GlobalState, SerializedState } from "../../types"
-import { DrawingState } from "../../drawing/state/index.types"
-import { deserializeOnlineState, serializeOnlineState } from "../serializers"
+import { GlobalState } from "../../types"
+import { OnlineSerializer } from "../serializers"
 
-export class Online implements GlobalState<OnlineState> {
-    state: OnlineState = {
-        user: {
-            alias: uniqueNamesGenerator({
-                dictionaries: [adjectives, animals],
-                separator: "",
-                style: "capital",
-            }),
-            color: getRandomColor(),
-        },
-        session: {},
-        isAuthorized: false,
+export class Online
+    extends OnlineSerializer
+    implements GlobalState<OnlineState>
+{
+    constructor(state?: OnlineState) {
+        super()
+        if (!state) return
+        this.setState(state)
     }
 
     getState(): OnlineState {
@@ -57,6 +45,22 @@ export class Online implements GlobalState<OnlineState> {
 
     setState(newState: OnlineState): void {
         this.state = newState
+    }
+
+    override async loadFromLocalStorage(): Promise<OnlineState> {
+        const state = await super.loadFromLocalStorage()
+
+        // Load preferred user settings
+        if (state.user) {
+            request.userId = state.user.id
+        }
+
+        // dont erase an existing token
+        if (state.token) {
+            await this.setToken(state.token)
+        }
+
+        return state
     }
 
     isConnected(): boolean {
@@ -524,39 +528,6 @@ export class Online implements GlobalState<OnlineState> {
     static path(sessionURL: string): string {
         const url = sessionURL.split("/")
         return `/b/${url[url.length - 1]}`
-    }
-
-    getSerializedState(): SerializedState<DrawingState> {
-        return serializeOnlineState(this.getState())
-    }
-
-    async setSerializedState(
-        serializedDrawingState: SerializedState<DrawingState>
-    ): Promise<void> {
-        const { token, user: userSelection } = await deserializeOnlineState(
-            serializedDrawingState
-        )
-
-        // Load preferred user settings
-        if (userSelection) {
-            this.setUser(userSelection)
-            request.userId = userSelection.id
-        }
-
-        // dont erase an existing token
-        if (!token) return
-        await this.setToken(token)
-    }
-
-    saveToLocalStorage(): void {
-        const state = this.getState()
-        saveLocalStorage("online", () => serializeOnlineState(state))
-    }
-
-    async loadFromLocalStorage(): Promise<void> {
-        const serializedState = await loadLocalStorage("online")
-        if (serializedState === null) return
-        await this.setSerializedState(serializedState)
     }
 }
 

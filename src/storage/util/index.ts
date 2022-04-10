@@ -15,9 +15,9 @@ export const readFileAsUint8Array = async (file: File): Promise<Uint8Array> =>
         fileReader.readAsArrayBuffer(file)
     })
 
-export const startBackgroundJob = async (
+export const startBackgroundJob = async <T>(
     userMessage: IntlMessageId,
-    job: () => Promise<void>
+    job: () => Promise<T>
 ) => {
     loading.startLoading(userMessage)
     return new Promise((resolve, reject) => {
@@ -26,8 +26,8 @@ export const startBackgroundJob = async (
         // then the pdf render blocks any updates until its finished.
         setTimeout(async () => {
             try {
-                await job()
-                resolve(undefined)
+                const value = await job()
+                resolve(value)
             } catch (err) {
                 reject(err)
             }

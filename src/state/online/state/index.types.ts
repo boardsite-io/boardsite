@@ -1,9 +1,16 @@
-export interface OnlineState {
+import { SerializedVersionState } from "../../types"
+
+interface State {
     user: User
-    session: Session
     token?: string
+}
+
+export interface OnlineState extends State {
+    session: Session
     isAuthorized: boolean
 }
+
+export type SerializedOnlineState = SerializedVersionState<State>
 
 export type Session = {
     config?: SessionConfig

@@ -5,18 +5,24 @@ import {
     StrokeCollection,
     StrokeUpdate,
 } from "drawing/stroke/index.types"
+import { SerializedVersionState, Serializer } from "../../types"
 
-export interface BoardState {
+interface State<A extends SerializedAttachment, P extends SerializedPage> {
     currentPageIndex: number
     pageRank: PageRank
-    pageCollection: PageCollection
-    attachments: Attachments
+    pageCollection: Record<PageId, P>
+    attachments: Record<AttachId, A>
     undoStack?: StackAction[]
     redoStack?: StackAction[]
     strokeUpdates?: StrokeUpdate[]
     transformStrokes?: TransformStrokes
     transformPagePosition?: Point
 }
+
+export type BoardState = State<Attachment, Page>
+export type SerializedBoardState = SerializedVersionState<
+    State<SerializedAttachment, SerializedPage>
+>
 
 export type PageRank = string[]
 export type RenderedData = ImageData[]
@@ -28,16 +34,20 @@ export enum AttachType {
     PNG,
 }
 
-export interface Attachment {
+export interface SerializedAttachment {
     id: AttachId
     type: AttachType
-    renderedData: RenderedData
     cachedBlob: Uint8Array
+}
+
+export interface Attachment
+    extends SerializedAttachment,
+        Serializer<Attachment, SerializedAttachment> {
+    renderedData: RenderedData
 
     setId(attachId: AttachId): Attachment
+
     render(): Promise<Attachment>
-    serialize(): void
-    deserialize(): Promise<Attachment>
 }
 
 export type Attachments = Record<AttachId, Attachment>
@@ -70,7 +80,13 @@ export type TransformStrokes = Stroke[]
 
 export type PageId = string
 
-export interface Page {
+export interface SerializedPage {
+    pageId: PageId
+    strokes: Record<string, SerializedStroke>
+    meta: PageMeta
+}
+
+export interface Page extends Serializer<Page, SerializedPage> {
     pageId: PageId
     strokes: StrokeCollection
     meta: PageMeta

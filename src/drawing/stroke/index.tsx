@@ -1,5 +1,5 @@
 import { LiveStroke } from "drawing/livestroke/index.types"
-import { assign, cloneDeep, pick } from "lodash"
+import { assign, pick } from "lodash"
 import { Polygon } from "sat"
 import { getHitboxPolygon } from "./hitbox"
 import {
@@ -55,10 +55,23 @@ export class BoardStroke implements Stroke {
     /**
      * Generate a serializable stroke for e.g. WS transmission
      */
-    serialize(): Stroke {
-        const strokeCopy = cloneDeep<Stroke>(this)
-        delete strokeCopy.hitboxes
-        return strokeCopy
+    serialize(): SerializedStroke {
+        return pick(this, [
+            "id",
+            "pageId",
+            "type",
+            "x",
+            "y",
+            "scaleX",
+            "scaleY",
+            "points",
+            "style",
+        ])
+    }
+
+    async deserialize(): Promise<Stroke> {
+        // nop
+        return this
     }
 
     // returns a copy of the stroke with the update properties

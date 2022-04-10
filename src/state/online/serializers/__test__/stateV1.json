@@ -1,0 +1,9 @@
+{
+    "version": "1.0",
+    "token": "abcdef",
+    "user": {
+        "id": "abcd-1234",
+        "alias": "potato",
+        "color": "#00beef"
+    }
+}

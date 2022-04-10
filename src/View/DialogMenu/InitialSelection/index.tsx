@@ -20,9 +20,11 @@ const InitialSelection: React.FC<InitialSelectionProps> = ({ firstLoad }) => {
     const [showContinue, setShowContinue] = useState(false)
 
     const checkStorage = useCallback(async () => {
-        const data = await loadIndexedDB("board")
-        if (data !== null) {
-            setShowContinue(true)
+        try {
+            const data = await loadIndexedDB("board")
+            setShowContinue(!!data)
+        } catch {
+            setShowContinue(false)
         }
     }, [])
 

@@ -1,4 +1,5 @@
 import { Polygon } from "sat"
+import { Serializer } from "../../state/types"
 
 export type Hitbox = {
     v1: Point
@@ -32,6 +33,7 @@ export type ToolStyle = {
     width: number
     opacity: number
 }
+
 export interface Tool {
     type: ToolType
     latestDrawType?: ToolType
@@ -64,8 +66,9 @@ export interface SerializedStroke extends BaseStroke {
     scaleY: number
 }
 
-export interface Stroke extends SerializedStroke {
-    serialize: () => Stroke
+export interface Stroke
+    extends SerializedStroke,
+        Serializer<Stroke, SerializedStroke> {
     serializeUpdate(): StrokeUpdate
     update: (strokeUpdate: Stroke | StrokeUpdate) => Stroke
     getPosition(): Point

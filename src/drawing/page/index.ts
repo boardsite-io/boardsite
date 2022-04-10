@@ -1,12 +1,14 @@
 import { nanoid } from "nanoid"
 import { PAPER, PAGE_SIZE } from "consts"
 import { BoardStroke } from "drawing/stroke"
-import { Page, PageMeta } from "state/board/state/index.types"
+import { Page, PageMeta, SerializedPage } from "state/board/state/index.types"
+import { assign, pick } from "lodash"
 import {
     SerializedStroke,
     Stroke,
     StrokeCollection,
 } from "../stroke/index.types"
+import { reduceRecord } from "../../util/lib"
 
 export class BoardPage implements Page {
     constructor(page?: Page) {
@@ -48,6 +50,26 @@ export class BoardPage implements Page {
         strokes.forEach((stroke) => {
             this.strokes[stroke.id] = new BoardStroke(stroke)
         })
+        return this
+    }
+
+    serialize(): SerializedPage {
+        const strokes = reduceRecord(this.strokes, (stroke) =>
+            stroke.serialize()
+        )
+        return {
+            pageId: this.pageId,
+            meta: this.meta,
+            strokes,
+        }
+    }
+
+    async deserialize(serialized: SerializedPage): Promise<Page> {
+        assign(this, pick(serialized, ["pageId", "meta"]))
+        this.strokes = reduceRecord(
+            serialized.strokes,
+            (stroke) => new BoardStroke(stroke)
+        )
         return this
     }
 }

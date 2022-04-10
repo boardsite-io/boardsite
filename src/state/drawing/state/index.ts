@@ -1,15 +1,20 @@
 import { StrokeCollection, Tool, ToolType } from "drawing/stroke/index.types"
-import { loadLocalStorage, saveLocalStorage } from "storage/local"
 import { Paper, PageSize } from "state/board/state/index.types"
 import { subscriptionState } from "state/subscription"
 import { isDrawType } from "util/drawing"
-import { GlobalState, SerializedState } from "../../types"
-import { getDefaultDrawingState } from "./default"
+import { GlobalState } from "../../types"
 import { DrawingState } from "./index.types"
-import { deserializeDrawingState, serializeDrawingState } from "../serializers"
+import { DrawingSerializer } from "../serializers"
 
-export class Drawing implements GlobalState<DrawingState> {
-    state: DrawingState = getDefaultDrawingState()
+export class Drawing
+    extends DrawingSerializer
+    implements GlobalState<DrawingState>
+{
+    constructor(state?: DrawingState) {
+        super()
+        if (!state) return
+        this.setState(state)
+    }
 
     getState(): DrawingState {
         return this.state
@@ -24,6 +29,17 @@ export class Drawing implements GlobalState<DrawingState> {
             "ColorPicker"
         )
         this.saveToLocalStorage()
+    }
+
+    override async loadFromLocalStorage(): Promise<DrawingState> {
+        const state = await super.loadFromLocalStorage()
+        subscriptionState.render(
+            "FavoriteTools",
+            "ActiveTool",
+            "WidthPicker",
+            "ColorPicker"
+        )
+        return state
     }
 
     /**
@@ -152,28 +168,6 @@ export class Drawing implements GlobalState<DrawingState> {
             subscriptionState.render("FavoriteTools")
             this.saveToLocalStorage()
         }
-    }
-
-    getSerializedState(): SerializedState<DrawingState> {
-        return serializeDrawingState(this.getState())
-    }
-
-    async setSerializedState(
-        serializedState: SerializedState<DrawingState>
-    ): Promise<void> {
-        const deserializedState = await deserializeDrawingState(serializedState)
-        this.setState(deserializedState)
-    }
-
-    saveToLocalStorage(): void {
-        const state = this.getState()
-        saveLocalStorage("drawing", () => serializeDrawingState(state))
-    }
-
-    async loadFromLocalStorage(): Promise<void> {
-        const serializedState = await loadLocalStorage("drawing")
-        if (serializedState === null) return
-        await this.setSerializedState(serializedState)
     }
 }
 

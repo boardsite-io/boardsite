@@ -1,6 +1,5 @@
 import localforage from "localforage"
 import { debounce } from "lodash"
-import { notification } from "state/notification"
 
 const NAMESPACE = "boardsite"
 const DEBOUNCE_LOCAL_STORAGE = 500
@@ -17,53 +16,33 @@ type StateInIndexedDB = "board"
 
 export const saveLocalStorage = debounce(
     (name: StateInLocalStorage, serializer: () => object): void => {
-        try {
-            localStorage.setItem(
-                `${NAMESPACE}_${name}`,
-                JSON.stringify(serializer())
-            )
-        } catch (error) {
-            notification.create("Notification.LocalStorageSaveFailed")
-        }
+        localStorage.setItem(
+            `${NAMESPACE}_${name}`,
+            JSON.stringify(serializer())
+        )
     },
     DEBOUNCE_LOCAL_STORAGE
 )
 
 export const saveIndexedDB = debounce(
     async (name: StateInIndexedDB, serializer: () => object): Promise<void> => {
-        try {
-            await localforage.setItem(`${NAMESPACE}_${name}`, serializer())
-        } catch (error) {
-            notification.create("Notification.IndexedDBSaveFailed")
-        }
+        await localforage.setItem(`${NAMESPACE}_${name}`, serializer())
     },
     DEBOUNCE_INDEXED_DB
 )
 
-export const loadLocalStorage = async (
+export const loadLocalStorage = async <T>(
     name: StateInLocalStorage
-): Promise<object | null> => {
-    try {
-        const data = localStorage.getItem(`${NAMESPACE}_${name}`)
-        if (data === null) return null
-
-        return JSON.parse(data)
-    } catch (error) {
-        notification.create("Notification.LocalStorageLoadFailed")
-        return null
-    }
+): Promise<T | undefined> => {
+    const data = localStorage.getItem(`${NAMESPACE}_${name}`)
+    if (!data) return undefined
+    return JSON.parse(data) as T
 }
 
-export const loadIndexedDB = async (
+export const loadIndexedDB = async <T>(
     name: StateInIndexedDB
-): Promise<object | null> => {
-    try {
-        const data = await localforage.getItem(`${NAMESPACE}_${name}`)
-        if (!data) return null
-
-        return data as object
-    } catch (error) {
-        notification.create("Notification.IndexedDBLoadFailed")
-        return null
-    }
+): Promise<T | undefined> => {
+    const data = await localforage.getItem(`${NAMESPACE}_${name}`)
+    if (!data) return undefined
+    return data as T
 }
