@@ -1,4 +1,5 @@
 import {
+    DEFAULT_PAGE_GAP,
     DEFAULT_VIEW_TRANSFORM,
     DEVICE_PIXEL_RATIO,
     MAX_PIXEL_SCALE,
@@ -8,35 +9,48 @@ import {
 } from "consts"
 import { debounce } from "lodash"
 import { board } from "state/board"
+import { settings } from "state/settings"
 import { subscriptionState } from "state/subscription"
 import { GlobalState } from "../../types"
+import { ViewSerializer } from "../serializers"
 import {
-    applyBounds,
-    DetectionResult,
-    detectPageChange,
+    applyBound,
     getCenterOfScreen,
     getCenterX,
     getCenterY,
-    toNextPage,
-    toPreviousPage,
+    getHorizontalBounds,
+    getLowerBound,
+    getUpperBound,
+    getViewCenterY,
     zoomTo,
 } from "../util"
-import { ViewTransform, ViewState } from "./index.types"
+import { ViewTransform, ViewState, PageIndex } from "./index.types"
 
-export class View implements GlobalState<ViewState> {
-    state: ViewState = {
-        viewTransform: DEFAULT_VIEW_TRANSFORM,
-        layerConfig: {
-            pixelScale: DEVICE_PIXEL_RATIO,
-        },
-    }
-
+export class View extends ViewSerializer implements GlobalState<ViewState> {
     getState(): ViewState {
         return this.state
     }
 
     setState(newState: ViewState) {
         this.state = newState
+        return this
+    }
+
+    override async loadFromLocalStorage(): Promise<ViewState> {
+        const state = await super.loadFromLocalStorage()
+        subscriptionState.render("RenderNG", "ViewTransform")
+        return state
+    }
+
+    getPageIndex(): PageIndex {
+        return this.getState().pageIndex
+    }
+
+    setPageIndex(pageIndex: PageIndex) {
+        this.state.pageIndex = pageIndex
+        this.saveToLocalStorage()
+        subscriptionState.render("RenderNG", "MenuPageButton")
+        board.clearTransform()
     }
 
     /**
@@ -87,7 +101,8 @@ export class View implements GlobalState<ViewState> {
      * Set the view scale so that the current page fits the viewport width
      */
     fitToPage(): void {
-        this.rescaleAtCenter(window.innerWidth / board.getPageSize().width)
+        const pageSize = board.getPageSize(this.getPageIndex())
+        this.rescaleAtCenter(window.innerWidth / pageSize.width)
     }
 
     /**
@@ -95,21 +110,74 @@ export class View implements GlobalState<ViewState> {
      * @param newTransform transform update to be applied
      */
     updateViewTransform(newTransform: ViewTransform): void {
-        const detectionResult = detectPageChange(newTransform)
-
-        if (detectionResult === DetectionResult.Next) {
-            newTransform = toNextPage(newTransform)
-            board.jumpToNextPage()
-        } else if (detectionResult === DetectionResult.Previous) {
-            newTransform = toPreviousPage(newTransform)
-            board.jumpToPrevPage()
-        }
-        newTransform = applyBounds(newTransform)
+        newTransform = this.handlePageChange(newTransform)
+        newTransform = this.applyBounds(newTransform)
 
         this.state.viewTransform = newTransform
         this.checkPixelScaleDebounced(newTransform)
 
         subscriptionState.render("ViewTransform")
+    }
+
+    /**
+     * Find out if currently on first page
+     * @returns true if on first page
+     */
+    onFirstPage(): boolean {
+        return this.getState().pageIndex === 0
+    }
+
+    /**
+     * Find out if currently on last page
+     * @returns true if on last page
+     */
+    onLastPage(): boolean {
+        return (
+            this.getState().pageIndex === board.getState().pageRank.length - 1
+        )
+    }
+
+    /**
+     * Test if the view is zoomed in at least full screen
+     * @param scale : optional input for testing for a specific scale
+     * @returns true if the views page width exceeds the window width
+     */
+    isFullScreen(scale = this.getState().viewTransform.scale) {
+        const effectivePageWidth =
+            board.getPageSize(this.getState().pageIndex).width * scale
+        return effectivePageWidth > window.innerWidth
+    }
+
+    /**
+     * Go to the next page
+     */
+    jumpToNextPage(): void {
+        if (this.state.pageIndex < board.getState().pageRank.length - 1) {
+            this.setPageIndex(this.state.pageIndex + 1)
+        }
+    }
+
+    /**
+     * Go to the previous page
+     */
+    jumpToPrevPage(): void {
+        if (this.state.pageIndex > 0) {
+            this.setPageIndex(this.state.pageIndex - 1)
+        }
+    }
+
+    /**
+     * Go to the first page
+     */
+    jumpToFirstPage(): void {
+        this.setPageIndex(0)
+    }
+
+    /**
+     * Go to the last page
+     */
+    jumpToLastPage(): void {
+        this.setPageIndex(board.getState().pageRank.length - 1)
     }
 
     /**
@@ -165,6 +233,148 @@ export class View implements GlobalState<ViewState> {
             yOffset: this.scaleWithFixedY(newScale, getCenterY()),
         }
         this.updateViewTransform(newTransform)
+    }
+
+    /**
+     * Transition the view transform and page index to previous page
+     * @param newTransform updated transform
+     * @returns view transform adjusted to page transition
+     */
+    private transitionToPreviousPage(
+        newTransform: ViewTransform
+    ): ViewTransform {
+        this.jumpToPrevPage()
+        const pageHeight = board.getPageSize(this.getState().pageIndex).height
+        newTransform.yOffset -= pageHeight + DEFAULT_PAGE_GAP
+        return newTransform
+    }
+
+    /**
+     * Transition the view transform and page index to next page
+     * @param newTransform updated transform
+     * @returns view transform adjusted to page transition
+     */
+    private transitionToNextPage(newTransform: ViewTransform): ViewTransform {
+        this.jumpToNextPage()
+        const pageHeight = board.getPageSize(
+            this.getState().pageIndex - 1
+        ).height
+        newTransform.yOffset += pageHeight + DEFAULT_PAGE_GAP
+        return newTransform
+    }
+
+    /**
+     * Detect if page index has changed and adjust the transform accordingly
+     * @param newTransform updated transform
+     * @returns adjusted transform
+     */
+    private handlePageChange(newTransform: ViewTransform): ViewTransform {
+        const transformedCenterY = getViewCenterY(newTransform)
+        const prevPageBorder = -DEFAULT_PAGE_GAP / 2
+        const nextPageBorder =
+            board.getPageSize(this.getState().pageIndex).height *
+                newTransform.scale +
+            DEFAULT_PAGE_GAP / 2
+
+        if (transformedCenterY < prevPageBorder) {
+            if (!this.onFirstPage()) {
+                return this.transitionToPreviousPage(newTransform)
+            }
+        } else if (transformedCenterY > nextPageBorder) {
+            if (!this.onLastPage()) {
+                return this.transitionToNextPage(newTransform)
+            }
+        }
+        return newTransform
+    }
+
+    /**
+     * Apply bounds on a transform
+     * @param newTransform transform to apply bounds on
+     * @returns bounded transform
+     */
+    private applyBounds(newTransform: ViewTransform): ViewTransform {
+        return {
+            ...newTransform,
+            xOffset: this.applyBoundsX(newTransform),
+            yOffset: this.applyBoundsY(newTransform),
+        }
+    }
+
+    /**
+     * Apply horizontal bounds
+     * @param newTransform transform to apply bounds on
+     * @returns X-bounded transform
+     */
+    private applyBoundsX(
+        newTransform: ViewTransform
+    ): ViewTransform["xOffset"] {
+        const { keepCentered } = settings.getState()
+
+        // Zoomed out with keepCentered setting on sticks to center
+        if (keepCentered && !this.isFullScreen(newTransform.scale)) {
+            return getCenterX() / newTransform.scale
+        }
+
+        const pageWidth = board.getPageSize(this.getState().pageIndex).width
+        const { leftBound, rightBound } = getHorizontalBounds({
+            newTransform,
+            keepCentered,
+            pageWidth,
+        })
+
+        return applyBound({
+            value: newTransform.xOffset,
+            min: leftBound,
+            max: rightBound,
+        })
+    }
+
+    /**
+     * Apply vertical bounds
+     * @param newTransform transform to apply bounds on
+     * @returns Y-bounded transform
+     */
+    private applyBoundsY(
+        newTransform: ViewTransform
+    ): ViewTransform["yOffset"] {
+        if (this.onFirstPage()) {
+            const upperBound = getUpperBound(newTransform)
+
+            if (newTransform.yOffset > upperBound) {
+                return upperBound
+            }
+
+            if (this.onLastPage()) {
+                const lowerBound = getLowerBound(
+                    newTransform,
+                    board.getPageSize(this.getState().pageIndex).height
+                )
+
+                // If the upper and lower bounds cross
+                // eachother then set y to upper bound
+                if (upperBound < lowerBound) {
+                    return upperBound
+                }
+
+                if (newTransform.yOffset < lowerBound) {
+                    return lowerBound
+                }
+            }
+        }
+
+        if (this.onLastPage()) {
+            const lowerBound = getLowerBound(
+                newTransform,
+                board.getPageSize(this.getState().pageIndex).height
+            )
+
+            if (newTransform.yOffset < lowerBound) {
+                return lowerBound
+            }
+        }
+
+        return newTransform.yOffset
     }
 }
 

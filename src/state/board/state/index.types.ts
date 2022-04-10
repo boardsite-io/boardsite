@@ -8,7 +8,6 @@ import {
 import { SerializedVersionState, Serializer } from "../../types"
 
 interface State<A extends SerializedAttachment, P extends SerializedPage> {
-    currentPageIndex: number
     pageRank: PageRank
     pageCollection: Record<PageId, P>
     attachments: Record<AttachId, A>
@@ -120,7 +119,12 @@ export type SetPageMetaAction = BoardAction<
     Pick<Page, "pageId" | "meta">[]
 >
 
-export type Paper = "blank" | "checkered" | "ruled" | "doc"
+export enum Paper {
+    Blank = "blank",
+    Checkered = "checkered",
+    Ruled = "ruled",
+    Doc = "doc",
+}
 
 export type AddPageData = {
     page: Page

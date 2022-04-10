@@ -6,6 +6,7 @@ import { ThemeProvider } from "styled-components"
 import { settings } from "state/settings"
 import { drawing } from "state/drawing"
 import { online } from "state/online"
+import { view } from "state/view"
 import { useGState } from "state"
 import { themes } from "theme"
 import ElectronWrapper from "./electron"
@@ -21,6 +22,7 @@ const App = () => {
             drawing.loadFromLocalStorage(),
             online.loadFromLocalStorage(),
             settings.loadFromLocalStorage(),
+            view.loadFromLocalStorage(),
         ])
         setLoading(false)
     }, [])

@@ -10,9 +10,9 @@ import {
 import { ToolType } from "drawing/stroke/index.types"
 import { useEffect } from "react"
 import { drawing } from "state/drawing"
-import { board } from "state/board"
 import { handleExportWorkspace, handleImportWorkspace } from "storage/workspace"
 import { menu } from "state/menu"
+import { view } from "state/view"
 
 export const useKeyboardShortcuts = (): void => {
     useEffect(() => {
@@ -91,16 +91,16 @@ const keyListener = (e: KeyboardEvent): void => {
                 handleSetTool({ type: ToolType.Circle })
                 break
             case "ArrowUp":
-                board.jumpToFirstPage()
+                view.jumpToFirstPage()
                 break
             case "ArrowDown":
-                board.jumpToLastPage()
+                view.jumpToLastPage()
                 break
             case "ArrowLeft":
-                board.jumpToPrevPage()
+                view.jumpToPrevPage()
                 break
             case "ArrowRight":
-                board.jumpToNextPage()
+                view.jumpToNextPage()
                 break
             default:
                 break

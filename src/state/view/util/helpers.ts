@@ -1,6 +1,5 @@
 import { Point } from "drawing/stroke/index.types"
 import { ViewTransform } from "state/view/state/index.types"
-import { board } from "state/board"
 
 export const getCenterOfScreen = () => ({
     x: getCenterX(),
@@ -27,8 +26,3 @@ export const applyTransformToPoint = (
     x: applyTransform1D(point.x, transform.scale, transform.xOffset),
     y: applyTransform1D(point.y, transform.scale, transform.yOffset),
 })
-
-export const isFullScreen = (viewTransform: ViewTransform) => {
-    const effectivePageWidth = board.getPageSize().width * viewTransform.scale
-    return effectivePageWidth > window.innerWidth
-}

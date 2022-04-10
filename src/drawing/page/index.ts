@@ -1,7 +1,12 @@
 import { nanoid } from "nanoid"
-import { PAPER, PAGE_SIZE } from "consts"
+import { PAGE_SIZE } from "consts"
 import { BoardStroke } from "drawing/stroke"
-import { Page, PageMeta, SerializedPage } from "state/board/state/index.types"
+import {
+    Page,
+    PageMeta,
+    Paper,
+    SerializedPage,
+} from "state/board/state/index.types"
 import { assign, pick } from "lodash"
 import {
     SerializedStroke,
@@ -22,7 +27,7 @@ export class BoardPage implements Page {
             this.meta = {
                 size: PAGE_SIZE.A4_PORTRAIT,
                 background: {
-                    paper: PAPER.BLANK, // fallback type
+                    paper: Paper.Blank, // fallback type
                 },
             }
         }

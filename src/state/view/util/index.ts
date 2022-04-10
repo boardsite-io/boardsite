@@ -1,5 +1,4 @@
 export * from "./bounds"
 export * from "./zoomTo"
 export * from "./helpers"
-export * from "./detectPageChange"
 export * from "./multiTouch"

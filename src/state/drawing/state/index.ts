@@ -10,17 +10,11 @@ export class Drawing
     extends DrawingSerializer
     implements GlobalState<DrawingState>
 {
-    constructor(state?: DrawingState) {
-        super()
-        if (!state) return
-        this.setState(state)
-    }
-
     getState(): DrawingState {
         return this.state
     }
 
-    setState(newState: DrawingState): void {
+    setState(newState: DrawingState) {
         this.state = newState
         subscriptionState.render(
             "FavoriteTools",
@@ -29,6 +23,7 @@ export class Drawing
             "ColorPicker"
         )
         this.saveToLocalStorage()
+        return this
     }
 
     override async loadFromLocalStorage(): Promise<DrawingState> {

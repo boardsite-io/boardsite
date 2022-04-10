@@ -1,4 +1,3 @@
-import { PAPER } from "consts"
 import { BoardStroke } from "drawing/stroke"
 import { LiveStroke } from "drawing/livestroke/index.types"
 import { Stroke, ToolType } from "drawing/stroke/index.types"
@@ -7,8 +6,11 @@ import {
     BoardState,
     PageCollection,
     PageMeta,
+    Paper,
 } from "state/board/state/index.types"
 import { Board } from "state/board"
+import { View } from "state/view"
+import { ViewState } from "state/view/state/index.types"
 import { SessionConfig, User } from "state/online/state/index.types"
 import { Request } from "api/request"
 import { Message, PageSync, StrokeDelete } from "../../../api/types"
@@ -18,6 +20,8 @@ jest.mock("api/request")
 const requestMock = Request as jest.MockedClass<typeof Request>
 jest.mock("state/board")
 const boardStateMock = Board as jest.MockedClass<typeof Board>
+jest.mock("state/view")
+const viewStateMock = View as jest.MockedClass<typeof View>
 
 const mockConfig: SessionConfig = {
     id: "testId",
@@ -52,11 +56,15 @@ const mockPageMeta: PageMeta = {
         height: 800,
     },
     background: {
-        paper: PAPER.BLANK,
+        paper: Paper.Blank,
     },
 }
 
 function createOnlineMock(): Online {
+    viewStateMock.prototype.getState.mockReturnValue({
+        pageIndex: 0,
+    } as unknown as ViewState)
+
     const online = new Online()
     online.setUser(mockUser)
     online.state.session.config = mockConfig

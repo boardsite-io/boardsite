@@ -1,5 +1,5 @@
 import { board } from "state/board"
-import { PageMeta } from "state/board/state/index.types"
+import { PageMeta, Paper } from "state/board/state/index.types"
 
 export const drawBackground = (
     ctx: CanvasRenderingContext2D,
@@ -11,15 +11,15 @@ export const drawBackground = (
     ctx.strokeStyle = "#00000022"
     ctx.beginPath()
     switch (paper) {
-        case "blank":
+        case Paper.Blank:
             break
-        case "checkered":
+        case Paper.Checkered:
             drawCheckered(ctx, meta)
             break
-        case "ruled":
+        case Paper.Ruled:
             drawRuled(ctx, meta)
             break
-        case "doc": {
+        case Paper.Doc: {
             if (attachId === undefined || documentPageNum === undefined) return
 
             const imageData =

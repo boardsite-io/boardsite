@@ -1,6 +1,5 @@
 import { cloneDeep } from "lodash"
 import { Stroke, Tool } from "drawing/stroke/index.types"
-import { PAPER } from "consts"
 import { drawing } from "state/drawing"
 import { board } from "state/board"
 import { view } from "state/view"
@@ -14,6 +13,7 @@ import {
     EraseStrokesAction,
     PageId,
     PageMeta,
+    Paper,
     SetPageMetaAction,
 } from "state/board/state/index.types"
 import { BoardPage } from "./page"
@@ -29,13 +29,13 @@ export function handleSetTool(tool: Partial<Tool>): void {
 }
 
 export function handleAddPageOver(): void {
-    handleAddPage(board.getState().currentPageIndex)
+    handleAddPage(view.getPageIndex())
     view.resetView()
 }
 
 export function handleAddPageUnder(): void {
-    handleAddPage(board.getState().currentPageIndex + 1)
-    board.jumpToNextPage()
+    handleAddPage(view.getPageIndex() + 1)
+    view.jumpToNextPage()
     view.resetView()
 }
 
@@ -56,7 +56,7 @@ export function handleAddPage(index: number): void {
 }
 
 export function handleClearPage(): void {
-    handleClearPages([board.getCurrentPageId()])
+    handleClearPages([board.getPageId(view.getPageIndex())])
 }
 
 export function handleClearPages(pageIds: PageId[]): void {
@@ -81,7 +81,7 @@ export function handleClearPages(pageIds: PageId[]): void {
 }
 
 export function handleDeleteCurrentPage(): void {
-    handleDeletePages([board.getCurrentPageId()], true)
+    handleDeletePages([board.getPageId(view.getPageIndex())], true)
 }
 
 export function handleDeletePages(
@@ -159,13 +159,13 @@ export function handleRedo(): void {
 
 export function handleChangePageBackground(): void {
     // update the default page type
-    const currentPage = board.getCurrentPage()
+    const currentPage = board.getPage(view.getPageIndex())
     // there is no current page, eg. when all pages have been removed
     if (!currentPage) {
         return
     }
     // cannot update background of doc type
-    if (currentPage.meta.background.paper === PAPER.DOC) {
+    if (currentPage.meta.background.paper === Paper.Doc) {
         return
     }
 

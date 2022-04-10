@@ -21,7 +21,7 @@ describe("board reducer state", () => {
         const drawingState = await new Drawing().deserialize(
             cloneDeep<unknown>(stateV1) as SerializedDrawingState
         )
-        const got = new Drawing(drawingState).serialize()
+        const got = new Drawing().setState(drawingState).serialize()
         const want = stateV1
 
         expect(got).toStrictEqual(want)

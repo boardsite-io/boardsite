@@ -32,7 +32,6 @@ export class BoardSerializer
 
         return {
             version: this.version,
-            currentPageIndex: this.state.currentPageIndex,
             pageRank: this.state.pageRank,
             attachments,
             pageCollection,

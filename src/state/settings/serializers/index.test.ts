@@ -19,9 +19,9 @@ describe("settings serialize state", () => {
 
     it("should deserialize the state version 1.0", async () => {
         const state = await new SettingsClass().deserialize(
-            cloneDeep<unknown>(stateV1) as SerializedSettingsState
+            cloneDeep<SerializedSettingsState>(stateV1)
         )
-        const got = new SettingsClass(state).serialize()
+        const got = new SettingsClass().setState(state).serialize()
         const want = stateV1
 
         expect(got).toStrictEqual(want)

@@ -23,6 +23,7 @@ import {
 } from "state/board/state/index.types"
 import { BoardPage } from "drawing/page"
 import { menu } from "state/menu"
+import { view } from "state/view"
 import { DialogState } from "state/menu/state/index.types"
 import { newAttachment } from "drawing/attachment/utils"
 import { OnlineState, SessionConfig, User } from "./index.types"
@@ -33,18 +34,13 @@ export class Online
     extends OnlineSerializer
     implements GlobalState<OnlineState>
 {
-    constructor(state?: OnlineState) {
-        super()
-        if (!state) return
-        this.setState(state)
-    }
-
     getState(): OnlineState {
         return this.state
     }
 
-    setState(newState: OnlineState): void {
+    setState(newState: OnlineState) {
         this.state = newState
+        return this
     }
 
     override async loadFromLocalStorage(): Promise<OnlineState> {
@@ -502,6 +498,11 @@ export class Online
                     await this.loadAttachment(AttachType.PDF, attachId)
                 }
             }
+        }
+
+        // Adjust view if necessary
+        if (pageRank.length && view.getPageIndex() > pageRank.length - 1) {
+            view.setPageIndex(pageRank.length - 1)
         }
 
         board.syncPages(pageRank, newPageCollection)

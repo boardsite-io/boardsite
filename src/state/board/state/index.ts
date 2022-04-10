@@ -3,6 +3,7 @@ import { Stroke, StrokeUpdate } from "drawing/stroke/index.types"
 import { subscriptionState } from "state/subscription"
 import { assign, cloneDeep, keys, pick } from "lodash"
 import { PAGE_SIZE } from "consts"
+import { PageIndex } from "state/view/state/index.types"
 import { GlobalState } from "../../types"
 import { getDefaultBoardState } from "./default"
 import {
@@ -26,20 +27,15 @@ import { addAction, redoAction, undoAction } from "../undoRedo"
 import { BoardSerializer } from "../serializers"
 
 export class Board extends BoardSerializer implements GlobalState<BoardState> {
-    constructor(state?: BoardState) {
-        super()
-        if (!state) return
-        this.setState(state)
-    }
-
     getState(): BoardState {
         return this.state
     }
 
-    setState(newState: Partial<BoardState>): void {
+    setState(newState: Partial<BoardState>) {
         assign(this.state, pick(newState, keys(this.state)))
         subscriptionState.render("RenderNG", "EditMenu", "MenuPageButton")
         this.saveToLocalStorage()
+        return this
     }
 
     override async loadFromLocalStorage(): Promise<BoardState> {
@@ -48,14 +44,14 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
         return state
     }
 
-    getCurrentPageId() {
-        const { pageRank, currentPageIndex } = this.state
-        return pageRank[currentPageIndex]
+    getPageId(pageIndex: PageIndex) {
+        const { pageRank } = this.state
+        return pageRank[pageIndex]
     }
 
-    getCurrentPage() {
-        const { pageRank, pageCollection, currentPageIndex } = this.state
-        return pageCollection[pageRank[currentPageIndex]]
+    getPage(pageIndex: PageIndex) {
+        const { pageRank, pageCollection } = this.state
+        return pageCollection[pageRank[pageIndex]]
     }
 
     /**
@@ -155,79 +151,19 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
     syncPages(pageRank: PageRank, pageCollection: PageCollection): void {
         this.state.pageRank = pageRank
         this.state.pageCollection = pageCollection
-
-        // Adjust view if necessary
-        if (
-            pageRank.length &&
-            this.state.currentPageIndex > pageRank.length - 1
-        ) {
-            this.state.currentPageIndex = pageRank.length - 1
-        }
-
         subscriptionState.render("RenderNG", "EditMenu", "MenuPageButton")
         this.saveToLocalStorage()
     }
 
     /**
      * Util function to get the page size of a specified page
-     * @param indexOffset offset relative to current page index
+     * @param pageIndex page index
      * @returns pageSize of target page
      */
-    getPageSize(indexOffset = 0): PageSize {
-        const { pageRank, currentPageIndex, pageCollection } = this.getState()
-        const pageId = pageRank[currentPageIndex + indexOffset]
+    getPageSize(pageIndex: PageIndex): PageSize {
+        const { pageRank, pageCollection } = this.getState()
+        const pageId = pageRank[pageIndex]
         return pageCollection[pageId]?.meta?.size ?? PAGE_SIZE.A4_LANDSCAPE
-    }
-
-    /**
-     * Go to the next page
-     */
-    jumpToNextPage(): void {
-        if (this.state.currentPageIndex < this.state.pageRank.length - 1) {
-            this.goToPageIndex(this.state.currentPageIndex + 1)
-        }
-    }
-
-    /**
-     * Go to the previous page
-     */
-    jumpToPrevPage(): void {
-        if (this.state.currentPageIndex > 0) {
-            this.goToPageIndex(this.state.currentPageIndex - 1)
-        }
-    }
-
-    /**
-     * Go to the first page
-     */
-    jumpToFirstPage(): void {
-        this.goToPageIndex(0)
-    }
-
-    /**
-     * Go to the last page
-     */
-    jumpToLastPage(): void {
-        this.goToPageIndex(this.state.pageRank.length - 1)
-    }
-
-    /**
-     * Find out if currently on first page
-     * @returns true if on first page
-     */
-    onFirstPage(): boolean {
-        return this.getState().currentPageIndex === 0
-    }
-
-    /**
-     * Find out if currently on last page
-     * @returns true if on last page
-     */
-    onLastPage(): boolean {
-        return (
-            this.getState().currentPageIndex ===
-            this.getState().pageRank.length - 1
-        )
     }
 
     /* --- Undoable action handlers --- */
@@ -545,18 +481,6 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
             delete pageCollection[pid]
         })
 
-        if (!this.state.pageRank.length) {
-            // All pages have been deleted so view and index can be reset
-            this.state.currentPageIndex = 0
-        } else if (
-            this.state.currentPageIndex >
-            this.state.pageRank.length - 1
-        ) {
-            // Deletions have caused the current page index to exceed
-            // the page limit, therefore we move to the last page
-            this.state.currentPageIndex = this.state.pageRank.length - 1
-        }
-
         // Make sure that transform is cleared when page is deleted
         this.clearTransform()
         subscriptionState.render("RenderNG", "EditMenu", "MenuPageButton")
@@ -597,16 +521,6 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
             this.state.redoStack = []
             subscriptionState.render("EditMenu")
         }
-    }
-
-    /**
-     * Helper function for performing the necessary updates when switching page index
-     * @param index new page index
-     */
-    private goToPageIndex(index: number): void {
-        this.state.currentPageIndex = index
-        subscriptionState.render("RenderNG", "MenuPageButton")
-        this.clearTransform()
     }
 }
 

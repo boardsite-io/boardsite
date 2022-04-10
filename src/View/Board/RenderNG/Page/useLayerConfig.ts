@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { Page } from "state/board/state/index.types"
+import { Page, Paper } from "state/board/state/index.types"
 import { view } from "state/view"
 import { drawBackground } from "View/Board/RenderNG/Page/Background/backgrounds"
 
@@ -21,7 +21,7 @@ export const useLayerConfig = (
             const { pixelScale } = view.getState().layerConfig
             ctx.scale(pixelScale, pixelScale)
         } else {
-            if (page.meta.background.paper !== "doc") {
+            if (page.meta.background.paper !== Paper.Doc) {
                 ctx.setTransform(1, 0, 0, 1, 0, 0) // reset last transform
                 const { pixelScale } = view.getState().layerConfig
                 ctx.scale(pixelScale, pixelScale)

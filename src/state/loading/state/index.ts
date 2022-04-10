@@ -15,6 +15,7 @@ export class Loading implements GlobalState<LoadingState> {
 
     setState(newState: LoadingState) {
         this.state = newState
+        return this
     }
 
     /**

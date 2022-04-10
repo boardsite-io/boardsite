@@ -1,5 +1,5 @@
 import { PDFDocument, PDFImage, PDFPage } from "pdf-lib"
-import { PAPER, MAX_PIXEL_SCALE } from "consts"
+import { MAX_PIXEL_SCALE } from "consts"
 import { handleDeleteAllPages } from "drawing/handlers"
 import { readFileAsUint8Array } from "storage/util"
 import { BoardPage } from "drawing/page"
@@ -8,7 +8,12 @@ import { view } from "state/view"
 import { board } from "state/board"
 import { online } from "state/online"
 import { request } from "api/request"
-import { AttachId, Attachment, PageMeta } from "state/board/state/index.types"
+import {
+    AttachId,
+    Attachment,
+    PageMeta,
+    Paper,
+} from "state/board/state/index.types"
 import { pageToDataURL } from "./rendering"
 
 export const importPdfFile = async (file: File): Promise<void> => {
@@ -31,7 +36,7 @@ const addRenderedPdf = async (attachment: Attachment): Promise<void> => {
         const pages = attachment.renderedData.map((img, i) => {
             return new BoardPage().updateMeta({
                 background: {
-                    paper: PAPER.DOC,
+                    paper: Paper.Doc,
                     attachId: attachment.id,
                     documentPageNum: i,
                 },
@@ -51,7 +56,7 @@ const addRenderedPdf = async (attachment: Attachment): Promise<void> => {
             return {
                 page: new BoardPage().updateMeta({
                     background: {
-                        paper: PAPER.DOC,
+                        paper: Paper.Doc,
                         attachId: attachment.id,
                         documentPageNum: i,
                     },
@@ -68,7 +73,7 @@ const addRenderedPdf = async (attachment: Attachment): Promise<void> => {
         view.resetView()
     }
 
-    board.jumpToFirstPage()
+    view.jumpToFirstPage()
     // clear the stacks when importing pdfs
     board.clearUndoRedo()
 }
@@ -98,7 +103,7 @@ export const renderAsPdf = async (): Promise<Uint8Array> => {
         let basePage: PDFPage | undefined
         const { paper, attachId, documentPageNum } = meta.background
         if (
-            paper === PAPER.DOC &&
+            paper === Paper.Doc &&
             documentPageNum !== undefined &&
             attachId !== undefined
         ) {
