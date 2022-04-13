@@ -4,17 +4,17 @@ import { DefaultTheme } from "styled-components"
 export const purpleTheme: DefaultTheme = {
     palette: {
         primary: {
-            main: "#AB47BC",
+            main: "#4A148C",
             contrastText: "#F3E5F5",
         },
         secondary: {
-            main: "#7B1FA2",
+            main: "#5E35B1",
             contrastText: "#F3E5F5",
         },
         editor: {
-            background: "#4A148C",
+            background: "#7E57C2",
             paper: "#f9fbff",
-            selected: "#7B1FA2",
+            selected: "#8E24AA",
         },
         common: {
             warning: "#ff0000",

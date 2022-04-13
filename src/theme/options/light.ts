@@ -8,7 +8,7 @@ export const lightTheme: DefaultTheme = {
             contrastText: "#000000",
         },
         secondary: {
-            main: "#00796b",
+            main: "#3F51B5",
             contrastText: "#ffffff",
         },
         editor: {

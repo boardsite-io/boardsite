@@ -4,21 +4,21 @@ import { DefaultTheme } from "styled-components"
 export const orangeTheme: DefaultTheme = {
     palette: {
         primary: {
-            main: "#EF6C00",
-            contrastText: "#FFF3E0",
+            main: "#F57C00",
+            contrastText: "#E0F7FA",
         },
         secondary: {
-            main: "#DD2C00",
-            contrastText: "#FFF3E0",
+            main: "#E65100",
+            contrastText: "#E0F7FA",
         },
         editor: {
-            background: "#FFE0B2",
+            background: "#FFCC80",
             paper: "#f9fbff",
-            selected: "#FF8F00",
+            selected: "#F4511E",
         },
         common: {
             warning: "#ff0000",
-            rule: "#1B5E2044",
+            rule: "#E0F7FA88",
         },
     },
 }

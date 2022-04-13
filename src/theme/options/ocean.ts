@@ -4,17 +4,17 @@ import { DefaultTheme } from "styled-components"
 export const oceanTheme: DefaultTheme = {
     palette: {
         primary: {
-            main: "#1565C0",
+            main: "#1A237E",
             contrastText: "#E0E0E0",
         },
         secondary: {
-            main: "#0D47A1",
-            contrastText: "#E1F5FE",
+            main: "#283593",
+            contrastText: "#FAFAFA",
         },
         editor: {
-            background: "#90CAF9",
+            background: "#3F51B5",
             paper: "#f9fbff",
-            selected: "#0288D1",
+            selected: "#3949AB",
         },
         common: {
             warning: "#ff0000",

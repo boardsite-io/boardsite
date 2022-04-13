@@ -14,7 +14,7 @@ export const candyTheme: DefaultTheme = {
         editor: {
             background: "#FCE4EC",
             paper: "#f9fbff",
-            selected: "#E1BEE7",
+            selected: "#F06292",
         },
         common: {
             warning: "#ff0000",
