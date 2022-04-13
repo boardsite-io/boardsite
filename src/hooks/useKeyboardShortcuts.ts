@@ -2,10 +2,10 @@ import {
     handleSetTool,
     handleRedo,
     handleUndo,
-    handleDeleteAllPages,
     handleAddPageUnder,
     handleAddPageOver,
     handleDeleteCurrentPage,
+    handleNewWorkspace,
 } from "drawing/handlers"
 import { ToolType } from "drawing/stroke/index.types"
 import { useEffect } from "react"
@@ -39,8 +39,7 @@ const keyListener = (e: KeyboardEvent): void => {
                 handleRedo()
                 break
             case "n": // File -> New
-                handleDeleteAllPages()
-                handleAddPageUnder()
+                handleNewWorkspace()
                 break
             case "o": // File -> Open
                 handleImportWorkspace()

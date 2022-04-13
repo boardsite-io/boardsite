@@ -2,7 +2,7 @@ import { FormattedMessage } from "language"
 import React, { useCallback, useEffect, useState } from "react"
 import { Button, DialogContent, DialogTitle } from "components"
 import PageSettings from "components/PageSettings"
-import { handleAddPageUnder, handleDeleteAllPages } from "drawing/handlers"
+import { handleNewWorkspace } from "drawing/handlers"
 import { board } from "state/board"
 import { loadIndexedDB } from "storage/local"
 import { menu } from "state/menu"
@@ -39,8 +39,7 @@ const InitialSelection: React.FC<InitialSelectionProps> = ({ firstLoad }) => {
     }, [navigate, firstLoad, checkStorage])
 
     const createOfflineSession = useCallback(() => {
-        handleDeleteAllPages() // Make sure state is clean
-        handleAddPageUnder()
+        handleNewWorkspace()
         menu.setDialogState(DialogState.Closed)
     }, [])
 
