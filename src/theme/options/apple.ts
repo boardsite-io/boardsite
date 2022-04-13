@@ -4,17 +4,17 @@ import { DefaultTheme } from "styled-components"
 export const appleTheme: DefaultTheme = {
     palette: {
         primary: {
-            main: "#C5E1A5",
-            contrastText: "#212121",
+            main: "#2E7D32",
+            contrastText: "#EFEBE9",
         },
         secondary: {
-            main: "#2E7D32",
-            contrastText: "#E8F5E9",
+            main: "#43A047",
+            contrastText: "#EFEBE9",
         },
         editor: {
-            background: "#E8F5E9",
+            background: "#81C784",
             paper: "#f9fbff",
-            selected: "#66BB6A",
+            selected: "#5D4037",
         },
         common: {
             warning: "#ff0000",

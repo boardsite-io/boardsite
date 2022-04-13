@@ -4,17 +4,17 @@ import { DefaultTheme } from "styled-components"
 export const sunTheme: DefaultTheme = {
     palette: {
         primary: {
-            main: "#FFF176",
+            main: "#FDD835",
             contrastText: "#212121",
         },
         secondary: {
-            main: "#FBC02D",
+            main: "#FFEE58",
             contrastText: "#212121",
         },
         editor: {
-            background: "#FFF9C4",
+            background: "#FFF59D",
             paper: "#f9fbff",
-            selected: "#FBC02D",
+            selected: "#FFF176",
         },
         common: {
             warning: "#ff0000",

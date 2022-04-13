@@ -23,7 +23,7 @@ export const StyledButton = styled.button<Props>`
 
     &:disabled {
         cursor: not-allowed;
-        background: #00000044;
+        filter: brightness(40%);
     }
 
     ${({ $withIcon }) => ($withIcon ? iconStyle : noIconStyle)};

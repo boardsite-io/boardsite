@@ -8,13 +8,13 @@ export const darkTheme: DefaultTheme = {
             contrastText: "#E0E0E0",
         },
         secondary: {
-            main: "#00796b",
+            main: "#616161",
             contrastText: "#ffffff",
         },
         editor: {
             background: "#757575",
             paper: "#f9fbff",
-            selected: "#00838F",
+            selected: "#212121",
         },
         common: {
             warning: "#ff0000",
