@@ -1,7 +1,6 @@
 import { FormattedMessage } from "language"
 import React, { useCallback, useEffect, useState } from "react"
 import { Button, DialogContent, DialogTitle } from "components"
-import PageSettings from "components/PageSettings"
 import { handleNewWorkspace } from "drawing/handlers"
 import { board } from "state/board"
 import { loadIndexedDB } from "storage/local"
@@ -10,6 +9,9 @@ import { DialogState } from "state/menu/state/index.types"
 import { useNavigate } from "react-router-dom"
 import { ROUTE } from "App/routes"
 import { startBackgroundJob } from "storage/util"
+import PaperSize from "./PaperSize"
+import PaperBackground from "./PaperBackground"
+import { CreateButtons } from "./index.styled"
 
 interface InitialSelectionProps {
     firstLoad: boolean
@@ -61,21 +63,27 @@ const InitialSelection: React.FC<InitialSelectionProps> = ({ firstLoad }) => {
                 <FormattedMessage id="Dialog.InitialSelection.Title" />
             </DialogTitle>
             <DialogContent>
-                <PageSettings />
-                {firstLoad && (
-                    <Button
-                        disabled={!showContinue}
-                        onClick={continuePreviousSession}
-                    >
+                <p>
+                    <FormattedMessage id="Dialog.InitialSelection.Description.Presets" />
+                </p>
+                <PaperSize />
+                <PaperBackground />
+                <p>
+                    <FormattedMessage id="Dialog.InitialSelection.Description.Create" />
+                </p>
+                <CreateButtons>
+                    <Button onClick={createOfflineSession}>
+                        <FormattedMessage id="Dialog.InitialSelection.Button.CreateOffline" />
+                    </Button>
+                    <Button onClick={createOnlineSession}>
+                        <FormattedMessage id="Dialog.InitialSelection.Button.OnlineCreate" />
+                    </Button>
+                </CreateButtons>
+                {firstLoad && showContinue && (
+                    <Button onClick={continuePreviousSession}>
                         <FormattedMessage id="Dialog.InitialSelection.Button.Continue" />
                     </Button>
                 )}
-                <Button onClick={createOfflineSession}>
-                    <FormattedMessage id="Dialog.InitialSelection.Button.CreateOffline" />
-                </Button>
-                <Button onClick={createOnlineSession}>
-                    <FormattedMessage id="Dialog.InitialSelection.Button.OnlineCreate" />
-                </Button>
             </DialogContent>
         </>
     )

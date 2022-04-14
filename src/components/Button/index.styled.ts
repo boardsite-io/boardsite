@@ -5,11 +5,13 @@ interface Props {
 }
 
 export const StyledButton = styled.button<Props>`
+    display: flex;
+    align-items: center;
     cursor: pointer;
     color: ${({ theme }) => theme.palette.secondary.contrastText};
     background: ${({ theme }) => theme.palette.secondary.main};
-    margin: 0.5rem 0;
-    padding: 0.5rem 1.5rem;
+    margin: 6px 0;
+    padding: 6px 1.5rem;
     border-width: 0;
     border-radius: var(--border-radius);
     transition: all 100ms ease-in-out;
@@ -35,8 +37,6 @@ export const StyledButton = styled.button<Props>`
 `
 
 const iconStyle = css`
-    display: flex;
-    align-items: center;
     gap: 1rem;
 `
 
