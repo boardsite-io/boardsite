@@ -15,6 +15,7 @@ export enum DialogState {
     OnlineEnterPassword,
     OnlineChangeAlias,
     OnlineChangePassword,
+    OnlineLeave,
 }
 
 export interface MenuState {
