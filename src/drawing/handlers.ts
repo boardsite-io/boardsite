@@ -4,6 +4,8 @@ import { drawing } from "state/drawing"
 import { board } from "state/board"
 import { view } from "state/view"
 import { online } from "state/online"
+import { menu } from "state/menu"
+import { notification } from "state/notification"
 import {
     AddPagesAction,
     AddStrokesAction,
@@ -18,7 +20,6 @@ import {
 } from "state/board/state/index.types"
 import { BoardPage } from "./page"
 import { getVerifiedPageIds, getVerifiedPages } from "./helpers"
-import { notification } from "../state/notification"
 
 const createPage = (): BoardPage =>
     new BoardPage().updateMeta(cloneDeep(drawing.getState().pageMeta))
@@ -106,6 +107,13 @@ export function handleDeletePages(
     }
 
     sendMutableAction(board.handleDeletePages, deletePagesAction)
+}
+
+export const handleNewWorkspace = () => {
+    handleDeleteAllPages()
+    handleAddPageUnder()
+    view.validatePageIndex()
+    menu.closeMainMenu()
 }
 
 export function handleDeleteAllPages(isRedoable?: boolean): void {

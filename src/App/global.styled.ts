@@ -33,13 +33,13 @@ export const GlobalStyles = styled.div`
     --page-box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
 
     /* --- Stacking Context --- */
-    --zIndexNotifications: 999;
+    --zIndexNotifications: 9999;
+    --zIndexDialog: 1000;
+    --zIndexDialogBG: 999;
     --zIndexToolTip: 888;
     --zIndexToolRing: 777;
     --zIndexDrawer: 81;
     --zIndexDrawerBG: 80;
-    --zIndexDialog: 81;
-    --zIndexDialogBG: 80;
     --zIndexMainMenu: 70;
     --zIndexFavoriteTools: 60;
     --zIndexPopupBG: 10;

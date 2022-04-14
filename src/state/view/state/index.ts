@@ -42,15 +42,35 @@ export class View extends ViewSerializer implements GlobalState<ViewState> {
         return state
     }
 
+    /**
+     * Get the index of the current page
+     * @returns the current page index
+     */
     getPageIndex(): PageIndex {
         return this.getState().pageIndex
     }
 
+    /**
+     * Go to a page of a specified index
+     * @param pageIndex target page index
+     */
     setPageIndex(pageIndex: PageIndex) {
         this.state.pageIndex = pageIndex
         this.saveToLocalStorage()
         subscriptionState.render("RenderNG", "MenuPageButton")
         board.clearTransform()
+    }
+
+    /**
+     * Check if pageIndex is OOB and needs adjustment
+     */
+    validatePageIndex() {
+        const numberOfPages = board.getState().pageRank.length
+        if (!numberOfPages) {
+            this.setPageIndex(0) // No pages -> Set to 0
+        } else if (this.getState().pageIndex >= numberOfPages) {
+            this.setPageIndex(numberOfPages - 1) // OOB -> Go to last page
+        }
     }
 
     /**

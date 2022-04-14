@@ -13,7 +13,7 @@ export const DialogBox = styled.div<DialogProps>`
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: min(90vw, 40rem);
+    width: min(90vw, 25rem);
     max-height: 80vh;
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
@@ -49,6 +49,8 @@ export const DialogBackground = styled.div<DialogProps>`
 `
 
 export const DialogContent = styled.div`
+    display: flex;
+    flex-direction: column;
     padding: 1rem 1.5rem;
 `
 
