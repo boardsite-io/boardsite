@@ -217,6 +217,8 @@ export class Online
         delete this.state.session.users
         delete this.state.session.socket
         subscriptionState.render("Session")
+
+        board.localStoreEnabled = true
     }
 
     async join(copyOffline?: boolean): Promise<void> {
@@ -226,6 +228,9 @@ export class Online
         const { users, config } = await request.getConfig()
         this.state.session.users = users
         this.state.session.config = config
+
+        // board state is now managed by session
+        board.localStoreEnabled = false
 
         if (copyOffline) {
             // create an online session from the current offline
