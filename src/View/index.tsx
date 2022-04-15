@@ -5,7 +5,7 @@ import { ViewWrap } from "./index.styled"
 import ToolRing from "./ToolRing"
 import FavoriteTools from "./FavoriteTools"
 import Loading from "./Loading"
-import DialogMenu from "./DialogMenu"
+import Dialog from "./Dialog"
 import MainMenu from "./MainMenu"
 import Notification from "./Notification"
 import Shortcuts from "./Shortcuts"
@@ -19,7 +19,7 @@ const View: React.FC = () => {
     return (
         <ViewWrap>
             <Board />
-            <DialogMenu />
+            <Dialog />
             <Subscribe />
             <Shortcuts />
             <Loading />
