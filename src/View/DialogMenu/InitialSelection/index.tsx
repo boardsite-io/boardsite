@@ -31,9 +31,8 @@ const InitialSelection: React.FC<InitialSelectionProps> = ({ firstLoad }) => {
     }, [])
 
     useEffect(() => {
-        if (firstLoad) {
-            checkStorage()
-        } else {
+        checkStorage()
+        if (!firstLoad) {
             // Leaving or getting kicked from a session opens this
             // dialog so we can navigate to the home route here
             navigate(ROUTE.HOME)
@@ -79,7 +78,7 @@ const InitialSelection: React.FC<InitialSelectionProps> = ({ firstLoad }) => {
                         <FormattedMessage id="Dialog.InitialSelection.Button.OnlineCreate" />
                     </Button>
                 </CreateButtons>
-                {firstLoad && showContinue && (
+                {showContinue && (
                     <Button onClick={continuePreviousSession}>
                         <FormattedMessage id="Dialog.InitialSelection.Button.Continue" />
                     </Button>

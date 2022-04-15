@@ -19,6 +19,7 @@ export class BoardSerializer
 {
     protected state: BoardState = getDefaultBoardState()
     private version: string = BOARD_VERSION
+    public localStoreEnabled = true
 
     serialize(): SerializedBoardState {
         // dont pollute the serialized object with image data
@@ -84,6 +85,7 @@ export class BoardSerializer
     }
 
     saveToLocalStorage(): void {
+        if (!this.localStoreEnabled) return
         try {
             saveIndexedDB("board", () => this.serialize())
         } catch {
