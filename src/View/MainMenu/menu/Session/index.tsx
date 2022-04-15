@@ -8,7 +8,6 @@ import { CSSTransition } from "react-transition-group"
 import { cssTransition } from "View/MainMenu/cssTransition"
 import { online } from "state/online"
 import { User } from "state/online/state/index.types"
-import { notification } from "state/notification"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 import SessionSettingsMenu from "./SessionSettings"
@@ -25,9 +24,8 @@ const SessionMenu = () => {
     useGState("Session")
 
     const leaveSession = useCallback(() => {
-        online.disconnect()
+        menu.setDialogState(DialogState.OnlineLeave)
         menu.setMainMenu(MainMenuState.Closed)
-        notification.create("Notification.Session.Leave", 3000)
     }, [])
 
     const changePassword = useCallback(() => {
