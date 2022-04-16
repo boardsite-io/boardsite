@@ -209,15 +209,19 @@ export class Online
      * Clear board state and update session UI
      */
     private disconnectCleanUp(): void {
-        board.fullReset() // Use non-redoable internal option
-        board.handleAddPages({
-            data: [{ page: new BoardPage(), index: -1 }],
-        })
-
         delete this.state.session.users
         delete this.state.session.socket
         subscriptionState.render("Session")
 
+        // Clean up session data, the localStorage is not
+        // overwritten since in online mode it is deactivated
+        board.fullReset()
+        board.handleAddPages({
+            data: [{ page: new BoardPage(), index: -1 }],
+        })
+        view.validatePageIndex()
+
+        // Enable localStorage for local session
         board.localStoreEnabled = true
     }
 
@@ -229,7 +233,7 @@ export class Online
         this.state.session.users = users
         this.state.session.config = config
 
-        // board state is now managed by session
+        // Disable localStorage for online session
         board.localStoreEnabled = false
 
         if (copyOffline) {
@@ -242,11 +246,6 @@ export class Online
             // synchronize with the online content
             const sync = await request.getPagesSync()
             await this.syncPages(sync)
-        }
-
-        if (board.getState().pageRank.length === 0) {
-            // create a page if there are none yet
-            await request.postPages([new BoardPage()], [0])
         }
 
         subscriptionState.render("Session")
