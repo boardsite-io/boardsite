@@ -18,11 +18,8 @@ import {
     Paper,
     SetPageMetaAction,
 } from "state/board/state/index.types"
-import { BoardPage } from "./page"
 import { getVerifiedPageIds, getVerifiedPages } from "./helpers"
-
-const createPage = (): BoardPage =>
-    new BoardPage().updateMeta(cloneDeep(drawing.getState().pageMeta))
+import { BoardPage } from "./page"
 
 export function handleSetTool(tool: Partial<Tool>): void {
     drawing.setTool(tool)
@@ -41,7 +38,7 @@ export function handleAddPageUnder(): void {
 }
 
 export function handleAddPage(index: number): void {
-    const page = createPage()
+    const page = new BoardPage()
     const addPagesAction: AddPagesAction = {
         data: [{ page, index }],
         isRedoable: true,

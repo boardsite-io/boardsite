@@ -1,13 +1,8 @@
 import { nanoid } from "nanoid"
-import { PAGE_SIZE } from "consts"
 import { BoardStroke } from "drawing/stroke"
-import {
-    Page,
-    PageMeta,
-    Paper,
-    SerializedPage,
-} from "state/board/state/index.types"
-import { assign, pick } from "lodash"
+import { Page, PageMeta, SerializedPage } from "state/board/state/index.types"
+import { assign, cloneDeep, pick } from "lodash"
+import { drawing } from "state/drawing"
 import {
     SerializedStroke,
     Stroke,
@@ -24,12 +19,7 @@ export class BoardPage implements Page {
         } else {
             this.pageId = nanoid(8)
             this.strokes = {}
-            this.meta = {
-                size: PAGE_SIZE.A4_PORTRAIT,
-                background: {
-                    paper: Paper.Blank, // fallback type
-                },
-            }
+            this.meta = cloneDeep(drawing.getState().pageMeta)
         }
     }
 
