@@ -47,7 +47,7 @@ const OnlineCreate: React.FC = () => {
                             color,
                         })
                         await createOnlineSession({
-                            fromCurrent: false,
+                            fromCurrent: true,
                             password,
                             navigate,
                         })
@@ -82,7 +82,7 @@ const OnlineCreate: React.FC = () => {
                             ),
                     })}
                 >
-                    {({ isSubmitting, values, setSubmitting }) => (
+                    {({ isSubmitting }) => (
                         <Form spellCheck="false">
                             <Selection>
                                 <FormikLabel htmlFor="color" textAlign="left">
@@ -125,23 +125,7 @@ const OnlineCreate: React.FC = () => {
                                 <FormattedMessage id="Dialog.OnlineCreate.Description.Create" />
                             </p>
                             <CreateButtons>
-                                <Button
-                                    type="submit"
-                                    onClick={async () => {
-                                        setSubmitting(true)
-                                        online.setUser({
-                                            alias: values.alias,
-                                            color: values.color,
-                                        })
-                                        await createOnlineSession({
-                                            fromCurrent: true,
-                                            password: values.password,
-                                            navigate,
-                                        })
-                                        setSubmitting(false)
-                                    }}
-                                    disabled={isSubmitting}
-                                >
+                                <Button type="submit" disabled={isSubmitting}>
                                     <FormattedMessage id="Dialog.OnlineCreate.Button.Create" />
                                 </Button>
                                 <Button
