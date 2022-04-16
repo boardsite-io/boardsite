@@ -130,6 +130,9 @@ const OnlineJoin: React.FC = () => {
                                     />
                                 </FormikLabel>
                             </Selection>
+                            <p>
+                                <FormattedMessage id="Dialog.OnlineJoin.Description" />
+                            </p>
                             <FormikLabel htmlFor="sessionId" textAlign="left">
                                 <FormattedMessage id="Dialog.OnlineJoin.Input.SessionId.Label" />
                                 <Field

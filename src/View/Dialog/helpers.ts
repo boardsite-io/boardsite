@@ -4,7 +4,7 @@ import { menu } from "../../state/menu"
 import { DialogState } from "../../state/menu/state/index.types"
 import { Online, online } from "../../state/online"
 
-interface CreateOrJoinConfig {
+interface CreateOnlineSession {
     navigate: NavigateFunction // react-router-dom navigation function
     fromCurrent: boolean // transfers the local session into the online session if set to true
     password: string // Optional session password
@@ -14,7 +14,7 @@ export const createOnlineSession = async ({
     fromCurrent,
     navigate,
     password,
-}: CreateOrJoinConfig): Promise<void> => {
+}: CreateOnlineSession): Promise<void> => {
     try {
         const sessionId = await online.createSession({ password })
         await online.createSocket(sessionId, password)
@@ -35,7 +35,7 @@ export const createOnlineSession = async ({
     }
 }
 
-interface JoinCfg {
+interface JoinOnlineSession {
     navigate: NavigateFunction
     sessionId: string
     password?: string
@@ -45,7 +45,7 @@ export const joinOnlineSession = async ({
     sessionId,
     password,
     navigate,
-}: JoinCfg): Promise<void> => {
+}: JoinOnlineSession): Promise<void> => {
     if (!sessionId) throw new Error("no sessionId provided")
     const path = Online.path(sessionId)
     await online.createSocket(sessionId, password)
