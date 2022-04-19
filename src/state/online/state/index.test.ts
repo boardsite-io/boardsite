@@ -98,6 +98,18 @@ describe("session", () => {
         expect(requestMock.prototype.postSession).toHaveBeenCalledTimes(1)
     })
 
+    it("creates a new session with config", async () => {
+        requestMock.prototype.postSessionWithConfig.mockResolvedValue({
+            config: mockConfig,
+        })
+        const online = createOnlineMock()
+        online.getState().isAuthorized = true
+        const sessionId = await online.createSession({ password: "" })
+        expect(sessionId).toEqual(mockConfig.id)
+        expect(online.state.session.config).toEqual(mockConfig)
+        expect(requestMock.prototype.postSession).toHaveBeenCalledTimes(1)
+    })
+
     it("joins an existing session", async () => {
         requestMock.prototype.getConfig.mockResolvedValue({
             config: mockConfig,

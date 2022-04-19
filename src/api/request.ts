@@ -86,11 +86,17 @@ export class Request {
         return resp.data
     }
 
-    postSession(config?: Partial<SessionConfig>): Promise<ResponsePostSession> {
+    postSession(): Promise<ResponsePostSession> {
+        return this.jsonSend("POST", "/create", false)
+    }
+
+    postSessionWithConfig(
+        config: Partial<SessionConfig>
+    ): Promise<ResponsePostSession> {
         const payload: RequestPostSession = {
             config,
         }
-        return this.jsonSend("POST", "/create", false, payload)
+        return this.jsonSend("POST", "/create/config", false, payload)
     }
 
     async postUser(
