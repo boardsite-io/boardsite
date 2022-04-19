@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom"
 import * as Yup from "yup"
 import { online } from "state/online"
 import { menu } from "state/menu"
+import { useGState } from "state"
 import { DialogState } from "state/menu/state/index.types"
 import { Selection } from "../OnlineChangeAlias/index.styled"
 import { createOnlineSession } from "../helpers"
@@ -25,6 +26,7 @@ export interface CreateFormValues {
 }
 
 const OnlineCreate: React.FC = () => {
+    useGState("Session")
     const navigate = useNavigate()
     const { formatMessage: f } = useIntl()
     const { alias, color } = online.getState().user
@@ -105,22 +107,24 @@ const OnlineCreate: React.FC = () => {
                                     />
                                 </FormikLabel>
                             </Selection>
-                            <FormikLabel
-                                htmlFor="password"
-                                textAlign="left"
-                                fullWidth
-                            >
-                                <FormattedMessage id="Dialog.OnlineCreate.Input.Password.Label" />
-                                <Field
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    placeholder={f({
-                                        id: "Dialog.OnlineCreate.Input.Password.Placeholder",
-                                    })}
-                                    component={FormikInput}
-                                />
-                            </FormikLabel>
+                            {online.isAuthorized() && (
+                                <FormikLabel
+                                    htmlFor="password"
+                                    textAlign="left"
+                                    fullWidth
+                                >
+                                    <FormattedMessage id="Dialog.OnlineCreate.Input.Password.Label" />
+                                    <Field
+                                        id="password"
+                                        name="password"
+                                        type="password"
+                                        placeholder={f({
+                                            id: "Dialog.OnlineCreate.Input.Password.Placeholder",
+                                        })}
+                                        component={FormikInput}
+                                    />
+                                </FormikLabel>
+                            )}
                             <p>
                                 <FormattedMessage id="Dialog.OnlineCreate.Description.Create" />
                             </p>
