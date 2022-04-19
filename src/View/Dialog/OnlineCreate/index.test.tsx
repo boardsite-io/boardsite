@@ -19,7 +19,7 @@ const submitCreate = async ({
         formatMessage("Dialog.OnlineCreate.Input.Alias.Label")
     )
     const submitButton = getByRole("button", {
-        name: formatMessage("Dialog.OnlineCreate.SubmitButton.CreateNew"),
+        name: formatMessage("Dialog.OnlineCreate.Button.Create"),
     })
 
     await waitFor(() =>

@@ -7,7 +7,9 @@ import { settings } from "state/settings"
 import { drawing } from "state/drawing"
 import { online } from "state/online"
 import { view } from "state/view"
+import { board } from "state/board"
 import { useGState } from "state"
+import { handleNewWorkspace } from "drawing/handlers"
 import { themes } from "theme"
 import ElectronWrapper from "./electron"
 import Routes from "./router"
@@ -24,6 +26,15 @@ const App = () => {
             settings.loadFromLocalStorage(),
             view.loadFromLocalStorage(),
         ])
+
+        // Set a default workspace without saving to localStorage.
+        // This prevents overwriting a previous save state and
+        // provides a default first page if the user closes the
+        // dialog or creates an online session.
+        board.localStoreEnabled = false
+        handleNewWorkspace()
+        board.localStoreEnabled = true
+
         setLoading(false)
     }, [])
 

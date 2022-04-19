@@ -75,7 +75,7 @@ const InitialSelection: React.FC<InitialSelectionProps> = ({ firstLoad }) => {
                         <FormattedMessage id="Dialog.InitialSelection.Button.CreateOffline" />
                     </Button>
                     <Button onClick={createOnlineSession}>
-                        <FormattedMessage id="Dialog.InitialSelection.Button.OnlineCreate" />
+                        <FormattedMessage id="Dialog.InitialSelection.Button.CreateOnline" />
                     </Button>
                 </CreateButtons>
                 {showContinue && (
