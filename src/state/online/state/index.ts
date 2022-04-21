@@ -135,7 +135,10 @@ export class Online
     }
 
     async createSession(createConfig: Partial<SessionConfig>): Promise<string> {
-        const { config } = await request.postSession(createConfig)
+        const req = this.isAuthorized()
+            ? async () => request.postSessionWithConfig(createConfig)
+            : request.postSession
+        const { config } = await req()
         this.state.session.config = config
         request.setSessionId(config.id)
         return config.id
