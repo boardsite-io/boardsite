@@ -12,7 +12,11 @@ const PageButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> =
         const numberPages = pageRank.length
 
         return (
-            <MainMenuButton type="button" {...props}>
+            <MainMenuButton
+                aria-label="Open page menu"
+                type="button"
+                {...props}
+            >
                 {numberPages > 0 ? (
                     <FormattedMessage
                         id="Menu.Bar.Page"

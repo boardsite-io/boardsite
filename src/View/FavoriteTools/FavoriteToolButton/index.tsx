@@ -57,6 +57,7 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({ icon, tool, index }) => {
                 position={Position.Right}
             >
                 <ToolButton
+                    aria-label="Favorite tool"
                     icon={icon}
                     toolColor={tool.style.color}
                     toolWidth={tool.style.width}
@@ -75,7 +76,11 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({ icon, tool, index }) => {
                         }
                         position={Position.TopRight}
                     >
-                        <IconButton icon={<PlusIcon />} onClick={replaceTool} />
+                        <IconButton
+                            aria-label="Replace favorite tool"
+                            icon={<PlusIcon />}
+                            onClick={replaceTool}
+                        />
                     </ToolTip>
                     <ToolTip
                         text={
@@ -83,7 +88,11 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({ icon, tool, index }) => {
                         }
                         position={Position.TopRight}
                     >
-                        <IconButton icon={<MinusIcon />} onClick={removeTool} />
+                        <IconButton
+                            aria-label="Remove favorite tool"
+                            icon={<MinusIcon />}
+                            onClick={removeTool}
+                        />
                     </ToolTip>
                 </FavToolOptions>
             </Popup>

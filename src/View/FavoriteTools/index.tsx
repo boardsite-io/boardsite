@@ -39,7 +39,11 @@ const FavoriteTools: React.FC = () => {
                     text={<FormattedMessage id="ToolTip.AddFavoriteTool" />}
                     position={Position.Right}
                 >
-                    <IconButton icon={<PlusIcon />} onClick={addFavoriteTool} />
+                    <IconButton
+                        aria-label="Add current tool as favorite"
+                        icon={<PlusIcon />}
+                        onClick={addFavoriteTool}
+                    />
                 </ToolTip>
             )}
         </FavToolsStyled>

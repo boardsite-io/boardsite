@@ -7,7 +7,11 @@ const ViewButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> =
         const { scale } = useGState("ViewTransform").view.viewTransform
 
         return (
-            <MainMenuButton type="button" {...props}>
+            <MainMenuButton
+                aria-label="Open view menu"
+                type="button"
+                {...props}
+            >
                 {(scale * 100).toFixed(0)} %
             </MainMenuButton>
         )

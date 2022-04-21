@@ -5,7 +5,11 @@ import { StyledMainMenuButton } from "./index.styled"
 const MenuButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> =
     memo((props) => {
         return (
-            <StyledMainMenuButton type="button" {...props}>
+            <StyledMainMenuButton
+                aria-label="Open main menu"
+                type="button"
+                {...props}
+            >
                 <MenuIcon />
             </StyledMainMenuButton>
         )

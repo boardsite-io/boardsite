@@ -9,7 +9,11 @@ const SessionButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> =
         useGState("Session")
 
         return (
-            <StyledMainMenuButton type="button" {...props}>
+            <StyledMainMenuButton
+                aria-label="Open session menu"
+                type="button"
+                {...props}
+            >
                 <OnlineIcon />
                 <SessionStatus>
                     {online.getNumberOfUsers() || "+"}

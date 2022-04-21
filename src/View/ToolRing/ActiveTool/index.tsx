@@ -33,6 +33,7 @@ const ActiveTool: React.FC = memo(() => {
                 text={<FormattedMessage id="ToolTip.Active" />}
             >
                 <ToolButton
+                    aria-label="Current shape tool, press while active to open style picker"
                     icon={<ToolIcon />}
                     active={isDraw}
                     onClick={onClick}
