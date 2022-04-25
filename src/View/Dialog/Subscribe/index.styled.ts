@@ -1,21 +1,10 @@
-import { Dialog } from "components"
 import styled from "styled-components"
-
-export const SubscribeCard = styled(Dialog)`
-    width: fit-content;
-    overflow-x: hidden;
-    display: flex;
-    flex-direction: column;
-    background: #333;
-    color: white;
-    border-radius: var(--border-radius);
-`
 
 export const BenefitList = styled.ul`
     align-items: left;
     position: relative;
     list-style: none;
-    padding: 1rem 2.5rem;
+    padding: 0 1rem;
     margin: 0;
 `
 
@@ -46,15 +35,28 @@ export const BenefitItem = styled.li`
 `
 
 export const SubscribeButton = styled.a`
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
     color: ${({ theme }) => theme.palette.secondary.contrastText};
     background: ${({ theme }) => theme.palette.secondary.main};
-    padding: 1rem 2rem;
-    cursor: pointer;
-    text-decoration: none;
+    margin: 6px 0;
+    padding: 10px 1.5rem;
+    border-width: 0;
+    border-radius: var(--border-radius);
     transition: all 100ms ease-in-out;
+    box-shadow: var(--box-shadow);
+    height: min-content;
 
     &:hover {
         filter: brightness(120%);
     }
+
+    &:disabled {
+        cursor: not-allowed;
+        filter: brightness(40%);
+    }
+
+    text-decoration: none;
 `

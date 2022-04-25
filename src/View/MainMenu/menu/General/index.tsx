@@ -12,6 +12,7 @@ import { CSSTransition } from "react-transition-group"
 import EditMenu from "View/MainMenu/menu/General/Edit"
 import { cssTransition } from "View/MainMenu/cssTransition"
 import { AUTH_URL } from "api/auth"
+import { DialogState } from "state/menu/state/index.types"
 import { MainMenuWrap } from "../../index.styled"
 import MenuItem from "../../MenuItem"
 import FileMenu from "./File"
@@ -37,7 +38,7 @@ const onClickSignOut = () => {
 }
 
 const onClickSponsor = () => {
-    menu.openSubscribe()
+    menu.setDialogState(DialogState.Subscribe)
 }
 
 const onClickShortcuts = () => {

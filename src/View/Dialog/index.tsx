@@ -13,6 +13,7 @@ import OnlineChangeAlias from "./OnlineChangeAlias"
 import OnlineChangePassword from "./OnlineChangePassword"
 import OnlineEnterPassword from "./OnlineEnterPassword"
 import OnlineLeave from "./OnlineLeave"
+import Subscribe from "./Subscribe"
 
 const contents = {
     [DialogState.Closed]: null,
@@ -24,6 +25,7 @@ const contents = {
     [DialogState.OnlineChangeAlias]: <OnlineChangeAlias />,
     [DialogState.OnlineChangePassword]: <OnlineChangePassword />,
     [DialogState.OnlineLeave]: <OnlineLeave />,
+    [DialogState.Subscribe]: <Subscribe />,
 }
 
 const DialogMenu: React.FC = () => {
