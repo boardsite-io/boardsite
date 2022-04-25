@@ -7,7 +7,6 @@ export class Menu implements GlobalState<MenuState> {
         mainMenuState: MainMenuState.Closed,
         dialogState: DialogState.Closed,
         shortcutsOpen: false,
-        subscribeOpen: false,
     }
 
     getState(): MenuState {
@@ -24,13 +23,11 @@ export class Menu implements GlobalState<MenuState> {
      * @returns true if any menu or dialog is open
      */
     isAnyMenuOpen() {
-        const { mainMenuState, shortcutsOpen, subscribeOpen, dialogState } =
-            this.getState()
+        const { mainMenuState, shortcutsOpen, dialogState } = this.getState()
         return (
             mainMenuState !== MainMenuState.Closed ||
             dialogState !== DialogState.Closed ||
-            shortcutsOpen ||
-            subscribeOpen
+            shortcutsOpen
         )
     }
 
@@ -73,22 +70,6 @@ export class Menu implements GlobalState<MenuState> {
     closeShortcuts() {
         this.state.shortcutsOpen = false
         subscriptionState.render("ShortcutsOpen")
-    }
-
-    /**
-     * Open the subscription dialog
-     */
-    openSubscribe() {
-        this.state.subscribeOpen = true
-        subscriptionState.render("SubscribeOpen")
-    }
-
-    /**
-     * Close the subscription dialog
-     */
-    closeSubscribe() {
-        this.state.subscribeOpen = false
-        subscriptionState.render("SubscribeOpen")
     }
 }
 

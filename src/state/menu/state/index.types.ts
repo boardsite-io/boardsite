@@ -16,11 +16,11 @@ export enum DialogState {
     OnlineChangeAlias,
     OnlineChangePassword,
     OnlineLeave,
+    Subscribe,
 }
 
 export interface MenuState {
     dialogState: DialogState
     mainMenuState: MainMenuState
     shortcutsOpen: boolean
-    subscribeOpen: boolean
 }

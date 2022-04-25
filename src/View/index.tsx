@@ -9,7 +9,6 @@ import Dialog from "./Dialog"
 import MainMenu from "./MainMenu"
 import Notification from "./Notification"
 import Shortcuts from "./Shortcuts"
-import Subscribe from "./Subscribe"
 
 const View: React.FC = () => {
     useKeyboardShortcuts()
@@ -20,7 +19,6 @@ const View: React.FC = () => {
         <ViewWrap>
             <Board />
             <Dialog />
-            <Subscribe />
             <Shortcuts />
             <Loading />
             <Notification />
