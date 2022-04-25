@@ -138,7 +138,7 @@ export class Online
         const req = this.isAuthorized()
             ? async () => request.postSessionWithConfig(createConfig)
             : request.postSession
-        const { config } = await req()
+        const { config } = await req.bind(request)()
         this.state.session.config = config
         request.setSessionId(config.id)
         return config.id
