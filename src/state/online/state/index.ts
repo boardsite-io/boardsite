@@ -216,16 +216,18 @@ export class Online
         delete this.state.session.socket
         subscriptionState.render("Session")
 
-        // Clean up session data, the localStorage is not
-        // overwritten since in online mode it is deactivated
-        board.fullReset()
-        board.handleAddPages({
-            data: [{ page: new BoardPage(), index: -1 }],
-        })
-        view.validatePageIndex()
+        if (!board.localStoreEnabled) {
+            // Clean up session data, the localStorage is not
+            // overwritten since in online mode it is deactivated
+            board.fullReset()
+            board.handleAddPages({
+                data: [{ page: new BoardPage(), index: -1 }],
+            })
+            view.validatePageIndex()
 
-        // Enable localStorage for local session
-        board.localStoreEnabled = true
+            // Enable localStorage for local session
+            board.localStoreEnabled = true
+        }
     }
 
     async join(copyOffline?: boolean): Promise<void> {

@@ -9,10 +9,7 @@ import {
 } from "components"
 import { Field, Form, Formik, FormikHelpers } from "formik"
 import { useNavigate, useParams } from "react-router-dom"
-import { notification } from "state/notification"
-import { ROUTE } from "App/routes"
 import * as Yup from "yup"
-import { ErrorBody, ErrorCode } from "api/types"
 import { joinOnlineSession } from "../helpers"
 
 export interface CreateFormValues {
@@ -36,31 +33,18 @@ const OnlineEnterPassword: React.FC = () => {
                         { password }: CreateFormValues,
                         actions: FormikHelpers<CreateFormValues>
                     ) => {
-                        try {
-                            await joinOnlineSession({
-                                sessionId,
-                                password,
-                                navigate,
-                            })
-                        } catch (error) {
-                            if (
-                                (error as ErrorBody).response?.data.code ===
-                                ErrorCode.InvalidPassword
-                            ) {
+                        await joinOnlineSession({
+                            sessionId,
+                            password,
+                            onWrongPassword: () =>
                                 actions.setFieldError(
                                     "password",
                                     f({
                                         id: "Dialog.OnlineEnterPassword.Input.Password.Invalid",
                                     })
-                                )
-                            } else {
-                                notification.create(
-                                    "Notification.Session.JoinFailed",
-                                    5000
-                                )
-                                navigate(ROUTE.HOME)
-                            }
-                        }
+                                ),
+                            navigate,
+                        })
                     }}
                     validationSchema={Yup.object().shape({
                         password: Yup.string().required(
