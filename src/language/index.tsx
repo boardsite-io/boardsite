@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react"
+import React from "react"
 import { Props as ReactIntlFormattedMessageProps } from "react-intl/src/components/message"
 import {
     FormattedMessage as ReactIntlFormattedMessage,
@@ -16,10 +16,12 @@ export type FormatMessageArgs = Parameters<IntlFormatters["formatMessage"]>
 // Our new union type of all available message IDs.
 export type IntlMessageId = keyof typeof langEN
 
+// TODO: annotate type
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Values = Record<string, any>
+
 // Extend the original FormattedMessage props.
-type FormattedMessageProps = ReactIntlFormattedMessageProps<
-    Record<string, ReactNode>
-> & {
+type FormattedMessageProps = ReactIntlFormattedMessageProps<Values> & {
     id?: IntlMessageId
 }
 
@@ -55,6 +57,7 @@ export enum Locales {
     EN = "en",
     // DE = "de",
 }
+
 export const translations = {
     [Locales.EN]: langEN,
     // [Locales.DE]: langDe,
