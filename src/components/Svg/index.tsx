@@ -71,4 +71,5 @@ export const ToolIcons = {
     [ToolType.Eraser]: EraserIcon,
     [ToolType.Pan]: PanIcon,
     [ToolType.Select]: SelectIcon,
+    [ToolType.Highlighter]: PenIcon, // TODO: icon svg
 }

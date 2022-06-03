@@ -87,6 +87,7 @@ export class BoardLiveStroke implements LiveStroke {
     addPoint(point: Point): void {
         switch (this.type) {
             case ToolType.Eraser:
+            case ToolType.Highlighter:
             case ToolType.Pen: {
                 this.points = perfectDrawing(this.points, point)
                 break
@@ -117,7 +118,8 @@ export class BoardLiveStroke implements LiveStroke {
         const { scale } = view.getState().viewTransform
 
         switch (this.type) {
-            case ToolType.Pen: {
+            case ToolType.Pen:
+            case ToolType.Highlighter: {
                 const epsilon = 0.25
                 const sections = 3
                 // this.points = perfectDrawing(this.points)

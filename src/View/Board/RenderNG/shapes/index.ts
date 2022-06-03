@@ -104,6 +104,7 @@ const drawShape = {
     [ToolType.Rectangle]: drawRect,
     [ToolType.Select]: drawSelect,
     [ToolType.Pan]: undefined,
+    [ToolType.Highlighter]: drawPen,
 }
 
 export const drawHitboxRects = (
