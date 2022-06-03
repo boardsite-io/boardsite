@@ -3,12 +3,12 @@ import { assign, pick } from "lodash"
 import { Polygon } from "sat"
 import { getHitboxPolygon } from "./hitbox"
 import {
-    Scale,
     Point,
-    Stroke,
-    ToolType,
-    StrokeUpdate,
+    Scale,
     SerializedStroke,
+    Stroke,
+    StrokeUpdate,
+    ToolType,
 } from "./index.types"
 
 export class BoardStroke implements Stroke {
@@ -115,6 +115,7 @@ export class BoardStroke implements Stroke {
         this.hitboxes = []
         switch (type) {
             case ToolType.Line:
+            case ToolType.Highlighter:
             case ToolType.Pen: {
                 // get hitboxes of all segments of the current stroke
                 for (let i = 0; i < points.length - 2; i += 2) {

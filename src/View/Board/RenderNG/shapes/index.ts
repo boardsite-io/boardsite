@@ -22,11 +22,11 @@ export const drawErased = (
 ) => {
     ctx.fillStyle = strokeStyleToRGBA({
         ...stroke.style,
-        opacity: ERASED_OPACITY,
+        opacity: stroke.style.opacity * ERASED_OPACITY,
     })
     ctx.strokeStyle = strokeStyleToRGBA({
         ...stroke.style,
-        opacity: ERASED_OPACITY,
+        opacity: stroke.style.opacity * ERASED_OPACITY,
     })
     drawStroke(ctx, stroke)
 }
