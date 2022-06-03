@@ -3,6 +3,7 @@ import React, { memo } from "react"
 import { useGState } from "state"
 import {
     CircleIcon,
+    HighlighterIcon,
     IconButton,
     LineIcon,
     PenIcon,
@@ -38,7 +39,7 @@ const ShapeTools: React.FC = memo(() => {
             >
                 <IconButton
                     aria-label="Highlighter tool"
-                    icon={<PenIcon />} // Highlighter Icon SVG
+                    icon={<HighlighterIcon />} // Highlighter Icon SVG
                     active={type === ToolType.Highlighter}
                     onClick={() => {
                         handleSetTool({ type: ToolType.Highlighter })

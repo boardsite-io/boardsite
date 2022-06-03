@@ -1,6 +1,7 @@
 import { ToolType } from "drawing/stroke/index.types"
 import EraserIcon from "./svgs/eraser.svg"
 import PenIcon from "./svgs/pen.svg"
+import HighlighterIcon from "./svgs/highlighter.svg"
 import SelectIcon from "./svgs/select.svg"
 import LineIcon from "./svgs/line.svg"
 import CircleIcon from "./svgs/circle.svg"
@@ -33,6 +34,7 @@ import BgRuledPortrait from "./svgs/background/ruledportrait.svg"
 export {
     EraserIcon,
     PenIcon,
+    HighlighterIcon,
     SelectIcon,
     LineIcon,
     CircleIcon,
@@ -71,5 +73,5 @@ export const ToolIcons = {
     [ToolType.Eraser]: EraserIcon,
     [ToolType.Pan]: PanIcon,
     [ToolType.Select]: SelectIcon,
-    [ToolType.Highlighter]: PenIcon, // TODO: icon svg
+    [ToolType.Highlighter]: HighlighterIcon,
 }
