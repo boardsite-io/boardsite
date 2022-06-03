@@ -130,6 +130,7 @@
     "ToolTip.Selection": "Selection Tool",
     "ToolTip.Panning": "Panning Tool",
     "ToolTip.Pen": "Pen Tool",
+    "ToolTip.Highlighter": "Highlighter Tool",
     "ToolTip.Line": "Line Tool",
     "ToolTip.Rectangle": "Rectangle Tool",
     "ToolTip.Circle": "Circle Tool",

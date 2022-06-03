@@ -18,14 +18,16 @@ export type Scale = {
     y: number
 }
 
+// Explicit numbers to avoid breaking save files
 export enum ToolType {
-    Eraser,
-    Pen,
-    Line,
-    Circle,
-    Rectangle,
-    Select,
-    Pan,
+    Eraser = 0,
+    Pen = 1,
+    Line = 2,
+    Circle = 3,
+    Rectangle = 4,
+    Select = 5,
+    Pan = 6,
+    Highlighter = 7,
 }
 
 export type ToolStyle = {

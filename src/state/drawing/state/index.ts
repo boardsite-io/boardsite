@@ -103,6 +103,11 @@ export class Drawing
 
             // Save latest draw type to enable resuming to that tool
             if (isDrawType(tool.type)) {
+                if (tool.type === ToolType.Highlighter) {
+                    this.state.tool.style.opacity = 0.3
+                } else {
+                    this.state.tool.style.opacity = 1
+                }
                 this.state.tool.latestDrawType = tool.type
             }
 
