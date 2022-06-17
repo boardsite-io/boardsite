@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { Page, Paper } from "state/board/state/index.types"
 import { view } from "state/view"
-import { drawBackground } from "View/Board/RenderNG/Page/Background/backgrounds"
+import { drawBackground } from "util/render/backgrounds"
 
 export const useLayerConfig = (
     canvasRef: React.RefObject<HTMLCanvasElement>,

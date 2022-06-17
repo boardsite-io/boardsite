@@ -2,7 +2,7 @@ import React from "react"
 import ReactDOM from "react-dom"
 import { MAX_PIXEL_SCALE } from "consts"
 import { Canvas } from "View/Board/RenderNG/Page/index.styled"
-import { drawBackground } from "View/Board/RenderNG/Page/Background/backgrounds"
+import { drawBackground } from "util/render/backgrounds"
 import { Page, Paper } from "state/board/state/index.types"
 import { draw } from "util/render/shapes"
 
