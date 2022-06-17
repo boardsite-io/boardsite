@@ -1,7 +1,7 @@
+import { useViewControl } from "hooks"
 import React from "react"
 import { useGState } from "state"
 import { Content, ViewControl, ViewBackground } from "./index.styled"
-import { useViewControl } from "./useViewControl"
 
 type ViewTransformerProps = { children: React.ReactNode }
 
