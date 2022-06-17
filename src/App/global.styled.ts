@@ -63,6 +63,10 @@ export const GlobalStyles = styled.div`
     --icon-stroke-width: 5;
 
     /* --- Font --- */
+    font-family: "Lato", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+
     body,
     input,
     button,
@@ -74,20 +78,6 @@ export const GlobalStyles = styled.div`
         font-size: inherit;
         font-weight: inherit;
     }
-
-    /* h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        font-family: inherit;
-        font-weight: 600;
-    } */
-
-    font-family: "Lato", sans-serif;
-    font-size: 1rem;
-    font-weight: 900;
 
     /* --- Style Picker --- */
     --style-picker-hue-width: 1.2rem;
