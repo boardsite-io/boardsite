@@ -12,7 +12,7 @@ import {
     isValidClick,
     isValidTouch,
 } from "util/drawing"
-import { PageOffset } from "../index.types"
+import { PageOffset } from "View/Board/RenderNG/Page/index.types"
 
 let isMouseOrTouchDown = false
 const liveStroke = new BoardLiveStroke()
