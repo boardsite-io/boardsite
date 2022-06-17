@@ -4,6 +4,7 @@ import { MouseEvent, TouchEvent, useCallback, useEffect } from "react"
 import { usePageLayer } from "state"
 import { board } from "state/board"
 import { Page } from "state/board/state/index.types"
+import { view } from "state/view"
 import {
     getMousePosition,
     getTouchPosition,
@@ -110,7 +111,11 @@ export const useTransformer = (
             e.preventDefault()
 
             if (isValidClick(e)) {
-                const point = getMousePosition(e, pageOffset)
+                const point = getMousePosition({
+                    event: e,
+                    pageOffset,
+                    transform: view.getState().viewTransform,
+                })
                 onStart(point, e)
             }
         },
@@ -123,7 +128,11 @@ export const useTransformer = (
             e.preventDefault()
 
             if (isMouseOrTouchDown && isValidClick(e)) {
-                const point = getMousePosition(e, pageOffset)
+                const point = getMousePosition({
+                    event: e,
+                    pageOffset,
+                    transform: view.getState().viewTransform,
+                })
                 onMove(point)
             }
         },
@@ -136,7 +145,11 @@ export const useTransformer = (
             e.preventDefault()
 
             if (isMouseOrTouchDown && isValidClick(e)) {
-                const point = getMousePosition(e, pageOffset)
+                const point = getMousePosition({
+                    event: e,
+                    pageOffset,
+                    transform: view.getState().viewTransform,
+                })
                 onEnd(point)
             }
         },
@@ -155,7 +168,11 @@ export const useTransformer = (
             e.stopPropagation()
 
             if (isValidTouch(e)) {
-                const point = getTouchPosition(e, pageOffset)
+                const point = getTouchPosition({
+                    event: e,
+                    pageOffset,
+                    transform: view.getState().viewTransform,
+                })
                 onStart(point, e)
             }
         },
@@ -167,7 +184,11 @@ export const useTransformer = (
             e.stopPropagation()
 
             if (isMouseOrTouchDown && isValidTouch(e)) {
-                const point = getTouchPosition(e, pageOffset)
+                const point = getTouchPosition({
+                    event: e,
+                    pageOffset,
+                    transform: view.getState().viewTransform,
+                })
                 onMove(point)
             }
         },
@@ -179,7 +200,11 @@ export const useTransformer = (
             e.stopPropagation()
 
             if (isMouseOrTouchDown) {
-                const point = getTouchPosition(e, pageOffset)
+                const point = getTouchPosition({
+                    event: e,
+                    pageOffset,
+                    transform: view.getState().viewTransform,
+                })
                 onEnd(point)
             }
         },
@@ -192,7 +217,11 @@ export const useTransformer = (
 
             if (isMouseOrTouchDown) {
                 const point = applyLeaveBounds(
-                    getTouchPosition(e, pageOffset),
+                    getTouchPosition({
+                        event: e,
+                        pageOffset,
+                        transform: view.getState().viewTransform,
+                    }),
                     page
                 )
 

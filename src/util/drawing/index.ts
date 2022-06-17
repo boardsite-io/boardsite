@@ -3,7 +3,7 @@ import { LiveStroke } from "drawing/livestroke/index.types"
 import { ToolType } from "drawing/stroke/index.types"
 import { MouseEvent, TouchEvent } from "react"
 import { settings } from "state/settings"
-import { view } from "state/view"
+import { ViewTransform } from "state/view/state/index.types"
 import { PageOffset } from "View/Board/RenderNG/Page/index.types"
 import { draw } from "View/Board/RenderNG/shapes"
 
@@ -22,38 +22,58 @@ export const drawLiveStroke = (
     draw(ctx, liveStroke)
 }
 
-export const getTouchPosition = (
-    e: TouchEvent<HTMLElement>,
+interface GetTouchPositionProps {
+    event: TouchEvent<HTMLElement>
     pageOffset: PageOffset
-): Point => {
-    const touch = e.touches[0] || e.changedTouches[0]
+    transform: ViewTransform
+}
+
+export const getTouchPosition = ({
+    event,
+    pageOffset,
+    transform,
+}: GetTouchPositionProps): Point => {
+    const touch = event.touches[0] || event.changedTouches[0]
 
     const point = {
         x: touch.pageX,
         y: touch.pageY,
     }
-    return applyTransformTo(point, pageOffset)
+    return applyTransformTo({ point, pageOffset, transform })
 }
 
-export const getMousePosition = (
-    e: MouseEvent<HTMLElement>,
+interface GetMousePositionProps {
+    event: MouseEvent<HTMLElement>
     pageOffset: PageOffset
-): Point => {
+    transform: ViewTransform
+}
+
+export const getMousePosition = ({
+    event,
+    pageOffset,
+    transform,
+}: GetMousePositionProps): Point => {
     const point = {
-        x: e.pageX,
-        y: e.pageY,
+        x: event.pageX,
+        y: event.pageY,
     }
-    return applyTransformTo(point, pageOffset)
+    return applyTransformTo({ point, pageOffset, transform })
 }
 
-const applyTransformTo = (point: Point, pageOffset: PageOffset): Point => {
-    const { scale, xOffset, yOffset } = view.getState().viewTransform
-
-    return {
-        x: point.x / scale - xOffset - pageOffset.left,
-        y: point.y / scale - yOffset - pageOffset.top,
-    }
+interface ApplyTransformToProps {
+    point: Point
+    pageOffset: PageOffset
+    transform: ViewTransform
 }
+
+const applyTransformTo = ({
+    point,
+    pageOffset,
+    transform,
+}: ApplyTransformToProps): Point => ({
+    x: point.x / transform.scale - transform.xOffset - pageOffset.left,
+    y: point.y / transform.scale - transform.yOffset - pageOffset.top,
+})
 
 export const isDrawType = (type: ToolType): boolean =>
     type === ToolType.Pen ||
