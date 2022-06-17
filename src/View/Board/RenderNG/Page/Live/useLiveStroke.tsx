@@ -10,7 +10,7 @@ import {
     getTouchPosition,
     isValidClick,
     isValidTouch,
-} from "./helpers"
+} from "util/drawing"
 import { PageOffset } from "../index.types"
 
 let isMouseOrTouchDown = false

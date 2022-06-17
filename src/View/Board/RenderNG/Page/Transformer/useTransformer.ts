@@ -4,14 +4,14 @@ import { MouseEvent, TouchEvent, useCallback, useEffect } from "react"
 import { usePageLayer } from "state"
 import { board } from "state/board"
 import { Page } from "state/board/state/index.types"
-import { draw } from "../../shapes"
-import { PageOffset } from "../index.types"
 import {
     getMousePosition,
     getTouchPosition,
     isValidClick,
     isValidTouch,
-} from "../Live/helpers"
+} from "util/drawing"
+import { draw } from "../../shapes"
+import { PageOffset } from "../index.types"
 import { applyBounds, applyLeaveBounds } from "./bounds"
 import { extractHandle, getOuterBounds } from "./helpers"
 import { TrHandle } from "./index.styled"
