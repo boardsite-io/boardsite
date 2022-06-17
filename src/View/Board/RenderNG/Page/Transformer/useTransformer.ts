@@ -11,7 +11,7 @@ import {
     isValidClick,
     isValidTouch,
 } from "util/drawing"
-import { draw } from "../../shapes"
+import { draw } from "util/render/shapes"
 import { PageOffset } from "../index.types"
 import { applyBounds, applyLeaveBounds } from "./bounds"
 import { extractHandle, getOuterBounds } from "./helpers"

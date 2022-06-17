@@ -5,7 +5,7 @@ import { MouseEvent, TouchEvent } from "react"
 import { settings } from "state/settings"
 import { ViewTransform } from "state/view/state/index.types"
 import { PageOffset } from "View/Board/RenderNG/Page/index.types"
-import { draw } from "View/Board/RenderNG/shapes"
+import { draw } from "util/render/shapes"
 
 export const drawLiveStroke = (
     liveStroke: LiveStroke,
