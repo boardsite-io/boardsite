@@ -6,6 +6,7 @@ export const Presets = styled.div`
     display: flex;
     align-items: center;
     box-shadow: var(--box-shadow);
+    border-radius: var(--border-radius);
 
     button:first-child {
         border-top-left-radius: var(--border-radius);
@@ -18,12 +19,12 @@ export const Presets = styled.div`
 `
 
 export const CreateButtons = styled.div`
-    display: flex;
+    display: grid;
     gap: 6px;
-    align-items: center;
+    grid-template-columns: repeat(2, 1fr);
 `
 
-export const SizeButton = styled(Button)<{ active: boolean }>`
+export const PresetButton = styled(Button)<{ active: boolean }>`
     :focus {
         z-index: 1; /* prevent other buttons from overlapping focus outline */
     }
