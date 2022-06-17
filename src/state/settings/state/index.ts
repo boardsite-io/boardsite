@@ -1,6 +1,6 @@
 import { subscriptionState } from "state/subscription"
 import { Theme } from "theme"
-import { GlobalState } from "../../types"
+import { GlobalState } from "state/types"
 import { SettingsSerializer } from "../serializers"
 import { SettingsState } from "./index.types"
 

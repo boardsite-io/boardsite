@@ -1,5 +1,5 @@
 import { subscriptionState } from "state/subscription"
-import { GlobalState } from "../../types"
+import { GlobalState } from "state/types"
 import { DialogState, MainMenuState, MenuState } from "./index.types"
 
 export class Menu implements GlobalState<MenuState> {

@@ -1,9 +1,9 @@
 import { assign, keys, pick } from "lodash"
-import { OnlineState, SerializedOnlineState } from "../state/index.types"
-import { StateSerializer } from "../../types"
-import { loadLocalStorage, saveLocalStorage } from "../../../storage/local"
+import { notification } from "state/notification"
+import { StateSerializer } from "state/types"
+import { loadLocalStorage, saveLocalStorage } from "storage/local"
 import { getDefaultOnlineState } from "../state/default"
-import { notification } from "../../notification"
+import { OnlineState, SerializedOnlineState } from "../state/index.types"
 
 /*
     Version of the board state reducer to allow backward compatibility for stored data

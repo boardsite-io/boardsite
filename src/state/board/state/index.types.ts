@@ -5,7 +5,7 @@ import {
     StrokeCollection,
     StrokeUpdate,
 } from "drawing/stroke/index.types"
-import { SerializedVersionState, Serializer } from "../../types"
+import { SerializedVersionState, Serializer } from "state/types"
 
 interface State<A extends SerializedAttachment, P extends SerializedPage> {
     pageRank: PageRank

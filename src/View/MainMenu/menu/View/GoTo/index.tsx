@@ -2,8 +2,8 @@ import { HorizontalRule } from "components"
 import { FormattedMessage } from "language"
 import React from "react"
 import { view } from "state/view"
-import { SubMenuWrap } from "../../../index.styled"
-import MenuItem from "../../../MenuItem"
+import { SubMenuWrap } from "View/MainMenu/index.styled"
+import MenuItem from "View/MainMenu/MenuItem"
 
 const GoToMenu = () => {
     return (

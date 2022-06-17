@@ -1,7 +1,7 @@
 import { assign, keys, pick } from "lodash"
 import { loadLocalStorage, saveLocalStorage } from "storage/local"
-import { StateSerializer } from "../../types"
-import { notification } from "../../notification"
+import { StateSerializer } from "state/types"
+import { notification } from "state/notification"
 import { SerializedViewState, ViewState } from "../state/index.types"
 import { getDefaultViewState } from "../state/default"
 

@@ -1,7 +1,7 @@
 import { DEFAULT_NOTIFICATION_DURATION } from "consts"
 import { IntlMessageId } from "language"
 import { subscriptionState } from "state/subscription"
-import { GlobalState } from "../../types"
+import { GlobalState } from "state/types"
 import { NotificationState } from "./index.types"
 
 export class Notification implements GlobalState<NotificationState> {

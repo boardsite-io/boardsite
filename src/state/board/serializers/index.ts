@@ -3,10 +3,10 @@ import { BoardPage } from "drawing/page"
 import { assign, keys, pick } from "lodash"
 import { reduceRecord } from "util/lib"
 import { loadIndexedDB, saveIndexedDB } from "storage/local"
+import { StateSerializer } from "state/types"
+import { notification } from "state/notification"
 import { getDefaultBoardState } from "../state/default"
 import { BoardState, SerializedBoardState } from "../state/index.types"
-import { StateSerializer } from "../../types"
-import { notification } from "../../notification"
 
 /*
     Version of the board state reducer to allow backward compatibility for stored data

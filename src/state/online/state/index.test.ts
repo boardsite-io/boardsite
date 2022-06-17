@@ -13,7 +13,7 @@ import { View } from "state/view"
 import { ViewState } from "state/view/state/index.types"
 import { SessionConfig, User } from "state/online/state/index.types"
 import { Request } from "api/request"
-import { Message, PageSync, StrokeDelete } from "../../../api/types"
+import { Message, PageSync, StrokeDelete } from "api/types"
 import { Online } from "."
 
 jest.mock("api/request")

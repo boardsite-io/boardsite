@@ -11,8 +11,8 @@ import {
 import { view } from "state/view"
 import { CSSTransition } from "react-transition-group"
 import { cssTransition } from "View/MainMenu/cssTransition"
-import { MainMenuWrap } from "../../index.styled"
-import MenuItem from "../../MenuItem"
+import { MainMenuWrap } from "View/MainMenu/index.styled"
+import MenuItem from "View/MainMenu/MenuItem"
 import GoToMenu from "./GoTo"
 
 enum SubMenu {

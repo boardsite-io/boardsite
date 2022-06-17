@@ -1,5 +1,6 @@
 import { nanoid } from "nanoid"
 import { BoardStroke } from "drawing/stroke"
+import { reduceRecord } from "util/lib"
 import { Page, PageMeta, SerializedPage } from "state/board/state/index.types"
 import { assign, cloneDeep, pick } from "lodash"
 import { drawing } from "state/drawing"
@@ -8,7 +9,6 @@ import {
     Stroke,
     StrokeCollection,
 } from "../stroke/index.types"
-import { reduceRecord } from "../../util/lib"
 
 export class BoardPage implements Page {
     constructor(page?: Page) {

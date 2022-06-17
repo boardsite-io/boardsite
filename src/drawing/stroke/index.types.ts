@@ -1,5 +1,5 @@
 import { Polygon } from "sat"
-import { Serializer } from "../../state/types"
+import { Serializer } from "state/types"
 
 export type Hitbox = {
     v1: Point

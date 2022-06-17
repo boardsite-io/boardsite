@@ -1,9 +1,9 @@
 import { assign, keys, pick } from "lodash"
+import { notification } from "state/notification"
+import { StateSerializer } from "state/types"
+import { loadLocalStorage, saveLocalStorage } from "storage/local"
 import { getDefaultDrawingState } from "../state/default"
 import { DrawingState, SerializedDrawingState } from "../state/index.types"
-import { StateSerializer } from "../../types"
-import { loadLocalStorage, saveLocalStorage } from "../../../storage/local"
-import { notification } from "../../notification"
 
 /*
     Version of the board state reducer to allow backward compatibility for stored data

@@ -1,6 +1,6 @@
 import { IntlMessageId } from "language"
 import { subscriptionState } from "state/subscription"
-import { GlobalState } from "../../types"
+import { GlobalState } from "state/types"
 import { LoadingState } from "./index.types"
 
 export class Loading implements GlobalState<LoadingState> {

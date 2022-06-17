@@ -3,8 +3,8 @@ import {
     animals,
     uniqueNamesGenerator,
 } from "unique-names-generator"
+import { getRandomColor } from "util/color"
 import { OnlineState } from "./index.types"
-import { getRandomColor } from "../../../util/color"
 
 export const getDefaultOnlineState = (): OnlineState => ({
     user: {

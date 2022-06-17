@@ -5,8 +5,8 @@ import { useGState } from "state"
 import { settings } from "state/settings"
 import { Theme } from "theme"
 import { online } from "state/online"
-import { SubMenuWrap } from "../../../index.styled"
-import MenuItem from "../../../MenuItem"
+import { SubMenuWrap } from "View/MainMenu/index.styled"
+import MenuItem from "View/MainMenu/MenuItem"
 
 const ThemeMenu = () => {
     const { theme: activeTheme } = useGState("Theme").settings

@@ -1,10 +1,10 @@
 import { BoardStroke } from "drawing/stroke"
 import { Stroke, StrokeUpdate } from "drawing/stroke/index.types"
 import { subscriptionState } from "state/subscription"
+import { GlobalState } from "state/types"
 import { assign, cloneDeep, keys, pick } from "lodash"
 import { PAGE_SIZE } from "consts"
 import { PageIndex } from "state/view/state/index.types"
-import { GlobalState } from "../../types"
 import { getDefaultBoardState } from "./default"
 import {
     AddPageData,
