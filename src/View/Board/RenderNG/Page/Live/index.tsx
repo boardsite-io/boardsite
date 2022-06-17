@@ -1,9 +1,8 @@
 import React, { memo } from "react"
 import { useGState } from "state"
-import { useLiveStroke } from "hooks"
+import { useLiveStroke, useLayerConfig } from "hooks"
 import { Canvas } from "../index.styled"
 import { PageProps } from "../index.types"
-import { useLayerConfig } from "../useLayerConfig"
 
 export const Live: React.FC<PageProps> = memo(({ page, pageOffset }) => {
     const canvasRef = React.useRef<HTMLCanvasElement>(null)

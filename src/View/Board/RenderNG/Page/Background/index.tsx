@@ -1,9 +1,9 @@
 import { MAX_PIXEL_SCALE } from "consts"
 import React, { memo } from "react"
+import { useLayerConfig } from "hooks"
 import { useGState, usePageLayer } from "state"
 import { Paper } from "state/board/state/index.types"
 import { PageProps } from "../index.types"
-import { useLayerConfig } from "../useLayerConfig"
 import { CanvasBG } from "./index.styled"
 
 export const Background: React.FC<PageProps> = memo(({ page, pageOffset }) => {
