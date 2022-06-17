@@ -9,13 +9,13 @@ import { CanvasBG } from "./index.styled"
 export const Background: React.FC<PageProps> = memo(({ page, pageOffset }) => {
     const canvasRef = React.useRef<HTMLCanvasElement>(null)
     const { layerConfig } = useGState("LayerConfig").view
-    useLayerConfig(canvasRef, page)
-    usePageLayer("background", page.pageId)
-
     const pxlScale =
         page.meta.background.paper === Paper.Doc
             ? MAX_PIXEL_SCALE
             : layerConfig.pixelScale
+
+    useLayerConfig(canvasRef, page)
+    usePageLayer("background", page.pageId)
 
     return (
         <CanvasBG
