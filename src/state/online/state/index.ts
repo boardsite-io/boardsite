@@ -24,10 +24,10 @@ import {
 import { BoardPage } from "drawing/page"
 import { menu } from "state/menu"
 import { view } from "state/view"
+import { GlobalState } from "state/types"
 import { DialogState } from "state/menu/state/index.types"
 import { newAttachment } from "drawing/attachment/utils"
 import { OnlineState, SessionConfig, User } from "./index.types"
-import { GlobalState } from "../../types"
 import { OnlineSerializer } from "../serializers"
 
 export class Online

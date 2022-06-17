@@ -11,7 +11,7 @@ import { debounce } from "lodash"
 import { board } from "state/board"
 import { settings } from "state/settings"
 import { subscriptionState } from "state/subscription"
-import { GlobalState } from "../../types"
+import { GlobalState } from "state/types"
 import { ViewSerializer } from "../serializers"
 import {
     applyBound,

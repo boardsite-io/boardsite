@@ -1,11 +1,11 @@
 import { NavigateFunction } from "react-router-dom"
-import { notification } from "../../state/notification"
-import { menu } from "../../state/menu"
-import { DialogState } from "../../state/menu/state/index.types"
-import { Online, online } from "../../state/online"
-import { ErrorCode } from "../../api/types"
-import { ROUTE } from "../../App/routes"
-import { isErrorResponse } from "../../api/error"
+import { notification } from "state/notification"
+import { menu } from "state/menu"
+import { DialogState } from "state/menu/state/index.types"
+import { Online, online } from "state/online"
+import { ErrorCode } from "api/types"
+import { ROUTE } from "App/routes"
+import { isErrorResponse } from "api/error"
 
 interface CreateOnlineSession {
     navigate: NavigateFunction // react-router-dom navigation function

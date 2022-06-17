@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { Page } from "state/board/state/index.types"
 import { useGState, usePageLayer } from "state"
-import { draw, drawErased } from "View/Board/RenderNG/shapes"
+import { draw, drawErased } from "util/render/shapes"
 
 export const useRender = (
     page: Page,

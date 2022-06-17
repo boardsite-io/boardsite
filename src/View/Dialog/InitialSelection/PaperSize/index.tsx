@@ -4,7 +4,7 @@ import { useGState } from "state"
 import { PageSize } from "state/board/state/index.types"
 import { PAGE_SIZE } from "consts"
 import { drawing } from "state/drawing"
-import { SizeButton, Presets } from "../index.styled"
+import { PresetButton, Presets } from "../index.styled"
 
 enum Orientation {
     Portrait,
@@ -25,18 +25,18 @@ const PaperSize: React.FC = () => {
 
     return (
         <Presets>
-            <SizeButton
+            <PresetButton
                 onClick={() => drawing.setPageSize(PAGE_SIZE.A4_PORTRAIT)}
                 active={isPortrait}
             >
                 <FormattedMessage id="Dialog.InitialSelection.Input.Size.A4Portrait.Label" />
-            </SizeButton>
-            <SizeButton
+            </PresetButton>
+            <PresetButton
                 onClick={() => drawing.setPageSize(PAGE_SIZE.A4_LANDSCAPE)}
                 active={!isPortrait}
             >
                 <FormattedMessage id="Dialog.InitialSelection.Input.Size.A4Landscape.Label" />
-            </SizeButton>
+            </PresetButton>
         </Presets>
     )
 }

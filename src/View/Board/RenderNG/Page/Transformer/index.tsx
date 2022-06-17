@@ -1,7 +1,7 @@
 import React, { memo } from "react"
 import { useGState } from "state"
+import { useLayerConfig } from "hooks"
 import { PageProps } from "../index.types"
-import { useLayerConfig } from "../useLayerConfig"
 import {
     TrCanvas,
     TrCanvasHandle,

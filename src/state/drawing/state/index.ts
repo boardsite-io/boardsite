@@ -2,7 +2,7 @@ import { StrokeCollection, Tool, ToolType } from "drawing/stroke/index.types"
 import { Paper, PageSize } from "state/board/state/index.types"
 import { subscriptionState } from "state/subscription"
 import { isDrawType } from "util/drawing"
-import { GlobalState } from "../../types"
+import { GlobalState } from "state/types"
 import { DrawingState } from "./index.types"
 import { DrawingSerializer } from "../serializers"
 

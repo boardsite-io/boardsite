@@ -1,6 +1,6 @@
 import { StrokeCollection, Tool } from "drawing/stroke/index.types"
 import { PageMeta } from "state/board/state/index.types"
-import { SerializedVersionState } from "../../types"
+import { SerializedVersionState } from "state/types"
 
 export interface DrawingState {
     tool: Tool

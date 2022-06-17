@@ -3,8 +3,8 @@ import { TickIcon } from "components"
 import { FormattedMessage } from "language"
 import { settings } from "state/settings"
 import { useGState } from "state"
-import { SubMenuWrap } from "../../../index.styled"
-import MenuItem from "../../../MenuItem"
+import { SubMenuWrap } from "View/MainMenu/index.styled"
+import MenuItem from "View/MainMenu/MenuItem"
 
 const SettingsMenu = () => {
     const { keepCentered, directDraw } = useGState("Settings").settings

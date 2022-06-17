@@ -1,5 +1,5 @@
 import { Theme } from "theme"
-import { SerializedVersionState } from "../../types"
+import { SerializedVersionState } from "state/types"
 
 export interface SettingsState {
     theme: Theme

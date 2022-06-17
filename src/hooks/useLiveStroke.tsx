@@ -2,6 +2,7 @@ import { MouseEvent, TouchEvent, useCallback } from "react"
 import { Point, ToolType } from "drawing/stroke/index.types"
 import { BoardLiveStroke } from "drawing/livestroke"
 import { drawing } from "state/drawing"
+import { view } from "state/view"
 import { PageId } from "state/board/state/index.types"
 import { useGState } from "state"
 import {
@@ -10,8 +11,8 @@ import {
     getTouchPosition,
     isValidClick,
     isValidTouch,
-} from "./helpers"
-import { PageOffset } from "../index.types"
+} from "util/drawing"
+import { PageOffset } from "View/Board/RenderNG/Page/index.types"
 
 let isMouseOrTouchDown = false
 const liveStroke = new BoardLiveStroke()
@@ -74,7 +75,11 @@ export const useLiveStroke = (
             e.preventDefault()
 
             if (isValidClick(e)) {
-                const point = getMousePosition(e, pageOffset)
+                const point = getMousePosition({
+                    event: e,
+                    pageOffset,
+                    transform: view.getState().viewTransform,
+                })
                 startLiveStroke(point)
             }
         },
@@ -87,7 +92,11 @@ export const useLiveStroke = (
             e.preventDefault()
 
             if (isMouseOrTouchDown && isValidClick(e)) {
-                const point = getMousePosition(e, pageOffset)
+                const point = getMousePosition({
+                    event: e,
+                    pageOffset,
+                    transform: view.getState().viewTransform,
+                })
                 moveLiveStroke(point)
             } else {
                 resetLiveStroke()
@@ -102,7 +111,11 @@ export const useLiveStroke = (
             e.preventDefault()
 
             if (isMouseOrTouchDown) {
-                const point = getMousePosition(e, pageOffset)
+                const point = getMousePosition({
+                    event: e,
+                    pageOffset,
+                    transform: view.getState().viewTransform,
+                })
                 endLiveStroke(point)
             }
         },
@@ -118,7 +131,11 @@ export const useLiveStroke = (
 
     const onTouchStart = useCallback(
         (e: TouchEvent<HTMLCanvasElement>) => {
-            const point = getTouchPosition(e, pageOffset)
+            const point = getTouchPosition({
+                event: e,
+                pageOffset,
+                transform: view.getState().viewTransform,
+            })
             if (isValidTouch(e)) {
                 startLiveStroke(point)
             }
@@ -129,7 +146,11 @@ export const useLiveStroke = (
     const onTouchMove = useCallback(
         (e: TouchEvent<HTMLCanvasElement>) => {
             if (isMouseOrTouchDown && isValidTouch(e)) {
-                const point = getTouchPosition(e, pageOffset)
+                const point = getTouchPosition({
+                    event: e,
+                    pageOffset,
+                    transform: view.getState().viewTransform,
+                })
                 moveLiveStroke(point)
             } else {
                 resetLiveStroke()
@@ -141,7 +162,11 @@ export const useLiveStroke = (
     const onTouchEnd = useCallback(
         (e: TouchEvent<HTMLCanvasElement>) => {
             if (isMouseOrTouchDown) {
-                const point = getTouchPosition(e, pageOffset)
+                const point = getTouchPosition({
+                    event: e,
+                    pageOffset,
+                    transform: view.getState().viewTransform,
+                })
                 endLiveStroke(point)
             }
         },

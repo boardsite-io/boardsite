@@ -3,7 +3,7 @@ import React from "react"
 import { useGState } from "state"
 import { Paper } from "state/board/state/index.types"
 import { drawing } from "state/drawing"
-import { SizeButton, Presets } from "../index.styled"
+import { PresetButton, Presets } from "../index.styled"
 
 enum Orientation {
     Portrait,
@@ -20,24 +20,24 @@ const PaperBackground: React.FC = () => {
 
     return (
         <Presets>
-            <SizeButton
+            <PresetButton
                 onClick={() => drawing.setPageBackground(Paper.Blank)}
                 active={paper === Paper.Blank}
             >
                 <FormattedMessage id="Dialog.InitialSelection.Input.Background.Blank" />
-            </SizeButton>
-            <SizeButton
+            </PresetButton>
+            <PresetButton
                 onClick={() => drawing.setPageBackground(Paper.Checkered)}
                 active={paper === Paper.Checkered}
             >
                 <FormattedMessage id="Dialog.InitialSelection.Input.Background.Checkered" />
-            </SizeButton>
-            <SizeButton
+            </PresetButton>
+            <PresetButton
                 onClick={() => drawing.setPageBackground(Paper.Ruled)}
                 active={paper === Paper.Ruled}
             >
                 <FormattedMessage id="Dialog.InitialSelection.Input.Background.Ruled" />
-            </SizeButton>
+            </PresetButton>
         </Presets>
     )
 }

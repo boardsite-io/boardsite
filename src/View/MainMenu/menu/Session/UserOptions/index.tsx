@@ -3,8 +3,8 @@ import { online } from "state/online"
 import { notification } from "state/notification"
 import { useGState } from "state"
 import { FormattedMessage } from "language"
-import { SubMenuWrap } from "../../../index.styled"
-import MenuItem from "../../../MenuItem"
+import { SubMenuWrap } from "View/MainMenu/index.styled"
+import MenuItem from "View/MainMenu/MenuItem"
 
 type UserOptionsProps = {
     userId: string

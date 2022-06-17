@@ -1,5 +1,5 @@
-import { IntlMessageId } from "../../language"
-import { loading } from "../../state/loading"
+import { IntlMessageId } from "language"
+import { loading } from "state/loading"
 
 export const readFileAsUint8Array = async (file: File): Promise<Uint8Array> =>
     new Promise((resolve, reject) => {

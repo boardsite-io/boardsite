@@ -6,8 +6,8 @@ import { online } from "state/online"
 import { handleNewWorkspace } from "drawing/handlers"
 import { handleExportWorkspace, handleImportWorkspace } from "storage/workspace"
 import { handleExportPdf, handleImportPdf } from "storage/pdf"
-import { SubMenuWrap } from "../../../index.styled"
-import MenuItem from "../../../MenuItem"
+import { SubMenuWrap } from "View/MainMenu/index.styled"
+import MenuItem from "View/MainMenu/MenuItem"
 
 const onClickOpen = async () => {
     handleImportWorkspace()

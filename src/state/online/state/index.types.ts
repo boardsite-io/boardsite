@@ -1,4 +1,4 @@
-import { SerializedVersionState } from "../../types"
+import { SerializedVersionState } from "state/types"
 
 interface State {
     user: User

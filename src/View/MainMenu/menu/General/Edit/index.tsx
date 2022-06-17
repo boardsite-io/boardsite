@@ -3,8 +3,8 @@ import { FormattedMessage } from "language"
 import { useGState } from "state"
 import { RedoIcon, UndoIcon } from "components"
 import { handleRedo, handleUndo } from "drawing/handlers"
-import { SubMenuWrap } from "../../../index.styled"
-import MenuItem from "../../../MenuItem"
+import { SubMenuWrap } from "View/MainMenu/index.styled"
+import MenuItem from "View/MainMenu/MenuItem"
 
 const EditMenu = () => {
     const { undoStack, redoStack } = useGState("EditMenu").board
