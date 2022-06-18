@@ -1,5 +1,10 @@
 import { Vector, Polygon, Box, testPolygonPolygon } from "sat"
-import { Scale, StrokeCollection } from "../../drawing/stroke/index.types"
+import {
+    Scale,
+    Stroke,
+    StrokeCollection,
+    ToolType,
+} from "drawing/stroke/index.types"
 
 export function getHitboxPolygon(
     [x1, y1, x2, y2]: number[],
@@ -72,4 +77,98 @@ export function matchStrokeCollision(
         }
     })
     return result
+}
+
+/**
+ * Get the hitboxes array of a stroke
+ */
+export const getStrokeHitbox = ({
+    type,
+    x,
+    y,
+    style,
+    scaleX,
+    scaleY,
+    points,
+}: Stroke): Polygon[] => {
+    const hitboxes: Polygon[] = []
+
+    switch (type) {
+        case ToolType.Line:
+        case ToolType.Highlighter:
+        case ToolType.Pen: {
+            // get hitboxes of all segments of the current stroke
+            for (let i = 0; i < points.length - 2; i += 2) {
+                const section = points.slice(i, i + 4)
+                for (let j = 0; j < 4; j += 2) {
+                    // compensate for the scale and offset
+                    section[j] = (section[j] + x) * scaleX
+                    section[j + 1] = (section[j + 1] + y) * scaleY
+                }
+                hitboxes.push(
+                    getHitboxPolygon(section, style.width, {
+                        x: scaleX,
+                        y: scaleY,
+                    })
+                )
+            }
+            return hitboxes
+        }
+        case ToolType.Rectangle: {
+            let [x1, y1, x2, y2] = points
+            x1 = (x1 + x) * scaleX
+            y1 = (y1 + y) * scaleY
+            x2 = (x2 + x) * scaleX
+            y2 = (y2 + y) * scaleY
+
+            hitboxes.push(
+                getHitboxPolygon([x1, y1, x1, y2], style.width, {
+                    x: scaleX,
+                    y: scaleY,
+                }),
+                getHitboxPolygon([x1, y2, x2, y2], style.width, {
+                    x: scaleX,
+                    y: scaleY,
+                }),
+                getHitboxPolygon([x2, y2, x2, y1], style.width, {
+                    x: scaleX,
+                    y: scaleY,
+                }),
+                getHitboxPolygon([x2, y1, x1, y1], style.width, {
+                    x: scaleX,
+                    y: scaleY,
+                })
+            )
+            return hitboxes
+        }
+        case ToolType.Circle: {
+            let [x1, y1, x2, y2] = points
+            x1 = (x1 + x) * scaleX
+            y1 = (y1 + y) * scaleY
+            x2 = (x2 + x) * scaleX
+            y2 = (y2 + y) * scaleY
+
+            hitboxes.push(
+                getHitboxPolygon([x1, y1, x1, y2], style.width, {
+                    x: scaleX,
+                    y: scaleY,
+                }),
+                getHitboxPolygon([x1, y2, x2, y2], style.width, {
+                    x: scaleX,
+                    y: scaleY,
+                }),
+                getHitboxPolygon([x2, y2, x2, y1], style.width, {
+                    x: scaleX,
+                    y: scaleY,
+                }),
+                getHitboxPolygon([x2, y1, x1, y1], style.width, {
+                    x: scaleX,
+                    y: scaleY,
+                })
+            )
+            return hitboxes
+        }
+        default:
+            return hitboxes
+    }
 }
