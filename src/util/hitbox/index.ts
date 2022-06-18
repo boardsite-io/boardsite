@@ -79,6 +79,60 @@ export function matchStrokeCollision(
     return result
 }
 
+interface GetEllipseOutlineProps {
+    x: number //  ellipse center (x-axis)
+    y: number //  ellipse center (y-axis)
+    rx: number // ellipse radius (x-axis)
+    ry: number //  ellipse radius (y-axis)
+    // specify how many segments to divide each ellipse quarter into
+    // => 4 segmentsPerQuarter = 16 segments total
+    segmentsPerQuarter: number
+}
+
+export const getEllipseOutline = ({
+    x,
+    y,
+    rx,
+    ry,
+    segmentsPerQuarter,
+}: GetEllipseOutlineProps) => {
+    const outlinePoints = new Array(segmentsPerQuarter * 4)
+
+    // Set top, bottom, left, right points
+    outlinePoints[0] = { x: x + rx, y }
+    outlinePoints[segmentsPerQuarter] = { x, y: y + ry }
+    outlinePoints[2 * segmentsPerQuarter] = { x: x - rx, y }
+    outlinePoints[3 * segmentsPerQuarter] = { x, y: y - ry }
+
+    for (let i = 1; i < segmentsPerQuarter; i++) {
+        const angleRadian = (i * Math.PI) / (segmentsPerQuarter * 2)
+
+        const xOff =
+            (rx * ry) /
+            Math.sqrt(ry ** 2 + rx ** 2 * Math.tan(angleRadian) ** 2)
+        const yOff = Math.tan(angleRadian) * xOff
+
+        outlinePoints[i] = {
+            x: x + xOff,
+            y: y + yOff,
+        }
+        outlinePoints[2 * segmentsPerQuarter - i] = {
+            x: x - xOff,
+            y: y + yOff,
+        }
+        outlinePoints[2 * segmentsPerQuarter + i] = {
+            x: x - xOff,
+            y: y - yOff,
+        }
+        outlinePoints[4 * segmentsPerQuarter - i] = {
+            x: x + xOff,
+            y: y - yOff,
+        }
+    }
+
+    return outlinePoints
+}
+
 /**
  * Get the hitboxes array of a stroke
  */
