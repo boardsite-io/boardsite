@@ -10,12 +10,12 @@ import { drawing } from "state/drawing"
 import { view } from "state/view"
 import { board } from "state/board"
 import { Page } from "state/board/state/index.types"
-import { perfectDrawing, simplifyRDP } from "../stroke/simplify"
 import {
     getHitboxPolygon,
     getSelectionPolygon,
     matchStrokeCollision,
-} from "../stroke/hitbox"
+} from "util/hitbox"
+import { perfectDrawing, simplifyRDP } from "../stroke/simplify"
 import { BoardStroke } from "../stroke"
 import {
     Point,
