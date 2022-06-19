@@ -202,24 +202,30 @@ export const getStrokeHitbox = ({
             x2 = (x2 + x) * scaleX
             y2 = (y2 + y) * scaleY
 
-            hitboxes.push(
-                getHitboxPolygon([x1, y1, x1, y2], style.width, {
-                    x: scaleX,
-                    y: scaleY,
-                }),
-                getHitboxPolygon([x1, y2, x2, y2], style.width, {
-                    x: scaleX,
-                    y: scaleY,
-                }),
-                getHitboxPolygon([x2, y2, x2, y1], style.width, {
-                    x: scaleX,
-                    y: scaleY,
-                }),
-                getHitboxPolygon([x2, y1, x1, y1], style.width, {
-                    x: scaleX,
-                    y: scaleY,
-                })
-            )
+            // Radius vector
+            const rxv = (x2 - x1) / 2
+            const ryv = (y2 - y1) / 2
+
+            const outlinePoints = getEllipseOutline({
+                x: x1 + rxv,
+                y: y1 + ryv,
+                rx: Math.abs(rxv),
+                ry: Math.abs(ryv),
+                segmentsPerQuarter: 8,
+            })
+
+            for (let i = 0; i < outlinePoints.length; i++) {
+                const p1 = outlinePoints[i]
+                const p2 = outlinePoints[i + 1] ?? outlinePoints[0]
+
+                hitboxes.push(
+                    getHitboxPolygon([p1.x, p1.y, p2.x, p2.y], style.width, {
+                        x: scaleX,
+                        y: scaleY,
+                    })
+                )
+            }
+
             return hitboxes
         }
         default:
