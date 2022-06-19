@@ -14,6 +14,7 @@ export const draw = (
     ctx.fillStyle = strokeStyleToRGBA(stroke.style)
     ctx.strokeStyle = strokeStyleToRGBA(stroke.style)
     drawStroke(ctx, stroke)
+    // drawHitboxRects(ctx, stroke) // debug hitboxes
 }
 
 export const drawErased = (
@@ -109,7 +110,7 @@ const drawShape = {
 
 export const drawHitboxRects = (
     ctx: CanvasRenderingContext2D,
-    stroke: Stroke
+    stroke: Stroke | LiveStroke
 ) => {
     ctx.lineCap = "round"
     ctx.lineJoin = "round"
