@@ -165,7 +165,11 @@ export class BoardLiveStroke implements LiveStroke {
                 .concat(p.slice(p.length - 2))
 
             this.numUpdates = 0
-            const selectionPolygon = getHitboxPolygon(line, ERASER_WIDTH)
+            const selectionPolygon = getHitboxPolygon(line, {
+                style: { width: ERASER_WIDTH } as Stroke["style"],
+                scaleX: 1,
+                scaleY: 1,
+            })
 
             return matchStrokeCollision(strokes, selectionPolygon)
         }

@@ -1,15 +1,9 @@
 import { Vector, Polygon, Box, testPolygonPolygon } from "sat"
-import {
-    Scale,
-    Stroke,
-    StrokeCollection,
-    ToolType,
-} from "drawing/stroke/index.types"
+import { Stroke, StrokeCollection, ToolType } from "drawing/stroke/index.types"
 
 export function getHitboxPolygon(
     [x1, y1, x2, y2]: number[],
-    width: number,
-    scale?: Scale
+    stroke: Pick<Stroke, "style" | "scaleX" | "scaleY">
 ): Polygon {
     const dx = x2 - x1
     const dy = y2 - y1
@@ -17,19 +11,19 @@ export function getHitboxPolygon(
     let dyw
     if (!dy) {
         dxw = 0
-        dyw = width / 2
+        dyw = stroke.style.width / 2
     } else if (!dx) {
-        dxw = width / 2
+        dxw = stroke.style.width / 2
         dyw = 0
     } else {
         const ratio = dx / dy
-        dxw = Math.sqrt((width / 2) ** 2 / (1 + ratio ** 2))
+        dxw = Math.sqrt((stroke.style.width / 2) ** 2 / (1 + ratio ** 2))
         dyw = dxw * ratio
     }
 
     // compensate the effect of the scale on the width
-    dxw *= scale?.x || 1
-    dyw *= scale?.y || 1
+    dxw *= stroke.scaleX
+    dyw *= stroke.scaleY
 
     // calc vertices
     return new Polygon(new Vector(), [
@@ -133,74 +127,48 @@ export const getEllipseOutline = ({
     return outlinePoints
 }
 
+export const getTransformedPoints = (stroke: Stroke): Stroke["points"] =>
+    stroke.points.map((value, index) =>
+        index % 2 === 0
+            ? (value + stroke.x) * stroke.scaleX
+            : (value + stroke.y) * stroke.scaleY
+    )
+
 /**
  * Get the hitboxes array of a stroke
  */
-export const getStrokeHitbox = ({
-    type,
-    x,
-    y,
-    style,
-    scaleX,
-    scaleY,
-    points,
-}: Stroke): Polygon[] => {
+export const getStrokeHitbox = (stroke: Stroke): Polygon[] => {
     const hitboxes: Polygon[] = []
 
-    switch (type) {
+    switch (stroke.type) {
         case ToolType.Line:
         case ToolType.Highlighter:
         case ToolType.Pen: {
             // get hitboxes of all segments of the current stroke
-            for (let i = 0; i < points.length - 2; i += 2) {
-                const section = points.slice(i, i + 4)
+            for (let i = 0; i < stroke.points.length - 2; i += 2) {
+                const section = stroke.points.slice(i, i + 4)
                 for (let j = 0; j < 4; j += 2) {
                     // compensate for the scale and offset
-                    section[j] = (section[j] + x) * scaleX
-                    section[j + 1] = (section[j + 1] + y) * scaleY
+                    section[j] = (section[j] + stroke.x) * stroke.scaleX
+                    section[j + 1] = (section[j + 1] + stroke.y) * stroke.scaleY
                 }
-                hitboxes.push(
-                    getHitboxPolygon(section, style.width, {
-                        x: scaleX,
-                        y: scaleY,
-                    })
-                )
+                hitboxes.push(getHitboxPolygon(section, stroke))
             }
             return hitboxes
         }
         case ToolType.Rectangle: {
-            let [x1, y1, x2, y2] = points
-            x1 = (x1 + x) * scaleX
-            y1 = (y1 + y) * scaleY
-            x2 = (x2 + x) * scaleX
-            y2 = (y2 + y) * scaleY
+            const [x1, y1, x2, y2] = getTransformedPoints(stroke)
 
             hitboxes.push(
-                getHitboxPolygon([x1, y1, x1, y2], style.width, {
-                    x: scaleX,
-                    y: scaleY,
-                }),
-                getHitboxPolygon([x1, y2, x2, y2], style.width, {
-                    x: scaleX,
-                    y: scaleY,
-                }),
-                getHitboxPolygon([x2, y2, x2, y1], style.width, {
-                    x: scaleX,
-                    y: scaleY,
-                }),
-                getHitboxPolygon([x2, y1, x1, y1], style.width, {
-                    x: scaleX,
-                    y: scaleY,
-                })
+                getHitboxPolygon([x1, y1, x1, y2], stroke),
+                getHitboxPolygon([x1, y2, x2, y2], stroke),
+                getHitboxPolygon([x2, y2, x2, y1], stroke),
+                getHitboxPolygon([x2, y1, x1, y1], stroke)
             )
             return hitboxes
         }
         case ToolType.Circle: {
-            let [x1, y1, x2, y2] = points
-            x1 = (x1 + x) * scaleX
-            y1 = (y1 + y) * scaleY
-            x2 = (x2 + x) * scaleX
-            y2 = (y2 + y) * scaleY
+            const [x1, y1, x2, y2] = getTransformedPoints(stroke)
 
             // Radius vector
             const rxv = (x2 - x1) / 2
@@ -219,10 +187,7 @@ export const getStrokeHitbox = ({
                 const p2 = outlinePoints[i + 1] ?? outlinePoints[0]
 
                 hitboxes.push(
-                    getHitboxPolygon([p1.x, p1.y, p2.x, p2.y], style.width, {
-                        x: scaleX,
-                        y: scaleY,
-                    })
+                    getHitboxPolygon([p1.x, p1.y, p2.x, p2.y], stroke)
                 )
             }
 

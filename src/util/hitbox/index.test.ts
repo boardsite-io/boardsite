@@ -1,4 +1,5 @@
-import { getEllipseOutline } from "."
+import { Stroke } from "drawing/stroke/index.types"
+import { getEllipseOutline, getTransformedPoints } from "."
 
 describe("getEllipseOutline", () => {
     it("returns the correct outline points for a circle", () => {
@@ -18,5 +19,22 @@ describe("getEllipseOutline", () => {
             { x: e.x, y: e.y - e.ry },
             { x: e.x + offset, y: e.y - offset },
         ])
+    })
+})
+
+describe("getTransformedPoints", () => {
+    it("applies the transform correctly", () => {
+        const stroke = {
+            x: -5,
+            y: 10,
+            scaleX: 1,
+            scaleY: 0.5,
+            points: [0, 0, -5, -5, 10, 10],
+        }
+
+        const transformedPoints = getTransformedPoints(stroke as Stroke)
+
+        expect(transformedPoints.length).toEqual(stroke.points.length)
+        expect(transformedPoints).toEqual([-5, 5, -10, 2.5, 5, 10])
     })
 })
