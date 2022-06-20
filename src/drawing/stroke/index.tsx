@@ -1,7 +1,7 @@
 import { LiveStroke } from "drawing/livestroke/index.types"
 import { assign, pick } from "lodash"
 import { Polygon } from "sat"
-import { getStrokeHitbox } from "util/hitbox"
+import { getStrokeHitbox } from "drawing/hitbox"
 import {
     Point,
     Scale,

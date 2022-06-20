@@ -14,7 +14,7 @@ import {
     getHitboxPolygon,
     getSelectionPolygon,
     matchStrokeCollision,
-} from "util/hitbox"
+} from "drawing/hitbox"
 import { perfectDrawing, simplifyRDP } from "../stroke/simplify"
 import { BoardStroke } from "../stroke"
 import {
