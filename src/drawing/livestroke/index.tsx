@@ -10,12 +10,12 @@ import { drawing } from "state/drawing"
 import { view } from "state/view"
 import { board } from "state/board"
 import { Page } from "state/board/state/index.types"
-import { perfectDrawing, simplifyRDP } from "../stroke/simplify"
 import {
     getHitboxPolygon,
     getSelectionPolygon,
     matchStrokeCollision,
-} from "../stroke/hitbox"
+} from "drawing/hitbox"
+import { perfectDrawing, simplifyRDP } from "../stroke/simplify"
 import { BoardStroke } from "../stroke"
 import {
     Point,
@@ -165,7 +165,11 @@ export class BoardLiveStroke implements LiveStroke {
                 .concat(p.slice(p.length - 2))
 
             this.numUpdates = 0
-            const selectionPolygon = getHitboxPolygon(line, ERASER_WIDTH)
+            const selectionPolygon = getHitboxPolygon(line, {
+                style: { width: ERASER_WIDTH } as Stroke["style"],
+                scaleX: 1,
+                scaleY: 1,
+            })
 
             return matchStrokeCollision(strokes, selectionPolygon)
         }
