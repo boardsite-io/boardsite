@@ -38,8 +38,8 @@ export class BoardStroke implements Stroke {
         this.pageId = stroke.pageId
         this.x = stroke.x
         this.y = stroke.y
-        this.scaleX = stroke.scaleX ?? 1
-        this.scaleY = stroke.scaleY ?? 1
+        this.scaleX = stroke.scaleX
+        this.scaleY = stroke.scaleY
         this.type = stroke.type
         this.style = { ...stroke.style }
         this.points = [...stroke.points]

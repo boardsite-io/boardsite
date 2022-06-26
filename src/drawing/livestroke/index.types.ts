@@ -1,19 +1,19 @@
 import {
     BaseStroke,
     Point,
-    Stroke,
     StrokeCollection,
     Tool,
 } from "drawing/stroke/index.types"
 
 export interface LiveStroke extends BaseStroke {
-    setTool(tool: Tool): LiveStroke
-    start({ x, y }: Point, pageId: string): void
+    start(point: Point, pageId: string): void
     move(point: Point, pagePosition: Point): void
+    end(point: Point): void
+    setTool(tool: Tool): void
     addPoint(point: Point): void
-    finalize(pagePosition: Point): Stroke
-    processPoints(pagePosition: Point): void
+    processPoints(): void
     reset(): void
+    moveEraser(): void
     isReset(): boolean
     selectLineCollision(
         strokes: StrokeCollection,

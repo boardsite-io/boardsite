@@ -5,18 +5,11 @@ import {
     DEFAULT_WIDTH,
     ERASER_WIDTH,
 } from "consts"
-import { handleAddStrokes, handleDeleteStrokes } from "drawing/handlers"
 import { drawing } from "state/drawing"
 import { view } from "state/view"
 import { board } from "state/board"
-import { Page } from "state/board/state/index.types"
-import {
-    getHitboxPolygon,
-    getSelectionPolygon,
-    matchStrokeCollision,
-} from "drawing/hitbox"
+import { getHitboxPolygon, matchStrokeCollision } from "drawing/hitbox"
 import { perfectDrawing, simplifyRDP } from "../stroke/simplify"
-import { BoardStroke } from "../stroke"
 import {
     Point,
     Stroke,
@@ -25,47 +18,27 @@ import {
     ToolType,
 } from "../stroke/index.types"
 import { LiveStroke } from "./index.types"
+import { registerStroke } from "./register"
 
 export class BoardLiveStroke implements LiveStroke {
-    type: ToolType
-    style: {
-        color: string
-        width: number
-        opacity: number
+    pageId = ""
+    x = 0
+    y = 0
+    scaleX = 1
+    scaleY = 1
+    type = DEFAULT_TOOL
+    style = {
+        color: DEFAULT_COLOR,
+        width: DEFAULT_WIDTH,
+        opacity: 1,
     }
+    points: number[] = []
 
-    pageId: string
-
-    x: number
-    y: number
-
-    points: number[]
-
-    constructor(tool?: Tool) {
-        this.pageId = ""
-        this.x = 0
-        this.y = 0
-        this.type = tool?.type ?? DEFAULT_TOOL
-        this.style = tool?.style ?? {
-            color: DEFAULT_COLOR,
-            width: DEFAULT_WIDTH,
-            opacity: 1,
-        }
-        this.points = [] as number[]
-    }
-
-    setTool(tool: Tool): BoardLiveStroke {
-        this.type = tool.type
-        this.style = tool.style
-        return this
-    }
-
-    start(point: Point, pageId: string): BoardLiveStroke {
+    start(point: Point, pageId: string) {
         this.reset()
+        this.setTool(drawing.getState().tool)
         this.pageId = pageId
         this.points = [point.x, point.y]
-
-        return this
     }
 
     move(point: Point): void {
@@ -73,6 +46,27 @@ export class BoardLiveStroke implements LiveStroke {
         if (this.type === ToolType.Eraser) {
             this.moveEraser()
         }
+    }
+
+    end(point: Point) {
+        this.move(point)
+        this.processPoints()
+        registerStroke(this)
+        this.reset()
+    }
+
+    reset(): void {
+        this.pageId = ""
+        this.x = 0
+        this.y = 0
+        this.scaleX = 1
+        this.scaleY = 1
+        this.points = []
+    }
+
+    setTool(tool: Tool) {
+        this.type = tool.type
+        this.style = tool.style
     }
 
     moveEraser(): void {
@@ -104,16 +98,6 @@ export class BoardLiveStroke implements LiveStroke {
         }
     }
 
-    /**
-     * Convert livestroke into the normal stroke format
-     */
-    finalize(): Stroke {
-        this.processPoints()
-        const stroke = new BoardStroke(this)
-        this.reset()
-        return stroke
-    }
-
     processPoints(): void {
         const { scale } = view.getState().viewTransform
 
@@ -133,18 +117,6 @@ export class BoardLiveStroke implements LiveStroke {
             default:
                 break
         }
-    }
-
-    /**
-     * Reset after completion
-     * x, y, scaleX, scaleY : constants so no need to reset
-     * Tool should persist so don't reset either
-     */
-    reset(): void {
-        this.pageId = ""
-        this.x = 0
-        this.y = 0
-        this.points = []
     }
 
     isReset(): boolean {
@@ -174,38 +146,5 @@ export class BoardLiveStroke implements LiveStroke {
             return matchStrokeCollision(strokes, selectionPolygon)
         }
         return res
-    }
-
-    static async register(stroke: Stroke): Promise<void> {
-        switch (stroke.type) {
-            case ToolType.Eraser: {
-                const { erasedStrokes } = drawing.getState()
-                const strokes = Object.keys(erasedStrokes).map(
-                    (id) => erasedStrokes[id]
-                )
-                if (strokes.length > 0) {
-                    handleDeleteStrokes(strokes)
-                }
-                drawing.clearErasedStrokes()
-                break
-            }
-            case ToolType.Select: {
-                const { strokes } = board.getState().pageCollection[
-                    stroke.pageId
-                ] as Page
-                const selectedStrokes = matchStrokeCollision(
-                    strokes,
-                    getSelectionPolygon(stroke.points)
-                )
-                board.setTransformStrokes(
-                    Object.values(selectedStrokes),
-                    stroke.pageId
-                )
-                break
-            }
-            default: {
-                handleAddStrokes([stroke], false)
-            }
-        }
     }
 }
