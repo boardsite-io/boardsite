@@ -66,8 +66,8 @@ export class ShapeTransformer {
             const newTr: TransformState = {
                 x: stroke.x + pageTr.x / stroke.scaleX,
                 y: stroke.y + pageTr.y / stroke.scaleY,
-                scaleX: (stroke.scaleX ?? 1) * tr.scaleX,
-                scaleY: (stroke.scaleY ?? 1) * tr.scaleY,
+                scaleX: stroke.scaleX * tr.scaleX,
+                scaleY: stroke.scaleY * tr.scaleY,
             }
 
             stroke.update(newTr)

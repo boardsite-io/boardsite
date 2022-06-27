@@ -1,7 +1,6 @@
 import { MouseEvent, TouchEvent, useCallback } from "react"
 import { Point, ToolType } from "drawing/stroke/index.types"
 import { BoardLiveStroke } from "drawing/livestroke"
-import { drawing } from "state/drawing"
 import { view } from "state/view"
 import { PageId } from "state/board/state/index.types"
 import { useGState } from "state"
@@ -28,9 +27,7 @@ export const useLiveStroke = (
     const startLiveStroke = useCallback(
         (point: Point) => {
             isMouseOrTouchDown = true
-
-            liveStroke.setTool(drawing.getState().tool).start(point, pageId)
-
+            liveStroke.start(point, pageId)
             drawLiveStroke(liveStroke, canvasRef)
         },
         [canvasRef, pageId]
@@ -46,13 +43,8 @@ export const useLiveStroke = (
 
     const endLiveStroke = useCallback(
         (point: Point) => {
-            liveStroke.move(point)
-
-            // register finished stroke
-            const stroke = liveStroke.finalize()
-            BoardLiveStroke.register(stroke)
+            liveStroke.end(point)
             drawLiveStroke(liveStroke, canvasRef)
-
             isMouseOrTouchDown = false
         },
         [canvasRef]

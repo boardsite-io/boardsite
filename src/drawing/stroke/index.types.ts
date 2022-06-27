@@ -47,8 +47,8 @@ export interface BaseStroke extends Tool {
     pageId: string
     x: number
     y: number
-    scaleX?: number
-    scaleY?: number
+    scaleX: number
+    scaleY: number
     points: number[]
     hitboxes?: Polygon[]
 }
