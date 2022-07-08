@@ -28,6 +28,7 @@ export enum ToolType {
     Select = 5,
     Pan = 6,
     Highlighter = 7,
+    Textfield = 8,
 }
 
 export type ToolStyle = {
@@ -42,6 +43,20 @@ export interface Tool {
     style: ToolStyle
 }
 
+export type HAlign = "center" | "left" | "right"
+export type vAlign = "middle" | "top" | "bottom"
+
+export interface Textfield {
+    text: string
+    color: string
+    hAlign: HAlign
+    vAlign: vAlign
+    font: string
+    fontWeight: number
+    fontSize: number
+    lineHeight: number
+}
+
 export interface BaseStroke extends Tool {
     id?: string
     pageId: string
@@ -51,6 +66,7 @@ export interface BaseStroke extends Tool {
     scaleY: number
     points: number[]
     hitboxes?: Polygon[]
+    textfield?: Textfield
 }
 
 export interface StrokeUpdate {

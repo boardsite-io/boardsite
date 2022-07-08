@@ -7,6 +7,7 @@ export const getDefaultBoardState = (): BoardState => ({
     undoStack: [],
     redoStack: [],
     strokeUpdates: [],
+    activeTextfield: undefined,
     transformStrokes: undefined,
     transformPagePosition: undefined,
 })

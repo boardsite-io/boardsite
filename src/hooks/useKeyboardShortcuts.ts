@@ -13,6 +13,7 @@ import { drawing } from "state/drawing"
 import { handleExportWorkspace, handleImportWorkspace } from "storage/workspace"
 import { menu } from "state/menu"
 import { view } from "state/view"
+import { board } from "state/board"
 
 export const useKeyboardShortcuts = (): void => {
     useEffect(() => {
@@ -24,9 +25,11 @@ export const useKeyboardShortcuts = (): void => {
 }
 
 const keyListener = (e: KeyboardEvent): void => {
-    // Avoid triggering shortcuts while in menus
-    // Avoid repeat spam
-    if (menu.isAnyMenuOpen() || e.repeat) {
+    // Don't trigger shortcuts while:
+    // - in textfield
+    // - in menus
+    // - repeat spam
+    if (board.getState().activeTextfield || menu.isAnyMenuOpen() || e.repeat) {
         return
     }
 

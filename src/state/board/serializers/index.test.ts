@@ -18,6 +18,7 @@ describe("board reducer state", () => {
         delete want.strokeUpdates
         delete want.transformPagePosition
         delete want.transformStrokes
+        delete want.activeTextfield
 
         expect(got).toStrictEqual(want)
     })

@@ -22,6 +22,8 @@ import {
     SetPageMetaAction,
     PageId,
     PageSize,
+    ActiveTextfield,
+    TransformStrokes,
 } from "./index.types"
 import { addAction, redoAction, undoAction } from "../undoRedo"
 import { BoardSerializer } from "../serializers"
@@ -137,10 +139,34 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
      * @param strokes shapes to be added to the shape transformer
      * @param pageId page on which the transformer is active
      */
-    setTransformStrokes(strokes: Stroke[], pageId: PageId): void {
+    setTransformStrokes(strokes: TransformStrokes, pageId: PageId): void {
         this.clearTransform()
         this.state.transformStrokes = strokes
         subscriptionState.pageSubscribers[pageId]?.transformer?.({})
+    }
+
+    setActiveTextfield(activeTextfield: ActiveTextfield): void {
+        this.state.activeTextfield = activeTextfield
+
+        if (!activeTextfield.textfield) {
+            this.state.activeTextfield.textfield = {
+                text: "",
+                color: "#000000",
+                hAlign: "left",
+                vAlign: "top",
+                font: "Lato, sans-serif",
+                fontWeight: 400,
+                fontSize: 16,
+                lineHeight: 20,
+            }
+        }
+
+        subscriptionState.render("Textfield")
+    }
+
+    clearActiveTextfield(): void {
+        delete this.state.activeTextfield
+        subscriptionState.render("Textfield")
     }
 
     /**

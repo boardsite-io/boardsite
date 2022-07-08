@@ -8,6 +8,7 @@ import {
     SerializedStroke,
     Stroke,
     StrokeUpdate,
+    Textfield,
     ToolType,
 } from "./index.types"
 
@@ -29,6 +30,7 @@ export class BoardStroke implements Stroke {
 
     points: number[]
     hitboxes: Polygon[] = []
+    textfield?: Textfield | undefined
 
     /**
      * Create a new stroke from another Stroke instance
@@ -43,6 +45,7 @@ export class BoardStroke implements Stroke {
         this.type = stroke.type
         this.style = { ...stroke.style }
         this.points = [...stroke.points]
+        this.textfield = stroke.textfield
 
         // Check if hitboxes need to be calculated
         if (stroke.hitboxes?.length) {
@@ -66,6 +69,7 @@ export class BoardStroke implements Stroke {
             "scaleY",
             "points",
             "style",
+            "textfield",
         ])
     }
 
@@ -91,7 +95,10 @@ export class BoardStroke implements Stroke {
      * Update stroke such as position and/or scale.
      */
     update(strokeUpdate: Stroke | StrokeUpdate): Stroke {
-        assign(this, pick(strokeUpdate, ["x", "y", "scaleX", "scaleY"]))
+        assign(
+            this,
+            pick(strokeUpdate, ["x", "y", "scaleX", "scaleY", "textfield"])
+        )
         this.calculateHitbox() // recalculate hitbox
         return this
     }

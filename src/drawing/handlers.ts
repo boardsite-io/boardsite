@@ -24,6 +24,16 @@ import { BoardPage } from "./page"
 export function handleSetTool(tool: Partial<Tool>): void {
     drawing.setTool(tool)
     board.clearTransform()
+    handleClearActiveTextfield()
+}
+
+export const handleClearActiveTextfield = () => {
+    const { activeTextfield } = board.getState()
+    if (activeTextfield?.textfield?.text) {
+        // Add back stroke which is being edited before clearing
+        handleAddStrokes([cloneDeep(activeTextfield)], false)
+    }
+    board.clearActiveTextfield()
 }
 
 export function handleAddPageOver(): void {

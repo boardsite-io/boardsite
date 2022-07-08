@@ -1,5 +1,69 @@
-import { Vector, Polygon, Box, testPolygonPolygon } from "sat"
-import { Stroke, StrokeCollection, ToolType } from "drawing/stroke/index.types"
+import { Vector, Polygon, Box, testPolygonPolygon, pointInPolygon } from "sat"
+import {
+    Point,
+    Stroke,
+    StrokeCollection,
+    ToolType,
+} from "drawing/stroke/index.types"
+
+/**
+ * Test the selection polygon against all strokes with multiple hitboxe
+ * segments and return a set of all collided stroke IDs.
+ */
+export function matchStrokeCollision(
+    strokes: StrokeCollection,
+    selectionPolygon: Polygon,
+    filterType?: ToolType
+): StrokeCollection {
+    const result: StrokeCollection = {}
+    Object.values(strokes).forEach((stroke) => {
+        if (!filterType || stroke.type === filterType) {
+            // test each hitbox segment
+            for (let i = 0; i < (stroke.hitboxes ?? []).length; i += 1) {
+                if (
+                    testPolygonPolygon(
+                        (stroke.hitboxes ?? [])[i],
+                        selectionPolygon
+                    )
+                ) {
+                    result[stroke.id] = stroke
+                    break
+                }
+            }
+        }
+    })
+    return result
+}
+
+type GetStrokesInPointProps = {
+    strokes: StrokeCollection
+    point: Point
+    filterType?: ToolType
+}
+
+export const getStrokesInPoint = ({
+    strokes,
+    point,
+    filterType,
+}: GetStrokesInPointProps): Stroke[] => {
+    const pointVector = getPointVector(point)
+    const matchingStrokes: Stroke[] = []
+
+    Object.values(strokes).forEach((stroke) => {
+        const passesFilter = !filterType || stroke.type === filterType
+        const { hitboxes } = stroke
+
+        if (passesFilter && hitboxes?.length) {
+            for (let i = 0; i < hitboxes.length; i += 1) {
+                if (pointInPolygon(pointVector, hitboxes[i])) {
+                    matchingStrokes.push(stroke)
+                    break
+                }
+            }
+        }
+    })
+    return matchingStrokes
+}
 
 export function getHitboxPolygon(
     [x1, y1, x2, y2]: number[],
@@ -34,10 +98,12 @@ export function getHitboxPolygon(
     ])
 }
 
+export const getPointVector = (point: Point) => new Vector(point.x, point.y)
+
 /**
  * Creates a simple reactangular polygon
  */
-export function getSelectionPolygon([x1, y1, x2, y2]: number[]): Polygon {
+export function getRectanglePolygon([x1, y1, x2, y2]: number[]): Polygon {
     const box = new Box(
         // set the left upper point as reference
         new Vector(Math.min(x1, x2), Math.min(y1, y2)),
@@ -45,35 +111,6 @@ export function getSelectionPolygon([x1, y1, x2, y2]: number[]): Polygon {
         Math.abs(y1 - y2)
     )
     return box.toPolygon()
-}
-
-/**
- * Test the selection polygon against all strokes with multiple hitboxe
- * segments and return a set of all collided stroke IDs.
- */
-export function matchStrokeCollision(
-    strokes: StrokeCollection,
-    selectionPolygon: Polygon,
-    filterType?: ToolType
-): StrokeCollection {
-    const result: StrokeCollection = {}
-    Object.values(strokes).forEach((stroke) => {
-        if (!filterType || stroke.type === filterType) {
-            // test each hitbox segment
-            for (let i = 0; i < (stroke.hitboxes ?? []).length; i += 1) {
-                if (
-                    testPolygonPolygon(
-                        (stroke.hitboxes ?? [])[i],
-                        selectionPolygon
-                    )
-                ) {
-                    result[stroke.id] = stroke
-                    break
-                }
-            }
-        }
-    })
-    return result
 }
 
 interface GetEllipseOutlineProps {
@@ -194,6 +231,12 @@ export const getStrokeHitbox = (stroke: Stroke): Polygon[] => {
                 )
             }
 
+            return hitboxes
+        }
+        case ToolType.Textfield: {
+            const points = getTransformedPoints(stroke)
+            const hitbox = getRectanglePolygon(points)
+            hitboxes.push(hitbox)
             return hitboxes
         }
         default:

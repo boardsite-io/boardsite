@@ -37,6 +37,7 @@ export class SubscriptionState {
         ShortcutsOpen: [],
         SubscribeOpen: [],
         ViewTransform: [],
+        Textfield: [],
     }
 
     subscribe(subscription: Subscription, trigger: RenderTrigger) {

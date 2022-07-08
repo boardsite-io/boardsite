@@ -1,6 +1,7 @@
 import { subscriptionState } from "state/subscription"
-import { Theme } from "theme"
+import { Theme, themes } from "theme"
 import { GlobalState } from "state/types"
+import { DefaultTheme } from "styled-components"
 import { SettingsSerializer } from "../serializers"
 import { SettingsState } from "./index.types"
 
@@ -29,8 +30,8 @@ export class SettingsClass
      * Get the current theme
      * @returns the current theme
      */
-    getTheme(): Theme {
-        return this.state.theme
+    getTheme(): DefaultTheme {
+        return themes[this.state.theme]
     }
 
     /**

@@ -90,6 +90,7 @@ export class BoardLiveStroke implements LiveStroke {
             case ToolType.Circle:
             case ToolType.Rectangle:
             case ToolType.Select:
+            case ToolType.Textfield:
                 this.points[2] = point.x
                 this.points[3] = point.y
                 break

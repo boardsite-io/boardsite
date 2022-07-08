@@ -21,6 +21,9 @@ export const FILE_DESCRIPTION_PDF = "PDF file"
 export const FILE_NAME_PDF = "file"
 export const FILE_NAME_WORKSPACE = "workspace"
 
+export const TEXTFIELD_MIN_WIDTH = 60
+export const TEXTFIELD_MIN_HEIGHT = 40
+
 export const NOTIFICATION_TRANSITION = 300 // in ms
 export const DEFAULT_NOTIFICATION_DURATION = 2000
 export const MAX_FAVORITE_TOOLS_FREE = 4

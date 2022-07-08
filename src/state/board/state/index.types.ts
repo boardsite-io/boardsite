@@ -15,6 +15,7 @@ interface State<A extends SerializedAttachment, P extends SerializedPage> {
     redoStack?: StackAction[]
     strokeUpdates?: StrokeUpdate[]
     transformStrokes?: TransformStrokes
+    activeTextfield?: ActiveTextfield
     transformPagePosition?: Point
 }
 
@@ -76,6 +77,7 @@ export interface ActionConfig {
 }
 
 export type TransformStrokes = Stroke[]
+export type ActiveTextfield = Stroke
 
 export type PageId = string
 
