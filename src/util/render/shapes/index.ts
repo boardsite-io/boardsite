@@ -120,17 +120,15 @@ export const drawHitboxRects = (
     ctx.beginPath()
 
     stroke.hitboxes?.forEach((polygon) => {
-        if (polygon.points.length !== 4) {
-            // TODO: find out why there are length 2 polygon points
-            // console.log("Weird polygon detected: ", polygon, stroke)
-            return
-        }
+        const { points, pos } = polygon
 
-        const [p1, p2, p3, p4] = polygon.points
-        ctx.moveTo(p1.x, p1.y)
-        ctx.lineTo(p2.x, p2.y)
-        ctx.lineTo(p3.x, p3.y)
-        ctx.lineTo(p4.x, p4.y)
+        points.forEach((point, i) => {
+            if (i === 0) {
+                ctx.moveTo(point.x + pos.x, point.y + pos.y)
+            } else {
+                ctx.lineTo(point.x + pos.x, point.y + pos.y)
+            }
+        })
         ctx.closePath()
         ctx.stroke()
     })
