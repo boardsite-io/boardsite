@@ -53,20 +53,23 @@ export function getSelectionPolygon([x1, y1, x2, y2]: number[]): Polygon {
  */
 export function matchStrokeCollision(
     strokes: StrokeCollection,
-    selectionPolygon: Polygon
+    selectionPolygon: Polygon,
+    filterType?: ToolType
 ): StrokeCollection {
     const result: StrokeCollection = {}
-    Object.keys(strokes).forEach((id) => {
-        // test each hitbox segment
-        for (let i = 0; i < (strokes[id].hitboxes ?? []).length; i += 1) {
-            if (
-                testPolygonPolygon(
-                    (strokes[id].hitboxes ?? [])[i],
-                    selectionPolygon
-                )
-            ) {
-                result[id] = strokes[id]
-                break
+    Object.values(strokes).forEach((stroke) => {
+        if (!filterType || stroke.type === filterType) {
+            // test each hitbox segment
+            for (let i = 0; i < (stroke.hitboxes ?? []).length; i += 1) {
+                if (
+                    testPolygonPolygon(
+                        (stroke.hitboxes ?? [])[i],
+                        selectionPolygon
+                    )
+                ) {
+                    result[stroke.id] = stroke
+                    break
+                }
             }
         }
     })
