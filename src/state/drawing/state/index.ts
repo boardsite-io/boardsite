@@ -1,4 +1,4 @@
-import { StrokeCollection, Tool, ToolType } from "drawing/stroke/index.types"
+import { Stroke, Tool, ToolType } from "drawing/stroke/index.types"
 import { Paper, PageSize } from "state/board/state/index.types"
 import { subscriptionState } from "state/subscription"
 import { isDrawType } from "util/drawing"
@@ -59,9 +59,9 @@ export class Drawing
      * Set the strokes which are marked as erased
      * @param strokes the strokes which should be marked as erased
      */
-    setErasedStrokes(strokes: StrokeCollection): void {
-        Object.keys(strokes).forEach((id) => {
-            this.state.erasedStrokes[id] = strokes[id]
+    setErasedStrokes(strokes: Stroke[]): void {
+        strokes.forEach((stroke) => {
+            this.state.erasedStrokes[stroke.id] = stroke
         })
         subscriptionState.render("PageContent")
     }

@@ -1,6 +1,7 @@
 import {
     BaseStroke,
     Point,
+    Stroke,
     StrokeCollection,
     Tool,
 } from "drawing/stroke/index.types"
@@ -15,8 +16,5 @@ export interface LiveStroke extends BaseStroke {
     reset(): void
     moveEraser(): void
     isReset(): boolean
-    selectLineCollision(
-        strokes: StrokeCollection,
-        pagePosition: Point
-    ): StrokeCollection
+    selectLineCollision(strokes: StrokeCollection): Stroke[]
 }

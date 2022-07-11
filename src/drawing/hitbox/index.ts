@@ -6,33 +6,33 @@ import {
     ToolType,
 } from "drawing/stroke/index.types"
 
-/**
- * Test the selection polygon against all strokes with multiple hitboxe
- * segments and return a set of all collided stroke IDs.
- */
-export function matchStrokeCollision(
-    strokes: StrokeCollection,
-    selectionPolygon: Polygon,
+type GetStrokesInPolygonProps = {
+    strokes: StrokeCollection
+    polygon: Polygon
     filterType?: ToolType
-): StrokeCollection {
-    const result: StrokeCollection = {}
+}
+
+export function getStrokesInPolygon({
+    strokes,
+    polygon,
+    filterType,
+}: GetStrokesInPolygonProps): Stroke[] {
+    const matchingStrokes: Stroke[] = []
+
     Object.values(strokes).forEach((stroke) => {
-        if (!filterType || stroke.type === filterType) {
-            // test each hitbox segment
-            for (let i = 0; i < (stroke.hitboxes ?? []).length; i += 1) {
-                if (
-                    testPolygonPolygon(
-                        (stroke.hitboxes ?? [])[i],
-                        selectionPolygon
-                    )
-                ) {
-                    result[stroke.id] = stroke
+        const passesFilter = !filterType || stroke.type === filterType
+        const { hitboxes } = stroke
+
+        if (passesFilter && hitboxes?.length) {
+            for (let i = 0; i < hitboxes.length; i += 1) {
+                if (testPolygonPolygon(polygon, hitboxes[i])) {
+                    matchingStrokes.push(stroke)
                     break
                 }
             }
         }
     })
-    return result
+    return matchingStrokes
 }
 
 type GetStrokesInPointProps = {
@@ -46,7 +46,7 @@ export const getStrokesInPoint = ({
     point,
     filterType,
 }: GetStrokesInPointProps): Stroke[] => {
-    const pointVector = getPointVector(point)
+    const vector = getPointVector(point)
     const matchingStrokes: Stroke[] = []
 
     Object.values(strokes).forEach((stroke) => {
@@ -55,7 +55,7 @@ export const getStrokesInPoint = ({
 
         if (passesFilter && hitboxes?.length) {
             for (let i = 0; i < hitboxes.length; i += 1) {
-                if (pointInPolygon(pointVector, hitboxes[i])) {
+                if (pointInPolygon(vector, hitboxes[i])) {
                     matchingStrokes.push(stroke)
                     break
                 }

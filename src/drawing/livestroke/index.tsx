@@ -8,7 +8,7 @@ import {
 import { drawing } from "state/drawing"
 import { view } from "state/view"
 import { board } from "state/board"
-import { getHitboxPolygon, matchStrokeCollision } from "drawing/hitbox"
+import { getHitboxPolygon, getStrokesInPolygon } from "drawing/hitbox"
 import { perfectDrawing, simplifyRDP } from "../stroke/simplify"
 import {
     Point,
@@ -125,27 +125,28 @@ export class BoardLiveStroke implements LiveStroke {
     }
 
     private numUpdates = 0
-    selectLineCollision(strokes: StrokeCollection): StrokeCollection {
+    selectLineCollision(strokes: StrokeCollection): Stroke[] {
         const target = 5
-        const res: StrokeCollection = {}
         this.numUpdates += 1
-        if (this.numUpdates === target) {
-            const p = this.points
-            // create a line between the latest point and 5th last point
-            const minIndex = Math.max(p.length - 2 - 2 * target, 0)
-            const line = p
-                .slice(minIndex, minIndex + 2)
-                .concat(p.slice(p.length - 2))
+        if (this.numUpdates !== target) return []
 
-            this.numUpdates = 0
-            const selectionPolygon = getHitboxPolygon(line, {
-                style: { width: ERASER_WIDTH } as Stroke["style"],
-                scaleX: 1,
-                scaleY: 1,
-            })
+        const p = this.points
+        // create a line between the latest point and 5th last point
+        const minIndex = Math.max(p.length - 2 - 2 * target, 0)
+        const line = p
+            .slice(minIndex, minIndex + 2)
+            .concat(p.slice(p.length - 2))
 
-            return matchStrokeCollision(strokes, selectionPolygon)
-        }
-        return res
+        this.numUpdates = 0
+        const polygon = getHitboxPolygon(line, {
+            style: { width: ERASER_WIDTH } as Stroke["style"],
+            scaleX: 1,
+            scaleY: 1,
+        })
+
+        return getStrokesInPolygon({
+            strokes,
+            polygon,
+        })
     }
 }

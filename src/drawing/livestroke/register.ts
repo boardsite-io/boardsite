@@ -3,7 +3,7 @@ import { handleAddStrokes, handleDeleteStrokes } from "drawing/handlers"
 import {
     getRectanglePolygon,
     getStrokesInPoint,
-    matchStrokeCollision,
+    getStrokesInPolygon,
 } from "drawing/hitbox"
 import { BoardStroke } from "drawing/stroke"
 import { ToolType } from "drawing/stroke/index.types"
@@ -33,12 +33,11 @@ const register: Record<ToolType, (stroke: BoardStroke) => void> = {
         drawing.clearErasedStrokes()
     },
     [ToolType.Select]: (stroke: BoardStroke) => {
-        const { strokes } = board.getState().pageCollection[stroke.pageId]
-        const selectedStrokes = matchStrokeCollision(
-            strokes,
-            getRectanglePolygon(stroke.points)
-        )
-        board.setTransformStrokes(Object.values(selectedStrokes), stroke.pageId)
+        const selectedStrokes = getStrokesInPolygon({
+            strokes: board.getState().pageCollection[stroke.pageId].strokes,
+            polygon: getRectanglePolygon(stroke.points),
+        })
+        board.setTransformStrokes(selectedStrokes, stroke.pageId)
     },
     [ToolType.Textfield]: (stroke: BoardStroke) => {
         const width = Math.abs(stroke.points[2] - stroke.points[0])
