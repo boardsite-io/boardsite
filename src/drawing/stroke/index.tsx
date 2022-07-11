@@ -1,7 +1,7 @@
 import { LiveStroke } from "drawing/livestroke/index.types"
 import { assign, pick } from "lodash"
 import { Polygon } from "sat"
-import { getStrokeHitbox } from "drawing/hitbox"
+import { getStrokeHitboxes } from "drawing/hitbox"
 import {
     Point,
     Scale,
@@ -118,7 +118,7 @@ export class BoardStroke implements Stroke {
     }
 
     calculateHitbox(): void {
-        this.hitboxes = getStrokeHitbox(this)
+        this.hitboxes = getStrokeHitboxes(this)
     }
 }
 
