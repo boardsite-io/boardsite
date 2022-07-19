@@ -144,16 +144,13 @@ export function handleAddStrokes(strokes: Stroke[], isUpdate: boolean): void {
     sendMutableAction(board.handleAddStrokes, addStrokesAction)
 }
 
-export function handleDeleteStrokes(
-    strokes: Stroke[],
-    offlineOnly = false
-): void {
+export function handleDeleteStrokes(strokes: Stroke[]): void {
     const eraseStrokesAction: EraseStrokesAction = {
         data: strokes,
         isRedoable: true,
     }
 
-    if (!offlineOnly && online.isConnected()) {
+    if (online.isConnected()) {
         eraseStrokesAction.sessionHandler = () => online.eraseStrokes(strokes)
         eraseStrokesAction.sessionUndoHandler = () =>
             online.sendStrokes(strokes)

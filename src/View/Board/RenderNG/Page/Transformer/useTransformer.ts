@@ -1,4 +1,4 @@
-import { handleAddStrokes, handleDeleteStrokes } from "drawing/handlers"
+import { handleAddStrokes } from "drawing/handlers"
 import { Point } from "drawing/stroke/index.types"
 import { MouseEvent, TouchEvent, useCallback, useEffect } from "react"
 import { usePageLayer } from "state"
@@ -76,7 +76,10 @@ export const useTransformer = (
             }
             shapeTr.start(point, handleType)
             if (transformStrokes) {
-                handleDeleteStrokes(transformStrokes, true)
+                board.handleEraseStrokes({
+                    data: transformStrokes,
+                    isRedoable: true,
+                })
             }
             isMouseOrTouchDown = true
         },

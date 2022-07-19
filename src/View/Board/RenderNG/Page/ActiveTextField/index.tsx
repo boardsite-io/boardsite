@@ -1,6 +1,5 @@
 import { TEXTFIELD_MIN_HEIGHT, TEXTFIELD_MIN_WIDTH } from "consts"
 import { handleAddStrokes } from "drawing/handlers"
-import { cloneDeep } from "lodash"
 import React, {
     ChangeEvent,
     KeyboardEvent,
@@ -13,6 +12,7 @@ import React, {
 import { useGState } from "state"
 import { board } from "state/board"
 import { applyTransformOnPoints, getUnflippedRect } from "util/render/shapes"
+import { cloneDeep } from "lodash"
 import { PageProps } from "../index.types"
 import { Textfield, TextfieldBackground } from "./index.styled"
 
@@ -46,7 +46,10 @@ export const ActiveTextfield: React.FC<PageProps> = memo(
                     ]
                     activeTextfield.calculateHitbox() // Update Hitbox
 
-                    handleAddStrokes([cloneDeep(activeTextfield)], false)
+                    handleAddStrokes(
+                        [activeTextfield],
+                        !!activeTextfield.isUpdate
+                    )
                 }
             }
 

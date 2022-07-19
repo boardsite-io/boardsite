@@ -77,7 +77,7 @@ export interface ActionConfig {
 }
 
 export type TransformStrokes = Stroke[]
-export type ActiveTextfield = Stroke
+export type ActiveTextfield = Stroke & { isUpdate?: boolean }
 
 export type PageId = string
 

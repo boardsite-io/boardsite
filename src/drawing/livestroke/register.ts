@@ -7,10 +7,10 @@ import {
 } from "drawing/hitbox"
 import { BoardStroke } from "drawing/stroke"
 import { ToolType } from "drawing/stroke/index.types"
-import { cloneDeep } from "lodash"
 import { board } from "state/board"
 import { drawing } from "state/drawing"
 import { LiveStroke } from "./index.types"
+import { ActiveTextfield } from "../../state/board/state/index.types"
 
 const defaultRegister = (stroke: BoardStroke) => {
     handleAddStrokes([stroke], false)
@@ -50,11 +50,15 @@ const register: Record<ToolType, (stroke: BoardStroke) => void> = {
                 filterType: ToolType.Textfield,
             })
 
-            const targetStroke = strokesInPoint.pop()
+            const targetStroke = strokesInPoint.pop() as ActiveTextfield
 
             if (targetStroke) {
+                targetStroke.isUpdate = true
                 board.setActiveTextfield(targetStroke)
-                handleDeleteStrokes([cloneDeep(targetStroke)])
+                board.handleEraseStrokes({
+                    data: [targetStroke],
+                    isRedoable: true,
+                })
             } else {
                 board.setActiveTextfield(stroke)
             }

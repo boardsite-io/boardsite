@@ -200,15 +200,17 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
      */
     handleAddStrokes(addStrokesAction: AddStrokesAction): void {
         const {
-            data: strokes,
+            data,
             isRedoable,
             sessionHandler,
             sessionUndoHandler,
             isUpdate,
         } = addStrokesAction
+        // clone deep to recover strokes in case of undo
+        const strokes = cloneDeep(data)
 
         const handler = () => {
-            this.addOrUpdateStrokes(strokes)
+            this.addOrUpdateStrokes(cloneDeep(strokes))
             sessionHandler?.([])
         }
 
@@ -240,12 +242,10 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
      * @param eraseStrokesAction action object
      */
     handleEraseStrokes(eraseStrokesAction: EraseStrokesAction): void {
-        const {
-            data: strokes,
-            isRedoable,
-            sessionHandler,
-            sessionUndoHandler,
-        } = eraseStrokesAction
+        const { data, isRedoable, sessionHandler, sessionUndoHandler } =
+            eraseStrokesAction
+        // clone deep to recover strokes in case of undo
+        const strokes = cloneDeep(data)
 
         const handler = () => {
             this.deleteStrokes(strokes)
@@ -253,7 +253,7 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
         }
 
         const undoHandler = () => {
-            this.addOrUpdateStrokes(strokes)
+            this.addOrUpdateStrokes(cloneDeep(strokes))
             sessionUndoHandler?.([])
         }
 
