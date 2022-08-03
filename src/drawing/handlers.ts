@@ -17,6 +17,7 @@ import {
     PageMeta,
     Paper,
     SetPageMetaAction,
+    UpdateStrokesAction,
 } from "state/board/state/index.types"
 import { getVerifiedPageIds, getVerifiedPages } from "./helpers"
 import { BoardPage } from "./page"
@@ -31,7 +32,7 @@ export const handleClearActiveTextfield = () => {
     const { activeTextfield } = board.getState()
     if (activeTextfield?.textfield?.text) {
         // Add back stroke which is being edited before clearing
-        handleAddStrokes([cloneDeep(activeTextfield)], false)
+        handleAddStrokes([cloneDeep(activeTextfield)])
     }
     board.clearActiveTextfield()
 }
@@ -127,21 +128,37 @@ export function handleDeleteAllPages(isRedoable?: boolean): void {
     handleDeletePages(board.getState().pageRank.slice(), isRedoable)
 }
 
-export function handleAddStrokes(strokes: Stroke[], isUpdate: boolean): void {
+export function handleAddStrokes(strokes: Stroke[]): void {
     strokes.sort((a, b) => ((a.id ?? "") > (b.id ?? "") ? 1 : -1))
 
     const addStrokesAction: AddStrokesAction = {
         data: strokes,
-        isUpdate,
         isRedoable: true,
     }
 
     if (online.isConnected()) {
-        addStrokesAction.sessionHandler = () => online.sendStrokes(strokes)
+        addStrokesAction.sessionHandler = (strokes) =>
+            online.sendStrokes(strokes)
         addStrokesAction.sessionUndoHandler = () => online.eraseStrokes(strokes)
     }
 
     sendMutableAction(board.handleAddStrokes, addStrokesAction)
+}
+
+export function handleUpdateStrokes(strokes: Stroke[]): void {
+    const updateStrokeAction: UpdateStrokesAction = {
+        data: strokes,
+        isRedoable: true,
+    }
+
+    if (online.isConnected()) {
+        updateStrokeAction.sessionHandler = (strokes) =>
+            online.sendStrokes(strokes)
+        updateStrokeAction.sessionUndoHandler = (strokes) =>
+            online.sendStrokes(strokes)
+    }
+
+    sendMutableAction(board.handleUpdateStrokes, updateStrokeAction)
 }
 
 export function handleDeleteStrokes(strokes: Stroke[]): void {
@@ -152,7 +169,7 @@ export function handleDeleteStrokes(strokes: Stroke[]): void {
 
     if (online.isConnected()) {
         eraseStrokesAction.sessionHandler = () => online.eraseStrokes(strokes)
-        eraseStrokesAction.sessionUndoHandler = () =>
+        eraseStrokesAction.sessionUndoHandler = (strokes) =>
             online.sendStrokes(strokes)
     }
 

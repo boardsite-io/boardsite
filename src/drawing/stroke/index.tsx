@@ -31,6 +31,7 @@ export class BoardStroke implements Stroke {
     points: number[]
     hitboxes: Polygon[] = []
     textfield?: Textfield | undefined
+    isErased: boolean
 
     /**
      * Create a new stroke from another Stroke instance
@@ -46,6 +47,7 @@ export class BoardStroke implements Stroke {
         this.style = { ...stroke.style }
         this.points = [...stroke.points]
         this.textfield = stroke.textfield
+        this.isErased = false
 
         // Check if hitboxes need to be calculated
         if (stroke.hitboxes?.length) {
@@ -97,7 +99,14 @@ export class BoardStroke implements Stroke {
     update(strokeUpdate: Stroke | StrokeUpdate): Stroke {
         assign(
             this,
-            pick(strokeUpdate, ["x", "y", "scaleX", "scaleY", "textfield"])
+            pick(strokeUpdate, [
+                "x",
+                "y",
+                "scaleX",
+                "scaleY",
+                "textfield",
+                "isErased",
+            ])
         )
         this.calculateHitbox() // recalculate hitbox
         return this

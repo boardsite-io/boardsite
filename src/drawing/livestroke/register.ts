@@ -13,7 +13,7 @@ import { LiveStroke } from "./index.types"
 import { ActiveTextfield } from "../../state/board/state/index.types"
 
 const defaultRegister = (stroke: BoardStroke) => {
-    handleAddStrokes([stroke], false)
+    handleAddStrokes([stroke])
 }
 
 const register: Record<ToolType, (stroke: BoardStroke) => void> = {
@@ -55,9 +55,8 @@ const register: Record<ToolType, (stroke: BoardStroke) => void> = {
             if (targetStroke) {
                 targetStroke.isUpdate = true
                 board.setActiveTextfield(targetStroke)
-                board.handleEraseStrokes({
+                board.handleSoftEraseStrokes({
                     data: [targetStroke],
-                    isRedoable: true,
                 })
             } else {
                 board.setActiveTextfield(stroke)

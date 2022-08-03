@@ -87,10 +87,16 @@ export interface SerializedStroke extends BaseStroke {
 export interface Stroke
     extends SerializedStroke,
         Serializer<Stroke, SerializedStroke> {
+    isErased: boolean
+
     serializeUpdate(): StrokeUpdate
+
     update: (strokeUpdate: Stroke | StrokeUpdate) => Stroke
+
     getPosition(): Point
+
     getScale(): Scale
+
     calculateHitbox: () => void
 }
 

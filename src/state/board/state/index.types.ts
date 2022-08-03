@@ -6,6 +6,7 @@ import {
     StrokeUpdate,
 } from "drawing/stroke/index.types"
 import { SerializedVersionState, Serializer } from "state/types"
+import { StrokeId } from "../../../View/Board/RenderNG/index.types"
 
 interface State<A extends SerializedAttachment, P extends SerializedPage> {
     pageRank: PageRank
@@ -62,7 +63,6 @@ export interface StackAction {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface BoardAction<T extends any[], U extends any[]> {
     data: T
-    isUpdate?: boolean
     isRedoable?: boolean
     sessionHandler?: <P extends T>(redos: P) => void
     sessionUndoHandler?: <V extends U>(undos: V) => void
@@ -133,7 +133,9 @@ export type AddPageData = {
     index?: number
 }
 export type AddStrokesAction = BoardAction<Stroke[], void[]>
-export type EraseStrokesAction = BoardAction<Stroke[], void[]>
+export type UpdateStrokesAction = BoardAction<Stroke[], Stroke[]>
+export type EraseStrokesAction = BoardAction<Stroke[], Stroke[]>
+export type SoftEraseStrokesAction = BoardAction<Stroke[], void[]>
 export type AddPagesAction = BoardAction<AddPageData[], void[]>
 export type ClearPagesAction = BoardAction<PageId[], Stroke[]>
 export type DeletePagesAction = BoardAction<PageId[], AddPageData[]>

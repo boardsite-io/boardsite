@@ -24,6 +24,8 @@ import {
     PageSize,
     ActiveTextfield,
     TransformStrokes,
+    UpdateStrokesAction,
+    SoftEraseStrokesAction,
 } from "./index.types"
 import { addAction, redoAction, undoAction } from "../undoRedo"
 import { BoardSerializer } from "../serializers"
@@ -141,12 +143,13 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
      */
     setTransformStrokes(strokes: TransformStrokes, pageId: PageId): void {
         this.clearTransform()
-        this.state.transformStrokes = strokes
+        this.state.transformStrokes = cloneDeep(strokes) // clone to prevent transform view to be erased
         subscriptionState.pageSubscribers[pageId]?.transformer?.({})
     }
 
     setActiveTextfield(activeTextfield: ActiveTextfield): void {
-        this.state.activeTextfield = activeTextfield
+        // clone to prevent the text from being edited in-place
+        this.state.activeTextfield = cloneDeep(activeTextfield)
 
         if (!activeTextfield.textfield) {
             this.state.activeTextfield.textfield = {
@@ -200,31 +203,59 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
      */
     handleAddStrokes(addStrokesAction: AddStrokesAction): void {
         const {
-            data,
+            data: strokes,
             isRedoable,
             sessionHandler,
             sessionUndoHandler,
-            isUpdate,
         } = addStrokesAction
         // clone deep to recover strokes in case of undo
-        const strokes = cloneDeep(data)
+        // const strokes = cloneDeep(data)
 
         const handler = () => {
-            this.addOrUpdateStrokes(cloneDeep(strokes))
-            sessionHandler?.([])
+            const strokesClone: Stroke[] = cloneDeep(strokes)
+            this.addOrUpdateStrokes(strokesClone)
+            sessionHandler?.(strokesClone)
         }
 
-        let undoHandler = () => {
+        const undoHandler = () => {
             this.deleteStrokes(strokes)
             sessionUndoHandler?.([])
         }
 
-        if (isUpdate) {
-            const addUpdateStartPoint = this.state.undoStack?.pop()?.handler
+        addAction({
+            handler,
+            undoHandler,
+            stack: this.state.undoStack,
+            isRedoable,
+        })
 
-            if (addUpdateStartPoint) {
-                undoHandler = addUpdateStartPoint
-            }
+        this.clearRedoCheck(isRedoable)
+    }
+
+    handleUpdateStrokes(updateStrokesAction: UpdateStrokesAction): void {
+        const {
+            data: strokeUpdates,
+            isRedoable,
+            sessionHandler,
+            sessionUndoHandler,
+        } = updateStrokesAction
+        // const strokesUpdates = cloneDeep(data)
+        const strokes = strokeUpdates.map((stroke) =>
+            cloneDeep(
+                this.state.pageCollection[stroke.pageId]?.strokes[stroke.id]
+            )
+        )
+
+        const handler = () => {
+            const strokesClone: Stroke[] = cloneDeep(strokeUpdates)
+            this.addOrUpdateStrokes(strokesClone)
+            sessionHandler?.(strokesClone)
+        }
+
+        const undoHandler = () => {
+            const strokesClone: Stroke[] = cloneDeep(strokes)
+            this.addOrUpdateStrokes(strokesClone)
+            sessionUndoHandler?.(strokesClone)
         }
 
         addAction({
@@ -253,8 +284,9 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
         }
 
         const undoHandler = () => {
-            this.addOrUpdateStrokes(cloneDeep(strokes))
-            sessionUndoHandler?.([])
+            const strokesClone: Stroke[] = cloneDeep(strokes)
+            this.addOrUpdateStrokes(strokesClone)
+            sessionUndoHandler?.(strokesClone)
         }
 
         addAction({
@@ -265,6 +297,20 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
         })
 
         this.clearRedoCheck(isRedoable)
+    }
+
+    handleSoftEraseStrokes(
+        softEraseStrokesAction: SoftEraseStrokesAction
+    ): void {
+        const { data: strokes } = softEraseStrokesAction
+
+        strokes.forEach((stroke) => {
+            this.state.pageCollection[stroke.pageId].strokes[
+                stroke.id
+            ].isErased = true
+        })
+
+        subscriptionState.render("RenderNG", "EditMenu")
     }
 
     /**
@@ -429,9 +475,10 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
      * Add or update strokes
      * @param strokes new strokes or stroke updates
      */
-    private addOrUpdateStrokes(strokes: Stroke[] | StrokeUpdate[]): void {
+    private addOrUpdateStrokes(strokes: Stroke[]): void {
         strokes.forEach((stroke) => {
             const page = this.getState().pageCollection[stroke.pageId ?? ""]
+            stroke.isErased = false
             if (page && stroke.id) {
                 if (page.strokes[stroke.id]) {
                     // stroke exists -> update

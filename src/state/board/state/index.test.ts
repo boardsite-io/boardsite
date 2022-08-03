@@ -418,7 +418,6 @@ describe("board reducer", () => {
         update.y = 5678
         const addStrokesAction: AddStrokesAction = {
             data: [update],
-            isUpdate: true,
             isRedoable: true,
         }
         const eraseStrokesAction: EraseStrokesAction = {
