@@ -17,6 +17,7 @@ import {
     PageId,
     Paper,
     SetPageMetaAction,
+    UpdateStrokesAction,
 } from "./index.types"
 import { Board } from "."
 
@@ -416,18 +417,11 @@ describe("board reducer", () => {
         const update = getMockStroke(page1.pageId)
         update.x = 1234
         update.y = 5678
-        const addStrokesAction: AddStrokesAction = {
+        const updateStrokesAction: UpdateStrokesAction = {
             data: [update],
             isRedoable: true,
         }
-        const eraseStrokesAction: EraseStrokesAction = {
-            data: [stroke],
-            isRedoable: true,
-        }
-
-        // update == delete + add
-        mockBoard.handleEraseStrokes(eraseStrokesAction)
-        mockBoard.handleAddStrokes(addStrokesAction)
+        mockBoard.handleUpdateStrokes(updateStrokesAction)
 
         expect(
             mockBoard.getState().pageCollection[page1.pageId]?.strokes[

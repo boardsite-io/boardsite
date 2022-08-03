@@ -1,4 +1,4 @@
-import { handleAddStrokes, handleUpdateStrokes } from "drawing/handlers"
+import { handleUpdateStrokes } from "drawing/handlers"
 import { Point } from "drawing/stroke/index.types"
 import { MouseEvent, TouchEvent, useCallback, useEffect } from "react"
 import { usePageLayer } from "state"

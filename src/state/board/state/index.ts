@@ -208,13 +208,10 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
             sessionHandler,
             sessionUndoHandler,
         } = addStrokesAction
-        // clone deep to recover strokes in case of undo
-        // const strokes = cloneDeep(data)
 
         const handler = () => {
-            const strokesClone: Stroke[] = cloneDeep(strokes)
-            this.addOrUpdateStrokes(strokesClone)
-            sessionHandler?.(strokesClone)
+            this.addOrUpdateStrokes(strokes)
+            sessionHandler?.(strokes)
         }
 
         const undoHandler = () => {
@@ -239,7 +236,7 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
             sessionHandler,
             sessionUndoHandler,
         } = updateStrokesAction
-        // const strokesUpdates = cloneDeep(data)
+
         const strokes = strokeUpdates.map((stroke) =>
             cloneDeep(
                 this.state.pageCollection[stroke.pageId]?.strokes[stroke.id]
@@ -247,15 +244,13 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
         )
 
         const handler = () => {
-            const strokesClone: Stroke[] = cloneDeep(strokeUpdates)
-            this.addOrUpdateStrokes(strokesClone)
-            sessionHandler?.(strokesClone)
+            this.addOrUpdateStrokes(strokeUpdates)
+            sessionHandler?.(strokeUpdates)
         }
 
         const undoHandler = () => {
-            const strokesClone: Stroke[] = cloneDeep(strokes)
-            this.addOrUpdateStrokes(strokesClone)
-            sessionUndoHandler?.(strokesClone)
+            this.addOrUpdateStrokes(strokes)
+            sessionUndoHandler?.(strokes)
         }
 
         addAction({
@@ -273,10 +268,12 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
      * @param eraseStrokesAction action object
      */
     handleEraseStrokes(eraseStrokesAction: EraseStrokesAction): void {
-        const { data, isRedoable, sessionHandler, sessionUndoHandler } =
-            eraseStrokesAction
-        // clone deep to recover strokes in case of undo
-        const strokes = cloneDeep(data)
+        const {
+            data: strokes,
+            isRedoable,
+            sessionHandler,
+            sessionUndoHandler,
+        } = eraseStrokesAction
 
         const handler = () => {
             this.deleteStrokes(strokes)
@@ -284,9 +281,8 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
         }
 
         const undoHandler = () => {
-            const strokesClone: Stroke[] = cloneDeep(strokes)
-            this.addOrUpdateStrokes(strokesClone)
-            sessionUndoHandler?.(strokesClone)
+            this.addOrUpdateStrokes(strokes)
+            sessionUndoHandler?.(strokes)
         }
 
         addAction({

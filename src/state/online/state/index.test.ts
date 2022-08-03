@@ -198,11 +198,7 @@ describe("session", () => {
             expect(data.content.length).toEqual(1)
             expect(data.content[0]).toHaveProperty("userId", mockUser.id)
             expect(data.content[0]).not.toHaveProperty("hitboxes")
-            expect(data.content[0]).toEqual({
-                ...mockStroke,
-                hitboxes: undefined,
-                userId: mockUser.id,
-            })
+            expect(data.content[0]).not.toHaveProperty("isErased")
         })
         online.sendStrokes(strokes)
     })
