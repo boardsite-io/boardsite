@@ -44,13 +44,13 @@ export interface Tool {
 }
 
 export type HAlign = "center" | "left" | "right"
-export type vAlign = "middle" | "top" | "bottom"
+export type VAlign = "middle" | "top" | "bottom"
 
 export interface Textfield {
     text: string
     color: string
     hAlign: HAlign
-    vAlign: vAlign
+    vAlign: VAlign
     font: string
     fontWeight: number
     fontSize: number
