@@ -8,26 +8,17 @@ import { PageIndex } from "state/view/state/index.types"
 import { getDefaultBoardState } from "./default"
 import {
     AddPageData,
-    AddPagesAction,
-    AddStrokesAction,
     AttachId,
     Attachment,
     BoardState,
-    ClearPagesAction,
-    DeletePagesAction,
-    EraseStrokesAction,
     Page,
     PageCollection,
     PageRank,
-    SetPageMetaAction,
     PageId,
     PageSize,
     ActiveTextfield,
     TransformStrokes,
-    UpdateStrokesAction,
-    SoftEraseStrokesAction,
 } from "./index.types"
-import { addAction, redoAction, undoAction } from "../undoRedo"
 import { BoardSerializer } from "../serializers"
 
 export class Board extends BoardSerializer implements GlobalState<BoardState> {
@@ -86,33 +77,6 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
     clearAttachments(): void {
         this.state.attachments = {}
         this.saveToLocalStorage()
-    }
-
-    /**
-     * Undo last action
-     */
-    undoAction(): void {
-        undoAction(this.state)
-        subscriptionState.render("RenderNG", "EditMenu")
-        this.saveToLocalStorage()
-    }
-
-    /**
-     * Redo last action
-     */
-    redoAction(): void {
-        redoAction(this.state)
-        subscriptionState.render("RenderNG", "EditMenu")
-        this.saveToLocalStorage()
-    }
-
-    /**
-     * Clear undo and redo stack
-     */
-    clearUndoRedo(): void {
-        this.state.undoStack = []
-        this.state.redoStack = []
-        subscriptionState.render("EditMenu")
     }
 
     /**
@@ -195,111 +159,7 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
         return pageCollection[pageId]?.meta?.size ?? PAGE_SIZE.A4_LANDSCAPE
     }
 
-    /* --- Undoable action handlers --- */
-
-    /**
-     * Action: Add strokes
-     * @param addStrokesAction action object
-     */
-    handleAddStrokes(addStrokesAction: AddStrokesAction): void {
-        const {
-            data: strokes,
-            isRedoable,
-            sessionHandler,
-            sessionUndoHandler,
-        } = addStrokesAction
-
-        const handler = () => {
-            this.addOrUpdateStrokes(strokes)
-            sessionHandler?.(strokes)
-        }
-
-        const undoHandler = () => {
-            this.deleteStrokes(strokes)
-            sessionUndoHandler?.([])
-        }
-
-        addAction({
-            handler,
-            undoHandler,
-            stack: this.state.undoStack,
-            isRedoable,
-        })
-
-        this.clearRedoCheck(isRedoable)
-    }
-
-    handleUpdateStrokes(updateStrokesAction: UpdateStrokesAction): void {
-        const {
-            data: strokeUpdates,
-            isRedoable,
-            sessionHandler,
-            sessionUndoHandler,
-        } = updateStrokesAction
-
-        const strokes = strokeUpdates.map((stroke) =>
-            cloneDeep(
-                this.state.pageCollection[stroke.pageId]?.strokes[stroke.id]
-            )
-        )
-
-        const handler = () => {
-            this.addOrUpdateStrokes(strokeUpdates)
-            sessionHandler?.(strokeUpdates)
-        }
-
-        const undoHandler = () => {
-            this.addOrUpdateStrokes(strokes)
-            sessionUndoHandler?.(strokes)
-        }
-
-        addAction({
-            handler,
-            undoHandler,
-            stack: this.state.undoStack,
-            isRedoable,
-        })
-
-        this.clearRedoCheck(isRedoable)
-    }
-
-    /**
-     * Action: Erase strokes
-     * @param eraseStrokesAction action object
-     */
-    handleEraseStrokes(eraseStrokesAction: EraseStrokesAction): void {
-        const {
-            data: strokes,
-            isRedoable,
-            sessionHandler,
-            sessionUndoHandler,
-        } = eraseStrokesAction
-
-        const handler = () => {
-            this.deleteStrokes(strokes)
-            sessionHandler?.([])
-        }
-
-        const undoHandler = () => {
-            this.addOrUpdateStrokes(strokes)
-            sessionUndoHandler?.(strokes)
-        }
-
-        addAction({
-            handler,
-            undoHandler,
-            stack: this.state.undoStack,
-            isRedoable,
-        })
-
-        this.clearRedoCheck(isRedoable)
-    }
-
-    handleSoftEraseStrokes(
-        softEraseStrokesAction: SoftEraseStrokesAction
-    ): void {
-        const { data: strokes } = softEraseStrokesAction
-
+    handleSoftEraseStrokes(strokes: Stroke[]): void {
         strokes.forEach((stroke) => {
             this.state.pageCollection[stroke.pageId].strokes[
                 stroke.id
@@ -310,168 +170,10 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
     }
 
     /**
-     * Action: Add pages
-     * @param addPagesAction action object
-     */
-    handleAddPages(addPagesAction: AddPagesAction): void {
-        const {
-            data: addPageData,
-            isRedoable,
-            sessionHandler,
-            sessionUndoHandler,
-        } = addPagesAction
-
-        const pageIds = addPageData.map(({ page }) => page.pageId)
-
-        const handler = () => {
-            this.addPages(addPageData)
-            sessionHandler?.([])
-        }
-
-        const undoHandler = () => {
-            this.deletePages(pageIds)
-            sessionUndoHandler?.([])
-        }
-
-        addAction({
-            handler,
-            undoHandler,
-            stack: this.state.undoStack,
-            isRedoable,
-        })
-
-        this.clearRedoCheck(isRedoable)
-    }
-
-    /**
-     * Action: Clear pages
-     * @param clearPagesAction action object
-     */
-    handleClearPages(clearPagesAction: ClearPagesAction): void {
-        const {
-            data: pageIds,
-            isRedoable,
-            sessionHandler,
-            sessionUndoHandler,
-        } = clearPagesAction
-
-        // make a copy of cleared strokes
-        const strokes = pageIds
-            .map((pid) => cloneDeep(this.state.pageCollection[pid]))
-            .filter((page) => page !== undefined)
-            .reduce<Stroke[]>(
-                (arr, page) =>
-                    arr.concat(Object.values((page as Page).strokes)),
-                []
-            )
-
-        const handler = () => {
-            this.clearPages(pageIds)
-            sessionHandler?.([])
-        }
-
-        const undoHandler = () => {
-            this.addOrUpdateStrokes(strokes)
-            sessionUndoHandler?.(strokes)
-        }
-
-        addAction({
-            handler,
-            undoHandler,
-            stack: this.state.undoStack,
-            isRedoable,
-        })
-
-        this.clearRedoCheck(isRedoable)
-    }
-
-    /**
-     * Action: Delete pages
-     * @param deletePagesAction action object
-     */
-    handleDeletePages(deletePagesAction: DeletePagesAction): void {
-        const {
-            data: pageIds,
-            isRedoable,
-            sessionHandler,
-            sessionUndoHandler,
-        } = deletePagesAction
-
-        const addPageData = pageIds
-            .map<AddPageData>((pid) => ({
-                page: this.state.pageCollection[pid] as Page,
-            }))
-            .filter(({ page }) => page !== undefined)
-        const pageRank = this.state.pageRank.slice()
-
-        const handler = () => {
-            this.deletePages(pageIds)
-            sessionHandler?.([])
-        }
-
-        const undoHandler = () => {
-            // set pagerank manually as it was before deletion
-            this.state.pageRank = pageRank
-            this.addPages(addPageData)
-            sessionUndoHandler?.(addPageData)
-        }
-
-        addAction({
-            handler,
-            undoHandler,
-            stack: this.state.undoStack,
-            isRedoable,
-        })
-
-        this.clearRedoCheck(isRedoable)
-    }
-
-    /**
-     * Action: Update page meta of one or more pages
-     * @param setPageMetaAction action object
-     */
-    handleSetPageMeta(setPageMetaAction: SetPageMetaAction): void {
-        const {
-            data: pageUpdates,
-            isRedoable,
-            sessionHandler,
-            sessionUndoHandler,
-        } = setPageMetaAction
-
-        // make a copy of old page meta
-        const pages = pageUpdates.map((page) =>
-            cloneDeep(
-                pick(this.state.pageCollection[page.pageId], ["pageId", "meta"])
-            )
-        ) as Page[]
-
-        const handler = () => {
-            this.updatePages(pageUpdates)
-            sessionHandler?.([])
-        }
-
-        const undoHandler = () => {
-            this.updatePages(pages)
-            sessionUndoHandler?.(pages)
-        }
-
-        addAction({
-            handler,
-            undoHandler,
-            stack: this.state.undoStack,
-            isRedoable,
-        })
-
-        this.clearRedoCheck(isRedoable)
-    }
-
-    /* --- Internal Undoable Functions --- */
-
-    /**
      * Add or update strokes
      * @param strokes new strokes or stroke updates
      */
-    private addOrUpdateStrokes(strokes: Stroke[]): void {
+    addOrUpdateStrokes(strokes: Stroke[]): void {
         strokes.forEach((stroke) => {
             const page = this.getState().pageCollection[stroke.pageId ?? ""]
             stroke.isErased = false
@@ -491,7 +193,7 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
      * Delete strokes
      * @param strokes strokes to be deleted
      */
-    private deleteStrokes(strokes: Stroke[] | StrokeUpdate[]): void {
+    deleteStrokes(strokes: Stroke[] | StrokeUpdate[]): void {
         strokes.forEach(({ id, pageId }) => {
             const page = this.getState().pageCollection[pageId ?? ""]
             if (page && id) {
@@ -524,7 +226,7 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
      * Add pages
      * @param addPageData pages and respective indices to be added
      */
-    private addPages(addPageData: AddPageData[]): void {
+    addPages(addPageData: AddPageData[]): void {
         addPageData.forEach(({ page, index }) => {
             this.getState().pageCollection[page.pageId] = page
             if (index !== undefined) {
@@ -543,7 +245,7 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
      * Delete pages
      * @param pageIds ids of pages which should be deleted
      */
-    private deletePages(pageIds: PageId[]): void {
+    deletePages(pageIds: PageId[]): void {
         const { pageRank, pageCollection } = this.getState()
         pageIds.forEach((pid) => {
             pageRank.splice(pageRank.indexOf(pid), 1)
@@ -560,7 +262,7 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
      * Clear pages
      * @param pageIds ids of pages which should be cleared
      */
-    private clearPages(pageIds: PageId[]): void {
+    clearPages(pageIds: PageId[]): void {
         pageIds.forEach((pageId) => {
             this.getState().pageCollection[pageId]?.clear()
             subscriptionState.renderPageLayer("content", pageId)
@@ -573,23 +275,12 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
      * Update meta info of pages
      * @param pages array which contains pages with their meta and pageId
      */
-    private updatePages(pages: Pick<Page, "pageId" | "meta">[]): void {
+    updatePages(pages: Pick<Page, "pageId" | "meta">[]): void {
         pages.forEach((page) => {
             this.getState().pageCollection[page.pageId]?.updateMeta(page.meta)
         })
         subscriptionState.render("RenderNG", "EditMenu")
         this.saveToLocalStorage()
-    }
-
-    /**
-     * Reset the redoStack where otherwise a parallel timeline would be created
-     * @param isRedoable
-     */
-    private clearRedoCheck(isRedoable?: boolean): void {
-        if (isRedoable) {
-            this.state.redoStack = []
-            subscriptionState.render("EditMenu")
-        }
     }
 }
 

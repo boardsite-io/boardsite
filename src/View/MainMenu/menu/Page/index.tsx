@@ -8,14 +8,8 @@ import {
     // PageDeleteIcon,
     // PageDeleteAllIcon,
 } from "components"
-import {
-    handleAddPageOver,
-    handleAddPageUnder,
-    handleClearPage,
-    handleDeleteAllPages,
-    handleDeleteCurrentPage,
-} from "drawing/handlers"
 import { FormattedMessage } from "language"
+import { action } from "state/action"
 import { menu } from "state/menu"
 import { CSSTransition } from "react-transition-group"
 import { cssTransition } from "View/MainMenu/cssTransition"
@@ -25,23 +19,23 @@ import PageSizeMenu from "./PageSize"
 import PageStyle from "./PageStyle"
 
 const onClickNewPageBefore = () => {
-    handleAddPageOver()
+    action.addPageOver()
     menu.closeMainMenu()
 }
 const onClickNewPageAfter = () => {
-    handleAddPageUnder()
+    action.addPageUnder()
     menu.closeMainMenu()
 }
 const onClickDeletePage = () => {
-    handleDeleteCurrentPage()
+    action.deleteCurrentPage()
     menu.closeMainMenu()
 }
 const onClickClearPage = () => {
-    handleClearPage()
+    action.clearPage()
     menu.closeMainMenu()
 }
 const onClickDeleteAllPages = () => {
-    handleDeleteAllPages(true)
+    action.deleteAllPages()
 }
 
 enum SubMenu {

@@ -1,5 +1,4 @@
 import { TEXTFIELD_MIN_HEIGHT, TEXTFIELD_MIN_WIDTH } from "consts"
-import { handleAddStrokes, handleDeleteStrokes } from "drawing/handlers"
 import {
     getRectanglePolygon,
     getStrokesInPoint,
@@ -9,11 +8,12 @@ import { BoardStroke } from "drawing/stroke"
 import { ToolType } from "drawing/stroke/index.types"
 import { board } from "state/board"
 import { drawing } from "state/drawing"
+import { action } from "state/action"
 import { LiveStroke } from "./index.types"
 import { ActiveTextfield } from "../../state/board/state/index.types"
 
 const defaultRegister = (stroke: BoardStroke) => {
-    handleAddStrokes([stroke])
+    action.addStrokes([stroke])
 }
 
 const register: Record<ToolType, (stroke: BoardStroke) => void> = {
@@ -28,7 +28,7 @@ const register: Record<ToolType, (stroke: BoardStroke) => void> = {
         const strokes = Object.values(erasedStrokes)
 
         if (strokes.length > 0) {
-            handleDeleteStrokes(strokes)
+            action.deleteStrokes(strokes)
         }
         drawing.clearErasedStrokes()
     },
@@ -55,9 +55,7 @@ const register: Record<ToolType, (stroke: BoardStroke) => void> = {
             if (targetStroke) {
                 targetStroke.isUpdate = true
                 board.setActiveTextfield(targetStroke)
-                board.handleSoftEraseStrokes({
-                    data: [targetStroke],
-                })
+                board.handleSoftEraseStrokes([targetStroke])
             } else {
                 board.setActiveTextfield(stroke)
             }

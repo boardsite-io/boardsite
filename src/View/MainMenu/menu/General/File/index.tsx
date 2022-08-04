@@ -3,11 +3,11 @@ import React from "react"
 import { HorizontalRule } from "components"
 import { useGState } from "state"
 import { online } from "state/online"
-import { handleNewWorkspace } from "drawing/handlers"
 import { handleExportWorkspace, handleImportWorkspace } from "storage/workspace"
 import { handleExportPdf, handleImportPdf } from "storage/pdf"
 import { SubMenuWrap } from "View/MainMenu/index.styled"
 import MenuItem from "View/MainMenu/MenuItem"
+import { action } from "state/action"
 
 const onClickOpen = async () => {
     handleImportWorkspace()
@@ -32,7 +32,7 @@ const FileMenu = () => {
         <SubMenuWrap>
             <MenuItem
                 text={<FormattedMessage id="Menu.General.File.New" />}
-                onClick={handleNewWorkspace}
+                onClick={action.newWorkspace}
             />
             <MenuItem
                 text={<FormattedMessage id="Menu.General.File.Open" />}

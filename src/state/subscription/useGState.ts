@@ -1,4 +1,5 @@
 // Global States
+import { action } from "state/action"
 import { board } from "state/board"
 import { drawing } from "state/drawing"
 import { loading } from "state/loading"
@@ -13,6 +14,7 @@ import { useCallback, useEffect, useState } from "react"
 import { Subscription } from "./index.types"
 
 const getGlobalState = () => ({
+    action: action.getState(),
     board: board.getState(),
     drawing: drawing.getState(),
     loading: loading.getState(),

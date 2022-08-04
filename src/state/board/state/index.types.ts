@@ -11,8 +11,6 @@ interface State<A extends SerializedAttachment, P extends SerializedPage> {
     pageRank: PageRank
     pageCollection: Record<PageId, P>
     attachments: Record<AttachId, A>
-    undoStack?: StackAction[]
-    redoStack?: StackAction[]
     strokeUpdates?: StrokeUpdate[]
     transformStrokes?: TransformStrokes
     activeTextfield?: ActiveTextfield
@@ -54,27 +52,6 @@ export type Attachments = Record<AttachId, Attachment>
 
 export type DocumentSrc = string | Uint8Array
 
-export interface StackAction {
-    handler: () => void
-    undoHandler: () => void
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface BoardAction<T extends any[], U extends any[]> {
-    data: T
-    isRedoable?: boolean
-    sessionHandler?: <P extends T>(redos: P) => void
-    sessionUndoHandler?: <V extends U>(undos: V) => void
-}
-
-export interface ActionConfig {
-    handler: () => void
-    undoHandler: () => void
-    stack?: StackAction[]
-    isRedoable?: boolean
-    isNew?: boolean
-}
-
 export type TransformStrokes = Stroke[]
 export type ActiveTextfield = Stroke & { isUpdate?: boolean }
 
@@ -115,11 +92,6 @@ export interface PageBackground {
     documentPageNum?: number
 }
 
-export type SetPageMetaAction = BoardAction<
-    Pick<Page, "pageId" | "meta">[],
-    Pick<Page, "pageId" | "meta">[]
->
-
 export enum Paper {
     Blank = "blank",
     Checkered = "checkered",
@@ -131,10 +103,3 @@ export type AddPageData = {
     page: Page
     index?: number
 }
-export type AddStrokesAction = BoardAction<Stroke[], void[]>
-export type UpdateStrokesAction = BoardAction<Stroke[], Stroke[]>
-export type EraseStrokesAction = BoardAction<Stroke[], Stroke[]>
-export type SoftEraseStrokesAction = BoardAction<Stroke[], void[]>
-export type AddPagesAction = BoardAction<AddPageData[], void[]>
-export type ClearPagesAction = BoardAction<PageId[], Stroke[]>
-export type DeletePagesAction = BoardAction<PageId[], AddPageData[]>

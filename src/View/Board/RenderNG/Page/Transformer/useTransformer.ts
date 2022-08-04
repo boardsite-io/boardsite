@@ -1,7 +1,7 @@
-import { handleUpdateStrokes } from "drawing/handlers"
 import { Point } from "drawing/stroke/index.types"
 import { MouseEvent, TouchEvent, useCallback, useEffect } from "react"
 import { usePageLayer } from "state"
+import { action } from "state/action"
 import { board } from "state/board"
 import { Page } from "state/board/state/index.types"
 import { view } from "state/view"
@@ -77,9 +77,7 @@ export const useTransformer = (
             shapeTr.start(point, handleType)
             if (transformStrokes) {
                 // non redoable delete
-                board.handleSoftEraseStrokes({
-                    data: transformStrokes,
-                })
+                board.handleSoftEraseStrokes(transformStrokes)
             }
             isMouseOrTouchDown = true
         },
@@ -100,7 +98,7 @@ export const useTransformer = (
             onMove(point)
             if (transformStrokes) {
                 const newStrokes = shapeTr.end(trRef.current, transformStrokes)
-                handleUpdateStrokes(newStrokes)
+                action.updateStrokes(newStrokes)
                 board.setTransformStrokes(newStrokes, page.pageId)
             }
             isMouseOrTouchDown = false

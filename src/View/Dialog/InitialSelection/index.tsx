@@ -1,11 +1,11 @@
 import { FormattedMessage } from "language"
 import React, { useCallback, useEffect, useState } from "react"
 import { Button, DialogContent, DialogTitle } from "components"
-import { handleNewWorkspace } from "drawing/handlers"
 import { board } from "state/board"
-import { loadIndexedDB } from "storage/local"
+import { action } from "state/action"
 import { menu } from "state/menu"
 import { DialogState } from "state/menu/state/index.types"
+import { loadIndexedDB } from "storage/local"
 import { useNavigate } from "react-router-dom"
 import { ROUTE } from "App/routes"
 import { startBackgroundJob } from "storage/util"
@@ -40,7 +40,7 @@ const InitialSelection: React.FC<InitialSelectionProps> = ({ firstLoad }) => {
     }, [navigate, firstLoad, checkStorage])
 
     const createOfflineSession = useCallback(() => {
-        handleNewWorkspace()
+        action.newWorkspace()
         menu.setDialogState(DialogState.Closed)
     }, [])
 

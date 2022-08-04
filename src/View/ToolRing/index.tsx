@@ -9,8 +9,8 @@ import {
     TextfieldIcon,
     ToolTip,
 } from "components"
-import { handleSetTool } from "drawing/handlers"
 import { notification } from "state/notification"
+import { action } from "state/action"
 import { useGState } from "state"
 import { ToolType } from "drawing/stroke/index.types"
 import ActiveTool from "./ActiveTool"
@@ -22,28 +22,28 @@ const ToolRing: React.FC = memo(() => {
     const onClickEraser = useCallback(() => {
         if (type === ToolType.Eraser) return
 
-        handleSetTool({ type: ToolType.Eraser })
+        action.setTool({ type: ToolType.Eraser })
         notification.create("Notification.Tool.Eraser")
     }, [type])
 
     const onClickSelect = useCallback(() => {
         if (type === ToolType.Select) return
 
-        handleSetTool({ type: ToolType.Select })
+        action.setTool({ type: ToolType.Select })
         notification.create("Notification.Tool.Selection")
     }, [type])
 
     const onClickPan = useCallback(() => {
         if (type === ToolType.Pan) return
 
-        handleSetTool({ type: ToolType.Pan })
+        action.setTool({ type: ToolType.Pan })
         notification.create("Notification.Tool.Panning")
     }, [type])
 
     const onClickTextfield = useCallback(() => {
         if (type === ToolType.Textfield) return
 
-        handleSetTool({ type: ToolType.Textfield })
+        action.setTool({ type: ToolType.Textfield })
         notification.create("Notification.Tool.Textfield")
     }, [type])
 

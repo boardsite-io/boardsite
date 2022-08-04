@@ -1,5 +1,4 @@
 import { TEXTFIELD_MIN_HEIGHT, TEXTFIELD_MIN_WIDTH } from "consts"
-import { handleAddStrokes, handleUpdateStrokes } from "drawing/handlers"
 import React, {
     ChangeEvent,
     KeyboardEvent,
@@ -10,6 +9,7 @@ import React, {
     useRef,
 } from "react"
 import { useGState } from "state"
+import { action } from "state/action"
 import { board } from "state/board"
 import { applyTransformOnPoints, getUnflippedRect } from "util/render/shapes"
 import { PageProps } from "../index.types"
@@ -46,9 +46,9 @@ export const ActiveTextfield: React.FC<PageProps> = memo(
                     activeTextfield.calculateHitbox() // Update Hitbox
 
                     if (activeTextfield.isUpdate) {
-                        handleUpdateStrokes([activeTextfield])
+                        action.updateStrokes([activeTextfield])
                     } else {
-                        handleAddStrokes([activeTextfield])
+                        action.addStrokes([activeTextfield])
                     }
                 }
             }

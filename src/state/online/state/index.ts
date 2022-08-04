@@ -220,9 +220,7 @@ export class Online
             // Clean up session data, the localStorage is not
             // overwritten since in online mode it is deactivated
             board.fullReset()
-            board.handleAddPages({
-                data: [{ page: new BoardPage(), index: -1 }],
-            })
+            board.addPages([{ page: new BoardPage(), index: -1 }])
             view.validatePageIndex()
 
             // Enable localStorage for local session
@@ -368,13 +366,13 @@ export class Online
     receiveStrokes(strokes: Stroke[]): void {
         const erasedStrokes = strokes.filter((s) => s.type === 0)
         if (erasedStrokes.length > 0) {
-            board.handleEraseStrokes({ data: erasedStrokes })
+            board.deleteStrokes(erasedStrokes)
         }
 
         strokes = strokes.filter((s) => s.type !== 0)
 
         if (strokes.length > 0) {
-            board.handleAddStrokes({ data: strokes })
+            board.addOrUpdateStrokes(strokes)
         }
     }
 
