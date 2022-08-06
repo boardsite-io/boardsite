@@ -55,7 +55,7 @@ const register: Record<ToolType, (stroke: BoardStroke) => void> = {
             if (targetStroke) {
                 targetStroke.isUpdate = true
                 board.setActiveTextfield(targetStroke)
-                board.handleSoftEraseStrokes([targetStroke])
+                board.hideStrokes([targetStroke])
             } else {
                 board.setActiveTextfield(stroke)
             }

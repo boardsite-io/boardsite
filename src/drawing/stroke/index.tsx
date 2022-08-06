@@ -24,7 +24,7 @@ export class BoardStroke implements Stroke {
     points: number[] = []
     hitboxes: Polygon[] = []
     textfield?: Textfield
-    isErased = false
+    isHidden = false
 
     /**
      * Create a new stroke from another Stroke instance
@@ -73,7 +73,7 @@ export class BoardStroke implements Stroke {
         this.points = strokeCopy.points ?? this.points
         this.textfield = strokeCopy.textfield ?? this.textfield
 
-        this.isErased = false
+        this.isHidden = false
         this.calculateHitbox() // recalculate hitbox
         return this
     }

@@ -77,7 +77,7 @@ export const useTransformer = (
             shapeTr.start(point, handleType)
             if (transformStrokes) {
                 // non redoable delete
-                board.handleSoftEraseStrokes(transformStrokes)
+                board.hideStrokes(transformStrokes)
             }
             isMouseOrTouchDown = true
         },

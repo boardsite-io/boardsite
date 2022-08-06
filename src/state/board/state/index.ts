@@ -157,14 +157,14 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
         return pageCollection[pageId]?.meta?.size ?? PAGE_SIZE.A4_LANDSCAPE
     }
 
-    handleSoftEraseStrokes(strokes: Stroke[]): void {
+    hideStrokes(strokes: Stroke[]): void {
         strokes.forEach((stroke) => {
             this.state.pageCollection[stroke.pageId].strokes[
                 stroke.id
-            ].isErased = true
+            ].isHidden = true
         })
 
-        subscriptionState.render("RenderNG", "EditMenu")
+        this.renderPagesWithStrokeChanges(strokes, true)
     }
 
     /**
@@ -174,7 +174,7 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
     addOrUpdateStrokes(strokes: Stroke[]): void {
         strokes.forEach((stroke) => {
             const page = this.getState().pageCollection[stroke.pageId]
-            stroke.isErased = false
+            stroke.isHidden = false
             if (page && stroke.id) {
                 if (page.strokes[stroke.id]) {
                     // stroke exists -> update
@@ -205,7 +205,10 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
      * Rerender all pages which have changed content
      * @param strokes stroke updates which could require a content render
      */
-    private renderPagesWithStrokeChanges(strokes: Stroke[]): void {
+    private renderPagesWithStrokeChanges(
+        strokes: Stroke[],
+        skipLocalStorage?: boolean
+    ): void {
         const renderedPages: Record<PageId, boolean> = {}
         strokes.forEach(({ pageId }) => {
             if (pageId && !renderedPages[pageId]) {
@@ -214,7 +217,9 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
             }
         })
         subscriptionState.render("EditMenu")
-        this.saveToLocalStorage()
+        if (!skipLocalStorage) {
+            this.saveToLocalStorage()
+        }
     }
 
     /**

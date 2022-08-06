@@ -13,7 +13,7 @@ export const draw = (
     ctx: CanvasRenderingContext2D,
     stroke: Stroke | LiveStroke
 ) => {
-    if ((stroke as Stroke).isErased) return
+    if ((stroke as Stroke).isHidden) return
     ctx.fillStyle = strokeStyleToRGBA(stroke.style)
     ctx.strokeStyle = strokeStyleToRGBA(stroke.style)
     drawStroke(ctx, stroke)

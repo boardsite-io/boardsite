@@ -74,7 +74,7 @@ export type StrokeUpdate = Partial<SerializedStroke>
 export interface Stroke
     extends SerializedStroke,
         Serializer<Stroke, SerializedStroke> {
-    isErased: boolean
+    isHidden: boolean
 
     update: (strokeUpdate: StrokeUpdate) => Stroke
 
