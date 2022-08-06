@@ -11,19 +11,27 @@ const EditMenu = () => {
     const disableUndoStack = undoStack.length === 0
     const disableRedoStack = redoStack.length === 0
 
+    const undo = () => {
+        action.undo()
+    }
+
+    const redo = () => {
+        action.redo()
+    }
+
     return (
         <SubMenuWrap>
             <MenuItem
                 disabled={disableUndoStack}
                 text={<FormattedMessage id="Menu.General.Edit.Undo" />}
                 icon={<UndoIcon />}
-                onClick={action.undo}
+                onClick={undo}
             />
             <MenuItem
                 disabled={disableRedoStack}
                 text={<FormattedMessage id="Menu.General.Edit.Redo" />}
                 icon={<RedoIcon />}
-                onClick={action.redo}
+                onClick={redo}
             />
         </SubMenuWrap>
     )
