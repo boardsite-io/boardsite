@@ -1,9 +1,11 @@
 import { MenuIcon } from "components"
 import { TEXTFIELD_MIN_HEIGHT, TEXTFIELD_MIN_WIDTH } from "consts"
+import { cloneDeep } from "lodash"
 import React, { ChangeEvent, memo, useEffect, useRef, useState } from "react"
 import { useGState } from "state"
 import { action } from "state/action"
 import { board } from "state/board"
+import { drawing } from "state/drawing"
 import { applyTransformOnPoints, getUnflippedRect } from "util/render/shapes"
 import { PageProps } from "../index.types"
 import {
@@ -16,14 +18,13 @@ import TextfieldSettings from "./TextfieldSettings"
 
 export const ActiveTextfield: React.FC<PageProps> = memo(
     ({ page, pageOffset }) => {
-        useGState("Textfield")
+        const { textfieldAttributes } = useGState("Textfield").drawing
         const inputRef = useRef<HTMLTextAreaElement>(null)
         const { activeTextfield } = board.getState()
         const [open, setOpen] = useState<boolean>(false)
 
-        const currentTextfield = activeTextfield?.textfield
         const hideTextfield =
-            !currentTextfield || activeTextfield.pageId !== page.pageId
+            !activeTextfield || activeTextfield.pageId !== page.pageId
 
         useEffect(() => {
             if (hideTextfield) return
@@ -43,7 +44,7 @@ export const ActiveTextfield: React.FC<PageProps> = memo(
         )
 
         const onFinishTextEdit = () => {
-            if (!activeTextfield?.textfield) return
+            if (!activeTextfield) return
 
             const input = inputRef.current
             if (input) {
@@ -56,7 +57,7 @@ export const ActiveTextfield: React.FC<PageProps> = memo(
                 } = input
 
                 if (value) {
-                    activeTextfield.textfield.text = value
+                    activeTextfield.textfield = cloneDeep(textfieldAttributes)
                     activeTextfield.points = [
                         left + offsetLeft,
                         top + offsetTop,
@@ -78,7 +79,6 @@ export const ActiveTextfield: React.FC<PageProps> = memo(
 
         return (
             <>
-                <TextfieldSettings open={open} onClose={() => setOpen(false)} />
                 <TextfieldBackground
                     onClick={onFinishTextEdit}
                     style={{
@@ -88,8 +88,14 @@ export const ActiveTextfield: React.FC<PageProps> = memo(
                         top: pageOffset.top,
                     }}
                 />
+                <TextfieldSettings
+                    open={open}
+                    onClose={() => {
+                        setOpen(false)
+                    }}
+                />
                 <AttributesProvider
-                    {...currentTextfield}
+                    {...textfieldAttributes}
                     style={{
                         left: left + pageOffset.left,
                         top: top + pageOffset.top,
@@ -97,16 +103,18 @@ export const ActiveTextfield: React.FC<PageProps> = memo(
                 >
                     <TextfieldSettingsButton
                         icon={<MenuIcon />}
-                        onClick={() => setOpen(true)}
+                        onClick={() => {
+                            setOpen(true)
+                        }}
                     />
                     <Textarea
-                        value={currentTextfield.text}
-                        color={currentTextfield.color}
+                        value={textfieldAttributes.text}
+                        color={textfieldAttributes.color}
                         autoFocus
                         ref={inputRef}
                         onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
-                            board.setTextareaAttributes({
-                                ...currentTextfield,
+                            drawing.setTextfieldAttributes({
+                                ...textfieldAttributes,
                                 text: e.target.value,
                             })
                         }}

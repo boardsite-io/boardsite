@@ -1,5 +1,5 @@
 import { BoardStroke } from "drawing/stroke"
-import { Stroke, Textfield } from "drawing/stroke/index.types"
+import { Stroke, TextfieldAttrs } from "drawing/stroke/index.types"
 import { subscriptionState } from "state/subscription"
 import { GlobalState } from "state/types"
 import { assign, cloneDeep, keys, pick } from "lodash"
@@ -112,24 +112,10 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
     setActiveTextfield(activeTextfield: ActiveTextfield): void {
         // clone to prevent the text from being edited in-place
         this.state.activeTextfield = cloneDeep(activeTextfield)
-
-        if (!activeTextfield.textfield) {
-            this.state.activeTextfield.textfield = {
-                text: "",
-                color: "#000000",
-                hAlign: "left",
-                vAlign: "top",
-                font: "Lato, sans-serif",
-                fontWeight: 400,
-                fontSize: 16,
-                lineHeight: 20,
-            }
-        }
-
         subscriptionState.render("Textfield")
     }
 
-    setTextareaAttributes(textfield: Textfield) {
+    setTextfieldAttributes(textfield: TextfieldAttrs) {
         if (this.state.activeTextfield) {
             this.state.activeTextfield.textfield = textfield
             subscriptionState.render("Textfield")

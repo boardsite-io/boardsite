@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogContent } from "components"
 import { DialogProps } from "components/Dialog"
 import React from "react"
-import { board } from "state/board"
+import { drawing } from "state/drawing"
 import { FontSizes } from "./index.styled"
 
 interface TextfieldSettingsProps {
@@ -15,11 +15,7 @@ const TextfieldSettings: React.FC<TextfieldSettingsProps> = ({
     open,
     onClose,
 }) => {
-    const textarea = board.getState().activeTextfield?.textfield
-
-    if (!textarea) {
-        return null
-    }
+    const textfield = drawing.getState().textfieldAttributes
 
     return (
         <Dialog open={open} onClose={onClose}>
@@ -29,8 +25,8 @@ const TextfieldSettings: React.FC<TextfieldSettingsProps> = ({
                         <Button
                             key={fontSize}
                             onClick={() => {
-                                board.setTextareaAttributes({
-                                    ...textarea,
+                                drawing.setTextfieldAttributes({
+                                    ...textfield,
                                     fontSize,
                                     lineHeight: fontSize,
                                 })

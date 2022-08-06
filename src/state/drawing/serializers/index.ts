@@ -24,6 +24,7 @@ export class DrawingSerializer
             tool: this.state.tool,
             pageMeta: this.state.pageMeta,
             erasedStrokes: {},
+            textfieldAttributes: this.state.textfieldAttributes,
         }
     }
 

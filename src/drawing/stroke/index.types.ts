@@ -46,7 +46,7 @@ export interface Tool {
 export type HAlign = "center" | "left" | "right"
 export type VAlign = "middle" | "top" | "bottom"
 
-export interface Textfield {
+export interface TextfieldAttrs {
     text: string
     color: string
     hAlign: HAlign
@@ -66,7 +66,7 @@ export interface SerializedStroke extends Tool {
     scaleY: number
     points: number[]
     hitboxes?: Polygon[]
-    textfield?: Textfield
+    textfield?: TextfieldAttrs
 }
 
 export type StrokeUpdate = Partial<SerializedStroke>

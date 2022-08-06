@@ -1,5 +1,5 @@
 import { IconButton } from "components"
-import type { Textfield as TextfieldObject } from "drawing/stroke/index.types"
+import type { TextfieldAttrs as TextfieldObject } from "drawing/stroke/index.types"
 import styled from "styled-components"
 
 type TextareaProps = {
@@ -24,7 +24,8 @@ export const TextfieldSettingsButton = styled(IconButton)`
     margin: 0;
     padding: 2px;
     position: absolute;
-    bottom: 0.5rem;
+    top: 0px;
+    right: 2px;
     height: 2rem;
     width: 2rem;
     box-shadow: var(--box-shadow);

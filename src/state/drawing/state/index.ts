@@ -1,4 +1,9 @@
-import { Stroke, Tool, ToolType } from "drawing/stroke/index.types"
+import {
+    Stroke,
+    TextfieldAttrs,
+    Tool,
+    ToolType,
+} from "drawing/stroke/index.types"
 import { Paper, PageSize } from "state/board/state/index.types"
 import { subscriptionState } from "state/subscription"
 import { isDrawType } from "util/drawing"
@@ -64,6 +69,11 @@ export class Drawing
             this.state.erasedStrokes[stroke.id] = stroke
         })
         subscriptionState.render("PageContent")
+    }
+
+    setTextfieldAttributes(attrs: TextfieldAttrs) {
+        this.state.textfieldAttributes = attrs
+        subscriptionState.render("Textfield")
     }
 
     /**

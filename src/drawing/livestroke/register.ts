@@ -52,8 +52,9 @@ const register: Record<ToolType, (stroke: BoardStroke) => void> = {
 
             const targetStroke = strokesInPoint.pop() as ActiveTextfield
 
-            if (targetStroke) {
+            if (targetStroke?.textfield) {
                 targetStroke.isUpdate = true
+                drawing.setTextfieldAttributes(targetStroke.textfield)
                 board.setActiveTextfield(targetStroke)
                 board.hideStrokes([targetStroke])
             } else {

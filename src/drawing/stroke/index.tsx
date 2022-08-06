@@ -9,7 +9,7 @@ import {
     SerializedStroke,
     Stroke,
     StrokeUpdate,
-    Textfield,
+    TextfieldAttrs,
 } from "./index.types"
 
 export class BoardStroke implements Stroke {
@@ -23,7 +23,7 @@ export class BoardStroke implements Stroke {
     scaleY = 1
     points: number[] = []
     hitboxes: Polygon[] = []
-    textfield?: Textfield
+    textfield?: TextfieldAttrs
     isHidden = false
 
     /**
