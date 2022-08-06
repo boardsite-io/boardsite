@@ -1,5 +1,5 @@
 import { BoardStroke } from "drawing/stroke"
-import { Stroke, StrokeUpdate } from "drawing/stroke/index.types"
+import { Stroke } from "drawing/stroke/index.types"
 import { subscriptionState } from "state/subscription"
 import { GlobalState } from "state/types"
 import { assign, cloneDeep, keys, pick } from "lodash"
@@ -84,8 +84,6 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
      */
     clearTransform(): void {
         this.state.transformStrokes = []
-        this.state.strokeUpdates = []
-
         Object.values(subscriptionState.pageSubscribers).forEach((pageLayers) =>
             pageLayers?.transformer?.({})
         )
@@ -175,14 +173,14 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
      */
     addOrUpdateStrokes(strokes: Stroke[]): void {
         strokes.forEach((stroke) => {
-            const page = this.getState().pageCollection[stroke.pageId ?? ""]
+            const page = this.getState().pageCollection[stroke.pageId]
             stroke.isErased = false
             if (page && stroke.id) {
                 if (page.strokes[stroke.id]) {
                     // stroke exists -> update
                     page.strokes[stroke.id].update(stroke)
                 } else {
-                    page.strokes[stroke.id] = new BoardStroke(stroke as Stroke)
+                    page.strokes[stroke.id] = new BoardStroke(stroke)
                 }
             }
         })
@@ -193,7 +191,7 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
      * Delete strokes
      * @param strokes strokes to be deleted
      */
-    deleteStrokes(strokes: Stroke[] | StrokeUpdate[]): void {
+    deleteStrokes(strokes: Stroke[]): void {
         strokes.forEach(({ id, pageId }) => {
             const page = this.getState().pageCollection[pageId ?? ""]
             if (page && id) {
@@ -207,12 +205,9 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
      * Rerender all pages which have changed content
      * @param strokes stroke updates which could require a content render
      */
-    private renderPagesWithStrokeChanges(
-        strokes: Stroke[] | StrokeUpdate[]
-    ): void {
+    private renderPagesWithStrokeChanges(strokes: Stroke[]): void {
         const renderedPages: Record<PageId, boolean> = {}
-        strokes.forEach((stroke) => {
-            const { pageId } = stroke
+        strokes.forEach(({ pageId }) => {
             if (pageId && !renderedPages[pageId]) {
                 renderedPages[pageId] = true // prevent rerendering twice
                 subscriptionState.renderPageLayer("content", pageId)

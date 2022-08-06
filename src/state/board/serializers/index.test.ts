@@ -13,7 +13,6 @@ describe("board reducer state", () => {
             version: BOARD_VERSION,
             ...getDefaultBoardState(),
         }
-        delete want.strokeUpdates
         delete want.transformPagePosition
         delete want.transformStrokes
         delete want.activeTextfield

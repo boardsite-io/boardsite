@@ -57,7 +57,7 @@ export const PAGE_SIZE = {
     A4_LANDSCAPE: { width: 877, height: 620 },
 }
 
-const FAVORITE_TOOL_1: Tool = {
+export const FAVORITE_TOOL_1: Tool = {
     type: ToolType.Pen,
     style: {
         color: "#000000",

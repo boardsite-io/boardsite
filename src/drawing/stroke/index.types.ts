@@ -57,8 +57,8 @@ export interface Textfield {
     lineHeight: number
 }
 
-export interface BaseStroke extends Tool {
-    id?: string
+export interface SerializedStroke extends Tool {
+    id: string
     pageId: string
     x: number
     y: number
@@ -69,29 +69,14 @@ export interface BaseStroke extends Tool {
     textfield?: Textfield
 }
 
-export interface StrokeUpdate {
-    id?: string
-    pageId?: string
-    x?: number
-    y?: number
-    scaleX?: number
-    scaleY?: number
-}
-
-export interface SerializedStroke extends BaseStroke {
-    id: string
-    scaleX: number
-    scaleY: number
-}
+export type StrokeUpdate = Partial<SerializedStroke>
 
 export interface Stroke
     extends SerializedStroke,
         Serializer<Stroke, SerializedStroke> {
     isErased: boolean
 
-    serializeUpdate(): StrokeUpdate
-
-    update: (strokeUpdate: Stroke | StrokeUpdate) => Stroke
+    update: (strokeUpdate: StrokeUpdate) => Stroke
 
     getPosition(): Point
 

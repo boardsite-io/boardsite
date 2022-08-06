@@ -1,7 +1,8 @@
-import { LiveStroke } from "drawing/livestroke/index.types"
-import { assign, pick } from "lodash"
+import { cloneDeep, pick } from "lodash"
 import { Polygon } from "sat"
 import { getStrokeHitboxes } from "drawing/hitbox"
+import { LiveStroke } from "drawing/livestroke/index.types"
+import { FAVORITE_TOOL_1 } from "consts"
 import {
     Point,
     Scale,
@@ -9,52 +10,27 @@ import {
     Stroke,
     StrokeUpdate,
     Textfield,
-    ToolType,
 } from "./index.types"
 
 export class BoardStroke implements Stroke {
-    type: ToolType
-    style: {
-        color: string
-        width: number
-        opacity: number
-    }
-
-    id: string
-    pageId: string
-
-    x: number
-    y: number
-    scaleX: number
-    scaleY: number
-
-    points: number[]
+    type = FAVORITE_TOOL_1.type
+    style = FAVORITE_TOOL_1.style
+    id = ""
+    pageId = ""
+    x = 0
+    y = 0
+    scaleX = 1
+    scaleY = 1
+    points: number[] = []
     hitboxes: Polygon[] = []
-    textfield?: Textfield | undefined
-    isErased: boolean
+    textfield?: Textfield
+    isErased = false
 
     /**
      * Create a new stroke from another Stroke instance
      */
-    constructor(stroke: Stroke | LiveStroke | SerializedStroke) {
-        this.id = stroke.id ?? createUniqueId()
-        this.pageId = stroke.pageId
-        this.x = stroke.x
-        this.y = stroke.y
-        this.scaleX = stroke.scaleX
-        this.scaleY = stroke.scaleY
-        this.type = stroke.type
-        this.style = { ...stroke.style }
-        this.points = [...stroke.points]
-        this.textfield = stroke.textfield
-        this.isErased = false
-
-        // Check if hitboxes need to be calculated
-        if (stroke.hitboxes?.length) {
-            this.hitboxes = stroke.hitboxes
-        } else {
-            this.calculateHitbox()
-        }
+    constructor(stroke: SerializedStroke | LiveStroke) {
+        this.update(stroke)
     }
 
     /**
@@ -80,34 +56,24 @@ export class BoardStroke implements Stroke {
         return this
     }
 
-    // returns a copy of the stroke with the update properties
-    serializeUpdate(): StrokeUpdate {
-        return pick(this, [
-            "id",
-            "pageId",
-            "type",
-            "x",
-            "y",
-            "scaleX",
-            "scaleY",
-        ])
-    }
-
     /**
      * Update stroke such as position and/or scale.
      */
-    update(strokeUpdate: Stroke | StrokeUpdate): Stroke {
-        assign(
-            this,
-            pick(strokeUpdate, [
-                "x",
-                "y",
-                "scaleX",
-                "scaleY",
-                "textfield",
-                "isErased",
-            ])
-        )
+    update(strokeUpdate: StrokeUpdate): Stroke {
+        const strokeCopy = cloneDeep(strokeUpdate)
+
+        this.id = (strokeCopy.id ?? this.id) || createUniqueId()
+        this.pageId = strokeCopy.pageId ?? this.pageId
+        this.x = strokeCopy.x ?? this.x
+        this.y = strokeCopy.y ?? this.y
+        this.scaleX = strokeCopy.scaleX ?? this.scaleX
+        this.scaleY = strokeCopy.scaleY ?? this.scaleY
+        this.type = strokeCopy.type ?? this.type
+        this.style = strokeCopy.style ?? this.style
+        this.points = strokeCopy.points ?? this.points
+        this.textfield = strokeCopy.textfield ?? this.textfield
+
+        this.isErased = false
         this.calculateHitbox() // recalculate hitbox
         return this
     }

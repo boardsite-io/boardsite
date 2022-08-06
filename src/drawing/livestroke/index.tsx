@@ -21,6 +21,7 @@ import { LiveStroke } from "./index.types"
 import { registerStroke } from "./register"
 
 export class BoardLiveStroke implements LiveStroke {
+    id = ""
     pageId = ""
     x = 0
     y = 0
