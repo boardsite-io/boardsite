@@ -9,3 +9,6 @@ export const reduceRecord = <T, U>(
         }),
         {}
     )
+
+export const parseFontSize = (fontSize: string): number =>
+    parseInt(fontSize.replace("px", ""), 10)

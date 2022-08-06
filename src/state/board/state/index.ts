@@ -1,5 +1,5 @@
 import { BoardStroke } from "drawing/stroke"
-import { Stroke } from "drawing/stroke/index.types"
+import { Stroke, Textfield } from "drawing/stroke/index.types"
 import { subscriptionState } from "state/subscription"
 import { GlobalState } from "state/types"
 import { assign, cloneDeep, keys, pick } from "lodash"
@@ -127,6 +127,13 @@ export class Board extends BoardSerializer implements GlobalState<BoardState> {
         }
 
         subscriptionState.render("Textfield")
+    }
+
+    setTextareaAttributes(textfield: Textfield) {
+        if (this.state.activeTextfield) {
+            this.state.activeTextfield.textfield = textfield
+            subscriptionState.render("Textfield")
+        }
     }
 
     clearActiveTextfield(): void {

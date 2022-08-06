@@ -1,4 +1,4 @@
-import { Tool, ToolType } from "drawing/stroke/index.types"
+import { Textfield, Tool, ToolType } from "drawing/stroke/index.types"
 import { ViewTransform } from "state/view/state/index.types"
 
 /* 
@@ -87,3 +87,14 @@ export const DEFAULT_FAV_TOOLS = [
     FAVORITE_TOOL_2,
     FAVORITE_TOOL_3,
 ]
+
+export const DEFAULT_TEXTFIELD_ATTRIBUTES: Textfield = {
+    text: "",
+    color: "#000000",
+    hAlign: "left",
+    vAlign: "top",
+    font: "Lato, sans-serif",
+    fontWeight: 400,
+    fontSize: 16,
+    lineHeight: 20,
+}

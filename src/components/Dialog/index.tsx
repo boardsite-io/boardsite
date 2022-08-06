@@ -1,7 +1,7 @@
 import React, { MouseEventHandler, ReactNode } from "react"
 import { DialogBox, DialogBackground } from "./index.styled"
 
-interface DialogProps {
+export interface DialogProps {
     open: boolean
     onClose: MouseEventHandler<HTMLDivElement>
     children: ReactNode

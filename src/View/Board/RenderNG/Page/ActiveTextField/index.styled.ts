@@ -1,20 +1,37 @@
+import { IconButton } from "components"
 import type { Textfield as TextfieldObject } from "drawing/stroke/index.types"
 import styled from "styled-components"
 
-export const Textfield = styled.textarea`
+type TextareaProps = {
+    width: number
+    height: number
+}
+
+export const Textarea = styled.textarea<TextareaProps>`
     background: ${({ theme }) => theme.palette.editor.paper}ee;
     box-shadow: var(--box-shadow);
     position: absolute;
     outline: none;
+
     border: 1px solid ${({ theme }) => theme.palette.secondary.main};
     border-radius: var(--border-radius);
+
+    width: ${({ width }) => width}px;
+    height: ${({ height }) => height}px;
 `
 
-export const TextfieldBackground = styled.button<Omit<TextfieldObject, "text">>`
+export const TextfieldSettingsButton = styled(IconButton)`
+    margin: 0;
+    padding: 2px;
     position: absolute;
-    background: transparent;
-    outline: none;
-    border: none;
+    bottom: 0.5rem;
+    height: 2rem;
+    width: 2rem;
+    box-shadow: var(--box-shadow);
+`
+
+export const AttributesProvider = styled.div<Omit<TextfieldObject, "text">>`
+    position: absolute;
 
     textarea {
         text-align: ${({ hAlign }) => hAlign};
@@ -23,4 +40,11 @@ export const TextfieldBackground = styled.button<Omit<TextfieldObject, "text">>`
         font-size: ${({ fontSize }) => fontSize}px;
         line-height: ${({ lineHeight }) => lineHeight}px;
     }
+`
+
+export const TextfieldBackground = styled.button`
+    position: absolute;
+    background: transparent;
+    outline: none;
+    border: none;
 `
