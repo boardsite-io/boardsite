@@ -12,10 +12,8 @@ export const Textarea = styled.textarea<TextareaProps>`
     box-shadow: var(--box-shadow);
     position: absolute;
     outline: none;
-
-    border: 1px solid ${({ theme }) => theme.palette.secondary.main};
     border-radius: var(--border-radius);
-
+    border: none;
     width: ${({ width }) => width}px;
     height: ${({ height }) => height}px;
 `
@@ -31,6 +29,8 @@ export const TextfieldSettingsButton = styled(IconButton)`
     box-shadow: var(--box-shadow);
 `
 
+export const TEXTFIELD_PADDING = 2
+
 export const AttributesProvider = styled.div<Omit<TextfieldObject, "text">>`
     position: absolute;
 
@@ -40,6 +40,7 @@ export const AttributesProvider = styled.div<Omit<TextfieldObject, "text">>`
         font-family: ${({ font }) => font};
         font-size: ${({ fontSize }) => fontSize}px;
         line-height: ${({ lineHeight }) => lineHeight}px;
+        padding: ${TEXTFIELD_PADDING}px;
     }
 `
 

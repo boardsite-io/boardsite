@@ -28,7 +28,7 @@ const TextfieldSettings: React.FC<TextfieldSettingsProps> = ({
                                 drawing.setTextfieldAttributes({
                                     ...textfield,
                                     fontSize,
-                                    lineHeight: fontSize,
+                                    lineHeight: fontSize * 1.25,
                                 })
                             }}
                         >

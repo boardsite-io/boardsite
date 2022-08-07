@@ -13,6 +13,7 @@ import {
     TextfieldBackground,
     TextfieldSettingsButton,
     AttributesProvider,
+    TEXTFIELD_PADDING,
 } from "./index.styled"
 import TextfieldSettings from "./TextfieldSettings"
 
@@ -97,8 +98,8 @@ export const ActiveTextfield: React.FC<PageProps> = memo(
                 <AttributesProvider
                     {...textfieldAttributes}
                     style={{
-                        left: left + pageOffset.left,
-                        top: top + pageOffset.top,
+                        left: left + pageOffset.left - TEXTFIELD_PADDING,
+                        top: top + pageOffset.top - TEXTFIELD_PADDING,
                     }}
                 >
                     <TextfieldSettingsButton

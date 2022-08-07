@@ -109,8 +109,8 @@ const drawTextField = (
     if (!stroke.textfield?.text) {
         ctx.lineWidth = 1
         ctx.fillStyle = `${settings.getTheme().palette.editor.paper}ee`
-        ctx.strokeStyle = settings.getTheme().palette.secondary.main
-        drawRoundRect(ctx, left, top, width + 6, height + 6, 4, true, true)
+        ctx.strokeStyle = `${settings.getTheme().palette.secondary.main}66`
+        drawRoundRect(ctx, left, top, width, height, 4, true, true)
     } else {
         const {
             text,
@@ -130,7 +130,7 @@ const drawTextField = (
         canvasTxt.fontWeight = fontWeight
         canvasTxt.fontSize = fontSize
         canvasTxt.lineHeight = lineHeight
-        canvasTxt.drawText(ctx, text, left + 3, top + 3, width, height)
+        canvasTxt.drawText(ctx, text, left, top, width, height)
     }
 }
 

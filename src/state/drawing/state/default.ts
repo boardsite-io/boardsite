@@ -26,7 +26,7 @@ export const getDefaultDrawingState = (): DrawingState => ({
         font: "Lato, sans-serif",
         fontWeight: 400,
         fontSize: 16,
-        lineHeight: 20,
+        lineHeight: 16 * 1.25,
     },
     pageMeta: {
         background: { paper: Paper.Blank },
