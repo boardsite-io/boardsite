@@ -26,6 +26,7 @@ export type Subscription =
     | "DialogState"
     | "MainMenu"
     | "ShortcutsOpen"
+    | "TextfieldSettings"
     | "SubscribeOpen"
     // Notification
     | "Notification"

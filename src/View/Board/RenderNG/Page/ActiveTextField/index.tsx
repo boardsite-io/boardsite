@@ -1,11 +1,12 @@
 import { MenuIcon } from "components"
 import { TEXTFIELD_MIN_HEIGHT, TEXTFIELD_MIN_WIDTH } from "consts"
 import { cloneDeep } from "lodash"
-import React, { ChangeEvent, memo, useEffect, useRef, useState } from "react"
+import React, { ChangeEvent, memo, useEffect, useRef } from "react"
 import { useGState } from "state"
 import { action } from "state/action"
 import { board } from "state/board"
 import { drawing } from "state/drawing"
+import { menu } from "state/menu"
 import { applyTransformOnPoints, getUnflippedRect } from "util/render/shapes"
 import { PageProps } from "../index.types"
 import {
@@ -15,14 +16,12 @@ import {
     AttributesProvider,
     TEXTFIELD_PADDING,
 } from "./index.styled"
-import TextfieldSettings from "./TextfieldSettings"
 
 export const ActiveTextfield: React.FC<PageProps> = memo(
     ({ page, pageOffset }) => {
         const { textfieldAttributes } = useGState("Textfield").drawing
         const inputRef = useRef<HTMLTextAreaElement>(null)
         const { activeTextfield } = board.getState()
-        const [open, setOpen] = useState<boolean>(false)
 
         const hideTextfield =
             !activeTextfield || activeTextfield.pageId !== page.pageId
@@ -89,12 +88,6 @@ export const ActiveTextfield: React.FC<PageProps> = memo(
                         top: pageOffset.top,
                     }}
                 />
-                <TextfieldSettings
-                    open={open}
-                    onClose={() => {
-                        setOpen(false)
-                    }}
-                />
                 <AttributesProvider
                     {...textfieldAttributes}
                     style={{
@@ -105,12 +98,11 @@ export const ActiveTextfield: React.FC<PageProps> = memo(
                     <TextfieldSettingsButton
                         icon={<MenuIcon />}
                         onClick={() => {
-                            setOpen(true)
+                            menu.openTextfieldSettings()
                         }}
                     />
                     <Textarea
                         value={textfieldAttributes.text}
-                        color={textfieldAttributes.color}
                         autoFocus
                         ref={inputRef}
                         onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {

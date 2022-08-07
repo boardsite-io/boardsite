@@ -9,6 +9,7 @@ import Dialog from "./Dialog"
 import MainMenu from "./MainMenu"
 import Notification from "./Notification"
 import Shortcuts from "./Shortcuts"
+import TextfieldSettings from "./TextfieldSettings"
 
 const View: React.FC = () => {
     useKeyboardShortcuts()
@@ -25,6 +26,7 @@ const View: React.FC = () => {
             <MainMenu />
             <ToolRing />
             <FavoriteTools />
+            <TextfieldSettings />
         </ViewWrap>
     )
 }

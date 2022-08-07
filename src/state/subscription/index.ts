@@ -29,6 +29,7 @@ export class SubscriptionState {
         MainMenu: [],
         MenuPageButton: [],
         Notification: [],
+        TextfieldSettings: [],
         Theme: [],
         RenderNG: [],
         Session: [],

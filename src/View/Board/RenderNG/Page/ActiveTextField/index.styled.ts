@@ -41,6 +41,7 @@ export const AttributesProvider = styled.div<Omit<TextfieldObject, "text">>`
         font-size: ${({ fontSize }) => fontSize}px;
         line-height: ${({ lineHeight }) => lineHeight}px;
         padding: ${TEXTFIELD_PADDING}px;
+        color: ${({ color }) => color};
     }
 `
 

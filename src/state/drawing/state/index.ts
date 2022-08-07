@@ -73,7 +73,7 @@ export class Drawing
 
     setTextfieldAttributes(attrs: TextfieldAttrs) {
         this.state.textfieldAttributes = attrs
-        subscriptionState.render("Textfield")
+        subscriptionState.render("Textfield", "TextfieldSettings")
     }
 
     /**

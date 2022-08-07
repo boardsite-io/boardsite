@@ -208,5 +208,6 @@
     "Loading.ImportingPdf": "Importing PDF...",
     "Loading.ExportWorkspace": "Saving workspace...",
     "Loading.ImportWorkspace": "Loading workspace...",
-    "Loading.ContinuePreviousSession": "Loading previous session..."
+    "Loading.ContinuePreviousSession": "Loading previous session...",
+    "TextfieldSettings.SampleText": "Sample Text"
 }
