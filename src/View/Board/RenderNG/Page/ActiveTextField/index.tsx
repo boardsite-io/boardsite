@@ -1,14 +1,13 @@
 import { MenuIcon } from "components"
 import { TEXTFIELD_MIN_HEIGHT, TEXTFIELD_MIN_WIDTH } from "consts"
-import { cloneDeep } from "lodash"
 import React, { ChangeEvent, memo, useEffect, useRef } from "react"
 import { useGState } from "state"
-import { action } from "state/action"
 import { board } from "state/board"
 import { drawing } from "state/drawing"
 import { menu } from "state/menu"
 import { applyTransformOnPoints, getUnflippedRect } from "util/render/shapes"
 import { PageProps } from "../index.types"
+import { onFinishTextEdit } from "./helpers"
 import {
     Textarea,
     TextfieldBackground,
@@ -16,6 +15,7 @@ import {
     AttributesProvider,
     TEXTFIELD_PADDING,
 } from "./index.styled"
+import { useKeylistener } from "./useKeylistener"
 
 export const ActiveTextfield: React.FC<PageProps> = memo(
     ({ page, pageOffset }) => {
@@ -25,6 +25,8 @@ export const ActiveTextfield: React.FC<PageProps> = memo(
 
         const hideTextfield =
             !activeTextfield || activeTextfield.pageId !== page.pageId
+
+        useKeylistener(inputRef)
 
         useEffect(() => {
             if (hideTextfield) return
@@ -43,44 +45,10 @@ export const ActiveTextfield: React.FC<PageProps> = memo(
             activeTextfield.points
         )
 
-        const onFinishTextEdit = () => {
-            if (!activeTextfield) return
-
-            const input = inputRef.current
-            if (input) {
-                const {
-                    value,
-                    offsetWidth,
-                    offsetHeight,
-                    offsetLeft,
-                    offsetTop,
-                } = input
-
-                if (value) {
-                    activeTextfield.textfield = cloneDeep(textfieldAttributes)
-                    activeTextfield.points = [
-                        left + offsetLeft,
-                        top + offsetTop,
-                        left + offsetLeft + offsetWidth,
-                        top + offsetTop + offsetHeight,
-                    ]
-                    activeTextfield.calculateHitbox() // Update Hitbox
-
-                    if (activeTextfield.isUpdate) {
-                        action.updateStrokes([activeTextfield])
-                    } else {
-                        action.addStrokes([activeTextfield])
-                    }
-                }
-            }
-
-            board.clearActiveTextfield()
-        }
-
         return (
             <>
                 <TextfieldBackground
-                    onClick={onFinishTextEdit}
+                    onClick={() => onFinishTextEdit(inputRef)}
                     style={{
                         width: page.meta.size.width,
                         height: page.meta.size.height,
