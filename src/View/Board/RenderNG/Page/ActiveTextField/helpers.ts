@@ -24,7 +24,7 @@ export const onFinishTextEdit = (
                 left + offsetLeft,
                 top + offsetTop,
                 left + offsetLeft + offsetWidth,
-                top + offsetTop + offsetHeight,
+                top + offsetTop + Math.max(offsetHeight, input.scrollHeight),
             ]
             activeTextfield.calculateHitbox() // Update Hitbox
 
