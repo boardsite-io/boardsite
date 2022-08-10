@@ -298,6 +298,7 @@ export class Action implements GlobalState<ActionState> {
     newWorkspace(): void {
         this.deleteAllPages()
         this.addPageUnder()
+        this.clearUndoRedo()
         view.validatePageIndex()
         menu.closeMainMenu()
     }
