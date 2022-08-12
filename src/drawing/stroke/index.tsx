@@ -1,4 +1,4 @@
-import { cloneDeep, pick } from "lodash"
+import { pick } from "lodash"
 import { Polygon } from "sat"
 import { getStrokeHitboxes } from "drawing/hitbox"
 import { LiveStroke } from "drawing/livestroke/index.types"
@@ -8,7 +8,6 @@ import {
     Scale,
     SerializedStroke,
     Stroke,
-    StrokeUpdate,
     TextfieldAttrs,
 } from "./index.types"
 
@@ -59,19 +58,17 @@ export class BoardStroke implements Stroke {
     /**
      * Update stroke such as position and/or scale.
      */
-    update(strokeUpdate: StrokeUpdate): Stroke {
-        const strokeCopy = cloneDeep(strokeUpdate)
-
-        this.id = (strokeCopy.id ?? this.id) || createUniqueId()
-        this.pageId = strokeCopy.pageId ?? this.pageId
-        this.x = strokeCopy.x ?? this.x
-        this.y = strokeCopy.y ?? this.y
-        this.scaleX = strokeCopy.scaleX ?? this.scaleX
-        this.scaleY = strokeCopy.scaleY ?? this.scaleY
-        this.type = strokeCopy.type ?? this.type
-        this.style = strokeCopy.style ?? this.style
-        this.points = strokeCopy.points ?? this.points
-        this.textfield = strokeCopy.textfield ?? this.textfield
+    update(strokeUpdate: Partial<SerializedStroke>): Stroke {
+        this.id = (strokeUpdate.id ?? this.id) || createUniqueId()
+        this.pageId = strokeUpdate.pageId ?? this.pageId
+        this.x = strokeUpdate.x ?? this.x
+        this.y = strokeUpdate.y ?? this.y
+        this.scaleX = strokeUpdate.scaleX ?? this.scaleX
+        this.scaleY = strokeUpdate.scaleY ?? this.scaleY
+        this.type = strokeUpdate.type ?? this.type
+        this.style = strokeUpdate.style ?? this.style
+        this.points = strokeUpdate.points ?? this.points
+        this.textfield = strokeUpdate.textfield ?? this.textfield
 
         this.isHidden = false
         this.calculateHitbox() // recalculate hitbox

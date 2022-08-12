@@ -98,3 +98,5 @@ export const DEFAULT_TEXTFIELD_ATTRIBUTES: TextfieldAttrs = {
     fontSize: 16,
     lineHeight: 20,
 }
+
+export const FONT_SIZE_PRESETS = [12, 16, 20, 24, 32, 40, 50, 60]

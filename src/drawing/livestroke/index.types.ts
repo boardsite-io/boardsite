@@ -1,10 +1,4 @@
-import {
-    SerializedStroke,
-    Point,
-    Stroke,
-    StrokeCollection,
-    Tool,
-} from "drawing/stroke/index.types"
+import { SerializedStroke, Point, Tool } from "drawing/stroke/index.types"
 
 export interface LiveStroke extends SerializedStroke {
     start(point: Point, pageId: string): void
@@ -16,5 +10,4 @@ export interface LiveStroke extends SerializedStroke {
     reset(): void
     moveEraser(): void
     isReset(): boolean
-    selectLineCollision(strokes: StrokeCollection): Stroke[]
 }

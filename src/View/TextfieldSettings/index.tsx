@@ -4,6 +4,7 @@ import { useGState } from "state"
 import { menu } from "state/menu"
 import { FormattedMessage } from "language"
 import { drawing } from "state/drawing"
+import { FONT_SIZE_PRESETS } from "consts"
 import {
     ContentWrapper,
     CustomColorPicker,
@@ -11,8 +12,6 @@ import {
     TextPreview,
     TextPreviewWrapper,
 } from "./index.styled"
-
-const PRESETS = [12, 16, 20, 24, 32, 40, 50, 60]
 
 const TextfieldSettings: React.FC = () => {
     const { menu: menuState, drawing: drawingState } =
@@ -42,7 +41,7 @@ const TextfieldSettings: React.FC = () => {
                     }}
                 />
                 <FontSizes>
-                    {PRESETS.map((fontSize) => (
+                    {FONT_SIZE_PRESETS.map((fontSize) => (
                         <Button
                             key={fontSize}
                             onClick={() => {

@@ -12,6 +12,11 @@ type GetStrokesInPolygonProps = {
     filterType?: ToolType
 }
 
+/**
+ * Get all strokes which have an overlap with a given polygon. Provide
+ * a filterType if you only want to check for a specific stroke type.
+ * @returns array of overlapping strokes
+ */
 export function getStrokesInPolygon({
     strokes,
     polygon,
@@ -41,6 +46,11 @@ type GetStrokesInPointProps = {
     filterType?: ToolType
 }
 
+/**
+ * Get all strokes which contain a given point. Provide
+ * a filterType if you only want to check for a specific stroke type.
+ * @returns array of strokes containing the provided point
+ */
 export const getStrokesInPoint = ({
     strokes,
     point,

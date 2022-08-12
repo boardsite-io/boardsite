@@ -11,7 +11,7 @@ import {
     UserHost,
 } from "api/types"
 import { notification } from "state/notification"
-import { Stroke, StrokeUpdate, ToolType } from "drawing/stroke/index.types"
+import { Stroke, ToolType } from "drawing/stroke/index.types"
 import { board } from "state/board"
 import {
     AttachId,
@@ -263,7 +263,7 @@ export class Online
         this.state.session.socket?.send(JSON.stringify(message))
     }
 
-    sendStrokes(strokes: Stroke[] | StrokeUpdate[]): void {
+    sendStrokes(strokes: Stroke[]): void {
         const strokesToSend = strokes
             .map((s) => {
                 if (s.id && s.pageId) {

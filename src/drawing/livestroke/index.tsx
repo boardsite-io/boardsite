@@ -126,7 +126,7 @@ export class BoardLiveStroke implements LiveStroke {
     }
 
     private numUpdates = 0
-    selectLineCollision(strokes: StrokeCollection): Stroke[] {
+    private selectLineCollision(strokes: StrokeCollection): Stroke[] {
         const target = 5
         this.numUpdates += 1
         if (this.numUpdates !== target) return []

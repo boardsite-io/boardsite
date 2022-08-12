@@ -69,14 +69,12 @@ export interface SerializedStroke extends Tool {
     textfield?: TextfieldAttrs
 }
 
-export type StrokeUpdate = Partial<SerializedStroke>
-
 export interface Stroke
     extends SerializedStroke,
         Serializer<Stroke, SerializedStroke> {
     isHidden: boolean
 
-    update: (strokeUpdate: StrokeUpdate) => Stroke
+    update: (strokeUpdate: Partial<SerializedStroke>) => Stroke
 
     getPosition(): Point
 
