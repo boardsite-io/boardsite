@@ -6,7 +6,17 @@
             "pageId": "jtWj1Y7e",
             "strokes": {
                 "2vl2xtzkgldbsatk": {
-                    "type": 1,
+                    "textfield": {
+                        "text": "",
+                        "color": "#000000",
+                        "hAlign": "left",
+                        "vAlign": "top",
+                        "font": "Arial, Helvetica, sans-serif",
+                        "fontWeight": 400,
+                        "fontSize": 16,
+                        "lineHeight": 20
+                    },
+                    "type": 8,
                     "style": {
                         "color": "#000000",
                         "width": 3,
@@ -18,12 +28,7 @@
                     "y": 0,
                     "scaleX": 1,
                     "scaleY": 1,
-                    "points": [
-                        196, 180, 196, 179.5, 196.94, 179.03, 197.47, 179.02,
-                        197.73000000000002, 178.51, 199, 178, 202, 178, 211.5,
-                        178, 214, 178, 214.5, 178.5, 215.69, 178.94, 217, 180,
-                        217, 182
-                    ]
+                    "points": [120, 160, 240, 400]
                 }
             },
             "meta": {

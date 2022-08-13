@@ -1,4 +1,4 @@
-import { Tool, ToolType } from "drawing/stroke/index.types"
+import { TextfieldAttrs, Tool, ToolType } from "drawing/stroke/index.types"
 import { ViewTransform } from "state/view/state/index.types"
 
 /* 
@@ -20,6 +20,9 @@ export const FILE_DESCRIPTION_WORKSPACE = "Workspace file"
 export const FILE_DESCRIPTION_PDF = "PDF file"
 export const FILE_NAME_PDF = "file"
 export const FILE_NAME_WORKSPACE = "workspace"
+
+export const TEXTFIELD_MIN_WIDTH = 60
+export const TEXTFIELD_MIN_HEIGHT = 40
 
 export const NOTIFICATION_TRANSITION = 300 // in ms
 export const DEFAULT_NOTIFICATION_DURATION = 2000
@@ -54,7 +57,7 @@ export const PAGE_SIZE = {
     A4_LANDSCAPE: { width: 877, height: 620 },
 }
 
-const FAVORITE_TOOL_1: Tool = {
+export const FAVORITE_TOOL_1: Tool = {
     type: ToolType.Pen,
     style: {
         color: "#000000",
@@ -84,3 +87,16 @@ export const DEFAULT_FAV_TOOLS = [
     FAVORITE_TOOL_2,
     FAVORITE_TOOL_3,
 ]
+
+export const DEFAULT_TEXTFIELD_ATTRIBUTES: TextfieldAttrs = {
+    text: "",
+    color: "#000000",
+    hAlign: "left",
+    vAlign: "top",
+    font: "Lato, sans-serif",
+    fontWeight: 400,
+    fontSize: 16,
+    lineHeight: 20,
+}
+
+export const FONT_SIZE_PRESETS = [12, 16, 20, 24, 32, 40, 50, 60]

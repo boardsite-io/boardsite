@@ -8,8 +8,8 @@ import { drawing } from "state/drawing"
 import { online } from "state/online"
 import { view } from "state/view"
 import { board } from "state/board"
+import { action } from "state/action"
 import { useGState } from "state"
-import { handleNewWorkspace } from "drawing/handlers"
 import { themes } from "theme"
 import ElectronWrapper from "./electron"
 import Routes from "./router"
@@ -32,7 +32,7 @@ const App = () => {
         // provides a default first page if the user closes the
         // dialog or creates an online session.
         board.localStoreEnabled = false
-        handleNewWorkspace()
+        action.newWorkspace()
         board.localStoreEnabled = true
 
         setLoading(false)

@@ -1,12 +1,12 @@
 import { PDFDocument, PDFImage, PDFPage } from "pdf-lib"
 import { MAX_PIXEL_SCALE } from "consts"
-import { handleDeleteAllPages } from "drawing/handlers"
 import { readFileAsUint8Array } from "storage/util"
 import { BoardPage } from "drawing/page"
 import { PDFAttachment } from "drawing/attachment"
 import { view } from "state/view"
 import { board } from "state/board"
 import { online } from "state/online"
+import { action } from "state/action"
 import { request } from "api/request"
 import {
     AttachId,
@@ -30,7 +30,7 @@ export const importPdfFile = async (file: File): Promise<void> => {
 }
 
 const addRenderedPdf = async (attachment: Attachment): Promise<void> => {
-    handleDeleteAllPages()
+    action.deleteAllPages()
 
     if (online.isConnected()) {
         const pages = attachment.renderedData.map((img, i) => {
@@ -69,13 +69,13 @@ const addRenderedPdf = async (attachment: Attachment): Promise<void> => {
             }
         })
 
-        board.handleAddPages({ data: addPageData })
+        board.addPages(addPageData)
         view.resetView()
     }
 
     view.jumpToFirstPage()
     // clear the stacks when importing pdfs
-    board.clearUndoRedo()
+    action.clearUndoRedo()
 }
 
 export const ENCRYPTED_PDF_ERROR = "Encrypted PDF"

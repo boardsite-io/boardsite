@@ -11,8 +11,8 @@ import {
     RectangleIcon,
     ToolTip,
 } from "components"
+import { action } from "state/action"
 import { ToolType } from "drawing/stroke/index.types"
-import { handleSetTool } from "drawing/handlers"
 import { StyledShapeTools } from "./index.styled"
 
 const ShapeTools: React.FC = memo(() => {
@@ -29,7 +29,7 @@ const ShapeTools: React.FC = memo(() => {
                     icon={<PenIcon />}
                     active={type === ToolType.Pen}
                     onClick={() => {
-                        handleSetTool({ type: ToolType.Pen })
+                        action.setTool({ type: ToolType.Pen })
                     }}
                 />
             </ToolTip>
@@ -42,7 +42,7 @@ const ShapeTools: React.FC = memo(() => {
                     icon={<HighlighterIcon />} // Highlighter Icon SVG
                     active={type === ToolType.Highlighter}
                     onClick={() => {
-                        handleSetTool({ type: ToolType.Highlighter })
+                        action.setTool({ type: ToolType.Highlighter })
                     }}
                 />
             </ToolTip>
@@ -55,7 +55,7 @@ const ShapeTools: React.FC = memo(() => {
                     icon={<LineIcon />}
                     active={type === ToolType.Line}
                     onClick={() => {
-                        handleSetTool({ type: ToolType.Line })
+                        action.setTool({ type: ToolType.Line })
                     }}
                 />
             </ToolTip>
@@ -68,7 +68,7 @@ const ShapeTools: React.FC = memo(() => {
                     icon={<RectangleIcon />}
                     active={type === ToolType.Rectangle}
                     onClick={() => {
-                        handleSetTool({ type: ToolType.Rectangle })
+                        action.setTool({ type: ToolType.Rectangle })
                     }}
                 />
             </ToolTip>
@@ -81,7 +81,7 @@ const ShapeTools: React.FC = memo(() => {
                     icon={<CircleIcon />}
                     active={type === ToolType.Circle}
                     onClick={() => {
-                        handleSetTool({ type: ToolType.Circle })
+                        action.setTool({ type: ToolType.Circle })
                     }}
                 />
             </ToolTip>

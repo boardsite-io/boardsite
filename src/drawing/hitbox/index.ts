@@ -1,5 +1,79 @@
-import { Vector, Polygon, Box, testPolygonPolygon } from "sat"
-import { Stroke, StrokeCollection, ToolType } from "drawing/stroke/index.types"
+import { Vector, Polygon, Box, testPolygonPolygon, pointInPolygon } from "sat"
+import {
+    Point,
+    Stroke,
+    StrokeCollection,
+    ToolType,
+} from "drawing/stroke/index.types"
+
+type GetStrokesInPolygonProps = {
+    strokes: StrokeCollection
+    polygon: Polygon
+    filterType?: ToolType
+}
+
+/**
+ * Get all strokes which have an overlap with a given polygon. Provide
+ * a filterType if you only want to check for a specific stroke type.
+ * @returns array of overlapping strokes
+ */
+export function getStrokesInPolygon({
+    strokes,
+    polygon,
+    filterType,
+}: GetStrokesInPolygonProps): Stroke[] {
+    const matchingStrokes: Stroke[] = []
+
+    Object.values(strokes).forEach((stroke) => {
+        const passesFilter = !filterType || stroke.type === filterType
+        const { hitboxes } = stroke
+
+        if (passesFilter && hitboxes?.length) {
+            for (let i = 0; i < hitboxes.length; i += 1) {
+                if (testPolygonPolygon(polygon, hitboxes[i])) {
+                    matchingStrokes.push(stroke)
+                    break
+                }
+            }
+        }
+    })
+    return matchingStrokes
+}
+
+type GetStrokesInPointProps = {
+    strokes: StrokeCollection
+    point: Point
+    filterType?: ToolType
+}
+
+/**
+ * Get all strokes which contain a given point. Provide
+ * a filterType if you only want to check for a specific stroke type.
+ * @returns array of strokes containing the provided point
+ */
+export const getStrokesInPoint = ({
+    strokes,
+    point,
+    filterType,
+}: GetStrokesInPointProps): Stroke[] => {
+    const vector = getPointVector(point)
+    const matchingStrokes: Stroke[] = []
+
+    Object.values(strokes).forEach((stroke) => {
+        const passesFilter = !filterType || stroke.type === filterType
+        const { hitboxes } = stroke
+
+        if (passesFilter && hitboxes?.length) {
+            for (let i = 0; i < hitboxes.length; i += 1) {
+                if (pointInPolygon(vector, hitboxes[i])) {
+                    matchingStrokes.push(stroke)
+                    break
+                }
+            }
+        }
+    })
+    return matchingStrokes
+}
 
 export function getHitboxPolygon(
     [x1, y1, x2, y2]: number[],
@@ -34,10 +108,12 @@ export function getHitboxPolygon(
     ])
 }
 
+export const getPointVector = (point: Point) => new Vector(point.x, point.y)
+
 /**
  * Creates a simple reactangular polygon
  */
-export function getSelectionPolygon([x1, y1, x2, y2]: number[]): Polygon {
+export function getRectanglePolygon([x1, y1, x2, y2]: number[]): Polygon {
     const box = new Box(
         // set the left upper point as reference
         new Vector(Math.min(x1, x2), Math.min(y1, y2)),
@@ -45,32 +121,6 @@ export function getSelectionPolygon([x1, y1, x2, y2]: number[]): Polygon {
         Math.abs(y1 - y2)
     )
     return box.toPolygon()
-}
-
-/**
- * Test the selection polygon against all strokes with multiple hitboxe
- * segments and return a set of all collided stroke IDs.
- */
-export function matchStrokeCollision(
-    strokes: StrokeCollection,
-    selectionPolygon: Polygon
-): StrokeCollection {
-    const result: StrokeCollection = {}
-    Object.keys(strokes).forEach((id) => {
-        // test each hitbox segment
-        for (let i = 0; i < (strokes[id].hitboxes ?? []).length; i += 1) {
-            if (
-                testPolygonPolygon(
-                    (strokes[id].hitboxes ?? [])[i],
-                    selectionPolygon
-                )
-            ) {
-                result[id] = strokes[id]
-                break
-            }
-        }
-    })
-    return result
 }
 
 interface GetEllipseOutlineProps {
@@ -134,66 +184,81 @@ export const getTransformedPoints = (stroke: Stroke): Stroke["points"] =>
             : (value + stroke.y) * stroke.scaleY
     )
 
-/**
- * Get the hitboxes array of a stroke
- */
-export const getStrokeHitbox = (stroke: Stroke): Polygon[] => {
+type GetHitbox = (stroke: Stroke) => Polygon[]
+
+const getPenHitbox: GetHitbox = (stroke) => {
     const hitboxes: Polygon[] = []
 
-    switch (stroke.type) {
-        case ToolType.Line:
-        case ToolType.Highlighter:
-        case ToolType.Pen: {
-            // get hitboxes of all segments of the current stroke
-            for (let i = 0; i < stroke.points.length - 2; i += 2) {
-                const section = stroke.points.slice(i, i + 4)
-                for (let j = 0; j < 4; j += 2) {
-                    // compensate for the scale and offset
-                    section[j] = (section[j] + stroke.x) * stroke.scaleX
-                    section[j + 1] = (section[j + 1] + stroke.y) * stroke.scaleY
-                }
-                hitboxes.push(getHitboxPolygon(section, stroke))
-            }
-            return hitboxes
+    for (let i = 0; i < stroke.points.length - 2; i += 2) {
+        const section = stroke.points.slice(i, i + 4)
+        for (let j = 0; j < 4; j += 2) {
+            // compensate for the scale and offset
+            section[j] = (section[j] + stroke.x) * stroke.scaleX
+            section[j + 1] = (section[j + 1] + stroke.y) * stroke.scaleY
         }
-        case ToolType.Rectangle: {
-            const [x1, y1, x2, y2] = getTransformedPoints(stroke)
-
-            hitboxes.push(
-                getHitboxPolygon([x1, y1, x1, y2], stroke),
-                getHitboxPolygon([x1, y2, x2, y2], stroke),
-                getHitboxPolygon([x2, y2, x2, y1], stroke),
-                getHitboxPolygon([x2, y1, x1, y1], stroke)
-            )
-            return hitboxes
-        }
-        case ToolType.Circle: {
-            const [x1, y1, x2, y2] = getTransformedPoints(stroke)
-
-            // Radius vector
-            const rxv = (x2 - x1) / 2
-            const ryv = (y2 - y1) / 2
-
-            const outlinePoints = getEllipseOutline({
-                x: x1 + rxv,
-                y: y1 + ryv,
-                rx: Math.abs(rxv),
-                ry: Math.abs(ryv),
-                segmentsPerQuarter: 8,
-            })
-
-            for (let i = 0; i < outlinePoints.length; i++) {
-                const p1 = outlinePoints[i]
-                const p2 = outlinePoints[i + 1] ?? outlinePoints[0]
-
-                hitboxes.push(
-                    getHitboxPolygon([p1.x, p1.y, p2.x, p2.y], stroke)
-                )
-            }
-
-            return hitboxes
-        }
-        default:
-            return hitboxes
+        hitboxes.push(getHitboxPolygon(section, stroke))
     }
+    return hitboxes
 }
+
+const getRectangleHitbox: GetHitbox = (stroke) => {
+    const hitboxes: Polygon[] = []
+    const [x1, y1, x2, y2] = getTransformedPoints(stroke)
+
+    hitboxes.push(
+        getHitboxPolygon([x1, y1, x1, y2], stroke),
+        getHitboxPolygon([x1, y2, x2, y2], stroke),
+        getHitboxPolygon([x2, y2, x2, y1], stroke),
+        getHitboxPolygon([x2, y1, x1, y1], stroke)
+    )
+    return hitboxes
+}
+
+const getCircleHitbox: GetHitbox = (stroke) => {
+    const hitboxes: Polygon[] = []
+    const [x1, y1, x2, y2] = getTransformedPoints(stroke)
+
+    // Radius vector
+    const rxv = (x2 - x1) / 2
+    const ryv = (y2 - y1) / 2
+
+    const outlinePoints = getEllipseOutline({
+        x: x1 + rxv,
+        y: y1 + ryv,
+        rx: Math.abs(rxv),
+        ry: Math.abs(ryv),
+        segmentsPerQuarter: 8,
+    })
+
+    for (let i = 0; i < outlinePoints.length; i++) {
+        const p1 = outlinePoints[i]
+        const p2 = outlinePoints[i + 1] ?? outlinePoints[0]
+
+        hitboxes.push(getHitboxPolygon([p1.x, p1.y, p2.x, p2.y], stroke))
+    }
+
+    return hitboxes
+}
+
+const getTextfieldHitbox: GetHitbox = (stroke) => {
+    const hitboxes: Polygon[] = []
+    const points = getTransformedPoints(stroke)
+    const hitbox = getRectanglePolygon(points)
+    hitboxes.push(hitbox)
+    return hitboxes
+}
+
+const strokeHitboxGetters: Record<ToolType, GetHitbox> = {
+    [ToolType.Line]: getPenHitbox,
+    [ToolType.Highlighter]: getPenHitbox,
+    [ToolType.Pen]: getPenHitbox,
+    [ToolType.Rectangle]: getRectangleHitbox,
+    [ToolType.Circle]: getCircleHitbox,
+    [ToolType.Textfield]: getTextfieldHitbox,
+    [ToolType.Pan]: () => [],
+    [ToolType.Eraser]: () => [],
+    [ToolType.Select]: () => [],
+}
+
+export const getStrokeHitboxes = (stroke: Stroke): Polygon[] =>
+    strokeHitboxGetters[stroke.type](stroke)

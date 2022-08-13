@@ -7,6 +7,7 @@ export class Menu implements GlobalState<MenuState> {
         mainMenuState: MainMenuState.Closed,
         dialogState: DialogState.Closed,
         shortcutsOpen: false,
+        textfieldSettingsOpen: false,
     }
 
     getState(): MenuState {
@@ -70,6 +71,22 @@ export class Menu implements GlobalState<MenuState> {
     closeShortcuts() {
         this.state.shortcutsOpen = false
         subscriptionState.render("ShortcutsOpen")
+    }
+
+    /**
+     * Open the shortcuts overview
+     */
+    openTextfieldSettings() {
+        this.state.textfieldSettingsOpen = true
+        subscriptionState.render("TextfieldSettings")
+    }
+
+    /**
+     * Close the shortcuts overview
+     */
+    closeTextfieldSettings() {
+        this.state.textfieldSettingsOpen = false
+        subscriptionState.render("TextfieldSettings")
     }
 }
 

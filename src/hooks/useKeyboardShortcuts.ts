@@ -1,18 +1,11 @@
-import {
-    handleSetTool,
-    handleRedo,
-    handleUndo,
-    handleAddPageUnder,
-    handleAddPageOver,
-    handleDeleteCurrentPage,
-    handleNewWorkspace,
-} from "drawing/handlers"
 import { ToolType } from "drawing/stroke/index.types"
 import { useEffect } from "react"
 import { drawing } from "state/drawing"
 import { handleExportWorkspace, handleImportWorkspace } from "storage/workspace"
 import { menu } from "state/menu"
 import { view } from "state/view"
+import { board } from "state/board"
+import { action } from "state/action"
 
 export const useKeyboardShortcuts = (): void => {
     useEffect(() => {
@@ -24,22 +17,24 @@ export const useKeyboardShortcuts = (): void => {
 }
 
 const keyListener = (e: KeyboardEvent): void => {
-    // Avoid triggering shortcuts while in menus
-    // Avoid repeat spam
-    if (menu.isAnyMenuOpen() || e.repeat) {
+    // Don't trigger shortcuts while:
+    // - in textfield
+    // - in menus
+    // - repeat spam
+    if (board.getState().activeTextfield || menu.isAnyMenuOpen() || e.repeat) {
         return
     }
 
     if (e.ctrlKey) {
         switch (e.key) {
             case "z": // Undo
-                handleUndo()
+                action.undo()
                 break
             case "y": // Redo
-                handleRedo()
+                action.redo()
                 break
             case "n": // File -> New
-                handleNewWorkspace()
+                action.newWorkspace()
                 break
             case "o": // File -> Open
                 handleImportWorkspace()
@@ -48,13 +43,13 @@ const keyListener = (e: KeyboardEvent): void => {
                 handleExportWorkspace()
                 break
             case "a": // Add Page Over
-                handleAddPageOver()
+                action.addPageOver()
                 break
             case "b": // Add Page Under
-                handleAddPageUnder()
+                action.addPageUnder()
                 break
             case "d": // Delete Current Page
-                handleDeleteCurrentPage()
+                action.deleteCurrentPage()
                 break
             default:
                 break
@@ -63,31 +58,31 @@ const keyListener = (e: KeyboardEvent): void => {
         // no ctrl
         switch (e.key) {
             case "1":
-                handleSetTool({
+                action.setTool({
                     type:
                         drawing.getState().tool.latestDrawType ?? ToolType.Pen,
                 })
                 break
             case "2":
-                handleSetTool({ type: ToolType.Eraser })
+                action.setTool({ type: ToolType.Eraser })
                 break
             case "3":
-                handleSetTool({ type: ToolType.Select })
+                action.setTool({ type: ToolType.Select })
                 break
             case "4":
-                handleSetTool({ type: ToolType.Pan })
+                action.setTool({ type: ToolType.Pan })
                 break
             case "5":
-                handleSetTool({ type: ToolType.Pen })
+                action.setTool({ type: ToolType.Pen })
                 break
             case "6":
-                handleSetTool({ type: ToolType.Line })
+                action.setTool({ type: ToolType.Line })
                 break
             case "7":
-                handleSetTool({ type: ToolType.Rectangle })
+                action.setTool({ type: ToolType.Rectangle })
                 break
             case "8":
-                handleSetTool({ type: ToolType.Circle })
+                action.setTool({ type: ToolType.Circle })
                 break
             case "ArrowUp":
                 view.jumpToFirstPage()

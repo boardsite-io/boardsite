@@ -26,6 +26,7 @@ export type Subscription =
     | "DialogState"
     | "MainMenu"
     | "ShortcutsOpen"
+    | "TextfieldSettings"
     | "SubscribeOpen"
     // Notification
     | "Notification"
@@ -37,6 +38,8 @@ export type Subscription =
     // View
     | "LayerConfig"
     | "ViewTransform"
+    // Textfield
+    | "Textfield"
 
 export type RenderTrigger = React.Dispatch<React.SetStateAction<object>>
 export type Subscribers = Record<Subscription, RenderTrigger[]>

@@ -11,7 +11,7 @@ import {
     UserHost,
 } from "api/types"
 import { notification } from "state/notification"
-import { Stroke, StrokeUpdate, ToolType } from "drawing/stroke/index.types"
+import { Stroke, ToolType } from "drawing/stroke/index.types"
 import { board } from "state/board"
 import {
     AttachId,
@@ -220,9 +220,7 @@ export class Online
             // Clean up session data, the localStorage is not
             // overwritten since in online mode it is deactivated
             board.fullReset()
-            board.handleAddPages({
-                data: [{ page: new BoardPage(), index: -1 }],
-            })
+            board.addPages([{ page: new BoardPage(), index: -1 }])
             view.validatePageIndex()
 
             // Enable localStorage for local session
@@ -265,7 +263,7 @@ export class Online
         this.state.session.socket?.send(JSON.stringify(message))
     }
 
-    sendStrokes(strokes: Stroke[] | StrokeUpdate[]): void {
+    sendStrokes(strokes: Stroke[]): void {
         const strokesToSend = strokes
             .map((s) => {
                 if (s.id && s.pageId) {
@@ -368,13 +366,13 @@ export class Online
     receiveStrokes(strokes: Stroke[]): void {
         const erasedStrokes = strokes.filter((s) => s.type === 0)
         if (erasedStrokes.length > 0) {
-            board.handleEraseStrokes({ data: erasedStrokes })
+            board.deleteStrokes(erasedStrokes)
         }
 
         strokes = strokes.filter((s) => s.type !== 0)
 
         if (strokes.length > 0) {
-            board.handleAddStrokes({ data: strokes })
+            board.addOrUpdateStrokes(strokes)
         }
     }
 

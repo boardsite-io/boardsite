@@ -6,10 +6,11 @@ import {
     PanIcon,
     Position,
     SelectIcon,
+    TextfieldIcon,
     ToolTip,
 } from "components"
-import { handleSetTool } from "drawing/handlers"
 import { notification } from "state/notification"
+import { action } from "state/action"
 import { useGState } from "state"
 import { ToolType } from "drawing/stroke/index.types"
 import ActiveTool from "./ActiveTool"
@@ -19,32 +20,47 @@ const ToolRing: React.FC = memo(() => {
     const { type } = useGState("ToolRing").drawing.tool
 
     const onClickEraser = useCallback(() => {
-        if (type === ToolType.Eraser) {
-            return
-        }
-        handleSetTool({ type: ToolType.Eraser })
+        if (type === ToolType.Eraser) return
+
+        action.setTool({ type: ToolType.Eraser })
         notification.create("Notification.Tool.Eraser")
     }, [type])
 
     const onClickSelect = useCallback(() => {
-        if (type === ToolType.Select) {
-            return
-        }
-        handleSetTool({ type: ToolType.Select })
+        if (type === ToolType.Select) return
+
+        action.setTool({ type: ToolType.Select })
         notification.create("Notification.Tool.Selection")
     }, [type])
 
     const onClickPan = useCallback(() => {
-        if (type === ToolType.Pan) {
-            return
-        }
-        handleSetTool({ type: ToolType.Pan })
+        if (type === ToolType.Pan) return
+
+        action.setTool({ type: ToolType.Pan })
         notification.create("Notification.Tool.Panning")
+    }, [type])
+
+    const onClickTextfield = useCallback(() => {
+        if (type === ToolType.Textfield) return
+
+        action.setTool({ type: ToolType.Textfield })
+        notification.create("Notification.Tool.Textfield")
     }, [type])
 
     return (
         <ToolRingWrap>
             <ActiveTool />
+            <ToolTip
+                position={Position.Left}
+                text={<FormattedMessage id="ToolTip.Textfield" />}
+            >
+                <IconButton
+                    aria-label="Textfield tool"
+                    icon={<TextfieldIcon />}
+                    active={type === ToolType.Textfield}
+                    onClick={onClickTextfield}
+                />
+            </ToolTip>
             <ToolTip
                 position={Position.Left}
                 text={<FormattedMessage id="ToolTip.Eraser" />}

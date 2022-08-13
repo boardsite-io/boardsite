@@ -13,11 +13,9 @@ describe("board reducer state", () => {
             version: BOARD_VERSION,
             ...getDefaultBoardState(),
         }
-        delete want.undoStack
-        delete want.redoStack
-        delete want.strokeUpdates
         delete want.transformPagePosition
         delete want.transformStrokes
+        delete want.activeTextfield
 
         expect(got).toStrictEqual(want)
     })

@@ -129,6 +129,7 @@
     "ToolTip.Eraser": "Eraser Tool",
     "ToolTip.Selection": "Selection Tool",
     "ToolTip.Panning": "Panning Tool",
+    "ToolTip.Textfield": "Textfield Tool",
     "ToolTip.Pen": "Pen Tool",
     "ToolTip.Highlighter": "Highlighter Tool",
     "ToolTip.Line": "Line Tool",
@@ -145,6 +146,7 @@
     "Notification.Tool.Eraser": "Eraser tool activated.",
     "Notification.Tool.Selection": "Selection tool activated.",
     "Notification.Tool.Panning": "Panning mode activated.",
+    "Notification.Tool.Textfield": "Textfield tool activated.",
     "Notification.ImportWorkspaceFailed": "🚨 Load failed!",
     "Notification.InvalidFileTypePdfImport": "🚨 Invalid file type. Please choose a supported file type.",
     "Notification.PdfExportFailed": "🚨 PDF export failed.",
@@ -206,5 +208,6 @@
     "Loading.ImportingPdf": "Importing PDF...",
     "Loading.ExportWorkspace": "Saving workspace...",
     "Loading.ImportWorkspace": "Loading workspace...",
-    "Loading.ContinuePreviousSession": "Loading previous session..."
+    "Loading.ContinuePreviousSession": "Loading previous session...",
+    "TextfieldSettings.SampleText": "Sample Text"
 }

@@ -1,55 +1,35 @@
-import { LiveStroke } from "drawing/livestroke/index.types"
-import { assign, pick } from "lodash"
+import { pick } from "lodash"
 import { Polygon } from "sat"
-import { getStrokeHitbox } from "drawing/hitbox"
+import { getStrokeHitboxes } from "drawing/hitbox"
+import { LiveStroke } from "drawing/livestroke/index.types"
+import { FAVORITE_TOOL_1 } from "consts"
 import {
     Point,
     Scale,
     SerializedStroke,
     Stroke,
-    StrokeUpdate,
-    ToolType,
+    TextfieldAttrs,
 } from "./index.types"
 
 export class BoardStroke implements Stroke {
-    type: ToolType
-    style: {
-        color: string
-        width: number
-        opacity: number
-    }
-
-    id: string
-    pageId: string
-
-    x: number
-    y: number
-    scaleX: number
-    scaleY: number
-
-    points: number[]
+    type = FAVORITE_TOOL_1.type
+    style = FAVORITE_TOOL_1.style
+    id = ""
+    pageId = ""
+    x = 0
+    y = 0
+    scaleX = 1
+    scaleY = 1
+    points: number[] = []
     hitboxes: Polygon[] = []
+    textfield?: TextfieldAttrs
+    isHidden = false
 
     /**
      * Create a new stroke from another Stroke instance
      */
-    constructor(stroke: Stroke | LiveStroke | SerializedStroke) {
-        this.id = stroke.id ?? createUniqueId()
-        this.pageId = stroke.pageId
-        this.x = stroke.x
-        this.y = stroke.y
-        this.scaleX = stroke.scaleX
-        this.scaleY = stroke.scaleY
-        this.type = stroke.type
-        this.style = { ...stroke.style }
-        this.points = [...stroke.points]
-
-        // Check if hitboxes need to be calculated
-        if (stroke.hitboxes?.length) {
-            this.hitboxes = stroke.hitboxes
-        } else {
-            this.calculateHitbox()
-        }
+    constructor(stroke: SerializedStroke | LiveStroke) {
+        this.update(stroke)
     }
 
     /**
@@ -66,6 +46,7 @@ export class BoardStroke implements Stroke {
             "scaleY",
             "points",
             "style",
+            "textfield",
         ])
     }
 
@@ -74,24 +55,22 @@ export class BoardStroke implements Stroke {
         return this
     }
 
-    // returns a copy of the stroke with the update properties
-    serializeUpdate(): StrokeUpdate {
-        return pick(this, [
-            "id",
-            "pageId",
-            "type",
-            "x",
-            "y",
-            "scaleX",
-            "scaleY",
-        ])
-    }
-
     /**
      * Update stroke such as position and/or scale.
      */
-    update(strokeUpdate: Stroke | StrokeUpdate): Stroke {
-        assign(this, pick(strokeUpdate, ["x", "y", "scaleX", "scaleY"]))
+    update(strokeUpdate: Partial<SerializedStroke>): Stroke {
+        this.id = (strokeUpdate.id ?? this.id) || createUniqueId()
+        this.pageId = strokeUpdate.pageId ?? this.pageId
+        this.x = strokeUpdate.x ?? this.x
+        this.y = strokeUpdate.y ?? this.y
+        this.scaleX = strokeUpdate.scaleX ?? this.scaleX
+        this.scaleY = strokeUpdate.scaleY ?? this.scaleY
+        this.type = strokeUpdate.type ?? this.type
+        this.style = strokeUpdate.style ?? this.style
+        this.points = strokeUpdate.points ?? this.points
+        this.textfield = strokeUpdate.textfield ?? this.textfield
+
+        this.isHidden = false
         this.calculateHitbox() // recalculate hitbox
         return this
     }
@@ -111,7 +90,7 @@ export class BoardStroke implements Stroke {
     }
 
     calculateHitbox(): void {
-        this.hitboxes = getStrokeHitbox(this)
+        this.hitboxes = getStrokeHitboxes(this)
     }
 }
 

@@ -11,6 +11,7 @@ import MinusIcon from "./svgs/minus.svg"
 import ExpandIcon from "./svgs/expand.svg"
 import ShrinkIcon from "./svgs/shrink.svg"
 import PanIcon from "./svgs/pan.svg"
+import TextfieldIcon from "./svgs/textfield.svg"
 import ZoomInIcon from "./svgs/zoomin.svg"
 import ZoomOutIcon from "./svgs/zoomout.svg"
 import UndoIcon from "./svgs/undo.svg"
@@ -44,6 +45,7 @@ export {
     ExpandIcon,
     ShrinkIcon,
     PanIcon,
+    TextfieldIcon,
     ZoomInIcon,
     ZoomOutIcon,
     UndoIcon,
@@ -74,4 +76,5 @@ export const ToolIcons = {
     [ToolType.Pan]: PanIcon,
     [ToolType.Select]: SelectIcon,
     [ToolType.Highlighter]: HighlighterIcon,
+    [ToolType.Textfield]: TextfieldIcon,
 }

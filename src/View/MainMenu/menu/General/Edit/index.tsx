@@ -2,14 +2,22 @@ import React from "react"
 import { FormattedMessage } from "language"
 import { useGState } from "state"
 import { RedoIcon, UndoIcon } from "components"
-import { handleRedo, handleUndo } from "drawing/handlers"
 import { SubMenuWrap } from "View/MainMenu/index.styled"
 import MenuItem from "View/MainMenu/MenuItem"
+import { action } from "state/action"
 
 const EditMenu = () => {
-    const { undoStack, redoStack } = useGState("EditMenu").board
-    const disableUndoStack = undoStack?.length === 0
-    const disableRedoStack = redoStack?.length === 0
+    const { undoStack, redoStack } = useGState("EditMenu").action
+    const disableUndoStack = undoStack.length === 0
+    const disableRedoStack = redoStack.length === 0
+
+    const undo = () => {
+        action.undo()
+    }
+
+    const redo = () => {
+        action.redo()
+    }
 
     return (
         <SubMenuWrap>
@@ -17,13 +25,13 @@ const EditMenu = () => {
                 disabled={disableUndoStack}
                 text={<FormattedMessage id="Menu.General.Edit.Undo" />}
                 icon={<UndoIcon />}
-                onClick={handleUndo}
+                onClick={undo}
             />
             <MenuItem
                 disabled={disableRedoStack}
                 text={<FormattedMessage id="Menu.General.Edit.Redo" />}
                 icon={<RedoIcon />}
-                onClick={handleRedo}
+                onClick={redo}
             />
         </SubMenuWrap>
     )

@@ -28,6 +28,7 @@ export enum ToolType {
     Select = 5,
     Pan = 6,
     Highlighter = 7,
+    Textfield = 8,
 }
 
 export type ToolStyle = {
@@ -42,8 +43,22 @@ export interface Tool {
     style: ToolStyle
 }
 
-export interface BaseStroke extends Tool {
-    id?: string
+export type HAlign = "center" | "left" | "right"
+export type VAlign = "middle" | "top" | "bottom"
+
+export interface TextfieldAttrs {
+    text: string
+    color: string
+    hAlign: HAlign
+    vAlign: VAlign
+    font: string
+    fontWeight: number
+    fontSize: number
+    lineHeight: number
+}
+
+export interface SerializedStroke extends Tool {
+    id: string
     pageId: string
     x: number
     y: number
@@ -51,30 +66,20 @@ export interface BaseStroke extends Tool {
     scaleY: number
     points: number[]
     hitboxes?: Polygon[]
-}
-
-export interface StrokeUpdate {
-    id?: string
-    pageId?: string
-    x?: number
-    y?: number
-    scaleX?: number
-    scaleY?: number
-}
-
-export interface SerializedStroke extends BaseStroke {
-    id: string
-    scaleX: number
-    scaleY: number
+    textfield?: TextfieldAttrs
 }
 
 export interface Stroke
     extends SerializedStroke,
         Serializer<Stroke, SerializedStroke> {
-    serializeUpdate(): StrokeUpdate
-    update: (strokeUpdate: Stroke | StrokeUpdate) => Stroke
+    isHidden: boolean
+
+    update: (strokeUpdate: Partial<SerializedStroke>) => Stroke
+
     getPosition(): Point
+
     getScale(): Scale
+
     calculateHitbox: () => void
 }
 

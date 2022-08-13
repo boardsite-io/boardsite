@@ -18,6 +18,16 @@ export const getDefaultDrawingState = (): DrawingState => ({
             opacity: 1,
         },
     },
+    textfieldAttributes: {
+        text: "",
+        color: "#000000",
+        hAlign: "left",
+        vAlign: "top",
+        font: "Lato, sans-serif",
+        fontWeight: 400,
+        fontSize: 16,
+        lineHeight: 16 * 1.25,
+    },
     pageMeta: {
         background: { paper: Paper.Blank },
         size: PAGE_SIZE.A4_PORTRAIT,

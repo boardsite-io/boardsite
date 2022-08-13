@@ -10,8 +10,8 @@ import {
     ToolTip,
 } from "components"
 import React, { useCallback, useState } from "react"
-import { handleSetTool } from "drawing/handlers"
 import { drawing } from "state/drawing"
+import { action } from "state/action"
 import { FavToolOptions, FavToolWrapper } from "./index.styled"
 
 interface FavToolButtonProps {
@@ -47,7 +47,7 @@ const FavToolButton: React.FC<FavToolButtonProps> = ({ icon, tool, index }) => {
     }, [])
 
     const click = useCallback(() => {
-        handleSetTool(tool)
+        action.setTool(tool)
     }, [tool])
 
     return (

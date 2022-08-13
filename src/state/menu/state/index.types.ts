@@ -23,4 +23,5 @@ export interface MenuState {
     dialogState: DialogState
     mainMenuState: MainMenuState
     shortcutsOpen: boolean
+    textfieldSettingsOpen: boolean
 }

@@ -10,6 +10,16 @@
             "paper": "blank"
         }
     },
+    "textfieldAttributes": {
+        "color": "#000000",
+        "font": "Lato, sans-serif",
+        "fontSize": 16,
+        "fontWeight": 400,
+        "hAlign": "left",
+        "lineHeight": 20,
+        "text": "",
+        "vAlign": "top"
+    },
     "favoriteTools": [
         {
             "type": 1,

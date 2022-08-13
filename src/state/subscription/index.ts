@@ -29,6 +29,7 @@ export class SubscriptionState {
         MainMenu: [],
         MenuPageButton: [],
         Notification: [],
+        TextfieldSettings: [],
         Theme: [],
         RenderNG: [],
         Session: [],
@@ -37,6 +38,7 @@ export class SubscriptionState {
         ShortcutsOpen: [],
         SubscribeOpen: [],
         ViewTransform: [],
+        Textfield: [],
     }
 
     subscribe(subscription: Subscription, trigger: RenderTrigger) {

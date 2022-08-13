@@ -1,6 +1,5 @@
 import { BoardStroke } from "drawing/stroke"
-import { LiveStroke } from "drawing/livestroke/index.types"
-import { Stroke, ToolType } from "drawing/stroke/index.types"
+import { SerializedStroke, Stroke, ToolType } from "drawing/stroke/index.types"
 import { BoardPage } from "drawing/page"
 import {
     BoardState,
@@ -12,6 +11,7 @@ import { Board } from "state/board"
 import { View } from "state/view"
 import { ViewState } from "state/view/state/index.types"
 import { SessionConfig, User } from "state/online/state/index.types"
+import { FAVORITE_TOOL_1 } from "consts"
 import { Request } from "api/request"
 import { Message, PageSync, StrokeDelete } from "api/types"
 import { Online } from "."
@@ -40,16 +40,20 @@ const newUser: User = {
     color: "#deadbf",
     alias: "potato",
 }
-const mockStroke = new BoardStroke({
-    id: "strokeId",
+
+const mockSerializedStroke: SerializedStroke = {
+    id: "kappa123",
     pageId: "pageId",
     type: ToolType.Pen,
+    style: FAVORITE_TOOL_1.style,
     x: 0,
     y: 0,
     scaleX: 1,
     scaleY: 1,
     points: [1, 2, 3, 4],
-} as LiveStroke)
+}
+
+const mockStroke = new BoardStroke(mockSerializedStroke)
 const mockPageMeta: PageMeta = {
     size: {
         width: 600,
@@ -198,11 +202,7 @@ describe("session", () => {
             expect(data.content.length).toEqual(1)
             expect(data.content[0]).toHaveProperty("userId", mockUser.id)
             expect(data.content[0]).not.toHaveProperty("hitboxes")
-            expect(data.content[0]).toEqual({
-                ...mockStroke,
-                hitboxes: undefined,
-                userId: mockUser.id,
-            })
+            expect(data.content[0]).not.toHaveProperty("isHidden")
         })
         online.sendStrokes(strokes)
     })
