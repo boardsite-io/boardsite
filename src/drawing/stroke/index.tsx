@@ -66,7 +66,7 @@ export class BoardStroke implements Stroke {
         this.scaleX = strokeUpdate.scaleX ?? this.scaleX
         this.scaleY = strokeUpdate.scaleY ?? this.scaleY
         this.type = strokeUpdate.type ?? this.type
-        this.style = strokeUpdate.style ?? this.style
+        this.style = { ...(strokeUpdate.style ?? this.style) }
         this.points = strokeUpdate.points ?? this.points
         this.textfield = strokeUpdate.textfield ?? this.textfield
 
