@@ -15,9 +15,6 @@ import { GlobalState } from "state/types"
 import { ViewSerializer } from "../serializers"
 import {
     applyBound,
-    getCenterOfScreen,
-    getCenterX,
-    getCenterY,
     getHorizontalBounds,
     getLowerBound,
     getUpperBound,
@@ -74,12 +71,21 @@ export class View extends ViewSerializer implements GlobalState<ViewState> {
     }
 
     /**
+     * Cache the view dimensions onResize to avoid expensive DOM operations
+     */
+    updateViewDimensions() {
+        this.state.innerWidth = window.innerWidth
+        this.state.innerHeight = window.innerHeight
+        this.centerView()
+    }
+
+    /**
      * Center the view while maintaining the current scale
      */
     centerView(): void {
         const newTransform = {
             ...this.getState().viewTransform,
-            xOffset: getCenterX() / this.getState().viewTransform.scale,
+            xOffset: this.getCenterX() / this.getState().viewTransform.scale,
         }
 
         this.updateViewTransform(newTransform)
@@ -92,7 +98,10 @@ export class View extends ViewSerializer implements GlobalState<ViewState> {
     zoomCenter(isZoomingIn: boolean): void {
         const newTransform = zoomTo({
             viewTransform: this.getState().viewTransform,
-            zoomPoint: getCenterOfScreen(),
+            zoomPoint: {
+                x: this.getCenterX(),
+                y: this.getCenterY(),
+            },
             zoomScale: isZoomingIn ? ZOOM_IN_WHEEL_SCALE : ZOOM_OUT_WHEEL_SCALE,
         })
 
@@ -105,7 +114,7 @@ export class View extends ViewSerializer implements GlobalState<ViewState> {
     resetView(): void {
         this.updateViewTransform({
             scale: DEFAULT_VIEW_TRANSFORM.scale,
-            xOffset: getCenterX(),
+            xOffset: this.getCenterX(),
             yOffset: DEFAULT_VIEW_TRANSFORM.yOffset,
         })
     }
@@ -122,7 +131,7 @@ export class View extends ViewSerializer implements GlobalState<ViewState> {
      */
     fitToPage(): void {
         const pageSize = board.getPageSize(this.getPageIndex())
-        this.rescaleAtCenter(window.innerWidth / pageSize.width)
+        this.rescaleAtCenter(this.getState().innerWidth / pageSize.width)
     }
 
     /**
@@ -165,7 +174,7 @@ export class View extends ViewSerializer implements GlobalState<ViewState> {
     isFullScreen(scale = this.getState().viewTransform.scale) {
         const effectivePageWidth =
             board.getPageSize(this.getState().pageIndex).width * scale
-        return effectivePageWidth > window.innerWidth
+        return effectivePageWidth > this.getState().innerWidth
     }
 
     /**
@@ -249,10 +258,18 @@ export class View extends ViewSerializer implements GlobalState<ViewState> {
     private rescaleAtCenter(newScale: number): void {
         const newTransform = {
             scale: newScale,
-            xOffset: getCenterX() / newScale,
-            yOffset: this.scaleWithFixedY(newScale, getCenterY()),
+            xOffset: this.getCenterX() / newScale,
+            yOffset: this.scaleWithFixedY(newScale, this.getCenterY()),
         }
         this.updateViewTransform(newTransform)
+    }
+
+    private getCenterX(): number {
+        return this.getState().innerWidth / 2
+    }
+
+    private getCenterY(): number {
+        return this.getState().innerHeight / 2
     }
 
     /**
@@ -289,7 +306,10 @@ export class View extends ViewSerializer implements GlobalState<ViewState> {
      * @returns adjusted transform
      */
     private handlePageChange(newTransform: ViewTransform): ViewTransform {
-        const transformedCenterY = getViewCenterY(newTransform)
+        const transformedCenterY = getViewCenterY({
+            viewTransform: newTransform,
+            innerHeight: this.getState().innerHeight,
+        })
         const prevPageBorder = -DEFAULT_PAGE_GAP / 2
         const nextPageBorder =
             board.getPageSize(this.getState().pageIndex).height *
@@ -333,7 +353,7 @@ export class View extends ViewSerializer implements GlobalState<ViewState> {
 
         // Zoomed out with keepCentered setting on sticks to center
         if (keepCentered && !this.isFullScreen(newTransform.scale)) {
-            return getCenterX() / newTransform.scale
+            return this.getCenterX() / newTransform.scale
         }
 
         const pageWidth = board.getPageSize(this.getState().pageIndex).width
@@ -341,6 +361,7 @@ export class View extends ViewSerializer implements GlobalState<ViewState> {
             newTransform,
             keepCentered,
             pageWidth,
+            innerWidth: this.state.innerWidth,
         })
 
         return applyBound({
@@ -359,17 +380,22 @@ export class View extends ViewSerializer implements GlobalState<ViewState> {
         newTransform: ViewTransform
     ): ViewTransform["yOffset"] {
         if (this.onFirstPage()) {
-            const upperBound = getUpperBound(newTransform)
+            const upperBound = getUpperBound({
+                newTransform,
+                innerHeight: this.getState().innerHeight,
+            })
 
             if (newTransform.yOffset > upperBound) {
                 return upperBound
             }
 
             if (this.onLastPage()) {
-                const lowerBound = getLowerBound(
+                const lowerBound = getLowerBound({
                     newTransform,
-                    board.getPageSize(this.getState().pageIndex).height
-                )
+                    pageHeight: board.getPageSize(this.getState().pageIndex)
+                        .height,
+                    innerHeight: this.getState().innerHeight,
+                })
 
                 // If the upper and lower bounds cross
                 // eachother then set y to upper bound
@@ -384,10 +410,11 @@ export class View extends ViewSerializer implements GlobalState<ViewState> {
         }
 
         if (this.onLastPage()) {
-            const lowerBound = getLowerBound(
+            const lowerBound = getLowerBound({
                 newTransform,
-                board.getPageSize(this.getState().pageIndex).height
-            )
+                pageHeight: board.getPageSize(this.getState().pageIndex).height,
+                innerHeight: this.getState().innerHeight,
+            })
 
             if (newTransform.yOffset < lowerBound) {
                 return lowerBound

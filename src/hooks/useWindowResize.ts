@@ -3,7 +3,7 @@ import { useEffect } from "react"
 import { view } from "state/view"
 
 const onResize = debounce(() => {
-    view.centerView()
+    view.updateViewDimensions()
 }, 300)
 
 /**

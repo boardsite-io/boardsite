@@ -1,20 +1,29 @@
 import { Point } from "drawing/stroke/index.types"
-import { ViewTransform } from "state/view/state/index.types"
+import { ViewState, ViewTransform } from "state/view/state/index.types"
 
-export const getCenterOfScreen = () => ({
-    x: getCenterX(),
-    y: getCenterY(),
-})
+type GetViewCenterXProps = {
+    viewTransform: ViewTransform
+} & Pick<ViewState, "innerWidth">
 
-export const getCenterX = (): number => window.innerWidth / 2
+export const getViewCenterX = ({
+    viewTransform,
+    innerWidth,
+}: GetViewCenterXProps): number =>
+    applyTransform1D(innerWidth / 2, viewTransform.scale, viewTransform.xOffset)
 
-export const getCenterY = (): number => window.innerHeight / 2
+type GetViewCenterYProps = {
+    viewTransform: ViewTransform
+} & Pick<ViewState, "innerHeight">
 
-export const getViewCenterX = (viewTransform: ViewTransform): number =>
-    applyTransform1D(getCenterX(), viewTransform.scale, viewTransform.xOffset)
-
-export const getViewCenterY = (viewTransform: ViewTransform): number =>
-    applyTransform1D(getCenterY(), viewTransform.scale, viewTransform.yOffset)
+export const getViewCenterY = ({
+    viewTransform,
+    innerHeight,
+}: GetViewCenterYProps): number =>
+    applyTransform1D(
+        innerHeight / 2,
+        viewTransform.scale,
+        viewTransform.yOffset
+    )
 
 export const applyTransform1D = (x: number, scale: number, offset: number) =>
     x - scale * offset
