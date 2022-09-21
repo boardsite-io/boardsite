@@ -1,10 +1,10 @@
-import { ERASER_STROKE, SELECTION_FILL } from "App/global.styled"
 import { LiveStroke } from "drawing/livestroke/index.types"
 import { ToolType, Stroke } from "drawing/stroke/index.types"
 import { strokeStyleToRGBA } from "util/color"
 import { ERASED_OPACITY, ERASER_WIDTH } from "consts"
 import canvasTxt from "canvas-txt"
 import { settings } from "state/settings"
+import { ERASER_STROKE, SELECTION_FILL } from "theme/globalStyles"
 
 export const shiftPoints = (points: number[], x: number, y: number) =>
     points.map((p, i) => (i % 2 === 0 ? p + x : p + y))

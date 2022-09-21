@@ -11,7 +11,6 @@ import { board } from "state/board"
 import { action } from "state/action"
 import ElectronWrapper from "./electron"
 import Routes from "./router"
-import { GlobalStyles } from "./global.styled"
 
 const App = () => {
     const [loading, setLoading] = useState(true)
@@ -46,13 +45,11 @@ const App = () => {
     return (
         <IntlProvider locale={locale} messages={translations[Locales.EN]}>
             <Theme>
-                <GlobalStyles>
-                    <BrowserRouter>
-                        <ElectronWrapper>
-                            <Routes />
-                        </ElectronWrapper>
-                    </BrowserRouter>
-                </GlobalStyles>
+                <BrowserRouter>
+                    <ElectronWrapper>
+                        <Routes />
+                    </ElectronWrapper>
+                </BrowserRouter>
             </Theme>
         </IntlProvider>
     )

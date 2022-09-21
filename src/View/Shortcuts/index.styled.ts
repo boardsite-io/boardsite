@@ -1,6 +1,6 @@
-import { Breakpoint } from "App/global.styled"
 import { Drawer } from "components"
 import styled from "styled-components"
+import { Breakpoint } from "theme/globalStyles"
 
 export const ShortcutDrawer = styled(Drawer)`
     width: fit-content;
