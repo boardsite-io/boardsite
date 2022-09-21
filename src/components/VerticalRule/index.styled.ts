@@ -1,11 +1,13 @@
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 
 export const VerticalRule = styled.div`
-    background: ${({ theme }) => theme.palette.common.rule};
-    outline: none;
-    border: none;
-    height: var(--icon-button-size);
-    width: 1px;
-    margin: 0;
-    padding: 0;
+    ${({ theme }) => css`
+        background: ${theme.palette.common.rule};
+        outline: none;
+        border: none;
+        height: ${theme.iconButton.size};
+        width: 1px;
+        margin: 0;
+        padding: 0;
+    `}
 `

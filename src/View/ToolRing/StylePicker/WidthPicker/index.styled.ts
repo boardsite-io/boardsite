@@ -5,7 +5,7 @@ export const WidthPresets = styled.div`
     grid-template-columns: repeat(2, 1fr);
     align-content: space-between;
     align-items: center;
-    border-radius: var(--border-radius);
+    border-radius: ${({ theme }) => theme.borderRadius};
 `
 
 interface PresetProps {
@@ -13,25 +13,25 @@ interface PresetProps {
 }
 
 export const Preset = styled.button<PresetProps>`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    border-radius: var(--border-radius);
-    height: var(--icon-button-size);
-    width: var(--icon-button-size);
-    transition: all ease-in-out 250ms;
-    ${({ $active }) => ($active ? activePreset : inActivePreset)};
-
-    &:hover {
+    ${({ theme, $active }) => css`
         cursor: pointer;
-    }
-`
-const activePreset = css`
-    background: ${({ theme }) => theme.palette.editor.selected};
-`
-const inActivePreset = css`
-    background: transparent;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        border-radius: ${theme.borderRadius};
+        height: ${theme.iconButton.size};
+        width: ${theme.iconButton.size};
+        transition: all ease-in-out 250ms;
+
+        ${$active
+            ? css`
+                  background: ${({ theme }) => theme.palette.editor.selected};
+              `
+            : css`
+                  background: transparent;
+              `};
+    `}
 `
 
 interface StrokeWidth {
@@ -39,13 +39,12 @@ interface StrokeWidth {
 }
 
 export const WidthPresetInnerDot = styled.div<StrokeWidth>`
-    display: flex;
-    background: ${({ theme }) => theme.palette.primary.contrastText};
-    ${({ $strokeWidth }) =>
-        css`
-            height: ${$strokeWidth}px;
-            width: ${$strokeWidth}px;
-            min-width: ${$strokeWidth}px; /* Adjustment for mobile */
-        `};
-    border-radius: 50%;
+    ${({ $strokeWidth, theme }) => css`
+        display: flex;
+        background: ${theme.palette.primary.contrastText};
+        height: ${$strokeWidth}px;
+        width: ${$strokeWidth}px;
+        min-width: ${$strokeWidth}px; /* Adjustment for mobile */
+        border-radius: 50%;
+    `};
 `

@@ -2,20 +2,22 @@ import { Button } from "components"
 import styled, { css } from "styled-components"
 
 export const Presets = styled.div`
-    margin: 6px 0;
-    display: flex;
-    align-items: center;
-    box-shadow: var(--box-shadow);
-    border-radius: var(--border-radius);
+    ${({ theme }) => css`
+        margin: 6px 0;
+        display: flex;
+        align-items: center;
+        box-shadow: ${theme.boxShadow};
+        border-radius: ${theme.borderRadius};
 
-    button:first-child {
-        border-top-left-radius: var(--border-radius);
-        border-bottom-left-radius: var(--border-radius);
-    }
-    button:last-child {
-        border-top-right-radius: var(--border-radius);
-        border-bottom-right-radius: var(--border-radius);
-    }
+        button:first-child {
+            border-top-left-radius: ${theme.borderRadius};
+            border-bottom-left-radius: ${theme.borderRadius};
+        }
+        button:last-child {
+            border-top-right-radius: ${theme.borderRadius};
+            border-bottom-right-radius: ${theme.borderRadius};
+        }
+    `}
 `
 
 export const CreateButtons = styled.div`

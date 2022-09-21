@@ -13,8 +13,8 @@ export const ToolInfo = styled.div<{ $toolColor: string }>`
     right: 0;
     padding: 0 0.3rem;
     color: ${({ theme }) => theme.palette.secondary.contrastText};
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
+    border-radius: ${({ theme }) => theme.borderRadius};
+    box-shadow: ${({ theme }) => theme.boxShadow};
     ${({ $toolColor }) =>
         css`
             background: ${$toolColor}66;

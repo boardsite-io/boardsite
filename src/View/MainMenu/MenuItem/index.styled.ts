@@ -24,32 +24,33 @@ export const ItemWrap = styled.li`
 `
 
 export const ItemButton = styled.button<{ $warning: boolean }>`
-    cursor: pointer;
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--main-menu-button-gap);
-    padding: var(--main-menu-button-padding);
-    margin: var(--main-menu-button-margin);
-    border: none;
-    border-radius: var(--border-radius);
-    transition: all 200ms ease;
-    color: ${({ theme }) => theme.palette.primary.contrastText};
-    background: ${({ theme }) => theme.palette.primary.main};
+    ${({ theme, $warning }) => css`
+        cursor: pointer;
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: space-between;
+        gap: ${theme.menuButton.gap};
+        padding: ${theme.menuButton.padding};
+        margin: ${theme.menuButton.margin};
+        border: none;
+        border-radius: ${theme.borderRadius};
+        transition: all 200ms ease;
+        color: ${theme.palette.primary.contrastText};
+        background: ${theme.palette.primary.main};
 
-    &:hover {
-        filter: var(--main-menu-hover-filter);
-    }
+        &:hover {
+            filter: ${theme.menuButton.hoverFilter};
+        }
 
-    &:disabled {
-        cursor: no-drop;
-        filter: opacity(20%);
-    }
+        &:disabled {
+            cursor: no-drop;
+            filter: opacity(20%);
+        }
 
-    ${({ $warning }) =>
-        $warning &&
+        ${$warning &&
         css`
-            color: ${({ theme }) => theme.palette.common.warning};
+            color: ${theme.palette.common.warning};
         `}
+    `}
 `

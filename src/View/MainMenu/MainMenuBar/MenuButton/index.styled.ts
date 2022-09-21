@@ -1,15 +1,17 @@
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import { MainMenuButton } from "../index.styled"
 
 export const StyledMainMenuButton = styled(MainMenuButton)`
-    cursor: pointer;
-    margin-right: 0.6rem;
-    padding: var(--icon-button-padding);
-    height: var(--icon-button-size);
-    width: var(--icon-button-size);
+    ${({ theme }) => css`
+        cursor: pointer;
+        margin-right: 0.6rem;
+        padding: ${theme.iconButton.padding};
+        height: ${theme.iconButton.size};
+        width: ${theme.iconButton.size};
 
-    svg {
-        width: 80%;
-        height: 80%;
-    }
+        svg {
+            width: 80%;
+            height: 80%;
+        }
+    `}
 `

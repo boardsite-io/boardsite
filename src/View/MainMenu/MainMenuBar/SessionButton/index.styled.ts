@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import { MainMenuButton } from "../index.styled"
 
 export const SessionStatus = styled.div`
@@ -15,13 +15,15 @@ export const SessionStatus = styled.div`
 
     color: ${({ theme }) => theme.palette.secondary.contrastText};
     background: ${({ theme }) => theme.palette.secondary.main};
-    border-radius: var(--border-radius);
+    border-radius: ${({ theme }) => theme.borderRadius};
     filter: opacity(75%);
-    box-shadow: var(--box-shadow);
+    box-shadow: ${({ theme }) => theme.boxShadow};
 `
 
 export const StyledMainMenuButton = styled(MainMenuButton)`
-    cursor: pointer;
-    width: var(--icon-button-size);
-    padding: var(--icon-button-padding);
+    ${({ theme }) => css`
+        cursor: pointer;
+        width: ${theme.iconButton.size};
+        padding: ${theme.iconButton.padding};
+    `}
 `

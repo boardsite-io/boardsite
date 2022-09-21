@@ -9,10 +9,10 @@ type TextareaProps = {
 
 export const Textarea = styled.textarea<TextareaProps>`
     background: ${({ theme }) => theme.palette.editor.paper}ee;
-    box-shadow: var(--box-shadow);
+    box-shadow: ${({ theme }) => theme.boxShadow};
     position: absolute;
     outline: none;
-    border-radius: var(--border-radius);
+    border-radius: ${({ theme }) => theme.borderRadius};
     border: none;
     width: ${({ width }) => width}px;
     height: ${({ height }) => height}px;
@@ -26,7 +26,7 @@ export const TextfieldSettingsButton = styled(IconButton)`
     right: 2px;
     height: 2rem;
     width: 2rem;
-    box-shadow: var(--box-shadow);
+    box-shadow: ${({ theme }) => theme.boxShadow};
 `
 
 export const TEXTFIELD_PADDING = 2

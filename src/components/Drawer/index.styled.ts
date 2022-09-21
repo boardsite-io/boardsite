@@ -6,48 +6,50 @@ interface DrawerBoxProps {
 }
 
 export const DrawerBox = styled.div<DrawerBoxProps>`
-    z-index: var(--zIndexDrawer);
-    position: fixed;
-    inset-block: 0;
-    width: min(20rem, 80%);
-    display: flex;
-    flex-direction: column;
-    background: ${({ theme }) => theme.palette.primary.main};
-    padding: 0.5rem;
-    box-shadow: var(--box-shadow);
-    overflow-y: auto;
-    overflow-x: hidden;
-    transition: 250ms ease-in-out;
-    -webkit-transition: transform 250ms;
-    -webkit-transition: -webkit-transform 250ms;
-    ${({ open, position }) => {
-        if (open && position === "left") {
-            return css`
-                left: 0;
-                transform: translateX(0);
-                -webkit-transform: translateX(0);
-            `
-        }
-        if (!open && position === "left") {
-            return css`
-                left: 0;
-                transform: translateX(-100%);
-                -webkit-transform: translateX(-100%);
-            `
-        }
-        if (open && position === "right") {
+    ${({ theme, open, position }) => css`
+        z-index: ${theme.zIndex.drawer};
+        position: fixed;
+        inset-block: 0;
+        width: min(20rem, 80%);
+        display: flex;
+        flex-direction: column;
+        background: ${theme.palette.primary.main};
+        padding: 0.5rem;
+        box-shadow: ${theme.boxShadow};
+        overflow-y: auto;
+        overflow-x: hidden;
+        transition: 250ms ease-in-out;
+        -webkit-transition: transform 250ms;
+        -webkit-transition: -webkit-transform 250ms;
+        ${() => {
+            if (open && position === "left") {
+                return css`
+                    left: 0;
+                    transform: translateX(0);
+                    -webkit-transform: translateX(0);
+                `
+            }
+            if (!open && position === "left") {
+                return css`
+                    left: 0;
+                    transform: translateX(-100%);
+                    -webkit-transform: translateX(-100%);
+                `
+            }
+            if (open && position === "right") {
+                return css`
+                    right: 0;
+                    transform: translateX(0);
+                    -webkit-transform: translateX(0);
+                `
+            }
             return css`
                 right: 0;
-                transform: translateX(0);
-                -webkit-transform: translateX(0);
+                transform: translateX(100%);
+                -webkit-transform: translateX(100%);
             `
-        }
-        return css`
-            right: 0;
-            transform: translateX(100%);
-            -webkit-transform: translateX(100%);
-        `
-    }}
+        }}
+    `}
 `
 
 interface DrawerBackgroundProps {
@@ -55,13 +57,13 @@ interface DrawerBackgroundProps {
 }
 
 export const DrawerBackground = styled.div<DrawerBackgroundProps>`
-    z-index: var(--zIndexDrawerBG);
-    position: fixed;
-    background: var(--cDialogBackground);
-    inset: 0;
-    transition: 250ms ease-in-out;
-    ${({ open }) =>
-        open
+    ${({ theme, open }) => css`
+        z-index: ${theme.zIndex.drawerBG};
+        position: fixed;
+        background: ${theme.dialog.background};
+        inset: 0;
+        transition: 250ms ease-in-out;
+        ${open
             ? css`
                   opacity: 1;
               `
@@ -69,6 +71,7 @@ export const DrawerBackground = styled.div<DrawerBackgroundProps>`
                   opacity: 0;
                   pointer-events: none;
               `};
+    `}
 `
 
 export const DrawerTitle = styled.h1`

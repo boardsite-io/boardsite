@@ -19,16 +19,18 @@ export const HoverTrigger = styled.div`
 `
 
 export const ToolTipBox = styled.div<ToolTipBoxProps>`
-    z-index: var(--zIndexToolTip);
-    line-break: none;
-    position: absolute;
-    pointer-events: none;
-    color: ${({ theme }) => theme.palette.primary.contrastText};
-    background: ${({ theme }) => theme.palette.primary.main};
-    box-shadow: var(--box-shadow);
-    padding: 0.4rem 0.6rem;
-    border-radius: var(--border-radius);
-    ${(props) => getPosition(props)}
+    ${({ theme, ...props }) => css`
+        z-index: ${theme.zIndex.toolTip};
+        line-break: none;
+        position: absolute;
+        pointer-events: none;
+        color: ${theme.palette.primary.contrastText};
+        background: ${theme.palette.primary.main};
+        box-shadow: ${theme.boxShadow};
+        padding: 0.4rem 0.6rem;
+        border-radius: ${theme.borderRadius};
+        ${getPosition(props)}
+    `}
 `
 
 export const ToolTipText = styled.p`
