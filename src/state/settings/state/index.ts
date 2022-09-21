@@ -1,5 +1,5 @@
 import { subscriptionState } from "state/subscription"
-import { Theme, themes } from "theme"
+import { ThemeOption, themes } from "theme/themes"
 import { GlobalState } from "state/types"
 import { DefaultTheme } from "styled-components"
 import { SettingsSerializer } from "../serializers"
@@ -38,7 +38,7 @@ export class SettingsClass
      * Set the global theme
      * @param theme new theme to be set
      */
-    setTheme(theme: Theme) {
+    setTheme(theme: ThemeOption) {
         this.state.theme = theme
         subscriptionState.render("Theme")
         this.saveToLocalStorage()

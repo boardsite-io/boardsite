@@ -9,7 +9,7 @@ import { soilTheme } from "./options/soil"
 import { sunTheme } from "./options/sun"
 import { tealTheme } from "./options/teal"
 
-export enum Theme {
+export enum ThemeOption {
     Apple,
     Candy,
     Dark,
@@ -23,14 +23,14 @@ export enum Theme {
 }
 
 export const themes = {
-    [Theme.Apple]: appleTheme,
-    [Theme.Candy]: candyTheme,
-    [Theme.Dark]: darkTheme,
-    [Theme.Light]: lightTheme,
-    [Theme.Ocean]: oceanTheme,
-    [Theme.Orange]: orangeTheme,
-    [Theme.Purple]: purpleTheme,
-    [Theme.Soil]: soilTheme,
-    [Theme.Sun]: sunTheme,
-    [Theme.Teal]: tealTheme,
+    [ThemeOption.Apple]: appleTheme,
+    [ThemeOption.Candy]: candyTheme,
+    [ThemeOption.Dark]: darkTheme,
+    [ThemeOption.Light]: lightTheme,
+    [ThemeOption.Ocean]: oceanTheme,
+    [ThemeOption.Orange]: orangeTheme,
+    [ThemeOption.Purple]: purpleTheme,
+    [ThemeOption.Soil]: soilTheme,
+    [ThemeOption.Sun]: sunTheme,
+    [ThemeOption.Teal]: tealTheme,
 }

@@ -10,7 +10,7 @@ import {
     translations,
 } from "language"
 import { ThemeProvider } from "styled-components"
-import { Theme, themes } from "theme"
+import { ThemeOption, themes } from "theme/themes"
 import { render } from "@testing-library/react"
 
 type RenderProps = {
@@ -24,7 +24,7 @@ export const renderWithProviders = ({
     pathname = "/",
     initRoutes = ["/"],
 }: RenderProps) => {
-    const theme = themes[Theme.Dark]
+    const theme = themes[ThemeOption.Dark]
     const messages = translations[Locales.EN]
 
     return render(

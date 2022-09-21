@@ -3,7 +3,7 @@ import { FormattedMessage } from "language"
 import { TickIcon } from "components"
 import { useGState } from "state"
 import { settings } from "state/settings"
-import { Theme } from "theme"
+import { ThemeOption } from "theme/themes"
 import { online } from "state/online"
 import { SubMenuWrap } from "View/MainMenu/index.styled"
 import MenuItem from "View/MainMenu/MenuItem"
@@ -16,61 +16,61 @@ const ThemeMenu = () => {
         <SubMenuWrap>
             <MenuItem
                 text={<FormattedMessage id="Menu.General.Theme.Light" />}
-                onClick={() => settings.setTheme(Theme.Light)}
-                icon={activeTheme === Theme.Light && <TickIcon />}
+                onClick={() => settings.setTheme(ThemeOption.Light)}
+                icon={activeTheme === ThemeOption.Light && <TickIcon />}
             />
             <MenuItem
                 text={<FormattedMessage id="Menu.General.Theme.Dark" />}
-                onClick={() => settings.setTheme(Theme.Dark)}
-                icon={activeTheme === Theme.Dark && <TickIcon />}
+                onClick={() => settings.setTheme(ThemeOption.Dark)}
+                icon={activeTheme === ThemeOption.Dark && <TickIcon />}
             />
             <MenuItem
                 disabled={!online.isAuthorized()}
                 text={<FormattedMessage id="Menu.General.Theme.Apple" />}
-                onClick={() => settings.setTheme(Theme.Apple)}
-                icon={activeTheme === Theme.Apple && <TickIcon />}
+                onClick={() => settings.setTheme(ThemeOption.Apple)}
+                icon={activeTheme === ThemeOption.Apple && <TickIcon />}
             />
             <MenuItem
                 disabled={!online.isAuthorized()}
                 text={<FormattedMessage id="Menu.General.Theme.Candy" />}
-                onClick={() => settings.setTheme(Theme.Candy)}
-                icon={activeTheme === Theme.Candy && <TickIcon />}
+                onClick={() => settings.setTheme(ThemeOption.Candy)}
+                icon={activeTheme === ThemeOption.Candy && <TickIcon />}
             />
             <MenuItem
                 disabled={!online.isAuthorized()}
                 text={<FormattedMessage id="Menu.General.Theme.Ocean" />}
-                onClick={() => settings.setTheme(Theme.Ocean)}
-                icon={activeTheme === Theme.Ocean && <TickIcon />}
+                onClick={() => settings.setTheme(ThemeOption.Ocean)}
+                icon={activeTheme === ThemeOption.Ocean && <TickIcon />}
             />
             <MenuItem
                 disabled={!online.isAuthorized()}
                 text={<FormattedMessage id="Menu.General.Theme.Orange" />}
-                onClick={() => settings.setTheme(Theme.Orange)}
-                icon={activeTheme === Theme.Orange && <TickIcon />}
+                onClick={() => settings.setTheme(ThemeOption.Orange)}
+                icon={activeTheme === ThemeOption.Orange && <TickIcon />}
             />
             <MenuItem
                 disabled={!online.isAuthorized()}
                 text={<FormattedMessage id="Menu.General.Theme.Purple" />}
-                onClick={() => settings.setTheme(Theme.Purple)}
-                icon={activeTheme === Theme.Purple && <TickIcon />}
+                onClick={() => settings.setTheme(ThemeOption.Purple)}
+                icon={activeTheme === ThemeOption.Purple && <TickIcon />}
             />
             <MenuItem
                 disabled={!online.isAuthorized()}
                 text={<FormattedMessage id="Menu.General.Theme.Soil" />}
-                onClick={() => settings.setTheme(Theme.Soil)}
-                icon={activeTheme === Theme.Soil && <TickIcon />}
+                onClick={() => settings.setTheme(ThemeOption.Soil)}
+                icon={activeTheme === ThemeOption.Soil && <TickIcon />}
             />
             <MenuItem
                 disabled={!online.isAuthorized()}
                 text={<FormattedMessage id="Menu.General.Theme.Sun" />}
-                onClick={() => settings.setTheme(Theme.Sun)}
-                icon={activeTheme === Theme.Sun && <TickIcon />}
+                onClick={() => settings.setTheme(ThemeOption.Sun)}
+                icon={activeTheme === ThemeOption.Sun && <TickIcon />}
             />
             <MenuItem
                 disabled={!online.isAuthorized()}
                 text={<FormattedMessage id="Menu.General.Theme.Teal" />}
-                onClick={() => settings.setTheme(Theme.Teal)}
-                icon={activeTheme === Theme.Teal && <TickIcon />}
+                onClick={() => settings.setTheme(ThemeOption.Teal)}
+                icon={activeTheme === ThemeOption.Teal && <TickIcon />}
             />
         </SubMenuWrap>
     )

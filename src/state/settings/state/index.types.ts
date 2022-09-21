@@ -1,8 +1,8 @@
-import { Theme } from "theme"
+import { ThemeOption } from "theme/themes"
 import { SerializedVersionState } from "state/types"
 
 export interface SettingsState {
-    theme: Theme
+    theme: ThemeOption
     keepCentered: boolean
     directDraw: boolean
 }
