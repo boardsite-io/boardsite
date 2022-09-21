@@ -4,7 +4,7 @@ import { strokeStyleToRGBA } from "util/color"
 import { ERASED_OPACITY, ERASER_WIDTH } from "consts"
 import canvasTxt from "canvas-txt"
 import { settings } from "state/settings"
-import { ERASER_STROKE, SELECTION_FILL } from "theme/globalStyles"
+import { baseTheme } from "theme/baseTheme"
 
 export const shiftPoints = (points: number[], x: number, y: number) =>
     points.map((p, i) => (i % 2 === 0 ? p + x : p + y))
@@ -71,7 +71,7 @@ const drawPen = (ctx: CanvasRenderingContext2D, points: number[]) => {
 }
 
 const drawEraser = (ctx: CanvasRenderingContext2D, points: number[]) => {
-    ctx.strokeStyle = ERASER_STROKE
+    ctx.strokeStyle = baseTheme.tools.eraser.stroke
     ctx.lineWidth = ERASER_WIDTH
     drawPen(ctx, points)
 }
@@ -96,7 +96,7 @@ const drawCircle = (ctx: CanvasRenderingContext2D, points: number[]) => {
 
 const drawSelect = (ctx: CanvasRenderingContext2D, points: number[]) => {
     const [x1, y1, x2, y2] = points
-    ctx.fillStyle = SELECTION_FILL
+    ctx.fillStyle = baseTheme.tools.selection.fill
     ctx.fillRect(x1, y1, x2 - x1, y2 - y1)
 }
 

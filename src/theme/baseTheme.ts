@@ -1,6 +1,17 @@
 import { DefaultTheme } from "styled-components"
 
 export const baseTheme: Omit<DefaultTheme, "palette"> = {
+    tools: {
+        selection: {
+            fill: "#00a2ff38",
+            handle: {
+                borderRadius: "2px",
+                color: "#00245366",
+                size: "0.75rem",
+            },
+        },
+        eraser: { stroke: "#77110511" },
+    },
     breakpoint: {
         sm: "576px",
         md: "768px",

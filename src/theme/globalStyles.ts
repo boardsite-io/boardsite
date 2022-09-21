@@ -1,8 +1,5 @@
 import { createGlobalStyle, css } from "styled-components"
 
-export const SELECTION_FILL = "#00a2ff38"
-export const ERASER_STROKE = "#77110511"
-
 const GlobalStyles = createGlobalStyle`
     ${({ theme }) => css`
         body {
@@ -30,12 +27,6 @@ const GlobalStyles = createGlobalStyle`
                 stroke: ${theme.palette.primary.contrastText};
                 stroke-width: ${theme.iconButton.strokeWidth};
             }
-
-            /* --- Selection Tool --- */
-            --sel-color: ${SELECTION_FILL};
-            --sel-handle-color: #00245366;
-            --sel-handle-size: 0.75rem;
-            --sel-handle-border-radius: 2px;
         }
     `}
 `

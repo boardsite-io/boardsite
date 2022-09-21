@@ -20,6 +20,13 @@ declare module "styled-components" {
                 rule: string
             }
         }
+        tools: {
+            selection: {
+                fill: string
+                handle: { color: string; size: string; borderRadius: string }
+            }
+            eraser: { stroke: string }
+        }
         breakpoint: {
             sm: string
             md: string
