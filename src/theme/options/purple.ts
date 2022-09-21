@@ -1,7 +1,9 @@
 // theme.ts
 import { DefaultTheme } from "styled-components"
+import { baseTheme } from "theme/baseTheme"
 
 export const purpleTheme: DefaultTheme = {
+    ...baseTheme,
     palette: {
         primary: {
             main: "#4A148C",

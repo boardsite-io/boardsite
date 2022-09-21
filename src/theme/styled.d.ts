@@ -20,5 +20,12 @@ declare module "styled-components" {
                 rule: string
             }
         }
+        breakpoint: {
+            sm: string
+            md: string
+            lg: string
+            xl: string
+            xxl: string
+        }
     }
 }

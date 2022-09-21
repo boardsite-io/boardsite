@@ -1,13 +1,5 @@
 import { createGlobalStyle } from "styled-components"
 
-export enum Breakpoint {
-    Sm = "576px",
-    Md = "768px",
-    Lg = "992px",
-    Xl = "1200px",
-    Xxl = "1400px",
-}
-
 export const SELECTION_FILL = "#00a2ff38"
 export const ERASER_STROKE = "#77110511"
 
