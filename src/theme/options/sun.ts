@@ -1,7 +1,9 @@
 // theme.ts
 import { DefaultTheme } from "styled-components"
+import { baseTheme } from "theme/baseTheme"
 
 export const sunTheme: DefaultTheme = {
+    ...baseTheme,
     palette: {
         primary: {
             main: "#FDD835",

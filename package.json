@@ -17,6 +17,10 @@
         "start": "GENERATE_SOURCEMAP=false REACT_APP_B_API_URL=https://api.test.boardsite.io node scripts/start.js",
         "test": "jest -c jest.config.js --env=jsdom"
     },
+    "resolutions": {
+        "@types/react": "17.0.2",
+        "@types/react-dom": "17.0.2"
+    },
     "browserslist": {
         "production": [
             ">0.2%",

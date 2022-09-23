@@ -1,7 +1,9 @@
 // theme.ts
 import { DefaultTheme } from "styled-components"
+import { baseTheme } from "theme/baseTheme"
 
 export const oceanTheme: DefaultTheme = {
+    ...baseTheme,
     palette: {
         primary: {
             main: "#1A237E",

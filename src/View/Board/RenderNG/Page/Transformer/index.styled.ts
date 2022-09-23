@@ -16,21 +16,22 @@ export const SelectionTransformer = styled.div`
 export const TrCanvas = styled(Canvas)`
     cursor: move;
     position: relative;
-    background: var(--sel-color);
+    background: ${({ theme }) => theme.tools.selection.fill};
 `
 
 export const TrCanvasHandle = styled.div<{ position: TrHandle }>`
-    position: absolute;
-    width: var(--sel-handle-size);
-    height: var(--sel-handle-size);
-    background: var(--sel-handle-color);
-    border: 1px solid;
-    border-color: ${({ theme }) => theme.palette.secondary.main};
-    border-radius: var(--sel-handle-border-radius);
-
-    transform-origin: center;
-    transform: translate(-50%, -50%);
-    ${({ position }) => handlePosition[position]}
+    ${({ theme, position }) => css`
+        position: absolute;
+        width: ${theme.tools.selection.handle.size};
+        height: ${theme.tools.selection.handle.size};
+        background: ${theme.tools.selection.handle.color};
+        border: 1px solid;
+        border-color: ${theme.palette.secondary.main};
+        border-radius: ${theme.tools.selection.handle.borderRadius};
+        transform-origin: center;
+        transform: translate(-50%, -50%);
+        ${handlePosition[position]}
+    `}
 `
 
 export enum TrHandle {

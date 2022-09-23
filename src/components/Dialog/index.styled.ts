@@ -5,21 +5,21 @@ interface DialogProps {
 }
 
 export const DialogBox = styled.div<DialogProps>`
-    z-index: var(--zIndexDialog);
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    background: ${({ theme }) => theme.palette.primary.main};
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: min(90vw, 25rem);
-    max-height: 90vh;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    transition: 250ms ease-in-out;
-    ${({ open }) =>
-        open
+    ${({ theme, open }) => css`
+        z-index: ${theme.zIndex.dialog};
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        background: ${theme.palette.primary.main};
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: min(90vw, 25rem);
+        max-height: 90vh;
+        border-radius: ${theme.borderRadius};
+        box-shadow: ${theme.boxShadow};
+        transition: 250ms ease-in-out;
+        ${open
             ? css`
                   opacity: 1;
               `
@@ -28,16 +28,17 @@ export const DialogBox = styled.div<DialogProps>`
                   opacity: 0;
                   pointer-events: none;
               `};
+    `}
 `
 
 export const DialogBackground = styled.div<DialogProps>`
-    z-index: var(--zIndexDialogBG);
-    position: fixed;
-    background: var(--cDialogBackground);
-    inset: 0;
-    transition: 250ms ease-in-out;
-    ${({ open }) =>
-        open
+    ${({ theme, open }) => css`
+        z-index: ${theme.zIndex.dialogBG};
+        position: fixed;
+        background: ${theme.dialog.background};
+        inset: 0;
+        transition: 250ms ease-in-out;
+        ${open
             ? css`
                   opacity: 1;
               `
@@ -46,6 +47,7 @@ export const DialogBackground = styled.div<DialogProps>`
                   opacity: 0;
                   pointer-events: none;
               `};
+    `}
 `
 
 export const DialogContent = styled.div`

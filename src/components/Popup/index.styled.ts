@@ -1,7 +1,7 @@
 import styled from "styled-components"
 
 export const PopupCover = styled.button`
-    z-index: var(--zIndexPopupBG);
+    z-index: ${({ theme }) => theme.zIndex.popupBG};
     position: fixed;
     inset: 0;
     width: 100vw;

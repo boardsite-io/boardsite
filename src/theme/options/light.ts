@@ -1,7 +1,9 @@
 // theme.ts
 import { DefaultTheme } from "styled-components"
+import { baseTheme } from "theme/baseTheme"
 
 export const lightTheme: DefaultTheme = {
+    ...baseTheme,
     palette: {
         primary: {
             main: "#f5f5f5",

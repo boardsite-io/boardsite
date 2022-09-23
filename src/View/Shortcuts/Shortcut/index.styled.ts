@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 
 export const Item = styled.li`
     list-style: none;
@@ -13,9 +13,11 @@ export const Item = styled.li`
 
 export const Title = styled.span``
 export const Keys = styled.span`
-    text-overflow: ellipsis;
-    background: ${({ theme }) => theme.palette.editor.selected};
-    padding: var(--main-menu-button-padding);
-    margin: var(--main-menu-button-margin);
-    border-radius: var(--border-radius);
+    ${({ theme }) => css`
+        text-overflow: ellipsis;
+        background: ${theme.palette.editor.selected};
+        padding: ${theme.menuButton.padding};
+        margin: ${theme.menuButton.margin};
+        border-radius: ${theme.borderRadius};
+    `}
 `

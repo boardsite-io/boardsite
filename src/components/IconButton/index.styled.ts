@@ -6,43 +6,45 @@ interface Props {
 }
 
 export const StyledIconButton = styled.button<Props>`
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: var(--icon-button-size);
-    width: var(--icon-button-size);
-    margin: var(--icon-button-margin);
-    padding: var(--icon-button-padding);
-    border: none;
-    border-radius: var(--border-radius);
-    background: ${({ theme }) => theme.palette.primary.main};
+    ${({ theme, $active, $deactivated }) => css`
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: ${theme.iconButton.size};
+        width: ${theme.iconButton.size};
+        margin: ${theme.iconButton.margin};
+        padding: ${theme.iconButton.padding};
+        border: none;
+        border-radius: ${theme.borderRadius};
+        background: ${theme.palette.primary.main};
 
-    /* color for non custom svgs */
-    color: ${({ theme }) => theme.palette.primary.contrastText};
-    svg {
-        transition: all 100ms ease-in-out;
-        height: 80%;
-        width: 80%;
-    }
-
-    ${({ $active }) => ($active ? active : inactive)};
-    ${({ $deactivated }) => ($deactivated ? deactivated : null)};
-`
-
-const active = css`
-    background: ${({ theme }) => theme.palette.editor.selected};
-`
-const inactive = css`
-    &:hover {
+        /* color for non custom svgs */
+        color: ${theme.palette.primary.contrastText};
         svg {
-            transform: var(--button-hover-transform);
+            transition: all 100ms ease-in-out;
+            height: 80%;
+            width: 80%;
         }
-    }
-`
-const deactivated = css`
-    cursor: not-allowed;
-    svg {
-        stroke: ${({ theme }) => theme.palette.primary.main};
-    }
+
+        ${$active
+            ? css`
+                  background: ${theme.palette.editor.selected};
+              `
+            : css`
+                  &:hover {
+                      svg {
+                          transform: scale(1.2, 1.2);
+                      }
+                  }
+              `};
+        ${$deactivated
+            ? css`
+                  cursor: not-allowed;
+                  svg {
+                      stroke: ${theme.palette.primary.main};
+                  }
+              `
+            : null};
+    `}
 `

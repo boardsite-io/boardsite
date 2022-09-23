@@ -2,22 +2,18 @@ import { locale, Locales, translations } from "language"
 import React, { useCallback, useEffect, useState } from "react"
 import { IntlProvider } from "react-intl"
 import { BrowserRouter } from "react-router-dom"
-import { ThemeProvider } from "styled-components"
+import Theme from "theme"
 import { settings } from "state/settings"
 import { drawing } from "state/drawing"
 import { online } from "state/online"
 import { view } from "state/view"
 import { board } from "state/board"
 import { action } from "state/action"
-import { useGState } from "state"
-import { themes } from "theme"
 import ElectronWrapper from "./electron"
 import Routes from "./router"
-import { GlobalStyles } from "./global.styled"
 
 const App = () => {
     const [loading, setLoading] = useState(true)
-    const { theme: currentTheme } = useGState("Theme").settings
 
     const loadLocalStates = useCallback(async () => {
         await Promise.all([
@@ -48,15 +44,13 @@ const App = () => {
 
     return (
         <IntlProvider locale={locale} messages={translations[Locales.EN]}>
-            <ThemeProvider theme={themes[currentTheme]}>
-                <GlobalStyles>
-                    <BrowserRouter>
-                        <ElectronWrapper>
-                            <Routes />
-                        </ElectronWrapper>
-                    </BrowserRouter>
-                </GlobalStyles>
-            </ThemeProvider>
+            <Theme>
+                <BrowserRouter>
+                    <ElectronWrapper>
+                        <Routes />
+                    </ElectronWrapper>
+                </BrowserRouter>
+            </Theme>
         </IntlProvider>
     )
 }

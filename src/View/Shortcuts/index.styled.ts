@@ -1,4 +1,3 @@
-import { Breakpoint } from "App/global.styled"
 import { Drawer } from "components"
 import styled from "styled-components"
 
@@ -12,7 +11,7 @@ export const ShortcutList = styled.ul`
     padding: 0.5rem 0.8rem;
     gap: 0.2rem 3em;
 
-    @media (min-width: ${Breakpoint.Md}) {
+    @media (min-width: ${({ theme }) => theme.breakpoint.md}) {
         grid-auto-flow: row;
         justify-content: space-between;
         align-items: center;

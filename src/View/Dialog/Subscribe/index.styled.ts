@@ -44,9 +44,9 @@ export const SubscribeButton = styled.a`
     margin: 6px 0;
     padding: 10px 1.5rem;
     border-width: 0;
-    border-radius: var(--border-radius);
+    border-radius: ${({ theme }) => theme.borderRadius};
     transition: all 100ms ease-in-out;
-    box-shadow: var(--box-shadow);
+    box-shadow: ${({ theme }) => theme.boxShadow};
     height: min-content;
 
     &:hover {

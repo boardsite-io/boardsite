@@ -1,43 +1,47 @@
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 
 export const MainMenuBarWrap = styled.nav`
-    z-index: var(--zIndexMainMenu);
-    position: fixed;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: var(--toolbar-margin);
-    margin-left: var(--toolbar-margin);
-    top: 0;
-    left: 0;
-    background: ${({ theme }) => theme.palette.primary.main};
-    border-radius: var(--border-radius);
-    box-shadow: var(--toolbar-box-shadow);
-    padding: var(--toolbar-padding);
+    ${({ theme }) => css`
+        z-index: ${theme.zIndex.mainMenu};
+        position: fixed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: ${theme.toolbar.margin};
+        margin-left: ${theme.toolbar.margin};
+        box-shadow: ${theme.toolbar.boxShadow};
+        padding: ${theme.toolbar.padding};
+        top: 0;
+        left: 0;
+        background: ${theme.palette.primary.main};
+        border-radius: ${theme.borderRadius};
+    `}
 `
 
 export const MainMenuButton = styled.button`
-    cursor: pointer;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    color: ${({ theme }) => theme.palette.primary.contrastText};
-    background: ${({ theme }) => theme.palette.primary.main};
-    border-radius: var(--border-radius);
-    width: fit-content;
-    height: var(--icon-button-size);
-    margin: var(--icon-button-margin);
-    padding: 0 0.2rem;
-    transition: all 100ms ease-in-out;
+    ${({ theme }) => css`
+        cursor: pointer;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        color: ${theme.palette.primary.contrastText};
+        background: ${theme.palette.primary.main};
+        border-radius: ${theme.borderRadius};
+        width: fit-content;
+        height: ${theme.iconButton.size};
+        margin: ${theme.iconButton.margin};
+        padding: 0 0.2rem;
+        transition: all 100ms ease-in-out;
 
-    &:hover {
-        filter: var(--main-menu-hover-filter);
-    }
+        &:hover {
+            filter: ${theme.menuButton.hoverFilter};
+        }
 
-    svg {
-        height: 80%;
-        width: 80%;
-    }
+        svg {
+            height: 80%;
+            width: 80%;
+        }
+    `}
 `

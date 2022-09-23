@@ -1,16 +1,18 @@
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 
 export const FavToolsStyled = styled.div`
-    z-index: var(--zIndexFavoriteTools);
-    position: fixed;
-    display: flex;
-    flex-direction: column;
-    left: 0;
-    bottom: 0;
-    background: ${({ theme }) => theme.palette.primary.main};
-    margin: var(--toolbar-margin);
-    gap: var(--toolbar-gap);
-    padding: var(--toolbar-padding);
-    border-radius: var(--border-radius);
-    box-shadow: var(--toolbar-box-shadow);
+    ${({ theme }) => css`
+        z-index: ${theme.zIndex.favoriteTools};
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        left: 0;
+        bottom: 0;
+        background: ${theme.palette.primary.main};
+        margin: ${theme.toolbar.margin};
+        gap: ${theme.toolbar.gap};
+        padding: ${theme.toolbar.padding};
+        box-shadow: ${theme.toolbar.boxShadow};
+        border-radius: ${theme.borderRadius};
+    `}
 `

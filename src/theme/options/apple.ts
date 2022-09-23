@@ -1,7 +1,9 @@
 // theme.ts
 import { DefaultTheme } from "styled-components"
+import { baseTheme } from "theme/baseTheme"
 
 export const appleTheme: DefaultTheme = {
+    ...baseTheme,
     palette: {
         primary: {
             main: "#2E7D32",
