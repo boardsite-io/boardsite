@@ -71,7 +71,8 @@ export class BoardStroke implements Stroke {
         this.textfield = strokeUpdate.textfield ?? this.textfield
 
         this.isHidden = false
-        this.calculateHitbox() // recalculate hitbox
+        // perform expensive operation async
+        setTimeout(() => this.calculateHitbox(), 0)
         return this
     }
 
