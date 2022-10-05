@@ -51,9 +51,10 @@ export class BoardLiveStroke implements LiveStroke {
 
     end(point: Point) {
         this.move(point)
-        this.processPoints()
+        // this.processPoints()
         registerStroke(this)
-        this.reset()
+        // async fixes livestroke jitter
+        setTimeout(() => this.reset(), 0)
     }
 
     reset(): void {
