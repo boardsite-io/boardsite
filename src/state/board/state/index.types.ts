@@ -21,7 +21,7 @@ export type SerializedBoardState = SerializedVersionState<
 >
 
 export type PageRank = string[]
-export type RenderedData = ImageData[]
+export type RenderedData = Record<number, ImageData>
 
 export type AttachId = string
 
@@ -39,10 +39,11 @@ export interface SerializedAttachment {
 export interface Attachment
     extends SerializedAttachment,
         Serializer<Attachment, SerializedAttachment> {
-    renderedData: RenderedData
-
+    // Loads additional information for the attachment eg. metadata
+    load(): Promise<Attachment>
+    // Sets the attachment
     setId(attachId: AttachId): Attachment
-
+    // Renders the attachment
     render(): Promise<Attachment>
 }
 

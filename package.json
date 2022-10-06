@@ -98,7 +98,7 @@
         "@types/lodash": "^4.14.176",
         "@types/node": "^17.0.8",
         "@types/pako": "^1.0.2",
-        "@types/pdfjs-dist": "^2.7.4",
+        "@types/pdfjs-dist": "^2.10.378",
         "@types/react": "^17.0.37",
         "@types/react-dom": "^17.0.5",
         "@types/react-router-dom": "^5.1.7",

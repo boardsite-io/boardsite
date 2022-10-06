@@ -1,11 +1,12 @@
+import { PDFAttachment } from "drawing/attachment"
 import { board } from "state/board"
 import { PageMeta, Paper } from "state/board/state/index.types"
 
-export const drawBackground = (
+export const drawBackground = async (
     ctx: CanvasRenderingContext2D,
     meta: PageMeta
-): void => {
-    const { paper, attachId, documentPageNum } = meta.background
+): Promise<void> => {
+    const { paper } = meta.background
 
     ctx.lineWidth = 1
     ctx.strokeStyle = "#00000022"
@@ -20,14 +21,7 @@ export const drawBackground = (
             drawRuled(ctx, meta)
             break
         case Paper.Doc: {
-            if (attachId === undefined || documentPageNum === undefined) return
-
-            const imageData =
-                board.getState().attachments[attachId].renderedData[
-                    documentPageNum
-                ]
-            ctx.putImageData(imageData, 0, 0)
-
+            await drawDocument(ctx, meta)
             break
         }
         default:
@@ -68,4 +62,19 @@ const drawRuled = (ctx: CanvasRenderingContext2D, meta: PageMeta): void => {
     ctx.lineTo(boundary * meta.size.width, meta.size.height)
     ctx.moveTo((1 - boundary) * meta.size.width, 0)
     ctx.lineTo((1 - boundary) * meta.size.width, meta.size.height)
+}
+
+const drawDocument = async (
+    ctx: CanvasRenderingContext2D,
+    meta: PageMeta
+): Promise<void> => {
+    const { attachId, documentPageNum } = meta.background
+
+    if (attachId === undefined || documentPageNum === undefined) return
+
+    const attachment = board.getState().attachments[attachId] as PDFAttachment
+    const imageData = await attachment.renderDocumentPage(documentPageNum)
+    if (!imageData) return
+
+    ctx.putImageData(imageData, 0, 0)
 }

@@ -1,5 +1,5 @@
 import { PDFDocument, PDFImage, PDFPage } from "pdf-lib"
-import { MAX_PIXEL_SCALE } from "consts"
+import { MAX_PIXEL_SCALE, PAGE_SIZE } from "consts"
 import { readFileAsUint8Array } from "storage/util"
 import { BoardPage } from "drawing/page"
 import { PDFAttachment } from "drawing/attachment"
@@ -8,17 +8,12 @@ import { board } from "state/board"
 import { online } from "state/online"
 import { action } from "state/action"
 import { request } from "api/request"
-import {
-    AttachId,
-    Attachment,
-    PageMeta,
-    Paper,
-} from "state/board/state/index.types"
+import { AttachId, PageMeta, Paper } from "state/board/state/index.types"
 import { pageToDataURL } from "./rendering"
 
 export const importPdfFile = async (file: File): Promise<void> => {
     const blob = await readFileAsUint8Array(file)
-    const pdf = await new PDFAttachment(blob).render()
+    const pdf = await new PDFAttachment(blob).load()
 
     if (online.isConnected()) {
         const { attachId } = await request.postAttachment(file)
@@ -29,43 +24,43 @@ export const importPdfFile = async (file: File): Promise<void> => {
     await addRenderedPdf(pdf)
 }
 
-const addRenderedPdf = async (attachment: Attachment): Promise<void> => {
+const addRenderedPdf = async (attachment: PDFAttachment): Promise<void> => {
     action.deleteAllPages()
+    const numDocumentPages = await attachment.getNumDocumentPages()
 
-    if (online.isConnected()) {
-        const pages = attachment.renderedData.map((img, i) => {
+    const pagePromises = new Array(numDocumentPages)
+        .fill(0)
+        .map(async (_, i) => {
+            const viewport = await attachment.getPageDimension(i + 1)
             return new BoardPage().updateMeta({
                 background: {
                     paper: Paper.Doc,
                     attachId: attachment.id,
-                    documentPageNum: i,
+                    documentPageNum: i + 1,
                 },
                 size: {
-                    width: img.width / MAX_PIXEL_SCALE,
-                    height: img.height / MAX_PIXEL_SCALE,
+                    width:
+                        (viewport?.width ?? PAGE_SIZE.A4_PORTRAIT.width) /
+                        MAX_PIXEL_SCALE,
+                    height:
+                        (viewport?.height ?? PAGE_SIZE.A4_PORTRAIT.height) /
+                        MAX_PIXEL_SCALE,
                 },
             })
         })
 
+    const pages = await Promise.all(pagePromises)
+
+    if (online.isConnected()) {
         online.addPages(
             pages,
             pages.map(() => -1)
         )
     } else {
-        const addPageData = attachment.renderedData.map((img, i) => {
+        const addPageData = pages.map((page) => {
             return {
-                page: new BoardPage().updateMeta({
-                    background: {
-                        paper: Paper.Doc,
-                        attachId: attachment.id,
-                        documentPageNum: i,
-                    },
-                    size: {
-                        width: img.width / MAX_PIXEL_SCALE,
-                        height: img.height / MAX_PIXEL_SCALE,
-                    },
-                }),
-                index: -1, // append subsequent pages at the end
+                page,
+                index: -1,
             }
         })
 

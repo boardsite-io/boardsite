@@ -529,7 +529,7 @@ export class Online
             type,
             id,
             cachedBlob: blob,
-        }).render()
+        }).load()
         board.addAttachments([attachment])
     }
 

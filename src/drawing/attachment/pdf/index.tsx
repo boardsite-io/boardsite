@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { MAX_PIXEL_SCALE } from "consts"
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf"
-import { RenderParameters } from "pdfjs-dist/types/src/display/api"
+import { PageViewport } from "pdfjs-dist"
+import {
+    PDFDocumentProxy,
+    RenderParameters,
+} from "pdfjs-dist/types/src/display/api"
 import { nanoid } from "nanoid"
 import {
     AttachId,
@@ -20,19 +24,45 @@ pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 export class PDFAttachment implements Attachment {
     id: AttachId
     type: AttachType
-    renderedData: RenderedData
     cachedBlob: Uint8Array
+    renderedData: RenderedData
+    pdf?: PDFDocumentProxy
 
     constructor(dataBlob?: Uint8Array) {
         this.id = nanoid(16)
         this.type = AttachType.PDF
-        this.renderedData = []
+        this.renderedData = {}
         this.cachedBlob = dataBlob ?? new Uint8Array()
     }
 
     setId(attachId: AttachId): PDFAttachment {
         this.id = attachId
         return this
+    }
+
+    async load(): Promise<PDFAttachment> {
+        this.pdf = await pdfjs.getDocument(this.cachedBlob).promise
+        return this
+    }
+
+    async getNumDocumentPages(): Promise<number> {
+        if (!this.pdf) {
+            await this.load()
+        }
+        // eslint-disable-next-line no-underscore-dangle
+        return this.pdf?._pdfInfo.numPages
+    }
+
+    async getPageDimension(
+        documentPageNum: number
+    ): Promise<PageViewport | undefined> {
+        if (!this.pdf) {
+            await this.load()
+        }
+
+        const page = await this.pdf?.getPage(documentPageNum)
+        const viewport = page?.getViewport({ scale: MAX_PIXEL_SCALE })
+        return viewport
     }
 
     /**
@@ -44,44 +74,68 @@ export class PDFAttachment implements Attachment {
      *
      */
     async render(): Promise<PDFAttachment> {
-        const pdf = await pdfjs.getDocument(this.cachedBlob).promise
+        if (!this.pdf) {
+            await this.load()
+        }
+        this.renderedData = {}
 
         // process all pages by drawing them in
         // a canvas and saving the image data
         // eslint-disable-next-line no-underscore-dangle
-        const pages = new Array(pdf._pdfInfo.numPages)
-            .fill(null)
-            .map(async (_, i) => {
-                const page = await pdf.getPage(i + 1)
-                const viewport = page.getViewport({ scale: MAX_PIXEL_SCALE })
+        for (let i = 0; i < this.pdf?._pdfInfo.numPages; i += 1) {
+            this.renderDocumentPage(i + 1)
+        }
 
-                const canvas = document.createElement("canvas")
-                const canvasContext = canvas.getContext(
-                    "2d"
-                ) as CanvasRenderingContext2D
-
-                canvas.height = viewport.height
-                canvas.width = viewport.width
-
-                await page.render({
-                    canvasContext,
-                    viewport,
-                    enableWebGL: true,
-                } as RenderParameters).promise
-
-                const imageData = canvasContext.getImageData(
-                    0,
-                    0,
-                    canvas.width,
-                    canvas.height
-                )
-                canvas.remove()
-
-                return imageData
-            })
-
-        this.renderedData = await Promise.all(pages)
         return this
+    }
+
+    async renderDocumentPage(
+        documentPageNum: number
+    ): Promise<ImageData | undefined> {
+        if (this.renderedData[documentPageNum]) {
+            return this.renderedData[documentPageNum]
+        }
+
+        if (!this.pdf) {
+            await this.load()
+        }
+
+        const canvas = document.createElement("canvas")
+        const canvasContext = canvas.getContext(
+            "2d"
+        ) as CanvasRenderingContext2D
+
+        const page = await this.pdf?.getPage(documentPageNum)
+        const viewport = await this.getPageDimension(documentPageNum)
+
+        if (!viewport?.height || !viewport.width) {
+            return undefined
+        }
+
+        canvas.height = Math.floor(viewport?.height)
+        canvas.width = Math.floor(viewport?.width)
+
+        await page?.render({
+            canvasContext,
+            viewport,
+            enableWebGL: true,
+        } as RenderParameters).promise
+
+        const imageData = canvasContext.getImageData(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        )
+
+        this.renderedData[documentPageNum] = imageData
+
+        canvas.width = 1
+        canvas.height = 1
+        canvasContext.clearRect(0, 0, 1, 1)
+        canvas.remove()
+
+        return this.renderedData[documentPageNum]
     }
 
     serialize(): SerializedAttachment {
@@ -94,7 +148,7 @@ export class PDFAttachment implements Attachment {
 
     async deserialize(serialized: SerializedAttachment): Promise<Attachment> {
         assign(this, pick(serialized, ["id", "type", "cachedBlob"]))
-        await this.render()
+        // await this.render()
         return this
     }
 }
