@@ -1,4 +1,10 @@
-import { MouseEvent, TouchEvent, useCallback } from "react"
+import {
+    ClipboardEventHandler,
+    DragEventHandler,
+    MouseEvent,
+    TouchEvent,
+    useCallback,
+} from "react"
 import { Point, ToolType } from "drawing/stroke/index.types"
 import { BoardLiveStroke } from "drawing/livestroke"
 import { view } from "state/view"
@@ -172,6 +178,23 @@ export const useLiveStroke = (
         [onTouchEnd]
     )
 
+    const onPaste: ClipboardEventHandler<HTMLCanvasElement> = useCallback(
+        (e) => {
+            // TODO
+            e.preventDefault()
+            console.log(e)
+        },
+        []
+    )
+
+    const onDrop: DragEventHandler<HTMLCanvasElement> = useCallback((e) => {
+        e.preventDefault()
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            // Do something with file here
+            console.log(e.dataTransfer.files[0]) // <- file
+        }
+    }, [])
+
     if (isPanMode) {
         return {}
     }
@@ -186,5 +209,7 @@ export const useLiveStroke = (
         onTouchMove,
         onTouchEnd,
         onTouchCancel,
+        onPaste,
+        onDrop,
     }
 }

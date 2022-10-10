@@ -1,5 +1,10 @@
 import React from "react"
-import { useInitialDialog, useKeyboardShortcuts, useWindowResize } from "hooks"
+import {
+    usePreventFileOpen,
+    useInitialDialog,
+    useKeyboardShortcuts,
+    useWindowResize,
+} from "hooks"
 import Board from "./Board"
 import { ViewWrap } from "./index.styled"
 import ToolRing from "./ToolRing"
@@ -13,6 +18,7 @@ import TextfieldSettings from "./TextfieldSettings"
 
 const View: React.FC = () => {
     useKeyboardShortcuts()
+    usePreventFileOpen()
     useInitialDialog()
     useWindowResize()
 

@@ -17,6 +17,8 @@ export const Live: React.FC<PageProps> = memo(({ page, pageOffset }) => {
         onTouchMove,
         onTouchEnd,
         onTouchCancel,
+        onPaste,
+        onDrop,
     } = useLiveStroke(page.pageId, canvasRef, pageOffset)
     const { layerConfig } = useGState("LayerConfig").view
     useLayerConfig(canvasRef)
@@ -42,6 +44,8 @@ export const Live: React.FC<PageProps> = memo(({ page, pageOffset }) => {
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
             onTouchCancel={onTouchCancel}
+            onPaste={onPaste}
+            onDrop={onDrop}
         />
     )
 })
